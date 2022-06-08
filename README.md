@@ -1,73 +1,37 @@
-# Obsidian Sample Plugin
+# Obsidian Meta Bind Plugin
+This plugin can create input fields inside your notes and bind them to metadata fields.
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+### How to use
+To create an input field you have to write an inline code block starting with `INPUT`. Then in square brackets the type of input field and what metadata field to bind to.
 
-This project uses Typescript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in Typescript Definition format, which contains TSDoc comments describing what it does.
+Examples:
+- `INPUT[toggle]` will create an unbound toggle
+- `INPUT[slider:rating]` will create a slider bound to the metadata field `rating` of this note
+- `INPUT[text:taks#completedOn]` will create a text input bound to the metadata field `completedOn` of the note with the name `task`
 
-**Note:** The Obsidian API is still in early alpha and is subject to change at any time!
+Be aware that the plugin might do unwanted things when you have multiple files with the same name in your vault.
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Changes the default font color to red using `styles.css`.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+### How to install
+Currently, there is no release. When there is one, follow the steps below.
 
-## First time developing plugins?
+You must manually download the zip archive from the latest release here on GitHub.  
+After downloading, extract the archive into the `.obsidian/plugins` folder in your vault.
 
-Quick starting guide for new plugin devs:
+The folder structure should look like this:
+```  
+[path to your vault]  
+|_ .obsidian  
+   |_ plugins  
+      |_ obsidian-meta-bind-plugin  
+         |_ main.js  
+         |_ manifest.json  
+         |_ styles.css  
+```
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+### Problems, unexpected behavior or improvement suggestions?
+You are more than welcome to open an issue on [GitHub](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues).
 
-## Releasing new releases
+### Contributions
+Thank you for wanting to contribute to this project.
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
-
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
-
-## Adding your plugin to the community plugin list
-
-- Check https://github.com/obsidianmd/obsidian-releases/blob/master/plugin-review.md
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
-
-## How to use
-
-- Clone this repo.
-- `npm i` or `yarn` to install dependencies
-- `npm run dev` to start compilation in watch mode.
-
-## Manually installing the plugin
-
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
-
-## Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint .\src\`
-
-
-## API Documentation
-
-See https://github.com/obsidianmd/obsidian-api
+Contributions are always welcome. If you have an idea, feel free to open a feature request under the issue tab or even create a pull request.
