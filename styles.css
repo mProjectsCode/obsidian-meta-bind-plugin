@@ -1,4 +1,7 @@
-/* Sets all the text color to red! */
-body {
-    color: red;
+.meta-bind-plugin-input-wrapper {
+	display: inline;
+}
+
+.meta-bind-plugin-input-wrapper .checkbox-container {
+	vertical-align: text-bottom;
 }
