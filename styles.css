@@ -5,3 +5,7 @@
 .meta-bind-plugin-input-wrapper .checkbox-container {
 	vertical-align: text-bottom;
 }
+
+.meta-bind-plugin-error {
+	color: red;
+}

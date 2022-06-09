@@ -1,7 +1,7 @@
 import {Notice, Plugin, stringifyYaml, TFile} from 'obsidian';
 import {DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab} from './settings/Settings';
 import {InputField} from './InputField';
-import {getFileName, removeFileEnding} from './Utils';
+import {getFileName, isPath, removeFileEnding} from './Utils';
 
 export default class MetaBindPlugin extends Plugin {
 	settings: MetaBindPluginSettings;
@@ -16,14 +16,14 @@ export default class MetaBindPlugin extends Plugin {
 
 
 		this.registerMarkdownPostProcessor((element, context) => {
-			const codeblocks = element.querySelectorAll('code');
-			for (let index = 0; index < codeblocks.length; index++) {
-				const codeblock = codeblocks.item(index);
-				const text = codeblock.innerText;
-				const isEmoji = text.startsWith('INPUT[') && text.endsWith(']');
+			const codeBlocks = element.querySelectorAll('code');
+			for (let index = 0; index < codeBlocks.length; index++) {
+				const codeBlock = codeBlocks.item(index);
+				const text = codeBlock.innerText;
+				const isInputField = text.startsWith('INPUT[') && text.endsWith(']');
 				// console.log(context.sourcePath);
-				if (isEmoji) {
-					context.addChild(new InputField(codeblock, text, this, context.sourcePath));
+				if (isInputField) {
+					context.addChild(new InputField(codeBlock, text, this, context.sourcePath));
 				}
 			}
 		});
@@ -40,8 +40,10 @@ export default class MetaBindPlugin extends Plugin {
 	}
 
 	async updateMetaData(key: string, value: any, file: TFile) {
+		// console.log('update', key, value);
+
 		if (!file) {
-			console.log('file not found');
+			console.log('no file');
 			return;
 		}
 
@@ -60,23 +62,32 @@ export default class MetaBindPlugin extends Plugin {
 		await this.app.vault.modify(file, fileContent);
 	}
 
-	getFileByName(name: string): TFile {
+	getFilesByName(name: string): TFile[] {
 		// console.log(getFileName(removeFileEnding(name)))
-		const files = this.app.vault.getFiles();
-		for (const file of files) {
-			// console.log(getFileName(removeFileEnding(file.name)));
-			if (getFileName(removeFileEnding(file.name)) === getFileName(removeFileEnding(name))) {
-				return file;
+		const allFiles = this.app.vault.getFiles();
+		const files: TFile[] = [];
+		for (const file of allFiles) {
+			// console.log(removeFileEnding(file.path));
+			if (isPath(name)) {
+				if (removeFileEnding(file.path) === removeFileEnding(name)) {
+					files.push(file);
+				}
+			} else {
+				if (getFileName(removeFileEnding(file.name)) === getFileName(removeFileEnding(name))) {
+					files.push(file);
+				}
 			}
 		}
 
-		return null;
+		return files;
 	}
 
 	getMetaDataForFile(file: TFile): any {
 		let metadata: any;
 		try {
 			metadata = this.app.metadataCache.getFileCache(file).frontmatter;
+			metadata = JSON.parse(JSON.stringify(metadata)); // deep copy
+			// console.log(metadata);
 		} catch (e) {
 			new Notice('Waring: ' + e.toString());
 			return;
