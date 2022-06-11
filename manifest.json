@@ -3,7 +3,7 @@
 	"name": "Meta Bind Plugin",
 	"version": "0.1.0",
 	"minAppVersion": "0.14.0",
-	"description": "This is a sample plugin for Obsidian. This plugin demonstrates some of the capabilities of the Obsidian API.",
+	"description": "This plugin can create input fields inside your notes and bind them to metadata fields.",
 	"author": "Moritz Jung",
 	"authorUrl": "https://mprojectscode.github.io/",
 	"isDesktopOnly": false
