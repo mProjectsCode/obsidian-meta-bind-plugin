@@ -6,6 +6,7 @@ This plugin is not yet finished.
 
 Planed features are:
 - two-way sync (listening to file changes and updating the input fields)
+- ranges for sliders
 - more input types
 
 ### How to use
