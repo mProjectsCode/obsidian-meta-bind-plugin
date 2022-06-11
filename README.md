@@ -1,6 +1,13 @@
 # Obsidian Meta Bind Plugin
 This plugin can create input fields inside your notes and bind them to metadata fields.
 
+### UNDER CONSTRUCTION
+This plugin is not yet finished.
+
+Planed features are:
+- two-way sync (listening to file changes and updating the input fields)
+- more input types
+
 ### How to use
 To create an input field you have to write an inline code block starting with `INPUT`. Then in square brackets the type of input field and what metadata field to bind to.
 
@@ -12,7 +19,7 @@ Examples:
 Be aware that the plugin might do unwanted things when you have multiple files with the same name in your vault.
 
 ### How to install
-Currently, there is no release. When there is one, follow the steps below.
+This plugin is still in **beta**.
 
 You must manually download the zip archive from the latest release here on GitHub.  
 After downloading, extract the archive into the `.obsidian/plugins` folder in your vault.
