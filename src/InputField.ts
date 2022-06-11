@@ -94,7 +94,7 @@ export class InputField extends MarkdownRenderChild {
 	}
 
 	getInitialValue() {
-		console.log(this);
+		// console.log(this);
 		if (this.isBound) {
 			return this.metaData[this.boundMetadataField];
 		}
