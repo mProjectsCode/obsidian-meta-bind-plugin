@@ -94,13 +94,14 @@ export class InputField extends MarkdownRenderChild {
 	}
 
 	getInitialValue() {
+		// console.log(this);
 		if (this.isBound) {
 			return this.metaData[this.boundMetadataField];
 		}
 	}
 
 	onload() {
-		console.log('load', this);
+		//console.log('load', this);
 
 		const container = this.containerEl.createDiv();
 		container.addClass('meta-bind-plugin-input-wrapper');
@@ -139,7 +140,7 @@ export class InputField extends MarkdownRenderChild {
 	onunload() {
 		super.onunload();
 
-		console.log('unload', this);
+		//console.log('unload', this);
 		clearInterval(this.limitInterval);
 	}
 }

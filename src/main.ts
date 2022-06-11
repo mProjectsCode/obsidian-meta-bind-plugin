@@ -86,14 +86,14 @@ export default class MetaBindPlugin extends Plugin {
 		let metadata: any;
 		try {
 			metadata = this.app.metadataCache.getFileCache(file).frontmatter;
-			metadata = JSON.parse(JSON.stringify(metadata)); // deep copy
-			// console.log(metadata);
 		} catch (e) {
 			new Notice('Waring: ' + e.toString());
+			console.warn(e.toString());
 			return;
 		}
 
 		if (metadata) {
+			metadata = JSON.parse(JSON.stringify(metadata)); // deep copy
 			delete metadata.position;
 		} else {
 			metadata = {};
