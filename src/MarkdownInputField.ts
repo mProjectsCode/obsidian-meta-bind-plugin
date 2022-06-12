@@ -1,9 +1,12 @@
-import {MarkdownRenderChild, SliderComponent, TextComponent, TFile, ToggleComponent} from 'obsidian';
+import {MarkdownRenderChild, SliderComponent, TextComponent, TFile, ToggleComponent, ValueComponent} from 'obsidian';
 import MetaBindPlugin from './main';
+import {Logger} from './Logger';
 
-export class InputField extends MarkdownRenderChild {
+export class MarkdownInputField extends MarkdownRenderChild {
 	plugin: MetaBindPlugin;
 	metaData: any;
+	uid: number;
+	inputElement: ValueComponent<any>;
 	error: string;
 
 	declaration: string;
@@ -12,22 +15,23 @@ export class InputField extends MarkdownRenderChild {
 	boundMetadataField: string;
 	file: TFile;
 
-	limitInterval: NodeJS.Timer;
+	limitInterval: number;
 	intervalCounter: number;
 	valueQueue: any[];
 
-	constructor(containerEl: HTMLElement, fullDeclaration: string, plugin: MetaBindPlugin, filePath: string) {
+	constructor(containerEl: HTMLElement, fullDeclaration: string, plugin: MetaBindPlugin, filePath: string, uid: number) {
 		super(containerEl);
 
 		//console.log(this, 2)
 
 		this.error = '';
 		this.declaration = fullDeclaration;
+		this.uid = uid;
 		this.plugin = plugin;
 
 		this.valueQueue = [];
 		this.intervalCounter = 0;
-		this.limitInterval = setInterval(this.incrementInterval.bind(this), 10);
+		this.limitInterval = window.setInterval(this.incrementInterval.bind(this), 10);
 
 		const regExp = new RegExp(/\[.*?\]/);
 		let declaration = regExp.exec(fullDeclaration)[0];
@@ -93,6 +97,13 @@ export class InputField extends MarkdownRenderChild {
 		}
 	}
 
+	updateValue(value: any) {
+		if (value != null && this.inputElement.getValue() !== value && this.valueQueue.length === 0) {
+			Logger.logDebug(`updating input field ${this.uid} to '${value.toString()}'`);
+			this.inputElement.setValue(value);
+		}
+	}
+
 	getInitialValue() {
 		// console.log(this);
 		if (this.isBound) {
@@ -100,8 +111,10 @@ export class InputField extends MarkdownRenderChild {
 		}
 	}
 
-	onload() {
+	async onload() {
 		//console.log('load', this);
+
+		this.metaData = await this.metaData;
 
 		const container = this.containerEl.createDiv();
 		container.addClass('meta-bind-plugin-input-wrapper');
@@ -113,24 +126,30 @@ export class InputField extends MarkdownRenderChild {
 			return;
 		}
 
+		this.plugin.registerMarkdownInputField(this);
+
 		if (this.inputFieldType === 'toggle') {
 			const newEl = new ToggleComponent(container);
 			newEl.setValue(this.getInitialValue());
 			newEl.onChange(async (value) => {
 				await this.updateMetaData(value);
 			});
+			this.inputElement = newEl;
 		} else if (this.inputFieldType === 'slider') {
 			const newEl = new SliderComponent(container);
 			newEl.setValue(this.getInitialValue());
 			newEl.onChange(async (value) => {
 				await this.updateMetaData(value);
 			});
+			newEl.setDynamicTooltip();
+			this.inputElement = newEl;
 		} else if (this.inputFieldType === 'text') {
 			const newEl = new TextComponent(container);
 			newEl.setValue(this.getInitialValue());
 			newEl.onChange(async (value) => {
 				await this.updateMetaData(value);
 			});
+			this.inputElement = newEl;
 		}
 
 		this.containerEl.empty();
@@ -138,9 +157,11 @@ export class InputField extends MarkdownRenderChild {
 	}
 
 	onunload() {
+		this.plugin.unregisterMarkdownInputField(this);
+
 		super.onunload();
 
 		//console.log('unload', this);
-		clearInterval(this.limitInterval);
+		window.clearInterval(this.limitInterval);
 	}
 }
