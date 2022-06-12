@@ -5,7 +5,6 @@ This plugin can create input fields inside your notes and bind them to metadata 
 This plugin is not yet finished.
 
 Planed features are:
-- two-way sync (listening to file changes and updating the input fields)
 - ranges for sliders
 - more input types
 
@@ -37,6 +36,9 @@ The folder structure should look like this:
 ```
 
 ### Problems, unexpected behavior or improvement suggestions?
+#### The sync seems laggy
+This is intentional. To reduce the load on your hard drive the plugin ony syncs about 5 times a second. 
+
 You are more than welcome to open an issue on [GitHub](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues).
 
 ### Contributions
