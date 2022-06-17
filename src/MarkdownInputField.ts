@@ -19,6 +19,8 @@ export class MarkdownInputField extends MarkdownRenderChild {
 	intervalCounter: number;
 	valueQueue: any[];
 
+	arguments: { name: string, value: any }[];
+
 	constructor(containerEl: HTMLElement, fullDeclaration: string, plugin: MetaBindPlugin, filePath: string, uid: number) {
 		super(containerEl);
 
@@ -33,14 +35,50 @@ export class MarkdownInputField extends MarkdownRenderChild {
 		this.intervalCounter = 0;
 		this.limitInterval = window.setInterval(this.incrementInterval.bind(this), 10);
 
-		const regExp = new RegExp(/\[.*?\]/);
-		let declaration = regExp.exec(fullDeclaration)[0];
+		const declarationRegExp: RegExp = new RegExp(/\[.*?\]/);
+		let declaration: string = declarationRegExp.exec(fullDeclaration)[0];
 		declaration = declaration.replace('[', '').replace(']', '');
 		let declarationParts: string[] = declaration.split(':');
 		let boundTo: string = declarationParts[1] ?? '';
 
 		this.isBound = !!boundTo;
-		this.inputFieldType = declarationParts[0].toLowerCase();
+		let inputFieldTypeWithArguments: string = declarationParts[0];
+		const inputFieldArgumentsRegExp: RegExp = new RegExp(/\(.*\)/);
+		this.inputFieldType = inputFieldTypeWithArguments.replace(inputFieldArgumentsRegExp, '');
+
+		this.arguments = [];
+		let inputFieldArgumentsRegExpResult = inputFieldArgumentsRegExp.exec(inputFieldTypeWithArguments);
+		let inputFieldArgumentsString = inputFieldArgumentsRegExpResult ? inputFieldArgumentsRegExpResult[0] : '';
+		console.log(inputFieldArgumentsString);
+		if (inputFieldArgumentsString) {
+			inputFieldArgumentsString = inputFieldArgumentsString.substring(1, inputFieldArgumentsString.length - 1);
+			let inputFieldArguments: string[] = inputFieldArgumentsString.split(',');
+
+			inputFieldArguments = inputFieldArguments.map(x => x.trim());
+			for (const inputFieldArgument of inputFieldArguments) {
+				if (inputFieldArgument.startsWith('class')) {
+					let classArgumentsString: string = inputFieldArgumentsRegExp.exec(inputFieldArgument)[0];
+					if (!classArgumentsString && classArgumentsString.length >= 2) {
+						this.error = 'class needs an argument';
+						return;
+					}
+					classArgumentsString = classArgumentsString.substring(1, classArgumentsString.length - 1);
+					if (!classArgumentsString) {
+						this.error = 'class argument can not be empty';
+						return;
+					}
+
+					let inputFieldStyleArgument: { name: string, value: string } = {name: 'class', value: classArgumentsString};
+
+					this.arguments.push(inputFieldStyleArgument);
+				}
+
+				if (inputFieldArgument.startsWith('addLabels')) {
+					this.arguments.push({name: 'labels', value: true});
+				}
+			}
+		}
+
 
 		if (this.isBound) {
 			let boundToParts = boundTo.split('#');
@@ -74,6 +112,7 @@ export class MarkdownInputField extends MarkdownRenderChild {
 			}
 			this.metaData = plugin.getMetaDataForFile(this.file);
 		}
+
 
 		// console.log(this, 3)
 	}
@@ -112,7 +151,7 @@ export class MarkdownInputField extends MarkdownRenderChild {
 	}
 
 	async onload() {
-		//console.log('load', this);
+		Logger.logDebug(this);
 
 		this.metaData = await this.metaData;
 
@@ -128,6 +167,8 @@ export class MarkdownInputField extends MarkdownRenderChild {
 
 		this.plugin.registerMarkdownInputField(this);
 
+		let element: HTMLElement = null;
+
 		if (this.inputFieldType === 'toggle') {
 			const newEl = new ToggleComponent(container);
 			newEl.setValue(this.getInitialValue());
@@ -135,14 +176,29 @@ export class MarkdownInputField extends MarkdownRenderChild {
 				await this.updateMetaData(value);
 			});
 			this.inputElement = newEl;
+			element = newEl.toggleEl;
 		} else if (this.inputFieldType === 'slider') {
+			let minValue = 0;
+			let maxValue = 100;
+
+			let labelArgument = this.arguments.filter(x => x.name === 'labels').first();
+			if (labelArgument && labelArgument.value === true) {
+				container.createSpan({text: minValue.toString()});
+			}
+
 			const newEl = new SliderComponent(container);
 			newEl.setValue(this.getInitialValue());
 			newEl.onChange(async (value) => {
 				await this.updateMetaData(value);
 			});
 			newEl.setDynamicTooltip();
+
+			if (labelArgument && labelArgument.value === true) {
+				container.createSpan({text: maxValue.toString()});
+			}
+
 			this.inputElement = newEl;
+			element = newEl.sliderEl;
 		} else if (this.inputFieldType === 'text') {
 			const newEl = new TextComponent(container);
 			newEl.setValue(this.getInitialValue());
@@ -150,6 +206,15 @@ export class MarkdownInputField extends MarkdownRenderChild {
 				await this.updateMetaData(value);
 			});
 			this.inputElement = newEl;
+			element = newEl.inputEl;
+		}
+
+		if (element) {
+			for (const argument of this.arguments) {
+				if (argument.name === 'class') {
+					element.addClass(argument.value);
+				}
+			}
 		}
 
 		this.containerEl.empty();
