@@ -16,7 +16,19 @@ Examples:
 - `INPUT[slider:rating]` will create a slider bound to the metadata field `rating` of this note
 - `INPUT[text:taks#completedOn]` will create a text input bound to the metadata field `completedOn` of the note with the name `task`
 
-Be aware that the plugin might do unwanted things when you have multiple files with the same name in your vault.
+The plugin also allows further customization with arguments. So the complete syntax looks like this:
+```
+INPUT[input_type(argument_name(argument_value), argument_name_2, ...):file_name_or_path#metadata_field]
+```
+
+#### Input field types
+- `slider` a slider from 0 to 100 (custom ranges are on the road map)
+- `toggle` a toggle element
+- `text` a text field
+
+#### Arguments
+- `class(class_name)` adds a css class to the input field
+- `addLabels` only for slider, adds labels for the min and max values
 
 ### How to install
 This plugin is still in **beta**.
