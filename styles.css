@@ -9,3 +9,7 @@
 .meta-bind-plugin-error {
 	color: red;
 }
+
+.meta-bind-full-width {
+	width: 100%;
+}
