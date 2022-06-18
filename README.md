@@ -14,7 +14,7 @@ To create an input field you have to write an inline code block starting with `I
 Examples:
 - `INPUT[toggle]` will create an unbound toggle
 - `INPUT[slider:rating]` will create a slider bound to the metadata field `rating` of this note
-- `INPUT[text:taks#completedOn]` will create a text input bound to the metadata field `completedOn` of the note with the name `task`
+- `INPUT[text:task#completedOn]` will create a text input bound to the metadata field `completedOn` of the note with the name `task`
 
 The plugin also allows further customization with arguments. So the complete syntax looks like this:
 ```
