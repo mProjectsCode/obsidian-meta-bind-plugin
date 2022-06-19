@@ -33,7 +33,7 @@ export class MarkdownInputField extends MarkdownRenderChild {
 
 		this.valueQueue = [];
 		this.intervalCounter = 0;
-		this.limitInterval = window.setInterval(this.incrementInterval.bind(this), 10);
+		this.limitInterval = window.setInterval(() => this.incrementInterval(), this.plugin.settings.syncInterval);
 
 		const declarationRegExp: RegExp = new RegExp(/\[.*?\]/);
 		let declaration: string = declarationRegExp.exec(fullDeclaration)[0];
@@ -49,7 +49,7 @@ export class MarkdownInputField extends MarkdownRenderChild {
 		this.arguments = [];
 		let inputFieldArgumentsRegExpResult = inputFieldArgumentsRegExp.exec(inputFieldTypeWithArguments);
 		let inputFieldArgumentsString = inputFieldArgumentsRegExpResult ? inputFieldArgumentsRegExpResult[0] : '';
-		console.log(inputFieldArgumentsString);
+		// console.log(inputFieldArgumentsString);
 		if (inputFieldArgumentsString) {
 			inputFieldArgumentsString = inputFieldArgumentsString.substring(1, inputFieldArgumentsString.length - 1);
 			let inputFieldArguments: string[] = inputFieldArgumentsString.split(',');
@@ -119,15 +119,11 @@ export class MarkdownInputField extends MarkdownRenderChild {
 
 	// use this interval to reduce writing operations
 	async incrementInterval() {
-		this.intervalCounter += 1;
-
-		if (this.intervalCounter >= 20 && this.valueQueue.length > 0) {
+		if (this.valueQueue.length > 0) {
 			// console.log(this.valueQueue.at(-1))
 			await this.plugin.updateMetaData(this.boundMetadataField, this.valueQueue.at(-1), this.file);
 			this.valueQueue = [];
-			this.intervalCounter = 0;
 		}
-
 	}
 
 	async updateMetaData(value: any) {
