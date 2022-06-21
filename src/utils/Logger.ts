@@ -1,4 +1,4 @@
-import MetaBindPlugin from './main';
+import MetaBindPlugin from '../main';
 
 export class Logger {
 	static plugin: MetaBindPlugin;
