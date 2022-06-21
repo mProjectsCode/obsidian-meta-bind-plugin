@@ -1,13 +1,13 @@
 import {parseYaml, Plugin, stringifyYaml, TFile} from 'obsidian';
 import {DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab} from './settings/Settings';
-import {MarkdownInputField} from './MarkdownInputField';
-import {getFileName, isPath, removeFileEnding} from './Utils';
-import {Logger} from './Logger';
+import {InputFieldMarkdownRenderChild} from './InputFieldMarkdownRenderChild';
+import {getFileName, isPath, removeFileEnding} from './utils/Utils';
+import {Logger} from './utils/Logger';
 
 export default class MetaBindPlugin extends Plugin {
 	settings: MetaBindPluginSettings;
 
-	activeMarkdownInputFields: MarkdownInputField[];
+	activeMarkdownInputFields: InputFieldMarkdownRenderChild[];
 	markDownInputFieldIndex: number;
 
 	async onload() {
@@ -26,7 +26,7 @@ export default class MetaBindPlugin extends Plugin {
 				const isInputField = text.startsWith('INPUT[') && text.endsWith(']');
 				// console.log(context.sourcePath);
 				if (isInputField) {
-					context.addChild(new MarkdownInputField(codeBlock, text, this, context.sourcePath, this.markDownInputFieldIndex));
+					context.addChild(new InputFieldMarkdownRenderChild(codeBlock, text, this, context.sourcePath, this.markDownInputFieldIndex));
 					this.markDownInputFieldIndex += 1;
 				}
 			}
@@ -47,11 +47,11 @@ export default class MetaBindPlugin extends Plugin {
 		}
 	}
 
-	registerMarkdownInputField(markdownInputField: MarkdownInputField) {
+	registerMarkdownInputField(markdownInputField: InputFieldMarkdownRenderChild) {
 		this.activeMarkdownInputFields.push(markdownInputField);
 	}
 
-	unregisterMarkdownInputField(markdownInputField: MarkdownInputField) {
+	unregisterMarkdownInputField(markdownInputField: InputFieldMarkdownRenderChild) {
 		this.activeMarkdownInputFields = this.activeMarkdownInputFields.filter(x => x.uid !== markdownInputField.uid);
 	}
 
@@ -64,7 +64,7 @@ export default class MetaBindPlugin extends Plugin {
 			}
 
 			if (activeMarkdownInputField.file.path === file.path) {
-				activeMarkdownInputField.updateValue(metadata[activeMarkdownInputField.boundMetadataField]);
+				activeMarkdownInputField.updateValue(metadata[activeMarkdownInputField.bindTargetMetadataField]);
 			}
 		}
 	}
@@ -96,16 +96,19 @@ export default class MetaBindPlugin extends Plugin {
 
 	getFilesByName(name: string): TFile[] {
 		// console.log(getFileName(removeFileEnding(name)))
+		const fileNameIsPath = isPath(name);
+		let processedFileName = fileNameIsPath ? removeFileEnding(name) : getFileName(removeFileEnding(name));
+
 		const allFiles = this.app.vault.getFiles();
 		const files: TFile[] = [];
 		for (const file of allFiles) {
 			// console.log(removeFileEnding(file.path));
-			if (isPath(name)) {
-				if (removeFileEnding(file.path) === removeFileEnding(name)) {
+			if (fileNameIsPath) {
+				if (removeFileEnding(file.path) === processedFileName) {
 					files.push(file);
 				}
 			} else {
-				if (getFileName(removeFileEnding(file.name)) === getFileName(removeFileEnding(name))) {
+				if (getFileName(removeFileEnding(file.name)) === processedFileName) {
 					files.push(file);
 				}
 			}
@@ -115,26 +118,8 @@ export default class MetaBindPlugin extends Plugin {
 	}
 
 	async getMetaDataForFile(file: TFile): Promise<any> {
-		// console.log(`reading metadata for ${file.path}`);
-
+		// Logger.logDebug(`reading metadata for ${file.path}`);
 		let metadata: any;
-
-		/* metadata cache is unreliable and might not be updated yet
-		try {
-			metadata = this.app.metadataCache.getFileCache(file).frontmatter;
-		} catch (e) {
-			new Notice('Waring: ' + e.toString());
-			console.warn(e.toString());
-			return;
-		}
-
-		if (metadata) {
-			metadata = JSON.parse(JSON.stringify(metadata)); // deep copy
-			delete metadata.position;
-		} else {
-			metadata = {};
-		}
-		*/
 
 		let fileContent: string = await this.app.vault.read(file);
 		const regExp = new RegExp('^(---)\\n[\\s\\S]*\\n---');
