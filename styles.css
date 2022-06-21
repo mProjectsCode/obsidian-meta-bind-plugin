@@ -10,6 +10,16 @@
 	color: red;
 }
 
+.meta-bind-slider-label {
+	color: var(--text-muted);
+}
+
+
+
 .meta-bind-full-width {
 	width: 100%;
+}
+
+.meta-bind-high {
+	height: 200px;
 }
