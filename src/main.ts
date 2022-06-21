@@ -123,8 +123,12 @@ export default class MetaBindPlugin extends Plugin {
 
 		let fileContent: string = await this.app.vault.read(file);
 		const regExp = new RegExp('^(---)\\n[\\s\\S]*\\n---');
-		let frontMatter = regExp.exec(fileContent)[0];
-		if (frontMatter === null) {
+		let frontMatterRegExpResult = regExp.exec(fileContent);
+		if (!frontMatterRegExpResult) {
+			return {};
+		}
+		let frontMatter = frontMatterRegExpResult[0];
+		if (!frontMatter) {
 			return {};
 		}
 		// console.log(frontMatter);
