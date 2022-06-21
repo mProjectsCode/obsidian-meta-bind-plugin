@@ -90,25 +90,70 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 		inputFieldArguments = inputFieldArguments.map(x => x.trim());
 		for (const inputFieldArgument of inputFieldArguments) {
-			if (inputFieldArgument.startsWith('class')) {
-				let classArgumentsString: string = inputFieldArgumentsRegExp.exec(inputFieldArgument)[0];
-				if (!classArgumentsString && classArgumentsString.length >= 2) {
-					throw new Error('class needs an argument');
-				}
-				classArgumentsString = classArgumentsString.substring(1, classArgumentsString.length - 1);
-				if (!classArgumentsString) {
-					throw new Error('class argument can not be empty');
-				}
+			const inputFieldArgumentName: string = this.extractInputFieldArgumentName(inputFieldArgument);
 
-				let inputFieldStyleArgument: { name: string, value: string } = {name: 'class', value: classArgumentsString};
+			if (inputFieldArgumentName === 'class') {
+				const inputFieldArgumentValue: string = this.extractInputFieldArgumentValue(inputFieldArgument);
 
-				this.arguments.push(inputFieldStyleArgument);
+				let inputFieldClassArgument: { name: string, value: string } = {name: inputFieldArgumentName, value: inputFieldArgumentValue};
+				this.arguments.push(inputFieldClassArgument);
 			}
 
-			if (inputFieldArgument.startsWith('addLabels')) {
+			if (inputFieldArgumentName === 'addLabels') {
 				this.arguments.push({name: 'labels', value: true});
 			}
+
+			if (inputFieldArgumentName === 'minValue') {
+				const inputFieldArgumentValue: string = this.extractInputFieldArgumentValue(inputFieldArgument);
+				const inputFieldArgumentValueAsNumber: number = Number.parseInt(inputFieldArgumentValue);
+
+				if (Number.isNaN(inputFieldArgumentValueAsNumber)) {
+					throw new Error(`argument \'${inputFieldArgumentName}\' value must be of type number`);
+				}
+
+				let inputFieldClassArgument: { name: string, value: number } = {name: inputFieldArgumentName, value: inputFieldArgumentValueAsNumber};
+				this.arguments.push(inputFieldClassArgument);
+			}
+
+			if (inputFieldArgumentName === 'maxValue') {
+				const inputFieldArgumentValue: string = this.extractInputFieldArgumentValue(inputFieldArgument);
+				const inputFieldArgumentValueAsNumber: number = Number.parseInt(inputFieldArgumentValue);
+
+				if (Number.isNaN(inputFieldArgumentValueAsNumber)) {
+					throw new Error(`argument \'${inputFieldArgumentName}\' value must be of type number`);
+				}
+
+				let inputFieldClassArgument: { name: string, value: number } = {name: inputFieldArgumentName, value: inputFieldArgumentValueAsNumber};
+				this.arguments.push(inputFieldClassArgument);
+			}
 		}
+	}
+
+	extractInputFieldArgumentName(argumentString: string): string {
+		const argumentsRegExp: RegExp = new RegExp(/\(.*\)/);
+
+		return argumentString.replace(argumentsRegExp, '');
+	}
+
+	extractInputFieldArgumentValue(argumentString: string): string {
+		const argumentsRegExp: RegExp = new RegExp(/\(.*\)/);
+
+		let argumentName = this.extractInputFieldArgumentName(argumentString);
+
+		let argumentValueRegExpResult = argumentsRegExp.exec(argumentString);
+		if (!argumentValueRegExpResult) {
+			throw new Error(`argument \'${argumentName}\' requires a value`);
+		}
+		let argumentValue = argumentsRegExp.exec(argumentString)[0];
+		if (!argumentValue && argumentValue.length >= 2) {
+			throw new Error(`argument \'${argumentName}\' requires a value`);
+		}
+		argumentValue = argumentValue.substring(1, argumentValue.length - 1);
+		if (!argumentValue) {
+			throw new Error(`argument \'${argumentName}\' value can not be empty`);
+		}
+
+		return argumentValue;
 	}
 
 	parseBindTarget(bindTarget: string) {
@@ -117,26 +162,24 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 			this.bindTargetMetadataField = bindTarget;
 			const files = this.plugin.getFilesByName(this.filePath);
 			if (files.length === 0) {
-				this.error = 'file not fond.';
-				return;
+				throw new Error('file not found');
 			} else if (files.length === 1) {
 				this.file = files[0];
 			} else {
-				throw new Error('multiple files found. please specify the file path.');
+				throw new Error('multiple files found. please specify the file path');
 			}
 		} else if (bindTargetParts.length === 2) {
 			this.bindTargetMetadataField = bindTargetParts[1];
 			const files = this.plugin.getFilesByName(bindTargetParts[0]);
 			if (files.length === 0) {
-				this.error = 'file not fond.';
-				return;
+				throw new Error('file not found');
 			} else if (files.length === 1) {
 				this.file = files[0];
 			} else {
-				throw new Error('multiple files found. please specify the file path.');
+				throw new Error('multiple files found. please specify the file path');
 			}
 		} else {
-			throw new Error('invalid binding.');
+			throw new Error('invalid binding');
 		}
 		this.metaData = this.plugin.getMetaDataForFile(this.file);
 	}
@@ -170,8 +213,12 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		}
 	}
 
+	getArguments(name: string) {
+		return this.arguments.filter(x => x.name === name);
+	}
+
 	getArgument(name: string) {
-		return this.arguments.filter(x => x.name === name).first();
+		return this.getArguments(name).first();
 	}
 
 	async onload() {
@@ -193,9 +240,9 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 		this.inputField.render(container);
 
-		const classArgument = this.getArgument('class');
+		const classArgument = this.getArguments('class');
 		if (classArgument) {
-			this.inputField.getHtmlElement().addClass(classArgument.value);
+			this.inputField.getHtmlElement().addClasses(classArgument.map(x => x.value));
 		}
 
 		this.containerEl.empty();
