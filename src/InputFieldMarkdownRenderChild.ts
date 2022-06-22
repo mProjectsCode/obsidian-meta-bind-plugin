@@ -222,7 +222,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	}
 
 	async onload() {
-		Logger.logDebug(this);
+		Logger.logDebug('load', this);
 
 		this.metaData = await this.metaData;
 
@@ -250,6 +250,8 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	}
 
 	onunload() {
+		Logger.logDebug('unload', this);
+
 		this.plugin.unregisterMarkdownInputField(this);
 
 		super.onunload();
