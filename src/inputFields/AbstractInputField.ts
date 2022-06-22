@@ -1,6 +1,8 @@
 import {InputFieldMarkdownRenderChild} from '../InputFieldMarkdownRenderChild';
 
 export abstract class AbstractInputField {
+	static allowCodeBlock: boolean = true;
+	static allowInlineCodeBlock: boolean = true;
 	inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild;
 	onValueChange: (value: any) => void | Promise<void>;
 
@@ -20,6 +22,10 @@ export abstract class AbstractInputField {
 	 * @param value
 	 */
 	abstract setValue(value: any): void;
+
+	abstract isEqualValue(value: any): boolean;
+
+	abstract getDefaultValue(): any;
 
 	abstract getHtmlElement(): HTMLElement;
 
