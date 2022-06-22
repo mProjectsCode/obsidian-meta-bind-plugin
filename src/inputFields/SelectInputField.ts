@@ -23,7 +23,7 @@ export class SelectInputField extends AbstractInputField {
 		return this.elements.filter(x => x.isActive()).first()?.value ?? '';
 	}
 
-	setValue(value: string): void {
+	setValue(value: any): void {
 		for (const element of this.elements) {
 			if (value === element.value) {
 				element.setActive(true, false);
@@ -37,7 +37,7 @@ export class SelectInputField extends AbstractInputField {
 		return this.getValue() == value;
 	}
 
-	getDefaultValue(): string {
+	getDefaultValue(): any {
 		return '';
 	}
 
