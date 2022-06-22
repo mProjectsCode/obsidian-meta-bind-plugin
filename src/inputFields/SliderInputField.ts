@@ -2,7 +2,6 @@ import {AbstractInputField} from './AbstractInputField';
 import {SliderComponent} from 'obsidian';
 import {Logger} from '../utils/Logger';
 import {InputFieldMarkdownRenderChild} from '../InputFieldMarkdownRenderChild';
-import {clamp} from '../utils/Utils';
 
 export class SliderInputField extends AbstractInputField {
 	sliderComponent: SliderComponent;

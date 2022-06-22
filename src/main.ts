@@ -32,6 +32,18 @@ export default class MetaBindPlugin extends Plugin {
 			}
 		});
 
+		this.registerMarkdownCodeBlockProcessor('meta-bind', (source, el, ctx) => {
+			const codeBlock = el;
+			const text = source.replace('\n', '');
+			console.log(text);
+			const isInputField = text.startsWith('INPUT[') && text.endsWith(']');
+			// console.log(context.sourcePath);
+			if (isInputField) {
+				ctx.addChild(new InputFieldMarkdownRenderChild(codeBlock, text, this, ctx.sourcePath, this.markDownInputFieldIndex));
+				this.markDownInputFieldIndex += 1;
+			}
+		});
+
 		this.registerEvent(this.app.vault.on('modify', async abstractFile => {
 			if (abstractFile instanceof TFile) {
 				await this.updateMarkdownInputFieldsOnFileChange(abstractFile as TFile);

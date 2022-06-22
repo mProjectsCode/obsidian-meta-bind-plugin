@@ -6,6 +6,10 @@
 	vertical-align: text-bottom;
 }
 
+.meta-bind-plugin-input-wrapper .slider {
+
+}
+
 .meta-bind-plugin-error {
 	color: red;
 }
