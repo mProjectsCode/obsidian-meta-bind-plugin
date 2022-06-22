@@ -22,3 +22,23 @@ export function removeFileEnding(fileName: string) {
 export function clamp(num: number, min: number, max: number): number {
 	return Math.min(Math.max(num, min), max);
 }
+
+
+// js can't even implement modulo correctly...
+export function mod(n: number, m: number): number {
+	return ((n % m) + m) % m;
+}
+
+export function arrayEquals(arr1: any[], arr2: any[]) {
+	if (arr1.length !== arr2.length) {
+		return false;
+	}
+
+	for (const arr1Element of arr1) {
+		if (!arr2.contains(arr1Element)) {
+			return false;
+		}
+	}
+
+	return true;
+}

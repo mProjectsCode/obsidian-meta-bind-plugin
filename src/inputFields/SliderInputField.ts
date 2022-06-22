@@ -26,8 +26,16 @@ export class SliderInputField extends AbstractInputField {
 			}
 		} else {
 			Logger.logWarning(`can not set value of slider to \'${value}\'`);
-			this.sliderComponent.setValue(this.minValue);
+			this.sliderComponent.setValue(this.getDefaultValue());
 		}
+	}
+
+	isEqualValue(value: any): boolean {
+		return this.getValue() == value;
+	}
+
+	getDefaultValue(): any {
+		return this.minValue;
 	}
 
 	getHtmlElement(): HTMLElement {

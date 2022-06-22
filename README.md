@@ -18,7 +18,7 @@ INPUT[input_type(argument_name(argument_value), argument_name_2, ...):file_name_
 ```
 
 #### Input field types
-- `slider` a slider from 0 to 100 (custom ranges are on the road map)
+- `slider` a slider from 0 to 100 (custom ranges can be set using `minValue` and `maxValue`, see below)
 - `toggle` a toggle element
 - `text` a text field
 - `text_area` a bigger text field

@@ -18,6 +18,14 @@ export class ToggleInputField extends AbstractInputField {
 		}
 	}
 
+	isEqualValue(value: any): boolean {
+		return this.getValue() == value;
+	}
+
+	getDefaultValue(): any {
+		return false;
+	}
+
 	getHtmlElement(): HTMLElement {
 		return this.toggleComponent.toggleEl;
 	}

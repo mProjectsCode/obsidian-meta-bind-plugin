@@ -14,10 +14,39 @@
 	color: red;
 }
 
-.meta-bind-slider-label {
+.meta-bind-plugin-slider-label {
 	color: var(--text-muted);
 }
 
+.meta-bind-plugin-select-bg {
+	display: flex;
+	flex-direction: column;
+}
+
+.meta-bind-plugin-select-wrapper {
+	margin: 5px;
+	flex: 1;
+	overflow-y: auto;
+}
+
+.meta-bind-plugin-select-element {
+	cursor: pointer;
+	border-left: 5px solid transparent;
+	padding: 5px;
+	margin: 5px 0 5px 0;
+	border-radius: 5px;
+	white-space: pre-wrap;
+	font-size: 16px;
+}
+
+.meta-bind-plugin-select-element-selected {
+	border-left: 5px solid var(--interactive-accent) !important;
+	background: var(--background-secondary-alt);
+}
+
+.meta-bind-plugin-select-element-hover {
+	background: var(--background-secondary-alt);
+}
 
 
 .meta-bind-full-width {
