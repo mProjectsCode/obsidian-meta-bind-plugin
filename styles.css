@@ -1,13 +1,23 @@
+.meta-bind-plugin-input {
+	background-color: transparent !important;
+}
+
 .meta-bind-plugin-input-wrapper {
 	display: inline;
+}
+
+.meta-bind-plugin-flex-input-wrapper {
+	display: inline-flex;
 }
 
 .meta-bind-plugin-input-wrapper .checkbox-container {
 	vertical-align: text-bottom;
 }
 
-.meta-bind-plugin-input-wrapper .slider {
-
+.meta-bind-plugin-slider-input {
+	align-self: center;
+	margin-left: 5px !important;
+	margin-right: 5px !important;
 }
 
 .meta-bind-plugin-error {
@@ -18,18 +28,18 @@
 	color: var(--text-muted);
 }
 
-.meta-bind-plugin-select-bg {
+.meta-bind-plugin-select-input-bg {
 	display: flex;
 	flex-direction: column;
 }
 
-.meta-bind-plugin-select-wrapper {
+.meta-bind-plugin-select-input-wrapper {
 	margin: 5px;
 	flex: 1;
 	overflow-y: auto;
 }
 
-.meta-bind-plugin-select-element {
+.meta-bind-plugin-select-input-element {
 	cursor: pointer;
 	border-left: 5px solid transparent;
 	padding: 5px;
@@ -37,15 +47,40 @@
 	border-radius: 5px;
 	white-space: pre-wrap;
 	font-size: 16px;
+	min-width: 200px;
 }
 
-.meta-bind-plugin-select-element-selected {
+.meta-bind-plugin-select-input-element-selected {
 	border-left: 5px solid var(--interactive-accent) !important;
 	background: var(--background-secondary-alt);
 }
 
-.meta-bind-plugin-select-element-hover {
+.meta-bind-plugin-select-input-element-hover {
 	background: var(--background-secondary-alt);
+}
+
+.meta-bind-plugin-date-input-year-input[type="number"] {
+	width: 80px;
+	height: unset;
+	align-self: stretch;
+	border-radius: 0 0.5em 0.5em 0;
+}
+
+.meta-bind-plugin-date-input-left-input {
+	border-radius: 0.5em 0 0 0.5em;
+}
+
+.meta-bind-plugin-date-input-middle-input:not(:focus) {
+	border-radius: 0;
+	border-left: 0;
+	border-right: 0;
+}
+
+.meta-bind-plugin-date-input-middle-input:focus {
+	border-radius: 0;
+	margin-left: -1px;
+	margin-right: -1px;
+	z-index: 10;
 }
 
 

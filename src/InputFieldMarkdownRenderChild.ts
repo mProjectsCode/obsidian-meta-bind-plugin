@@ -259,8 +259,9 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 		this.metaData = await this.metaData;
 
-		const container = this.containerEl.createDiv();
+		const container: HTMLDivElement = this.containerEl.createDiv();
 		container.addClass('meta-bind-plugin-input-wrapper');
+		this.containerEl.addClass('meta-bind-plugin-input');
 
 		if (this.error) {
 			container.innerText = ` -> Error: ${this.error}`;
@@ -277,6 +278,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		if (classArgument) {
 			this.inputField.getHtmlElement().addClasses(classArgument.map(x => x.value));
 		}
+
 
 		this.containerEl.empty();
 		this.containerEl.appendChild(container);

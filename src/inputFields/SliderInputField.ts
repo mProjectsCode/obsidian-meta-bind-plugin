@@ -43,6 +43,9 @@ export class SliderInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
+		container.removeClass('meta-bind-plugin-input-wrapper');
+		container.addClass('meta-bind-plugin-flex-input-wrapper');
+
 		let labelArgument = this.inputFieldMarkdownRenderChild.getArgument('labels');
 		if (labelArgument && labelArgument.value === true) {
 			container.createSpan({text: this.minValue.toString(), cls: 'meta-bind-slider-label'});
@@ -53,6 +56,7 @@ export class SliderInputField extends AbstractInputField {
 		component.onChange(this.onValueChange);
 		component.setDynamicTooltip();
 		component.setLimits(this.minValue, this.maxValue, 1);
+		component.sliderEl.addClass('meta-bind-plugin-slider-input');
 
 		if (labelArgument && labelArgument.value === true) {
 			container.createSpan({text: this.maxValue.toString(), cls: 'meta-bind-slider-label'});
