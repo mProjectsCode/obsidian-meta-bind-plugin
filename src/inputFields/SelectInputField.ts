@@ -46,10 +46,10 @@ export class SelectInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
-		container.addClass('media-db-plugin-select-bg');
+		container.addClass('media-db-plugin-select-input-bg');
 		this.container = container;
 
-		const elementWrapper = container.createDiv({cls: 'media-db-plugin-select-wrapper'});
+		const elementWrapper = container.createDiv({cls: 'media-db-plugin-select-input-wrapper'});
 
 		const elementArguments: { name: string, value: string }[] = this.inputFieldMarkdownRenderChild.getArguments('option');
 

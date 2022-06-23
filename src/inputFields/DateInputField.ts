@@ -1,12 +1,11 @@
 import {AbstractInputField} from './AbstractInputField';
-import {DropdownComponent} from 'obsidian';
+import {DropdownComponent, TextComponent} from 'obsidian';
 import {InputFieldMarkdownRenderChild} from '../InputFieldMarkdownRenderChild';
+import {Date, DateFormat, DateParser} from '../Parsers/DateParser';
 
 export class DateInputField extends AbstractInputField {
 	container: HTMLDivElement;
-	month: string;
-	day: string;
-	year: string;
+	date: Date;
 
 	months: Record<string, string> = {
 		'1': 'January',
@@ -21,20 +20,20 @@ export class DateInputField extends AbstractInputField {
 		'10': 'October',
 		'11': 'November',
 		'12': 'December',
-	}
+	};
 	days: Record<string, string>;
 	years: Record<string, string>;
 
 	monthComponent: DropdownComponent;
 	dayComponent: DropdownComponent;
-	yearComponent: DropdownComponent;
+	yearComponent: TextComponent;
 
 
 	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => (void | Promise<void>)) {
 		super(inputFieldMarkdownRenderChild, onValueChange);
 
 		this.days = {};
-		for (let i = 0; i < 31; i++) {
+		for (let i = 1; i <= 31; i++) {
 			this.days[i.toString()] = i.toString();
 		}
 
@@ -49,22 +48,15 @@ export class DateInputField extends AbstractInputField {
 	}
 
 	public getValue(): string {
-		return `${this.month}/${this.day}/${this.year}`;
+		return DateParser.stringify(this.date);
 	}
 
 	public setValue(value: string): void {
-		const valueParts = value.split('/');
-		if (valueParts.length !== 3) {
-			return;
-		}
-		this.month = valueParts[0];
-		this.monthComponent.setValue(this.month);
-
-		this.day = valueParts[1];
-		this.dayComponent.setValue(this.day);
-
-		this.year = valueParts[2];
-		this.yearComponent.setValue(this.year);
+		this.date = DateParser.parse(value);
+		console.log(this.date);
+		this.monthComponent.setValue(this.date.getMonth().toString());
+		this.dayComponent.setValue(this.date.getDay().toString());
+		this.yearComponent.setValue(this.date.getYear().toString());
 	}
 
 	public isEqualValue(value: any): boolean {
@@ -72,41 +64,69 @@ export class DateInputField extends AbstractInputField {
 	}
 
 	public getDefaultValue(): any {
-		return `1/1/2022`;
+		return DateParser.stringify(DateParser.getDefaultDate());
+	}
+
+	public render(container: HTMLDivElement): void {
+		this.date = DateParser.parse(this.inputFieldMarkdownRenderChild.getInitialValue()) ?? DateParser.getDefaultDate();
+		console.log(this.date);
+
+		container.removeClass('meta-bind-plugin-input-wrapper');
+		container.addClass('meta-bind-plugin-flex-input-wrapper');
+
+		if (DateParser.dateFormat === DateFormat.EU) {
+			this.dayComponent = new DropdownComponent(container);
+			this.dayComponent.addOptions(this.days);
+			this.dayComponent.setValue(this.date.getDay().toString());
+			this.dayComponent.onChange(this.onDayChange.bind(this));
+
+			this.monthComponent = new DropdownComponent(container);
+			this.monthComponent.addOptions(this.months);
+			this.monthComponent.setValue(this.date.getMonth().toString());
+			this.monthComponent.onChange(this.onMonthChange.bind(this));
+
+			this.dayComponent.selectEl.addClass('meta-bind-plugin-date-input-left-input');
+			this.monthComponent.selectEl.addClass('meta-bind-plugin-date-input-middle-input');
+		} else {
+			this.monthComponent = new DropdownComponent(container);
+			this.monthComponent.addOptions(this.months);
+			this.monthComponent.setValue(this.date.getMonth().toString());
+			this.monthComponent.onChange(this.onMonthChange.bind(this));
+
+			this.dayComponent = new DropdownComponent(container);
+			this.dayComponent.addOptions(this.days);
+			this.dayComponent.setValue(this.date.getDay().toString());
+			this.dayComponent.onChange(this.onDayChange.bind(this));
+
+			this.dayComponent.selectEl.addClass('meta-bind-plugin-date-input-middle-input');
+			this.monthComponent.selectEl.addClass('meta-bind-plugin-date-input-left-input');
+		}
+
+		this.yearComponent = new TextComponent(container);
+		this.yearComponent.setValue(this.date.getYear().toString());
+		this.yearComponent.onChange(this.onYearChange.bind(this));
+
+		this.yearComponent.inputEl.addClass('meta-bind-plugin-date-input-year-input');
+		this.yearComponent.inputEl.type = 'number';
+		this.yearComponent.inputEl.max = '9999';
+
+		this.container = container;
 	}
 
 	private onMonthChange(value: string): void {
-		this.month = value;
+		console.log(value);
+		this.date.setMonthFromString(value);
 		this.onValueChange(this.getValue());
 	}
 
 	private onDayChange(value: string): void {
-		this.day = value;
+		this.date.setDayFromString(value);
 		this.onValueChange(this.getValue());
 	}
 
 	private onYearChange(value: string): void {
-		this.year = value;
+		this.date.setYearFromString(value);
 		this.onValueChange(this.getValue());
-	}
-
-	public render(container: HTMLDivElement): void {
-		this.monthComponent = new DropdownComponent(container);
-		this.monthComponent.addOptions(this.months);
-		this.monthComponent.setValue(this.month);
-		this.monthComponent.onChange(this.onMonthChange.bind(this));
-
-		this.dayComponent = new DropdownComponent(container);
-		this.dayComponent.addOptions(this.days);
-		this.dayComponent.setValue(this.day);
-		this.dayComponent.onChange(this.onDayChange.bind(this))
-
-		this.yearComponent = new DropdownComponent(container);
-		this.yearComponent.addOptions(this.years);
-		this.yearComponent.setValue(this.year);
-		this.yearComponent.onChange(this.onYearChange.bind(this))
-
-		this.container = container;
 	}
 
 }

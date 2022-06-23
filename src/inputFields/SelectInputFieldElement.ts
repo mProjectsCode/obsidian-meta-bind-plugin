@@ -19,9 +19,9 @@ export class SelectInputFieldElement {
 		this.active = active;
 		this.selectInputField = multiSelectInputField;
 
-		this.cssClass = 'meta-bind-plugin-select-element';
-		this.activeClass = 'meta-bind-plugin-select-element-selected';
-		this.hoverClass = 'meta-bind-plugin-select-element-hover';
+		this.cssClass = 'meta-bind-plugin-select-input-element';
+		this.activeClass = 'meta-bind-plugin-select-input-element-selected';
+		this.hoverClass = 'meta-bind-plugin-select-input-element-hover';
 
 		this.element = parentElement.createDiv({cls: this.cssClass});
 		this.element.id = this.getHTMLId();
@@ -40,7 +40,7 @@ export class SelectInputFieldElement {
 	}
 
 	getHTMLId(): string {
-		return `meta-bind-select-element-${this.selectInputField.inputFieldMarkdownRenderChild.uid}-${this.id}`;
+		return `meta-bind-select-input-element-${this.selectInputField.inputFieldMarkdownRenderChild.uid}-${this.id}`;
 	}
 
 	isHighlighted(): boolean {

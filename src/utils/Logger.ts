@@ -1,7 +1,5 @@
-import MetaBindPlugin from '../main';
-
 export class Logger {
-	static plugin: MetaBindPlugin;
+	static devMode: boolean;
 	static prefix: string = 'meta-bind |';
 
 	/**
@@ -19,7 +17,7 @@ export class Logger {
 	 * @param data
 	 */
 	static logDebug(...data: any): void {
-		if (this.plugin.settings.devMode) {
+		if (this.devMode) {
 			Logger.log(...data);
 		}
 	}
