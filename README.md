@@ -5,9 +5,9 @@ This plugin can create input fields inside your notes and bind them to metadata 
 This plugin is not yet finished.
 
 ### How to use
-To create an input field you have to write an inline code block starting with `INPUT`. Then in square brackets the type of input field and what metadata field to bind to.
+To create an input field you have to write an inline code block or normal code block starting with `INPUT`. Then in square brackets the type of input field, in round brackets arguments and finally behind a colon the metadata field to bind to.
 
-Examples:
+#### Examples:
 - `INPUT[toggle]` will create an unbound toggle
 - `INPUT[slider:rating]` will create a slider bound to the metadata field `rating` of this note
 - `INPUT[text:task#completedOn]` will create a text input bound to the metadata field `completedOn` of the note with the name `task`
@@ -22,12 +22,17 @@ INPUT[input_type(argument_name(argument_value), argument_name_2, ...):file_name_
 - `toggle` a toggle element
 - `text` a text field
 - `text_area` a bigger text field
+- `select` a select input field, only for code blocks
+- `multi-select` a multi-select input field, only for code blocks
+- `date` a date input field
 
 #### Arguments
 - `class(class_name)` adds a css class to the input field
 - `addLabels` only for slider, adds labels for the min and max values
 - `minValue(value)` only for slider, sets the min value 
 - `maxValue(value)` only for slider, sets the max value
+- `option(value)` only for (multi-)selects, adds an option to the select
+- `title(value)` only for (multi-)selects, adds a title to the select input
 
 ### How to install
 This plugin is still in **beta**.
@@ -47,10 +52,11 @@ The folder structure should look like this:
 ```
 
 ### Problems, unexpected behavior or improvement suggestions?
-#### The sync seems laggy
-This is intentional. To reduce the load on your hard drive the plugin ony syncs about 5 times a second. 
-
 You are more than welcome to open an issue on [GitHub](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues).
+
+#### The sync seems laggy
+This is intentional. To reduce the load on your hard drive the plugin ony syncs about 5 times a second.
+There is a setting to change the sync interval, but I don't recommend changing it.
 
 ### Contributions
 Thank you for wanting to contribute to this project.

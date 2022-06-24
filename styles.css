@@ -42,7 +42,8 @@
 }
 
 .meta-bind-plugin-select-input-header {
-	margin: 5px 5px 10px 5px;
+	margin:      5px 5px 5px 5px;
+	font-weight: bold;
 }
 
 .meta-bind-plugin-select-input-element {
