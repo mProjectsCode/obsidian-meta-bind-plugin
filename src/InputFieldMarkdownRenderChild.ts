@@ -4,6 +4,11 @@ import {Logger} from './utils/Logger';
 import {AbstractInputField} from './inputFields/AbstractInputField';
 import {InputFieldFactory, InputFieldType} from './inputFields/InputFieldFactory';
 
+export enum InputFieldMarkdownRenderChildType {
+	INLINE_CODE_BLOCK,
+	CODE_BLOCK,
+}
+
 export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	plugin: MetaBindPlugin;
 	metaData: any;
@@ -24,7 +29,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 	arguments: { name: string, value: any }[];
 
-	constructor(containerEl: HTMLElement, fullDeclaration: string, plugin: MetaBindPlugin, filePath: string, uid: number) {
+	constructor(containerEl: HTMLElement, type: InputFieldMarkdownRenderChildType, fullDeclaration: string, plugin: MetaBindPlugin, filePath: string, uid: number) {
 		super(containerEl);
 
 		//console.log(this, 2)
@@ -43,6 +48,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 			this.parseDeclaration();
 
 			this.inputField = InputFieldFactory.createInputField(this.inputFieldType, {
+				type: type,
 				inputFieldMarkdownRenderChild: this,
 				onValueChanged: this.updateMetaData.bind(this),
 			});
@@ -100,10 +106,18 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 			}
 
 			if (inputFieldArgumentName === 'addLabels') {
+				if (this.inputFieldType !== InputFieldType.SLIDER) {
+					throw new Error(`argument \'${inputFieldArgumentName}\' is only applicable to slider input fields`);
+				}
+
 				this.arguments.push({name: 'labels', value: true});
 			}
 
 			if (inputFieldArgumentName === 'minValue') {
+				if (this.inputFieldType !== InputFieldType.SLIDER) {
+					throw new Error(`argument \'${inputFieldArgumentName}\' is only applicable to slider input fields`);
+				}
+
 				const inputFieldArgumentValue: string = this.extractInputFieldArgumentValue(inputFieldArgument);
 				const inputFieldArgumentValueAsNumber: number = Number.parseInt(inputFieldArgumentValue);
 
@@ -111,11 +125,15 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 					throw new Error(`argument \'${inputFieldArgumentName}\' value must be of type number`);
 				}
 
-				let inputFieldClassArgument: { name: string, value: number } = {name: inputFieldArgumentName, value: inputFieldArgumentValueAsNumber};
-				this.arguments.push(inputFieldClassArgument);
+				let inputFieldArgumentObject: { name: string, value: number } = {name: inputFieldArgumentName, value: inputFieldArgumentValueAsNumber};
+				this.arguments.push(inputFieldArgumentObject);
 			}
 
 			if (inputFieldArgumentName === 'maxValue') {
+				if (this.inputFieldType !== InputFieldType.SLIDER) {
+					throw new Error(`argument \'${inputFieldArgumentName}\' is only applicable to slider input fields`);
+				}
+
 				const inputFieldArgumentValue: string = this.extractInputFieldArgumentValue(inputFieldArgument);
 				const inputFieldArgumentValueAsNumber: number = Number.parseInt(inputFieldArgumentValue);
 
@@ -123,8 +141,30 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 					throw new Error(`argument \'${inputFieldArgumentName}\' value must be of type number`);
 				}
 
-				let inputFieldClassArgument: { name: string, value: number } = {name: inputFieldArgumentName, value: inputFieldArgumentValueAsNumber};
-				this.arguments.push(inputFieldClassArgument);
+				let inputFieldArgumentObject: { name: string, value: number } = {name: inputFieldArgumentName, value: inputFieldArgumentValueAsNumber};
+				this.arguments.push(inputFieldArgumentObject);
+			}
+
+			if (inputFieldArgumentName === 'option') {
+				if (this.inputFieldType !== InputFieldType.SELECT && this.inputFieldType !== InputFieldType.MULTI_SELECT) {
+					throw new Error(`argument \'${inputFieldArgumentName}\' is only applicable to select and multi-select input fields`);
+				}
+
+				const inputFieldArgumentValue: string = this.extractInputFieldArgumentValue(inputFieldArgument);
+
+				let inputFieldArgumentObject: { name: string, value: string } = {name: inputFieldArgumentName, value: inputFieldArgumentValue};
+				this.arguments.push(inputFieldArgumentObject);
+			}
+
+			if (inputFieldArgumentName === 'title') {
+				if (this.inputFieldType !== InputFieldType.SELECT && this.inputFieldType !== InputFieldType.MULTI_SELECT) {
+					throw new Error(`argument \'${inputFieldArgumentName}\' is only applicable to select and multi-select input fields`);
+				}
+
+				const inputFieldArgumentValue: string = this.extractInputFieldArgumentValue(inputFieldArgument);
+
+				let inputFieldArgumentObject: { name: string, value: string } = {name: inputFieldArgumentName, value: inputFieldArgumentValue};
+				this.arguments.push(inputFieldArgumentObject);
 			}
 		}
 	}
@@ -200,8 +240,12 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	}
 
 	updateValue(value: any) {
-		if (value != null && this.inputField.getValue() !== value && this.valueQueue.length === 0) {
-			Logger.logDebug(`updating input field ${this.uid} to '${value.toString()}'`);
+		if (value == null) {
+			value = this.inputField.getDefaultValue();
+		}
+
+		if (!this.inputField.isEqualValue(value) && this.valueQueue.length === 0) {
+			Logger.logDebug(`updating input field ${this.uid} to`, value);
 			this.inputField.setValue(value);
 		}
 	}
@@ -209,7 +253,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	getInitialValue() {
 		// console.log(this);
 		if (this.isBound) {
-			return this.metaData[this.bindTargetMetadataField];
+			return this.metaData[this.bindTargetMetadataField] ?? this.inputField.getDefaultValue();
 		}
 	}
 
@@ -222,12 +266,13 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	}
 
 	async onload() {
-		Logger.logDebug(this);
+		Logger.logDebug('load', this);
 
 		this.metaData = await this.metaData;
 
-		const container = this.containerEl.createDiv();
+		const container: HTMLDivElement = this.containerEl.createDiv();
 		container.addClass('meta-bind-plugin-input-wrapper');
+		this.containerEl.addClass('meta-bind-plugin-input');
 
 		if (this.error) {
 			container.innerText = ` -> Error: ${this.error}`;
@@ -245,11 +290,14 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 			this.inputField.getHtmlElement().addClasses(classArgument.map(x => x.value));
 		}
 
+
 		this.containerEl.empty();
 		this.containerEl.appendChild(container);
 	}
 
 	onunload() {
+		Logger.logDebug('unload', this);
+
 		this.plugin.unregisterMarkdownInputField(this);
 
 		super.onunload();

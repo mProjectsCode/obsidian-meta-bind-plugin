@@ -1,8 +1,9 @@
 import {parseYaml, Plugin, stringifyYaml, TFile} from 'obsidian';
 import {DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab} from './settings/Settings';
-import {InputFieldMarkdownRenderChild} from './InputFieldMarkdownRenderChild';
+import {InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType} from './InputFieldMarkdownRenderChild';
 import {getFileName, isPath, removeFileEnding} from './utils/Utils';
 import {Logger} from './utils/Logger';
+import {DateParser} from './parsers/DateParser';
 
 export default class MetaBindPlugin extends Plugin {
 	settings: MetaBindPluginSettings;
@@ -13,7 +14,8 @@ export default class MetaBindPlugin extends Plugin {
 	async onload() {
 		await this.loadSettings();
 
-		Logger.plugin = this;
+		Logger.devMode = this.settings.devMode;
+		DateParser.dateFormat = this.settings.dateFormat;
 
 		this.activeMarkdownInputFields = [];
 		this.markDownInputFieldIndex = 0;
@@ -26,9 +28,22 @@ export default class MetaBindPlugin extends Plugin {
 				const isInputField = text.startsWith('INPUT[') && text.endsWith(']');
 				// console.log(context.sourcePath);
 				if (isInputField) {
-					context.addChild(new InputFieldMarkdownRenderChild(codeBlock, text, this, context.sourcePath, this.markDownInputFieldIndex));
+					context.addChild(new InputFieldMarkdownRenderChild(codeBlock, InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK, text, this, context.sourcePath, this.markDownInputFieldIndex));
 					this.markDownInputFieldIndex += 1;
 				}
+			}
+		});
+
+		this.registerMarkdownCodeBlockProcessor('meta-bind', (source, el, ctx) => {
+			const codeBlock = el;
+			// console.log(JSON.stringify(source));
+			const text = source.replace(/\n/g, '');
+			// console.log(text);
+			const isInputField = text.startsWith('INPUT[') && text.endsWith(']');
+			// console.log(context.sourcePath);
+			if (isInputField) {
+				ctx.addChild(new InputFieldMarkdownRenderChild(codeBlock, InputFieldMarkdownRenderChildType.CODE_BLOCK, text, this, ctx.sourcePath, this.markDownInputFieldIndex));
+				this.markDownInputFieldIndex += 1;
 			}
 		});
 
@@ -70,7 +85,7 @@ export default class MetaBindPlugin extends Plugin {
 	}
 
 	async updateMetaData(key: string, value: any, file: TFile) {
-		Logger.logDebug(`updating '${key}: ${value}' in '${file.path}'`);
+		Logger.logDebug(`updating `, key, `: `, value, ` in '${file.path}'`);
 
 		if (!file) {
 			console.log('no file');
@@ -152,6 +167,8 @@ export default class MetaBindPlugin extends Plugin {
 	}
 
 	async saveSettings() {
+		DateParser.dateFormat = this.settings.dateFormat;
+		Logger.devMode = this.settings.devMode;
 		await this.saveData(this.settings);
 	}
 }
