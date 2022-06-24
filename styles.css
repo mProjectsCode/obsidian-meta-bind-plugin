@@ -15,8 +15,8 @@
 }
 
 .meta-bind-plugin-slider-input {
-	align-self: center;
-	margin-left: 5px !important;
+	align-self:   center;
+	margin-left:  5px !important;
 	margin-right: 5px !important;
 }
 
@@ -29,60 +29,77 @@
 }
 
 .meta-bind-plugin-select-input-bg {
-	display: flex;
+	display:        flex;
 	flex-direction: column;
+	border:         1px solid var(--background-modifier-border);
+	border-radius:  4px;
 }
 
 .meta-bind-plugin-select-input-wrapper {
-	margin: 5px;
-	flex: 1;
+	margin:     0 5px 0 5px;
+	flex:       1;
 	overflow-y: auto;
 }
 
+.meta-bind-plugin-select-input-header {
+	margin: 5px 5px 10px 5px;
+}
+
 .meta-bind-plugin-select-input-element {
-	cursor: pointer;
-	border-left: 5px solid transparent;
-	padding: 5px;
-	margin: 5px 0 5px 0;
+	cursor:        pointer;
+	padding:       5px;
+	margin:        5px 0 5px 0;
 	border-radius: 5px;
-	white-space: pre-wrap;
-	font-size: 16px;
-	min-width: 200px;
+	border-left:   5px solid transparent;
+	white-space:   pre-wrap;
+	font-size:     16px;
+	min-width:     200px;
 }
 
 .meta-bind-plugin-select-input-element-selected {
 	border-left: 5px solid var(--interactive-accent) !important;
-	background: var(--background-secondary-alt);
+	background:  var(--background-secondary);
 }
 
 .meta-bind-plugin-select-input-element-hover {
-	background: var(--background-secondary-alt);
+	background: var(--background-secondary);
 }
 
 .meta-bind-plugin-date-input-year-input[type="number"] {
-	width: 80px;
-	height: unset;
+	width:      80px;
+	height:     unset;
 	align-self: stretch;
-	border-radius: 0 0.5em 0.5em 0;
 }
 
-.meta-bind-plugin-date-input-left-input {
+.meta-bind-plugin-input-element-group {
+
+}
+
+.meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:first-child {
 	border-radius: 0.5em 0 0 0.5em;
 }
 
-.meta-bind-plugin-date-input-middle-input:not(:focus) {
+.meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:not(:first-child):not(:last-child):not(:focus) {
 	border-radius: 0;
-	border-left: 0;
-	border-right: 0;
+	border-left:   0;
 }
 
-.meta-bind-plugin-date-input-middle-input:focus {
+.meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:not(:first-child):not(:last-child):focus {
 	border-radius: 0;
-	margin-left: -1px;
-	margin-right: -1px;
-	z-index: 10;
+	margin-left:   -1px;
+	z-index:       10;
 }
 
+.meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:last-child:not(:focus) {
+	border-radius: 0 0.5em 0.5em 0;
+	border-left:   0;
+}
+
+.meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:last-child:focus {
+	border-radius: 0 0.5em 0.5em 0;
+	margin-left:   -1px;
+	z-index:       10;
+}
 
 .meta-bind-full-width {
 	width: 100%;

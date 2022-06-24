@@ -1,7 +1,7 @@
 import {AbstractInputField} from './AbstractInputField';
 import {DropdownComponent, TextComponent} from 'obsidian';
 import {InputFieldMarkdownRenderChild} from '../InputFieldMarkdownRenderChild';
-import {Date, DateFormat, DateParser} from '../Parsers/DateParser';
+import {Date, DateFormat, DateParser} from '../parsers/DateParser';
 
 export class DateInputField extends AbstractInputField {
 	container: HTMLDivElement;
@@ -72,7 +72,7 @@ export class DateInputField extends AbstractInputField {
 		console.log(this.date);
 
 		container.removeClass('meta-bind-plugin-input-wrapper');
-		container.addClass('meta-bind-plugin-flex-input-wrapper');
+		container.addClass('meta-bind-plugin-flex-input-wrapper', 'meta-bind-plugin-input-element-group');
 
 		if (DateParser.dateFormat === DateFormat.EU) {
 			this.dayComponent = new DropdownComponent(container);
@@ -85,8 +85,8 @@ export class DateInputField extends AbstractInputField {
 			this.monthComponent.setValue(this.date.getMonth().toString());
 			this.monthComponent.onChange(this.onMonthChange.bind(this));
 
-			this.dayComponent.selectEl.addClass('meta-bind-plugin-date-input-left-input');
-			this.monthComponent.selectEl.addClass('meta-bind-plugin-date-input-middle-input');
+			this.dayComponent.selectEl.addClass('meta-bind-plugin-input-element-group-element');
+			this.monthComponent.selectEl.addClass('meta-bind-plugin-input-element-group-element');
 		} else {
 			this.monthComponent = new DropdownComponent(container);
 			this.monthComponent.addOptions(this.months);
@@ -98,8 +98,8 @@ export class DateInputField extends AbstractInputField {
 			this.dayComponent.setValue(this.date.getDay().toString());
 			this.dayComponent.onChange(this.onDayChange.bind(this));
 
-			this.dayComponent.selectEl.addClass('meta-bind-plugin-date-input-middle-input');
-			this.monthComponent.selectEl.addClass('meta-bind-plugin-date-input-left-input');
+			this.dayComponent.selectEl.addClass('meta-bind-plugin-input-element-group-element');
+			this.monthComponent.selectEl.addClass('meta-bind-plugin-input-element-group-element');
 		}
 
 		this.yearComponent = new TextComponent(container);
@@ -107,6 +107,7 @@ export class DateInputField extends AbstractInputField {
 		this.yearComponent.onChange(this.onYearChange.bind(this));
 
 		this.yearComponent.inputEl.addClass('meta-bind-plugin-date-input-year-input');
+		this.yearComponent.inputEl.addClass('meta-bind-plugin-input-element-group-element');
 		this.yearComponent.inputEl.type = 'number';
 		this.yearComponent.inputEl.max = '9999';
 

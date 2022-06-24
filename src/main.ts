@@ -3,7 +3,7 @@ import {DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab} from './se
 import {InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType} from './InputFieldMarkdownRenderChild';
 import {getFileName, isPath, removeFileEnding} from './utils/Utils';
 import {Logger} from './utils/Logger';
-import {DateParser} from './Parsers/DateParser';
+import {DateParser} from './parsers/DateParser';
 
 export default class MetaBindPlugin extends Plugin {
 	settings: MetaBindPluginSettings;

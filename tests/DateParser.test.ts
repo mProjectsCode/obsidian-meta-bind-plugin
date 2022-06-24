@@ -1,4 +1,4 @@
-import {Date, DateParser} from '../src/Parsers/DateParser';
+import {Date, DateParser} from '../src/parsers/DateParser';
 
 
 test('stringify EU date', () => {

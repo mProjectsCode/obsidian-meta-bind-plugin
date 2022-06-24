@@ -1,6 +1,6 @@
 import {App, PluginSettingTab, Setting} from 'obsidian';
 import MetaBindPlugin from '../main';
-import {DateFormat} from '../Parsers/DateParser';
+import {DateFormat} from '../parsers/DateParser';
 
 export interface MetaBindPluginSettings {
 	devMode: boolean;
