@@ -2,7 +2,6 @@ import {AbstractInputField} from './AbstractInputField';
 import {SliderComponent} from 'obsidian';
 import {Logger} from '../utils/Logger';
 import {InputFieldMarkdownRenderChild} from '../InputFieldMarkdownRenderChild';
-import {clamp} from '../utils/Utils';
 
 export class SliderInputField extends AbstractInputField {
 	sliderComponent: SliderComponent;
@@ -27,8 +26,16 @@ export class SliderInputField extends AbstractInputField {
 			}
 		} else {
 			Logger.logWarning(`can not set value of slider to \'${value}\'`);
-			this.sliderComponent.setValue(this.minValue);
+			this.sliderComponent.setValue(this.getDefaultValue());
 		}
+	}
+
+	isEqualValue(value: any): boolean {
+		return this.getValue() == value;
+	}
+
+	getDefaultValue(): any {
+		return this.minValue;
 	}
 
 	getHtmlElement(): HTMLElement {
@@ -36,6 +43,9 @@ export class SliderInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
+		container.removeClass('meta-bind-plugin-input-wrapper');
+		container.addClass('meta-bind-plugin-flex-input-wrapper');
+
 		let labelArgument = this.inputFieldMarkdownRenderChild.getArgument('labels');
 		if (labelArgument && labelArgument.value === true) {
 			container.createSpan({text: this.minValue.toString(), cls: 'meta-bind-slider-label'});
@@ -46,6 +56,7 @@ export class SliderInputField extends AbstractInputField {
 		component.onChange(this.onValueChange);
 		component.setDynamicTooltip();
 		component.setLimits(this.minValue, this.maxValue, 1);
+		component.sliderEl.addClass('meta-bind-plugin-slider-input');
 
 		if (labelArgument && labelArgument.value === true) {
 			container.createSpan({text: this.maxValue.toString(), cls: 'meta-bind-slider-label'});

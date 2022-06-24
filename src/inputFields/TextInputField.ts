@@ -18,6 +18,14 @@ export class TextInputField extends AbstractInputField {
 		}
 	}
 
+	isEqualValue(value: any): boolean {
+		return this.getValue() == value;
+	}
+
+	getDefaultValue(): any {
+		return '';
+	}
+
 	getHtmlElement(): HTMLElement {
 		return this.textComponent.inputEl;
 	}

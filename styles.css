@@ -1,20 +1,106 @@
+.meta-bind-plugin-input {
+	background-color: transparent !important;
+}
+
 .meta-bind-plugin-input-wrapper {
 	display: inline;
+}
+
+.meta-bind-plugin-flex-input-wrapper {
+	display: inline-flex;
 }
 
 .meta-bind-plugin-input-wrapper .checkbox-container {
 	vertical-align: text-bottom;
 }
 
+.meta-bind-plugin-slider-input {
+	align-self:   center;
+	margin-left:  5px !important;
+	margin-right: 5px !important;
+}
+
 .meta-bind-plugin-error {
 	color: red;
 }
 
-.meta-bind-slider-label {
+.meta-bind-plugin-slider-label {
 	color: var(--text-muted);
 }
 
+.meta-bind-plugin-select-input-bg {
+	display:        flex;
+	flex-direction: column;
+	border:         1px solid var(--background-modifier-border);
+	border-radius:  4px;
+}
 
+.meta-bind-plugin-select-input-wrapper {
+	margin:     0 5px 0 5px;
+	flex:       1;
+	overflow-y: auto;
+}
+
+.meta-bind-plugin-select-input-header {
+	margin:      5px 5px 5px 5px;
+	font-weight: bold;
+}
+
+.meta-bind-plugin-select-input-element {
+	cursor:        pointer;
+	padding:       5px;
+	margin:        5px 0 5px 0;
+	border-radius: 5px;
+	border-left:   5px solid transparent;
+	white-space:   pre-wrap;
+	font-size:     16px;
+	min-width:     200px;
+}
+
+.meta-bind-plugin-select-input-element-selected {
+	border-left: 5px solid var(--interactive-accent) !important;
+	background:  var(--background-secondary);
+}
+
+.meta-bind-plugin-select-input-element-hover {
+	background: var(--background-secondary);
+}
+
+.meta-bind-plugin-date-input-year-input[type="number"] {
+	width:      80px;
+	height:     unset;
+	align-self: stretch;
+}
+
+.meta-bind-plugin-input-element-group {
+
+}
+
+.meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:first-child {
+	border-radius: 0.5em 0 0 0.5em;
+}
+
+.meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:not(:first-child):not(:last-child):not(:focus) {
+	border-radius: 0;
+	border-left:   0;
+}
+
+.meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:not(:first-child):not(:last-child):focus {
+	border-radius: 0;
+	margin-left:   -1px;
+	z-index:       10;
+}
+
+.meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:last-child:not(:focus) {
+	border-radius: 0 0.5em 0.5em 0;
+	border-left:   0;
+}
+
+.meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:last-child:focus {
+	border-radius: 0 0.5em 0.5em 0;
+	margin-left:   -1px;
+	z-index:       10;
+}
 
 .meta-bind-full-width {
 	width: 100%;
