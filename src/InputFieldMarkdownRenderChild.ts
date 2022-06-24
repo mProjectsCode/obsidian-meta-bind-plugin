@@ -155,6 +155,17 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 				let inputFieldArgumentObject: { name: string, value: string } = {name: inputFieldArgumentName, value: inputFieldArgumentValue};
 				this.arguments.push(inputFieldArgumentObject);
 			}
+
+			if (inputFieldArgumentName === 'title') {
+				if (this.inputFieldType !== InputFieldType.SELECT && this.inputFieldType !== InputFieldType.MULTI_SELECT) {
+					throw new Error(`argument \'${inputFieldArgumentName}\' is only applicable to select and multi-select input fields`);
+				}
+
+				const inputFieldArgumentValue: string = this.extractInputFieldArgumentValue(inputFieldArgument);
+
+				let inputFieldArgumentObject: { name: string, value: string } = {name: inputFieldArgumentName, value: inputFieldArgumentValue};
+				this.arguments.push(inputFieldArgumentObject);
+			}
 		}
 	}
 
