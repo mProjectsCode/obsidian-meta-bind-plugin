@@ -7,6 +7,7 @@ import {TextAreaInputField} from './TextAreaInputField';
 import {SelectInputField} from './SelectInputField';
 import {MultiSelectInputField} from './MultiSelectInputField';
 import {DateInputField} from './DateInputField';
+import {TimeInputField} from './TimeInputField';
 
 export enum InputFieldType {
 	TOGGLE = 'toggle',
@@ -16,6 +17,7 @@ export enum InputFieldType {
 	SELECT = 'select',
 	MULTI_SELECT = 'multi_select',
 	DATE = 'date',
+	TIME = 'time',
 	INVALID = 'invalid',
 }
 
@@ -77,6 +79,14 @@ export class InputFieldFactory {
 				throw new Error(`can not create ${inputFieldType} as inline code block`);
 			}
 			return new DateInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+		} else if (inputFieldType === InputFieldType.TIME) {
+			if (args.type === InputFieldMarkdownRenderChildType.CODE_BLOCK && !TimeInputField.allowCodeBlock) {
+				throw new Error(`can not create ${inputFieldType} as code block`);
+			}
+			if (args.type === InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK && !TimeInputField.allowInlineCodeBlock) {
+				throw new Error(`can not create ${inputFieldType} as inline code block`);
+			}
+			return new TimeInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		}
 
 		return null;

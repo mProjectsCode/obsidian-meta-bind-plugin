@@ -64,7 +64,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 					'fs_us': 'US date format (Jan 30, 2022)',
 				});
 				cb.onChange(data => {
-					this.plugin.settings.dateFormat = data as any;
+					this.plugin.settings.dateFormat = data as DateFormat;
 					this.plugin.saveSettings();
 				});
 			});
