@@ -22,7 +22,6 @@ export class DateInputField extends AbstractInputField {
 		'12': 'December',
 	};
 	days: Record<string, string>;
-	years: Record<string, string>;
 
 	monthComponent: DropdownComponent;
 	dayComponent: DropdownComponent;
@@ -36,11 +35,6 @@ export class DateInputField extends AbstractInputField {
 		for (let i = 1; i <= 31; i++) {
 			this.days[i.toString()] = i.toString();
 		}
-
-		this.years = {};
-		for (let i = 1970; i < 2030; i++) {
-			this.years[i.toString()] = i.toString();
-		}
 	}
 
 	public getHtmlElement(): HTMLElement {
@@ -53,7 +47,7 @@ export class DateInputField extends AbstractInputField {
 
 	public setValue(value: string): void {
 		this.date = DateParser.parse(value);
-		console.log(this.date);
+		// console.log(this.date);
 		this.monthComponent.setValue(this.date.getMonth().toString());
 		this.dayComponent.setValue(this.date.getDay().toString());
 		this.yearComponent.setValue(this.date.getYear().toString());
@@ -69,7 +63,7 @@ export class DateInputField extends AbstractInputField {
 
 	public render(container: HTMLDivElement): void {
 		this.date = DateParser.parse(this.inputFieldMarkdownRenderChild.getInitialValue()) ?? DateParser.getDefaultDate();
-		console.log(this.date);
+		// console.log(this.date);
 
 		container.removeClass('meta-bind-plugin-input-wrapper');
 		container.addClass('meta-bind-plugin-flex-input-wrapper', 'meta-bind-plugin-input-element-group');
@@ -115,7 +109,7 @@ export class DateInputField extends AbstractInputField {
 	}
 
 	private onMonthChange(value: string): void {
-		console.log(value);
+		// console.log(value);
 		this.date.setMonthFromString(value);
 		this.onValueChange(this.getValue());
 	}
