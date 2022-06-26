@@ -2,7 +2,9 @@ import {MarkdownRenderChild, TFile} from 'obsidian';
 import MetaBindPlugin from './main';
 import {Logger} from './utils/Logger';
 import {AbstractInputField} from './inputFields/AbstractInputField';
-import {InputFieldFactory, InputFieldType} from './inputFields/InputFieldFactory';
+import {InputFieldFactory} from './inputFields/InputFieldFactory';
+import {InputFieldDeclaration, InputFieldDeclarationParser} from './parsers/InputFieldDeclarationParser';
+import {MetaBindBindTargetError} from './utils/Utils';
 
 export enum InputFieldMarkdownRenderChildType {
 	INLINE_CODE_BLOCK,
@@ -17,17 +19,13 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	inputField: AbstractInputField;
 	error: string;
 
-	fullDeclaration: string;
-	inputFieldType: InputFieldType;
-	isBound: boolean;
+	inputFieldDeclaration: InputFieldDeclaration;
+	bindTargetFile: TFile;
 	bindTargetMetadataField: string;
-	file: TFile;
 
 	limitInterval: number;
 	intervalCounter: number;
 	valueQueue: any[];
-
-	arguments: { name: string, value: any }[];
 
 	constructor(containerEl: HTMLElement, type: InputFieldMarkdownRenderChildType, fullDeclaration: string, plugin: MetaBindPlugin, filePath: string, uid: number) {
 		super(containerEl);
@@ -35,7 +33,6 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		//console.log(this, 2)
 
 		this.error = '';
-		this.fullDeclaration = fullDeclaration;
 		this.filePath = filePath;
 		this.uid = uid;
 		this.plugin = plugin;
@@ -45,196 +42,71 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		this.limitInterval = window.setInterval(() => this.incrementInterval(), this.plugin.settings.syncInterval);
 
 		try {
-			this.parseDeclaration();
+			this.inputFieldDeclaration = InputFieldDeclarationParser.parse(fullDeclaration);
 
-			this.inputField = InputFieldFactory.createInputField(this.inputFieldType, {
+			if (this.inputFieldDeclaration.isBound) {
+				this.parseBindTarget();
+				this.metaData = this.plugin.getMetaDataForFile(this.bindTargetFile);
+			}
+
+			this.inputField = InputFieldFactory.createInputField(this.inputFieldDeclaration.inputFieldType, {
 				type: type,
 				inputFieldMarkdownRenderChild: this,
 				onValueChanged: this.updateMetaData.bind(this),
 			});
 		} catch (e) {
 			this.error = e.message;
+			Logger.logWarning(e);
 		}
 
 		// console.log(this, 3)
 	}
 
-	parseDeclaration() {
-		const declarationRegExp: RegExp = new RegExp(/\[.*?\]/);
-		let declaration: string = declarationRegExp.exec(this.fullDeclaration)[0];
-		declaration = declaration.replace('[', '').replace(']', '');
-		let declarationParts: string[] = declaration.split(':');
+	parseBindTarget() {
+		let bindTargetParts = this.inputFieldDeclaration.bindTarget.split('#');
 
-		let boundTo: string = declarationParts[1] ?? '';
-		this.isBound = !!boundTo;
+		if (bindTargetParts.length === 1) {
+			// the bind target is in the same file
+			this.bindTargetMetadataField = this.inputFieldDeclaration.bindTarget;
 
-		let inputFieldTypeWithArguments: string = declarationParts[0];
-		const inputFieldArgumentsRegExp: RegExp = new RegExp(/\(.*\)/);
-		const inputFieldTypeString = inputFieldTypeWithArguments.replace(inputFieldArgumentsRegExp, '');
-		this.inputFieldType = InputFieldFactory.getInputFieldType(inputFieldTypeString);
-		if (this.inputFieldType === InputFieldType.INVALID) {
-			throw Error(`Invalid input field type \'${inputFieldTypeString}\'`);
-		}
-
-		this.arguments = [];
-		let inputFieldArgumentsRegExpResult = inputFieldArgumentsRegExp.exec(inputFieldTypeWithArguments);
-		let inputFieldArgumentsString = inputFieldArgumentsRegExpResult ? inputFieldArgumentsRegExpResult[0] : '';
-		if (inputFieldArgumentsString) {
-			this.parseArguments(inputFieldArgumentsString);
-		}
-
-		if (this.isBound) {
-			this.parseBindTarget(boundTo);
-		}
-	}
-
-	parseArguments(inputFieldArgumentsString: string) {
-		const inputFieldArgumentsRegExp: RegExp = new RegExp(/\(.*\)/);
-
-		inputFieldArgumentsString = inputFieldArgumentsString.substring(1, inputFieldArgumentsString.length - 1);
-		let inputFieldArguments: string[] = inputFieldArgumentsString.split(',');
-
-		inputFieldArguments = inputFieldArguments.map(x => x.trim());
-		for (const inputFieldArgument of inputFieldArguments) {
-			const inputFieldArgumentName: string = this.extractInputFieldArgumentName(inputFieldArgument);
-
-			if (inputFieldArgumentName === 'class') {
-				const inputFieldArgumentValue: string = this.extractInputFieldArgumentValue(inputFieldArgument);
-
-				let inputFieldClassArgument: { name: string, value: string } = {name: inputFieldArgumentName, value: inputFieldArgumentValue};
-				this.arguments.push(inputFieldClassArgument);
-			}
-
-			if (inputFieldArgumentName === 'addLabels') {
-				if (this.inputFieldType !== InputFieldType.SLIDER) {
-					throw new Error(`argument \'${inputFieldArgumentName}\' is only applicable to slider input fields`);
-				}
-
-				this.arguments.push({name: 'labels', value: true});
-			}
-
-			if (inputFieldArgumentName === 'minValue') {
-				if (this.inputFieldType !== InputFieldType.SLIDER) {
-					throw new Error(`argument \'${inputFieldArgumentName}\' is only applicable to slider input fields`);
-				}
-
-				const inputFieldArgumentValue: string = this.extractInputFieldArgumentValue(inputFieldArgument);
-				const inputFieldArgumentValueAsNumber: number = Number.parseInt(inputFieldArgumentValue);
-
-				if (Number.isNaN(inputFieldArgumentValueAsNumber)) {
-					throw new Error(`argument \'${inputFieldArgumentName}\' value must be of type number`);
-				}
-
-				let inputFieldArgumentObject: { name: string, value: number } = {name: inputFieldArgumentName, value: inputFieldArgumentValueAsNumber};
-				this.arguments.push(inputFieldArgumentObject);
-			}
-
-			if (inputFieldArgumentName === 'maxValue') {
-				if (this.inputFieldType !== InputFieldType.SLIDER) {
-					throw new Error(`argument \'${inputFieldArgumentName}\' is only applicable to slider input fields`);
-				}
-
-				const inputFieldArgumentValue: string = this.extractInputFieldArgumentValue(inputFieldArgument);
-				const inputFieldArgumentValueAsNumber: number = Number.parseInt(inputFieldArgumentValue);
-
-				if (Number.isNaN(inputFieldArgumentValueAsNumber)) {
-					throw new Error(`argument \'${inputFieldArgumentName}\' value must be of type number`);
-				}
-
-				let inputFieldArgumentObject: { name: string, value: number } = {name: inputFieldArgumentName, value: inputFieldArgumentValueAsNumber};
-				this.arguments.push(inputFieldArgumentObject);
-			}
-
-			if (inputFieldArgumentName === 'option') {
-				if (this.inputFieldType !== InputFieldType.SELECT && this.inputFieldType !== InputFieldType.MULTI_SELECT) {
-					throw new Error(`argument \'${inputFieldArgumentName}\' is only applicable to select and multi-select input fields`);
-				}
-
-				const inputFieldArgumentValue: string = this.extractInputFieldArgumentValue(inputFieldArgument);
-
-				let inputFieldArgumentObject: { name: string, value: string } = {name: inputFieldArgumentName, value: inputFieldArgumentValue};
-				this.arguments.push(inputFieldArgumentObject);
-			}
-
-			if (inputFieldArgumentName === 'title') {
-				if (this.inputFieldType !== InputFieldType.SELECT && this.inputFieldType !== InputFieldType.MULTI_SELECT) {
-					throw new Error(`argument \'${inputFieldArgumentName}\' is only applicable to select and multi-select input fields`);
-				}
-
-				const inputFieldArgumentValue: string = this.extractInputFieldArgumentValue(inputFieldArgument);
-
-				let inputFieldArgumentObject: { name: string, value: string } = {name: inputFieldArgumentName, value: inputFieldArgumentValue};
-				this.arguments.push(inputFieldArgumentObject);
-			}
-		}
-	}
-
-	extractInputFieldArgumentName(argumentString: string): string {
-		const argumentsRegExp: RegExp = new RegExp(/\(.*\)/);
-
-		return argumentString.replace(argumentsRegExp, '');
-	}
-
-	extractInputFieldArgumentValue(argumentString: string): string {
-		const argumentsRegExp: RegExp = new RegExp(/\(.*\)/);
-
-		let argumentName = this.extractInputFieldArgumentName(argumentString);
-
-		let argumentValueRegExpResult = argumentsRegExp.exec(argumentString);
-		if (!argumentValueRegExpResult) {
-			throw new Error(`argument \'${argumentName}\' requires a value`);
-		}
-		let argumentValue = argumentsRegExp.exec(argumentString)[0];
-		if (!argumentValue && argumentValue.length >= 2) {
-			throw new Error(`argument \'${argumentName}\' requires a value`);
-		}
-		argumentValue = argumentValue.substring(1, argumentValue.length - 1);
-		if (!argumentValue) {
-			throw new Error(`argument \'${argumentName}\' value can not be empty`);
-		}
-
-		return argumentValue;
-	}
-
-	parseBindTarget(bindTarget: string) {
-		let bindTargetParts = bindTarget.split('#');
-		if (bindTargetParts.length === 1) { // same file
-			this.bindTargetMetadataField = bindTarget;
 			const files = this.plugin.getFilesByName(this.filePath);
 			if (files.length === 0) {
-				throw new Error('file not found');
+				throw new MetaBindBindTargetError('file not found');
 			} else if (files.length === 1) {
-				this.file = files[0];
+				this.bindTargetFile = files[0];
 			} else {
-				throw new Error('multiple files found. please specify the file path');
+				throw new MetaBindBindTargetError('multiple files found. please specify the file path');
 			}
 		} else if (bindTargetParts.length === 2) {
+			// the bind target is in another file
 			this.bindTargetMetadataField = bindTargetParts[1];
+
 			const files = this.plugin.getFilesByName(bindTargetParts[0]);
 			if (files.length === 0) {
-				throw new Error('file not found');
+				throw new MetaBindBindTargetError('file not found');
 			} else if (files.length === 1) {
-				this.file = files[0];
+				this.bindTargetFile = files[0];
 			} else {
-				throw new Error('multiple files found. please specify the file path');
+				throw new MetaBindBindTargetError('multiple files found. please specify the file path');
 			}
 		} else {
-			throw new Error('invalid binding');
+			throw new MetaBindBindTargetError('invalid bind target');
 		}
-		this.metaData = this.plugin.getMetaDataForFile(this.file);
+
+
 	}
 
 	// use this interval to reduce writing operations
 	async incrementInterval() {
 		if (this.valueQueue.length > 0) {
 			// console.log(this.valueQueue.at(-1))
-			await this.plugin.updateMetaData(this.bindTargetMetadataField, this.valueQueue.at(-1), this.file);
+			await this.plugin.updateMetaData(this.bindTargetMetadataField, this.valueQueue.at(-1), this.bindTargetFile);
 			this.valueQueue = [];
 		}
 	}
 
 	async updateMetaData(value: any) {
-		if (this.isBound) {
+		if (this.inputFieldDeclaration.isBound) {
 			this.valueQueue.push(value);
 		}
 	}
@@ -252,13 +124,13 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 	getInitialValue() {
 		// console.log(this);
-		if (this.isBound) {
+		if (this.inputFieldDeclaration.isBound) {
 			return this.metaData[this.bindTargetMetadataField] ?? this.inputField.getDefaultValue();
 		}
 	}
 
 	getArguments(name: string) {
-		return this.arguments.filter(x => x.name === name);
+		return this.inputFieldDeclaration.arguments.filter(x => x.name === name);
 	}
 
 	getArgument(name: string) {
@@ -275,7 +147,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		this.containerEl.addClass('meta-bind-plugin-input');
 
 		if (this.error) {
-			container.innerText = ` -> Error: ${this.error}`;
+			container.innerText = ` -> ERROR: ${this.error}`;
 			container.addClass('meta-bind-plugin-error');
 			this.containerEl.appendChild(container);
 			return;
