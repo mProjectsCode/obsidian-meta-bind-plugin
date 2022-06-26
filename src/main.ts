@@ -71,14 +71,17 @@ export default class MetaBindPlugin extends Plugin {
 	}
 
 	async updateMarkdownInputFieldsOnFileChange(file: TFile) {
-		const metadata = await this.getMetaDataForFile(file);
+		let metadata: any = undefined;
 
 		for (const activeMarkdownInputField of this.activeMarkdownInputFields) {
-			if (!activeMarkdownInputField.file || !activeMarkdownInputField.isBound) {
+			if (!activeMarkdownInputField.bindTargetFile || !activeMarkdownInputField.inputFieldDeclaration.isBound) {
 				continue;
 			}
 
-			if (activeMarkdownInputField.file.path === file.path) {
+			if (activeMarkdownInputField.bindTargetFile.path === file.path) {
+				if (metadata === undefined) {
+					metadata = await this.getMetaDataForFile(file);
+				}
 				activeMarkdownInputField.updateValue(metadata[activeMarkdownInputField.bindTargetMetadataField]);
 			}
 		}
