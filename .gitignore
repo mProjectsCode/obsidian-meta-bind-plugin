@@ -20,3 +20,12 @@ data.json
 
 # Exclude macOS Finder (System Explorer) View States
 .DS_Store
+
+!exampleVault/.obsidian
+
+exampleVault/.obsidian/*
+!exampleVault/.obsidian/plugins
+
+exampleVault/.obsidian/plugins/*
+!exampleVault/.obsidian/plugins/obsidian-meta-bind-plugin
+!exampleVault/.obsidian/plugins/obsidian-meta-bind-plugin/main.js

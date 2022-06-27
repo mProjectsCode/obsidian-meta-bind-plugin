@@ -46,6 +46,7 @@ export class EnclosingPair {
 
 export class ParserUtils {
 
+	// TODO: rename stuff
 	static split(str: string, separator: string, ignore?: EnclosingPair): string[] {
 		if (!str) {
 			throw new MetaBindInternalError('string must not be empty');
@@ -54,40 +55,37 @@ export class ParserUtils {
 			throw new MetaBindInternalError('separator must not be empty');
 		}
 
-		let currentString = '';
-		let strParts: string[] = [];
+		let subStr: string = '';
+		let subStrings: string[] = [];
 
 		if (ignore) {
 			let remainingOpeningStringCount = ParserUtils.numberOfOccurrences(str, ignore.openingString);
 			let remainingClosingStringCount = ParserUtils.numberOfOccurrences(str, ignore.closingString);
 
-			let openingCharCount: number = 0;
-
-			let subStr: string = '';
+			let enclosingLevel: number = 0;
 
 			strLoop : for (let i = 0; i < str.length; i++) {
-
-				// console.log(openingCharCount, ParserUtils.isStringAt(str, separator, i));
-				if (openingCharCount === 0 && ParserUtils.isStringAt(str, separator, i)) {
-					strParts.push(currentString);
-					currentString = '';
+				// ignore specified
+				if (enclosingLevel === 0 && ParserUtils.isStringAt(str, separator, i)) {
+					subStrings.push(subStr);
+					subStr = '';
 					i += separator.length - 1;
 				} else {
-					currentString += str[i];
+					subStr += str[i];
 				}
 
 				if (ignore.openingEqualsClosing) {
 					if (ParserUtils.isStringAt(str, ignore.openingString, i)) {
-						if (openingCharCount % 2 === 0 && remainingOpeningStringCount === 1) {
+						if (enclosingLevel % 2 === 0 && remainingOpeningStringCount === 1) {
 							// not in a part that should be removed and there is still an opening string left, so we ignore it
-						} else if (openingCharCount % 2 === 0) {
+						} else if (enclosingLevel % 2 === 0) {
 							// opening string
-							openingCharCount += 1;
+							enclosingLevel += 1;
 
 							// copy the opening string
 							for (let j = 1; j < ignore.openingString.length; j++) {
 								i += 1;
-								currentString += str[i];
+								subStr += str[i];
 
 								if (i >= str.length) {
 									break strLoop;
@@ -95,12 +93,12 @@ export class ParserUtils {
 							}
 						} else {
 							// closing string
-							openingCharCount -= 1;
+							enclosingLevel -= 1;
 
 							// copy the closing string
 							for (let j = 1; j < ignore.closingString.length; j++) { // (opening and closing string are the same)
 								i += 1;
-								currentString += str[i];
+								subStr += str[i];
 
 								if (i >= str.length) {
 									break strLoop;
@@ -114,12 +112,12 @@ export class ParserUtils {
 						// opening string
 						if (remainingOpeningStringCount <= remainingClosingStringCount) {
 							// str still has sufficient closing string to find this a partner
-							openingCharCount += 1;
+							enclosingLevel += 1;
 
 							// copy the opening string
 							for (let j = 1; j < ignore.openingString.length; j++) {
 								i += 1;
-								currentString += str[i];
+								subStr += str[i];
 
 								if (i >= str.length) {
 									break strLoop;
@@ -129,14 +127,14 @@ export class ParserUtils {
 						remainingOpeningStringCount -= 1;
 					} else if (ParserUtils.isStringAt(str, ignore.closingString, i)) {
 						// closing string
-						if (openingCharCount > 0) {
+						if (enclosingLevel > 0) {
 							// there was an opening string before this
-							openingCharCount -= 1;
+							enclosingLevel -= 1;
 
 							// copy the closing string
 							for (let j = 1; j < ignore.closingString.length; j++) {
 								i += 1;
-								currentString += str[i];
+								subStr += str[i];
 
 								if (i >= str.length) {
 									break strLoop;
@@ -146,59 +144,59 @@ export class ParserUtils {
 						remainingClosingStringCount -= 1;
 					}
 				}
-
-
 			}
 		} else {
+			// no ignore specified
 			for (let i = 0; i < str.length; i++) {
 
 				if (ParserUtils.isStringAt(str, separator, i)) {
-					strParts.push(currentString);
-					currentString = '';
+					subStrings.push(subStr);
+					subStr = '';
 					i += separator.length - 1;
 				} else {
-					currentString += str[i];
+					subStr += str[i];
 				}
 			}
 		}
 
-		strParts.push(currentString);
+		subStrings.push(subStr);
 
-		return strParts;
+		return subStrings;
 	}
 
-	static removeInBetween(str: string, charPair: EnclosingPair) {
+	// TODO: rename stuff
+	static removeInBetween(str: string, enclosingPair: EnclosingPair) {
 		if (!str) {
 			throw new MetaBindInternalError('string must not be empty');
 		}
 
-		let remainingOpeningStringCount = ParserUtils.numberOfOccurrences(str, charPair.openingString);
-		let remainingClosingStringCount = ParserUtils.numberOfOccurrences(str, charPair.closingString);
+		let remainingOpeningStringCount = ParserUtils.numberOfOccurrences(str, enclosingPair.openingString);
+		let remainingClosingStringCount = ParserUtils.numberOfOccurrences(str, enclosingPair.closingString);
 
-		let openingCharCount: number = 0;
+		let enclosingLevel: number = 0;
 
 		let subStr: string = '';
 
 		for (let i = 0; i < str.length; i++) {
-			if (charPair.openingEqualsClosing) {
-				if (ParserUtils.isStringAt(str, charPair.openingString, i)) {
-					if (openingCharCount % 2 === 0 && remainingOpeningStringCount === 1) {
+			if (enclosingPair.openingEqualsClosing) {
+				if (ParserUtils.isStringAt(str, enclosingPair.openingString, i)) {
+					if (enclosingLevel % 2 === 0 && remainingOpeningStringCount === 1) {
 						// not in a part that should be removed and there is still an opening string left, so we ignore it
-					} else if (openingCharCount % 2 === 0) {
+					} else if (enclosingLevel % 2 === 0) {
 						// opening string
-						openingCharCount += 1;
+						enclosingLevel += 1;
 
 						// skip the opening string
-						i += charPair.openingString.length;
+						i += enclosingPair.openingString.length;
 						if (i >= str.length) {
 							break;
 						}
 					} else {
 						// closing string
-						openingCharCount -= 1;
+						enclosingLevel -= 1;
 
 						// skip the closing string
-						i += charPair.closingString.length; // (opening and closing string are the same)
+						i += enclosingPair.closingString.length; // (opening and closing string are the same)
 						if (i >= str.length) {
 							break;
 						}
@@ -206,27 +204,27 @@ export class ParserUtils {
 					remainingOpeningStringCount -= 1;
 				}
 			} else {
-				if (ParserUtils.isStringAt(str, charPair.openingString, i)) {
+				if (ParserUtils.isStringAt(str, enclosingPair.openingString, i)) {
 					// opening string
 					if (remainingOpeningStringCount <= remainingClosingStringCount) {
 						// str still has sufficient closing string to find this a partner
-						openingCharCount += 1;
+						enclosingLevel += 1;
 
 						// skip the opening string
-						i += charPair.openingString.length;
+						i += enclosingPair.openingString.length;
 						if (i >= str.length) {
 							break;
 						}
 					}
 					remainingOpeningStringCount -= 1;
-				} else if (ParserUtils.isStringAt(str, charPair.closingString, i)) {
+				} else if (ParserUtils.isStringAt(str, enclosingPair.closingString, i)) {
 					// closing string
-					if (openingCharCount > 0) {
+					if (enclosingLevel > 0) {
 						// there was an opening string before this
-						openingCharCount -= 1;
+						enclosingLevel -= 1;
 
 						// skip the closing string
-						i += charPair.closingString.length;
+						i += enclosingPair.closingString.length;
 						if (i >= str.length) {
 							break;
 						}
@@ -235,40 +233,39 @@ export class ParserUtils {
 				}
 			}
 
-			if (openingCharCount === 0) {
+			if (enclosingLevel === 0) {
 				subStr += str[i];
 			}
-
 		}
 
 		return subStr;
 	}
 
-	static getInBetween(str: string, charPair: EnclosingPair): string | string[] {
+	static getInBetween(str: string, enclosingPair: EnclosingPair): string | string[] {
 		if (!str) {
 			throw new MetaBindInternalError('string must not be empty');
 		}
 
-		let remainingOpeningStringCount = ParserUtils.numberOfOccurrences(str, charPair.openingString);
-		let remainingClosingStringCount = ParserUtils.numberOfOccurrences(str, charPair.closingString);
+		let remainingOpeningStringCount = ParserUtils.numberOfOccurrences(str, enclosingPair.openingString);
+		let remainingClosingStringCount = ParserUtils.numberOfOccurrences(str, enclosingPair.closingString);
 
-		let openingCharCount: number = 0;
+		let enclosingLevel: number = 0;
 
 		let subStr: string = '';
-		let subStrParts: string[] = [];
+		let subStrings: string[] = [];
 
 		strLoop : for (let i = 0; i < str.length; i++) {
-			if (charPair.openingEqualsClosing) {
-				if (ParserUtils.isStringAt(str, charPair.openingString, i)) {
-					if (openingCharCount % 2 === 0 && remainingOpeningStringCount === 1) {
+			if (enclosingPair.openingEqualsClosing) {
+				if (ParserUtils.isStringAt(str, enclosingPair.openingString, i)) {
+					if (enclosingLevel % 2 === 0 && remainingOpeningStringCount === 1) {
 						// not in a part that should be removed and there is still an opening string left, so we ignore it
-					} else if (openingCharCount % 2 === 0) {
+					} else if (enclosingLevel % 2 === 0) {
 						// opening string
-						openingCharCount += 1;
+						enclosingLevel += 1;
 
 						// skip the opening string
 						subStr += str[i];
-						for (let j = 1; j < charPair.openingString.length; j++) {
+						for (let j = 1; j < enclosingPair.openingString.length; j++) {
 							i += 1;
 							subStr += str[i];
 
@@ -278,11 +275,11 @@ export class ParserUtils {
 						}
 					} else {
 						// closing string
-						openingCharCount -= 1;
+						enclosingLevel -= 1;
 
 						// skip the closing string
 						subStr += str[i];
-						for (let j = 1; j < charPair.closingString.length; j++) { // (opening and closing string are the same)
+						for (let j = 1; j < enclosingPair.closingString.length; j++) { // (opening and closing string are the same)
 							i += 1;
 							subStr += str[i];
 
@@ -290,25 +287,25 @@ export class ParserUtils {
 								break strLoop;
 							}
 						}
-						subStrParts.push(subStr);
+						subStrings.push(subStr);
 						subStr = '';
 					}
 					remainingOpeningStringCount -= 1;
 				} else {
-					if (openingCharCount >= 1) {
+					if (enclosingLevel >= 1) {
 						subStr += str[i];
 					}
 				}
 			} else {
-				if (ParserUtils.isStringAt(str, charPair.openingString, i)) {
+				if (ParserUtils.isStringAt(str, enclosingPair.openingString, i)) {
 					// opening string
 					if (remainingOpeningStringCount <= remainingClosingStringCount) {
 						// str still has sufficient closing string to find this a partner
-						openingCharCount += 1;
+						enclosingLevel += 1;
 
 						// copy the opening string
 						subStr += str[i];
-						for (let j = 1; j < charPair.openingString.length; j++) {
+						for (let j = 1; j < enclosingPair.openingString.length; j++) {
 							i += 1;
 							subStr += str[i];
 
@@ -318,15 +315,15 @@ export class ParserUtils {
 						}
 					}
 					remainingOpeningStringCount -= 1;
-				} else if (ParserUtils.isStringAt(str, charPair.closingString, i)) {
+				} else if (ParserUtils.isStringAt(str, enclosingPair.closingString, i)) {
 					// closing string
-					if (openingCharCount > 0) {
+					if (enclosingLevel > 0) {
 						// there was an opening string before this
-						openingCharCount -= 1;
+						enclosingLevel -= 1;
 
 						// copy the closing string
 						subStr += str[i];
-						for (let j = 1; j < charPair.closingString.length; j++) {
+						for (let j = 1; j < enclosingPair.closingString.length; j++) {
 							i += 1;
 							subStr += str[i];
 
@@ -335,28 +332,26 @@ export class ParserUtils {
 							}
 						}
 
-						if (openingCharCount === 0) {
-							subStrParts.push(subStr);
+						if (enclosingLevel === 0) {
+							subStrings.push(subStr);
 							subStr = '';
 						}
 					}
 					remainingClosingStringCount -= 1;
 				} else {
-					if (openingCharCount >= 1) {
+					if (enclosingLevel >= 1) {
 						subStr += str[i];
 					}
 				}
 			}
-
-
 		}
 
-		if (subStrParts.length === 0) {
+		if (subStrings.length === 0) {
 			return '';
-		} else if (subStrParts.length === 1) {
-			return subStrParts[0].substring(charPair.openingString.length, subStrParts[0].length - charPair.closingString.length);
+		} else if (subStrings.length === 1) {
+			return subStrings[0].substring(enclosingPair.openingString.length, subStrings[0].length - enclosingPair.closingString.length);
 		} else {
-			return subStrParts.map(x => x.substring(charPair.openingString.length, x.length - charPair.closingString.length));
+			return subStrings.map(x => x.substring(enclosingPair.openingString.length, x.length - enclosingPair.closingString.length));
 		}
 	}
 

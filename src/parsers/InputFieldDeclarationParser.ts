@@ -1,6 +1,17 @@
-import {InputFieldFactory, InputFieldType} from '../inputFields/InputFieldFactory';
 import {EnclosingPair, ParserUtils} from '../utils/ParserUtils';
 import {isTruthy, MetaBindParsingError} from '../utils/Utils';
+
+export enum InputFieldType {
+	TOGGLE = 'toggle',
+	SLIDER = 'slider',
+	TEXT = 'text',
+	TEXT_AREA = 'text_area',
+	SELECT = 'select',
+	MULTI_SELECT = 'multi_select',
+	DATE = 'date',
+	TIME = 'time',
+	INVALID = 'invalid',
+}
 
 export interface InputFieldDeclaration {
 	fullDeclaration: string;
@@ -46,19 +57,19 @@ export class InputFieldDeclarationParser {
 		const inputFieldTypeWithArguments: string = declarationParts[0];
 		// input field type
 		const inputFieldTypeString = ParserUtils.removeInBetween(inputFieldTypeWithArguments, InputFieldDeclarationParser.roundBracesPair);
-		inputFieldDeclaration.inputFieldType = InputFieldFactory.getInputFieldType(inputFieldTypeString);
+		inputFieldDeclaration.inputFieldType = InputFieldDeclarationParser.getInputFieldType(inputFieldTypeString);
 		if (inputFieldDeclaration.inputFieldType === InputFieldType.INVALID) {
 			throw new MetaBindParsingError(`Unknown input field type \'${inputFieldTypeString}\'`);
 		}
 		// arguments
 		const inputFieldArgumentsString: string = ParserUtils.getInBetween(inputFieldTypeWithArguments, InputFieldDeclarationParser.roundBracesPair) as string;
-		console.log(inputFieldArgumentsString);
+		// console.log(inputFieldArgumentsString);
 		if (inputFieldArgumentsString) {
 			inputFieldDeclaration.arguments = InputFieldDeclarationParser.parseArguments(inputFieldArgumentsString, inputFieldDeclaration.inputFieldType);
 		} else {
 			inputFieldDeclaration.arguments = [];
 		}
-		console.log(inputFieldDeclaration.arguments);
+		// console.log(inputFieldDeclaration.arguments);
 
 		return inputFieldDeclaration;
 	}
@@ -72,7 +83,7 @@ export class InputFieldDeclarationParser {
 
 		for (const inputFieldArgumentString of inputFieldArgumentStrings) {
 			const inputFieldArgumentName: string = InputFieldDeclarationParser.extractInputFieldArgumentName(inputFieldArgumentString);
-			console.log(inputFieldArgumentName);
+			// console.log(inputFieldArgumentName);
 
 			if (inputFieldArgumentName === 'class') {
 				const inputFieldArgumentValue: string = InputFieldDeclarationParser.extractInputFieldArgumentValue(inputFieldArgumentString);
@@ -160,6 +171,16 @@ export class InputFieldDeclarationParser {
 		}
 
 		return argumentValue;
+	}
+
+	static getInputFieldType(str: string): InputFieldType {
+		for (const entry of Object.entries(InputFieldType)) {
+			if (entry[1] === str) {
+				return entry[1];
+			}
+		}
+
+		return InputFieldType.INVALID;
 	}
 
 }
