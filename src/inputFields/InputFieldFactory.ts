@@ -1,4 +1,3 @@
-import {AbstractInputField} from './AbstractInputField';
 import {ToggleInputField} from './ToggleInputField';
 import {InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType} from '../InputFieldMarkdownRenderChild';
 import {TextInputField} from './TextInputField';
@@ -9,18 +8,9 @@ import {MultiSelectInputField} from './MultiSelectInputField';
 import {DateInputField} from './DateInputField';
 import {TimeInputField} from './TimeInputField';
 import {MetaBindParsingError} from '../utils/Utils';
+import {AbstractInputField} from './AbstractInputField';
+import {InputFieldType} from '../parsers/InputFieldDeclarationParser';
 
-export enum InputFieldType {
-	TOGGLE = 'toggle',
-	SLIDER = 'slider',
-	TEXT = 'text',
-	TEXT_AREA = 'text_area',
-	SELECT = 'select',
-	MULTI_SELECT = 'multi_select',
-	DATE = 'date',
-	TIME = 'time',
-	INVALID = 'invalid',
-}
 
 export class InputFieldFactory {
 	static createInputField(inputFieldType: InputFieldType, args: { type: InputFieldMarkdownRenderChildType, inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChanged: (value: any) => void | Promise<void> }): AbstractInputField {
@@ -91,16 +81,6 @@ export class InputFieldFactory {
 		}
 
 		return null;
-	}
-
-	static getInputFieldType(str: string): InputFieldType {
-		for (const entry of Object.entries(InputFieldType)) {
-			if (entry[1] === str) {
-				return entry[1];
-			}
-		}
-
-		return InputFieldType.INVALID;
 	}
 
 }
