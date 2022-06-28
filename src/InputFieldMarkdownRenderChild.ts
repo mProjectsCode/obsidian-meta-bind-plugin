@@ -30,8 +30,6 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	constructor(containerEl: HTMLElement, type: InputFieldMarkdownRenderChildType, fullDeclaration: string, plugin: MetaBindPlugin, filePath: string, uid: number) {
 		super(containerEl);
 
-		//console.log(this, 2)
-
 		this.error = '';
 		this.filePath = filePath;
 		this.uid = uid;
@@ -39,7 +37,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 		this.valueQueue = [];
 		this.intervalCounter = 0;
-		this.limitInterval = window.setInterval(() => this.incrementInterval(), this.plugin.settings.syncInterval);
+		this.limitInterval = window.setInterval(() => this.applyValueQueueToMetadata(), this.plugin.settings.syncInterval);
 
 		try {
 			this.inputFieldDeclaration = InputFieldDeclarationParser.parse(fullDeclaration);
@@ -52,14 +50,12 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 			this.inputField = InputFieldFactory.createInputField(this.inputFieldDeclaration.inputFieldType, {
 				type: type,
 				inputFieldMarkdownRenderChild: this,
-				onValueChanged: this.updateMetaData.bind(this),
+				onValueChanged: this.pushToValueQueue.bind(this),
 			});
 		} catch (e) {
 			this.error = e.message;
 			Logger.logWarning(e);
 		}
-
-		// console.log(this, 3)
 	}
 
 	parseBindTarget() {
@@ -71,11 +67,11 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 			const files = this.plugin.getFilesByName(this.filePath);
 			if (files.length === 0) {
-				throw new MetaBindBindTargetError('file not found');
+				throw new MetaBindBindTargetError('bind target file not found');
 			} else if (files.length === 1) {
 				this.bindTargetFile = files[0];
 			} else {
-				throw new MetaBindBindTargetError('multiple files found. please specify the file path');
+				throw new MetaBindBindTargetError('bind target resolves to multiple files; please also specify the file path');
 			}
 		} else if (bindTargetParts.length === 2) {
 			// the bind target is in another file
@@ -83,21 +79,21 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 			const files = this.plugin.getFilesByName(bindTargetParts[0]);
 			if (files.length === 0) {
-				throw new MetaBindBindTargetError('file not found');
+				throw new MetaBindBindTargetError('bind target file not found');
 			} else if (files.length === 1) {
 				this.bindTargetFile = files[0];
 			} else {
-				throw new MetaBindBindTargetError('multiple files found. please specify the file path');
+				throw new MetaBindBindTargetError('bind target resolves to multiple files; please also specify the file path');
 			}
 		} else {
-			throw new MetaBindBindTargetError('invalid bind target');
+			throw new MetaBindBindTargetError('bind target may only contain one \'#\' to specify the metadata field');
 		}
 
 
 	}
 
 	// use this interval to reduce writing operations
-	async incrementInterval() {
+	async applyValueQueueToMetadata() {
 		if (this.valueQueue.length > 0) {
 			// console.log(this.valueQueue.at(-1))
 			await this.plugin.updateMetaData(this.bindTargetMetadataField, this.valueQueue.at(-1), this.bindTargetFile);
@@ -105,7 +101,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		}
 	}
 
-	async updateMetaData(value: any) {
+	async pushToValueQueue(value: any) {
 		if (this.inputFieldDeclaration.isBound) {
 			this.valueQueue.push(value);
 		}

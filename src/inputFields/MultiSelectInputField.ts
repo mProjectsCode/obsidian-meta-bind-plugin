@@ -15,6 +15,9 @@ export class MultiSelectInputField extends SelectInputField {
 
 	setValue(value: string[]): void {
 		if (value.length === 0) {
+			for (const element of this.elements) {
+				element.setActive(false, false);
+			}
 			return;
 		}
 

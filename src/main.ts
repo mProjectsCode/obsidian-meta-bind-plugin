@@ -36,9 +36,7 @@ export default class MetaBindPlugin extends Plugin {
 
 		this.registerMarkdownCodeBlockProcessor('meta-bind', (source, el, ctx) => {
 			const codeBlock = el;
-			// console.log(JSON.stringify(source));
 			const text = source.replace(/\n/g, '');
-			// console.log(text);
 			const isInputField = text.startsWith('INPUT[') && text.endsWith(']');
 			// console.log(context.sourcePath);
 			if (isInputField) {

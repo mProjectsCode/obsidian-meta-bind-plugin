@@ -1,3 +1,11 @@
+:root {
+	--meta-bind-plugin-border-width: 1px;
+	--meta-bind-plugin-border-radius: 5px;
+	--meta-bind-plugin-slider-spacing: 5px;
+	--meta-bind-plugin-select-element-border-width: 5px;
+	--meta-bind-plugin-date-input-year-input-width: 80px;
+}
+
 .meta-bind-plugin-input {
 	background-color: transparent !important;
 }
@@ -16,8 +24,8 @@
 
 .meta-bind-plugin-slider-input {
 	align-self:   center;
-	margin-left:  5px !important;
-	margin-right: 5px !important;
+	margin-left:  var(--meta-bind-plugin-slider-spacing) !important;
+	margin-right: var(--meta-bind-plugin-slider-spacing) !important;
 }
 
 .meta-bind-plugin-error {
@@ -32,8 +40,8 @@
 .meta-bind-plugin-select-input-bg {
 	display:        flex;
 	flex-direction: column;
-	border:         1px solid var(--background-modifier-border);
-	border-radius:  4px;
+	border:         var(--meta-bind-plugin-border-width) solid var(--background-modifier-border);
+	border-radius:  var(--meta-bind-plugin-border-radius);
 }
 
 .meta-bind-plugin-select-input-wrapper {
@@ -51,15 +59,15 @@
 	cursor:        pointer;
 	padding:       5px;
 	margin:        5px 0 5px 0;
-	border-radius: 5px;
-	border-left:   5px solid transparent;
+	border-radius: var(--meta-bind-plugin-border-radius);
+	border-left:   var(--meta-bind-plugin-select-element-border-width) solid transparent;
 	white-space:   pre-wrap;
 	font-size:     16px;
 	min-width:     200px;
 }
 
 .meta-bind-plugin-select-input-element-selected {
-	border-left: 5px solid var(--interactive-accent) !important;
+	border-left: var(--meta-bind-plugin-select-element-border-width) solid var(--interactive-accent) !important;
 	background:  var(--background-secondary);
 }
 
@@ -68,7 +76,12 @@
 }
 
 .meta-bind-plugin-date-input-year-input[type="number"] {
-	width:      80px;
+	width:      var(--meta-bind-plugin-date-input-year-input-width);
+	height:     unset;
+	align-self: stretch;
+}
+.meta-bind-plugin-date-input-year-input[type="number"]:focus {
+	width:      calc(var(--meta-bind-plugin-date-input-year-input-width) + var(--meta-bind-plugin-border-width));
 	height:     unset;
 	align-self: stretch;
 }
@@ -78,7 +91,7 @@
 }
 
 .meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:first-child {
-	border-radius: 0.5em 0 0 0.5em;
+	border-radius: var(--meta-bind-plugin-border-radius) 0 0 var(--meta-bind-plugin-border-radius);
 }
 
 .meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:not(:first-child):not(:last-child):not(:focus) {
@@ -88,18 +101,18 @@
 
 .meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:not(:first-child):not(:last-child):focus {
 	border-radius: 0;
-	margin-left:   -1px;
+	margin-left:   calc(var(--meta-bind-plugin-border-width) * -1);
 	z-index:       10;
 }
 
 .meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:last-child:not(:focus) {
-	border-radius: 0 0.5em 0.5em 0;
+	border-radius: 0 var(--meta-bind-plugin-border-radius) var(--meta-bind-plugin-border-radius) 0;
 	border-left:   0;
 }
 
 .meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:last-child:focus {
-	border-radius: 0 0.5em 0.5em 0;
-	margin-left:   -1px;
+	border-radius: 0 var(--meta-bind-plugin-border-radius) var(--meta-bind-plugin-border-radius) 0;
+	margin-left:   calc(var(--meta-bind-plugin-border-width) * -1);
 	z-index:       10;
 }
 

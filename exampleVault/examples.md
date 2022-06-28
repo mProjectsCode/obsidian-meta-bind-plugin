@@ -10,7 +10,7 @@ text_area1: Test text area
 date1: 06/28/2022
 select: option c
 multi-select:
-  - option b
+  - option a
   - option d
 time1: 03:11
 ---
@@ -114,4 +114,9 @@ Lorem ipsum dolor sit amet, `INPUT[date():other note#date]` consectetur adipisci
 
 ## Error Messages
 - `INPUT[text():meta bind/nonExistantFile#title]`
+- `INPUT[slider(nonExistantArgument)]`
 - `INPUT[select(option(option a),option(option b),option(option c),option(option d)):select]`
+Code block error
+```meta-bind
+INPUT[slider(nonExistantArgument)]
+```
