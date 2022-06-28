@@ -13,74 +13,55 @@ import {InputFieldType} from '../parsers/InputFieldDeclarationParser';
 
 
 export class InputFieldFactory {
+	static allowCodeBlockMap: Record<string, { codeBlock: boolean, inlineCodeBlock: boolean }> = {
+		[InputFieldType.TOGGLE]: { codeBlock: ToggleInputField.allowCodeBlock, inlineCodeBlock: ToggleInputField.allowInlineCodeBlock },
+		[InputFieldType.SLIDER]: { codeBlock: SliderInputField.allowCodeBlock, inlineCodeBlock: SliderInputField.allowInlineCodeBlock },
+		[InputFieldType.TEXT]: { codeBlock: TextInputField.allowCodeBlock, inlineCodeBlock: TextInputField.allowInlineCodeBlock },
+		[InputFieldType.TEXT_AREA]: { codeBlock: TextAreaInputField.allowCodeBlock, inlineCodeBlock: TextAreaInputField.allowInlineCodeBlock },
+		[InputFieldType.SELECT]: { codeBlock: SelectInputField.allowCodeBlock, inlineCodeBlock: SelectInputField.allowInlineCodeBlock },
+		[InputFieldType.MULTI_SELECT]: { codeBlock: MultiSelectInputField.allowCodeBlock, inlineCodeBlock: MultiSelectInputField.allowInlineCodeBlock },
+		[InputFieldType.DATE]: { codeBlock: DateInputField.allowCodeBlock, inlineCodeBlock: DateInputField.allowInlineCodeBlock },
+		[InputFieldType.TIME]: { codeBlock: TimeInputField.allowCodeBlock, inlineCodeBlock: TimeInputField.allowInlineCodeBlock },
+	}
+
 	static createInputField(inputFieldType: InputFieldType, args: { type: InputFieldMarkdownRenderChildType, inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChanged: (value: any) => void | Promise<void> }): AbstractInputField {
 		if (inputFieldType === InputFieldType.TOGGLE) {
-			if (args.type === InputFieldMarkdownRenderChildType.CODE_BLOCK && !ToggleInputField.allowCodeBlock) {
-				throw new MetaBindParsingError(`can not create ${inputFieldType} as code block`);
-			}
-			if (args.type === InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK && !ToggleInputField.allowInlineCodeBlock) {
-				throw new MetaBindParsingError(`can not create ${inputFieldType} as inline code block`);
-			}
+			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new ToggleInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		} else if (inputFieldType === InputFieldType.SLIDER) {
-			if (args.type === InputFieldMarkdownRenderChildType.CODE_BLOCK && !SliderInputField.allowCodeBlock) {
-				throw new MetaBindParsingError(`can not create ${inputFieldType} as code block`);
-			}
-			if (args.type === InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK && !SliderInputField.allowInlineCodeBlock) {
-				throw new MetaBindParsingError(`can not create ${inputFieldType} as inline code block`);
-			}
+			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new SliderInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		} else if (inputFieldType === InputFieldType.TEXT) {
-			if (args.type === InputFieldMarkdownRenderChildType.CODE_BLOCK && !TextInputField.allowCodeBlock) {
-				throw new MetaBindParsingError(`can not create ${inputFieldType} as code block`);
-			}
-			if (args.type === InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK && !TextInputField.allowInlineCodeBlock) {
-				throw new MetaBindParsingError(`can not create ${inputFieldType} as inline code block`);
-			}
+			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new TextInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		} else if (inputFieldType === InputFieldType.TEXT_AREA) {
-			if (args.type === InputFieldMarkdownRenderChildType.CODE_BLOCK && !TextAreaInputField.allowCodeBlock) {
-				throw new MetaBindParsingError(`can not create ${inputFieldType} as code block`);
-			}
-			if (args.type === InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK && !TextAreaInputField.allowInlineCodeBlock) {
-				throw new MetaBindParsingError(`can not create ${inputFieldType} as inline code block`);
-			}
+			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new TextAreaInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		} else if (inputFieldType === InputFieldType.SELECT) {
-			if (args.type === InputFieldMarkdownRenderChildType.CODE_BLOCK && !SelectInputField.allowCodeBlock) {
-				throw new MetaBindParsingError(`can not create ${inputFieldType} as code block`);
-			}
-			if (args.type === InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK && !SelectInputField.allowInlineCodeBlock) {
-				throw new MetaBindParsingError(`can not create ${inputFieldType} as inline code block`);
-			}
+			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new SelectInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		} else if (inputFieldType === InputFieldType.MULTI_SELECT) {
-			if (args.type === InputFieldMarkdownRenderChildType.CODE_BLOCK && !MultiSelectInputField.allowCodeBlock) {
-				throw new MetaBindParsingError(`can not create ${inputFieldType} as code block`);
-			}
-			if (args.type === InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK && !MultiSelectInputField.allowInlineCodeBlock) {
-				throw new MetaBindParsingError(`can not create ${inputFieldType} as inline code block`);
-			}
+			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new MultiSelectInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		} else if (inputFieldType === InputFieldType.DATE) {
-			if (args.type === InputFieldMarkdownRenderChildType.CODE_BLOCK && !DateInputField.allowCodeBlock) {
-				throw new MetaBindParsingError(`can not create ${inputFieldType} as code block`);
-			}
-			if (args.type === InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK && !DateInputField.allowInlineCodeBlock) {
-				throw new MetaBindParsingError(`can not create ${inputFieldType} as inline code block`);
-			}
+			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new DateInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		} else if (inputFieldType === InputFieldType.TIME) {
-			if (args.type === InputFieldMarkdownRenderChildType.CODE_BLOCK && !TimeInputField.allowCodeBlock) {
-				throw new MetaBindParsingError(`can not create ${inputFieldType} as code block`);
-			}
-			if (args.type === InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK && !TimeInputField.allowInlineCodeBlock) {
-				throw new MetaBindParsingError(`can not create ${inputFieldType} as inline code block`);
-			}
+			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new TimeInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		}
 
 		return null;
+	}
+
+	static checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType: InputFieldType, type: InputFieldMarkdownRenderChildType) {
+		const allowCodeBlock: { codeBlock: boolean; inlineCodeBlock: boolean } = InputFieldFactory.allowCodeBlockMap[inputFieldType];
+		if (type === InputFieldMarkdownRenderChildType.CODE_BLOCK && !allowCodeBlock.codeBlock) {
+			throw new MetaBindParsingError(`\'${inputFieldType}\' is not allowed as code block`);
+		}
+		if (type === InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK && !allowCodeBlock.inlineCodeBlock) {
+			throw new MetaBindParsingError(`\'${inputFieldType}\' is not allowed as inline code block`);
+		}
 	}
 
 }
