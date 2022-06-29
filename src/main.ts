@@ -36,9 +36,7 @@ export default class MetaBindPlugin extends Plugin {
 
 		this.registerMarkdownCodeBlockProcessor('meta-bind', (source, el, ctx) => {
 			const codeBlock = el;
-			// console.log(JSON.stringify(source));
 			const text = source.replace(/\n/g, '');
-			// console.log(text);
 			const isInputField = text.startsWith('INPUT[') && text.endsWith(']');
 			// console.log(context.sourcePath);
 			if (isInputField) {
@@ -71,14 +69,17 @@ export default class MetaBindPlugin extends Plugin {
 	}
 
 	async updateMarkdownInputFieldsOnFileChange(file: TFile) {
-		const metadata = await this.getMetaDataForFile(file);
+		let metadata: any = undefined;
 
 		for (const activeMarkdownInputField of this.activeMarkdownInputFields) {
-			if (!activeMarkdownInputField.file || !activeMarkdownInputField.isBound) {
+			if (!activeMarkdownInputField.bindTargetFile || !activeMarkdownInputField.inputFieldDeclaration.isBound) {
 				continue;
 			}
 
-			if (activeMarkdownInputField.file.path === file.path) {
+			if (activeMarkdownInputField.bindTargetFile.path === file.path) {
+				if (metadata === undefined) {
+					metadata = await this.getMetaDataForFile(file);
+				}
 				activeMarkdownInputField.updateValue(metadata[activeMarkdownInputField.bindTargetMetadataField]);
 			}
 		}

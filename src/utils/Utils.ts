@@ -1,3 +1,21 @@
+export class MetaBindInternalError extends Error {
+	constructor(message: string) {
+		super(`[MB_INTERNAL_ERROR - please report this error here https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues] ${message}`);
+	}
+}
+
+export class MetaBindParsingError extends Error {
+	constructor(message: string) {
+		super(`[MB_PARSING_ERROR] ${message}`);
+	}
+}
+
+export class MetaBindBindTargetError extends Error {
+	constructor(message: string) {
+		super(`[MB_BIND_TARGET_ERROR] ${message}`);
+	}
+}
+
 /**
  * Gets the file name from a path
  *
@@ -153,4 +171,16 @@ function traverseObject(path: Array<string>, obj: any): any {
 	}
 
 	return obj;
+}
+
+export function isTruthy(value: any): boolean {
+	return !!value;
+}
+
+export function isFalsy(value: any): boolean {
+	return !value;
+}
+
+export function equalOrIncludes(str1: string, str2: string): boolean {
+	return str1 === str2 || str1.includes(str2) || str2.includes(str1);
 }
