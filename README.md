@@ -1,9 +1,6 @@
 # Obsidian Meta Bind Plugin
 This plugin can create input fields inside your notes and bind them to metadata fields.
 
-### UNDER CONSTRUCTION
-This plugin is not yet finished.
-
 ### How to use
 To create an input field you have to write an inline code block or normal code block starting with `INPUT`. Then in square brackets the type of input field, in round brackets arguments and finally behind a colon the metadata field to bind to.
 
@@ -16,6 +13,8 @@ The plugin also allows further customization with arguments. So the complete syn
 ```
 INPUT[input_type(argument_name(argument_value), argument_name_2, ...):file_name_or_path#metadata_field]
 ```
+
+For more examples see the `exampleVault` folder.
 
 #### Input field types
 - `slider` a slider from 0 to 100 (custom ranges can be set using `minValue` and `maxValue`, see below)
@@ -35,8 +34,6 @@ INPUT[input_type(argument_name(argument_value), argument_name_2, ...):file_name_
 - `title(value)` only for (multi-)selects, adds a title to the select input
 
 ### How to install
-This plugin is still in **beta**.
-
 You must manually download the zip archive from the latest release here on GitHub.  
 After downloading, extract the archive into the `.obsidian/plugins` folder in your vault.
 

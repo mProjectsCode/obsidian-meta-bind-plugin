@@ -48,7 +48,7 @@ export class SliderInputField extends AbstractInputField {
 
 		let labelArgument = this.inputFieldMarkdownRenderChild.getArgument('labels');
 		if (labelArgument && labelArgument.value === true) {
-			container.createSpan({text: this.minValue.toString(), cls: 'meta-bind-slider-label'});
+			container.createSpan({text: this.minValue.toString(), cls: 'meta-bind-plugin-slider-input-label'});
 		}
 
 		const component = new SliderComponent(container);
@@ -59,7 +59,7 @@ export class SliderInputField extends AbstractInputField {
 		component.sliderEl.addClass('meta-bind-plugin-slider-input');
 
 		if (labelArgument && labelArgument.value === true) {
-			container.createSpan({text: this.maxValue.toString(), cls: 'meta-bind-slider-label'});
+			container.createSpan({text: this.maxValue.toString(), cls: 'meta-bind-plugin-slider-input-label'});
 		}
 
 		this.sliderComponent = component;
