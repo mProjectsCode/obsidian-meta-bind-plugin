@@ -88,7 +88,7 @@ export class InputFieldDeclarationParser {
 			if (inputFieldArgumentName === 'class') {
 				const inputFieldArgumentValue: string = InputFieldDeclarationParser.extractInputFieldArgumentValue(inputFieldArgumentString);
 
-				let inputFieldClassArgument: InputFieldArgument = {name: inputFieldArgumentName, value: inputFieldArgumentValue};
+				const inputFieldClassArgument: InputFieldArgument = {name: inputFieldArgumentName, value: inputFieldArgumentValue};
 				inputFieldArguments.push(inputFieldClassArgument);
 			}
 
@@ -112,7 +112,7 @@ export class InputFieldDeclarationParser {
 					throw new MetaBindParsingError(`argument \'${inputFieldArgumentName}\' value must be of type number`);
 				}
 
-				let inputFieldArgumentObject: InputFieldArgument = {name: inputFieldArgumentName, value: inputFieldArgumentValueAsNumber};
+				const inputFieldArgumentObject: InputFieldArgument = {name: inputFieldArgumentName, value: inputFieldArgumentValueAsNumber};
 				inputFieldArguments.push(inputFieldArgumentObject);
 			}
 
@@ -128,7 +128,7 @@ export class InputFieldDeclarationParser {
 					throw new MetaBindParsingError(`argument \'${inputFieldArgumentName}\' value must be of type number`);
 				}
 
-				let inputFieldArgumentObject: InputFieldArgument = {name: inputFieldArgumentName, value: inputFieldArgumentValueAsNumber};
+				const inputFieldArgumentObject: InputFieldArgument = {name: inputFieldArgumentName, value: inputFieldArgumentValueAsNumber};
 				inputFieldArguments.push(inputFieldArgumentObject);
 			}
 
@@ -139,7 +139,7 @@ export class InputFieldDeclarationParser {
 
 				const inputFieldArgumentValue: string = InputFieldDeclarationParser.extractInputFieldArgumentValue(inputFieldArgumentString);
 
-				let inputFieldArgumentObject: InputFieldArgument = {name: inputFieldArgumentName, value: inputFieldArgumentValue};
+				const inputFieldArgumentObject: InputFieldArgument = {name: inputFieldArgumentName, value: inputFieldArgumentValue};
 				inputFieldArguments.push(inputFieldArgumentObject);
 			}
 
@@ -150,7 +150,7 @@ export class InputFieldDeclarationParser {
 
 				const inputFieldArgumentValue: string = InputFieldDeclarationParser.extractInputFieldArgumentValue(inputFieldArgumentString);
 
-				let inputFieldArgumentObject: InputFieldArgument = {name: inputFieldArgumentName, value: inputFieldArgumentValue};
+				const inputFieldArgumentObject: InputFieldArgument = {name: inputFieldArgumentName, value: inputFieldArgumentValue};
 				inputFieldArguments.push(inputFieldArgumentObject);
 			}
 
@@ -167,9 +167,9 @@ export class InputFieldDeclarationParser {
 	}
 
 	static extractInputFieldArgumentValue(argumentString: string): string {
-		let argumentName = this.extractInputFieldArgumentName(argumentString);
+		const argumentName = this.extractInputFieldArgumentName(argumentString);
 
-		let argumentValue = ParserUtils.getInBetween(argumentString, InputFieldDeclarationParser.roundBracesPair) as string;
+		const argumentValue = ParserUtils.getInBetween(argumentString, InputFieldDeclarationParser.roundBracesPair) as string;
 		if (!argumentValue) {
 			throw new MetaBindParsingError(`argument \'${argumentName}\' requires a non empty value`);
 		}

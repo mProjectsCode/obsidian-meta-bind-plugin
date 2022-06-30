@@ -2,9 +2,10 @@ import {AbstractInputField} from './AbstractInputField';
 import {DropdownComponent, TextComponent} from 'obsidian';
 import {InputFieldMarkdownRenderChild} from '../InputFieldMarkdownRenderChild';
 import {Date, DateFormat, DateParser} from '../parsers/DateParser';
+import {MetaBindInternalError} from '../utils/Utils';
 
 export class DateInputField extends AbstractInputField {
-	container: HTMLDivElement;
+	container: HTMLDivElement | undefined;
 	date: Date;
 
 	months: Record<string, string> = {
@@ -23,13 +24,15 @@ export class DateInputField extends AbstractInputField {
 	};
 	days: Record<string, string>;
 
-	monthComponent: DropdownComponent;
-	dayComponent: DropdownComponent;
-	yearComponent: TextComponent;
+	monthComponent: DropdownComponent | undefined;
+	dayComponent: DropdownComponent | undefined;
+	yearComponent: TextComponent | undefined;
 
 
 	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => (void | Promise<void>)) {
 		super(inputFieldMarkdownRenderChild, onValueChange);
+
+		this.date = DateParser.getDefaultDate();
 
 		this.days = {};
 		for (let i = 1; i <= 31; i++) {
@@ -38,6 +41,10 @@ export class DateInputField extends AbstractInputField {
 	}
 
 	public getHtmlElement(): HTMLElement {
+		if (!this.container) {
+			throw new MetaBindInternalError('toggle input container is undefined');
+		}
+
 		return this.container;
 	}
 
@@ -46,7 +53,17 @@ export class DateInputField extends AbstractInputField {
 	}
 
 	public setValue(value: string): void {
-		this.date = DateParser.parse(value);
+		if (!this.monthComponent) {
+			throw new MetaBindInternalError('date input month component is undefined');
+		}
+		if (!this.dayComponent) {
+			throw new MetaBindInternalError('date input day component is undefined');
+		}
+		if (!this.yearComponent) {
+			throw new MetaBindInternalError('date input hour component is undefined');
+		}
+
+		this.date = DateParser.parse(value) ?? DateParser.getDefaultDate();
 		// console.log(this.date);
 		this.monthComponent.setValue(this.date.getMonth().toString());
 		this.dayComponent.setValue(this.date.getDay().toString());
@@ -63,7 +80,6 @@ export class DateInputField extends AbstractInputField {
 
 	public render(container: HTMLDivElement): void {
 		this.date = DateParser.parse(this.inputFieldMarkdownRenderChild.getInitialValue()) ?? DateParser.getDefaultDate();
-		// console.log(this.date);
 
 		container.removeClass('meta-bind-plugin-input-wrapper');
 		container.addClass('meta-bind-plugin-flex-input-wrapper', 'meta-bind-plugin-input-element-group');

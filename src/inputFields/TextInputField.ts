@@ -1,15 +1,24 @@
 import {AbstractInputField} from './AbstractInputField';
 import {TextComponent} from 'obsidian';
 import {Logger} from '../utils/Logger';
+import {MetaBindInternalError} from '../utils/Utils';
 
 export class TextInputField extends AbstractInputField {
-	textComponent: TextComponent;
+	textComponent: TextComponent | undefined;
 
 	getValue(): any {
+		if (!this.textComponent) {
+			throw new MetaBindInternalError('text input component is undefined');
+		}
+
 		return this.textComponent.getValue();
 	}
 
 	setValue(value: any): void {
+		if (!this.textComponent) {
+			throw new MetaBindInternalError('text input component is undefined');
+		}
+
 		if (value != null && typeof value == 'string') {
 			this.textComponent.setValue(value);
 		} else {
@@ -27,6 +36,10 @@ export class TextInputField extends AbstractInputField {
 	}
 
 	getHtmlElement(): HTMLElement {
+		if (!this.textComponent) {
+			throw new MetaBindInternalError('text input component is undefined');
+		}
+
 		return this.textComponent.inputEl;
 	}
 

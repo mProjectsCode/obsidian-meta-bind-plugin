@@ -2,20 +2,23 @@ import {AbstractInputField} from './AbstractInputField';
 import {DropdownComponent} from 'obsidian';
 import {InputFieldMarkdownRenderChild} from '../InputFieldMarkdownRenderChild';
 import {Time, TimeParser} from '../parsers/TimeParser';
+import {MetaBindInternalError} from '../utils/Utils';
 
 export class TimeInputField extends AbstractInputField {
-	container: HTMLDivElement;
+	container: HTMLDivElement | undefined;
 	time: Time;
 
 	hours: Record<string, string>;
 	minutes: Record<string, string>;
 
-	hourComponent: DropdownComponent;
-	minuteComponent: DropdownComponent;
+	hourComponent: DropdownComponent | undefined;
+	minuteComponent: DropdownComponent | undefined;
 
 
 	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => (void | Promise<void>)) {
 		super(inputFieldMarkdownRenderChild, onValueChange);
+
+		this.time = TimeParser.getDefaultTime();
 
 		this.hours = {};
 		for (let i = 0; i <= 24; i++) {
@@ -29,6 +32,10 @@ export class TimeInputField extends AbstractInputField {
 	}
 
 	public getHtmlElement(): HTMLElement {
+		if (!this.container) {
+			throw new MetaBindInternalError('time input container is undefined');
+		}
+
 		return this.container;
 	}
 
@@ -37,7 +44,14 @@ export class TimeInputField extends AbstractInputField {
 	}
 
 	public setValue(value: string): void {
-		this.time = TimeParser.parse(value);
+		if (!this.hourComponent) {
+			throw new MetaBindInternalError('time input hour component is undefined');
+		}
+		if (!this.minuteComponent) {
+			throw new MetaBindInternalError('time input minute component is undefined');
+		}
+
+		this.time = TimeParser.parse(value) ?? TimeParser.getDefaultTime();
 		// console.log(this.time);
 		this.hourComponent.setValue(this.time.getHour().toString());
 		this.minuteComponent.setValue(this.time.getMinute().toString());
@@ -47,13 +61,12 @@ export class TimeInputField extends AbstractInputField {
 		return value == this.getValue();
 	}
 
-	public getDefaultValue(): any {
+	public getDefaultValue(): string {
 		return TimeParser.stringify(TimeParser.getDefaultTime());
 	}
 
 	public render(container: HTMLDivElement): void {
 		this.time = TimeParser.parse(this.inputFieldMarkdownRenderChild.getInitialValue()) ?? TimeParser.getDefaultTime();
-		// console.log(this.date);
 
 		container.removeClass('meta-bind-plugin-input-wrapper');
 		container.addClass('meta-bind-plugin-flex-input-wrapper', 'meta-bind-plugin-input-element-group');
