@@ -34,7 +34,7 @@ describe('bind target', () => {
 		const inputFieldDeclaration: InputFieldDeclaration = InputFieldDeclarationParser.parse(declaration);
 
 		expect(inputFieldDeclaration.isBound).toEqual(true);
-		expect(inputFieldDeclaration.bindTarget).toEqual('file#target');
+		expect(inputFieldDeclaration.bindTarget).toEqual('path/to/file#target');
 	});
 });
 

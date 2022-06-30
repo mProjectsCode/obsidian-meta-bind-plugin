@@ -13,8 +13,14 @@ export class EnclosingPair {
 
 		this.openingEqualsClosing = isFalsy(closingString) || openingString === closingString;
 
-		this._openingString = openingString;
-		this._closingString = closingString;
+		if (this.openingEqualsClosing) {
+			this._openingString = openingString;
+			this._closingString = openingString;
+		} else {
+			this._openingString = openingString;
+			// @ts-ignore this can not be undefined here
+			this._closingString = closingString;
+		}
 	}
 
 	public get openingString(): string {
@@ -56,7 +62,7 @@ export class ParserUtils {
 		}
 
 		let subStr: string = '';
-		let subStrings: string[] = [];
+		const subStrings: string[] = [];
 
 		if (ignore) {
 			let remainingOpeningStringCount = ParserUtils.numberOfOccurrences(str, ignore.openingString);
@@ -164,8 +170,7 @@ export class ParserUtils {
 		return subStrings;
 	}
 
-	// TODO: rename stuff
-	static removeInBetween(str: string, enclosingPair: EnclosingPair) {
+	static removeInBetween(str: string, enclosingPair: EnclosingPair): string {
 		if (!str) {
 			throw new MetaBindInternalError('string must not be empty');
 		}
@@ -252,7 +257,7 @@ export class ParserUtils {
 		let enclosingLevel: number = 0;
 
 		let subStr: string = '';
-		let subStrings: string[] = [];
+		const subStrings: string[] = [];
 
 		strLoop : for (let i = 0; i < str.length; i++) {
 			if (enclosingPair.openingEqualsClosing) {

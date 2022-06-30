@@ -1,13 +1,13 @@
 import {AbstractInputField} from './AbstractInputField';
 import {SelectInputFieldElement} from './SelectInputFieldElement';
-import {mod} from '../utils/Utils';
+import {MetaBindInternalError, mod} from '../utils/Utils';
 import {InputFieldMarkdownRenderChild} from '../InputFieldMarkdownRenderChild';
 
 export class SelectInputField extends AbstractInputField {
 	static allowInlineCodeBlock: boolean = false;
 	elements: SelectInputFieldElement[];
 	allowMultiSelect: boolean;
-	container: HTMLDivElement;
+	container: HTMLDivElement | undefined;
 
 	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => (void | Promise<void>)) {
 		super(inputFieldMarkdownRenderChild, onValueChange);
@@ -16,6 +16,10 @@ export class SelectInputField extends AbstractInputField {
 	}
 
 	getHtmlElement(): HTMLElement {
+		if (!this.container) {
+			throw new MetaBindInternalError('select input container is undefined');
+		}
+
 		return this.container;
 	}
 
@@ -72,7 +76,7 @@ export class SelectInputField extends AbstractInputField {
 		this.setValue(this.inputFieldMarkdownRenderChild.getInitialValue());
 	}
 
-	disableAllOtherElements(elementId: number) {
+	disableAllOtherElements(elementId: number): void {
 		for (const selectModalElement of this.elements) {
 			if (selectModalElement.id !== elementId) {
 				selectModalElement.setActive(false);
@@ -80,7 +84,7 @@ export class SelectInputField extends AbstractInputField {
 		}
 	}
 
-	deHighlightAllOtherElements(elementId: number) {
+	deHighlightAllOtherElements(elementId: number): void {
 		for (const selectModalElement of this.elements) {
 			if (selectModalElement.id !== elementId) {
 				selectModalElement.setHighlighted(false);
@@ -88,7 +92,7 @@ export class SelectInputField extends AbstractInputField {
 		}
 	}
 
-	activateHighlighted() {
+	activateHighlighted(): void {
 		for (const selectModalElement of this.elements) {
 			if (selectModalElement.isHighlighted()) {
 				selectModalElement.setActive(!selectModalElement.isActive());
@@ -99,41 +103,41 @@ export class SelectInputField extends AbstractInputField {
 		}
 	}
 
-	highlightUp() {
+	highlightUp(): void {
 		for (const selectModalElement of this.elements) {
 			if (selectModalElement.isHighlighted()) {
-				this.getPreviousSelectModalElement(selectModalElement).setHighlighted(true);
+				this.getPreviousSelectModalElement(selectModalElement)?.setHighlighted(true);
 				return;
 			}
 		}
 
 		// nothing is highlighted
-		this.elements.last().setHighlighted(true);
+		this.elements.at(-1)?.setHighlighted(true);
 	}
 
-	highlightDown() {
+	highlightDown(): void {
 		for (const selectModalElement of this.elements) {
 			if (selectModalElement.isHighlighted()) {
-				this.getNextSelectModalElement(selectModalElement).setHighlighted(true);
+				this.getNextSelectModalElement(selectModalElement)?.setHighlighted(true);
 				return;
 			}
 		}
 
 		// nothing is highlighted
-		this.elements.first().setHighlighted(true);
+		this.elements.at(0)?.setHighlighted(true);
 	}
 
-	private getNextSelectModalElement(element: SelectInputFieldElement): SelectInputFieldElement {
+	private getNextSelectModalElement(element: SelectInputFieldElement): SelectInputFieldElement | undefined {
 		let nextId = element.id + 1;
 		nextId = mod(nextId, this.elements.length);
 
-		return this.elements.filter(x => x.id === nextId).first();
+		return this.elements.filter(x => x.id === nextId).at(0);
 	}
 
-	private getPreviousSelectModalElement(element: SelectInputFieldElement): SelectInputFieldElement {
+	private getPreviousSelectModalElement(element: SelectInputFieldElement): SelectInputFieldElement | undefined {
 		let nextId = element.id - 1;
 		nextId = mod(nextId, this.elements.length);
 
-		return this.elements.filter(x => x.id === nextId).first();
+		return this.elements.filter(x => x.id === nextId).at(0);
 	}
 }
