@@ -2,35 +2,29 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Meta Bind Plugin</title>
-	<style>
-		html {
-			height: 100%;
-		}
-
-		body {
-			display: flex;
-			justify-content: center;
-			height: 100%;
-			background: #0b0b0b;
-			margin: 0;
-		}
-
-		.content {
-			margin: 200px 0;
-			height: fit-content;
-		}
-
-		.text {
-			text-align: center;
-			color: #FFFFFF;
-		}
-	</style>
+	<title>Meta Bind Plugin Docs</title>
+	<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+	<meta content="Description" name="description">
+	<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0" name="viewport">
+	<!-- Theme: Simple Dark -->
+	<link href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple-dark.css" rel="stylesheet">
+	<!-- Plugin: copy code - Latest v2.x.x -->
+	<script src="https://unpkg.com/docsify-copy-code@2"></script>
 </head>
 <body>
-<div class="content">
-	<h1 class="text">Meta Bind Plugin Docs</h1>
-	<p class="text">under construction</p>
-</div>
+<div id="app">Loading...</div>
+<script>
+	window.$docsify = {
+		name: 'Obsidian Meta Bind Plugin',
+		repo: 'mProjectsCode/obsidian-meta-bind-plugin',
+		copyCode: {
+			buttonText : 'Copy to clipboard',
+			errorText  : 'Error',
+			successText: 'Copied',
+		},
+	};
+</script>
+<!-- Docsify v4 -->
+<script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
 </body>
 </html>
