@@ -3,16 +3,16 @@ rating: 31
 title: test title test test
 completed: false
 toggle1: true
-slider1: 19
-slider2: 6
+slider1: 37
+slider2: 5
 text1: Test text
 text_area1: Test text area
 date1: 06/28/2022
 select: option c
 multi-select:
-  - option a
+  - option b
   - option d
-time1: 03:11
+time1: 10:17
 ---
 
 ## Components

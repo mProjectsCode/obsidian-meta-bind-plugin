@@ -3,8 +3,8 @@ import MetaBindPlugin from './main';
 import {Logger} from './utils/Logger';
 import {AbstractInputField} from './inputFields/AbstractInputField';
 import {InputFieldFactory} from './inputFields/InputFieldFactory';
-import {InputFieldDeclaration, InputFieldDeclarationParser} from './parsers/InputFieldDeclarationParser';
-import {MetaBindBindTargetError} from './utils/Utils';
+import {InputFieldArgument, InputFieldDeclaration, InputFieldDeclarationParser} from './parsers/InputFieldDeclarationParser';
+import {MetaBindBindTargetError, MetaBindInternalError} from './utils/Utils';
 
 export enum InputFieldMarkdownRenderChildType {
 	INLINE_CODE_BLOCK,
@@ -16,14 +16,14 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	metaData: any;
 	filePath: string;
 	uid: number;
-	inputField: AbstractInputField;
+	inputField: AbstractInputField | undefined;
 	error: string;
 
-	inputFieldDeclaration: InputFieldDeclaration;
-	bindTargetFile: TFile;
-	bindTargetMetadataField: string;
+	inputFieldDeclaration: InputFieldDeclaration | undefined;
+	bindTargetFile: TFile | undefined;
+	bindTargetMetadataField: string | undefined;
 
-	limitInterval: number;
+	limitInterval: number | undefined;
 	intervalCounter: number;
 	valueQueue: any[];
 
@@ -37,13 +37,13 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 		this.valueQueue = [];
 		this.intervalCounter = 0;
-		this.limitInterval = window.setInterval(() => this.applyValueQueueToMetadata(), this.plugin.settings.syncInterval);
 
 		try {
 			this.inputFieldDeclaration = InputFieldDeclarationParser.parse(fullDeclaration);
 
 			if (this.inputFieldDeclaration.isBound) {
 				this.parseBindTarget();
+				// @ts-ignore `parseBindTarget` sets `bindTargetFile` and `bindTargetMetadataField` or throws an error.
 				this.metaData = this.plugin.getMetaDataForFile(this.bindTargetFile);
 			}
 
@@ -52,48 +52,62 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 				inputFieldMarkdownRenderChild: this,
 				onValueChanged: this.pushToValueQueue.bind(this),
 			});
-		} catch (e) {
+
+			this.limitInterval = window.setInterval(() => this.applyValueQueueToMetadata(), this.plugin.settings.syncInterval);
+		} catch (e: any) {
 			this.error = e.message;
 			Logger.logWarning(e);
 		}
 	}
 
-	parseBindTarget() {
-		let bindTargetParts = this.inputFieldDeclaration.bindTarget.split('#');
+	parseBindTarget(): void {
+		if (!this.inputFieldDeclaration) {
+			throw new MetaBindInternalError('inputFieldDeclaration is undefined, can not parse bind target');
+		}
+
+		const bindTargetParts = this.inputFieldDeclaration.bindTarget.split('#');
 
 		if (bindTargetParts.length === 1) {
 			// the bind target is in the same file
 			this.bindTargetMetadataField = this.inputFieldDeclaration.bindTarget;
 
-			const files = this.plugin.getFilesByName(this.filePath);
+			const files: TFile[] = this.plugin.getFilesByName(this.filePath);
 			if (files.length === 0) {
 				throw new MetaBindBindTargetError('bind target file not found');
 			} else if (files.length === 1) {
 				this.bindTargetFile = files[0];
 			} else {
-				throw new MetaBindBindTargetError('bind target resolves to multiple files; please also specify the file path');
+				throw new MetaBindBindTargetError('bind target resolves to multiple files, please also specify the file path');
 			}
 		} else if (bindTargetParts.length === 2) {
 			// the bind target is in another file
 			this.bindTargetMetadataField = bindTargetParts[1];
 
-			const files = this.plugin.getFilesByName(bindTargetParts[0]);
+			const files: TFile[] = this.plugin.getFilesByName(bindTargetParts[0]);
 			if (files.length === 0) {
 				throw new MetaBindBindTargetError('bind target file not found');
 			} else if (files.length === 1) {
 				this.bindTargetFile = files[0];
 			} else {
-				throw new MetaBindBindTargetError('bind target resolves to multiple files; please also specify the file path');
+				throw new MetaBindBindTargetError('bind target resolves to multiple files, please also specify the file path');
 			}
 		} else {
 			throw new MetaBindBindTargetError('bind target may only contain one \'#\' to specify the metadata field');
 		}
-
-
 	}
 
 	// use this interval to reduce writing operations
-	async applyValueQueueToMetadata() {
+	async applyValueQueueToMetadata(): Promise<void> {
+		if (!this.inputFieldDeclaration) {
+			throw new MetaBindInternalError('inputFieldDeclaration is undefined, can not update metadata');
+		}
+		if (!this.inputFieldDeclaration.isBound) {
+			return;
+		}
+		if (!this.bindTargetMetadataField || !this.bindTargetFile) {
+			throw new MetaBindInternalError('bindTargetMetadataField or bindTargetFile is undefined, can not update metadata');
+		}
+
 		if (this.valueQueue.length > 0) {
 			// console.log(this.valueQueue.at(-1))
 			await this.plugin.updateMetaData(this.bindTargetMetadataField, this.valueQueue.at(-1), this.bindTargetFile);
@@ -101,13 +115,17 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		}
 	}
 
-	async pushToValueQueue(value: any) {
-		if (this.inputFieldDeclaration.isBound) {
+	async pushToValueQueue(value: any): Promise<void> {
+		if (this.inputFieldDeclaration?.isBound) {
 			this.valueQueue.push(value);
 		}
 	}
 
-	updateValue(value: any) {
+	updateValue(value: any): void {
+		if (!this.inputField) {
+			throw new MetaBindInternalError('inputField is undefined, can not update value');
+		}
+
 		if (value == null) {
 			value = this.inputField.getDefaultValue();
 		}
@@ -118,22 +136,25 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		}
 	}
 
-	getInitialValue() {
-		// console.log(this);
-		if (this.inputFieldDeclaration.isBound) {
-			return this.metaData[this.bindTargetMetadataField] ?? this.inputField.getDefaultValue();
+	getInitialValue(): any | undefined {
+		if (this.inputFieldDeclaration?.isBound) {
+			return this.metaData[this.bindTargetMetadataField ?? ''] ?? this.inputField?.getDefaultValue();
 		}
 	}
 
-	getArguments(name: string) {
+	getArguments(name: string): InputFieldArgument[] {
+		if (!this.inputFieldDeclaration) {
+			throw new MetaBindInternalError('inputFieldDeclaration is undefined, can not retrieve arguments');
+		}
+
 		return this.inputFieldDeclaration.arguments.filter(x => x.name === name);
 	}
 
-	getArgument(name: string) {
-		return this.getArguments(name).first();
+	getArgument(name: string): InputFieldArgument | undefined {
+		return this.getArguments(name).at(0);
 	}
 
-	async onload() {
+	async onload(): Promise<void> {
 		Logger.logDebug('load', this);
 
 		this.metaData = await this.metaData;
@@ -149,7 +170,14 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 			return;
 		}
 
-		this.plugin.registerMarkdownInputField(this);
+		if (!this.inputField) {
+			container.innerText = ` -> ERROR: ${(new MetaBindInternalError('input field is undefined and error is empty').message)}`;
+			container.addClass('meta-bind-plugin-error');
+			this.containerEl.appendChild(container);
+			return;
+		}
+
+		this.plugin.registerInputFieldMarkdownRenderChild(this);
 
 		this.inputField.render(container);
 
@@ -163,10 +191,10 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		this.containerEl.appendChild(container);
 	}
 
-	onunload() {
+	onunload(): void {
 		Logger.logDebug('unload', this);
 
-		this.plugin.unregisterMarkdownInputField(this);
+		this.plugin.unregisterInputFieldMarkdownRenderChild(this);
 
 		super.onunload();
 

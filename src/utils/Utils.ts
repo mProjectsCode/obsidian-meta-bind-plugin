@@ -21,8 +21,8 @@ export class MetaBindBindTargetError extends Error {
  *
  * @param path
  */
-export function getFileName(path: string) {
-	return path.split('/').at(-1);
+export function getFileName(path: string): string {
+	return path.split('/').at(-1) ?? path;
 }
 
 /**
@@ -30,7 +30,7 @@ export function getFileName(path: string) {
  *
  * @param path
  */
-export function isPath(path: string) {
+export function isPath(path: string): boolean {
 	return path.split('/').length > 1;
 }
 
@@ -39,7 +39,7 @@ export function isPath(path: string) {
  *
  * @param fileName
  */
-export function removeFileEnding(fileName: string) {
+export function removeFileEnding(fileName: string): string {
 	const fileNameParts = fileName.split('.');
 	if (fileNameParts.length === 1) {
 		return fileName;
@@ -79,7 +79,7 @@ export function mod(n: number, m: number): number {
  * @param arr1
  * @param arr2
  */
-export function arrayEquals(arr1: any[], arr2: any[]) {
+export function arrayEquals(arr1: any[], arr2: any[]): boolean {
 	if (arr1.length !== arr2.length) {
 		return false;
 	}
@@ -117,11 +117,11 @@ function replaceTag(match: string, dataModel: any): string {
 	tag = tag.substring(0, tag.length - 2);
 	tag = tag.trim();
 
-	let parts = tag.split(':');
+	const parts = tag.split(':');
 	if (parts.length === 1) {
-		let path = parts[0].split('.');
+		const path = parts[0].split('.');
 
-		let obj = traverseObject(path, dataModel);
+		const obj = traverseObject(path, dataModel);
 
 		if (obj === undefined) {
 			return '{{ INVALID TEMPLATE TAG - object undefined }}';
@@ -129,11 +129,11 @@ function replaceTag(match: string, dataModel: any): string {
 
 		return obj;
 	} else if (parts.length === 2) {
-		let operator = parts[0];
+		const operator = parts[0];
 
-		let path = parts[1].split('.');
+		const path = parts[1].split('.');
 
-		let obj = traverseObject(path, dataModel);
+		const obj = traverseObject(path, dataModel);
 
 		if (obj === undefined) {
 			return '{{ INVALID TEMPLATE TAG - object undefined }}';
@@ -164,7 +164,7 @@ function replaceTag(match: string, dataModel: any): string {
  * @param obj
  */
 function traverseObject(path: Array<string>, obj: any): any {
-	for (let part of path) {
+	for (const part of path) {
 		if (obj !== undefined) {
 			obj = obj[part];
 		}

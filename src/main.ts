@@ -6,12 +6,15 @@ import {Logger} from './utils/Logger';
 import {DateParser} from './parsers/DateParser';
 
 export default class MetaBindPlugin extends Plugin {
+	// @ts-ignore defined in `onload`
 	settings: MetaBindPluginSettings;
 
+	// @ts-ignore defined in `onload`
 	activeMarkdownInputFields: InputFieldMarkdownRenderChild[];
+	// @ts-ignore defined in `onload`
 	markDownInputFieldIndex: number;
 
-	async onload() {
+	async onload(): Promise<void> {
 		await this.loadSettings();
 
 		Logger.devMode = this.settings.devMode;
@@ -54,25 +57,25 @@ export default class MetaBindPlugin extends Plugin {
 		this.addSettingTab(new MetaBindSettingTab(this.app, this));
 	}
 
-	onunload() {
+	onunload(): void {
 		for (const activeMarkdownInputField of this.activeMarkdownInputFields) {
 			activeMarkdownInputField.unload();
 		}
 	}
 
-	registerMarkdownInputField(markdownInputField: InputFieldMarkdownRenderChild) {
-		this.activeMarkdownInputFields.push(markdownInputField);
+	registerInputFieldMarkdownRenderChild(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild): void {
+		this.activeMarkdownInputFields.push(inputFieldMarkdownRenderChild);
 	}
 
-	unregisterMarkdownInputField(markdownInputField: InputFieldMarkdownRenderChild) {
-		this.activeMarkdownInputFields = this.activeMarkdownInputFields.filter(x => x.uid !== markdownInputField.uid);
+	unregisterInputFieldMarkdownRenderChild(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild): void {
+		this.activeMarkdownInputFields = this.activeMarkdownInputFields.filter(x => x.uid !== inputFieldMarkdownRenderChild.uid);
 	}
 
-	async updateMarkdownInputFieldsOnFileChange(file: TFile) {
+	async updateMarkdownInputFieldsOnFileChange(file: TFile): Promise<void> {
 		let metadata: any = undefined;
 
 		for (const activeMarkdownInputField of this.activeMarkdownInputFields) {
-			if (!activeMarkdownInputField.bindTargetFile || !activeMarkdownInputField.inputFieldDeclaration.isBound) {
+			if (!activeMarkdownInputField.inputFieldDeclaration?.isBound || !activeMarkdownInputField.bindTargetFile || !activeMarkdownInputField.bindTargetMetadataField) {
 				continue;
 			}
 
@@ -85,7 +88,7 @@ export default class MetaBindPlugin extends Plugin {
 		}
 	}
 
-	async updateMetaData(key: string, value: any, file: TFile) {
+	async updateMetaData(key: string, value: any, file: TFile): Promise<void> {
 		Logger.logDebug(`updating `, key, `: `, value, ` in '${file.path}'`);
 
 		if (!file) {
@@ -97,7 +100,7 @@ export default class MetaBindPlugin extends Plugin {
 		const regExp = new RegExp('^(---)\\n[\\s\\S]*\\n---');
 		fileContent = fileContent.replace(regExp, '');
 
-		let metadata: any = await this.getMetaDataForFile(file);
+		const metadata: any = await this.getMetaDataForFile(file);
 		// console.log(metadata);
 		if (!metadata) {
 			return;
@@ -113,7 +116,7 @@ export default class MetaBindPlugin extends Plugin {
 	getFilesByName(name: string): TFile[] {
 		// console.log(getFileName(removeFileEnding(name)))
 		const fileNameIsPath = isPath(name);
-		let processedFileName = fileNameIsPath ? removeFileEnding(name) : getFileName(removeFileEnding(name));
+		const processedFileName = fileNameIsPath ? removeFileEnding(name) : getFileName(removeFileEnding(name));
 
 		const allFiles = this.app.vault.getFiles();
 		const files: TFile[] = [];
@@ -137,9 +140,9 @@ export default class MetaBindPlugin extends Plugin {
 		// Logger.logDebug(`reading metadata for ${file.path}`);
 		let metadata: any;
 
-		let fileContent: string = await this.app.vault.read(file);
+		const fileContent: string = await this.app.vault.read(file);
 		const regExp = new RegExp('^(---)\\n[\\s\\S]*\\n---');
-		let frontMatterRegExpResult = regExp.exec(fileContent);
+		const frontMatterRegExpResult = regExp.exec(fileContent);
 		if (!frontMatterRegExpResult) {
 			return {};
 		}
@@ -163,11 +166,11 @@ export default class MetaBindPlugin extends Plugin {
 		return metadata;
 	}
 
-	async loadSettings() {
+	async loadSettings(): Promise<void> {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
 	}
 
-	async saveSettings() {
+	async saveSettings(): Promise<void> {
 		DateParser.dateFormat = this.settings.dateFormat;
 		Logger.devMode = this.settings.devMode;
 		await this.saveData(this.settings);
