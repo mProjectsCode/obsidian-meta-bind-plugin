@@ -17,6 +17,7 @@ export class SelectInputFieldElement {
 		this.value = value;
 		this.id = id;
 		this.active = active;
+		this.highlighted = false;
 		this.selectInputField = multiSelectInputField;
 
 		this.cssClass = 'meta-bind-plugin-select-input-element';
@@ -47,7 +48,7 @@ export class SelectInputFieldElement {
 		return this.highlighted;
 	}
 
-	setHighlighted(value: boolean) {
+	setHighlighted(value: boolean): void {
 		this.highlighted = value;
 		if (this.highlighted) {
 			this.addClass(this.hoverClass);
@@ -89,7 +90,7 @@ export class SelectInputFieldElement {
 		}
 	}
 
-	render() {
+	render(): void {
 		this.element.createEl('div', {text: this.value});
 	}
 }

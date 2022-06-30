@@ -1,3 +1,5 @@
+import {MetaBindInternalError} from '../utils/Utils';
+
 export class Date {
 	private _day: number;
 	private _month: number;
@@ -34,16 +36,16 @@ export class Date {
 	};
 
 	constructor() {
-		this.setDay(DateParser.getDefaultDay());
-		this.setMonth(DateParser.getDefaultMonth());
-		this.setYear(DateParser.getDefaultYear());
+		this._day = DateParser.getDefaultDay();
+		this._month = DateParser.getDefaultMonth();
+		this._year = DateParser.getDefaultYear();
 	}
 
 	public getDay(): number {
 		return this._day;
 	}
 
-	public setDay(value: number) {
+	public setDay(value: number): void  {
 		if (value < 1 || value > 31) {
 			return;
 		}
@@ -54,7 +56,7 @@ export class Date {
 		return this._month;
 	}
 
-	public setMonth(value: number) {
+	public setMonth(value: number): void  {
 		if (value < 1 || value > 12) {
 			return;
 		}
@@ -65,7 +67,7 @@ export class Date {
 		return this._year;
 	}
 
-	public setYear(value: number) {
+	public setYear(value: number): void  {
 		this._year = value;
 	}
 
@@ -81,18 +83,18 @@ export class Date {
 		return ('0000' + this.getYear().toString()).slice(-4);
 	}
 
-	public setDayFromString(str: string) {
-		let v = Number.parseInt(str);
+	public setDayFromString(str: string): void  {
+		const v = Number.parseInt(str);
 		this.setDay(Number.isNaN(v) ? DateParser.getDefaultDay() : v);
 	}
 
-	public setMonthFromString(str: string) {
-		let v = Number.parseInt(str);
+	public setMonthFromString(str: string): void  {
+		const v = Number.parseInt(str);
 		this.setMonth(Number.isNaN(v) ? DateParser.getDefaultMonth() : v);
 	}
 
-	public setYearFromString(str: string) {
-		let v = Number.parseInt(str);
+	public setYearFromString(str: string): void {
+		const v = Number.parseInt(str);
 		this.setYear(Number.isNaN(v) ? DateParser.getDefaultYear() : v);
 	}
 
@@ -104,7 +106,7 @@ export class Date {
 		return this._monthMapShort[this.getMonth()];
 	}
 
-	public setMonthFromName(name: string) {
+	public setMonthFromName(name: string): void {
 		for (const [key, value] of Object.entries(this._monthMap)) {
 			if (value === name) {
 				this.setMonthFromString(key);
@@ -141,9 +143,10 @@ export class DateParser {
 		} else if (DateParser.dateFormat === DateFormat.FANCY_SHORT_US) {
 			return DateParser.stringifyUsFancyDateShort(date);
 		}
+		throw new MetaBindInternalError('date format setting does not match any supported date format');
 	}
 
-	public static parse(dateString: string): Date {
+	public static parse(dateString: string): Date | undefined {
 		if (DateParser.dateFormat === DateFormat.US) {
 			return DateParser.parseUsDate(dateString);
 		} else if (DateParser.dateFormat === DateFormat.EU) {
@@ -153,18 +156,19 @@ export class DateParser {
 		} else if (DateParser.dateFormat === DateFormat.FANCY_SHORT_US) {
 			return DateParser.parseUsFancyDate(dateString);
 		}
+		throw new MetaBindInternalError('date format setting does not match any supported date format');
 	}
 
 	public static stringifyEuDate(date: Date): string {
 		return `${date.getUniformDay()}/${date.getUniformMonth()}/${date.getUniformYear()}`;
 	}
 
-	public static parseEuDate(dateString: string): Date {
+	public static parseEuDate(dateString: string): Date | undefined {
 		const date: Date = DateParser.getDefaultDate();
 
 		const dateParts = dateString.split('/');
 		if (dateParts.length !== 3) {
-			return null;
+			return undefined;
 		}
 
 		date.setDayFromString(dateParts[0]);
@@ -178,12 +182,12 @@ export class DateParser {
 		return `${date.getUniformMonth()}/${date.getUniformDay()}/${date.getUniformYear()}`;
 	}
 
-	public static parseUsDate(dateString: string): Date {
+	public static parseUsDate(dateString: string): Date | undefined {
 		const date: Date = DateParser.getDefaultDate();
 
 		const dateParts = dateString.split('/');
 		if (dateParts.length !== 3) {
-			return null;
+			return undefined;
 		}
 
 		date.setMonthFromString(dateParts[0]);
@@ -201,16 +205,16 @@ export class DateParser {
 		return `${date.getMonthNameShort()} ${date.getDay().toString()}, ${date.getYear().toString()}`;
 	}
 
-	public static parseUsFancyDate(dateString: string): Date {
+	public static parseUsFancyDate(dateString: string): Date | undefined {
 		const date: Date = DateParser.getDefaultDate();
 
 		const dateParts = dateString.split(',').map(x => x.trim());
 		if (dateParts.length !== 2) {
-			return null;
+			return undefined;
 		}
 		const datePartsParts = dateParts[0].split(' ');
 		if (datePartsParts.length !== 2) {
-			return null;
+			return undefined;
 		}
 
 		// console.log(datePartsParts)

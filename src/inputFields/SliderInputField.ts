@@ -2,9 +2,10 @@ import {AbstractInputField} from './AbstractInputField';
 import {SliderComponent} from 'obsidian';
 import {Logger} from '../utils/Logger';
 import {InputFieldMarkdownRenderChild} from '../InputFieldMarkdownRenderChild';
+import {MetaBindInternalError} from '../utils/Utils';
 
 export class SliderInputField extends AbstractInputField {
-	sliderComponent: SliderComponent;
+	sliderComponent: SliderComponent | undefined;
 	minValue: number;
 	maxValue: number;
 
@@ -16,10 +17,18 @@ export class SliderInputField extends AbstractInputField {
 	}
 
 	getValue(): any {
+		if (!this.sliderComponent) {
+			throw new MetaBindInternalError('slider input component is undefined');
+		}
+
 		return this.sliderComponent.getValue();
 	}
 
 	setValue(value: any): void {
+		if (!this.sliderComponent) {
+			throw new MetaBindInternalError('slider input component is undefined');
+		}
+
 		if (value != null && typeof value == 'number') {
 			if (value >= this.minValue && value <= this.maxValue) {
 				this.sliderComponent.setValue(value);
@@ -39,6 +48,10 @@ export class SliderInputField extends AbstractInputField {
 	}
 
 	getHtmlElement(): HTMLElement {
+		if (!this.sliderComponent) {
+			throw new MetaBindInternalError('slider input component is undefined');
+		}
+
 		return this.sliderComponent.sliderEl;
 	}
 
@@ -46,7 +59,7 @@ export class SliderInputField extends AbstractInputField {
 		container.removeClass('meta-bind-plugin-input-wrapper');
 		container.addClass('meta-bind-plugin-flex-input-wrapper');
 
-		let labelArgument = this.inputFieldMarkdownRenderChild.getArgument('labels');
+		const labelArgument = this.inputFieldMarkdownRenderChild.getArgument('labels');
 		if (labelArgument && labelArgument.value === true) {
 			container.createSpan({text: this.minValue.toString(), cls: 'meta-bind-plugin-slider-input-label'});
 		}

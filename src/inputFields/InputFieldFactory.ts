@@ -24,7 +24,7 @@ export class InputFieldFactory {
 		[InputFieldType.TIME]: { codeBlock: TimeInputField.allowCodeBlock, inlineCodeBlock: TimeInputField.allowInlineCodeBlock },
 	}
 
-	static createInputField(inputFieldType: InputFieldType, args: { type: InputFieldMarkdownRenderChildType, inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChanged: (value: any) => void | Promise<void> }): AbstractInputField {
+	static createInputField(inputFieldType: InputFieldType, args: { type: InputFieldMarkdownRenderChildType, inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChanged: (value: any) => void | Promise<void> }): AbstractInputField | undefined {
 		if (inputFieldType === InputFieldType.TOGGLE) {
 			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new ToggleInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
@@ -51,10 +51,10 @@ export class InputFieldFactory {
 			return new TimeInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		}
 
-		return null;
+		return undefined;
 	}
 
-	static checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType: InputFieldType, type: InputFieldMarkdownRenderChildType) {
+	static checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType: InputFieldType, type: InputFieldMarkdownRenderChildType): void {
 		const allowCodeBlock: { codeBlock: boolean; inlineCodeBlock: boolean } = InputFieldFactory.allowCodeBlockMap[inputFieldType];
 		if (type === InputFieldMarkdownRenderChildType.CODE_BLOCK && !allowCodeBlock.codeBlock) {
 			throw new MetaBindParsingError(`\'${inputFieldType}\' is not allowed as code block`);
