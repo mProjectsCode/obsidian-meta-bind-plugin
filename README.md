@@ -26,7 +26,7 @@ For more examples see the `exampleVault` folder.
 - `text` a text field
 - `text_area` a bigger text field
 - `select` a select input field, only for code blocks
-- `multi-select` a multi-select input field, only for code blocks
+- `multi_select` a multi-select input field, only for code blocks
 - `date` a date input field
 
 #### Arguments
