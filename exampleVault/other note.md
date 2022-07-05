@@ -1,9 +1,9 @@
 ---
-title: Text in a different note
-select: option c
+title: Text in a diffea
+select: option b
 multi-select:
   - option b
   - option c
-date: 08/08/2002
+date: Thursday, June 27th 2030
 time: 19:20
 ---

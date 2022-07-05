@@ -18,7 +18,7 @@ export default class MetaBindPlugin extends Plugin {
 		await this.loadSettings();
 
 		Logger.devMode = this.settings.devMode;
-		DateParser.dateFormat = this.settings.dateFormat;
+		DateParser.dateFormat = this.settings.preferredDateFormat;
 
 		this.activeMarkdownInputFields = [];
 		this.markDownInputFieldIndex = 0;
@@ -31,7 +31,13 @@ export default class MetaBindPlugin extends Plugin {
 				const isInputField = text.startsWith('INPUT[') && text.endsWith(']');
 				// console.log(context.sourcePath);
 				if (isInputField) {
-					context.addChild(new InputFieldMarkdownRenderChild(codeBlock, InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK, text, this, context.sourcePath, this.markDownInputFieldIndex));
+					context.addChild(new InputFieldMarkdownRenderChild(
+						codeBlock,
+						InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK,
+						text, this,
+						context.sourcePath,
+						this.markDownInputFieldIndex
+					));
 					this.markDownInputFieldIndex += 1;
 				}
 			}
@@ -43,14 +49,20 @@ export default class MetaBindPlugin extends Plugin {
 			const isInputField = text.startsWith('INPUT[') && text.endsWith(']');
 			// console.log(context.sourcePath);
 			if (isInputField) {
-				ctx.addChild(new InputFieldMarkdownRenderChild(codeBlock, InputFieldMarkdownRenderChildType.CODE_BLOCK, text, this, ctx.sourcePath, this.markDownInputFieldIndex));
+				ctx.addChild(new InputFieldMarkdownRenderChild(
+					codeBlock,
+					InputFieldMarkdownRenderChildType.CODE_BLOCK,
+					text,
+					this,
+					ctx.sourcePath,
+					this.markDownInputFieldIndex));
 				this.markDownInputFieldIndex += 1;
 			}
 		});
 
 		this.registerEvent(this.app.vault.on('modify', async abstractFile => {
 			if (abstractFile instanceof TFile) {
-				await this.updateMarkdownInputFieldsOnFileChange(abstractFile as TFile);
+				await this.updateMarkdownInputFieldsOnFileChange(abstractFile);
 			}
 		}));
 
@@ -97,14 +109,15 @@ export default class MetaBindPlugin extends Plugin {
 		}
 
 		let fileContent: string = await this.app.vault.read(file);
-		const regExp = new RegExp('^(---)\\n[\\s\\S]*\\n---');
-		fileContent = fileContent.replace(regExp, '');
 
-		const metadata: any = await this.getMetaDataForFile(file);
+		const metadata: any = await this.getMetaDataForFileContent(fileContent);
 		// console.log(metadata);
 		if (!metadata) {
 			return;
 		}
+
+		const regExp = new RegExp('^(---)\\n[\\s\\S]*\\n---');
+		fileContent = fileContent.replace(regExp, '');
 
 		metadata[key] = value;
 		// console.log(metadata);
@@ -118,7 +131,7 @@ export default class MetaBindPlugin extends Plugin {
 		const fileNameIsPath = isPath(name);
 		const processedFileName = fileNameIsPath ? removeFileEnding(name) : getFileName(removeFileEnding(name));
 
-		const allFiles = this.app.vault.getFiles();
+		const allFiles = this.app.vault.getMarkdownFiles();
 		const files: TFile[] = [];
 		for (const file of allFiles) {
 			// console.log(removeFileEnding(file.path));
@@ -137,10 +150,18 @@ export default class MetaBindPlugin extends Plugin {
 	}
 
 	async getMetaDataForFile(file: TFile): Promise<any> {
+		if (!file) {
+			return undefined;
+		}
+
+		const fileContent: string = await this.app.vault.read(file);
+		return await this.getMetaDataForFileContent(fileContent);
+	}
+
+	async getMetaDataForFileContent(fileContent: string): Promise<any> {
 		// Logger.logDebug(`reading metadata for ${file.path}`);
 		let metadata: any;
 
-		const fileContent: string = await this.app.vault.read(file);
 		const regExp = new RegExp('^(---)\\n[\\s\\S]*\\n---');
 		const frontMatterRegExpResult = regExp.exec(fileContent);
 		if (!frontMatterRegExpResult) {
@@ -171,7 +192,7 @@ export default class MetaBindPlugin extends Plugin {
 	}
 
 	async saveSettings(): Promise<void> {
-		DateParser.dateFormat = this.settings.dateFormat;
+		DateParser.dateFormat = this.settings.preferredDateFormat;
 		Logger.devMode = this.settings.devMode;
 		await this.saveData(this.settings);
 	}
