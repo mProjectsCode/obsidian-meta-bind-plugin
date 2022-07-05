@@ -1,4 +1,6 @@
 ---
+slider1: 1
+------
 rating: 31
 title: test title test test
 completed: false
