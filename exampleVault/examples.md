@@ -5,15 +5,15 @@ rating: 31
 title: test title test test
 completed: false
 toggle1: true
-slider1: 37
+slider1: 7
 slider2: 5
 text1: Test text
-text_area1: Test text area
-date1: 06/28/2022
+text_area1: Test test
+date1: 2022-05-28
 select: option c
 multi-select:
-  - option b
-  - option d
+  - option a
+  - option c
 time1: 10:17
 ---
 
@@ -80,6 +80,15 @@ option(option d)
 ):multi-select]
 ```
 
+## In callouts
+> quote
+> `INPUT[slider(addLabels, minValue(1), maxValue(10)):slider1]`
+
+> [!INFO]
+> `INPUT[slider(addLabels, minValue(1), maxValue(10)):slider1]` Slider
+
+> [!INFO]
+> `INPUT[slider(addLabels, minValue(1), maxValue(10)):slider1]`
 
 ## Linking to a different note
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. Curabitur sed rhoncus nisl.
@@ -112,7 +121,7 @@ option(option d)
 ):other note#multi-select]
 ```
 
-Lorem ipsum dolor sit amet, `INPUT[date():other note#date]` consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. Curabitur sed rhoncus nisl. Maecenas nisi justo, viverra vel tempus vel, hendrerit at metus. 
+Lorem ipsum dolor sit amet, `INPUT[date():other note#date]` consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. `INPUT[date():other note#date]` Curabitur sed rhoncus nisl. Maecenas nisi justo, viverra vel tempus vel, hendrerit at metus. 
 
 ## Error Messages
 - `INPUT[text():meta bind/nonExistantFile#title]`
