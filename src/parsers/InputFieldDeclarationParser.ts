@@ -10,6 +10,7 @@ export enum InputFieldType {
 	MULTI_SELECT = 'multi_select',
 	DATE = 'date',
 	TIME = 'time',
+	DATE_PICKER = 'date_picker',
 	INVALID = 'invalid',
 }
 

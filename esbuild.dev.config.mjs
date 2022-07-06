@@ -2,6 +2,8 @@ import esbuild from "esbuild";
 import process from "process";
 import builtins from 'builtin-modules'
 import copy from 'esbuild-plugin-copy-watch'
+import esbuildSvelte from "esbuild-svelte";
+import sveltePreprocess from "svelte-preprocess";
 
 const banner =
 `/*
@@ -61,6 +63,10 @@ esbuild.build({
 				from: './manifest.json',
 				to: '',
 			},
-		])
+		]),
+		esbuildSvelte({
+			compilerOptions: { css: true },
+			preprocess: sveltePreprocess(),
+		}),
 	]
 }).catch(() => process.exit(1));

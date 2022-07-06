@@ -1,6 +1,4 @@
 ---
-slider1: 1
-------
 rating: 31
 title: test title test test
 completed: false
@@ -121,7 +119,7 @@ option(option d)
 ):other note#multi-select]
 ```
 
-Lorem ipsum dolor sit amet, `INPUT[date():other note#date]` consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. `INPUT[date():other note#date]` Curabitur sed rhoncus nisl. Maecenas nisi justo, viverra vel tempus vel, hendrerit at metus. 
+Lorem ipsum dolor sit amet, `INPUT[date():other note#date]` consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. `INPUT[date():other note#date]` Curabitur sed rhoncus nisl. Maecenas nisi justo, viverra vel tempus vel, hendrerit at metus. `INPUT[date_picker:other note#date]`
 
 ## Error Messages
 - `INPUT[text():meta bind/nonExistantFile#title]`

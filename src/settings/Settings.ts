@@ -56,7 +56,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Date format')
-			.setDesc(`The date format to be used by this plugin.`)
+			.setDesc(`The date format to be used by this plugin. Changing this setting will break the parsing of existing date inputs. Here is a list of all available date tokes https://momentjs.com/docs/#/displaying/.`)
 			.addText(cb => {
 				cb.setValue(this.plugin.settings.preferredDateFormat);
 				cb.onChange(data => {

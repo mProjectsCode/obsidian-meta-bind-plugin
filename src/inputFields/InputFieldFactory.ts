@@ -10,6 +10,7 @@ import {TimeInputField} from './TimeInputField';
 import {MetaBindParsingError} from '../utils/Utils';
 import {AbstractInputField} from './AbstractInputField';
 import {InputFieldType} from '../parsers/InputFieldDeclarationParser';
+import {DatePickerInputField} from './DatePicker/DatePickerInputField';
 
 
 export class InputFieldFactory {
@@ -22,6 +23,7 @@ export class InputFieldFactory {
 		[InputFieldType.MULTI_SELECT]: { codeBlock: MultiSelectInputField.allowCodeBlock, inlineCodeBlock: MultiSelectInputField.allowInlineCodeBlock },
 		[InputFieldType.DATE]: { codeBlock: DateInputField.allowCodeBlock, inlineCodeBlock: DateInputField.allowInlineCodeBlock },
 		[InputFieldType.TIME]: { codeBlock: TimeInputField.allowCodeBlock, inlineCodeBlock: TimeInputField.allowInlineCodeBlock },
+		[InputFieldType.DATE_PICKER]: { codeBlock: DatePickerInputField.allowCodeBlock, inlineCodeBlock: DatePickerInputField.allowInlineCodeBlock },
 	}
 
 	static createInputField(inputFieldType: InputFieldType, args: { type: InputFieldMarkdownRenderChildType, inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChanged: (value: any) => void | Promise<void> }): AbstractInputField | undefined {
@@ -49,6 +51,9 @@ export class InputFieldFactory {
 		} else if (inputFieldType === InputFieldType.TIME) {
 			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new TimeInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+		} else if (inputFieldType === InputFieldType.DATE_PICKER) {
+			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
+			return new DatePickerInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		}
 
 		return undefined;
