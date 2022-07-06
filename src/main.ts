@@ -159,7 +159,7 @@ export default class MetaBindPlugin extends Plugin {
 	}
 
 	async getMetaDataForFileContent(fileContent: string): Promise<any> {
-		// Logger.logDebug(`reading metadata for ${file.path}`);
+		// Logger.logDebug(`reading metadata`);
 		let metadata: any;
 
 		const regExp = new RegExp('^(---)\\n[\\s\\S]*\\n---');
