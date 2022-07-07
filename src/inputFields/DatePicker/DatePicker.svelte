@@ -3,6 +3,7 @@
 	import Calender from './Calender.svelte';
 	import {getMonthName} from './DatePickerInputSvelteHelpers.js';
 	import {moment} from 'obsidian';
+	import Icon from './Icon.svelte';
 
 	const dispatch = createEventDispatcher();
 
@@ -79,7 +80,6 @@
 		border-radius: var(--meta-bind-plugin-border-radius);
 		border:        var(--meta-bind-plugin-border-width) solid var(--background-modifier-border);
 		padding:       5px 10px;
-		height:        30px;
 		cursor:        pointer;
 		width:         fit-content;
 		display:       inline-block;
@@ -111,7 +111,10 @@
 </style>
 
 <div class="date-picker-input">
-	<div class="date-picker-text" on:click={() => showDatePicker = true}>{selectedDate.format(dateFormat)}</div>
+	<div class="date-picker-text" on:click={() => showDatePicker = true}>
+		{selectedDate.format(dateFormat)}
+		<Icon iconName="calendar"/>
+	</div>
 	{#if showDatePicker}
 		<div class="date-picker-close-layer" on:click={() => showDatePicker = false}></div>
 		<div class="date-picker">

@@ -18,7 +18,9 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	uid: number;
 	inputField: AbstractInputField | undefined;
 	error: string;
+	type: InputFieldMarkdownRenderChildType;
 
+	fullDeclaration: string;
 	inputFieldDeclaration: InputFieldDeclaration | undefined;
 	bindTargetFile: TFile | undefined;
 	bindTargetMetadataField: string | undefined;
@@ -34,6 +36,8 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		this.filePath = filePath;
 		this.uid = uid;
 		this.plugin = plugin;
+		this.type = type;
+		this.fullDeclaration = fullDeclaration;
 
 		this.valueQueue = [];
 		this.intervalCounter = 0;
@@ -164,6 +168,8 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		this.containerEl.addClass('meta-bind-plugin-input');
 
 		if (this.error) {
+			this.containerEl.empty();
+			const originalText = this.containerEl.createEl('span', {text: this.fullDeclaration, cls: 'meta-bind-code'});
 			container.innerText = ` -> ERROR: ${this.error}`;
 			container.addClass('meta-bind-plugin-error');
 			this.containerEl.appendChild(container);
@@ -171,6 +177,8 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		}
 
 		if (!this.inputField) {
+			this.containerEl.empty();
+			const originalText = this.containerEl.createEl('span', {text: this.fullDeclaration, cls: 'meta-bind-code'});
 			container.innerText = ` -> ERROR: ${(new MetaBindInternalError('input field is undefined and error is empty').message)}`;
 			container.addClass('meta-bind-plugin-error');
 			this.containerEl.appendChild(container);

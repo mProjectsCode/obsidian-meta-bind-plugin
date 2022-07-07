@@ -29,8 +29,15 @@
 }
 
 .meta-bind-plugin-error {
-	color: red;
+	display: block;
+	color: #FF0000;
 	font-weight: bold;
+	font-family: var(--font-monospace);
+}
+
+.meta-bind-code {
+	color: var(--text-normal);
+	font-family: var(--font-monospace);
 }
 
 .meta-bind-plugin-slider-input-label {
