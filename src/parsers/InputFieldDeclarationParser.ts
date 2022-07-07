@@ -91,17 +91,13 @@ export class InputFieldDeclarationParser {
 
 				const inputFieldClassArgument: InputFieldArgument = {name: inputFieldArgumentName, value: inputFieldArgumentValue};
 				inputFieldArguments.push(inputFieldClassArgument);
-			}
-
-			else if (inputFieldArgumentName === 'addLabels') {
+			} else if (inputFieldArgumentName === 'addLabels') {
 				if (inputFieldType !== InputFieldType.SLIDER) {
 					throw new MetaBindParsingError(`argument \'${inputFieldArgumentName}\' is only applicable to slider input fields`);
 				}
 
 				inputFieldArguments.push({name: 'labels', value: true});
-			}
-
-			else if (inputFieldArgumentName === 'minValue') {
+			} else if (inputFieldArgumentName === 'minValue') {
 				if (inputFieldType !== InputFieldType.SLIDER) {
 					throw new MetaBindParsingError(`argument \'${inputFieldArgumentName}\' is only applicable to slider input fields`);
 				}
@@ -115,9 +111,7 @@ export class InputFieldDeclarationParser {
 
 				const inputFieldArgumentObject: InputFieldArgument = {name: inputFieldArgumentName, value: inputFieldArgumentValueAsNumber};
 				inputFieldArguments.push(inputFieldArgumentObject);
-			}
-
-			else if (inputFieldArgumentName === 'maxValue') {
+			} else if (inputFieldArgumentName === 'maxValue') {
 				if (inputFieldType !== InputFieldType.SLIDER) {
 					throw new MetaBindParsingError(`argument \'${inputFieldArgumentName}\' is only applicable to slider input fields`);
 				}
@@ -131,9 +125,7 @@ export class InputFieldDeclarationParser {
 
 				const inputFieldArgumentObject: InputFieldArgument = {name: inputFieldArgumentName, value: inputFieldArgumentValueAsNumber};
 				inputFieldArguments.push(inputFieldArgumentObject);
-			}
-
-			else if (inputFieldArgumentName === 'option') {
+			} else if (inputFieldArgumentName === 'option') {
 				if (inputFieldType !== InputFieldType.SELECT && inputFieldType !== InputFieldType.MULTI_SELECT) {
 					throw new MetaBindParsingError(`argument \'${inputFieldArgumentName}\' is only applicable to select and multi-select input fields`);
 				}
@@ -142,9 +134,7 @@ export class InputFieldDeclarationParser {
 
 				const inputFieldArgumentObject: InputFieldArgument = {name: inputFieldArgumentName, value: inputFieldArgumentValue};
 				inputFieldArguments.push(inputFieldArgumentObject);
-			}
-
-			else if (inputFieldArgumentName === 'title') {
+			} else if (inputFieldArgumentName === 'title') {
 				if (inputFieldType !== InputFieldType.SELECT && inputFieldType !== InputFieldType.MULTI_SELECT) {
 					throw new MetaBindParsingError(`argument \'${inputFieldArgumentName}\' is only applicable to select and multi-select input fields`);
 				}
@@ -153,9 +143,7 @@ export class InputFieldDeclarationParser {
 
 				const inputFieldArgumentObject: InputFieldArgument = {name: inputFieldArgumentName, value: inputFieldArgumentValue};
 				inputFieldArguments.push(inputFieldArgumentObject);
-			}
-
-			else {
+			} else {
 				throw new MetaBindParsingError(`unknown argument \'${inputFieldArgumentName}\'`);
 			}
 		}

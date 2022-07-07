@@ -22,6 +22,12 @@ export class DatePickerInputField extends AbstractInputField {
 
 	setValue(value: any): void {
 		this.date = DateParser.parse(value) ?? DateParser.getDefaultDate();
+
+		if (!this.date.isValid()) {
+			this.date = DateParser.getDefaultDate();
+			this.onValueChange(this.getValue());
+		}
+
 		this.component?.$set({'selectedDate': this.date});
 	}
 
@@ -43,23 +49,30 @@ export class DatePickerInputField extends AbstractInputField {
 
 	datePickerValueChanged(date: moment.Moment): void {
 		this.date = date;
-		console.log('date picker value change', this.date);
+		// console.log('date picker value change', this.date);
 
-		this.onValueChange(this.getValue());
+		if (this.date.isValid()) {
+			this.onValueChange(this.getValue());
+		}
 	}
 
 	render(container: HTMLDivElement): void {
 		this.container = container;
 
 		this.date = DateParser.parse(this.inputFieldMarkdownRenderChild.getInitialValue()) ?? DateParser.getDefaultDate();
+		if (!this.date.isValid()) {
+			this.date = DateParser.getDefaultDate();
+			this.onValueChange(this.getValue());
+		}
 
 		this.component = new DatePicker({
 			target: container,
 			props: {
 				selectedDate: this.date,
+				dateFormat: this.inputFieldMarkdownRenderChild.plugin.settings.preferredDateFormat,
 				dateChangeCallback: (date: moment.Moment) => this.datePickerValueChanged(date),
 			},
-		})
+		});
 	}
 
 }

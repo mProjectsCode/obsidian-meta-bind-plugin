@@ -12,7 +12,7 @@ export class DateParser {
 	}
 
 	public static getDefaultDate(): moment.Moment {
-		return moment(`${DateParser.getDefaultYear}-${DateParser.getDefaultMonth()}-${DateParser.getDefaultDay()}`);
+		return moment(new Date(DateParser.getDefaultYear(), DateParser.getDefaultMonth(), DateParser.getDefaultDay()));
 	}
 
 	public static getDefaultDay(): number {
