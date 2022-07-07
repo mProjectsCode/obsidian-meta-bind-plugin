@@ -36,7 +36,7 @@ export default class MetaBindPlugin extends Plugin {
 						InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK,
 						text, this,
 						context.sourcePath,
-						this.markDownInputFieldIndex
+						this.markDownInputFieldIndex,
 					));
 					this.markDownInputFieldIndex += 1;
 				}

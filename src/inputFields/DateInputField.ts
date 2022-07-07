@@ -1,9 +1,8 @@
 import {AbstractInputField} from './AbstractInputField';
-import {DropdownComponent, TextComponent} from 'obsidian';
+import {DropdownComponent, moment, TextComponent} from 'obsidian';
 import {InputFieldMarkdownRenderChild} from '../InputFieldMarkdownRenderChild';
 import {DateParser} from '../parsers/DateParser';
 import {MetaBindInternalError} from '../utils/Utils';
-import {moment} from 'obsidian';
 
 export class DateInputField extends AbstractInputField {
 	container: HTMLDivElement | undefined;
@@ -65,6 +64,12 @@ export class DateInputField extends AbstractInputField {
 		}
 
 		this.date = DateParser.parse(value) ?? DateParser.getDefaultDate();
+
+		if (!this.date.isValid()) {
+			this.date = DateParser.getDefaultDate();
+			this.onValueChange(this.getValue());
+		}
+
 		// console.log(this.date);
 		this.monthComponent.setValue(this.date.month().toString());
 		this.dayComponent.setValue(this.date.date().toString());
@@ -81,6 +86,11 @@ export class DateInputField extends AbstractInputField {
 
 	public render(container: HTMLDivElement): void {
 		this.date = DateParser.parse(this.inputFieldMarkdownRenderChild.getInitialValue()) ?? DateParser.getDefaultDate();
+		if (!this.date.isValid()) {
+			this.date = DateParser.getDefaultDate();
+			this.onValueChange(this.getValue());
+		}
+
 		let useUsInputOrder = this.inputFieldMarkdownRenderChild.plugin.settings.useUsDateInputOrder;
 
 		container.removeClass('meta-bind-plugin-input-wrapper');
