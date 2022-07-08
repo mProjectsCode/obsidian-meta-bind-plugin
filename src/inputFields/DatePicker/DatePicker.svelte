@@ -13,14 +13,14 @@
 	export let dateChangeCallback: (date: moment.Moment) => void;
 
 	// state
-	let date;
-	let month;
-	let year;
-	let showDatePicker;
+	let date: number;
+	let month: number;
+	let year: number;
+	let showDatePicker: boolean;
 
 	// so that these change with props
 	$: {
-		// console.log('update date picker', selectedDate);
+		console.log('update date picker', selectedDate);
 		date = selectedDate.date();
 		month = selectedDate.month();
 		year = selectedDate.year();
@@ -47,6 +47,14 @@
 			return;
 		}
 		month -= 1;
+	}
+
+	function yearChange(value: any) {
+		const v = value.target.value;
+		const vNum = Number.parseInt(v);
+		if (!Number.isNaN(vNum)) {
+			year = vNum;
+		}
 	}
 
 	function onDateChange(d: { detail: moment.Moment }) {
@@ -79,7 +87,7 @@
 		background:    var(--background-secondary);
 		border-radius: var(--meta-bind-plugin-border-radius);
 		border:        var(--meta-bind-plugin-border-width) solid var(--background-modifier-border);
-		padding:       5px 10px;
+		padding:       5px 5px 5px 7px;
 		cursor:        pointer;
 		width:         fit-content;
 		display:       inline-block;
@@ -96,13 +104,28 @@
 
 	.date-picker-header {
 		display:         flex;
-		justify-content: center;
+		gap:             5px;
 		align-items:     center;
+		justify-content: space-around;
 	}
 
 	.date-picker-header-text {
-		flex:       1;
-		text-align: center;
+		flex:            1;
+		text-align:      center;
+		display:         flex;
+		gap:             5px;
+		align-items:     center;
+		justify-content: center;
+		width:           min-content;
+	}
+
+	.date-picker-header-text-year {
+		width:   60px;
+		padding: 5px;
+	}
+
+	.date-picker-header-text-month {
+		height: min-content;
 	}
 
 	.month-switch-button {
@@ -121,7 +144,9 @@
 			<div class="date-picker-header">
 				<button class="month-switch-button" on:click={prev}>Prev</button>
 				<div class="date-picker-header-text">
-					{getMonthName(month)} {year}
+					<span class="date-picker-header-text-month">{getMonthName(month)}</span>
+					<input class="date-picker-header-text-year" type="number" value="{year.toString()}"
+						   on:input="{yearChange}">
 				</div>
 				<button class="month-switch-button" on:click={next}>Next</button>
 			</div>

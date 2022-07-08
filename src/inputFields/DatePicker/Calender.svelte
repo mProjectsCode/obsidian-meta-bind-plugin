@@ -27,12 +27,13 @@
 	}
 
 	.calendar-header {
-		display:       flex;
-		flex-wrap:     wrap;
-		gap:           2px;
-		background:    var(--background-primary);
-		border-radius: var(--meta-bind-plugin-border-radius);
-		margin-bottom: 2px;
+		display:         flex;
+		justify-content: space-around;
+		flex-wrap:       wrap;
+		gap:             2px;
+		background:      var(--background-primary);
+		border-radius:   var(--meta-bind-plugin-border-radius);
+		margin-bottom:   2px;
 	}
 
 	.calendar-content {
@@ -43,7 +44,7 @@
 	}
 
 	.cell {
-		width:           40px;
+		min-width:       40px;
 		height:          30px;
 		padding:         5px;
 		display:         flex;

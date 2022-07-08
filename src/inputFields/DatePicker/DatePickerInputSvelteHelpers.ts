@@ -21,14 +21,17 @@ export function getMonthName(index: number): string {
 
 export function getDateRows(monthIndex: number, year: number): number[] {
 	const days: number = moment(new Date(year, monthIndex)).daysInMonth(); // amount of days in month
-	const rows: number[] = (new Array(42)).fill(undefined); // empty 42 long array
+	let rows: number[] = (new Array(42)).fill(undefined); // empty 42 long array
 	const startIndex: number = getWeekDay(new Date(year, monthIndex, 1)); // index offset based on weekday of first day in month
 
 	for (let i = 0; i < days; i++) {
 		rows[i + startIndex] = i + 1;
 	}
 
-	return rows[rows.length - 7] ? rows : rows.slice(0, -7);
+	rows = rows[rows.length - 7] ? rows : rows.slice(0, -7); // slice last week if it is empty
+	rows = rows[rows.length - 7] ? rows : rows.slice(0, -7); // slice last week if it is empty
+
+	return rows;
 }
 
 // first day of the week is monday where I live
