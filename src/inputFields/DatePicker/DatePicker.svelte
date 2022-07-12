@@ -3,16 +3,15 @@
 	import Calender from './Calender.svelte';
 	import {getMonthName} from './DatePickerInputSvelteHelpers.js';
 	import {moment} from 'obsidian';
+	import type { Moment } from 'moment';
 	import Icon from './Icon.svelte';
 
 	const dispatch = createEventDispatcher();
 
-	// props
-	export let selectedDate: moment.Moment = moment();
+	export let selectedDate: Moment = moment();
 	export let dateFormat: string = 'dddd, MMMM Do YYYY';
-	export let dateChangeCallback: (date: moment.Moment) => void;
+	export let dateChangeCallback: (date: Moment) => void;
 
-	// state
 	let date: number;
 	let month: number;
 	let year: number;
@@ -26,12 +25,7 @@
 		year = selectedDate.year();
 	}
 
-	// handlers
-	function onFocus() {
-		showDatePicker = true;
-	}
-
-	function next() {
+	function nextMonth(): void {
 		if (month === 11) {
 			month = 0;
 			year += 1;
@@ -40,7 +34,7 @@
 		month = month + 1;
 	}
 
-	function prev() {
+	function prevMonth(): void {
 		if (month === 0) {
 			month = 11;
 			year -= 1;
@@ -49,7 +43,7 @@
 		month -= 1;
 	}
 
-	function yearChange(value: any) {
+	function changeYear(value: any): void {
 		const v = value.target.value;
 		const vNum = Number.parseInt(v);
 		if (!Number.isNaN(vNum)) {
@@ -57,7 +51,7 @@
 		}
 	}
 
-	function onDateChange(d: { detail: moment.Moment }) {
+	function onDateChange(d: { detail: Moment }): void {
 		showDatePicker = false;
 		selectedDate = d.detail;
 		dateChangeCallback(d.detail);
@@ -142,13 +136,13 @@
 		<div class="date-picker-close-layer" on:click={() => showDatePicker = false}></div>
 		<div class="date-picker">
 			<div class="date-picker-header">
-				<button class="month-switch-button" on:click={prev}>Prev</button>
+				<button class="month-switch-button" on:click={prevMonth}>Prev</button>
 				<div class="date-picker-header-text">
 					<span class="date-picker-header-text-month">{getMonthName(month)}</span>
 					<input class="date-picker-header-text-year" type="number" value="{year.toString()}"
-						   on:input="{yearChange}">
+						   on:input="{changeYear}">
 				</div>
-				<button class="month-switch-button" on:click={next}>Next</button>
+				<button class="month-switch-button" on:click={nextMonth}>Next</button>
 			</div>
 			<Calender
 				on:dateChange={onDateChange}

@@ -2,11 +2,12 @@
 	import {getDateRows, getWeekDays, uuid} from './DatePickerInputSvelteHelpers.js';
 	import {createEventDispatcher} from 'svelte';
 	import {moment} from 'obsidian';
+	import type { Moment } from 'moment';
 
 	const dispatch = createEventDispatcher();
 
 	// props
-	export let selectedDate: moment.Moment;
+	export let selectedDate: Moment;
 	export let month: number;
 	export let year: number;
 

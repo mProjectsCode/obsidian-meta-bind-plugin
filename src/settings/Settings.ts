@@ -8,6 +8,8 @@ export interface MetaBindPluginSettings {
 	syncInterval: number;
 	maxSyncInterval: number;
 	minSyncInterval: number;
+
+	inputTemplates: string;
 }
 
 export const DEFAULT_SETTINGS: MetaBindPluginSettings = {
@@ -17,6 +19,8 @@ export const DEFAULT_SETTINGS: MetaBindPluginSettings = {
 	syncInterval: 200,
 	minSyncInterval: 50,
 	maxSyncInterval: 1000,
+
+	inputTemplates: '',
 };
 
 export class MetaBindSettingTab extends PluginSettingTab {
@@ -75,6 +79,19 @@ export class MetaBindSettingTab extends PluginSettingTab {
 					this.plugin.saveSettings();
 				});
 			});
+
+		new Setting(containerEl)
+			.setName('Templates')
+			.setDesc(`You can specify templates here, and access them using \`TEMPLATE_INPUT[...]\` in your notes.`)
+			.addTextArea(cb => {
+				cb.setValue(this.plugin.settings.inputTemplates);
+				cb.setPlaceholder('template_name -> INPUT[input_type(argument(value)):bind_target]');
+				cb.onChange(data => {
+					this.plugin.settings.inputTemplates = data;
+					this.plugin.saveSettings();
+				});
+			});
+
 
 		new Setting(containerEl)
 			.setName('Dev Mode')
