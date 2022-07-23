@@ -32,6 +32,15 @@ export class Logger {
 	}
 
 	/**
+	 * Logs a warning to the console without the plugin prefix
+	 *
+	 * @param data
+	 */
+	static warn(...data: any): void {
+		console.warn(data);
+	}
+
+	/**
 	 * Logs an error to the console with the plugin prefix
 	 *
 	 * @param data

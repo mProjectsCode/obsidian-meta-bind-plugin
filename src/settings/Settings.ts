@@ -1,4 +1,4 @@
-import {App, PluginSettingTab, Setting} from 'obsidian';
+import {App, PluginSettingTab, Setting, TextAreaComponent} from 'obsidian';
 import MetaBindPlugin from '../main';
 
 export interface MetaBindPluginSettings {
@@ -82,15 +82,17 @@ export class MetaBindSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Templates')
-			.setDesc(`You can specify templates here, and access them using \`TEMPLATE_INPUT[...]\` in your notes.`)
-			.addTextArea(cb => {
-				cb.setValue(this.plugin.settings.inputTemplates);
-				cb.setPlaceholder('template_name -> INPUT[input_type(argument(value)):bind_target]');
-				cb.onChange(data => {
-					this.plugin.settings.inputTemplates = data;
-					this.plugin.saveSettings();
-				});
-			});
+			.setDesc(`You can specify templates here, and access them using \`TEMPLATE_INPUT[...]\` in your notes.`);
+
+		const ta = new TextAreaComponent(containerEl);
+		ta.setValue(this.plugin.settings.inputTemplates);
+		ta.setPlaceholder('template_name -> INPUT[input_type(argument(value)):bind_target]');
+		ta.inputEl.style.width = '100%';
+		ta.inputEl.style.height = '200px';
+		ta.onChange(data => {
+			this.plugin.settings.inputTemplates = data;
+			this.plugin.saveSettings();
+		});
 
 
 		new Setting(containerEl)

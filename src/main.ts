@@ -4,6 +4,7 @@ import {InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType} from '
 import {getFileName, isPath, removeFileEnding} from './utils/Utils';
 import {Logger} from './utils/Logger';
 import {DateParser} from './parsers/DateParser';
+import {InputFieldDeclarationParser} from "./parsers/InputFieldDeclarationParser";
 
 export default class MetaBindPlugin extends Plugin {
 	// @ts-ignore defined in `onload`
@@ -19,6 +20,7 @@ export default class MetaBindPlugin extends Plugin {
 
 		Logger.devMode = this.settings.devMode;
 		DateParser.dateFormat = this.settings.preferredDateFormat;
+		InputFieldDeclarationParser.parseTemplates(this.settings.inputTemplates);
 
 		this.activeMarkdownInputFields = [];
 		this.markDownInputFieldIndex = 0;
@@ -194,6 +196,7 @@ export default class MetaBindPlugin extends Plugin {
 	async saveSettings(): Promise<void> {
 		DateParser.dateFormat = this.settings.preferredDateFormat;
 		Logger.devMode = this.settings.devMode;
+		InputFieldDeclarationParser.parseTemplates(this.settings.inputTemplates);
 		await this.saveData(this.settings);
 	}
 }

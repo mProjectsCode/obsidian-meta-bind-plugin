@@ -2,8 +2,8 @@
 rating: 31
 title: test title test test
 completed: false
-toggle1: true
-slider1: 63
+toggle1: false
+slider1: 5
 slider2: 5
 text1: Test text
 text_area1: Test test
@@ -122,6 +122,12 @@ option(option d)
 Lorem ipsum dolor sit amet, `INPUT[date():other note#date]` consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. `INPUT[date():other note#date]` Curabitur sed rhoncus nisl. Maecenas nisi justo, viverra vel tempus vel, hendrerit at metus. `INPUT[date_picker:other note#date]`  asdasd asdasdasd
 
 asdasd
+
+## Templates
+- unknown tempalate
+	- `INPUT[][toggle:toggle1]`
+	- `INPUT[nonExistantTemplate][toggle:toggle1]`
+- `INPUT[toggleTemplate][:toggle1]`
 
 ## Error Messages
 - `INPUT[text():meta bind/nonExistantFile#title]`

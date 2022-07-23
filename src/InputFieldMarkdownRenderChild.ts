@@ -66,7 +66,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 			this.limitInterval = window.setInterval(() => this.applyValueQueueToMetadata(), this.plugin.settings.syncInterval);
 		} catch (e: any) {
 			this.error = e.message;
-			Logger.logWarning(e);
+			console.warn(e);
 		}
 	}
 
