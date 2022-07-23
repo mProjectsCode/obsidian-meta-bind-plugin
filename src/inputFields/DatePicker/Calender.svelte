@@ -2,7 +2,7 @@
 	import {getDateRows, getWeekDays, uuid} from './DatePickerInputSvelteHelpers.js';
 	import {createEventDispatcher} from 'svelte';
 	import {moment} from 'obsidian';
-	import type { Moment } from 'moment';
+	import type {Moment} from 'moment';
 
 	const dispatch = createEventDispatcher();
 

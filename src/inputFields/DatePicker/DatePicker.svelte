@@ -3,7 +3,7 @@
 	import Calender from './Calender.svelte';
 	import {getMonthName} from './DatePickerInputSvelteHelpers.js';
 	import {moment} from 'obsidian';
-	import type { Moment } from 'moment';
+	import type {Moment} from 'moment';
 	import Icon from './Icon.svelte';
 
 	const dispatch = createEventDispatcher();

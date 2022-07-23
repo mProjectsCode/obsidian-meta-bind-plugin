@@ -2,6 +2,8 @@ import {AbstractInputField} from './AbstractInputField';
 import {SelectInputFieldElement} from './SelectInputFieldElement';
 import {MetaBindInternalError, mod} from '../utils/Utils';
 import {InputFieldMarkdownRenderChild} from '../InputFieldMarkdownRenderChild';
+import {InputFieldArgumentType} from "../parsers/InputFieldDeclarationParser";
+import {AbstractInputFieldArgument} from "../inputFieldArguments/AbstractInputFieldArgument";
 
 export class SelectInputField extends AbstractInputField {
 	static allowInlineCodeBlock: boolean = false;
@@ -55,12 +57,12 @@ export class SelectInputField extends AbstractInputField {
 
 		const elementWrapper = container.createDiv({cls: 'meta-bind-plugin-select-input-wrapper'});
 
-		const titleArgument = this.inputFieldMarkdownRenderChild.getArgument('title');
+		const titleArgument = this.inputFieldMarkdownRenderChild.getArgument(InputFieldArgumentType.TITLE);
 		if (titleArgument) {
 			elementWrapper.createEl('div', {text: titleArgument.value, cls: 'meta-bind-plugin-select-input-header'});
 		}
 
-		const elementArguments: { name: string, value: string }[] = this.inputFieldMarkdownRenderChild.getArguments('option');
+		const elementArguments: AbstractInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.OPTION);
 
 		let i = 0;
 		for (const elementArgument of elementArguments) {

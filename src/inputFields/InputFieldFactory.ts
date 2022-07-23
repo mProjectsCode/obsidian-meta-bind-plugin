@@ -15,15 +15,42 @@ import {DatePickerInputField} from './DatePicker/DatePickerInputField';
 
 export class InputFieldFactory {
 	static allowCodeBlockMap: Record<string, { codeBlock: boolean, inlineCodeBlock: boolean }> = {
-		[InputFieldType.TOGGLE]: {codeBlock: ToggleInputField.allowCodeBlock, inlineCodeBlock: ToggleInputField.allowInlineCodeBlock},
-		[InputFieldType.SLIDER]: {codeBlock: SliderInputField.allowCodeBlock, inlineCodeBlock: SliderInputField.allowInlineCodeBlock},
-		[InputFieldType.TEXT]: {codeBlock: TextInputField.allowCodeBlock, inlineCodeBlock: TextInputField.allowInlineCodeBlock},
-		[InputFieldType.TEXT_AREA]: {codeBlock: TextAreaInputField.allowCodeBlock, inlineCodeBlock: TextAreaInputField.allowInlineCodeBlock},
-		[InputFieldType.SELECT]: {codeBlock: SelectInputField.allowCodeBlock, inlineCodeBlock: SelectInputField.allowInlineCodeBlock},
-		[InputFieldType.MULTI_SELECT]: {codeBlock: MultiSelectInputField.allowCodeBlock, inlineCodeBlock: MultiSelectInputField.allowInlineCodeBlock},
-		[InputFieldType.DATE]: {codeBlock: DateInputField.allowCodeBlock, inlineCodeBlock: DateInputField.allowInlineCodeBlock},
-		[InputFieldType.TIME]: {codeBlock: TimeInputField.allowCodeBlock, inlineCodeBlock: TimeInputField.allowInlineCodeBlock},
-		[InputFieldType.DATE_PICKER]: {codeBlock: DatePickerInputField.allowCodeBlock, inlineCodeBlock: DatePickerInputField.allowInlineCodeBlock},
+		[InputFieldType.TOGGLE]: {
+			codeBlock: ToggleInputField.allowCodeBlock,
+			inlineCodeBlock: ToggleInputField.allowInlineCodeBlock
+		},
+		[InputFieldType.SLIDER]: {
+			codeBlock: SliderInputField.allowCodeBlock,
+			inlineCodeBlock: SliderInputField.allowInlineCodeBlock
+		},
+		[InputFieldType.TEXT]: {
+			codeBlock: TextInputField.allowCodeBlock,
+			inlineCodeBlock: TextInputField.allowInlineCodeBlock
+		},
+		[InputFieldType.TEXT_AREA]: {
+			codeBlock: TextAreaInputField.allowCodeBlock,
+			inlineCodeBlock: TextAreaInputField.allowInlineCodeBlock
+		},
+		[InputFieldType.SELECT]: {
+			codeBlock: SelectInputField.allowCodeBlock,
+			inlineCodeBlock: SelectInputField.allowInlineCodeBlock
+		},
+		[InputFieldType.MULTI_SELECT]: {
+			codeBlock: MultiSelectInputField.allowCodeBlock,
+			inlineCodeBlock: MultiSelectInputField.allowInlineCodeBlock
+		},
+		[InputFieldType.DATE]: {
+			codeBlock: DateInputField.allowCodeBlock,
+			inlineCodeBlock: DateInputField.allowInlineCodeBlock
+		},
+		[InputFieldType.TIME]: {
+			codeBlock: TimeInputField.allowCodeBlock,
+			inlineCodeBlock: TimeInputField.allowInlineCodeBlock
+		},
+		[InputFieldType.DATE_PICKER]: {
+			codeBlock: DatePickerInputField.allowCodeBlock,
+			inlineCodeBlock: DatePickerInputField.allowInlineCodeBlock
+		},
 	};
 
 	static createInputField(inputFieldType: InputFieldType, args: { type: InputFieldMarkdownRenderChildType, inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChanged: (value: any) => void | Promise<void> }): AbstractInputField | undefined {
