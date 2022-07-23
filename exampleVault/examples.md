@@ -3,12 +3,12 @@ rating: 31
 title: test title test test
 completed: false
 toggle1: true
-slider1: 7
+slider1: 63
 slider2: 5
 text1: Test text
 text_area1: Test test
 date1: 2022-05-28
-select: option c
+select: option b
 multi-select:
   - option a
   - option c
@@ -127,6 +127,7 @@ asdasd
 - `INPUT[text():meta bind/nonExistantFile#title]`
 - `INPUT[slider(nonExistantArgument)]`
 - `INPUT[select(option(option a),option(option b),option(option c),option(option d)):select]`
+
 Code block error
 ```meta-bind
 INPUT[slider(nonExistantArgument)]

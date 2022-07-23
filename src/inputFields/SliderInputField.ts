@@ -3,6 +3,7 @@ import {SliderComponent} from 'obsidian';
 import {Logger} from '../utils/Logger';
 import {InputFieldMarkdownRenderChild} from '../InputFieldMarkdownRenderChild';
 import {MetaBindInternalError} from '../utils/Utils';
+import {InputFieldArgumentType} from "../parsers/InputFieldDeclarationParser";
 
 export class SliderInputField extends AbstractInputField {
 	sliderComponent: SliderComponent | undefined;
@@ -59,7 +60,7 @@ export class SliderInputField extends AbstractInputField {
 		container.removeClass('meta-bind-plugin-input-wrapper');
 		container.addClass('meta-bind-plugin-flex-input-wrapper');
 
-		const labelArgument = this.inputFieldMarkdownRenderChild.getArgument('labels');
+		const labelArgument = this.inputFieldMarkdownRenderChild.getArgument(InputFieldArgumentType.ADD_LABELS);
 		if (labelArgument && labelArgument.value === true) {
 			container.createSpan({text: this.minValue.toString(), cls: 'meta-bind-plugin-slider-input-label'});
 		}

@@ -3,8 +3,14 @@ import MetaBindPlugin from './main';
 import {Logger} from './utils/Logger';
 import {AbstractInputField} from './inputFields/AbstractInputField';
 import {InputFieldFactory} from './inputFields/InputFieldFactory';
-import {InputFieldArgument, InputFieldDeclaration, InputFieldDeclarationParser} from './parsers/InputFieldDeclarationParser';
+import {
+	InputFieldArgumentType,
+	InputFieldDeclaration,
+	InputFieldDeclarationParser
+} from './parsers/InputFieldDeclarationParser';
 import {MetaBindBindTargetError, MetaBindInternalError} from './utils/Utils';
+import {AbstractInputFieldArgument} from "./inputFieldArguments/AbstractInputFieldArgument";
+import {ClassInputFieldArgument} from "./inputFieldArguments/ClassInputFieldArgument";
 
 export enum InputFieldMarkdownRenderChildType {
 	INLINE_CODE_BLOCK,
@@ -146,15 +152,15 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		}
 	}
 
-	getArguments(name: string): InputFieldArgument[] {
+	getArguments(name: InputFieldArgumentType): AbstractInputFieldArgument[] {
 		if (!this.inputFieldDeclaration) {
 			throw new MetaBindInternalError('inputFieldDeclaration is undefined, can not retrieve arguments');
 		}
 
-		return this.inputFieldDeclaration.arguments.filter(x => x.name === name);
+		return this.inputFieldDeclaration.argumentContainer.arguments.filter(x => x.identifier === name);
 	}
 
-	getArgument(name: string): InputFieldArgument | undefined {
+	getArgument(name: InputFieldArgumentType): AbstractInputFieldArgument | undefined {
 		return this.getArguments(name).at(0);
 	}
 
@@ -189,9 +195,9 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 		this.inputField.render(container);
 
-		const classArgument = this.getArguments('class');
-		if (classArgument) {
-			this.inputField.getHtmlElement().addClasses(classArgument.map(x => x.value));
+		const classArguments: ClassInputFieldArgument[] = this.getArguments(InputFieldArgumentType.CLASS);
+		if (classArguments) {
+			this.inputField.getHtmlElement().addClasses(classArguments.map(x => x.value).flat());
 		}
 
 
