@@ -15,6 +15,8 @@ export default class MetaBindPlugin extends Plugin {
 	// @ts-ignore defined in `onload`
 	markDownInputFieldIndex: number;
 
+	frontMatterRexExpPattern = '^(---)\\n[\\s\\S]*?\\n---'
+
 	async onload(): Promise<void> {
 		await this.loadSettings();
 
@@ -118,7 +120,7 @@ export default class MetaBindPlugin extends Plugin {
 			return;
 		}
 
-		const regExp = new RegExp('^(---)\\n[\\s\\S]*\\n---');
+		const regExp = new RegExp(this.frontMatterRexExpPattern);
 		fileContent = fileContent.replace(regExp, '');
 
 		metadata[key] = value;
@@ -164,8 +166,9 @@ export default class MetaBindPlugin extends Plugin {
 		// Logger.logDebug(`reading metadata`);
 		let metadata: any;
 
-		const regExp = new RegExp('^(---)\\n[\\s\\S]*\\n---');
+		const regExp = new RegExp(this.frontMatterRexExpPattern);
 		const frontMatterRegExpResult = regExp.exec(fileContent);
+		// console.log('regexres: ', frontMatterRegExpResult);
 		if (!frontMatterRegExpResult) {
 			return {};
 		}
@@ -184,7 +187,7 @@ export default class MetaBindPlugin extends Plugin {
 			metadata = {};
 		}
 
-		//console.log(metadata);
+		// console.log('metadata: ', metadata);
 
 		return metadata;
 	}
