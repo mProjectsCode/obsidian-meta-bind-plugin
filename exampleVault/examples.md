@@ -3,8 +3,8 @@ rating: 31
 title: test title test test
 completed: false
 toggle1: false
-slider1: 5
-slider2: 5
+slider1: 7
+slider2: 6
 text1: Test text
 text_area1: Test test
 date1: 2022-05-28
@@ -87,6 +87,8 @@ option(option d)
 
 > [!INFO]
 > `INPUT[slider(addLabels, minValue(1), maxValue(10)):slider1]`
+
+---
 
 ## Linking to a different note
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. Curabitur sed rhoncus nisl.

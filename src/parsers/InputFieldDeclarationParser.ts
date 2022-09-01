@@ -127,7 +127,7 @@ export class InputFieldDeclarationParser {
 	}
 
 	static parseTemplates(templates: string): void {
-		let templateDeclarations = ParserUtils.split(templates, '\n', InputFieldDeclarationParser.squareBracesPair);
+		let templateDeclarations = templates ? ParserUtils.split(templates, '\n', InputFieldDeclarationParser.squareBracesPair) : [];
 		templateDeclarations = templateDeclarations.map(x => x.trim()).filter(x => x.length > 0);
 
 		for (const templateDeclaration of templateDeclarations) {
