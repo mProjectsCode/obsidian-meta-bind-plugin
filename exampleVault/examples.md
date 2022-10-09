@@ -4,7 +4,7 @@ title: test title test test
 completed: false
 toggle1: false
 slider1: 7
-slider2: 6
+slider2: 4
 text1: Test text
 text_area1: Test test
 date1: 2022-05-28
