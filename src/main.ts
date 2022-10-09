@@ -15,7 +15,7 @@ export default class MetaBindPlugin extends Plugin {
 	// @ts-ignore defined in `onload`
 	markDownInputFieldIndex: number;
 
-	frontMatterRexExpPattern = '^(---)\\n[\\s\\S]*?\\n---'
+	frontMatterRexExpPattern = '^(---)\\n[\\s\\S]*?\\n---';
 
 	async onload(): Promise<void> {
 		await this.loadSettings();
