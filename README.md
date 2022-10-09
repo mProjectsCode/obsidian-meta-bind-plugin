@@ -1,6 +1,10 @@
 # Obsidian Meta Bind Plugin
 This plugin can create input fields inside your notes and bind them to metadata fields.
 
+### New docs
+I am currently working on new docs for this plugin.
+https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs
+
 ### How to use
 To create an input field you have to write an inline code block or normal code block starting with `INPUT`. Then in square brackets the type of input field, in round brackets arguments and finally behind a colon the metadata field to bind to.
 
@@ -22,7 +26,7 @@ For more examples see the `exampleVault` folder.
 - `text` a text field
 - `text_area` a bigger text field
 - `select` a select input field, only for code blocks
-- `multi-select` a multi-select input field, only for code blocks
+- `multi_select` a multi-select input field, only for code blocks
 - `date` a date input field
 
 #### Arguments

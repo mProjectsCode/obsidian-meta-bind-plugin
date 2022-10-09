@@ -23,7 +23,7 @@ export class Time {
 		return this._minute;
 	}
 
-	public setMinute(value: number): void  {
+	public setMinute(value: number): void {
 		if (value < 0 || value > 59) {
 			this._minute = TimeParser.getDefaultMinute();
 			return;
@@ -39,12 +39,12 @@ export class Time {
 		return ('00' + this.getMinute().toString()).slice(-2);
 	}
 
-	public setHourFromString(str: string): void  {
+	public setHourFromString(str: string): void {
 		const v = Number.parseInt(str);
 		this.setHour(Number.isNaN(v) ? TimeParser.getDefaultHour() : v);
 	}
 
-	public setMinuteFromString(str: string): void  {
+	public setMinuteFromString(str: string): void {
 		const v = Number.parseInt(str);
 		this.setMinute(Number.isNaN(v) ? TimeParser.getDefaultMinute() : v);
 	}

@@ -3,8 +3,14 @@ import MetaBindPlugin from './main';
 import {Logger} from './utils/Logger';
 import {AbstractInputField} from './inputFields/AbstractInputField';
 import {InputFieldFactory} from './inputFields/InputFieldFactory';
-import {InputFieldArgument, InputFieldDeclaration, InputFieldDeclarationParser} from './parsers/InputFieldDeclarationParser';
+import {
+	InputFieldArgumentType,
+	InputFieldDeclaration,
+	InputFieldDeclarationParser
+} from './parsers/InputFieldDeclarationParser';
 import {MetaBindBindTargetError, MetaBindInternalError} from './utils/Utils';
+import {AbstractInputFieldArgument} from "./inputFieldArguments/AbstractInputFieldArgument";
+import {ClassInputFieldArgument} from "./inputFieldArguments/ClassInputFieldArgument";
 
 export enum InputFieldMarkdownRenderChildType {
 	INLINE_CODE_BLOCK,
@@ -18,7 +24,9 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	uid: number;
 	inputField: AbstractInputField | undefined;
 	error: string;
+	type: InputFieldMarkdownRenderChildType;
 
+	fullDeclaration: string;
 	inputFieldDeclaration: InputFieldDeclaration | undefined;
 	bindTargetFile: TFile | undefined;
 	bindTargetMetadataField: string | undefined;
@@ -34,6 +42,8 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		this.filePath = filePath;
 		this.uid = uid;
 		this.plugin = plugin;
+		this.type = type;
+		this.fullDeclaration = fullDeclaration;
 
 		this.valueQueue = [];
 		this.intervalCounter = 0;
@@ -56,7 +66,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 			this.limitInterval = window.setInterval(() => this.applyValueQueueToMetadata(), this.plugin.settings.syncInterval);
 		} catch (e: any) {
 			this.error = e.message;
-			Logger.logWarning(e);
+			console.warn(e);
 		}
 	}
 
@@ -142,15 +152,15 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		}
 	}
 
-	getArguments(name: string): InputFieldArgument[] {
+	getArguments(name: InputFieldArgumentType): AbstractInputFieldArgument[] {
 		if (!this.inputFieldDeclaration) {
 			throw new MetaBindInternalError('inputFieldDeclaration is undefined, can not retrieve arguments');
 		}
 
-		return this.inputFieldDeclaration.arguments.filter(x => x.name === name);
+		return this.inputFieldDeclaration.argumentContainer.arguments.filter(x => x.identifier === name);
 	}
 
-	getArgument(name: string): InputFieldArgument | undefined {
+	getArgument(name: InputFieldArgumentType): AbstractInputFieldArgument | undefined {
 		return this.getArguments(name).at(0);
 	}
 
@@ -164,6 +174,8 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		this.containerEl.addClass('meta-bind-plugin-input');
 
 		if (this.error) {
+			this.containerEl.empty();
+			const originalText = this.containerEl.createEl('span', {text: this.fullDeclaration, cls: 'meta-bind-code'});
 			container.innerText = ` -> ERROR: ${this.error}`;
 			container.addClass('meta-bind-plugin-error');
 			this.containerEl.appendChild(container);
@@ -171,6 +183,8 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		}
 
 		if (!this.inputField) {
+			this.containerEl.empty();
+			const originalText = this.containerEl.createEl('span', {text: this.fullDeclaration, cls: 'meta-bind-code'});
 			container.innerText = ` -> ERROR: ${(new MetaBindInternalError('input field is undefined and error is empty').message)}`;
 			container.addClass('meta-bind-plugin-error');
 			this.containerEl.appendChild(container);
@@ -181,9 +195,9 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 		this.inputField.render(container);
 
-		const classArgument = this.getArguments('class');
-		if (classArgument) {
-			this.inputField.getHtmlElement().addClasses(classArgument.map(x => x.value));
+		const classArguments: ClassInputFieldArgument[] = this.getArguments(InputFieldArgumentType.CLASS);
+		if (classArguments) {
+			this.inputField.getHtmlElement().addClasses(classArguments.map(x => x.value).flat());
 		}
 
 
