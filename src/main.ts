@@ -1,4 +1,4 @@
-import {parseYaml, Plugin, stringifyYaml, TFile} from 'obsidian';
+import {CachedMetadata, FrontMatterCache, parseYaml, Plugin, stringifyYaml, TFile} from 'obsidian';
 import {DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab} from './settings/Settings';
 import {InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType} from './InputFieldMarkdownRenderChild';
 import {getFileName, isPath, removeFileEnding} from './utils/Utils';
@@ -64,11 +64,9 @@ export default class MetaBindPlugin extends Plugin {
 			}
 		});
 
-		this.registerEvent(this.app.vault.on('modify', async abstractFile => {
-			if (abstractFile instanceof TFile) {
-				await this.updateMarkdownInputFieldsOnFileChange(abstractFile);
-			}
-		}));
+		this.app.metadataCache.on('changed', async (file: TFile, data: string, cache: CachedMetadata) => {
+			await this.updateMarkdownInputFieldsOnMetadataCacheChange(file, cache);
+		});
 
 		this.addSettingTab(new MetaBindSettingTab(this.app, this));
 	}
@@ -87,7 +85,7 @@ export default class MetaBindPlugin extends Plugin {
 		this.activeMarkdownInputFields = this.activeMarkdownInputFields.filter(x => x.uid !== inputFieldMarkdownRenderChild.uid);
 	}
 
-	async updateMarkdownInputFieldsOnFileChange(file: TFile): Promise<void> {
+	async updateMarkdownInputFieldsOnMetadataCacheChange(file: TFile, cache: CachedMetadata): Promise<void> {
 		let metadata: any = undefined;
 
 		for (const activeMarkdownInputField of this.activeMarkdownInputFields) {
@@ -97,7 +95,7 @@ export default class MetaBindPlugin extends Plugin {
 
 			if (activeMarkdownInputField.bindTargetFile.path === file.path) {
 				if (metadata === undefined) {
-					metadata = await this.getMetaDataForFile(file);
+					metadata = await this.getMetadataFromFileCache(cache.frontmatter);
 				}
 				activeMarkdownInputField.updateValue(metadata[activeMarkdownInputField.bindTargetMetadataField]);
 			}
@@ -189,6 +187,19 @@ export default class MetaBindPlugin extends Plugin {
 
 		// console.log('metadata: ', metadata);
 
+		return metadata;
+	}
+
+	getMetadataFromFileCache(cache: FrontMatterCache | undefined) {
+		let metadata = cache as object;
+
+		if (metadata) {
+			metadata = Object.assign({}, metadata); // copy
+			// @ts-ignore
+			delete metadata.position;
+		} else {
+			metadata = {};
+		}
 		return metadata;
 	}
 
