@@ -24,6 +24,7 @@ export enum InputFieldArgumentType {
 	MAX_VALUE = 'maxValue',
 	OPTION = 'option',
 	TITLE = 'title',
+	ALIGN_RIGHT = 'alignRight',
 
 	INVALID = 'invalid',
 }
@@ -106,9 +107,9 @@ export class InputFieldDeclarationParser {
 
 
 		if (useTemplate) {
-			console.log(templateName);
+			// console.log(templateName);
 			const template = InputFieldDeclarationParser.templates.filter(x => x.identifier === templateName).first()?.template;
-			console.log(template);
+			// console.log(template);
 			if (template) {
 				inputFieldDeclaration.bindTarget = inputFieldDeclaration.bindTarget || template.bindTarget;
 				inputFieldDeclaration.isBound = inputFieldDeclaration.isBound || template.isBound;
