@@ -3,7 +3,7 @@ import {SliderComponent} from 'obsidian';
 import {Logger} from '../utils/Logger';
 import {InputFieldMarkdownRenderChild} from '../InputFieldMarkdownRenderChild';
 import {MetaBindInternalError} from '../utils/Utils';
-import {InputFieldArgumentType} from "../parsers/InputFieldDeclarationParser";
+import {InputFieldArgumentType} from '../parsers/InputFieldDeclarationParser';
 
 export class SliderInputField extends AbstractInputField {
 	sliderComponent: SliderComponent | undefined;
@@ -13,8 +13,8 @@ export class SliderInputField extends AbstractInputField {
 
 	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => (void | Promise<void>)) {
 		super(inputFieldMarkdownRenderChild, onValueChange);
-		this.minValue = inputFieldMarkdownRenderChild.getArgument('minValue')?.value ?? 0;
-		this.maxValue = inputFieldMarkdownRenderChild.getArgument('maxValue')?.value ?? 100;
+		this.minValue = inputFieldMarkdownRenderChild.getArgument(InputFieldArgumentType.MIN_VALUE)?.value ?? 0;
+		this.maxValue = inputFieldMarkdownRenderChild.getArgument(InputFieldArgumentType.MAX_VALUE)?.value ?? 100;
 	}
 
 	getValue(): any {

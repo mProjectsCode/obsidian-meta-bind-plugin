@@ -17,7 +17,7 @@
 			"ES6",
 			"ES7"
 		],
-		"types": ["svelte", "node"]
+		"types": ["svelte", "node", "jest"]
 	},
 	"include": [
 		"**/*.ts"
