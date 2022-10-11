@@ -6,6 +6,7 @@ import {MinValueInputFieldArgument} from "./MinValueInputFieldArgument";
 import {MaxValueInputFieldArgument} from "./MaxValueInputFieldArgument";
 import {OptionInputFieldArgument} from "./OptionInputFieldArgument";
 import {TitleInputFieldArgument} from "./TitleInputFieldArgument";
+import {AlignRightInputFieldArgument} from './AlignRightInputFieldArgument';
 
 
 export class InputFieldArgumentFactory {
@@ -22,6 +23,8 @@ export class InputFieldArgumentFactory {
 			return new OptionInputFieldArgument();
 		} else if (argumentIdentifier === InputFieldArgumentType.TITLE) {
 			return new TitleInputFieldArgument();
+		} else if (argumentIdentifier === InputFieldArgumentType.ALIGN_RIGHT) {
+			return new AlignRightInputFieldArgument();
 		} else {
 			throw new MetaBindParsingError(`unknown argument \'${argumentIdentifier}\'`);
 		}

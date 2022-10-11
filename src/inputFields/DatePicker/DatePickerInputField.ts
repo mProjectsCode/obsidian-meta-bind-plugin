@@ -1,9 +1,10 @@
 import {InputFieldMarkdownRenderChild} from '../../InputFieldMarkdownRenderChild';
 import {AbstractInputField} from '../AbstractInputField';
-import {MetaBindInternalError} from '../../utils/Utils';
+import {isTruthy, MetaBindInternalError} from '../../utils/Utils';
 import DatePicker from './DatePicker.svelte';
 import {moment} from 'obsidian';
 import {DateParser} from '../../parsers/DateParser';
+import {InputFieldArgumentType} from '../../parsers/InputFieldDeclarationParser';
 
 export class DatePickerInputField extends AbstractInputField {
 	container: HTMLDivElement | undefined;
@@ -68,6 +69,7 @@ export class DatePickerInputField extends AbstractInputField {
 		this.component = new DatePicker({
 			target: container,
 			props: {
+				alignRight: this.inputFieldMarkdownRenderChild.getArgument(InputFieldArgumentType.ALIGN_RIGHT)?.value,
 				selectedDate: this.date,
 				dateFormat: this.inputFieldMarkdownRenderChild.plugin.settings.preferredDateFormat,
 				dateChangeCallback: (date: moment.Moment) => this.datePickerValueChanged(date),

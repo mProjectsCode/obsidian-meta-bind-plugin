@@ -28,6 +28,7 @@ For more examples see the `exampleVault` folder.
 - `select` a select input field, only for code blocks
 - `multi_select` a multi-select input field, only for code blocks
 - `date` a date input field
+- `date_picker` a date picker
 
 #### Arguments
 - `class(class_name)` adds a css class to the input field
@@ -36,9 +37,10 @@ For more examples see the `exampleVault` folder.
 - `maxValue(value)` only for slider, sets the max value
 - `option(value)` only for (multi-)selects, adds an option to the select
 - `title(value)` only for (multi-)selects, adds a title to the select input
+- `alignRight` only for date picker, aligns the date picker popup to the right of the input field
 
 ### How to install
-You must manually download the zip archive from the latest release here on GitHub.  
+You can eiter download it directly through Obsidian's plugin page or you can manually download the zip archive from the latest release here on GitHub.  
 After downloading, extract the archive into the `.obsidian/plugins` folder in your vault.
 
 The folder structure should look like this:
