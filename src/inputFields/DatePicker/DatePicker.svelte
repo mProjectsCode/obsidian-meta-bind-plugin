@@ -12,6 +12,8 @@
 	export let dateFormat: string = 'dddd, MMMM Do YYYY';
 	export let dateChangeCallback: (date: Moment) => void;
 
+	export let alignRight: boolean;
+
 	let date: number;
 	let month: number;
 	let year: number;
@@ -68,7 +70,6 @@
 	.date-picker {
 		position:      absolute;
 		top:           35px;
-		left:          0;
 		display:       inline-block;
 		background:    var(--background-secondary);
 		border-radius: var(--meta-bind-plugin-border-radius);
@@ -134,7 +135,7 @@
 	</div>
 	{#if showDatePicker}
 		<div class="date-picker-close-layer" on:click={() => showDatePicker = false}></div>
-		<div class="date-picker">
+		<div class="date-picker" style="{alignRight ? 'left: auto; right: 0;' : 'right: auto; left: 0;'}">
 			<div class="date-picker-header">
 				<button class="month-switch-button" on:click={prevMonth}>Prev</button>
 				<div class="date-picker-header-text">
