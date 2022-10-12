@@ -1,9 +1,9 @@
 ---
-title: asdasds sdf sasdfnosdijn  sdaskdjasbokbfosdasdasdasd asd asd
-select: option a
+title: This is an example of how the meta bind plugin works
+select: option c
 multi-select:
   - option a
-  - option c
-date: Wednesday, June 6th 2029
+  - option b
+date: Saturday, October 13th 2029
 time: 19:20
 ---
