@@ -65,9 +65,10 @@ export default class MetaBindPlugin extends Plugin {
 			}
 		});
 
-		this.app.metadataCache.on('changed', async (file: TFile, data: string, cache: CachedMetadata) => {
+		this.registerEvent(this.app.metadataCache.on('changed', async (file: TFile, data: string, cache: CachedMetadata) => {
 			await this.updateMarkdownInputFieldsOnMetadataCacheChange(file, cache);
-		});
+		}));
+
 
 		this.addSettingTab(new MetaBindSettingTab(this.app, this));
 	}
