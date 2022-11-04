@@ -1,4 +1,4 @@
-import {EnclosingPair, ParserUtils} from '../src/utils/ParserUtils';
+import { EnclosingPair, ParserUtils } from '../src/utils/ParserUtils';
 
 test('isStringAt', () => {
 	expect(ParserUtils.isStringAt('aaa', 'a', 2)).toEqual(true);
@@ -62,14 +62,14 @@ describe('removeInBetween', () => {
 	});
 
 	test('same opening and closing strings', () => {
-		expect(ParserUtils.removeInBetween('a\"asd\"c', new EnclosingPair('\"'))).toEqual('ac');
-		expect(ParserUtils.removeInBetween('\"asd\"', new EnclosingPair('\"'))).toEqual('');
-		expect(ParserUtils.removeInBetween('aasda', new EnclosingPair('\"'))).toEqual('aasda');
-		expect(ParserUtils.removeInBetween('a\"asda', new EnclosingPair('\"'))).toEqual('a\"asda');
-		expect(ParserUtils.removeInBetween('aasd\"a', new EnclosingPair('\"'))).toEqual('aasd\"a');
-		expect(ParserUtils.removeInBetween('aa\"s\"d\"a\"', new EnclosingPair('\"'))).toEqual('aad');
-		expect(ParserUtils.removeInBetween('aa\"s\"d\"a', new EnclosingPair('\"'))).toEqual('aad\"a');
-		expect(ParserUtils.removeInBetween('\"a\"a\"s\"d\"a', new EnclosingPair('\"'))).toEqual('ad\"a');
+		expect(ParserUtils.removeInBetween('a"asd"c', new EnclosingPair('"'))).toEqual('ac');
+		expect(ParserUtils.removeInBetween('"asd"', new EnclosingPair('"'))).toEqual('');
+		expect(ParserUtils.removeInBetween('aasda', new EnclosingPair('"'))).toEqual('aasda');
+		expect(ParserUtils.removeInBetween('a"asda', new EnclosingPair('"'))).toEqual('a"asda');
+		expect(ParserUtils.removeInBetween('aasd"a', new EnclosingPair('"'))).toEqual('aasd"a');
+		expect(ParserUtils.removeInBetween('aa"s"d"a"', new EnclosingPair('"'))).toEqual('aad');
+		expect(ParserUtils.removeInBetween('aa"s"d"a', new EnclosingPair('"'))).toEqual('aad"a');
+		expect(ParserUtils.removeInBetween('"a"a"s"d"a', new EnclosingPair('"'))).toEqual('ad"a');
 	});
 
 	test('expect errors', () => {
@@ -120,14 +120,14 @@ describe('getInBetween', () => {
 	});
 
 	test('same opening and closing strings', () => {
-		expect(ParserUtils.getInBetween('a\"asd\"a', new EnclosingPair('\"'))).toEqual('asd');
-		expect(ParserUtils.getInBetween('\"asd\"', new EnclosingPair('\"'))).toEqual('asd');
-		expect(ParserUtils.getInBetween('aasda', new EnclosingPair('\"'))).toEqual('');
-		expect(ParserUtils.getInBetween('a\"asda', new EnclosingPair('\"'))).toEqual('');
-		expect(ParserUtils.getInBetween('aasd\"a', new EnclosingPair('\"'))).toEqual('');
-		expect(ParserUtils.getInBetween('aa\"s\"d\"a\"', new EnclosingPair('\"'))).toEqual(['s', 'a']);
-		expect(ParserUtils.getInBetween('aa\"s\"d\"a', new EnclosingPair('\"'))).toEqual('s');
-		expect(ParserUtils.getInBetween('\"a\"a\"s\"d\"a', new EnclosingPair('\"'))).toEqual(['a', 's']);
+		expect(ParserUtils.getInBetween('a"asd"a', new EnclosingPair('"'))).toEqual('asd');
+		expect(ParserUtils.getInBetween('"asd"', new EnclosingPair('"'))).toEqual('asd');
+		expect(ParserUtils.getInBetween('aasda', new EnclosingPair('"'))).toEqual('');
+		expect(ParserUtils.getInBetween('a"asda', new EnclosingPair('"'))).toEqual('');
+		expect(ParserUtils.getInBetween('aasd"a', new EnclosingPair('"'))).toEqual('');
+		expect(ParserUtils.getInBetween('aa"s"d"a"', new EnclosingPair('"'))).toEqual(['s', 'a']);
+		expect(ParserUtils.getInBetween('aa"s"d"a', new EnclosingPair('"'))).toEqual('s');
+		expect(ParserUtils.getInBetween('"a"a"s"d"a', new EnclosingPair('"'))).toEqual(['a', 's']);
 	});
 
 	test('expect errors', () => {
@@ -166,7 +166,7 @@ describe('split', () => {
 	});
 
 	test('single length separator, single length self closing ignore', () => {
-		expect(ParserUtils.split('a\"b:b\":aa', ':', new EnclosingPair('"'))).toEqual(['a\"b:b\"', 'aa']);
+		expect(ParserUtils.split('a"b:b":aa', ':', new EnclosingPair('"'))).toEqual(['a"b:b"', 'aa']);
 	});
 
 	test('single length separator, multi length stacked ignore', () => {

@@ -1,10 +1,10 @@
-import {CachedMetadata, FrontMatterCache, parseYaml, Plugin, stringifyYaml, TFile} from 'obsidian';
-import {DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab} from './settings/Settings';
-import {InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType} from './InputFieldMarkdownRenderChild';
-import {getFileName, isPath, removeFileEnding} from './utils/Utils';
-import {Logger} from './utils/Logger';
-import {DateParser} from './parsers/DateParser';
-import {InputFieldDeclarationParser} from "./parsers/InputFieldDeclarationParser";
+import { CachedMetadata, FrontMatterCache, parseYaml, Plugin, stringifyYaml, TFile } from 'obsidian';
+import { DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab } from './settings/Settings';
+import { InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType } from './InputFieldMarkdownRenderChild';
+import { getFileName, isPath, removeFileEnding } from './utils/Utils';
+import { Logger } from './utils/Logger';
+import { DateParser } from './parsers/DateParser';
+import { InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
 
 export default class MetaBindPlugin extends Plugin {
 	// @ts-ignore defined in `onload`
@@ -35,14 +35,16 @@ export default class MetaBindPlugin extends Plugin {
 				const isInputField = text.startsWith('INPUT[') && text.endsWith(']');
 				// console.log(context.sourcePath);
 				if (isInputField) {
-					context.addChild(new InputFieldMarkdownRenderChild(
-						codeBlock,
-						InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK,
-						text,
-						this,
-						context.sourcePath,
-						this.markDownInputFieldIndex,
-					));
+					context.addChild(
+						new InputFieldMarkdownRenderChild(
+							codeBlock,
+							InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK,
+							text,
+							this,
+							context.sourcePath,
+							this.markDownInputFieldIndex
+						)
+					);
 					this.markDownInputFieldIndex += 1;
 				}
 			}
@@ -54,21 +56,16 @@ export default class MetaBindPlugin extends Plugin {
 			const isInputField = text.startsWith('INPUT[') && text.endsWith(']');
 			// console.log(context.sourcePath);
 			if (isInputField) {
-				ctx.addChild(new InputFieldMarkdownRenderChild(
-					codeBlock,
-					InputFieldMarkdownRenderChildType.CODE_BLOCK,
-					text,
-					this,
-					ctx.sourcePath,
-					this.markDownInputFieldIndex));
+				ctx.addChild(new InputFieldMarkdownRenderChild(codeBlock, InputFieldMarkdownRenderChildType.CODE_BLOCK, text, this, ctx.sourcePath, this.markDownInputFieldIndex));
 				this.markDownInputFieldIndex += 1;
 			}
 		});
 
-		this.registerEvent(this.app.metadataCache.on('changed', async (file: TFile, data: string, cache: CachedMetadata) => {
-			await this.updateMarkdownInputFieldsOnMetadataCacheChange(file, cache);
-		}));
-
+		this.registerEvent(
+			this.app.metadataCache.on('changed', async (file: TFile, data: string, cache: CachedMetadata) => {
+				await this.updateMarkdownInputFieldsOnMetadataCacheChange(file, cache);
+			})
+		);
 
 		this.addSettingTab(new MetaBindSettingTab(this.app, this));
 	}

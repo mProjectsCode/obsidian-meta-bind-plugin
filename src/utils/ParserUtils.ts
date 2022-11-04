@@ -1,5 +1,4 @@
-import {equalOrIncludes, isFalsy, MetaBindInternalError} from './Utils';
-
+import { equalOrIncludes, isFalsy, MetaBindInternalError } from './Utils';
 
 export class EnclosingPair {
 	readonly openingEqualsClosing: boolean;
@@ -32,17 +31,19 @@ export class EnclosingPair {
 	}
 
 	overlaps(other: EnclosingPair): boolean {
-		return equalOrIncludes(this.openingString, other.openingString) ||
+		return (
+			equalOrIncludes(this.openingString, other.openingString) ||
 			equalOrIncludes(this.openingString, other.closingString) ||
 			equalOrIncludes(this.closingString, other.openingString) ||
-			equalOrIncludes(this.closingString, other.closingString);
+			equalOrIncludes(this.closingString, other.closingString)
+		);
 	}
 
 	equals(other: EnclosingPair): boolean {
 		if (isFalsy(other)) {
 			return false;
 		}
-		return (this.openingString === other.openingString) && (this.closingString === other.closingString);
+		return this.openingString === other.openingString && this.closingString === other.closingString;
 	}
 
 	toString(): string {
@@ -51,7 +52,6 @@ export class EnclosingPair {
 }
 
 export class ParserUtils {
-
 	// TODO: rename stuff
 	static split(str: string, separator: string, ignore?: EnclosingPair): string[] {
 		if (!str) {
@@ -70,7 +70,7 @@ export class ParserUtils {
 
 			let enclosingLevel: number = 0;
 
-			strLoop : for (let i = 0; i < str.length; i++) {
+			strLoop: for (let i = 0; i < str.length; i++) {
 				// ignore specified
 				if (enclosingLevel === 0 && ParserUtils.isStringAt(str, separator, i)) {
 					subStrings.push(subStr);
@@ -102,7 +102,8 @@ export class ParserUtils {
 							enclosingLevel -= 1;
 
 							// copy the closing string
-							for (let j = 1; j < ignore.closingString.length; j++) { // (opening and closing string are the same)
+							for (let j = 1; j < ignore.closingString.length; j++) {
+								// (opening and closing string are the same)
 								i += 1;
 								subStr += str[i];
 
@@ -154,7 +155,6 @@ export class ParserUtils {
 		} else {
 			// no ignore specified
 			for (let i = 0; i < str.length; i++) {
-
 				if (ParserUtils.isStringAt(str, separator, i)) {
 					subStrings.push(subStr);
 					subStr = '';
@@ -259,7 +259,7 @@ export class ParserUtils {
 		let subStr: string = '';
 		const subStrings: string[] = [];
 
-		strLoop : for (let i = 0; i < str.length; i++) {
+		strLoop: for (let i = 0; i < str.length; i++) {
 			if (enclosingPair.openingEqualsClosing) {
 				if (ParserUtils.isStringAt(str, enclosingPair.openingString, i)) {
 					if (enclosingLevel % 2 === 0 && remainingOpeningStringCount === 1) {
@@ -284,7 +284,8 @@ export class ParserUtils {
 
 						// skip the closing string
 						subStr += str[i];
-						for (let j = 1; j < enclosingPair.closingString.length; j++) { // (opening and closing string are the same)
+						for (let j = 1; j < enclosingPair.closingString.length; j++) {
+							// (opening and closing string are the same)
 							i += 1;
 							subStr += str[i];
 

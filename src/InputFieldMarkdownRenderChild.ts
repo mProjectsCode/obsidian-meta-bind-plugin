@@ -1,16 +1,12 @@
-import {MarkdownRenderChild, TFile} from 'obsidian';
+import { MarkdownRenderChild, TFile } from 'obsidian';
 import MetaBindPlugin from './main';
-import {Logger} from './utils/Logger';
-import {AbstractInputField} from './inputFields/AbstractInputField';
-import {InputFieldFactory} from './inputFields/InputFieldFactory';
-import {
-	InputFieldArgumentType,
-	InputFieldDeclaration,
-	InputFieldDeclarationParser
-} from './parsers/InputFieldDeclarationParser';
-import {MetaBindBindTargetError, MetaBindInternalError} from './utils/Utils';
-import {AbstractInputFieldArgument} from "./inputFieldArguments/AbstractInputFieldArgument";
-import {ClassInputFieldArgument} from "./inputFieldArguments/ClassInputFieldArgument";
+import { Logger } from './utils/Logger';
+import { AbstractInputField } from './inputFields/AbstractInputField';
+import { InputFieldFactory } from './inputFields/InputFieldFactory';
+import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
+import { MetaBindBindTargetError, MetaBindInternalError } from './utils/Utils';
+import { AbstractInputFieldArgument } from './inputFieldArguments/AbstractInputFieldArgument';
+import { ClassInputFieldArgument } from './inputFieldArguments/ClassInputFieldArgument';
 
 export enum InputFieldMarkdownRenderChildType {
 	INLINE_CODE_BLOCK,
@@ -104,7 +100,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 				throw new MetaBindBindTargetError('bind target resolves to multiple files, please also specify the file path');
 			}
 		} else {
-			throw new MetaBindBindTargetError('bind target may only contain one \'#\' to specify the metadata field');
+			throw new MetaBindBindTargetError("bind target may only contain one '#' to specify the metadata field");
 		}
 	}
 
@@ -209,7 +205,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 		if (this.error) {
 			this.containerEl.empty();
-			const originalText = this.containerEl.createEl('span', {text: this.fullDeclaration, cls: 'meta-bind-code'});
+			const originalText = this.containerEl.createEl('span', { text: this.fullDeclaration, cls: 'meta-bind-code' });
 			container.innerText = ` -> ERROR: ${this.error}`;
 			container.addClass('meta-bind-plugin-error');
 			this.containerEl.appendChild(container);
@@ -218,8 +214,8 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 		if (!this.inputField) {
 			this.containerEl.empty();
-			const originalText = this.containerEl.createEl('span', {text: this.fullDeclaration, cls: 'meta-bind-code'});
-			container.innerText = ` -> ERROR: ${(new MetaBindInternalError('input field is undefined and error is empty').message)}`;
+			const originalText = this.containerEl.createEl('span', { text: this.fullDeclaration, cls: 'meta-bind-code' });
+			container.innerText = ` -> ERROR: ${new MetaBindInternalError('input field is undefined and error is empty').message}`;
 			container.addClass('meta-bind-plugin-error');
 			this.containerEl.appendChild(container);
 			return;
@@ -233,7 +229,6 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		if (classArguments) {
 			this.inputField.getHtmlElement().addClasses(classArguments.map(x => x.value).flat());
 		}
-
 
 		this.containerEl.empty();
 		this.containerEl.appendChild(container);

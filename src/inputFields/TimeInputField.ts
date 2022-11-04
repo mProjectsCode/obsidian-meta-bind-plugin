@@ -1,8 +1,8 @@
-import {AbstractInputField} from './AbstractInputField';
-import {DropdownComponent} from 'obsidian';
-import {InputFieldMarkdownRenderChild} from '../InputFieldMarkdownRenderChild';
-import {Time, TimeParser} from '../parsers/TimeParser';
-import {MetaBindInternalError} from '../utils/Utils';
+import { AbstractInputField } from './AbstractInputField';
+import { DropdownComponent } from 'obsidian';
+import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
+import { Time, TimeParser } from '../parsers/TimeParser';
+import { MetaBindInternalError } from '../utils/Utils';
 
 export class TimeInputField extends AbstractInputField {
 	container: HTMLDivElement | undefined;
@@ -14,8 +14,7 @@ export class TimeInputField extends AbstractInputField {
 	hourComponent: DropdownComponent | undefined;
 	minuteComponent: DropdownComponent | undefined;
 
-
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => (void | Promise<void>)) {
+	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
 		super(inputFieldMarkdownRenderChild, onValueChange);
 
 		this.time = TimeParser.getDefaultTime();
