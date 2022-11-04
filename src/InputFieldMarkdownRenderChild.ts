@@ -33,7 +33,8 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 	limitInterval: number | undefined;
 	intervalCounter: number;
-	valueQueue: any[];
+	metadataValueUpdateQueue: any[];
+	inputFieldValueUpdateQueue: any[];
 
 	constructor(containerEl: HTMLElement, type: InputFieldMarkdownRenderChildType, fullDeclaration: string, plugin: MetaBindPlugin, filePath: string, uid: number) {
 		super(containerEl);
@@ -45,7 +46,8 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		this.type = type;
 		this.fullDeclaration = fullDeclaration;
 
-		this.valueQueue = [];
+		this.metadataValueUpdateQueue = [];
+		this.inputFieldValueUpdateQueue = [];
 		this.intervalCounter = 0;
 
 		try {
@@ -60,10 +62,10 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 			this.inputField = InputFieldFactory.createInputField(this.inputFieldDeclaration.inputFieldType, {
 				type: type,
 				inputFieldMarkdownRenderChild: this,
-				onValueChanged: this.pushToValueQueue.bind(this),
+				onValueChanged: this.pushToMetadataValueUpdateQueue.bind(this),
 			});
 
-			this.limitInterval = window.setInterval(() => this.applyValueQueueToMetadata(), this.plugin.settings.syncInterval);
+			this.limitInterval = window.setInterval(() => this.applyValueUpdateQueues(), this.plugin.settings.syncInterval);
 		} catch (e: any) {
 			this.error = e.message;
 			console.warn(e);
@@ -107,7 +109,21 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	}
 
 	// use this interval to reduce writing operations
-	async applyValueQueueToMetadata(): Promise<void> {
+	async applyValueUpdateQueues(): Promise<void> {
+		if (this.metadataValueUpdateQueue.length !== 0) {
+			await this.applyMetadataValueUpdateQueue();
+			this.cleanUpUpdateQueues();
+			return;
+		}
+
+		if (this.inputFieldValueUpdateQueue.length !== 0) {
+			await this.applyInputFieldValueUpdateQueue();
+			this.cleanUpUpdateQueues();
+			return;
+		}
+	}
+
+	async applyMetadataValueUpdateQueue(): Promise<void> {
 		if (!this.inputFieldDeclaration) {
 			throw new MetaBindInternalError('inputFieldDeclaration is undefined, can not update metadata');
 		}
@@ -118,31 +134,49 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 			throw new MetaBindInternalError('bindTargetMetadataField or bindTargetFile is undefined, can not update metadata');
 		}
 
-		if (this.valueQueue.length > 0) {
-			// console.log(this.valueQueue.at(-1))
-			await this.plugin.updateMetaData(this.bindTargetMetadataField, this.valueQueue.at(-1), this.bindTargetFile);
-			this.valueQueue = [];
+		if (this.metadataValueUpdateQueue.length > 0) {
+			await this.plugin.updateMetaData(this.bindTargetMetadataField, this.metadataValueUpdateQueue.at(-1), this.bindTargetFile);
+		} else {
+			throw new MetaBindInternalError(`cannot apply metadataValueUpdateQueue to inputField ${this.uid}, metadataValueUpdateQueue is empty`);
 		}
 	}
 
-	async pushToValueQueue(value: any): Promise<void> {
-		if (this.inputFieldDeclaration?.isBound) {
-			this.valueQueue.push(value);
+	async applyInputFieldValueUpdateQueue(): Promise<void> {
+		if (!this.inputFieldDeclaration) {
+			throw new MetaBindInternalError('inputFieldDeclaration is undefined, can not update inputField');
 		}
-	}
-
-	updateValue(value: any): void {
 		if (!this.inputField) {
-			throw new MetaBindInternalError('inputField is undefined, can not update value');
+			throw new MetaBindInternalError('inputField is undefined, can not update inputField');
 		}
 
-		if (value == null) {
-			value = this.inputField.getDefaultValue();
-		}
+		if (this.inputFieldValueUpdateQueue.length > 0) {
+			let value = this.inputFieldValueUpdateQueue.at(-1);
 
-		if (!this.inputField.isEqualValue(value) && this.valueQueue.length === 0) {
+			if (value == null) {
+				value = this.inputField.getDefaultValue();
+			}
+
 			Logger.logDebug(`updating input field ${this.uid} to`, value);
 			this.inputField.setValue(value);
+		} else {
+			throw new MetaBindInternalError(`cannot apply inputFieldValueUpdateQueue to inputField ${this.uid}, inputFieldValueUpdateQueue is empty`);
+		}
+	}
+
+	cleanUpUpdateQueues(): void {
+		this.metadataValueUpdateQueue = [];
+		this.inputFieldValueUpdateQueue = [];
+	}
+
+	pushToMetadataValueUpdateQueue(value: any): void {
+		if (this.inputFieldDeclaration?.isBound) {
+			this.metadataValueUpdateQueue.push(value);
+		}
+	}
+
+	pushToInputFieldValueUpdateQueue(value: any): void {
+		if (!this.inputField?.isEqualValue(value)) {
+			this.inputFieldValueUpdateQueue.push(value);
 		}
 	}
 
