@@ -99,7 +99,7 @@ export default class MetaBindPlugin extends Plugin {
 				if (metadata === undefined) {
 					metadata = await this.getMetadataFromFileCache(cache.frontmatter);
 				}
-				activeMarkdownInputField.updateValue(metadata[activeMarkdownInputField.bindTargetMetadataField]);
+				activeMarkdownInputField.pushToInputFieldValueUpdateQueue(metadata[activeMarkdownInputField.bindTargetMetadataField]);
 			}
 		}
 	}

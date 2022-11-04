@@ -3,12 +3,12 @@ rating: 31
 title: test title test test
 completed: false
 toggle1: false
-slider1: 7
+slider1: 8
 slider2: 4
 text1: Test text
 text_area1: Test test
 date1: 2022-05-28
-select: option b
+select: option c
 multi-select:
   - option a
   - option c
