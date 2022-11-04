@@ -1,8 +1,8 @@
-import {EnclosingPair, ParserUtils} from '../utils/ParserUtils';
-import {isTruthy, MetaBindParsingError} from '../utils/Utils';
-import {AbstractInputFieldArgument} from "../inputFieldArguments/AbstractInputFieldArgument";
-import {InputFieldArgumentFactory} from "../inputFieldArguments/InputFieldArgumentFactory";
-import {InputFieldArgumentContainer} from "../inputFieldArguments/InputFieldArgumentContainer";
+import { EnclosingPair, ParserUtils } from '../utils/ParserUtils';
+import { isTruthy, MetaBindParsingError } from '../utils/Utils';
+import { AbstractInputFieldArgument } from '../inputFieldArguments/AbstractInputFieldArgument';
+import { InputFieldArgumentFactory } from '../inputFieldArguments/InputFieldArgumentFactory';
+import { InputFieldArgumentContainer } from '../inputFieldArguments/InputFieldArgumentContainer';
 
 export enum InputFieldType {
 	TOGGLE = 'toggle',
@@ -56,7 +56,6 @@ export class InputFieldDeclarationParser {
 
 	static templates: Template[] = [];
 
-
 	static parse(fullDeclaration: string): InputFieldDeclaration {
 		let inputFieldDeclaration: InputFieldDeclaration = {} as InputFieldDeclaration;
 
@@ -105,7 +104,6 @@ export class InputFieldDeclarationParser {
 			inputFieldDeclaration.argumentContainer = new InputFieldArgumentContainer();
 		}
 
-
 		if (useTemplate) {
 			// console.log(templateName);
 			const template = InputFieldDeclarationParser.templates.filter(x => x.identifier === templateName).first()?.template;
@@ -113,7 +111,8 @@ export class InputFieldDeclarationParser {
 			if (template) {
 				inputFieldDeclaration.bindTarget = inputFieldDeclaration.bindTarget || template.bindTarget;
 				inputFieldDeclaration.isBound = inputFieldDeclaration.isBound || template.isBound;
-				inputFieldDeclaration.inputFieldType = inputFieldDeclaration.inputFieldType === InputFieldType.INVALID ? template.inputFieldType : (inputFieldDeclaration.inputFieldType || template.inputFieldType);
+				inputFieldDeclaration.inputFieldType =
+					inputFieldDeclaration.inputFieldType === InputFieldType.INVALID ? template.inputFieldType : inputFieldDeclaration.inputFieldType || template.inputFieldType;
 				inputFieldDeclaration.argumentContainer = template.argumentContainer.mergeByOverride(inputFieldDeclaration.argumentContainer);
 			} else {
 				throw new MetaBindParsingError(`unknown template name \'${templateName}\'`);
@@ -141,7 +140,7 @@ export class InputFieldDeclarationParser {
 				InputFieldDeclarationParser.templates.push({
 					identifier: templateDeclarationParts[0],
 					template: InputFieldDeclarationParser.parse(templateDeclarationParts[1]),
-				})
+				});
 			}
 		}
 
@@ -162,7 +161,9 @@ export class InputFieldDeclarationParser {
 			const inputFieldArgument = InputFieldArgumentFactory.createInputFieldArgument(inputFieldArgumentIdentifier);
 
 			if (!inputFieldArgument.isAllowed(inputFieldType)) {
-				throw new MetaBindParsingError(`argument \'${inputFieldArgumentIdentifier}\' is only applicable to ${inputFieldArgument.getAllowedInputFieldsAsString()} input fields`);
+				throw new MetaBindParsingError(
+					`argument \'${inputFieldArgumentIdentifier}\' is only applicable to ${inputFieldArgument.getAllowedInputFieldsAsString()} input fields`
+				);
 			}
 
 			if (inputFieldArgument.requiresValue) {
@@ -201,5 +202,4 @@ export class InputFieldDeclarationParser {
 
 		return InputFieldType.INVALID;
 	}
-
 }

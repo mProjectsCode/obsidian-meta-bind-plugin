@@ -4,14 +4,8 @@
 	"env": {
 		"node": true
 	},
-	"plugins": [
-		"@typescript-eslint"
-	],
-	"extends": [
-		"eslint:recommended",
-		"plugin:@typescript-eslint/eslint-recommended",
-		"plugin:@typescript-eslint/recommended"
-	],
+	"plugins": ["@typescript-eslint"],
+	"extends": ["eslint:recommended", "plugin:@typescript-eslint/eslint-recommended", "plugin:@typescript-eslint/recommended"],
 	"parserOptions": {
 		"sourceType": "module"
 	},
@@ -28,8 +22,6 @@
 		"no-useless-escape": "off",
 		"@typescript-eslint/no-inferrable-types": "off",
 		"@typescript-eslint/no-empty-function": "off",
-		"@typescript-eslint/explicit-function-return-type": [
-			"error"
-		]
+		"@typescript-eslint/explicit-function-return-type": ["error"]
 	}
 }

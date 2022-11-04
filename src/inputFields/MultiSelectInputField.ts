@@ -1,10 +1,9 @@
-import {SelectInputField} from './SelectInputField';
-import {InputFieldMarkdownRenderChild} from '../InputFieldMarkdownRenderChild';
-import {arrayEquals} from '../utils/Utils';
+import { SelectInputField } from './SelectInputField';
+import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
+import { arrayEquals } from '../utils/Utils';
 
 export class MultiSelectInputField extends SelectInputField {
-
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => (void | Promise<void>)) {
+	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
 		super(inputFieldMarkdownRenderChild, onValueChange);
 		this.allowMultiSelect = true;
 	}
@@ -21,7 +20,7 @@ export class MultiSelectInputField extends SelectInputField {
 			return;
 		}
 
-		elementLoop : for (const element of this.elements) {
+		elementLoop: for (const element of this.elements) {
 			for (const valueElement of value) {
 				if (valueElement === element.value) {
 					element.setActive(true, false);

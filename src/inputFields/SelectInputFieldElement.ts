@@ -1,4 +1,4 @@
-import {SelectInputField} from './SelectInputField';
+import { SelectInputField } from './SelectInputField';
 
 export class SelectInputFieldElement {
 	value: string;
@@ -24,7 +24,7 @@ export class SelectInputFieldElement {
 		this.activeClass = 'meta-bind-plugin-select-input-element-selected';
 		this.hoverClass = 'meta-bind-plugin-select-input-element-hover';
 
-		this.element = parentElement.createDiv({cls: this.cssClass});
+		this.element = parentElement.createDiv({ cls: this.cssClass });
 		this.element.id = this.getHTMLId();
 		this.element.on('click', '#' + this.getHTMLId(), () => {
 			this.setActive(!this.active);
@@ -91,6 +91,6 @@ export class SelectInputFieldElement {
 	}
 
 	render(): void {
-		this.element.createEl('div', {text: this.value});
+		this.element.createEl('div', { text: this.value });
 	}
 }

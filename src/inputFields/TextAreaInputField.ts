@@ -1,7 +1,7 @@
-import {AbstractInputField} from './AbstractInputField';
-import {TextAreaComponent} from 'obsidian';
-import {Logger} from '../utils/Logger';
-import {MetaBindInternalError} from '../utils/Utils';
+import { AbstractInputField } from './AbstractInputField';
+import { TextAreaComponent } from 'obsidian';
+import { Logger } from '../utils/Logger';
+import { MetaBindInternalError } from '../utils/Utils';
 
 export class TextAreaInputField extends AbstractInputField {
 	textAreaComponent: TextAreaComponent | undefined;
@@ -49,5 +49,4 @@ export class TextAreaInputField extends AbstractInputField {
 		component.onChange(this.onValueChange);
 		this.textAreaComponent = component;
 	}
-
 }

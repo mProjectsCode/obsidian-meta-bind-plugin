@@ -1,4 +1,4 @@
-import {moment} from 'obsidian';
+import { moment } from 'obsidian';
 
 export class DateParser {
 	public static dateFormat: string;
