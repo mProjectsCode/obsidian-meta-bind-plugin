@@ -23,14 +23,14 @@
 }
 
 .meta-bind-plugin-slider-input {
-	align-self:   center;
-	margin-left:  var(--meta-bind-plugin-slider-spacing) !important;
+	align-self: center;
+	margin-left: var(--meta-bind-plugin-slider-spacing) !important;
 	margin-right: var(--meta-bind-plugin-slider-spacing) !important;
 }
 
 .meta-bind-plugin-error {
 	display: block;
-	color: #FF0000;
+	color: #ff0000;
 	font-weight: bold;
 	font-family: var(--font-monospace);
 }
@@ -45,56 +45,55 @@
 }
 
 .meta-bind-plugin-select-input-bg {
-	display:        flex;
+	display: flex;
 	flex-direction: column;
-	border:         var(--meta-bind-plugin-border-width) solid var(--background-modifier-border);
-	border-radius:  var(--meta-bind-plugin-border-radius);
+	border: var(--meta-bind-plugin-border-width) solid var(--background-modifier-border);
+	border-radius: var(--meta-bind-plugin-border-radius);
 }
 
 .meta-bind-plugin-select-input-wrapper {
-	margin:     0 5px 0 5px;
-	flex:       1;
+	margin: 0 5px 0 5px;
+	flex: 1;
 	overflow-y: auto;
 }
 
 .meta-bind-plugin-select-input-header {
-	margin:      5px 5px 5px 5px;
+	margin: 5px 5px 5px 5px;
 	font-weight: bold;
 }
 
 .meta-bind-plugin-select-input-element {
-	cursor:        pointer;
-	padding:       5px;
-	margin:        5px 0 5px 0;
+	cursor: pointer;
+	padding: 5px;
+	margin: 5px 0 5px 0;
 	border-radius: var(--meta-bind-plugin-border-radius);
-	border-left:   var(--meta-bind-plugin-select-element-border-width) solid transparent;
-	white-space:   pre-wrap;
-	font-size:     16px;
-	min-width:     200px;
+	border-left: var(--meta-bind-plugin-select-element-border-width) solid transparent;
+	white-space: pre-wrap;
+	font-size: 16px;
+	min-width: 200px;
 }
 
 .meta-bind-plugin-select-input-element-selected {
 	border-left: var(--meta-bind-plugin-select-element-border-width) solid var(--interactive-accent) !important;
-	background:  var(--background-secondary);
+	background: var(--background-secondary);
 }
 
 .meta-bind-plugin-select-input-element-hover {
 	background: var(--background-secondary);
 }
 
-.meta-bind-plugin-date-input-year-input[type="number"] {
-	width:      var(--meta-bind-plugin-date-input-year-input-width);
-	height:     unset;
+.meta-bind-plugin-date-input-year-input[type='number'] {
+	width: var(--meta-bind-plugin-date-input-year-input-width);
+	height: unset;
 	align-self: stretch;
 }
-.meta-bind-plugin-date-input-year-input[type="number"]:focus {
-	width:      calc(var(--meta-bind-plugin-date-input-year-input-width) + var(--meta-bind-plugin-border-width));
-	height:     unset;
+.meta-bind-plugin-date-input-year-input[type='number']:focus {
+	width: calc(var(--meta-bind-plugin-date-input-year-input-width) + var(--meta-bind-plugin-border-width));
+	height: unset;
 	align-self: stretch;
 }
 
 .meta-bind-plugin-input-element-group {
-
 }
 
 .meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:first-child {
@@ -103,24 +102,24 @@
 
 .meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:not(:first-child):not(:last-child):not(:focus) {
 	border-radius: 0;
-	border-left:   0;
+	border-left: 0;
 }
 
 .meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:not(:first-child):not(:last-child):focus {
 	border-radius: 0;
-	margin-left:   calc(var(--meta-bind-plugin-border-width) * -1);
-	z-index:       10;
+	margin-left: calc(var(--meta-bind-plugin-border-width) * -1);
+	z-index: 10;
 }
 
 .meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:last-child:not(:focus) {
 	border-radius: 0 var(--meta-bind-plugin-border-radius) var(--meta-bind-plugin-border-radius) 0;
-	border-left:   0;
+	border-left: 0;
 }
 
 .meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:last-child:focus {
 	border-radius: 0 var(--meta-bind-plugin-border-radius) var(--meta-bind-plugin-border-radius) 0;
-	margin-left:   calc(var(--meta-bind-plugin-border-width) * -1);
-	z-index:       10;
+	margin-left: calc(var(--meta-bind-plugin-border-width) * -1);
+	z-index: 10;
 }
 
 .meta-bind-full-width {
