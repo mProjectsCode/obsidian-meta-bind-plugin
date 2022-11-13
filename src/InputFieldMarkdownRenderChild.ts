@@ -7,6 +7,8 @@ import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationPar
 import { MetaBindBindTargetError, MetaBindInternalError } from './utils/Utils';
 import { AbstractInputFieldArgument } from './inputFieldArguments/AbstractInputFieldArgument';
 import { ClassInputFieldArgument } from './inputFieldArguments/ClassInputFieldArgument';
+import { getFrontmatterOfTFile, updateOrInsertFieldInTFile } from '@opd-libs/opd-metadata-lib/lib/API';
+import { validatePath as validateObjectPath } from '@opd-libs/opd-metadata-lib/lib/Utils';
 
 export enum InputFieldMarkdownRenderChildType {
 	INLINE_CODE_BLOCK,
@@ -51,8 +53,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 			if (this.inputFieldDeclaration.isBound) {
 				this.parseBindTarget();
-				// @ts-ignore `parseBindTarget` sets `bindTargetFile` and `bindTargetMetadataField` or throws an error.
-				this.metaData = this.plugin.getMetaDataForFile(this.bindTargetFile);
+				this.metaData = getFrontmatterOfTFile(this.bindTargetFile as TFile, this.plugin);
 			}
 
 			this.inputField = InputFieldFactory.createInputField(this.inputFieldDeclaration.inputFieldType, {
@@ -74,33 +75,38 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		}
 
 		const bindTargetParts = this.inputFieldDeclaration.bindTarget.split('#');
+		let bindTargetFileName;
+		let bindTargetMetadataFieldName;
 
 		if (bindTargetParts.length === 1) {
 			// the bind target is in the same file
-			this.bindTargetMetadataField = this.inputFieldDeclaration.bindTarget;
-
-			const files: TFile[] = this.plugin.getFilesByName(this.filePath);
-			if (files.length === 0) {
-				throw new MetaBindBindTargetError('bind target file not found');
-			} else if (files.length === 1) {
-				this.bindTargetFile = files[0];
-			} else {
-				throw new MetaBindBindTargetError('bind target resolves to multiple files, please also specify the file path');
-			}
+			bindTargetFileName = this.filePath;
+			bindTargetMetadataFieldName = this.inputFieldDeclaration.bindTarget;
 		} else if (bindTargetParts.length === 2) {
 			// the bind target is in another file
-			this.bindTargetMetadataField = bindTargetParts[1];
-
-			const files: TFile[] = this.plugin.getFilesByName(bindTargetParts[0]);
-			if (files.length === 0) {
-				throw new MetaBindBindTargetError('bind target file not found');
-			} else if (files.length === 1) {
-				this.bindTargetFile = files[0];
-			} else {
-				throw new MetaBindBindTargetError('bind target resolves to multiple files, please also specify the file path');
-			}
+			bindTargetFileName = bindTargetParts[0];
+			bindTargetMetadataFieldName = bindTargetParts[1];
 		} else {
 			throw new MetaBindBindTargetError("bind target may only contain one '#' to specify the metadata field");
+		}
+
+		try {
+			validateObjectPath(bindTargetMetadataFieldName);
+		} catch (e) {
+			if (e instanceof Error) {
+				throw new MetaBindBindTargetError(`bind target parsing error: ${e?.message}`);
+			}
+		}
+
+		this.bindTargetMetadataField = bindTargetMetadataFieldName;
+
+		const files: TFile[] = this.plugin.getFilesByName(bindTargetFileName);
+		if (files.length === 0) {
+			throw new MetaBindBindTargetError('bind target file not found');
+		} else if (files.length === 1) {
+			this.bindTargetFile = files[0];
+		} else {
+			throw new MetaBindBindTargetError('bind target resolves to multiple files, please also specify the file path');
 		}
 	}
 
@@ -131,7 +137,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		}
 
 		if (this.metadataValueUpdateQueue.length > 0) {
-			await this.plugin.updateMetaData(this.bindTargetMetadataField, this.metadataValueUpdateQueue.at(-1), this.bindTargetFile);
+			await updateOrInsertFieldInTFile(this.bindTargetMetadataField, this.metadataValueUpdateQueue.at(-1), this.bindTargetFile, this.plugin);
 		} else {
 			throw new MetaBindInternalError(`cannot apply metadataValueUpdateQueue to inputField ${this.uid}, metadataValueUpdateQueue is empty`);
 		}
