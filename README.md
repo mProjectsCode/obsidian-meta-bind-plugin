@@ -6,7 +6,7 @@ Or creating a slider inside your movie notes, that syncs up with a metadata fiel
 
 ### Demo
 
-![](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/tree/master/images/meta-bind-plugin-demo-3.mp4)
+![](https://raw.githubusercontent.com/mProjectsCode/obsidian-meta-bind-plugin/master/images/meta-bind-plugin-demo-3.mp4)
 
 ### Docs
 
