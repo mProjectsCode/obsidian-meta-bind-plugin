@@ -7,9 +7,7 @@ import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationPar
 import { MetaBindBindTargetError, MetaBindInternalError } from './utils/Utils';
 import { AbstractInputFieldArgument } from './inputFieldArguments/AbstractInputFieldArgument';
 import { ClassInputFieldArgument } from './inputFieldArguments/ClassInputFieldArgument';
-import { updateOrInsertFieldInTFile } from '@opd-libs/opd-metadata-lib/lib/API';
-import { Internal } from '@opd-libs/opd-metadata-lib/lib/Internal';
-import getMetadataFromFileCache = Internal.getMetadataFromFileCache;
+import { getFrontmatterOfTFile, updateOrInsertFieldInTFile } from '@opd-libs/opd-metadata-lib/lib/API';
 import { validatePath as validateObjectPath } from '@opd-libs/opd-metadata-lib/lib/Utils';
 
 export enum InputFieldMarkdownRenderChildType {
@@ -55,8 +53,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 			if (this.inputFieldDeclaration.isBound) {
 				this.parseBindTarget();
-				// @ts-ignore `parseBindTarget` sets `bindTargetFile` and `bindTargetMetadataField` or throws an error.
-				this.metaData = getMetadataFromFileCache(this.bindTargetFile, this.plugin);
+				this.metaData = getFrontmatterOfTFile(this.bindTargetFile as TFile, this.plugin);
 			}
 
 			this.inputField = InputFieldFactory.createInputField(this.inputFieldDeclaration.inputFieldType, {

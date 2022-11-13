@@ -34,6 +34,6 @@
 		"typescript": "^4.7.4"
 	},
 	"dependencies": {
-		"@opd-libs/opd-metadata-lib": "^0.0.2"
+		"@opd-libs/opd-metadata-lib": "0.0.3"
 	}
 }

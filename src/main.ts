@@ -5,8 +5,7 @@ import { getFileName, isPath, removeFileEnding } from './utils/Utils';
 import { Logger } from './utils/Logger';
 import { DateParser } from './parsers/DateParser';
 import { InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
-import { Internal } from '@opd-libs/opd-metadata-lib/lib/Internal';
-import getMetadataFromFileCache = Internal.getMetadataFromFileCache;
+import { getFrontmatterOfTFile } from '@opd-libs/opd-metadata-lib/lib/API';
 
 export default class MetaBindPlugin extends Plugin {
 	// @ts-ignore defined in `onload`
@@ -16,8 +15,6 @@ export default class MetaBindPlugin extends Plugin {
 	activeMarkdownInputFields: InputFieldMarkdownRenderChild[];
 	// @ts-ignore defined in `onload`
 	markDownInputFieldIndex: number;
-
-	frontMatterRexExpPattern = '^(---)\\n[\\s\\S]*?\\n---';
 
 	async onload(): Promise<void> {
 		await this.loadSettings();
@@ -96,7 +93,7 @@ export default class MetaBindPlugin extends Plugin {
 
 			if (activeMarkdownInputField.bindTargetFile.path === file.path) {
 				if (metadata === undefined) {
-					metadata = getMetadataFromFileCache(file, this);
+					metadata = getFrontmatterOfTFile(file, this);
 				}
 				activeMarkdownInputField.pushToInputFieldValueUpdateQueue(metadata[activeMarkdownInputField.bindTargetMetadataField]);
 			}
