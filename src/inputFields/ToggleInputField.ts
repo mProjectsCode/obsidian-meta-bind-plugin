@@ -1,7 +1,7 @@
-import {AbstractInputField} from './AbstractInputField';
-import {ToggleComponent} from 'obsidian';
-import {Logger} from '../utils/Logger';
-import {MetaBindInternalError} from '../utils/Utils';
+import { AbstractInputField } from './AbstractInputField';
+import { ToggleComponent } from 'obsidian';
+import { Logger } from '../utils/Logger';
+import { MetaBindInternalError } from '../utils/Utils';
 
 export class ToggleInputField extends AbstractInputField {
 	toggleComponent: ToggleComponent | undefined;
@@ -48,5 +48,4 @@ export class ToggleInputField extends AbstractInputField {
 		component.onChange(this.onValueChange);
 		this.toggleComponent = component;
 	}
-
 }

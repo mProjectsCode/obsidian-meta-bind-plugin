@@ -1,4 +1,4 @@
-import {InputFieldArgumentType, InputFieldType} from "../parsers/InputFieldDeclarationParser";
+import { InputFieldArgumentType, InputFieldType } from '../parsers/InputFieldDeclarationParser';
 
 export abstract class AbstractInputFieldArgument {
 	identifier: InputFieldArgumentType = InputFieldArgumentType.INVALID;
@@ -20,5 +20,4 @@ export abstract class AbstractInputFieldArgument {
 	getAllowedInputFieldsAsString() {
 		return this.allowedInputFields.length === 0 ? 'all' : this.allowedInputFields.join(', ');
 	}
-
 }

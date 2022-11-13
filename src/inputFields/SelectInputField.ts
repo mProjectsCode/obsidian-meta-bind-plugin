@@ -1,9 +1,9 @@
-import {AbstractInputField} from './AbstractInputField';
-import {SelectInputFieldElement} from './SelectInputFieldElement';
-import {MetaBindInternalError, mod} from '../utils/Utils';
-import {InputFieldMarkdownRenderChild} from '../InputFieldMarkdownRenderChild';
-import {InputFieldArgumentType} from "../parsers/InputFieldDeclarationParser";
-import {AbstractInputFieldArgument} from "../inputFieldArguments/AbstractInputFieldArgument";
+import { AbstractInputField } from './AbstractInputField';
+import { SelectInputFieldElement } from './SelectInputFieldElement';
+import { MetaBindInternalError, mod } from '../utils/Utils';
+import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
+import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
+import { AbstractInputFieldArgument } from '../inputFieldArguments/AbstractInputFieldArgument';
 
 export class SelectInputField extends AbstractInputField {
 	static allowInlineCodeBlock: boolean = false;
@@ -11,7 +11,7 @@ export class SelectInputField extends AbstractInputField {
 	allowMultiSelect: boolean;
 	container: HTMLDivElement | undefined;
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => (void | Promise<void>)) {
+	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
 		super(inputFieldMarkdownRenderChild, onValueChange);
 		this.elements = [];
 		this.allowMultiSelect = false;
@@ -55,11 +55,11 @@ export class SelectInputField extends AbstractInputField {
 		container.addClass('meta-bind-plugin-select-input-bg');
 		this.container = container;
 
-		const elementWrapper = container.createDiv({cls: 'meta-bind-plugin-select-input-wrapper'});
+		const elementWrapper = container.createDiv({ cls: 'meta-bind-plugin-select-input-wrapper' });
 
 		const titleArgument = this.inputFieldMarkdownRenderChild.getArgument(InputFieldArgumentType.TITLE);
 		if (titleArgument) {
-			elementWrapper.createEl('div', {text: titleArgument.value, cls: 'meta-bind-plugin-select-input-header'});
+			elementWrapper.createEl('div', { text: titleArgument.value, cls: 'meta-bind-plugin-select-input-header' });
 		}
 
 		const elementArguments: AbstractInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.OPTION);

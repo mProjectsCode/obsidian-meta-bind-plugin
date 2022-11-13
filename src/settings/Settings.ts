@@ -1,4 +1,4 @@
-import {App, PluginSettingTab, Setting, TextAreaComponent} from 'obsidian';
+import { App, PluginSettingTab, Setting, TextAreaComponent } from 'obsidian';
 import MetaBindPlugin from '../main';
 
 export interface MetaBindPluginSettings {
@@ -32,15 +32,17 @@ export class MetaBindSettingTab extends PluginSettingTab {
 	}
 
 	display(): void {
-		const {containerEl} = this;
+		const { containerEl } = this;
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', {text: 'Meta Bind Plugin Settings'});
+		containerEl.createEl('h2', { text: 'Meta Bind Plugin Settings' });
 
 		new Setting(containerEl)
 			.setName('Sync interval')
-			.setDesc(`The interval in milli-seconds between disk writes. Changing this number is not recommended except if your hard drive is exceptionally slow. Standard: ${DEFAULT_SETTINGS.syncInterval}; Minimum: ${DEFAULT_SETTINGS.minSyncInterval}; Maximum: ${DEFAULT_SETTINGS.maxSyncInterval}`)
+			.setDesc(
+				`The interval in milli-seconds between disk writes. Changing this number is not recommended except if your hard drive is exceptionally slow. Standard: ${DEFAULT_SETTINGS.syncInterval}; Minimum: ${DEFAULT_SETTINGS.minSyncInterval}; Maximum: ${DEFAULT_SETTINGS.maxSyncInterval}`
+			)
 			.addText(cb => {
 				cb.setValue(this.plugin.settings.syncInterval.toString());
 				cb.onChange(data => {
@@ -60,7 +62,9 @@ export class MetaBindSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Date format')
-			.setDesc(`The date format to be used by this plugin. Changing this setting will break the parsing of existing date inputs. Here is a list of all available date tokes https://momentjs.com/docs/#/displaying/.`)
+			.setDesc(
+				`The date format to be used by this plugin. Changing this setting will break the parsing of existing date inputs. Here is a list of all available date tokes https://momentjs.com/docs/#/displaying/.`
+			)
 			.addText(cb => {
 				cb.setValue(this.plugin.settings.preferredDateFormat);
 				cb.onChange(data => {
@@ -80,9 +84,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				});
 			});
 
-		new Setting(containerEl)
-			.setName('Templates')
-			.setDesc(`You can specify templates here, and access them using \`TEMPLATE_INPUT[...]\` in your notes.`);
+		new Setting(containerEl).setName('Templates').setDesc(`You can specify templates here, and access them using \`TEMPLATE_INPUT[...]\` in your notes.`);
 
 		const ta = new TextAreaComponent(containerEl);
 		ta.setValue(this.plugin.settings.inputTemplates);
@@ -93,7 +95,6 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			this.plugin.settings.inputTemplates = data;
 			this.plugin.saveSettings();
 		});
-
 
 		new Setting(containerEl)
 			.setName('Dev Mode')

@@ -1,9 +1,9 @@
 ---
-title: asdasds sdf sasdfnosdijn  sdaskdjasbokbfosdasdasdasd asd asd
+title: This is an example of how the meta bind
 select: option a
-multi-select:
-  - option a
-  - option c
-date: Wednesday, June 6th 2029
+date: Tuesday, June 14th 2022
 time: 19:20
+multi-select:
+  - option b
+  - option c
 ---

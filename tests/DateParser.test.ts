@@ -97,4 +97,4 @@ test('Date edge cases', () => {
 });
 
  */
-export {}
+export {};

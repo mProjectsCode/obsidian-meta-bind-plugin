@@ -1,19 +1,6 @@
-import {moment} from 'obsidian';
+import { moment } from 'obsidian';
 
-const monthNames = [
-	'January',
-	'February',
-	'March',
-	'April',
-	'May',
-	'June',
-	'July',
-	'August',
-	'September',
-	'October',
-	'November',
-	'December',
-];
+const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 export function getMonthName(index: number): string {
 	return monthNames[index];
@@ -21,7 +8,7 @@ export function getMonthName(index: number): string {
 
 export function getDateRows(monthIndex: number, year: number): number[] {
 	const days: number = moment(new Date(year, monthIndex)).daysInMonth(); // amount of days in month
-	let rows: number[] = (new Array(42)).fill(undefined); // empty 42 long array
+	let rows: number[] = new Array(42).fill(undefined); // empty 42 long array
 	const startIndex: number = getWeekDay(new Date(year, monthIndex, 1)); // index offset based on weekday of first day in month
 
 	for (let i = 0; i < days; i++) {

@@ -1,13 +1,12 @@
-import {ClassInputFieldArgument} from "./ClassInputFieldArgument";
-import {MetaBindParsingError} from "../utils/Utils";
-import {InputFieldArgumentType} from "../parsers/InputFieldDeclarationParser";
-import {AddLabelsInputFieldArgument} from "./AddLabelsInputFieldArgument";
-import {MinValueInputFieldArgument} from "./MinValueInputFieldArgument";
-import {MaxValueInputFieldArgument} from "./MaxValueInputFieldArgument";
-import {OptionInputFieldArgument} from "./OptionInputFieldArgument";
-import {TitleInputFieldArgument} from "./TitleInputFieldArgument";
-import {AlignRightInputFieldArgument} from './AlignRightInputFieldArgument';
-
+import { ClassInputFieldArgument } from './ClassInputFieldArgument';
+import { MetaBindParsingError } from '../utils/Utils';
+import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
+import { AddLabelsInputFieldArgument } from './AddLabelsInputFieldArgument';
+import { MinValueInputFieldArgument } from './MinValueInputFieldArgument';
+import { MaxValueInputFieldArgument } from './MaxValueInputFieldArgument';
+import { OptionInputFieldArgument } from './OptionInputFieldArgument';
+import { TitleInputFieldArgument } from './TitleInputFieldArgument';
+import { AlignRightInputFieldArgument } from './AlignRightInputFieldArgument';
 
 export class InputFieldArgumentFactory {
 	static createInputFieldArgument(argumentIdentifier: string) {

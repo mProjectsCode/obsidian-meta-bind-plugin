@@ -1,4 +1,4 @@
-import {InputFieldMarkdownRenderChild} from '../InputFieldMarkdownRenderChild';
+import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
 
 export abstract class AbstractInputField {
 	static allowCodeBlock: boolean = true;
