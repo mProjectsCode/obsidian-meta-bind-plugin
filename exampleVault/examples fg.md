@@ -8,7 +8,7 @@ slider2: 6
 text1: Test asdasd
 text_area1: Test teasd
 date1: 2022-05-28
-select: ""
+select: option b
 multi_select:
   - option a
   - option c
