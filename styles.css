@@ -1,6 +1,6 @@
-:root {
-	--meta-bind-plugin-border-width: 1px;
-	--meta-bind-plugin-border-radius: 5px;
+body {
+	--meta-bind-plugin-border-width: var(--border-width);
+	--meta-bind-plugin-border-radius: var(--input-radius);
 	--meta-bind-plugin-slider-spacing: 5px;
 	--meta-bind-plugin-select-element-border-width: 5px;
 	--meta-bind-plugin-date-input-year-input-width: 80px;
@@ -87,39 +87,24 @@
 	height: unset;
 	align-self: stretch;
 }
-.meta-bind-plugin-date-input-year-input[type='number']:focus {
-	width: calc(var(--meta-bind-plugin-date-input-year-input-width) + var(--meta-bind-plugin-border-width));
-	height: unset;
-	align-self: stretch;
-}
 
 .meta-bind-plugin-input-element-group {
+}
+
+.meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:focus {
+	z-index: 10;
 }
 
 .meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:first-child {
 	border-radius: var(--meta-bind-plugin-border-radius) 0 0 var(--meta-bind-plugin-border-radius);
 }
 
-.meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:not(:first-child):not(:last-child):not(:focus) {
+.meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:not(:first-child):not(:last-child) {
 	border-radius: 0;
-	border-left: 0;
 }
 
-.meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:not(:first-child):not(:last-child):focus {
-	border-radius: 0;
-	margin-left: calc(var(--meta-bind-plugin-border-width) * -1);
-	z-index: 10;
-}
-
-.meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:last-child:not(:focus) {
+.meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:last-child {
 	border-radius: 0 var(--meta-bind-plugin-border-radius) var(--meta-bind-plugin-border-radius) 0;
-	border-left: 0;
-}
-
-.meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:last-child:focus {
-	border-radius: 0 var(--meta-bind-plugin-border-radius) var(--meta-bind-plugin-border-radius) 0;
-	margin-left: calc(var(--meta-bind-plugin-border-width) * -1);
-	z-index: 10;
 }
 
 .meta-bind-full-width {

@@ -5,6 +5,7 @@ import { getFileName, isPath, removeFileEnding } from './utils/Utils';
 import { Logger } from './utils/Logger';
 import { DateParser } from './parsers/DateParser';
 import { InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
+import { getFrontmatterOfTFile } from '@opd-libs/opd-metadata-lib/lib/API';
 
 export default class MetaBindPlugin extends Plugin {
 	// @ts-ignore defined in `onload`
@@ -14,8 +15,6 @@ export default class MetaBindPlugin extends Plugin {
 	activeMarkdownInputFields: InputFieldMarkdownRenderChild[];
 	// @ts-ignore defined in `onload`
 	markDownInputFieldIndex: number;
-
-	frontMatterRexExpPattern = '^(---)\\n[\\s\\S]*?\\n---';
 
 	async onload(): Promise<void> {
 		await this.loadSettings();
@@ -84,7 +83,7 @@ export default class MetaBindPlugin extends Plugin {
 		this.activeMarkdownInputFields = this.activeMarkdownInputFields.filter(x => x.uid !== inputFieldMarkdownRenderChild.uid);
 	}
 
-	async updateMarkdownInputFieldsOnMetadataCacheChange(file: TFile, cache: CachedMetadata): Promise<void> {
+	updateMarkdownInputFieldsOnMetadataCacheChange(file: TFile, cache: CachedMetadata): void {
 		let metadata: any = undefined;
 
 		for (const activeMarkdownInputField of this.activeMarkdownInputFields) {
@@ -94,41 +93,15 @@ export default class MetaBindPlugin extends Plugin {
 
 			if (activeMarkdownInputField.bindTargetFile.path === file.path) {
 				if (metadata === undefined) {
-					metadata = await this.getMetadataFromFileCache(cache.frontmatter);
+					metadata = getFrontmatterOfTFile(file, this);
 				}
 				activeMarkdownInputField.pushToInputFieldValueUpdateQueue(metadata[activeMarkdownInputField.bindTargetMetadataField]);
 			}
 		}
 	}
 
-	async updateMetaData(key: string, value: any, file: TFile): Promise<void> {
-		Logger.logDebug(`updating `, key, `: `, value, ` in '${file.path}'`);
-
-		if (!file) {
-			console.log('no file');
-			return;
-		}
-
-		let fileContent: string = await this.app.vault.read(file);
-
-		const metadata: any = await this.getMetaDataForFileContent(fileContent);
-		// console.log(metadata);
-		if (!metadata) {
-			return;
-		}
-
-		const regExp = new RegExp(this.frontMatterRexExpPattern);
-		fileContent = fileContent.replace(regExp, '');
-
-		metadata[key] = value;
-		// console.log(metadata);
-
-		fileContent = `---\n${stringifyYaml(metadata)}---` + fileContent;
-		await this.app.vault.modify(file, fileContent);
-	}
-
 	getFilesByName(name: string): TFile[] {
-		// console.log(getFileName(removeFileEnding(name)))
+		console.log(getFileName(removeFileEnding(name)));
 		const fileNameIsPath = isPath(name);
 		const processedFileName = fileNameIsPath ? removeFileEnding(name) : getFileName(removeFileEnding(name));
 
@@ -148,58 +121,6 @@ export default class MetaBindPlugin extends Plugin {
 		}
 
 		return files;
-	}
-
-	async getMetaDataForFile(file: TFile): Promise<any> {
-		if (!file) {
-			return undefined;
-		}
-
-		const fileContent: string = await this.app.vault.read(file);
-		return await this.getMetaDataForFileContent(fileContent);
-	}
-
-	async getMetaDataForFileContent(fileContent: string): Promise<any> {
-		// Logger.logDebug(`reading metadata`);
-		let metadata: any;
-
-		const regExp = new RegExp(this.frontMatterRexExpPattern);
-		const frontMatterRegExpResult = regExp.exec(fileContent);
-		// console.log('regexres: ', frontMatterRegExpResult);
-		if (!frontMatterRegExpResult) {
-			return {};
-		}
-		let frontMatter = frontMatterRegExpResult[0];
-		if (!frontMatter) {
-			return {};
-		}
-		// console.log(frontMatter);
-		frontMatter = frontMatter.substring(4);
-		frontMatter = frontMatter.substring(0, frontMatter.length - 3);
-		// console.log(frontMatter);
-
-		metadata = parseYaml(frontMatter);
-
-		if (!metadata) {
-			metadata = {};
-		}
-
-		// console.log('metadata: ', metadata);
-
-		return metadata;
-	}
-
-	getMetadataFromFileCache(cache: FrontMatterCache | undefined) {
-		let metadata = cache as object;
-
-		if (metadata) {
-			metadata = Object.assign({}, metadata); // copy
-			// @ts-ignore
-			delete metadata.position;
-		} else {
-			metadata = {};
-		}
-		return metadata;
 	}
 
 	async loadSettings(): Promise<void> {
