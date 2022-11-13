@@ -1,17 +1,17 @@
-import {InputFieldMarkdownRenderChild} from '../../InputFieldMarkdownRenderChild';
-import {AbstractInputField} from '../AbstractInputField';
-import {isTruthy, MetaBindInternalError} from '../../utils/Utils';
+import { InputFieldMarkdownRenderChild } from '../../InputFieldMarkdownRenderChild';
+import { AbstractInputField } from '../AbstractInputField';
+import { isTruthy, MetaBindInternalError } from '../../utils/Utils';
 import DatePicker from './DatePicker.svelte';
-import {moment} from 'obsidian';
-import {DateParser} from '../../parsers/DateParser';
-import {InputFieldArgumentType} from '../../parsers/InputFieldDeclarationParser';
+import { moment } from 'obsidian';
+import { DateParser } from '../../parsers/DateParser';
+import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
 
 export class DatePickerInputField extends AbstractInputField {
 	container: HTMLDivElement | undefined;
 	component: DatePicker | undefined;
 	date: moment.Moment;
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => (void | Promise<void>)) {
+	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
 		super(inputFieldMarkdownRenderChild, onValueChange);
 
 		this.date = DateParser.getDefaultDate();
@@ -29,7 +29,7 @@ export class DatePickerInputField extends AbstractInputField {
 			this.onValueChange(this.getValue());
 		}
 
-		this.component?.$set({'selectedDate': this.date});
+		this.component?.$set({ selectedDate: this.date });
 	}
 
 	isEqualValue(value: any): boolean {
@@ -76,5 +76,4 @@ export class DatePickerInputField extends AbstractInputField {
 			},
 		});
 	}
-
 }

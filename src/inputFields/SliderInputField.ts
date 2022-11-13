@@ -1,17 +1,16 @@
-import {AbstractInputField} from './AbstractInputField';
-import {SliderComponent} from 'obsidian';
-import {Logger} from '../utils/Logger';
-import {InputFieldMarkdownRenderChild} from '../InputFieldMarkdownRenderChild';
-import {MetaBindInternalError} from '../utils/Utils';
-import {InputFieldArgumentType} from '../parsers/InputFieldDeclarationParser';
+import { AbstractInputField } from './AbstractInputField';
+import { SliderComponent } from 'obsidian';
+import { Logger } from '../utils/Logger';
+import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
+import { MetaBindInternalError } from '../utils/Utils';
+import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
 
 export class SliderInputField extends AbstractInputField {
 	sliderComponent: SliderComponent | undefined;
 	minValue: number;
 	maxValue: number;
 
-
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => (void | Promise<void>)) {
+	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
 		super(inputFieldMarkdownRenderChild, onValueChange);
 		this.minValue = inputFieldMarkdownRenderChild.getArgument(InputFieldArgumentType.MIN_VALUE)?.value ?? 0;
 		this.maxValue = inputFieldMarkdownRenderChild.getArgument(InputFieldArgumentType.MAX_VALUE)?.value ?? 100;
@@ -62,7 +61,7 @@ export class SliderInputField extends AbstractInputField {
 
 		const labelArgument = this.inputFieldMarkdownRenderChild.getArgument(InputFieldArgumentType.ADD_LABELS);
 		if (labelArgument && labelArgument.value === true) {
-			container.createSpan({text: this.minValue.toString(), cls: 'meta-bind-plugin-slider-input-label'});
+			container.createSpan({ text: this.minValue.toString(), cls: 'meta-bind-plugin-slider-input-label' });
 		}
 
 		const component = new SliderComponent(container);
@@ -73,10 +72,9 @@ export class SliderInputField extends AbstractInputField {
 		component.sliderEl.addClass('meta-bind-plugin-slider-input');
 
 		if (labelArgument && labelArgument.value === true) {
-			container.createSpan({text: this.maxValue.toString(), cls: 'meta-bind-plugin-slider-input-label'});
+			container.createSpan({ text: this.maxValue.toString(), cls: 'meta-bind-plugin-slider-input-label' });
 		}
 
 		this.sliderComponent = component;
 	}
-
 }

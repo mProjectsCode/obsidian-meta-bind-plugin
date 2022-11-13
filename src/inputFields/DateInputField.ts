@@ -1,8 +1,8 @@
-import {AbstractInputField} from './AbstractInputField';
-import {DropdownComponent, moment, TextComponent} from 'obsidian';
-import {InputFieldMarkdownRenderChild} from '../InputFieldMarkdownRenderChild';
-import {DateParser} from '../parsers/DateParser';
-import {MetaBindInternalError} from '../utils/Utils';
+import { AbstractInputField } from './AbstractInputField';
+import { DropdownComponent, moment, TextComponent } from 'obsidian';
+import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
+import { DateParser } from '../parsers/DateParser';
+import { MetaBindInternalError } from '../utils/Utils';
 
 export class DateInputField extends AbstractInputField {
 	container: HTMLDivElement | undefined;
@@ -28,8 +28,7 @@ export class DateInputField extends AbstractInputField {
 	dayComponent: DropdownComponent | undefined;
 	yearComponent: TextComponent | undefined;
 
-
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => (void | Promise<void>)) {
+	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
 		super(inputFieldMarkdownRenderChild, onValueChange);
 
 		this.date = DateParser.getDefaultDate();
@@ -173,5 +172,4 @@ export class DateInputField extends AbstractInputField {
 		}
 		return day;
 	}
-
 }

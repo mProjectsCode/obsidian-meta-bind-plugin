@@ -3,13 +3,13 @@ rating: 31
 title: test title test test
 completed: false
 toggle1: false
-slider1: 7
-slider2: 4
-text1: Test text
-text_area1: Test test
+slider1: 5
+slider2: 6
+text1: Test asdasd
+text_area1: Test teasd
 date1: 2022-05-28
 select: option b
-multi-select:
+multi_select:
   - option a
   - option c
 time1: 10:17
@@ -64,7 +64,7 @@ option(option a),
 option(option b),
 option(option c),
 option(option d)
-):multi-select]
+):multi_select]
 ```
 
 Multi-Select with title
@@ -75,7 +75,7 @@ option(option a),
 option(option b),
 option(option c),
 option(option d)
-):multi-select]
+):multi_select]
 ```
 
 ## In callouts

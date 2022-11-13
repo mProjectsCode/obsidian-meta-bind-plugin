@@ -1,59 +1,61 @@
-import {ToggleInputField} from './ToggleInputField';
-import {InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType} from '../InputFieldMarkdownRenderChild';
-import {TextInputField} from './TextInputField';
-import {SliderInputField} from './SliderInputField';
-import {TextAreaInputField} from './TextAreaInputField';
-import {SelectInputField} from './SelectInputField';
-import {MultiSelectInputField} from './MultiSelectInputField';
-import {DateInputField} from './DateInputField';
-import {TimeInputField} from './TimeInputField';
-import {MetaBindParsingError} from '../utils/Utils';
-import {AbstractInputField} from './AbstractInputField';
-import {InputFieldType} from '../parsers/InputFieldDeclarationParser';
-import {DatePickerInputField} from './DatePicker/DatePickerInputField';
-
+import { ToggleInputField } from './ToggleInputField';
+import { InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType } from '../InputFieldMarkdownRenderChild';
+import { TextInputField } from './TextInputField';
+import { SliderInputField } from './SliderInputField';
+import { TextAreaInputField } from './TextAreaInputField';
+import { SelectInputField } from './SelectInputField';
+import { MultiSelectInputField } from './MultiSelectInputField';
+import { DateInputField } from './DateInputField';
+import { TimeInputField } from './TimeInputField';
+import { MetaBindParsingError } from '../utils/Utils';
+import { AbstractInputField } from './AbstractInputField';
+import { InputFieldType } from '../parsers/InputFieldDeclarationParser';
+import { DatePickerInputField } from './DatePicker/DatePickerInputField';
 
 export class InputFieldFactory {
-	static allowCodeBlockMap: Record<string, { codeBlock: boolean, inlineCodeBlock: boolean }> = {
+	static allowCodeBlockMap: Record<string, { codeBlock: boolean; inlineCodeBlock: boolean }> = {
 		[InputFieldType.TOGGLE]: {
 			codeBlock: ToggleInputField.allowCodeBlock,
-			inlineCodeBlock: ToggleInputField.allowInlineCodeBlock
+			inlineCodeBlock: ToggleInputField.allowInlineCodeBlock,
 		},
 		[InputFieldType.SLIDER]: {
 			codeBlock: SliderInputField.allowCodeBlock,
-			inlineCodeBlock: SliderInputField.allowInlineCodeBlock
+			inlineCodeBlock: SliderInputField.allowInlineCodeBlock,
 		},
 		[InputFieldType.TEXT]: {
 			codeBlock: TextInputField.allowCodeBlock,
-			inlineCodeBlock: TextInputField.allowInlineCodeBlock
+			inlineCodeBlock: TextInputField.allowInlineCodeBlock,
 		},
 		[InputFieldType.TEXT_AREA]: {
 			codeBlock: TextAreaInputField.allowCodeBlock,
-			inlineCodeBlock: TextAreaInputField.allowInlineCodeBlock
+			inlineCodeBlock: TextAreaInputField.allowInlineCodeBlock,
 		},
 		[InputFieldType.SELECT]: {
 			codeBlock: SelectInputField.allowCodeBlock,
-			inlineCodeBlock: SelectInputField.allowInlineCodeBlock
+			inlineCodeBlock: SelectInputField.allowInlineCodeBlock,
 		},
 		[InputFieldType.MULTI_SELECT]: {
 			codeBlock: MultiSelectInputField.allowCodeBlock,
-			inlineCodeBlock: MultiSelectInputField.allowInlineCodeBlock
+			inlineCodeBlock: MultiSelectInputField.allowInlineCodeBlock,
 		},
 		[InputFieldType.DATE]: {
 			codeBlock: DateInputField.allowCodeBlock,
-			inlineCodeBlock: DateInputField.allowInlineCodeBlock
+			inlineCodeBlock: DateInputField.allowInlineCodeBlock,
 		},
 		[InputFieldType.TIME]: {
 			codeBlock: TimeInputField.allowCodeBlock,
-			inlineCodeBlock: TimeInputField.allowInlineCodeBlock
+			inlineCodeBlock: TimeInputField.allowInlineCodeBlock,
 		},
 		[InputFieldType.DATE_PICKER]: {
 			codeBlock: DatePickerInputField.allowCodeBlock,
-			inlineCodeBlock: DatePickerInputField.allowInlineCodeBlock
+			inlineCodeBlock: DatePickerInputField.allowInlineCodeBlock,
 		},
 	};
 
-	static createInputField(inputFieldType: InputFieldType, args: { type: InputFieldMarkdownRenderChildType, inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChanged: (value: any) => void | Promise<void> }): AbstractInputField | undefined {
+	static createInputField(
+		inputFieldType: InputFieldType,
+		args: { type: InputFieldMarkdownRenderChildType; inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild; onValueChanged: (value: any) => void | Promise<void> }
+	): AbstractInputField | undefined {
 		if (inputFieldType === InputFieldType.TOGGLE) {
 			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new ToggleInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
@@ -95,5 +97,4 @@ export class InputFieldFactory {
 			throw new MetaBindParsingError(`\'${inputFieldType}\' is not allowed as inline code block`);
 		}
 	}
-
 }

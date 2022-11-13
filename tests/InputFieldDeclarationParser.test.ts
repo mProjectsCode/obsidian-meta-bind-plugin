@@ -1,4 +1,4 @@
-import {InputFieldDeclaration, InputFieldDeclarationParser, InputFieldType} from '../src/parsers/InputFieldDeclarationParser';
+import { InputFieldDeclaration, InputFieldDeclarationParser, InputFieldType } from '../src/parsers/InputFieldDeclarationParser';
 
 test('placeholder', () => {
 	expect(true).toEqual(true);
