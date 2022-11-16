@@ -5,8 +5,8 @@ import { getFileName, isPath, removeFileEnding } from './utils/Utils';
 import { Logger } from './utils/Logger';
 import { DateParser } from './parsers/DateParser';
 import { InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
-import {getFieldFromTFile, getFrontmatterOfTFile} from '@opd-libs/opd-metadata-lib/lib/API';
-import {traverseObject} from '@opd-libs/opd-metadata-lib/lib/Utils';
+import { getFieldFromTFile, getFrontmatterOfTFile } from '@opd-libs/opd-metadata-lib/lib/API';
+import { traverseObject } from '@opd-libs/opd-metadata-lib/lib/Utils';
 
 export default class MetaBindPlugin extends Plugin {
 	// @ts-ignore defined in `onload`
