@@ -3,12 +3,14 @@ rating: 31
 title: test title test test
 completed: false
 toggle1: false
-slider1: 5
+slider1: 89
 slider2: 6
-text1: Test asdasd
-text_area1: Test teasd
-date1: 2022-05-28
+text1: Test
+text_area1: Test test
+date1: Wednesday, July 20th 2022
 select: option b
+nested:
+  object: dfgdf
 multi_select:
   - option a
   - option c
@@ -87,6 +89,9 @@ option(option d)
 
 > [!INFO]
 > `INPUT[slider(addLabels, minValue(1), maxValue(10)):slider1]`
+
+## Nested data
+`INPUT[text:nested.object]`
 
 ---
 
