@@ -8,7 +8,7 @@ import { MetaBindBindTargetError, MetaBindInternalError } from './utils/Utils';
 import { AbstractInputFieldArgument } from './inputFieldArguments/AbstractInputFieldArgument';
 import { ClassInputFieldArgument } from './inputFieldArguments/ClassInputFieldArgument';
 import { getFrontmatterOfTFile, updateOrInsertFieldInTFile } from '@opd-libs/opd-metadata-lib/lib/API';
-import { validatePath as validateObjectPath } from '@opd-libs/opd-metadata-lib/lib/Utils';
+import {traverseObject, validatePath as validateObjectPath} from '@opd-libs/opd-metadata-lib/lib/Utils';
 
 export enum InputFieldMarkdownRenderChildType {
 	INLINE_CODE_BLOCK,
@@ -183,8 +183,8 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	}
 
 	getInitialValue(): any | undefined {
-		if (this.inputFieldDeclaration?.isBound) {
-			return this.metaData[this.bindTargetMetadataField ?? ''] ?? this.inputField?.getDefaultValue();
+		if (this.inputFieldDeclaration?.isBound && this.bindTargetMetadataField) {
+			return traverseObject(this.bindTargetMetadataField, this.metaData) ?? this.inputField?.getDefaultValue();
 		}
 	}
 

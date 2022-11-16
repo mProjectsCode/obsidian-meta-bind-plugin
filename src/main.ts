@@ -5,7 +5,8 @@ import { getFileName, isPath, removeFileEnding } from './utils/Utils';
 import { Logger } from './utils/Logger';
 import { DateParser } from './parsers/DateParser';
 import { InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
-import { getFrontmatterOfTFile } from '@opd-libs/opd-metadata-lib/lib/API';
+import {getFieldFromTFile, getFrontmatterOfTFile} from '@opd-libs/opd-metadata-lib/lib/API';
+import {traverseObject} from '@opd-libs/opd-metadata-lib/lib/Utils';
 
 export default class MetaBindPlugin extends Plugin {
 	// @ts-ignore defined in `onload`
@@ -95,7 +96,7 @@ export default class MetaBindPlugin extends Plugin {
 				if (metadata === undefined) {
 					metadata = getFrontmatterOfTFile(file, this);
 				}
-				activeMarkdownInputField.pushToInputFieldValueUpdateQueue(metadata[activeMarkdownInputField.bindTargetMetadataField]);
+				activeMarkdownInputField.pushToInputFieldValueUpdateQueue(traverseObject(activeMarkdownInputField.bindTargetMetadataField, metadata));
 			}
 		}
 	}
