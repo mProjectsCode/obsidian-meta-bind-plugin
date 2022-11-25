@@ -4,7 +4,7 @@ import { Logger } from './utils/Logger';
 import { AbstractInputField } from './inputFields/AbstractInputField';
 import { InputFieldFactory } from './inputFields/InputFieldFactory';
 import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
-import { MetaBindBindTargetError, MetaBindInternalError } from './utils/Utils';
+import { isTruthy, MetaBindBindTargetError, MetaBindInternalError } from './utils/Utils';
 import { AbstractInputFieldArgument } from './inputFieldArguments/AbstractInputFieldArgument';
 import { ClassInputFieldArgument } from './inputFieldArguments/ClassInputFieldArgument';
 import { getFrontmatterOfTFile, updateOrInsertFieldInTFile } from '@opd-libs/opd-metadata-lib/lib/API';
@@ -19,7 +19,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	plugin: MetaBindPlugin;
 	metaData: any;
 	filePath: string;
-	uid: number;
+	uid: number | undefined;
 	inputField: AbstractInputField | undefined;
 	error: string;
 	type: InputFieldMarkdownRenderChildType;
@@ -34,38 +34,49 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	metadataValueUpdateQueue: any[];
 	inputFieldValueUpdateQueue: any[];
 
-	constructor(containerEl: HTMLElement, type: InputFieldMarkdownRenderChildType, fullDeclaration: string, plugin: MetaBindPlugin, filePath: string, uid: number) {
+	constructor(
+		containerEl: HTMLElement,
+		type: InputFieldMarkdownRenderChildType,
+		declaration: InputFieldDeclaration,
+		plugin: MetaBindPlugin,
+		filePath: string,
+		error?: string
+	) {
 		super(containerEl);
 
-		this.error = '';
+		this.error = error || '';
 		this.filePath = filePath;
-		this.uid = uid;
 		this.plugin = plugin;
 		this.type = type;
-		this.fullDeclaration = fullDeclaration;
+		this.fullDeclaration = declaration.fullDeclaration;
 
 		this.metadataValueUpdateQueue = [];
 		this.inputFieldValueUpdateQueue = [];
 		this.intervalCounter = 0;
+		this.inputFieldDeclaration = declaration;
+		
+		if (isTruthy(error)) {
+			console.warn(error);
+		} else {
+			this.uid = this.plugin.markDownInputFieldIndex++;
 
-		try {
-			this.inputFieldDeclaration = InputFieldDeclarationParser.parse(fullDeclaration);
+			try {
+				if (this.inputFieldDeclaration.isBound) {
+					this.parseBindTarget();
+					this.metaData = getFrontmatterOfTFile(this.bindTargetFile as TFile, this.plugin);
+				}
 
-			if (this.inputFieldDeclaration.isBound) {
-				this.parseBindTarget();
-				this.metaData = getFrontmatterOfTFile(this.bindTargetFile as TFile, this.plugin);
+				this.inputField = InputFieldFactory.createInputField(this.inputFieldDeclaration.inputFieldType, {
+					type: type,
+					inputFieldMarkdownRenderChild: this,
+					onValueChanged: this.pushToMetadataValueUpdateQueue.bind(this),
+				});
+
+				this.limitInterval = window.setInterval(() => this.applyValueUpdateQueues(), this.plugin.settings.syncInterval);
+			} catch (e: any) {
+				this.error = e.message;
+				console.warn(e);
 			}
-
-			this.inputField = InputFieldFactory.createInputField(this.inputFieldDeclaration.inputFieldType, {
-				type: type,
-				inputFieldMarkdownRenderChild: this,
-				onValueChanged: this.pushToMetadataValueUpdateQueue.bind(this),
-			});
-
-			this.limitInterval = window.setInterval(() => this.applyValueUpdateQueues(), this.plugin.settings.syncInterval);
-		} catch (e: any) {
-			this.error = e.message;
-			console.warn(e);
 		}
 	}
 
