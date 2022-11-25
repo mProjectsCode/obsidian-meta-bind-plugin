@@ -1,8 +1,8 @@
 import { EnclosingPair, ParserUtils } from '../utils/ParserUtils';
 import { isTruthy, MetaBindParsingError } from '../utils/Utils';
-import { AbstractInputFieldArgument } from '../inputFieldArguments/AbstractInputFieldArgument';
 import { InputFieldArgumentFactory } from '../inputFieldArguments/InputFieldArgumentFactory';
 import { InputFieldArgumentContainer } from '../inputFieldArguments/InputFieldArgumentContainer';
+import { AbstractInputFieldArgument } from 'src/inputFieldArguments/AbstractInputFieldArgument';
 
 export enum InputFieldType {
 	TOGGLE = 'toggle',
@@ -29,13 +29,38 @@ export enum InputFieldArgumentType {
 	INVALID = 'invalid',
 }
 
+/**
+ * Declaration of an input field.
+ */
 export interface InputFieldDeclaration {
+	/**
+	 * The full declaration string
+	 */
 	fullDeclaration: string;
+
+	/**
+	 * The type of inplut field plus the optional arguments
+	 */
 	declaration: string;
+
+	/**
+	 * The type of inplut field
+	 */
 	inputFieldType: InputFieldType;
+
+	/**
+	 * If it's a bound field or not
+	 */
 	isBound: boolean;
+
+	/**
+	 * The target field to bind.
+	 */
 	bindTarget: string;
 
+	/**
+	 * The container.
+	 */
 	argumentContainer: InputFieldArgumentContainer;
 }
 
@@ -56,7 +81,60 @@ export class InputFieldDeclarationParser {
 
 	static templates: Template[] = [];
 
-	static parse(fullDeclaration: string): InputFieldDeclaration {
+	static parseDeclaration(
+		input: InputFieldDeclaration,
+		args: Record<InputFieldArgumentType, string> | {} | undefined | null = undefined,
+		templateName: string | undefined | null = undefined
+	): InputFieldDeclaration {
+		// field type check
+		input.inputFieldType = InputFieldDeclarationParser.getInputFieldType(input.inputFieldType);
+
+		// template check:
+		let useTemplate = isTruthy(templateName) && typeof templateName === "string";
+		if (useTemplate) {
+			const template = InputFieldDeclarationParser.templates.filter(x => x.identifier === templateName).first()?.template;
+			if (template) {
+				input.bindTarget = input.bindTarget || template.bindTarget;
+				input.isBound = input.isBound || template.isBound;
+				input.inputFieldType = input.inputFieldType === InputFieldType.INVALID
+					? template.inputFieldType
+					: input.inputFieldType || template.inputFieldType;
+				input.argumentContainer = template.argumentContainer.mergeByOverride(input.argumentContainer);
+			} else {
+				throw new MetaBindParsingError(`unknown template name \'${templateName}\'`);
+			}
+		}
+
+		if (input.inputFieldType === InputFieldType.INVALID) {
+			throw new MetaBindParsingError(`unknown input field type`);
+		}
+
+		// arguments check:
+		input.argumentContainer = new InputFieldArgumentContainer();
+		if (args) {
+			for (const inputFieldArgumentIdentifier in Object.keys(args)) {
+				const inputFieldArgument : AbstractInputFieldArgument = InputFieldArgumentFactory.createInputFieldArgument(inputFieldArgumentIdentifier);
+
+				if (!inputFieldArgument.isAllowed(input.inputFieldType)) {
+					throw new MetaBindParsingError(
+						`argument \'${inputFieldArgumentIdentifier}\' is only applicable to ${inputFieldArgument.getAllowedInputFieldsAsString()} input fields`
+					);
+				}
+
+				if (inputFieldArgument.requiresValue) {
+					inputFieldArgument.parseValue((args as Record<InputFieldArgumentType, string>)[inputFieldArgumentIdentifier as InputFieldArgumentType]);
+				}
+
+				input.argumentContainer.add(inputFieldArgument);
+			}
+
+			input.argumentContainer.validate();
+		}
+
+		return input;
+	}
+
+	static parseString(fullDeclaration: string): InputFieldDeclaration {
 		let inputFieldDeclaration: InputFieldDeclaration = {} as InputFieldDeclaration;
 
 		let useTemplate = false;
@@ -139,7 +217,7 @@ export class InputFieldDeclarationParser {
 			} else if (templateDeclarationParts.length === 2) {
 				InputFieldDeclarationParser.templates.push({
 					identifier: templateDeclarationParts[0],
-					template: InputFieldDeclarationParser.parse(templateDeclarationParts[1]),
+					template: InputFieldDeclarationParser.parseString(templateDeclarationParts[1]),
 				});
 			}
 		}

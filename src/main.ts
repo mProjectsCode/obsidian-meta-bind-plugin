@@ -1,24 +1,29 @@
-import { CachedMetadata, FrontMatterCache, parseYaml, Plugin, stringifyYaml, TFile } from 'obsidian';
+import { CachedMetadata, MarkdownPostProcessorContext, Plugin, TFile } from 'obsidian';
 import { DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab } from './settings/Settings';
 import { InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType } from './InputFieldMarkdownRenderChild';
 import { getFileName, isPath, removeFileEnding } from './utils/Utils';
 import { Logger } from './utils/Logger';
 import { DateParser } from './parsers/DateParser';
-import { InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
-import { getFieldFromTFile, getFrontmatterOfTFile } from '@opd-libs/opd-metadata-lib/lib/API';
+import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
+import { getFrontmatterOfTFile } from '@opd-libs/opd-metadata-lib/lib/API';
 import { traverseObject } from '@opd-libs/opd-metadata-lib/lib/Utils';
 
 export default class MetaBindPlugin extends Plugin {
-	// @ts-ignore defined in `onload`
-	settings: MetaBindPluginSettings;
+	// defined in `loadSettings`
+	settings: MetaBindPluginSettings = null!;
 
-	// @ts-ignore defined in `onload`
-	activeMarkdownInputFields: InputFieldMarkdownRenderChild[];
-	// @ts-ignore defined in `onload`
-	markDownInputFieldIndex: number;
+	// defined in `onload`
+	activeMarkdownInputFields: InputFieldMarkdownRenderChild[] = null!;
+	markDownInputFieldIndex: number = null!;
 
 	async onload(): Promise<void> {
 		await this.loadSettings();
+
+		Object.defineProperty(this, "api", {
+			value: InputFieldDeclarationParser,
+			writable: false,
+			enumerable: false
+		});
 
 		Logger.devMode = this.settings.devMode;
 		DateParser.dateFormat = this.settings.preferredDateFormat;
@@ -33,19 +38,15 @@ export default class MetaBindPlugin extends Plugin {
 				const codeBlock = codeBlocks.item(index);
 				const text = codeBlock.innerText;
 				const isInputField = text.startsWith('INPUT[') && text.endsWith(']');
-				// console.log(context.sourcePath);
 				if (isInputField) {
 					context.addChild(
-						new InputFieldMarkdownRenderChild(
-							codeBlock,
-							InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK,
+						this.buildInputFieldMarkdownRenderChild(
 							text,
-							this,
 							context.sourcePath,
-							this.markDownInputFieldIndex
+							codeBlock,
+							InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK
 						)
 					);
-					this.markDownInputFieldIndex += 1;
 				}
 			}
 		});
@@ -54,10 +55,13 @@ export default class MetaBindPlugin extends Plugin {
 			const codeBlock = el;
 			const text = source.replace(/\n/g, '');
 			const isInputField = text.startsWith('INPUT[') && text.endsWith(']');
-			// console.log(context.sourcePath);
 			if (isInputField) {
-				ctx.addChild(new InputFieldMarkdownRenderChild(codeBlock, InputFieldMarkdownRenderChildType.CODE_BLOCK, text, this, ctx.sourcePath, this.markDownInputFieldIndex));
-				this.markDownInputFieldIndex += 1;
+				ctx.addChild(this.buildInputFieldMarkdownRenderChild(
+					text,
+					ctx.sourcePath,
+					codeBlock,
+					InputFieldMarkdownRenderChildType.CODE_BLOCK
+				));
 			}
 		});
 
@@ -68,6 +72,39 @@ export default class MetaBindPlugin extends Plugin {
 		);
 
 		this.addSettingTab(new MetaBindSettingTab(this.app, this));
+	}
+
+	buildInputFieldMarkdownRenderChild(declaration: string | InputFieldDeclaration, sourcePath: string, codeBlock: HTMLElement, renderType: InputFieldMarkdownRenderChildType = InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK) {
+		var error = undefined;
+
+		try {
+			if (typeof declaration === 'string') {
+				declaration = InputFieldDeclarationParser.parseString(declaration);
+			} else {
+				declaration = InputFieldDeclarationParser.parseDeclaration(declaration);
+			}
+		} catch (error) { }
+
+		return new InputFieldMarkdownRenderChild(
+			codeBlock,
+			renderType,
+			declaration as InputFieldDeclaration,
+			this,
+			sourcePath,
+			error
+		);
+	}
+
+	buildDeclaration(
+		base: string | InputFieldDeclaration,
+		args?: Record<InputFieldArgumentType, string> | {} | undefined | null,
+		templateName?: string | undefined | null
+	) {
+		if (typeof base === "string") {
+			return InputFieldDeclarationParser.parseString(base);
+		} else {
+			return InputFieldDeclarationParser.parseDeclaration(base, args, templateName);
+		}
 	}
 
 	onunload(): void {
