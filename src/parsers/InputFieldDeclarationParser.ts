@@ -253,4 +253,16 @@ export class InputFieldDeclarationParser {
 
 		return InputFieldType.INVALID;
 	}
+
+	static applyTemplate(fullDeclaration: InputFieldDeclaration, templateName: string | null | undefined) {
+		const template = InputFieldDeclarationParser.templates.filter(x => x.identifier === templateName).first()?.template;
+		if (template) {
+			fullDeclaration.bindTarget = fullDeclaration.bindTarget || template.bindTarget;
+			fullDeclaration.isBound = fullDeclaration.isBound || template.isBound;
+			fullDeclaration.inputFieldType = fullDeclaration.inputFieldType === InputFieldType.INVALID ? template.inputFieldType : fullDeclaration.inputFieldType || template.inputFieldType;
+			fullDeclaration.argumentContainer = template.argumentContainer.mergeByOverride(fullDeclaration.argumentContainer);
+		} else {
+			throw new MetaBindParsingError(`unknown template name \'${templateName}\'`);
+		}
+	}
 }
