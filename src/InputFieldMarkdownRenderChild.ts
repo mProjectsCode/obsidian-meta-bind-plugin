@@ -34,14 +34,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	metadataValueUpdateQueue: any[];
 	inputFieldValueUpdateQueue: any[];
 
-	constructor(
-		containerEl: HTMLElement,
-		type: InputFieldMarkdownRenderChildType,
-		declaration: InputFieldDeclaration,
-		plugin: MetaBindPlugin,
-		filePath: string,
-		error?: string
-	) {
+	constructor(containerEl: HTMLElement, type: InputFieldMarkdownRenderChildType, declaration: InputFieldDeclaration, plugin: MetaBindPlugin, filePath: string, error?: string) {
 		super(containerEl);
 
 		this.error = error || '';
@@ -54,11 +47,12 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		this.inputFieldValueUpdateQueue = [];
 		this.intervalCounter = 0;
 		this.inputFieldDeclaration = declaration;
-		
+
 		if (isTruthy(error)) {
 			console.warn(error);
 		} else {
-			this.uid = this.plugin.markDownInputFieldIndex++;
+			this.uid = this.plugin.markDownInputFieldIndex;
+			this.plugin.markDownInputFieldIndex += 1;
 
 			try {
 				if (this.inputFieldDeclaration.isBound) {

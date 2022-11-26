@@ -33,14 +33,7 @@ export default class MetaBindPlugin extends Plugin {
 				const text = codeBlock.innerText;
 				const isInputField = text.startsWith('INPUT[') && text.endsWith(']');
 				if (isInputField) {
-					context.addChild(
-						this.buildInputFieldMarkdownRenderChild(
-							text,
-							context.sourcePath,
-							codeBlock,
-							InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK
-						)
-					);
+					context.addChild(this.buildInputFieldMarkdownRenderChild(text, context.sourcePath, codeBlock, InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK));
 				}
 			}
 		});
@@ -50,12 +43,7 @@ export default class MetaBindPlugin extends Plugin {
 			const text = source.replace(/\n/g, '');
 			const isInputField = text.startsWith('INPUT[') && text.endsWith(']');
 			if (isInputField) {
-				ctx.addChild(this.buildInputFieldMarkdownRenderChild(
-					text,
-					ctx.sourcePath,
-					codeBlock,
-					InputFieldMarkdownRenderChildType.CODE_BLOCK
-				));
+				ctx.addChild(this.buildInputFieldMarkdownRenderChild(text, ctx.sourcePath, codeBlock, InputFieldMarkdownRenderChildType.CODE_BLOCK));
 			}
 		});
 
@@ -70,12 +58,12 @@ export default class MetaBindPlugin extends Plugin {
 
 	/**
 	 * Accessable function for building an input field.
-	 * 
+	 *
 	 * @param {string|InputFieldDeclaration} declaration The field declaration string or data.
 	 * @param {string} sourcePath The path of the file the element is being inserted into
-	 * @param {HTMLElement} container The element to fill with the input element 
+	 * @param {HTMLElement} container The element to fill with the input element
 	 * @param {InputFieldMarkdownRenderChildType} renderType Inline or Code Block
-	 * 
+	 *
 	 * @returns The render child produced.
 	 */
 	buildInputFieldMarkdownRenderChild(
@@ -83,8 +71,8 @@ export default class MetaBindPlugin extends Plugin {
 		sourcePath: string,
 		container: HTMLElement,
 		renderType: InputFieldMarkdownRenderChildType = InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK
-	) : InputFieldMarkdownRenderChild {
-		var error = undefined;
+	): InputFieldMarkdownRenderChild {
+		let error = undefined;
 
 		try {
 			if (typeof declaration === 'string') {
@@ -92,49 +80,42 @@ export default class MetaBindPlugin extends Plugin {
 			} else {
 				declaration = InputFieldDeclarationParser.parseDeclaration(declaration);
 			}
-		} catch (error) { }
+		} catch (error) {
+			console.warn(error);
+		}
 
-		return new InputFieldMarkdownRenderChild(
-			container,
-			renderType,
-			declaration as InputFieldDeclaration,
-			this,
-			sourcePath,
-			error
-		);
+		return new InputFieldMarkdownRenderChild(container, renderType, declaration as InputFieldDeclaration, this, sourcePath, error);
 	}
 
 	/**
 	 * Helper method to build a declaration from some initial data or a string.
-	 * 
-	 * @param {string | InputFieldDeclaration | {}} base The base declaration data or a string to parse for it. Can also be an empty object with the other arguments provided to fill it.
-	 * @param {Record<InputFieldArgumentType, string> | {} | undefined } args (Optional) The arguments, indexed by name.
+	 *
+	 * @param {string | InputFieldDeclaration | {}} declarationData The base declaration data or a string to parse for it. Can also be an empty object with the other arguments provided to fill it.
+	 * @param {Record<InputFieldArgumentType, string> | {} | undefined} inputFieldArguments (Optional) The arguments, indexed by name.
 	 * @param {InputFieldType | undefined} inputFieldType (Optional) The input field type if not provided in the base object.
 	 * @param {boolean | undefined} isBound (Optional) If the field should try to be bound to a bindTarget.
-	 * @param {Record<InputFieldArgumentType, string> | {} | undefined} args (Optional) The bind target of the field.
-	 * @param { string | undefined} templateName (Optional) A template to use.
-	 * 
+	 * @param {string | undefined} bindTarget (Optional) The bind target of the field.
+	 * @param {string | undefined} templateName (Optional) A template to use.
+	 *
 	 * @returns A constructed InputFieldDeclaration.
 	 */
 	buildDeclaration(
-		base: string | InputFieldDeclaration | {},
-		args?: Record<InputFieldArgumentType, string> | {} ,
+		declarationData: string | InputFieldDeclaration | {},
+		inputFieldArguments?: Record<InputFieldArgumentType, string> | {},
 		inputFieldType?: InputFieldType,
 		isBound?: boolean,
 		bindTarget?: string,
 		templateName?: string
-	) : InputFieldDeclaration {
-		if (typeof base === "string") {
-			return InputFieldDeclarationParser.parseString(base);
+	): InputFieldDeclaration {
+		if (typeof declarationData === 'string') {
+			return InputFieldDeclarationParser.parseString(declarationData);
 		} else {
-			var fullBase = base as InputFieldDeclaration;
-			fullBase = {
-				...fullBase,
-				inputFieldType: inputFieldType ?? fullBase.inputFieldType ?? InputFieldType.INVALID,
-				isBound: isBound ?? fullBase.isBound ?? false ?? isTruthy(bindTarget),
-				bindTarget: bindTarget ?? fullBase.bindTarget ?? undefined
-			}
-			return InputFieldDeclarationParser.parseDeclaration(fullBase, args, templateName);
+			const fullBase = declarationData as InputFieldDeclaration;
+			fullBase.inputFieldType = inputFieldType ?? fullBase.inputFieldType ?? InputFieldType.INVALID;
+			fullBase.isBound = isBound ?? fullBase.isBound ?? false ?? isTruthy(bindTarget);
+			fullBase.bindTarget = bindTarget ?? fullBase.bindTarget ?? undefined;
+
+			return InputFieldDeclarationParser.parseDeclaration(fullBase, inputFieldArguments, templateName);
 		}
 	}
 
