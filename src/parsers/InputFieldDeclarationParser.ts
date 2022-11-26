@@ -29,38 +29,12 @@ export enum InputFieldArgumentType {
 	INVALID = 'invalid',
 }
 
-/**
- * Declaration of an input field.
- */
 export interface InputFieldDeclaration {
-	/**
-	 * The full declaration string
-	 */
 	fullDeclaration: string;
-
-	/**
-	 * The type of inplut field plus the optional arguments
-	 */
 	declaration: string;
-
-	/**
-	 * The type of inplut field
-	 */
 	inputFieldType: InputFieldType;
-
-	/**
-	 * If it's a bound field or not
-	 */
 	isBound: boolean;
-
-	/**
-	 * The target field to bind.
-	 */
 	bindTarget: string;
-
-	/**
-	 * The container.
-	 */
 	argumentContainer: InputFieldArgumentContainer;
 }
 
@@ -82,56 +56,55 @@ export class InputFieldDeclarationParser {
 	static templates: Template[] = [];
 
 	static parseDeclaration(
-		input: InputFieldDeclaration,
-		args: Record<InputFieldArgumentType, string> | {} | undefined | null = undefined,
+		fullDeclaration: InputFieldDeclaration,
+		inputFieldArguments: Record<InputFieldArgumentType, string> | {} | undefined | null = undefined,
 		templateName: string | undefined | null = undefined
 	): InputFieldDeclaration {
 		// field type check
-		input.inputFieldType = InputFieldDeclarationParser.getInputFieldType(input.inputFieldType);
+		fullDeclaration.inputFieldType = InputFieldDeclarationParser.getInputFieldType(fullDeclaration.inputFieldType);
 
 		// template check:
-		let useTemplate = isTruthy(templateName) && typeof templateName === "string";
+		let useTemplate = isTruthy(templateName) && typeof templateName === 'string';
 		if (useTemplate) {
 			const template = InputFieldDeclarationParser.templates.filter(x => x.identifier === templateName).first()?.template;
 			if (template) {
-				input.bindTarget = input.bindTarget || template.bindTarget;
-				input.isBound = input.isBound || template.isBound;
-				input.inputFieldType = input.inputFieldType === InputFieldType.INVALID
-					? template.inputFieldType
-					: input.inputFieldType || template.inputFieldType;
-				input.argumentContainer = template.argumentContainer.mergeByOverride(input.argumentContainer);
+				fullDeclaration.bindTarget = fullDeclaration.bindTarget || template.bindTarget;
+				fullDeclaration.isBound = fullDeclaration.isBound || template.isBound;
+				fullDeclaration.inputFieldType =
+					fullDeclaration.inputFieldType === InputFieldType.INVALID ? template.inputFieldType : fullDeclaration.inputFieldType || template.inputFieldType;
+				fullDeclaration.argumentContainer = template.argumentContainer.mergeByOverride(fullDeclaration.argumentContainer);
 			} else {
 				throw new MetaBindParsingError(`unknown template name \'${templateName}\'`);
 			}
 		}
 
-		if (input.inputFieldType === InputFieldType.INVALID) {
+		if (fullDeclaration.inputFieldType === InputFieldType.INVALID) {
 			throw new MetaBindParsingError(`unknown input field type`);
 		}
 
 		// arguments check:
-		input.argumentContainer = new InputFieldArgumentContainer();
-		if (args) {
-			for (const inputFieldArgumentIdentifier in Object.keys(args)) {
-				const inputFieldArgument : AbstractInputFieldArgument = InputFieldArgumentFactory.createInputFieldArgument(inputFieldArgumentIdentifier);
+		fullDeclaration.argumentContainer = new InputFieldArgumentContainer();
+		if (inputFieldArguments) {
+			for (const inputFieldArgumentIdentifier in Object.keys(inputFieldArguments)) {
+				const inputFieldArgument: AbstractInputFieldArgument = InputFieldArgumentFactory.createInputFieldArgument(inputFieldArgumentIdentifier);
 
-				if (!inputFieldArgument.isAllowed(input.inputFieldType)) {
+				if (!inputFieldArgument.isAllowed(fullDeclaration.inputFieldType)) {
 					throw new MetaBindParsingError(
 						`argument \'${inputFieldArgumentIdentifier}\' is only applicable to ${inputFieldArgument.getAllowedInputFieldsAsString()} input fields`
 					);
 				}
 
 				if (inputFieldArgument.requiresValue) {
-					inputFieldArgument.parseValue((args as Record<InputFieldArgumentType, string>)[inputFieldArgumentIdentifier as InputFieldArgumentType]);
+					inputFieldArgument.parseValue((inputFieldArguments as Record<InputFieldArgumentType, string>)[inputFieldArgumentIdentifier as InputFieldArgumentType]);
 				}
 
-				input.argumentContainer.add(inputFieldArgument);
+				fullDeclaration.argumentContainer.add(inputFieldArgument);
 			}
 
-			input.argumentContainer.validate();
+			fullDeclaration.argumentContainer.validate();
 		}
 
-		return input;
+		return fullDeclaration;
 	}
 
 	static parseString(fullDeclaration: string): InputFieldDeclaration {
