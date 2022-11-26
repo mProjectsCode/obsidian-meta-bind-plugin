@@ -66,16 +66,7 @@ export class InputFieldDeclarationParser {
 		// template check:
 		let useTemplate = isTruthy(templateName) && typeof templateName === 'string';
 		if (useTemplate) {
-			const template = InputFieldDeclarationParser.templates.filter(x => x.identifier === templateName).first()?.template;
-			if (template) {
-				fullDeclaration.bindTarget = fullDeclaration.bindTarget || template.bindTarget;
-				fullDeclaration.isBound = fullDeclaration.isBound || template.isBound;
-				fullDeclaration.inputFieldType =
-					fullDeclaration.inputFieldType === InputFieldType.INVALID ? template.inputFieldType : fullDeclaration.inputFieldType || template.inputFieldType;
-				fullDeclaration.argumentContainer = template.argumentContainer.mergeByOverride(fullDeclaration.argumentContainer);
-			} else {
-				throw new MetaBindParsingError(`unknown template name \'${templateName}\'`);
-			}
+			InputFieldDeclarationParser.applyTemplate(fullDeclaration, templateName);
 		}
 
 		if (fullDeclaration.inputFieldType === InputFieldType.INVALID) {
@@ -156,18 +147,7 @@ export class InputFieldDeclarationParser {
 		}
 
 		if (useTemplate) {
-			// console.log(templateName);
-			const template = InputFieldDeclarationParser.templates.filter(x => x.identifier === templateName).first()?.template;
-			// console.log(template);
-			if (template) {
-				inputFieldDeclaration.bindTarget = inputFieldDeclaration.bindTarget || template.bindTarget;
-				inputFieldDeclaration.isBound = inputFieldDeclaration.isBound || template.isBound;
-				inputFieldDeclaration.inputFieldType =
-					inputFieldDeclaration.inputFieldType === InputFieldType.INVALID ? template.inputFieldType : inputFieldDeclaration.inputFieldType || template.inputFieldType;
-				inputFieldDeclaration.argumentContainer = template.argumentContainer.mergeByOverride(inputFieldDeclaration.argumentContainer);
-			} else {
-				throw new MetaBindParsingError(`unknown template name \'${templateName}\'`);
-			}
+			InputFieldDeclarationParser.applyTemplate(inputFieldDeclaration, templateName);
 		}
 
 		if (inputFieldDeclaration.inputFieldType === InputFieldType.INVALID) {
