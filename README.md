@@ -26,4 +26,3 @@ There is a setting to change the sync interval, but I don't recommend changing i
 Thank you for wanting to contribute to this project.
 
 Contributions are always welcome. If you have an idea, feel free to open a feature request under the issue tab or even create a pull request.
-
