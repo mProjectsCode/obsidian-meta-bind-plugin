@@ -74,7 +74,22 @@ export default class MetaBindPlugin extends Plugin {
 		this.addSettingTab(new MetaBindSettingTab(this.app, this));
 	}
 
-	buildInputFieldMarkdownRenderChild(declaration: string | InputFieldDeclaration, sourcePath: string, codeBlock: HTMLElement, renderType: InputFieldMarkdownRenderChildType = InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK) {
+	/**
+	 * Accessable function for building an input field.
+	 * 
+	 * @param {string|InputFieldDeclaration} declaration The field declaration string or data.
+	 * @param {string} sourcePath The path of the file the element is being inserted into
+	 * @param {HTMLElement} container The element to fill with the input element 
+	 * @param {InputFieldMarkdownRenderChildType} renderType Inline or Code Block
+	 * 
+	 * @returns The render child produced.
+	 */
+	buildInputFieldMarkdownRenderChild(
+		declaration: string | InputFieldDeclaration,
+		sourcePath: string,
+		container: HTMLElement,
+		renderType: InputFieldMarkdownRenderChildType = InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK
+	) : InputFieldMarkdownRenderChild {
 		var error = undefined;
 
 		try {
@@ -86,7 +101,7 @@ export default class MetaBindPlugin extends Plugin {
 		} catch (error) { }
 
 		return new InputFieldMarkdownRenderChild(
-			codeBlock,
+			container,
 			renderType,
 			declaration as InputFieldDeclaration,
 			this,
@@ -95,6 +110,14 @@ export default class MetaBindPlugin extends Plugin {
 		);
 	}
 
+	/**
+	 * Helper method to build a declaration from some initial data or a string.
+	 * 
+	 * @param {string | InputFieldDeclaration} base The base declaration data or a string to parse for it
+	 * @param {Record<InputFieldArgumentType, string> | {} | undefined | null} args The arguments, indexed by name.
+	 * @param { string | undefined | null} templateName (optional) A template to use.
+	 * @returns 
+	 */
 	buildDeclaration(
 		base: string | InputFieldDeclaration,
 		args?: Record<InputFieldArgumentType, string> | {} | undefined | null,
