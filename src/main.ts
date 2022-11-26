@@ -19,12 +19,6 @@ export default class MetaBindPlugin extends Plugin {
 	async onload(): Promise<void> {
 		await this.loadSettings();
 
-		Object.defineProperty(this, "api", {
-			value: InputFieldDeclarationParser,
-			writable: false,
-			enumerable: false
-		});
-
 		Logger.devMode = this.settings.devMode;
 		DateParser.dateFormat = this.settings.preferredDateFormat;
 		InputFieldDeclarationParser.parseTemplates(this.settings.inputTemplates);
