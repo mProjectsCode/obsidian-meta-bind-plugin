@@ -1,10 +1,10 @@
 import { CachedMetadata, MarkdownPostProcessorContext, Plugin, TFile } from 'obsidian';
 import { DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab } from './settings/Settings';
 import { InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType } from './InputFieldMarkdownRenderChild';
-import { getFileName, isPath, removeFileEnding } from './utils/Utils';
+import { getFileName, isPath, isTruthy, removeFileEnding } from './utils/Utils';
 import { Logger } from './utils/Logger';
 import { DateParser } from './parsers/DateParser';
-import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
+import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser, InputFieldType } from './parsers/InputFieldDeclarationParser';
 import { getFrontmatterOfTFile } from '@opd-libs/opd-metadata-lib/lib/API';
 import { traverseObject } from '@opd-libs/opd-metadata-lib/lib/Utils';
 
@@ -107,20 +107,34 @@ export default class MetaBindPlugin extends Plugin {
 	/**
 	 * Helper method to build a declaration from some initial data or a string.
 	 * 
-	 * @param {string | InputFieldDeclaration} base The base declaration data or a string to parse for it
-	 * @param {Record<InputFieldArgumentType, string> | {} | undefined | null} args The arguments, indexed by name.
-	 * @param { string | undefined | null} templateName (optional) A template to use.
-	 * @returns 
+	 * @param {string | InputFieldDeclaration | {}} base The base declaration data or a string to parse for it. Can also be an empty object with the other arguments provided to fill it.
+	 * @param {Record<InputFieldArgumentType, string> | {} | undefined } args (Optional) The arguments, indexed by name.
+	 * @param {InputFieldType | undefined} inputFieldType (Optional) The input field type if not provided in the base object.
+	 * @param {boolean | undefined} isBound (Optional) If the field should try to be bound to a bindTarget.
+	 * @param {Record<InputFieldArgumentType, string> | {} | undefined} args (Optional) The bind target of the field.
+	 * @param { string | undefined} templateName (Optional) A template to use.
+	 * 
+	 * @returns A constructed InputFieldDeclaration.
 	 */
 	buildDeclaration(
-		base: string | InputFieldDeclaration,
-		args?: Record<InputFieldArgumentType, string> | {} | undefined | null,
-		templateName?: string | undefined | null
-	) {
+		base: string | InputFieldDeclaration | {},
+		args?: Record<InputFieldArgumentType, string> | {} ,
+		inputFieldType?: InputFieldType,
+		isBound?: boolean,
+		bindTarget?: string,
+		templateName?: string
+	) : InputFieldDeclaration {
 		if (typeof base === "string") {
 			return InputFieldDeclarationParser.parseString(base);
 		} else {
-			return InputFieldDeclarationParser.parseDeclaration(base, args, templateName);
+			var fullBase = base as InputFieldDeclaration;
+			fullBase = {
+				...fullBase,
+				inputFieldType: inputFieldType ?? fullBase.inputFieldType ?? InputFieldType.INVALID,
+				isBound: isBound ?? fullBase.isBound ?? false ?? isTruthy(bindTarget),
+				bindTarget: bindTarget ?? fullBase.bindTarget ?? undefined
+			}
+			return InputFieldDeclarationParser.parseDeclaration(fullBase, args, templateName);
 		}
 	}
 
