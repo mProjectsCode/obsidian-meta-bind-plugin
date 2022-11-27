@@ -11,6 +11,7 @@ import { MetaBindParsingError } from '../utils/Utils';
 import { AbstractInputField } from './AbstractInputField';
 import { InputFieldType } from '../parsers/InputFieldDeclarationParser';
 import { DatePickerInputField } from './DatePicker/DatePickerInputField';
+import { NumberInputField } from './NumberInputField';
 
 export class InputFieldFactory {
 	static allowCodeBlockMap: Record<string, { codeBlock: boolean; inlineCodeBlock: boolean }> = {
@@ -50,6 +51,10 @@ export class InputFieldFactory {
 			codeBlock: DatePickerInputField.allowCodeBlock,
 			inlineCodeBlock: DatePickerInputField.allowInlineCodeBlock,
 		},
+		[InputFieldType.NUMBER]: {
+			codeBlock: NumberInputField.allowCodeBlock,
+			inlineCodeBlock: NumberInputField.allowInlineCodeBlock,
+		},
 	};
 
 	static createInputField(
@@ -83,6 +88,9 @@ export class InputFieldFactory {
 		} else if (inputFieldType === InputFieldType.DATE_PICKER) {
 			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new DatePickerInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+		} else if (inputFieldType === InputFieldType.NUMBER) {
+			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
+			return new NumberInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		}
 
 		return undefined;
