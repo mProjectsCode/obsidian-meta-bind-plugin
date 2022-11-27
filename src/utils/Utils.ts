@@ -16,6 +16,12 @@ export class MetaBindBindTargetError extends Error {
 	}
 }
 
+export class MetaBindBindValueError extends Error {
+	constructor(message: string) {
+		super(`[MB_BIND_VALUE_ERROR] ${message}`);
+	}
+}
+
 /**
  * Gets the file name from a path
  *
@@ -183,4 +189,8 @@ export function isFalsy(value: any): boolean {
 
 export function equalOrIncludes(str1: string, str2: string): boolean {
 	return str1 === str2 || str1.includes(str2) || str2.includes(str1);
+}
+
+export function numberToString(n: number | string) {
+	return n + '';
 }

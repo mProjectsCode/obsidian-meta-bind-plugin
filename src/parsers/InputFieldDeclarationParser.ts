@@ -14,6 +14,7 @@ export enum InputFieldType {
 	DATE = 'date',
 	TIME = 'time',
 	DATE_PICKER = 'date_picker',
+	NUMBER = 'number',
 	INVALID = 'invalid',
 }
 
@@ -158,6 +159,8 @@ export class InputFieldDeclarationParser {
 	}
 
 	static parseTemplates(templates: string): void {
+		InputFieldDeclarationParser.templates = [];
+
 		let templateDeclarations = templates ? ParserUtils.split(templates, '\n', InputFieldDeclarationParser.squareBracesPair) : [];
 		templateDeclarations = templateDeclarations.map(x => x.trim()).filter(x => x.length > 0);
 

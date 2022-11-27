@@ -126,10 +126,12 @@ export default class MetaBindPlugin extends Plugin {
 	}
 
 	registerInputFieldMarkdownRenderChild(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild): void {
+		console.debug(`meta-bind | registered input field ${inputFieldMarkdownRenderChild.uid}`);
 		this.activeMarkdownInputFields.push(inputFieldMarkdownRenderChild);
 	}
 
 	unregisterInputFieldMarkdownRenderChild(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild): void {
+		console.debug(`meta-bind | unregistered input field ${inputFieldMarkdownRenderChild.uid}`);
 		this.activeMarkdownInputFields = this.activeMarkdownInputFields.filter(x => x.uid !== inputFieldMarkdownRenderChild.uid);
 	}
 
