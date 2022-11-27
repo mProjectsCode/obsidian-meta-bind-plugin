@@ -1,7 +1,7 @@
-import { CachedMetadata, MarkdownPostProcessorContext, Plugin, TFile } from 'obsidian';
+import { CachedMetadata, editorEditorField, MarkdownPostProcessorContext, Plugin, TFile } from 'obsidian';
 import { DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab } from './settings/Settings';
 import { InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType } from './InputFieldMarkdownRenderChild';
-import { getFileName, isPath, isTruthy, removeFileEnding } from './utils/Utils';
+import { getFileName, isPath, isTruthy, MetaBindBindTargetError, removeFileEnding } from './utils/Utils';
 import { Logger } from './utils/Logger';
 import { DateParser } from './parsers/DateParser';
 import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser, InputFieldType } from './parsers/InputFieldDeclarationParser';
@@ -57,12 +57,12 @@ export default class MetaBindPlugin extends Plugin {
 	}
 
 	/**
-	 * Accessable function for building an input field.
+	 * Accessible function for building an input field.
 	 *
-	 * @param {string|InputFieldDeclaration} declaration The field declaration string or data.
-	 * @param {string} sourcePath The path of the file the element is being inserted into
-	 * @param {HTMLElement} container The element to fill with the input element
-	 * @param {InputFieldMarkdownRenderChildType} renderType Inline or Code Block
+	 * @param {string|InputFieldDeclaration} declaration The input field declaration as a string or object.
+	 * @param {string} sourcePath The path of the file the element will be inserted into.
+	 * @param {HTMLElement} container The container element for the input element.
+	 * @param {InputFieldMarkdownRenderChildType} renderType Inline or Code Block.
 	 *
 	 * @returns The render child produced.
 	 */
@@ -72,7 +72,7 @@ export default class MetaBindPlugin extends Plugin {
 		container: HTMLElement,
 		renderType: InputFieldMarkdownRenderChildType = InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK
 	): InputFieldMarkdownRenderChild {
-		let error = undefined;
+		let error: string | undefined;
 
 		try {
 			if (typeof declaration === 'string') {
@@ -80,8 +80,11 @@ export default class MetaBindPlugin extends Plugin {
 			} else {
 				declaration = InputFieldDeclarationParser.parseDeclaration(declaration);
 			}
-		} catch (error) {
-			console.warn(error);
+		} catch (e: any) {
+			if (e instanceof Error) {
+				error = e.message;
+				console.warn(e);
+			}
 		}
 
 		return new InputFieldMarkdownRenderChild(container, renderType, declaration as InputFieldDeclaration, this, sourcePath, error);
@@ -91,7 +94,7 @@ export default class MetaBindPlugin extends Plugin {
 	 * Helper method to build a declaration from some initial data or a string.
 	 *
 	 * @param {string | InputFieldDeclaration | {}} declarationData The base declaration data or a string to parse for it. Can also be an empty object with the other arguments provided to fill it.
-	 * @param {Record<InputFieldArgumentType, string> | {} | undefined} inputFieldArguments (Optional) The arguments, indexed by name.
+	 * @param {Record<InputFieldArgumentType, string> | {} | undefined} inputFieldArguments (Optional) The input field arguments, indexed by argument name.
 	 * @param {InputFieldType | undefined} inputFieldType (Optional) The input field type if not provided in the base object.
 	 * @param {boolean | undefined} isBound (Optional) If the field should try to be bound to a bindTarget.
 	 * @param {string | undefined} bindTarget (Optional) The bind target of the field.
@@ -110,12 +113,18 @@ export default class MetaBindPlugin extends Plugin {
 		if (typeof declarationData === 'string') {
 			return InputFieldDeclarationParser.parseString(declarationData);
 		} else {
-			const fullBase = declarationData as InputFieldDeclaration;
-			fullBase.inputFieldType = inputFieldType ?? fullBase.inputFieldType ?? InputFieldType.INVALID;
-			fullBase.isBound = isBound ?? fullBase.isBound ?? false ?? isTruthy(bindTarget);
-			fullBase.bindTarget = bindTarget ?? fullBase.bindTarget ?? undefined;
+			const declarationBase = declarationData as InputFieldDeclaration;
+			declarationBase.inputFieldType = inputFieldType ?? declarationBase.inputFieldType ?? InputFieldType.INVALID;
+			declarationBase.isBound = isBound ?? declarationBase.isBound ?? false;
+			declarationBase.bindTarget = bindTarget ?? declarationBase.bindTarget ?? undefined;
 
-			return InputFieldDeclarationParser.parseDeclaration(fullBase, inputFieldArguments, templateName);
+			// if the input field is bound should be determined by `isBound`
+			// `isBound` is true, `bindTarget` must be set
+			if (declarationBase.isBound && !declarationBase.bindTarget) {
+				throw new MetaBindBindTargetError('input field declaration is bound but bind target is undefined');
+			}
+
+			return InputFieldDeclarationParser.parseDeclaration(declarationBase, inputFieldArguments, templateName);
 		}
 	}
 

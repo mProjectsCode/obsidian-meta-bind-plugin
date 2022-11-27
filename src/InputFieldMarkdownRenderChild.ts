@@ -3,7 +3,7 @@ import MetaBindPlugin from './main';
 import { AbstractInputField } from './inputFields/AbstractInputField';
 import { InputFieldFactory } from './inputFields/InputFieldFactory';
 import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
-import { isTruthy, MetaBindBindTargetError, MetaBindInternalError } from './utils/Utils';
+import { isFalsy, isTruthy, MetaBindBindTargetError, MetaBindInternalError } from './utils/Utils';
 import { AbstractInputFieldArgument } from './inputFieldArguments/AbstractInputFieldArgument';
 import { ClassInputFieldArgument } from './inputFieldArguments/ClassInputFieldArgument';
 import { getFrontmatterOfTFile, updateOrInsertFieldInTFile } from '@opd-libs/opd-metadata-lib/lib/API';
@@ -47,12 +47,10 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		this.intervalCounter = 0;
 		this.inputFieldDeclaration = declaration;
 
-		if (isTruthy(error)) {
-			console.warn(error);
-		} else {
-			this.uid = this.plugin.markDownInputFieldIndex;
-			this.plugin.markDownInputFieldIndex += 1;
+		this.uid = this.plugin.markDownInputFieldIndex;
+		this.plugin.markDownInputFieldIndex += 1;
 
+		if (!error) {
 			try {
 				if (this.inputFieldDeclaration.isBound) {
 					this.parseBindTarget();
@@ -78,9 +76,9 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 			throw new MetaBindInternalError('inputFieldDeclaration is undefined, can not parse bind target');
 		}
 
-		const bindTargetParts = this.inputFieldDeclaration.bindTarget.split('#');
-		let bindTargetFileName;
-		let bindTargetMetadataFieldName;
+		const bindTargetParts: string[] = this.inputFieldDeclaration.bindTarget.split('#');
+		let bindTargetFileName: string;
+		let bindTargetMetadataFieldName: string;
 
 		if (bindTargetParts.length === 1) {
 			// the bind target is in the same file
