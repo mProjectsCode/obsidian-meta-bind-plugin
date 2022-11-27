@@ -1,12 +1,11 @@
 import { AbstractInputField } from './AbstractInputField';
 import { ToggleComponent } from 'obsidian';
-import { Logger } from '../utils/Logger';
-import { MetaBindInternalError } from '../utils/Utils';
+import { MetaBindBindValueError, MetaBindInternalError } from '../utils/Utils';
 
 export class ToggleInputField extends AbstractInputField {
 	toggleComponent: ToggleComponent | undefined;
 
-	getValue(): any {
+	getValue(): boolean {
 		if (!this.toggleComponent) {
 			throw new MetaBindInternalError('toggle input component is undefined');
 		}
@@ -21,7 +20,7 @@ export class ToggleInputField extends AbstractInputField {
 		if (value != null && typeof value == 'boolean') {
 			this.toggleComponent.setValue(value);
 		} else {
-			Logger.logWarning(`can not set value of toggle to \'${value}\'`);
+			console.warn(new MetaBindBindValueError(`invalid value \'${value}\' at toggleInputField ${this.inputFieldMarkdownRenderChild.uid}`));
 			this.toggleComponent.setValue(false);
 		}
 	}
@@ -43,6 +42,8 @@ export class ToggleInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
+		console.debug(`meta-bind | render toggleInputField ${this.inputFieldMarkdownRenderChild.uid}`);
+
 		const component = new ToggleComponent(container);
 		component.setValue(this.inputFieldMarkdownRenderChild.getInitialValue());
 		component.onChange(this.onValueChange);
