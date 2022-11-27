@@ -7,9 +7,10 @@ import { MaxValueInputFieldArgument } from './MaxValueInputFieldArgument';
 import { OptionInputFieldArgument } from './OptionInputFieldArgument';
 import { TitleInputFieldArgument } from './TitleInputFieldArgument';
 import { AlignRightInputFieldArgument } from './AlignRightInputFieldArgument';
+import { AbstractInputFieldArgument } from './AbstractInputFieldArgument';
 
 export class InputFieldArgumentFactory {
-	static createInputFieldArgument(argumentIdentifier: string) {
+	static createInputFieldArgument(argumentIdentifier: string): AbstractInputFieldArgument {
 		if (argumentIdentifier === InputFieldArgumentType.CLASS) {
 			return new ClassInputFieldArgument();
 		} else if (argumentIdentifier === InputFieldArgumentType.ADD_LABELS) {

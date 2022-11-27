@@ -15,6 +15,7 @@ export enum InputFieldType {
 	TIME = 'time',
 	DATE_PICKER = 'date_picker',
 	NUMBER = 'number',
+
 	INVALID = 'invalid',
 }
 
@@ -31,11 +32,39 @@ export enum InputFieldArgumentType {
 }
 
 export interface InputFieldDeclaration {
+	/**
+	 * The full declaration of the input field including the "INPUT[]".
+	 * e.g.
+	 * INPUT[input_type(argument_name(value)):bind_target]
+	 */
 	fullDeclaration: string;
+	/**
+	 * Trimmed declaration of the input field including without the "INPUT[]".
+	 * e.g.
+	 * input_type(argument_name(value)):bind_target
+	 */
 	declaration: string;
+	/**
+	 * The type of the input field.
+	 * e.g.
+	 * input_type
+	 */
 	inputFieldType: InputFieldType;
+	/**
+	 * Whether the input field is bound.
+	 * e.g.
+	 * true
+	 */
 	isBound: boolean;
+	/**
+	 * The frontmatter field the input field is bound to.
+	 * e.g.
+	 * bind_target
+	 */
 	bindTarget: string;
+	/**
+	 * A collection of the input field arguments.
+	 */
 	argumentContainer: InputFieldArgumentContainer;
 }
 
@@ -65,7 +94,7 @@ export class InputFieldDeclarationParser {
 		fullDeclaration.inputFieldType = InputFieldDeclarationParser.getInputFieldType(fullDeclaration.inputFieldType);
 
 		// template check:
-		let useTemplate = isTruthy(templateName) && typeof templateName === 'string';
+		let useTemplate: boolean = isTruthy(templateName) && typeof templateName === 'string';
 		if (useTemplate) {
 			InputFieldDeclarationParser.applyTemplate(fullDeclaration, templateName);
 		}
@@ -237,15 +266,20 @@ export class InputFieldDeclarationParser {
 		return InputFieldType.INVALID;
 	}
 
-	static applyTemplate(fullDeclaration: InputFieldDeclaration, templateName: string | null | undefined) {
+	static applyTemplate(inputFieldDeclaration: InputFieldDeclaration, templateName: string | null | undefined) {
+		if (!templateName) {
+			return;
+		}
+
 		const template = InputFieldDeclarationParser.templates.filter(x => x.identifier === templateName).first()?.template;
-		if (template) {
-			fullDeclaration.bindTarget = fullDeclaration.bindTarget || template.bindTarget;
-			fullDeclaration.isBound = fullDeclaration.isBound || template.isBound;
-			fullDeclaration.inputFieldType = fullDeclaration.inputFieldType === InputFieldType.INVALID ? template.inputFieldType : fullDeclaration.inputFieldType || template.inputFieldType;
-			fullDeclaration.argumentContainer = template.argumentContainer.mergeByOverride(fullDeclaration.argumentContainer);
-		} else {
+		if (!template) {
 			throw new MetaBindParsingError(`unknown template name \'${templateName}\'`);
 		}
+
+		inputFieldDeclaration.bindTarget = inputFieldDeclaration.bindTarget || template.bindTarget;
+		inputFieldDeclaration.isBound = inputFieldDeclaration.isBound || template.isBound;
+		inputFieldDeclaration.inputFieldType =
+			(inputFieldDeclaration.inputFieldType === InputFieldType.INVALID ? template.inputFieldType : inputFieldDeclaration.inputFieldType) || template.inputFieldType;
+		inputFieldDeclaration.argumentContainer = template.argumentContainer.mergeByOverride(inputFieldDeclaration.argumentContainer);
 	}
 }
