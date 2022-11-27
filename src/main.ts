@@ -1,11 +1,11 @@
-import { CachedMetadata, FrontMatterCache, parseYaml, Plugin, stringifyYaml, TFile } from 'obsidian';
+import { CachedMetadata, Plugin, TFile } from 'obsidian';
 import { DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab } from './settings/Settings';
 import { InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType } from './InputFieldMarkdownRenderChild';
 import { getFileName, isPath, removeFileEnding } from './utils/Utils';
 import { Logger } from './utils/Logger';
 import { DateParser } from './parsers/DateParser';
 import { InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
-import { getFieldFromTFile, getFrontmatterOfTFile } from '@opd-libs/opd-metadata-lib/lib/API';
+import { getFrontmatterOfTFile } from '@opd-libs/opd-metadata-lib/lib/API';
 import { traverseObject } from '@opd-libs/opd-metadata-lib/lib/Utils';
 
 export default class MetaBindPlugin extends Plugin {
@@ -77,10 +77,12 @@ export default class MetaBindPlugin extends Plugin {
 	}
 
 	registerInputFieldMarkdownRenderChild(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild): void {
+		console.debug(`meta-bind | registered input field ${inputFieldMarkdownRenderChild.uid}`);
 		this.activeMarkdownInputFields.push(inputFieldMarkdownRenderChild);
 	}
 
 	unregisterInputFieldMarkdownRenderChild(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild): void {
+		console.debug(`meta-bind | unregistered input field ${inputFieldMarkdownRenderChild.uid}`);
 		this.activeMarkdownInputFields = this.activeMarkdownInputFields.filter(x => x.uid !== inputFieldMarkdownRenderChild.uid);
 	}
 

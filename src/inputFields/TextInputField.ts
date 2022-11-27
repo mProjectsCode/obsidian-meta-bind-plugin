@@ -1,12 +1,11 @@
 import { AbstractInputField } from './AbstractInputField';
 import { TextComponent } from 'obsidian';
-import { Logger } from '../utils/Logger';
-import { MetaBindInternalError } from '../utils/Utils';
+import { MetaBindBindValueError, MetaBindInternalError } from '../utils/Utils';
 
 export class TextInputField extends AbstractInputField {
 	textComponent: TextComponent | undefined;
 
-	getValue(): any {
+	getValue(): string {
 		if (!this.textComponent) {
 			throw new MetaBindInternalError('text input component is undefined');
 		}
@@ -22,7 +21,7 @@ export class TextInputField extends AbstractInputField {
 		if (value != null && typeof value == 'string') {
 			this.textComponent.setValue(value);
 		} else {
-			Logger.logWarning(`can not set value of text input to \'${value}\'`);
+			console.warn(new MetaBindBindValueError(`invalid value \'${value}\' at textInputField ${this.inputFieldMarkdownRenderChild.uid}`));
 			this.textComponent.setValue('');
 		}
 	}
@@ -44,6 +43,8 @@ export class TextInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
+		console.debug(`meta-bind | render textInputField ${this.inputFieldMarkdownRenderChild.uid}`);
+
 		const component = new TextComponent(container);
 		component.setValue(this.inputFieldMarkdownRenderChild.getInitialValue());
 		component.onChange(this.onValueChange);

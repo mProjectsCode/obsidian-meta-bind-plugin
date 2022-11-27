@@ -1,6 +1,6 @@
 import { InputFieldMarkdownRenderChild } from '../../InputFieldMarkdownRenderChild';
 import { AbstractInputField } from '../AbstractInputField';
-import { isTruthy, MetaBindInternalError } from '../../utils/Utils';
+import { MetaBindInternalError } from '../../utils/Utils';
 import DatePicker from './DatePicker.svelte';
 import { moment } from 'obsidian';
 import { DateParser } from '../../parsers/DateParser';
@@ -58,6 +58,8 @@ export class DatePickerInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
+		console.debug(`meta-bind | render datePickerInputField ${this.inputFieldMarkdownRenderChild.uid}`);
+
 		this.container = container;
 
 		this.date = DateParser.parse(this.inputFieldMarkdownRenderChild.getInitialValue()) ?? DateParser.getDefaultDate();

@@ -2,11 +2,11 @@ import { AbstractInputField } from './AbstractInputField';
 import { DropdownComponent } from 'obsidian';
 import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
 import { Time, TimeParser } from '../parsers/TimeParser';
-import { MetaBindInternalError } from '../utils/Utils';
+import { MetaBindBindValueError, MetaBindInternalError } from '../utils/Utils';
 
 export class TimeInputField extends AbstractInputField {
 	container: HTMLDivElement | undefined;
-	time: Time;
+	time: Time | undefined;
 
 	hours: Record<string, string>;
 	minutes: Record<string, string>;
@@ -39,7 +39,7 @@ export class TimeInputField extends AbstractInputField {
 	}
 
 	public getValue(): string {
-		return TimeParser.stringify(this.time);
+		return TimeParser.stringify(this.time as Time);
 	}
 
 	public setValue(value: string): void {
@@ -50,7 +50,11 @@ export class TimeInputField extends AbstractInputField {
 			throw new MetaBindInternalError('time input minute component is undefined');
 		}
 
-		this.time = TimeParser.parse(value) ?? TimeParser.getDefaultTime();
+		this.time = TimeParser.parse(value);
+		if (!this.time) {
+			console.warn(new MetaBindBindValueError(`invalid value \'${value}\' at timeInputField ${this.inputFieldMarkdownRenderChild.uid}`));
+			this.time = TimeParser.getDefaultTime();
+		}
 		// console.log(this.time);
 		this.hourComponent.setValue(this.time.getHour().toString());
 		this.minuteComponent.setValue(this.time.getMinute().toString());
@@ -65,6 +69,8 @@ export class TimeInputField extends AbstractInputField {
 	}
 
 	public render(container: HTMLDivElement): void {
+		console.debug(`meta-bind | render timeInputField ${this.inputFieldMarkdownRenderChild.uid}`);
+
 		this.time = TimeParser.parse(this.inputFieldMarkdownRenderChild.getInitialValue()) ?? TimeParser.getDefaultTime();
 
 		container.removeClass('meta-bind-plugin-input-wrapper');
@@ -87,12 +93,12 @@ export class TimeInputField extends AbstractInputField {
 	}
 
 	private onHourChange(value: string): void {
-		this.time.setHourFromString(value);
+		this.time?.setHourFromString(value);
 		this.onValueChange(this.getValue());
 	}
 
 	private onMinuteChange(value: string): void {
-		this.time.setMinuteFromString(value);
+		this.time?.setMinuteFromString(value);
 		this.onValueChange(this.getValue());
 	}
 }

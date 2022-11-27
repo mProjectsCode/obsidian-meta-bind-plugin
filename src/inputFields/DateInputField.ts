@@ -2,7 +2,7 @@ import { AbstractInputField } from './AbstractInputField';
 import { DropdownComponent, moment, TextComponent } from 'obsidian';
 import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
 import { DateParser } from '../parsers/DateParser';
-import { MetaBindInternalError } from '../utils/Utils';
+import { MetaBindBindValueError, MetaBindInternalError } from '../utils/Utils';
 
 export class DateInputField extends AbstractInputField {
 	container: HTMLDivElement | undefined;
@@ -62,7 +62,11 @@ export class DateInputField extends AbstractInputField {
 			throw new MetaBindInternalError('date input hour component is undefined');
 		}
 
-		this.date = DateParser.parse(value) ?? DateParser.getDefaultDate();
+		this.date = DateParser.parse(value);
+		if (!this.date) {
+			console.warn(new MetaBindBindValueError(`invalid value \'${value}\' at dateInputField ${this.inputFieldMarkdownRenderChild.uid}`));
+			this.date = DateParser.getDefaultDate();
+		}
 
 		if (!this.date.isValid()) {
 			this.date = DateParser.getDefaultDate();
@@ -84,6 +88,8 @@ export class DateInputField extends AbstractInputField {
 	}
 
 	public render(container: HTMLDivElement): void {
+		console.debug(`meta-bind | render dateInputField ${this.inputFieldMarkdownRenderChild.uid}`);
+
 		this.date = DateParser.parse(this.inputFieldMarkdownRenderChild.getInitialValue()) ?? DateParser.getDefaultDate();
 		if (!this.date.isValid()) {
 			this.date = DateParser.getDefaultDate();
