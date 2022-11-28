@@ -48,7 +48,7 @@ export default class MetaBindPlugin extends Plugin {
 					this.markDownInputFieldIndex += 1;
 				}
 			}
-		});
+		}, 100);
 
 		this.registerMarkdownCodeBlockProcessor('meta-bind', (source, el, ctx) => {
 			const codeBlock = el;
