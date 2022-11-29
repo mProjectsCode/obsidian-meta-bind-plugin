@@ -33,7 +33,7 @@ export class SliderInputField extends AbstractInputField {
 				this.sliderComponent.setValue(value);
 			}
 		} else {
-			console.warn(new MetaBindBindValueError(`invalid value \'${value}\' at sliderInputField ${this.inputFieldMarkdownRenderChild.uid}`));
+			console.warn(new MetaBindBindValueError(`invalid value '${value}' at sliderInputField ${this.inputFieldMarkdownRenderChild.uid}`));
 			this.sliderComponent.setValue(this.getDefaultValue());
 		}
 	}

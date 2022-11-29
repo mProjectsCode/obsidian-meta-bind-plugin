@@ -215,7 +215,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 		if (this.error) {
 			this.containerEl.empty();
-			const originalText = this.containerEl.createEl('span', { text: this.fullDeclaration, cls: 'meta-bind-code' });
+			this.containerEl.createEl('span', { text: this.fullDeclaration, cls: 'meta-bind-code' });
 			container.innerText = ` -> ERROR: ${this.error}`;
 			container.addClass('meta-bind-plugin-error');
 			this.containerEl.appendChild(container);
@@ -224,7 +224,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 		if (!this.inputField) {
 			this.containerEl.empty();
-			const originalText = this.containerEl.createEl('span', { text: this.fullDeclaration, cls: 'meta-bind-code' });
+			this.containerEl.createEl('span', { text: this.fullDeclaration, cls: 'meta-bind-code' });
 			container.innerText = ` -> ERROR: ${new MetaBindInternalError('input field is undefined and error is empty').message}`;
 			container.addClass('meta-bind-plugin-error');
 			this.containerEl.appendChild(container);

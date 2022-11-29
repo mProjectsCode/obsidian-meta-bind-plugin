@@ -18,7 +18,7 @@ export class InputFieldArgumentContainer {
 		for (const argument of this.arguments) {
 			map[argument.identifier] += 1;
 			if (map[argument.identifier] > 1 && !argument.allowMultiple) {
-				throw new MetaBindParsingError(`argument \'${argument.identifier}\' does not allow duplicates`);
+				throw new MetaBindParsingError(`argument '${argument.identifier}' does not allow duplicates`);
 			}
 		}
 	}

@@ -106,9 +106,7 @@ export function arrayEquals(arr1: any[], arr2: any[]): boolean {
  * @param dataModel
  */
 export function replaceTags(template: string, dataModel: any): string {
-	const resolvedTemplate = template.replace(new RegExp('{{.*?}}', 'g'), (match: string) => replaceTag(match, dataModel));
-
-	return resolvedTemplate;
+	return template.replace(new RegExp('{{.*?}}', 'g'), (match: string) => replaceTag(match, dataModel));
 }
 
 /**
@@ -191,6 +189,6 @@ export function equalOrIncludes(str1: string, str2: string): boolean {
 	return str1 === str2 || str1.includes(str2) || str2.includes(str1);
 }
 
-export function numberToString(n: number | string) {
+export function numberToString(n: number | string): string {
 	return n + '';
 }

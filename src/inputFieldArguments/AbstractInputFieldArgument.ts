@@ -17,7 +17,7 @@ export abstract class AbstractInputFieldArgument {
 		return this.allowedInputFields.contains(inputFieldType);
 	}
 
-	getAllowedInputFieldsAsString() {
+	getAllowedInputFieldsAsString(): string {
 		return this.allowedInputFields.length === 0 ? 'all' : this.allowedInputFields.join(', ');
 	}
 }

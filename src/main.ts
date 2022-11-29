@@ -1,11 +1,10 @@
-import { CachedMetadata, Plugin, TFile } from 'obsidian';
+import { CachedMetadata, FrontMatterCache, Plugin, TFile } from 'obsidian';
 import { DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab } from './settings/Settings';
 import { InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType } from './InputFieldMarkdownRenderChild';
-import { getFileName, isPath, removeFileEnding } from './utils/Utils';
+import { getFileName, isPath, MetaBindInternalError, removeFileEnding } from './utils/Utils';
 import { Logger } from './utils/Logger';
 import { DateParser } from './parsers/DateParser';
 import { InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
-import { getFrontmatterOfTFile } from '@opd-libs/opd-metadata-lib/lib/API';
 import { traverseObject } from '@opd-libs/opd-metadata-lib/lib/Utils';
 
 export default class MetaBindPlugin extends Plugin {
@@ -87,7 +86,12 @@ export default class MetaBindPlugin extends Plugin {
 	}
 
 	updateMarkdownInputFieldsOnMetadataCacheChange(file: TFile, cache: CachedMetadata): void {
-		let metadata: any = undefined;
+		const metadata: FrontMatterCache | undefined = cache.frontmatter;
+
+		if (!metadata) {
+			console.warn(new MetaBindInternalError(`Can not update metadata for input fields, received metadata is ${metadata}`));
+			return;
+		}
 
 		for (const activeMarkdownInputField of this.activeMarkdownInputFields) {
 			if (!activeMarkdownInputField.inputFieldDeclaration?.isBound || !activeMarkdownInputField.bindTargetFile || !activeMarkdownInputField.bindTargetMetadataField) {
@@ -95,9 +99,6 @@ export default class MetaBindPlugin extends Plugin {
 			}
 
 			if (activeMarkdownInputField.bindTargetFile.path === file.path) {
-				if (metadata === undefined) {
-					metadata = getFrontmatterOfTFile(file, this);
-				}
 				activeMarkdownInputField.pushToInputFieldValueUpdateQueue(traverseObject(activeMarkdownInputField.bindTargetMetadataField, metadata));
 			}
 		}
