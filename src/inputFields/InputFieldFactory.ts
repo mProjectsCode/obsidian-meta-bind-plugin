@@ -99,10 +99,10 @@ export class InputFieldFactory {
 	static checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType: InputFieldType, type: InputFieldMarkdownRenderChildType): void {
 		const allowCodeBlock: { codeBlock: boolean; inlineCodeBlock: boolean } = InputFieldFactory.allowCodeBlockMap[inputFieldType];
 		if (type === InputFieldMarkdownRenderChildType.CODE_BLOCK && !allowCodeBlock.codeBlock) {
-			throw new MetaBindParsingError(`\'${inputFieldType}\' is not allowed as code block`);
+			throw new MetaBindParsingError(`'${inputFieldType}' is not allowed as code block`);
 		}
 		if (type === InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK && !allowCodeBlock.inlineCodeBlock) {
-			throw new MetaBindParsingError(`\'${inputFieldType}\' is not allowed as inline code block`);
+			throw new MetaBindParsingError(`'${inputFieldType}' is not allowed as inline code block`);
 		}
 	}
 }

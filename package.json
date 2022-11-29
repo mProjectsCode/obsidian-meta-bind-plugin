@@ -8,7 +8,8 @@
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 		"version": "node version-bump.mjs && git add manifest.json versions.json",
 		"test": "jest",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"lint": "eslint --max-warnings=0 src/**"
 	},
 	"keywords": [],
 	"author": "Moritz Jung",
@@ -23,6 +24,7 @@
 		"esbuild": "^0.14.47",
 		"esbuild-plugin-copy-watch": "^0.0.7",
 		"esbuild-svelte": "^0.7.1",
+		"eslint-plugin-only-warn": "^1.0.3",
 		"jest": "^28.1.1",
 		"jest-environment-jsdom": "^28.1.1",
 		"obsidian": "latest",

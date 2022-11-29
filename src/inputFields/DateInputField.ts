@@ -64,7 +64,7 @@ export class DateInputField extends AbstractInputField {
 
 		this.date = DateParser.parse(value);
 		if (!this.date) {
-			console.warn(new MetaBindBindValueError(`invalid value \'${value}\' at dateInputField ${this.inputFieldMarkdownRenderChild.uid}`));
+			console.warn(new MetaBindBindValueError(`invalid value '${value}' at dateInputField ${this.inputFieldMarkdownRenderChild.uid}`));
 			this.date = DateParser.getDefaultDate();
 		}
 

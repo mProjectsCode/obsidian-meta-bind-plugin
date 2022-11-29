@@ -21,7 +21,7 @@ export class NumberInputField extends AbstractInputField {
 		if (value != null && (typeof value == 'number' || typeof value == 'string')) {
 			this.numberComponent.setValue(numberToString(value));
 		} else {
-			console.warn(new MetaBindBindValueError(`invalid value \'${value}\' at numberInputField ${this.inputFieldMarkdownRenderChild.uid}`));
+			console.warn(new MetaBindBindValueError(`invalid value '${value}' at numberInputField ${this.inputFieldMarkdownRenderChild.uid}`));
 			this.numberComponent.setValue(this.getDefaultValue());
 		}
 	}

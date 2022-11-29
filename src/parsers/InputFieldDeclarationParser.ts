@@ -57,7 +57,7 @@ export class InputFieldDeclarationParser {
 	static templates: Template[] = [];
 
 	static parse(fullDeclaration: string): InputFieldDeclaration {
-		let inputFieldDeclaration: InputFieldDeclaration = {} as InputFieldDeclaration;
+		const inputFieldDeclaration: InputFieldDeclaration = {} as InputFieldDeclaration;
 
 		let useTemplate = false;
 		let templateName = '';
@@ -115,7 +115,7 @@ export class InputFieldDeclarationParser {
 					inputFieldDeclaration.inputFieldType === InputFieldType.INVALID ? template.inputFieldType : inputFieldDeclaration.inputFieldType || template.inputFieldType;
 				inputFieldDeclaration.argumentContainer = template.argumentContainer.mergeByOverride(inputFieldDeclaration.argumentContainer);
 			} else {
-				throw new MetaBindParsingError(`unknown template name \'${templateName}\'`);
+				throw new MetaBindParsingError(`unknown template name '${templateName}'`);
 			}
 		}
 
@@ -164,7 +164,7 @@ export class InputFieldDeclarationParser {
 
 			if (!inputFieldArgument.isAllowed(inputFieldType)) {
 				throw new MetaBindParsingError(
-					`argument \'${inputFieldArgumentIdentifier}\' is only applicable to ${inputFieldArgument.getAllowedInputFieldsAsString()} input fields`
+					`argument '${inputFieldArgumentIdentifier}' is only applicable to ${inputFieldArgument.getAllowedInputFieldsAsString()} input fields`
 				);
 			}
 
@@ -189,7 +189,7 @@ export class InputFieldDeclarationParser {
 
 		const argumentValue = ParserUtils.getInBetween(argumentString, InputFieldDeclarationParser.roundBracesPair) as string;
 		if (!argumentValue) {
-			throw new MetaBindParsingError(`argument \'${argumentName}\' requires a non empty value`);
+			throw new MetaBindParsingError(`argument '${argumentName}' requires a non empty value`);
 		}
 
 		return argumentValue;

@@ -21,7 +21,7 @@ export class TextInputField extends AbstractInputField {
 		if (value != null && typeof value == 'string') {
 			this.textComponent.setValue(value);
 		} else {
-			console.warn(new MetaBindBindValueError(`invalid value \'${value}\' at textInputField ${this.inputFieldMarkdownRenderChild.uid}`));
+			console.warn(new MetaBindBindValueError(`invalid value '${value}' at textInputField ${this.inputFieldMarkdownRenderChild.uid}`));
 			this.textComponent.setValue('');
 		}
 	}

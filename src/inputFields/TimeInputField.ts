@@ -52,7 +52,7 @@ export class TimeInputField extends AbstractInputField {
 
 		this.time = TimeParser.parse(value);
 		if (!this.time) {
-			console.warn(new MetaBindBindValueError(`invalid value \'${value}\' at timeInputField ${this.inputFieldMarkdownRenderChild.uid}`));
+			console.warn(new MetaBindBindValueError(`invalid value '${value}' at timeInputField ${this.inputFieldMarkdownRenderChild.uid}`));
 			this.time = TimeParser.getDefaultTime();
 		}
 		// console.log(this.time);
