@@ -1,7 +1,7 @@
 import { AbstractInputField } from './AbstractInputField';
 import { SliderComponent } from 'obsidian';
 import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
-import { MetaBindBindValueError, MetaBindInternalError } from '../utils/Utils';
+import { MetaBindInternalError, MetaBindValueError } from '../utils/Utils';
 import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
 
 export class SliderInputField extends AbstractInputField {
@@ -33,7 +33,7 @@ export class SliderInputField extends AbstractInputField {
 				this.sliderComponent.setValue(value);
 			}
 		} else {
-			console.warn(new MetaBindBindValueError(`invalid value '${value}' at sliderInputField ${this.inputFieldMarkdownRenderChild.uid}`));
+			console.warn(new MetaBindValueError(`invalid value '${value}' at sliderInputField ${this.inputFieldMarkdownRenderChild.uid}`));
 			this.sliderComponent.setValue(this.getDefaultValue());
 		}
 	}

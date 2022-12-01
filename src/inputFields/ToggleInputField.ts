@@ -1,6 +1,6 @@
 import { AbstractInputField } from './AbstractInputField';
 import { ToggleComponent } from 'obsidian';
-import { MetaBindBindValueError, MetaBindInternalError } from '../utils/Utils';
+import { MetaBindInternalError, MetaBindValueError } from '../utils/Utils';
 
 export class ToggleInputField extends AbstractInputField {
 	toggleComponent: ToggleComponent | undefined;
@@ -20,7 +20,7 @@ export class ToggleInputField extends AbstractInputField {
 		if (value != null && typeof value == 'boolean') {
 			this.toggleComponent.setValue(value);
 		} else {
-			console.warn(new MetaBindBindValueError(`invalid value '${value}' at toggleInputField ${this.inputFieldMarkdownRenderChild.uid}`));
+			console.warn(new MetaBindValueError(`invalid value '${value}' at toggleInputField ${this.inputFieldMarkdownRenderChild.uid}`));
 			this.toggleComponent.setValue(false);
 		}
 	}

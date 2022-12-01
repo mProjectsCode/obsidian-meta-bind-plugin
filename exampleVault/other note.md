@@ -1,4 +1,5 @@
 ---
+tags: test
 title: This is an example of how the meta bind
 select: option a
 date: Tuesday, June 14th 2022
@@ -7,3 +8,6 @@ multi-select:
   - option b
   - option c
 ---
+
+## This is another note
+This note is to test syncing to another note.

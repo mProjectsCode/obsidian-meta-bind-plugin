@@ -1,6 +1,6 @@
 import { AbstractInputField } from './AbstractInputField';
 import { TextAreaComponent } from 'obsidian';
-import { MetaBindBindValueError, MetaBindInternalError } from '../utils/Utils';
+import { MetaBindInternalError, MetaBindValueError } from '../utils/Utils';
 
 export class TextAreaInputField extends AbstractInputField {
 	textAreaComponent: TextAreaComponent | undefined;
@@ -21,7 +21,7 @@ export class TextAreaInputField extends AbstractInputField {
 		if (value != null && typeof value == 'string') {
 			this.textAreaComponent.setValue(value);
 		} else {
-			console.warn(new MetaBindBindValueError(`invalid value '${value}' at textAreaInputField ${this.inputFieldMarkdownRenderChild.uid}`));
+			console.warn(new MetaBindValueError(`invalid value '${value}' at textAreaInputField ${this.inputFieldMarkdownRenderChild.uid}`));
 			this.textAreaComponent.setValue('');
 		}
 	}

@@ -2,7 +2,6 @@ import { CachedMetadata, FrontMatterCache, Plugin, TFile } from 'obsidian';
 import { DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab } from './settings/Settings';
 import { InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType } from './InputFieldMarkdownRenderChild';
 import { getFileName, isPath, MetaBindInternalError, removeFileEnding } from './utils/Utils';
-import { Logger } from './utils/Logger';
 import { DateParser } from './parsers/DateParser';
 import { InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
 import { traverseObject } from '@opd-libs/opd-metadata-lib/lib/Utils';
@@ -19,7 +18,6 @@ export default class MetaBindPlugin extends Plugin {
 	async onload(): Promise<void> {
 		await this.loadSettings();
 
-		Logger.devMode = this.settings.devMode;
 		DateParser.dateFormat = this.settings.preferredDateFormat;
 		InputFieldDeclarationParser.parseTemplates(this.settings.inputTemplates);
 
@@ -133,7 +131,6 @@ export default class MetaBindPlugin extends Plugin {
 
 	async saveSettings(): Promise<void> {
 		DateParser.dateFormat = this.settings.preferredDateFormat;
-		Logger.devMode = this.settings.devMode;
 		InputFieldDeclarationParser.parseTemplates(this.settings.inputTemplates);
 		await this.saveData(this.settings);
 	}

@@ -12,6 +12,7 @@ import { AbstractInputField } from './AbstractInputField';
 import { InputFieldType } from '../parsers/InputFieldDeclarationParser';
 import { DatePickerInputField } from './DatePicker/DatePickerInputField';
 import { NumberInputField } from './NumberInputField';
+import { SuggestInputField } from './Suggest/SuggestInputField';
 
 export class InputFieldFactory {
 	static allowCodeBlockMap: Record<string, { codeBlock: boolean; inlineCodeBlock: boolean }> = {
@@ -55,6 +56,10 @@ export class InputFieldFactory {
 			codeBlock: NumberInputField.allowCodeBlock,
 			inlineCodeBlock: NumberInputField.allowInlineCodeBlock,
 		},
+		[InputFieldType.SUGGESTER]: {
+			codeBlock: SuggestInputField.allowCodeBlock,
+			inlineCodeBlock: SuggestInputField.allowInlineCodeBlock,
+		},
 	};
 
 	static createInputField(
@@ -91,6 +96,9 @@ export class InputFieldFactory {
 		} else if (inputFieldType === InputFieldType.NUMBER) {
 			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new NumberInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+		} else if (inputFieldType === InputFieldType.SUGGESTER) {
+			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
+			return new SuggestInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		}
 
 		return undefined;
