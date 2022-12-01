@@ -94,7 +94,7 @@ export class InputFieldDeclarationParser {
 		fullDeclaration.inputFieldType = InputFieldDeclarationParser.getInputFieldType(fullDeclaration.inputFieldType);
 
 		// template check:
-		let useTemplate: boolean = isTruthy(templateName) && typeof templateName === 'string';
+		let useTemplate: boolean = isTruthy(templateName);
 		if (useTemplate) {
 			InputFieldDeclarationParser.applyTemplate(fullDeclaration, templateName);
 		}
