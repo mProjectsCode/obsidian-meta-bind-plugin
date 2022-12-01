@@ -28,12 +28,13 @@
 		"jest": "^28.1.1",
 		"jest-environment-jsdom": "^28.1.1",
 		"obsidian": "latest",
+		"obsidian-dataview": "latest",
 		"prettier": "2.7.1",
-		"svelte": "^3.48.0",
+		"svelte": "^3.53.1",
 		"svelte-preprocess": "^4.10.7",
 		"ts-jest": "^28.0.5",
 		"tslib": "2.4.0",
-		"typescript": "^4.7.4"
+		"typescript": "^4.9.3"
 	},
 	"dependencies": {
 		"@opd-libs/opd-metadata-lib": "0.0.3"

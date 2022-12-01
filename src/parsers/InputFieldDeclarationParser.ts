@@ -14,6 +14,8 @@ export enum InputFieldType {
 	TIME = 'time',
 	DATE_PICKER = 'date_picker',
 	NUMBER = 'number',
+	SUGGESTER = 'suggester',
+
 	INVALID = 'invalid',
 }
 
@@ -25,6 +27,8 @@ export enum InputFieldArgumentType {
 	OPTION = 'option',
 	TITLE = 'title',
 	ALIGN_RIGHT = 'alignRight',
+	SUGGEST_OPTION = 'suggestOption',
+	SUGGEST_OPTION_QUERY = 'suggestOptionQuery',
 
 	INVALID = 'invalid',
 }

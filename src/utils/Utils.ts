@@ -16,9 +16,15 @@ export class MetaBindBindTargetError extends Error {
 	}
 }
 
-export class MetaBindBindValueError extends Error {
+export class MetaBindValueError extends Error {
 	constructor(message: string) {
-		super(`[MB_BIND_VALUE_ERROR] ${message}`);
+		super(`[MB_VALUE_ERROR] ${message}`);
+	}
+}
+
+export class MetaBindArgumentError extends Error {
+	constructor(message: string) {
+		super(`[MB_ARGUMENT_ERROR] ${message}`);
 	}
 }
 

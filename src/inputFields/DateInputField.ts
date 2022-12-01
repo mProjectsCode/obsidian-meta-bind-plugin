@@ -2,7 +2,7 @@ import { AbstractInputField } from './AbstractInputField';
 import { DropdownComponent, moment, TextComponent } from 'obsidian';
 import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
 import { DateParser } from '../parsers/DateParser';
-import { MetaBindBindValueError, MetaBindInternalError } from '../utils/Utils';
+import { MetaBindInternalError, MetaBindValueError } from '../utils/Utils';
 
 export class DateInputField extends AbstractInputField {
 	container: HTMLDivElement | undefined;
@@ -64,7 +64,7 @@ export class DateInputField extends AbstractInputField {
 
 		this.date = DateParser.parse(value);
 		if (!this.date) {
-			console.warn(new MetaBindBindValueError(`invalid value '${value}' at dateInputField ${this.inputFieldMarkdownRenderChild.uid}`));
+			console.warn(new MetaBindValueError(`invalid value '${value}' at dateInputField ${this.inputFieldMarkdownRenderChild.uid}`));
 			this.date = DateParser.getDefaultDate();
 		}
 
