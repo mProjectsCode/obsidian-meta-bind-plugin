@@ -7,12 +7,12 @@ import { SelectInputField } from './SelectInputField';
 import { MultiSelectInputField } from './MultiSelectInputField';
 import { DateInputField } from './DateInputField';
 import { TimeInputField } from './TimeInputField';
-import { MetaBindParsingError } from '../utils/Utils';
 import { AbstractInputField } from './AbstractInputField';
 import { InputFieldType } from '../parsers/InputFieldDeclarationParser';
 import { DatePickerInputField } from './DatePicker/DatePickerInputField';
 import { NumberInputField } from './NumberInputField';
 import { SuggestInputField } from './Suggest/SuggestInputField';
+import { MetaBindParsingError } from '../utils/MetaBindErrors';
 
 export class InputFieldFactory {
 	static allowCodeBlockMap: Record<string, { codeBlock: boolean; inlineCodeBlock: boolean }> = {

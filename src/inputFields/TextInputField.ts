@@ -1,6 +1,6 @@
 import { AbstractInputField } from './AbstractInputField';
 import { TextComponent } from 'obsidian';
-import { MetaBindInternalError, MetaBindValueError } from '../utils/Utils';
+import { MetaBindInternalError, MetaBindValueError } from '../utils/MetaBindErrors';
 
 export class TextInputField extends AbstractInputField {
 	textComponent: TextComponent | undefined;

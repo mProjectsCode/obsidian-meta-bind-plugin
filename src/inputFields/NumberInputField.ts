@@ -1,6 +1,7 @@
 import { AbstractInputField } from './AbstractInputField';
 import { TextComponent } from 'obsidian';
-import { MetaBindInternalError, MetaBindValueError, numberToString } from '../utils/Utils';
+import { numberToString } from '../utils/Utils';
+import { MetaBindInternalError, MetaBindValueError } from '../utils/MetaBindErrors';
 
 export class NumberInputField extends AbstractInputField {
 	numberComponent: TextComponent | undefined;

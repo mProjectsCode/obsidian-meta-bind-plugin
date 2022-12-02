@@ -1,7 +1,8 @@
 import { EnclosingPair, ParserUtils } from '../utils/ParserUtils';
-import { isTruthy, MetaBindParsingError } from '../utils/Utils';
+import { isTruthy } from '../utils/Utils';
 import { InputFieldArgumentFactory } from '../inputFieldArguments/InputFieldArgumentFactory';
 import { InputFieldArgumentContainer } from '../inputFieldArguments/InputFieldArgumentContainer';
+import { MetaBindParsingError } from '../utils/MetaBindErrors';
 
 export enum InputFieldType {
 	TOGGLE = 'toggle',

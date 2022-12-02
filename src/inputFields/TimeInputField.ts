@@ -2,7 +2,7 @@ import { AbstractInputField } from './AbstractInputField';
 import { DropdownComponent } from 'obsidian';
 import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
 import { Time, TimeParser } from '../parsers/TimeParser';
-import { MetaBindInternalError, MetaBindValueError } from '../utils/Utils';
+import { MetaBindInternalError, MetaBindValueError } from '../utils/MetaBindErrors';
 
 export class TimeInputField extends AbstractInputField {
 	container: HTMLDivElement | undefined;
