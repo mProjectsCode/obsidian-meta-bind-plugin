@@ -84,7 +84,9 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				});
 			});
 
-		new Setting(containerEl).setName('Templates').setDesc(`You can specify templates here, and access them using \`TEMPLATE_INPUT[...]\` in your notes.`);
+		new Setting(containerEl)
+			.setName('Templates')
+			.setDesc(`You can specify templates here, and access them using \`INPUT[template_name][overrides (optional)]\` in your notes.`);
 
 		const ta = new TextAreaComponent(containerEl);
 		ta.setValue(this.plugin.settings.inputTemplates);

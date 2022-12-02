@@ -5,12 +5,11 @@
 	import {onMount} from 'svelte';
 
 	export let iconName: string = '';
-	export let iconSize: number = 20;
 
 	let iconEl: HTMLElement;
 
 	onMount(() => {
-		setIcon(iconEl, iconName, iconSize);
+		setIcon(iconEl, iconName);
 	});
 </script>
 
@@ -18,19 +17,19 @@
 	.icon-wrapper {
 		display:  inline-block;
 		position: relative;
-		width:    20px;
+		width:    18px;
+		height:   18px;
 	}
 
-	.icon {
+	.icon-wrapper > svg {
 		position: absolute;
-		height:   20px;
-		width:    20px;
-		bottom:   -5px;
+		top:      0;
+		bottom:   0;
+		left:     0;
+		right:    0;
 	}
 </style>
 
 {#if iconName.length > 0}
-	<div class="icon-wrapper">
-		<div bind:this={iconEl} class="icon"></div>
-	</div>
+	<div class="icon-wrapper" bind:this={iconEl}></div>
 {/if}

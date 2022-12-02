@@ -1,6 +1,5 @@
 import { AbstractInputFieldArgument } from './AbstractInputFieldArgument';
 import { InputFieldArgumentType, InputFieldType } from '../parsers/InputFieldDeclarationParser';
-import { MetaBindParsingError } from '../utils/Utils';
 
 export class OptionInputFieldArgument extends AbstractInputFieldArgument {
 	identifier: InputFieldArgumentType = InputFieldArgumentType.OPTION;

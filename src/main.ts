@@ -1,12 +1,11 @@
-import { CachedMetadata, FrontMatterCache, parseYaml, Plugin, stringifyYaml, TFile } from 'obsidian';
+import { CachedMetadata, FrontMatterCache, Plugin, TFile } from 'obsidian';
 import { DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab } from './settings/Settings';
 import { InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType } from './InputFieldMarkdownRenderChild';
 import { getFileName, isPath, removeFileEnding } from './utils/Utils';
-import { Logger } from './utils/Logger';
 import { DateParser } from './parsers/DateParser';
 import { InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
-import { getFieldFromTFile, getFrontmatterOfTFile } from '@opd-libs/opd-metadata-lib/lib/API';
 import { traverseObject } from '@opd-libs/opd-metadata-lib/lib/Utils';
+import { MetaBindInternalError } from './utils/MetaBindErrors';
 
 export default class MetaBindPlugin extends Plugin {
 	// @ts-ignore defined in `onload`
@@ -20,7 +19,6 @@ export default class MetaBindPlugin extends Plugin {
 	async onload(): Promise<void> {
 		await this.loadSettings();
 
-		Logger.devMode = this.settings.devMode;
 		DateParser.dateFormat = this.settings.preferredDateFormat;
 		InputFieldDeclarationParser.parseTemplates(this.settings.inputTemplates);
 
@@ -48,7 +46,7 @@ export default class MetaBindPlugin extends Plugin {
 					this.markDownInputFieldIndex += 1;
 				}
 			}
-		});
+		}, 100);
 
 		this.registerMarkdownCodeBlockProcessor('meta-bind', (source, el, ctx) => {
 			const codeBlock = el;
@@ -77,15 +75,22 @@ export default class MetaBindPlugin extends Plugin {
 	}
 
 	registerInputFieldMarkdownRenderChild(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild): void {
+		console.debug(`meta-bind | registered input field ${inputFieldMarkdownRenderChild.uid}`);
 		this.activeMarkdownInputFields.push(inputFieldMarkdownRenderChild);
 	}
 
 	unregisterInputFieldMarkdownRenderChild(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild): void {
+		console.debug(`meta-bind | unregistered input field ${inputFieldMarkdownRenderChild.uid}`);
 		this.activeMarkdownInputFields = this.activeMarkdownInputFields.filter(x => x.uid !== inputFieldMarkdownRenderChild.uid);
 	}
 
 	updateMarkdownInputFieldsOnMetadataCacheChange(file: TFile, cache: CachedMetadata): void {
-		let metadata: any = undefined;
+		const metadata: FrontMatterCache | undefined = cache.frontmatter;
+
+		if (!metadata) {
+			console.warn(new MetaBindInternalError(`Can not update metadata for input fields, received metadata is ${metadata}`));
+			return;
+		}
 
 		for (const activeMarkdownInputField of this.activeMarkdownInputFields) {
 			if (!activeMarkdownInputField.inputFieldDeclaration?.isBound || !activeMarkdownInputField.bindTargetFile || !activeMarkdownInputField.bindTargetMetadataField) {
@@ -93,9 +98,6 @@ export default class MetaBindPlugin extends Plugin {
 			}
 
 			if (activeMarkdownInputField.bindTargetFile.path === file.path) {
-				if (metadata === undefined) {
-					metadata = getFrontmatterOfTFile(file, this);
-				}
 				activeMarkdownInputField.pushToInputFieldValueUpdateQueue(traverseObject(activeMarkdownInputField.bindTargetMetadataField, metadata));
 			}
 		}
@@ -130,7 +132,6 @@ export default class MetaBindPlugin extends Plugin {
 
 	async saveSettings(): Promise<void> {
 		DateParser.dateFormat = this.settings.preferredDateFormat;
-		Logger.devMode = this.settings.devMode;
 		InputFieldDeclarationParser.parseTemplates(this.settings.inputTemplates);
 		await this.saveData(this.settings);
 	}
