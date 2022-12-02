@@ -1,5 +1,5 @@
 import { EnclosingPair, ParserUtils } from '../utils/ParserUtils';
-import { MetaBindParsingError } from '../utils/Utils';
+import { MetaBindParsingError } from '../utils/MetaBindErrors';
 
 export interface MarkdownLink {
 	isEmbed: boolean;

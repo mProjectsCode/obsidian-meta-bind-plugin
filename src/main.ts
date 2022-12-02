@@ -1,10 +1,11 @@
 import { CachedMetadata, FrontMatterCache, Plugin, TFile } from 'obsidian';
 import { DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab } from './settings/Settings';
 import { InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType } from './InputFieldMarkdownRenderChild';
-import { getFileName, isPath, MetaBindInternalError, removeFileEnding } from './utils/Utils';
+import { getFileName, isPath, removeFileEnding } from './utils/Utils';
 import { DateParser } from './parsers/DateParser';
 import { InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
 import { traverseObject } from '@opd-libs/opd-metadata-lib/lib/Utils';
+import { MetaBindInternalError } from './utils/MetaBindErrors';
 
 export default class MetaBindPlugin extends Plugin {
 	// @ts-ignore defined in `onload`

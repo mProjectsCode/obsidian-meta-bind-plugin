@@ -1,8 +1,8 @@
 import { AbstractInputField } from './AbstractInputField';
 import { SliderComponent } from 'obsidian';
 import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
-import { MetaBindInternalError, MetaBindValueError } from '../utils/Utils';
 import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
+import { MetaBindInternalError, MetaBindValueError } from '../utils/MetaBindErrors';
 
 export class SliderInputField extends AbstractInputField {
 	sliderComponent: SliderComponent | undefined;

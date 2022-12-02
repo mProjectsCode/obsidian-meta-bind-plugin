@@ -1,4 +1,3 @@
-import { MetaBindParsingError } from '../utils/Utils';
 import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
 import { ClassInputFieldArgument } from './ClassInputFieldArgument';
 import { AddLabelsInputFieldArgument } from './AddLabelsInputFieldArgument';
@@ -9,6 +8,7 @@ import { TitleInputFieldArgument } from './TitleInputFieldArgument';
 import { AlignRightInputFieldArgument } from './AlignRightInputFieldArgument';
 import { SuggestOptionInputFieldArgument } from './SuggestOptionInputFieldArgument';
 import { SuggestOptionQueryInputFieldArgument } from './SuggestOptionQueryInputFieldArgument';
+import { MetaBindParsingError } from '../utils/MetaBindErrors';
 
 export class InputFieldArgumentFactory {
 	static createInputFieldArgument(argumentIdentifier: string) {

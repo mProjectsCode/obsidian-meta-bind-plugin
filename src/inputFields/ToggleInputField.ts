@@ -1,6 +1,6 @@
 import { AbstractInputField } from './AbstractInputField';
 import { ToggleComponent } from 'obsidian';
-import { MetaBindInternalError, MetaBindValueError } from '../utils/Utils';
+import { MetaBindInternalError, MetaBindValueError } from '../utils/MetaBindErrors';
 
 export class ToggleInputField extends AbstractInputField {
 	toggleComponent: ToggleComponent | undefined;

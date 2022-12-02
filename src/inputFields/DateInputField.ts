@@ -2,7 +2,7 @@ import { AbstractInputField } from './AbstractInputField';
 import { DropdownComponent, moment, TextComponent } from 'obsidian';
 import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
 import { DateParser } from '../parsers/DateParser';
-import { MetaBindInternalError, MetaBindValueError } from '../utils/Utils';
+import { MetaBindInternalError, MetaBindValueError } from '../utils/MetaBindErrors';
 
 export class DateInputField extends AbstractInputField {
 	container: HTMLDivElement | undefined;

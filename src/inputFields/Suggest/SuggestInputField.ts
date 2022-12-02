@@ -1,12 +1,12 @@
 import { InputFieldMarkdownRenderChild } from '../../InputFieldMarkdownRenderChild';
 import { AbstractInputField } from '../AbstractInputField';
-import { MetaBindArgumentError, MetaBindInternalError } from '../../utils/Utils';
 import Suggest from './Suggest.svelte';
 import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
 import { DataArray, getAPI, Literal } from 'obsidian-dataview';
 import { AbstractInputFieldArgument } from '../../inputFieldArguments/AbstractInputFieldArgument';
 import { SuggestInputModal } from './SuggestInputModal';
-import { TFile } from 'obsidian';
+import { Notice, TFile } from 'obsidian';
+import { MetaBindArgumentError, MetaBindInternalError } from '../../utils/MetaBindErrors';
 
 export interface SuggestOption {
 	value: string;
@@ -24,6 +24,12 @@ export class SuggestInputField extends AbstractInputField {
 
 		this.value = '';
 		this.options = [];
+
+		if (this.needsDataview()) {
+			if (!getAPI(this.inputFieldMarkdownRenderChild.plugin.app)) {
+				throw new MetaBindArgumentError(`dataview needs to be installed and enabled to use suggest option queries`);
+			}
+		}
 	}
 
 	getValue(): string {
@@ -51,6 +57,10 @@ export class SuggestInputField extends AbstractInputField {
 		return this.container;
 	}
 
+	needsDataview(): boolean {
+		return this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.SUGGEST_OPTION_QUERY).length > 0;
+	}
+
 	async getOptions(): Promise<void> {
 		this.options = [];
 
@@ -65,7 +75,8 @@ export class SuggestInputField extends AbstractInputField {
 			const dv = getAPI(this.inputFieldMarkdownRenderChild.plugin.app);
 
 			if (!dv) {
-				throw new MetaBindArgumentError(`dataview needs to be installed and enabled to use suggest option queries`);
+				new Notice('meta-bind | dataview needs to be installed and enabled to use suggest option queries');
+				return;
 			}
 
 			for (const suggestOptionsQueryArgument of suggestOptionsQueryArguments) {
