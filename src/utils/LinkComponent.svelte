@@ -17,8 +17,7 @@
 		target="_blank"
 		rel="noopener"
 		aria-label={getHref()}
-		aria-label-position="top"
-	>
+		aria-label-position="top">
 		{mdLink.alias}
 	</a>
 {:else}
@@ -27,8 +26,7 @@
 		href={getHref()}
 		class="internal-link"
 		target="_blank"
-		rel="noopener"
-	>
+		rel="noopener">
 		{getHref()}
 	</a>
 {/if}

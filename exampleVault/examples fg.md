@@ -15,7 +15,7 @@ multi_select:
   - option a
   - option c
 time1: 10:17
-suggest: test
+suggest: "[[other note.md|other note]]"
 ---
 
 ## Components

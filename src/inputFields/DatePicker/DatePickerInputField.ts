@@ -1,14 +1,16 @@
 import { InputFieldMarkdownRenderChild } from '../../InputFieldMarkdownRenderChild';
 import { AbstractInputField } from '../AbstractInputField';
 import { MetaBindInternalError } from '../../utils/Utils';
-import DatePicker from './DatePicker.svelte';
+import DatePickerInput from './DatePickerInput.svelte';
 import { moment } from 'obsidian';
 import { DateParser } from '../../parsers/DateParser';
-import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
+import { DatePickerModal } from './DatePickerModal';
+import { Moment } from 'moment';
 
 export class DatePickerInputField extends AbstractInputField {
 	container: HTMLDivElement | undefined;
-	component: DatePicker | undefined;
+	component: DatePickerInput | undefined;
+	modal: DatePickerModal | undefined;
 	date: moment.Moment;
 
 	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
@@ -48,13 +50,20 @@ export class DatePickerInputField extends AbstractInputField {
 		return this.container;
 	}
 
-	datePickerValueChanged(date: moment.Moment): void {
+	datePickerValueChanged(date: Moment): void {
 		this.date = date;
+		this.component?.updateValue(this.date);
+		this.modal?.close();
 		// console.log('date picker value change', this.date);
 
 		if (this.date.isValid()) {
 			this.onValueChange(this.getValue());
 		}
+	}
+
+	showDatePicker(): void {
+		this.modal = new DatePickerModal(this.inputFieldMarkdownRenderChild.plugin.app, this);
+		this.modal.open();
 	}
 
 	render(container: HTMLDivElement): void {
@@ -68,14 +77,14 @@ export class DatePickerInputField extends AbstractInputField {
 			this.onValueChange(this.getValue());
 		}
 
-		this.component = new DatePicker({
+		this.component = new DatePickerInput({
 			target: container,
 			props: {
-				alignRight: this.inputFieldMarkdownRenderChild.getArgument(InputFieldArgumentType.ALIGN_RIGHT)?.value,
-				selectedDate: this.date,
 				dateFormat: this.inputFieldMarkdownRenderChild.plugin.settings.preferredDateFormat,
-				dateChangeCallback: (date: moment.Moment) => this.datePickerValueChanged(date),
+				showDatePicker: () => this.showDatePicker(),
 			},
 		});
+
+		this.component.updateValue(this.date);
 	}
 }

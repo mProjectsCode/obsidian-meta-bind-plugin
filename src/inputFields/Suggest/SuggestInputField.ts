@@ -103,7 +103,6 @@ export class SuggestInputField extends AbstractInputField {
 		this.component = new Suggest({
 			target: container,
 			props: {
-				value: this.value,
 				showSuggest: () => this.showSuggest(),
 			},
 		});
