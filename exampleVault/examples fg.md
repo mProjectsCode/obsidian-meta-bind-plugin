@@ -3,7 +3,7 @@ rating: 31
 title: test title test test
 completed: false
 toggle1: false
-slider1: 89
+slider1: 6
 slider2: 6
 text1: Test
 text_area1: Test test
@@ -15,6 +15,7 @@ multi_select:
   - option a
   - option c
 time1: 10:17
+suggest: "[[other note.md|other note]]"
 ---
 
 ## Components
@@ -80,6 +81,9 @@ option(option d)
 ):multi_select]
 ```
 
+### Suggester
+`INPUT[suggester(suggestOption(test), suggestOptionQuery(#test)):suggest]`
+
 ## In callouts
 > quote
 > `INPUT[slider(addLabels, minValue(1), maxValue(10)):slider1]`
@@ -127,8 +131,6 @@ option(option d)
 ```
 
 Lorem ipsum dolor sit amet, `INPUT[date():other note#date]` consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. `INPUT[date():other note#date]` Curabitur sed rhoncus nisl. Maecenas nisi justo, viverra vel tempus vel, hendrerit at metus. `INPUT[date_picker():other note#date]`  asdasd asdasdasd
-
-asdasd
 
 ## Templates
 - unknown tempalate

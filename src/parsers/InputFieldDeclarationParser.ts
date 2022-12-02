@@ -1,8 +1,8 @@
 import { EnclosingPair, ParserUtils } from '../utils/ParserUtils';
-import { isTruthy, MetaBindParsingError } from '../utils/Utils';
-import { AbstractInputFieldArgument } from '../inputFieldArguments/AbstractInputFieldArgument';
+import { isTruthy } from '../utils/Utils';
 import { InputFieldArgumentFactory } from '../inputFieldArguments/InputFieldArgumentFactory';
 import { InputFieldArgumentContainer } from '../inputFieldArguments/InputFieldArgumentContainer';
+import { MetaBindParsingError } from '../utils/MetaBindErrors';
 
 export enum InputFieldType {
 	TOGGLE = 'toggle',
@@ -14,6 +14,9 @@ export enum InputFieldType {
 	DATE = 'date',
 	TIME = 'time',
 	DATE_PICKER = 'date_picker',
+	NUMBER = 'number',
+	SUGGESTER = 'suggester',
+
 	INVALID = 'invalid',
 }
 
@@ -25,6 +28,8 @@ export enum InputFieldArgumentType {
 	OPTION = 'option',
 	TITLE = 'title',
 	ALIGN_RIGHT = 'alignRight',
+	SUGGEST_OPTION = 'suggestOption',
+	SUGGEST_OPTION_QUERY = 'suggestOptionQuery',
 
 	INVALID = 'invalid',
 }
@@ -57,7 +62,7 @@ export class InputFieldDeclarationParser {
 	static templates: Template[] = [];
 
 	static parse(fullDeclaration: string): InputFieldDeclaration {
-		let inputFieldDeclaration: InputFieldDeclaration = {} as InputFieldDeclaration;
+		const inputFieldDeclaration: InputFieldDeclaration = {} as InputFieldDeclaration;
 
 		let useTemplate = false;
 		let templateName = '';
@@ -115,7 +120,7 @@ export class InputFieldDeclarationParser {
 					inputFieldDeclaration.inputFieldType === InputFieldType.INVALID ? template.inputFieldType : inputFieldDeclaration.inputFieldType || template.inputFieldType;
 				inputFieldDeclaration.argumentContainer = template.argumentContainer.mergeByOverride(inputFieldDeclaration.argumentContainer);
 			} else {
-				throw new MetaBindParsingError(`unknown template name \'${templateName}\'`);
+				throw new MetaBindParsingError(`unknown template name '${templateName}'`);
 			}
 		}
 
@@ -127,6 +132,8 @@ export class InputFieldDeclarationParser {
 	}
 
 	static parseTemplates(templates: string): void {
+		InputFieldDeclarationParser.templates = [];
+
 		let templateDeclarations = templates ? ParserUtils.split(templates, '\n', InputFieldDeclarationParser.squareBracesPair) : [];
 		templateDeclarations = templateDeclarations.map(x => x.trim()).filter(x => x.length > 0);
 
@@ -162,7 +169,7 @@ export class InputFieldDeclarationParser {
 
 			if (!inputFieldArgument.isAllowed(inputFieldType)) {
 				throw new MetaBindParsingError(
-					`argument \'${inputFieldArgumentIdentifier}\' is only applicable to ${inputFieldArgument.getAllowedInputFieldsAsString()} input fields`
+					`argument '${inputFieldArgumentIdentifier}' is only applicable to ${inputFieldArgument.getAllowedInputFieldsAsString()} input fields`
 				);
 			}
 
@@ -187,7 +194,7 @@ export class InputFieldDeclarationParser {
 
 		const argumentValue = ParserUtils.getInBetween(argumentString, InputFieldDeclarationParser.roundBracesPair) as string;
 		if (!argumentValue) {
-			throw new MetaBindParsingError(`argument \'${argumentName}\' requires a non empty value`);
+			throw new MetaBindParsingError(`argument '${argumentName}' requires a non empty value`);
 		}
 
 		return argumentValue;

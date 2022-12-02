@@ -7,10 +7,12 @@ import { SelectInputField } from './SelectInputField';
 import { MultiSelectInputField } from './MultiSelectInputField';
 import { DateInputField } from './DateInputField';
 import { TimeInputField } from './TimeInputField';
-import { MetaBindParsingError } from '../utils/Utils';
 import { AbstractInputField } from './AbstractInputField';
 import { InputFieldType } from '../parsers/InputFieldDeclarationParser';
 import { DatePickerInputField } from './DatePicker/DatePickerInputField';
+import { NumberInputField } from './NumberInputField';
+import { SuggestInputField } from './Suggest/SuggestInputField';
+import { MetaBindParsingError } from '../utils/MetaBindErrors';
 
 export class InputFieldFactory {
 	static allowCodeBlockMap: Record<string, { codeBlock: boolean; inlineCodeBlock: boolean }> = {
@@ -50,6 +52,14 @@ export class InputFieldFactory {
 			codeBlock: DatePickerInputField.allowCodeBlock,
 			inlineCodeBlock: DatePickerInputField.allowInlineCodeBlock,
 		},
+		[InputFieldType.NUMBER]: {
+			codeBlock: NumberInputField.allowCodeBlock,
+			inlineCodeBlock: NumberInputField.allowInlineCodeBlock,
+		},
+		[InputFieldType.SUGGESTER]: {
+			codeBlock: SuggestInputField.allowCodeBlock,
+			inlineCodeBlock: SuggestInputField.allowInlineCodeBlock,
+		},
 	};
 
 	static createInputField(
@@ -83,6 +93,12 @@ export class InputFieldFactory {
 		} else if (inputFieldType === InputFieldType.DATE_PICKER) {
 			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new DatePickerInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+		} else if (inputFieldType === InputFieldType.NUMBER) {
+			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
+			return new NumberInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+		} else if (inputFieldType === InputFieldType.SUGGESTER) {
+			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
+			return new SuggestInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		}
 
 		return undefined;
@@ -91,10 +107,10 @@ export class InputFieldFactory {
 	static checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType: InputFieldType, type: InputFieldMarkdownRenderChildType): void {
 		const allowCodeBlock: { codeBlock: boolean; inlineCodeBlock: boolean } = InputFieldFactory.allowCodeBlockMap[inputFieldType];
 		if (type === InputFieldMarkdownRenderChildType.CODE_BLOCK && !allowCodeBlock.codeBlock) {
-			throw new MetaBindParsingError(`\'${inputFieldType}\' is not allowed as code block`);
+			throw new MetaBindParsingError(`'${inputFieldType}' is not allowed as code block`);
 		}
 		if (type === InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK && !allowCodeBlock.inlineCodeBlock) {
-			throw new MetaBindParsingError(`\'${inputFieldType}\' is not allowed as inline code block`);
+			throw new MetaBindParsingError(`'${inputFieldType}' is not allowed as inline code block`);
 		}
 	}
 }

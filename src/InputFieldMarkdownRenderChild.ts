@@ -1,14 +1,13 @@
 import { MarkdownRenderChild, TFile } from 'obsidian';
 import MetaBindPlugin from './main';
-import { Logger } from './utils/Logger';
 import { AbstractInputField } from './inputFields/AbstractInputField';
 import { InputFieldFactory } from './inputFields/InputFieldFactory';
 import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
-import { MetaBindBindTargetError, MetaBindInternalError } from './utils/Utils';
 import { AbstractInputFieldArgument } from './inputFieldArguments/AbstractInputFieldArgument';
 import { ClassInputFieldArgument } from './inputFieldArguments/ClassInputFieldArgument';
 import { getFrontmatterOfTFile, updateOrInsertFieldInTFile } from '@opd-libs/opd-metadata-lib/lib/API';
 import { traverseObject, validatePath as validateObjectPath } from '@opd-libs/opd-metadata-lib/lib/Utils';
+import { MetaBindBindTargetError, MetaBindInternalError } from './utils/MetaBindErrors';
 
 export enum InputFieldMarkdownRenderChildType {
 	INLINE_CODE_BLOCK,
@@ -113,12 +112,14 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	// use this interval to reduce writing operations
 	async applyValueUpdateQueues(): Promise<void> {
 		if (this.metadataValueUpdateQueue.length !== 0) {
+			console.debug(`meta-bind | applying to metadataUpdateQueue to field ${this.uid}`);
 			await this.applyMetadataValueUpdateQueue();
 			this.cleanUpUpdateQueues();
 			return;
 		}
 
 		if (this.inputFieldValueUpdateQueue.length !== 0) {
+			console.debug(`meta-bind | applying to inputFieldValueUpdateQueue to field ${this.uid}`);
 			await this.applyInputFieldValueUpdateQueue();
 			this.cleanUpUpdateQueues();
 			return;
@@ -158,7 +159,6 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 				value = this.inputField.getDefaultValue();
 			}
 
-			Logger.logDebug(`updating input field ${this.uid} to`, value);
 			this.inputField.setValue(value);
 		} else {
 			throw new MetaBindInternalError(`cannot apply inputFieldValueUpdateQueue to inputField ${this.uid}, inputFieldValueUpdateQueue is empty`);
@@ -172,19 +172,23 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 	pushToMetadataValueUpdateQueue(value: any): void {
 		if (this.inputFieldDeclaration?.isBound) {
+			console.debug(`meta-bind | pushed value ${value} (typeof ${typeof value}) to metadataUpdateQueue on field ${this.uid}`);
 			this.metadataValueUpdateQueue.push(value);
 		}
 	}
 
 	pushToInputFieldValueUpdateQueue(value: any): void {
 		if (!this.inputField?.isEqualValue(value)) {
+			console.debug(`meta-bind | pushed value ${value} (typeof ${typeof value}) to inputFieldValueUpdateQueue on field ${this.uid}`);
 			this.inputFieldValueUpdateQueue.push(value);
 		}
 	}
 
 	getInitialValue(): any | undefined {
 		if (this.inputFieldDeclaration?.isBound && this.bindTargetMetadataField) {
-			return traverseObject(this.bindTargetMetadataField, this.metaData) ?? this.inputField?.getDefaultValue();
+			const value = traverseObject(this.bindTargetMetadataField, this.metaData);
+			console.debug(`meta-bind | setting initial value to ${value} (typeof ${typeof value}) for input field ${this.uid}`);
+			return value ?? this.inputField?.getDefaultValue();
 		}
 	}
 
@@ -201,7 +205,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	}
 
 	async onload(): Promise<void> {
-		Logger.logDebug('load', this);
+		console.debug('meta-bind | load inputFieldMarkdownRenderChild', this);
 
 		this.metaData = await this.metaData;
 
@@ -211,7 +215,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 		if (this.error) {
 			this.containerEl.empty();
-			const originalText = this.containerEl.createEl('span', { text: this.fullDeclaration, cls: 'meta-bind-code' });
+			this.containerEl.createEl('span', { text: this.fullDeclaration, cls: 'meta-bind-code' });
 			container.innerText = ` -> ERROR: ${this.error}`;
 			container.addClass('meta-bind-plugin-error');
 			this.containerEl.appendChild(container);
@@ -220,7 +224,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 		if (!this.inputField) {
 			this.containerEl.empty();
-			const originalText = this.containerEl.createEl('span', { text: this.fullDeclaration, cls: 'meta-bind-code' });
+			this.containerEl.createEl('span', { text: this.fullDeclaration, cls: 'meta-bind-code' });
 			container.innerText = ` -> ERROR: ${new MetaBindInternalError('input field is undefined and error is empty').message}`;
 			container.addClass('meta-bind-plugin-error');
 			this.containerEl.appendChild(container);
@@ -241,13 +245,12 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	}
 
 	onunload(): void {
-		Logger.logDebug('unload', this);
+		console.debug('meta-bind | unload inputFieldMarkdownRenderChild', this);
 
 		this.plugin.unregisterInputFieldMarkdownRenderChild(this);
 
 		super.onunload();
 
-		//console.log('unload', this);
 		window.clearInterval(this.limitInterval);
 	}
 }
