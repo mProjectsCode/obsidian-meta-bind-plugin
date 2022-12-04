@@ -69,7 +69,7 @@ export class TimeInputField extends AbstractInputField {
 	}
 
 	public render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | render timeInputField ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | TimeInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
 
 		this.time = TimeParser.parse(this.inputFieldMarkdownRenderChild.getInitialValue()) ?? TimeParser.getDefaultTime();
 

@@ -5,9 +5,9 @@ import { InputFieldFactory } from './inputFields/InputFieldFactory';
 import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
 import { AbstractInputFieldArgument } from './inputFieldArguments/AbstractInputFieldArgument';
 import { ClassInputFieldArgument } from './inputFieldArguments/ClassInputFieldArgument';
-import { getFrontmatterOfTFile } from '@opd-libs/opd-metadata-lib/lib/API';
 import { traverseObject, validatePath as validateObjectPath } from '@opd-libs/opd-metadata-lib/lib/Utils';
 import { MetaBindBindTargetError, MetaBindInternalError } from './utils/MetaBindErrors';
+import { MetadataFileCache } from './MetadataManager';
 
 export enum InputFieldMarkdownRenderChildType {
 	INLINE_CODE_BLOCK,
@@ -16,7 +16,7 @@ export enum InputFieldMarkdownRenderChildType {
 
 export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	plugin: MetaBindPlugin;
-	metaData: any;
+	metadataCache: MetadataFileCache | undefined;
 	filePath: string;
 	uuid: string;
 	inputField: AbstractInputField | undefined;
@@ -51,7 +51,6 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 			if (this.inputFieldDeclaration.isBound) {
 				this.parseBindTarget();
-				this.metaData = getFrontmatterOfTFile(this.bindTargetFile as TFile, this.plugin);
 			}
 
 			this.inputField = InputFieldFactory.createInputField(this.inputFieldDeclaration.inputFieldType, {
@@ -106,12 +105,12 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		}
 	}
 
-	registerSelfToMetadataManager(): void {
+	registerSelfToMetadataManager(): MetadataFileCache | undefined {
 		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetFile || !this.bindTargetMetadataField) {
 			return;
 		}
 
-		this.plugin.metadataManager.register(
+		return this.plugin.metadataManager.register(
 			this.bindTargetFile,
 			metadata => {
 				if (!this.inputField) {
@@ -145,8 +144,8 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 	getInitialValue(): any | undefined {
 		if (this.inputFieldDeclaration?.isBound && this.bindTargetMetadataField) {
-			const value = traverseObject(this.bindTargetMetadataField, this.metaData);
-			console.debug(`meta-bind | setting initial value to ${value} (typeof ${typeof value}) for input field ${this.uuid}`);
+			const value = traverseObject(this.bindTargetMetadataField, this.metadataCache?.metadata);
+			console.debug(`meta-bind | InputFieldMarkdownRenderChild >> setting initial value to ${value} (typeof ${typeof value}) for input field ${this.uuid}`);
 			return value ?? this.inputField?.getDefaultValue();
 		}
 	}
@@ -164,9 +163,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	}
 
 	async onload(): Promise<void> {
-		console.debug('meta-bind | load inputFieldMarkdownRenderChild', this);
-
-		this.metaData = await this.metaData;
+		console.debug('meta-bind | InputFieldMarkdownRenderChild >> load', this);
 
 		const container: HTMLDivElement = this.containerEl.createDiv();
 		container.addClass('meta-bind-plugin-input-wrapper');
@@ -190,7 +187,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 			return;
 		}
 
-		this.registerSelfToMetadataManager();
+		this.metadataCache = this.registerSelfToMetadataManager();
 		this.plugin.registerInputFieldMarkdownRenderChild(this);
 
 		this.inputField.render(container);
@@ -205,7 +202,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	}
 
 	onunload(): void {
-		console.debug('meta-bind | unload inputFieldMarkdownRenderChild', this);
+		console.debug('meta-bind | InputFieldMarkdownRenderChild >> unload', this);
 
 		this.plugin.unregisterInputFieldMarkdownRenderChild(this);
 		this.unregisterSelfFromMetadataManager();

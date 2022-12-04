@@ -43,7 +43,7 @@ export class TextInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | render textInputField ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | TextInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
 
 		const component = new TextComponent(container);
 		component.setValue(this.inputFieldMarkdownRenderChild.getInitialValue());

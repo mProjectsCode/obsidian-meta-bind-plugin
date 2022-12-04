@@ -17,6 +17,8 @@ export default class MetaBindPlugin extends Plugin {
 	metadataManager: MetadataManager;
 
 	async onload(): Promise<void> {
+		console.log(`meta-bind | Main >> load`);
+
 		await this.loadSettings();
 
 		DateParser.dateFormat = this.settings.preferredDateFormat;
@@ -31,7 +33,7 @@ export default class MetaBindPlugin extends Plugin {
 				const codeBlock = codeBlocks.item(index);
 				const text = codeBlock.innerText;
 				const isInputField = text.startsWith('INPUT[') && text.endsWith(']');
-				// console.log(context.sourcePath);
+
 				if (isInputField) {
 					context.addChild(
 						new InputFieldMarkdownRenderChild(codeBlock, InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK, text, this, context.sourcePath, crypto.randomUUID())
@@ -44,7 +46,7 @@ export default class MetaBindPlugin extends Plugin {
 			const codeBlock = el;
 			const text = source.replace(/\n/g, '');
 			const isInputField = text.startsWith('INPUT[') && text.endsWith(']');
-			// console.log(context.sourcePath);
+
 			if (isInputField) {
 				ctx.addChild(new InputFieldMarkdownRenderChild(codeBlock, InputFieldMarkdownRenderChildType.CODE_BLOCK, text, this, ctx.sourcePath, crypto.randomUUID()));
 			}
@@ -54,23 +56,23 @@ export default class MetaBindPlugin extends Plugin {
 	}
 
 	onunload(): void {
+		console.log(`meta-bind | Main >> unload`);
 		for (const activeMarkdownInputField of this.activeMarkdownInputFields) {
 			activeMarkdownInputField.unload();
 		}
 	}
 
 	registerInputFieldMarkdownRenderChild(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild): void {
-		console.debug(`meta-bind | registered input field ${inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | Main >> registered input field ${inputFieldMarkdownRenderChild.uuid}`);
 		this.activeMarkdownInputFields.push(inputFieldMarkdownRenderChild);
 	}
 
 	unregisterInputFieldMarkdownRenderChild(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild): void {
-		console.debug(`meta-bind | unregistered input field ${inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | Main >> unregistered input field ${inputFieldMarkdownRenderChild.uuid}`);
 		this.activeMarkdownInputFields = this.activeMarkdownInputFields.filter(x => x.uuid !== inputFieldMarkdownRenderChild.uuid);
 	}
 
 	getFilesByName(name: string): TFile[] {
-		console.log(getFileName(removeFileEnding(name)));
 		const fileNameIsPath = isPath(name);
 		const processedFileName = fileNameIsPath ? removeFileEnding(name) : getFileName(removeFileEnding(name));
 
@@ -93,10 +95,14 @@ export default class MetaBindPlugin extends Plugin {
 	}
 
 	async loadSettings(): Promise<void> {
+		console.log(`meta-bind | Main >> settings load`);
+
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
 	}
 
 	async saveSettings(): Promise<void> {
+		console.log(`meta-bind | Main >> settings save`);
+
 		DateParser.dateFormat = this.settings.preferredDateFormat;
 		InputFieldDeclarationParser.parseTemplates(this.settings.inputTemplates);
 		await this.saveData(this.settings);

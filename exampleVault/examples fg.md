@@ -2,8 +2,8 @@
 rating: 31
 title: test title test test
 completed: false
-toggle1: false
-slider1: 4
+toggle1: true
+slider1: 9
 slider2: 8
 text1: Testa
 text_area1: test test test

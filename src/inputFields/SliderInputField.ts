@@ -55,7 +55,7 @@ export class SliderInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | render slider ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | SliderInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
 
 		container.removeClass('meta-bind-plugin-input-wrapper');
 		container.addClass('meta-bind-plugin-flex-input-wrapper');
