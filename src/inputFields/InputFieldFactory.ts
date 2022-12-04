@@ -13,6 +13,7 @@ import { DatePickerInputField } from './DatePicker/DatePickerInputField';
 import { NumberInputField } from './NumberInputField';
 import { SuggestInputField } from './Suggest/SuggestInputField';
 import { MetaBindParsingError } from '../utils/MetaBindErrors';
+import { EditorInputField } from './Editor/EditorInputField';
 
 export class InputFieldFactory {
 	static allowCodeBlockMap: Record<string, { codeBlock: boolean; inlineCodeBlock: boolean }> = {
@@ -60,6 +61,10 @@ export class InputFieldFactory {
 			codeBlock: SuggestInputField.allowCodeBlock,
 			inlineCodeBlock: SuggestInputField.allowInlineCodeBlock,
 		},
+		[InputFieldType.EDITOR]: {
+			codeBlock: EditorInputField.allowCodeBlock,
+			inlineCodeBlock: EditorInputField.allowInlineCodeBlock,
+		},
 	};
 
 	static createInputField(
@@ -99,6 +104,9 @@ export class InputFieldFactory {
 		} else if (inputFieldType === InputFieldType.SUGGESTER) {
 			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new SuggestInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+		} else if (inputFieldType === InputFieldType.EDITOR) {
+			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
+			return new EditorInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		}
 
 		return undefined;
