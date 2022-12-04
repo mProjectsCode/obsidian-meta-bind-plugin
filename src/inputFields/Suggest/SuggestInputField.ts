@@ -105,7 +105,7 @@ export class SuggestInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | render suggestInputField ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | SuggestInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
 
 		this.container = container;
 

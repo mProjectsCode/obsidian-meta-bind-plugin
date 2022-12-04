@@ -42,7 +42,7 @@ export class ToggleInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | render toggleInputField ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | ToggleInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
 
 		const component = new ToggleComponent(container);
 		component.setValue(this.inputFieldMarkdownRenderChild.getInitialValue());

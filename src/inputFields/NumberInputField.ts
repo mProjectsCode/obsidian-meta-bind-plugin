@@ -44,7 +44,7 @@ export class NumberInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | render numberInputField ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | NumberInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
 
 		const component = new TextComponent(container);
 		component.inputEl.type = 'number';

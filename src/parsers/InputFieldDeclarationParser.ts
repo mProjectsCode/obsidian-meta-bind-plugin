@@ -151,7 +151,7 @@ export class InputFieldDeclarationParser {
 			}
 		}
 
-		console.log(InputFieldDeclarationParser.templates);
+		console.log(`meta-bind | InputFieldDeclarationParser >> parsed templates`, InputFieldDeclarationParser.templates);
 	}
 
 	static parseArguments(inputFieldArgumentsString: string, inputFieldType: InputFieldType): InputFieldArgumentContainer {

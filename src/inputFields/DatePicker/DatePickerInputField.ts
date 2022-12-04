@@ -67,7 +67,7 @@ export class DatePickerInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | render datePickerInputField ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | DatePickerInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
 
 		this.container = container;
 
