@@ -1,6 +1,6 @@
 import { InputFieldMarkdownRenderChild } from '../../InputFieldMarkdownRenderChild';
 import { AbstractInputField } from '../AbstractInputField';
-import Suggest from './Suggest.svelte';
+import SuggestInput from './SuggestInput.svelte';
 import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
 import { DataArray, getAPI, Literal } from 'obsidian-dataview';
 import { AbstractInputFieldArgument } from '../../inputFieldArguments/AbstractInputFieldArgument';
@@ -15,7 +15,7 @@ export interface SuggestOption {
 
 export class SuggestInputField extends AbstractInputField {
 	container: HTMLDivElement | undefined;
-	component: Suggest | undefined;
+	component: SuggestInput | undefined;
 	value: string;
 	options: SuggestOption[];
 
@@ -33,7 +33,7 @@ export class SuggestInputField extends AbstractInputField {
 	}
 
 	getValue(): string {
-		return '';
+		return this.value;
 	}
 
 	setValue(value: any): void {
@@ -111,7 +111,7 @@ export class SuggestInputField extends AbstractInputField {
 
 		this.value = this.inputFieldMarkdownRenderChild.getInitialValue();
 
-		this.component = new Suggest({
+		this.component = new SuggestInput({
 			target: container,
 			props: {
 				showSuggest: () => this.showSuggest(),

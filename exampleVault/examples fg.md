@@ -3,7 +3,7 @@ rating: 31
 title: test title test test
 completed: false
 toggle1: true
-slider1: 9
+slider1: 71
 slider2: 8
 text1: Testa
 text_area1: test test test
@@ -13,9 +13,20 @@ nested:
   object: dfgdf
 multi_select:
   - option b
-  - option d
 time1: 10:17
 suggest: test
+editor: |-
+  test **test**
+  [[other note]]
+
+  ## test
+
+  > [!INFO]
+  > this is an info
+
+  `INPUT[slider(addLabels):slider1]`
+
+  `$= dv.current().rating`
 ---
 
 ## Components
@@ -83,6 +94,9 @@ option(option d)
 
 ### Suggester
 `INPUT[suggester(suggestOption(test), suggestOptionQuery(#test)):suggest]`
+
+### Editor
+`INPUT[editor:editor]`
 
 ## In callouts
 > quote

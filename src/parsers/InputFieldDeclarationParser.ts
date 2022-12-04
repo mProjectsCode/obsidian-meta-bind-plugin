@@ -16,6 +16,7 @@ export enum InputFieldType {
 	DATE_PICKER = 'date_picker',
 	NUMBER = 'number',
 	SUGGESTER = 'suggester',
+	EDITOR = 'editor',
 
 	INVALID = 'invalid',
 }
