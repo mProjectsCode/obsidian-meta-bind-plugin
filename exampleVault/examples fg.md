@@ -3,19 +3,19 @@ rating: 31
 title: test title test test
 completed: false
 toggle1: false
-slider1: 6
-slider2: 6
-text1: Test
-text_area1: Test test
+slider1: 4
+slider2: 8
+text1: Testa
+text_area1: test test test
 date1: Wednesday, July 20th 2022
 select: option b
 nested:
   object: dfgdf
 multi_select:
-  - option a
-  - option c
+  - option b
+  - option d
 time1: 10:17
-suggest: "[[other note.md|other note]]"
+suggest: test
 ---
 
 ## Components
