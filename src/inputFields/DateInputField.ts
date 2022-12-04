@@ -64,7 +64,7 @@ export class DateInputField extends AbstractInputField {
 
 		this.date = DateParser.parse(value);
 		if (!this.date) {
-			console.warn(new MetaBindValueError(`invalid value '${value}' at dateInputField ${this.inputFieldMarkdownRenderChild.uid}`));
+			console.warn(new MetaBindValueError(`invalid value '${value}' at dateInputField ${this.inputFieldMarkdownRenderChild.uuid}`));
 			this.date = DateParser.getDefaultDate();
 		}
 
@@ -88,7 +88,7 @@ export class DateInputField extends AbstractInputField {
 	}
 
 	public render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | render dateInputField ${this.inputFieldMarkdownRenderChild.uid}`);
+		console.debug(`meta-bind | render dateInputField ${this.inputFieldMarkdownRenderChild.uuid}`);
 
 		this.date = DateParser.parse(this.inputFieldMarkdownRenderChild.getInitialValue()) ?? DateParser.getDefaultDate();
 		if (!this.date.isValid()) {

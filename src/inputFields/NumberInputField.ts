@@ -22,7 +22,7 @@ export class NumberInputField extends AbstractInputField {
 		if (value != null && (typeof value == 'number' || typeof value == 'string')) {
 			this.numberComponent.setValue(numberToString(value));
 		} else {
-			console.warn(new MetaBindValueError(`invalid value '${value}' at numberInputField ${this.inputFieldMarkdownRenderChild.uid}`));
+			console.warn(new MetaBindValueError(`invalid value '${value}' at numberInputField ${this.inputFieldMarkdownRenderChild.uuid}`));
 			this.numberComponent.setValue(this.getDefaultValue());
 		}
 	}
@@ -44,7 +44,7 @@ export class NumberInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | render numberInputField ${this.inputFieldMarkdownRenderChild.uid}`);
+		console.debug(`meta-bind | render numberInputField ${this.inputFieldMarkdownRenderChild.uuid}`);
 
 		const component = new TextComponent(container);
 		component.inputEl.type = 'number';

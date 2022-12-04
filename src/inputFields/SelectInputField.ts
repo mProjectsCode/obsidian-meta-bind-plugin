@@ -53,7 +53,7 @@ export class SelectInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | render selectInputField ${this.inputFieldMarkdownRenderChild.uid}`);
+		console.debug(`meta-bind | render selectInputField ${this.inputFieldMarkdownRenderChild.uuid}`);
 
 		container.addClass('meta-bind-plugin-select-input-bg');
 		this.container = container;

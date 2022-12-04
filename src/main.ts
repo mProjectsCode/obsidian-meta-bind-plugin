@@ -1,11 +1,10 @@
-import { CachedMetadata, FrontMatterCache, Plugin, TFile } from 'obsidian';
+import { Plugin, TFile } from 'obsidian';
 import { DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab } from './settings/Settings';
 import { InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType } from './InputFieldMarkdownRenderChild';
 import { getFileName, isPath, removeFileEnding } from './utils/Utils';
 import { DateParser } from './parsers/DateParser';
 import { InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
-import { traverseObject } from '@opd-libs/opd-metadata-lib/lib/Utils';
-import { MetaBindInternalError } from './utils/MetaBindErrors';
+import { MetadataManager } from './MetadataManager';
 
 export default class MetaBindPlugin extends Plugin {
 	// @ts-ignore defined in `onload`
@@ -13,8 +12,9 @@ export default class MetaBindPlugin extends Plugin {
 
 	// @ts-ignore defined in `onload`
 	activeMarkdownInputFields: InputFieldMarkdownRenderChild[];
+
 	// @ts-ignore defined in `onload`
-	markDownInputFieldIndex: number;
+	metadataManager: MetadataManager;
 
 	async onload(): Promise<void> {
 		await this.loadSettings();
@@ -23,7 +23,7 @@ export default class MetaBindPlugin extends Plugin {
 		InputFieldDeclarationParser.parseTemplates(this.settings.inputTemplates);
 
 		this.activeMarkdownInputFields = [];
-		this.markDownInputFieldIndex = 0;
+		this.metadataManager = new MetadataManager(this);
 
 		this.registerMarkdownPostProcessor((element, context) => {
 			const codeBlocks = element.querySelectorAll('code');
@@ -34,16 +34,8 @@ export default class MetaBindPlugin extends Plugin {
 				// console.log(context.sourcePath);
 				if (isInputField) {
 					context.addChild(
-						new InputFieldMarkdownRenderChild(
-							codeBlock,
-							InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK,
-							text,
-							this,
-							context.sourcePath,
-							this.markDownInputFieldIndex
-						)
+						new InputFieldMarkdownRenderChild(codeBlock, InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK, text, this, context.sourcePath, crypto.randomUUID())
 					);
-					this.markDownInputFieldIndex += 1;
 				}
 			}
 		}, 100);
@@ -54,16 +46,9 @@ export default class MetaBindPlugin extends Plugin {
 			const isInputField = text.startsWith('INPUT[') && text.endsWith(']');
 			// console.log(context.sourcePath);
 			if (isInputField) {
-				ctx.addChild(new InputFieldMarkdownRenderChild(codeBlock, InputFieldMarkdownRenderChildType.CODE_BLOCK, text, this, ctx.sourcePath, this.markDownInputFieldIndex));
-				this.markDownInputFieldIndex += 1;
+				ctx.addChild(new InputFieldMarkdownRenderChild(codeBlock, InputFieldMarkdownRenderChildType.CODE_BLOCK, text, this, ctx.sourcePath, crypto.randomUUID()));
 			}
 		});
-
-		this.registerEvent(
-			this.app.metadataCache.on('changed', async (file: TFile, data: string, cache: CachedMetadata) => {
-				await this.updateMarkdownInputFieldsOnMetadataCacheChange(file, cache);
-			})
-		);
 
 		this.addSettingTab(new MetaBindSettingTab(this.app, this));
 	}
@@ -75,32 +60,13 @@ export default class MetaBindPlugin extends Plugin {
 	}
 
 	registerInputFieldMarkdownRenderChild(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild): void {
-		console.debug(`meta-bind | registered input field ${inputFieldMarkdownRenderChild.uid}`);
+		console.debug(`meta-bind | registered input field ${inputFieldMarkdownRenderChild.uuid}`);
 		this.activeMarkdownInputFields.push(inputFieldMarkdownRenderChild);
 	}
 
 	unregisterInputFieldMarkdownRenderChild(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild): void {
-		console.debug(`meta-bind | unregistered input field ${inputFieldMarkdownRenderChild.uid}`);
-		this.activeMarkdownInputFields = this.activeMarkdownInputFields.filter(x => x.uid !== inputFieldMarkdownRenderChild.uid);
-	}
-
-	updateMarkdownInputFieldsOnMetadataCacheChange(file: TFile, cache: CachedMetadata): void {
-		const metadata: FrontMatterCache | undefined = cache.frontmatter;
-
-		if (!metadata) {
-			console.warn(new MetaBindInternalError(`Can not update metadata for input fields, received metadata is ${metadata}`));
-			return;
-		}
-
-		for (const activeMarkdownInputField of this.activeMarkdownInputFields) {
-			if (!activeMarkdownInputField.inputFieldDeclaration?.isBound || !activeMarkdownInputField.bindTargetFile || !activeMarkdownInputField.bindTargetMetadataField) {
-				continue;
-			}
-
-			if (activeMarkdownInputField.bindTargetFile.path === file.path) {
-				activeMarkdownInputField.pushToInputFieldValueUpdateQueue(traverseObject(activeMarkdownInputField.bindTargetMetadataField, metadata));
-			}
-		}
+		console.debug(`meta-bind | unregistered input field ${inputFieldMarkdownRenderChild.uuid}`);
+		this.activeMarkdownInputFields = this.activeMarkdownInputFields.filter(x => x.uuid !== inputFieldMarkdownRenderChild.uuid);
 	}
 
 	getFilesByName(name: string): TFile[] {
