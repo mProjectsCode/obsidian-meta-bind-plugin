@@ -27,10 +27,10 @@ export class SelectInputFieldElement {
 		this.element = parentElement.createDiv({ cls: this.cssClass });
 		this.element.id = this.getHTMLId();
 		this.element.on('click', '#' + this.getHTMLId(), () => {
-			this.setActive(!this.active);
 			if (!this.selectInputField.allowMultiSelect) {
 				this.selectInputField.disableAllOtherElements(this.id);
 			}
+			this.setActive(!this.active, true);
 		});
 		this.element.on('mouseenter', '#' + this.getHTMLId(), () => {
 			this.setHighlighted(true);

@@ -3,30 +3,21 @@ rating: 31
 title: test title test test
 completed: false
 toggle1: true
-slider1: 71
+slider1: 17
 slider2: 8
 text1: Testa
 text_area1: test test test
 date1: Wednesday, July 20th 2022
-select: option b
+select: option c
 nested:
   object: dfgdf
 multi_select:
+  - option a
   - option b
+  - option c
 time1: 10:17
 suggest: test
-editor: |-
-  test **test**
-  [[other note]]
-
-  ## test
-
-  > [!INFO]
-  > this is an info
-
-  `INPUT[slider(addLabels):slider1]`
-
-  `$= dv.current().rating`
+editor: test **test**
 ---
 
 ## Components
@@ -93,10 +84,14 @@ option(option d)
 ```
 
 ### Suggester
-`INPUT[suggester(suggestOption(test), suggestOptionQuery(#test)):suggest]`
+```meta-bind
+INPUT[suggester(suggestOption(test), suggestOptionQuery(#test)):suggest]
+```
 
 ### Editor
-`INPUT[editor:editor]`
+```meta-bind
+INPUT[editor:editor]
+```
 
 ## In callouts
 > quote

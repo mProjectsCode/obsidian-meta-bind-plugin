@@ -84,7 +84,7 @@ export class SelectInputField extends AbstractInputField {
 	disableAllOtherElements(elementId: number): void {
 		for (const selectModalElement of this.elements) {
 			if (selectModalElement.id !== elementId) {
-				selectModalElement.setActive(false);
+				selectModalElement.setActive(false, false);
 			}
 		}
 	}

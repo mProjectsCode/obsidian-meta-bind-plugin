@@ -1,3 +1,5 @@
+import { KeyValuePair, traverseObjectByPath } from '@opd-libs/opd-metadata-lib/lib/Utils';
+
 /**
  * Gets the file name from a path
  *
@@ -56,18 +58,40 @@ export function mod(n: number, m: number): number {
 }
 
 /**
- * Checks if 2 arrays are equal, the arrays should have the same datatype
+ * Checks if 2 arrays contain equal values, the arrays should have the same datatype
  *
  * @param arr1
  * @param arr2
  */
-export function arrayEquals(arr1: any[], arr2: any[]): boolean {
+export function doArraysContainEqualValues<T>(arr1: T[], arr2: T[]): boolean {
 	if (arr1.length !== arr2.length) {
 		return false;
 	}
 
 	for (const arr1Element of arr1) {
 		if (!arr2.contains(arr1Element)) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+/**
+ * Checks if 2 arrays are equal, the arrays should have the same datatype
+ *
+ * @param arr1
+ * @param arr2
+ *
+ * @returns true if the two arrays are equal
+ */
+export function arrayEquals<T>(arr1: T[], arr2: T[]): boolean {
+	if (arr1.length !== arr2.length) {
+		return false;
+	}
+
+	for (let i = 0; i < arr1.length; i++) {
+		if (arr1[i] !== arr2[i]) {
 			return false;
 		}
 	}
@@ -89,4 +113,19 @@ export function equalOrIncludes(str1: string, str2: string): boolean {
 
 export function numberToString(n: number | string): string {
 	return n + '';
+}
+
+export function traverseObjectToParentByPath(pathParts: string[], o: any): { parent: KeyValuePair<string[], any>; child: KeyValuePair<string, any> } {
+	if (pathParts[0] === '') {
+		throw new Error('can not traverse to parent on self reference');
+	}
+
+	const parentPath = pathParts.slice(0, -1);
+	const childKey: string = pathParts.at(-1) ?? '';
+	const parentObject = traverseObjectByPath(parentPath, o);
+
+	return {
+		parent: { key: parentPath, value: parentObject },
+		child: { key: childKey, value: parentObject[childKey] },
+	};
 }
