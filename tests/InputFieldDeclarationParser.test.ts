@@ -1,7 +1,39 @@
-import { InputFieldDeclaration, InputFieldDeclarationParser, InputFieldType } from '../src/parsers/InputFieldDeclarationParser';
+import { MetaBindParsingError } from '../src/utils/Utils';
+import { InputFieldArgumentContainer } from '../src/inputFieldArguments/InputFieldArgumentContainer';
+import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser, InputFieldType } from '../src/parsers/InputFieldDeclarationParser';
 
 test('placeholder', () => {
 	expect(true).toEqual(true);
+});
+
+describe('apply template', () => {
+	test('found', () => {
+		InputFieldDeclarationParser.templates = [
+			{
+				identifier: "Test",
+				template: {
+					isBound: true,
+					bindTarget: "Test#Target",
+					argumentContainer: new InputFieldArgumentContainer()
+				} as InputFieldDeclaration
+			}
+		];
+
+		const inputFieldDeclaration: InputFieldDeclaration = InputFieldDeclarationParser.parseString("INPUT[toggle(class(a))]");
+		InputFieldDeclarationParser.applyTemplate(inputFieldDeclaration, "Test");
+
+		expect(inputFieldDeclaration.isBound).toEqual(true);
+		expect(inputFieldDeclaration.bindTarget).toEqual("Test#Target");
+		expect(inputFieldDeclaration.inputFieldType).toEqual(InputFieldType.TOGGLE);
+		expect(inputFieldDeclaration.argumentContainer.arguments[0].identifier).toEqual(InputFieldArgumentType.CLASS);
+		expect(inputFieldDeclaration.argumentContainer.arguments[0].value).toEqual(["a"]);
+	});
+	test('not found', () => {
+		InputFieldDeclarationParser.templates = [];
+
+		const inputFieldDeclaration: InputFieldDeclaration = InputFieldDeclarationParser.parseString("INPUT[toggle(class(a))]");
+		expect(() => InputFieldDeclarationParser.applyTemplate(inputFieldDeclaration, "Test")).toThrowError(MetaBindParsingError);
+	});
 });
 
 describe('bind target', () => {
