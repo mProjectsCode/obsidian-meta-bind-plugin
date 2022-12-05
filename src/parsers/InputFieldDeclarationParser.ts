@@ -271,7 +271,7 @@ export class InputFieldDeclarationParser {
 			return;
 		}
 
-		const template = InputFieldDeclarationParser.templates.filter(x => x.identifier === templateName).first()?.template;
+		const template = InputFieldDeclarationParser.templates.find(x => x.identifier === templateName)?.template;
 		if (!template) {
 			throw new MetaBindParsingError(`unknown template name \'${templateName}\'`);
 		}
