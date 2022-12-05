@@ -5,7 +5,7 @@ import { InputFieldFactory } from './inputFields/InputFieldFactory';
 import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
 import { AbstractInputFieldArgument } from './inputFieldArguments/AbstractInputFieldArgument';
 import { ClassInputFieldArgument } from './inputFieldArguments/ClassInputFieldArgument';
-import { traverseObject, validatePath as validateObjectPath } from '@opd-libs/opd-metadata-lib/lib/Utils';
+import { parsePath, traverseObjectByPath } from '@opd-libs/opd-metadata-lib/lib/Utils';
 import { MetaBindBindTargetError, MetaBindInternalError } from './utils/MetaBindErrors';
 import { MetadataFileCache } from './MetadataManager';
 
@@ -26,7 +26,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	fullDeclaration: string;
 	inputFieldDeclaration: InputFieldDeclaration | undefined;
 	bindTargetFile: TFile | undefined;
-	bindTargetMetadataField: string | undefined;
+	bindTargetMetadataPath: string[] | undefined;
 
 	intervalCounter: number;
 	metadataValueUpdateQueue: any[];
@@ -86,14 +86,12 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		}
 
 		try {
-			validateObjectPath(bindTargetMetadataFieldName);
+			this.bindTargetMetadataPath = parsePath(bindTargetMetadataFieldName);
 		} catch (e) {
 			if (e instanceof Error) {
 				throw new MetaBindBindTargetError(`bind target parsing error: ${e?.message}`);
 			}
 		}
-
-		this.bindTargetMetadataField = bindTargetMetadataFieldName;
 
 		const files: TFile[] = this.plugin.getFilesByName(bindTargetFileName);
 		if (files.length === 0) {
@@ -106,28 +104,28 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	}
 
 	registerSelfToMetadataManager(): MetadataFileCache | undefined {
-		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetFile || !this.bindTargetMetadataField) {
+		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetFile || !this.bindTargetMetadataPath || this.bindTargetMetadataPath?.length === 0) {
 			return;
 		}
 
 		return this.plugin.metadataManager.register(
 			this.bindTargetFile,
-			metadata => {
+			value => {
 				if (!this.inputField) {
 					throw new MetaBindInternalError('inputField is undefined, can not update inputField');
 				}
 
-				const value = traverseObject(this.bindTargetMetadataField as string, metadata);
 				if (!this.inputField.isEqualValue(value)) {
 					this.inputField.setValue(value);
 				}
 			},
+			this.bindTargetMetadataPath,
 			this.uuid
 		);
 	}
 
 	unregisterSelfFromMetadataManager(): void {
-		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetFile || !this.bindTargetMetadataField) {
+		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetFile || !this.bindTargetMetadataPath || this.bindTargetMetadataPath?.length === 0) {
 			return;
 		}
 
@@ -135,16 +133,16 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	}
 
 	updateMetadataManager(value: any): void {
-		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetFile || !this.bindTargetMetadataField) {
+		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetFile || !this.bindTargetMetadataPath || this.bindTargetMetadataPath?.length === 0) {
 			return;
 		}
 
-		this.plugin.metadataManager.updatePropertyInMetadataFileCache(value, this.bindTargetMetadataField, this.bindTargetFile, this.uuid);
+		this.plugin.metadataManager.updatePropertyInMetadataFileCache(value, this.bindTargetMetadataPath, this.bindTargetFile, this.uuid);
 	}
 
 	getInitialValue(): any | undefined {
-		if (this.inputFieldDeclaration?.isBound && this.bindTargetMetadataField) {
-			const value = traverseObject(this.bindTargetMetadataField, this.metadataCache?.metadata);
+		if (this.inputFieldDeclaration?.isBound && this.bindTargetMetadataPath) {
+			const value = traverseObjectByPath(this.bindTargetMetadataPath, this.metadataCache?.metadata);
 			console.debug(`meta-bind | InputFieldMarkdownRenderChild >> setting initial value to ${value} (typeof ${typeof value}) for input field ${this.uuid}`);
 			return value ?? this.inputField?.getDefaultValue();
 		}

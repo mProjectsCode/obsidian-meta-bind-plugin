@@ -1,15 +1,17 @@
 import { CachedMetadata, TFile } from 'obsidian';
 import MetaBindPlugin from './main';
 import { setFrontmatterOfTFile } from '@opd-libs/opd-metadata-lib/lib/API';
-import { traverseObjectToParent } from '@opd-libs/opd-metadata-lib/lib/Utils';
+import { traverseObjectByPath } from '@opd-libs/opd-metadata-lib/lib/Utils';
 import { Internal } from '@opd-libs/opd-metadata-lib/lib/Internal';
+import { arrayEquals, traverseObjectToParentByPath } from './utils/Utils';
 import getMetaDataFromFileContent = Internal.getMetaDataFromFileContent;
 
 export interface MetadataFileCache {
 	file: TFile;
 	metadata: Record<string, any>;
 	listeners: {
-		onCacheUpdate: (metadata: Record<string, any>) => void;
+		onCacheUpdate: (value: any | undefined) => void;
+		metadataPath: string[];
 		uuid: string;
 	}[];
 	cyclesSinceLastUpdate: number;
@@ -32,24 +34,25 @@ export class MetadataManager {
 		this.interval = window.setInterval(() => this.update(), this.plugin.settings.syncInterval);
 	}
 
-	register(file: TFile, onCacheUpdate: (metadata: Record<string, any>) => void, uuid: string): MetadataFileCache {
+	register(file: TFile, onCacheUpdate: (value: any) => void, metadataPath: string[], uuid: string): MetadataFileCache {
 		const fileCache = this.getCacheForFile(file);
 		if (fileCache) {
-			console.debug(`meta-bind | MetadataManager >> registered ${uuid} to existing file cache ${file.path}`);
-			fileCache.listeners.push({ onCacheUpdate, uuid });
+			console.debug(`meta-bind | MetadataManager >> registered ${uuid} to existing file cache ${file.path} -> ${metadataPath}`);
+			fileCache.listeners.push({ onCacheUpdate, metadataPath, uuid });
 			return fileCache;
 		} else {
-			console.debug(`meta-bind | MetadataManager >> registered ${uuid} to newly created file cache ${file.path}`);
+			console.debug(`meta-bind | MetadataManager >> registered ${uuid} to newly created file cache ${file.path} -> ${metadataPath}`);
 			const c: MetadataFileCache = {
 				file: file,
 				metadata: {},
-				listeners: [{ onCacheUpdate, uuid }],
+				listeners: [{ onCacheUpdate, metadataPath, uuid }],
 				cyclesSinceLastUpdate: 0,
 				changed: false,
 			};
 
 			this.plugin.app.vault.cachedRead(file).then(value => {
 				c.metadata = getMetaDataFromFileContent(value);
+				console.log(`meta-bind | MetadataManager >> loaded metadata for file ${file.path}`, c.metadata);
 				this.notifyListeners(c);
 			});
 
@@ -106,28 +109,34 @@ export class MetadataManager {
 		fileCache.metadata = metadata;
 		fileCache.cyclesSinceLastUpdate = 0;
 
-		this.notifyListeners(fileCache, uuid);
+		this.notifyListeners(fileCache, undefined, uuid);
 	}
 
-	updatePropertyInMetadataFileCache(value: any, path: string, file: TFile, uuid?: string | undefined): void {
-		console.debug(`meta-bind | MetadataManager >> updating ${path} in ${file.path} metadata cache to`, value);
+	updatePropertyInMetadataFileCache(value: any, pathParts: string[], file: TFile, uuid?: string | undefined): void {
+		console.debug(`meta-bind | MetadataManager >> updating ${pathParts} in ${file.path} metadata cache to`, value);
+		console.trace();
 
 		const fileCache = this.getCacheForFile(file);
 		if (!fileCache) {
 			return;
 		}
 
-		const { parent, child } = traverseObjectToParent(path, fileCache.metadata);
+		const { parent, child } = traverseObjectToParentByPath(pathParts, fileCache.metadata);
 
 		if (parent.value === undefined) {
-			throw Error(`The parent of "${path}" does not exist in Object, please create the parent first`);
+			throw Error(`The parent of "${pathParts}" does not exist in Object, please create the parent first`);
+		}
+
+		if (child.value === value) {
+			console.debug(`meta-bind | MetadataManager >> skipping redundant update of ${pathParts} in ${file.path} metadata cache`, value);
+			return;
 		}
 
 		parent.value[child.key] = value;
 		fileCache.cyclesSinceLastUpdate = 0;
 		fileCache.changed = true;
 
-		this.notifyListeners(fileCache, uuid);
+		this.notifyListeners(fileCache, pathParts, uuid);
 	}
 
 	updateMetadataFileCacheOnFrontmatterUpdate(file: TFile, data: string, cache: CachedMetadata): void {
@@ -152,13 +161,26 @@ export class MetadataManager {
 		this.notifyListeners(fileCache);
 	}
 
-	notifyListeners(fileCache: MetadataFileCache, exceptUuid?: string | undefined): void {
+	notifyListeners(fileCache: MetadataFileCache, metadataPath?: string[] | undefined, exceptUuid?: string | undefined): void {
+		let value;
+		if (metadataPath) {
+			value = traverseObjectByPath(metadataPath, fileCache.metadata);
+		}
+
 		for (const listener of fileCache.listeners) {
 			if (exceptUuid && exceptUuid === listener.uuid) {
 				continue;
 			}
-			console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata`);
-			listener.onCacheUpdate(fileCache.metadata);
+
+			if (metadataPath) {
+				if (arrayEquals(metadataPath, listener.metadataPath)) {
+					console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata`);
+					listener.onCacheUpdate(value);
+				}
+			} else {
+				console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata`);
+				listener.onCacheUpdate(traverseObjectByPath(listener.metadataPath, fileCache.metadata));
+			}
 		}
 	}
 }

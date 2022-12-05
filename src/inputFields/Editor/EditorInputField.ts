@@ -4,6 +4,7 @@ import { InputFieldMarkdownRenderChild } from '../../InputFieldMarkdownRenderChi
 import { MetaBindInternalError } from '../../utils/MetaBindErrors';
 
 export class EditorInputField extends AbstractInputField {
+	static allowInlineCodeBlock: boolean = false;
 	container: HTMLDivElement | undefined;
 	component: EditorInput | undefined;
 	value: string;
@@ -51,9 +52,10 @@ export class EditorInputField extends AbstractInputField {
 			props: {
 				onValueChange: this.onValueChange.bind(this),
 				editorInput: this,
+				value: this.value,
 			},
 		});
 
-		this.component.updateValue(this.value);
+		this.component.render();
 	}
 }

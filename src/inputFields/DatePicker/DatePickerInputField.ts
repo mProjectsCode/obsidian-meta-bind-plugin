@@ -82,9 +82,8 @@ export class DatePickerInputField extends AbstractInputField {
 			props: {
 				dateFormat: this.inputFieldMarkdownRenderChild.plugin.settings.preferredDateFormat,
 				showDatePicker: () => this.showDatePicker(),
+				selectedDate: this.date,
 			},
 		});
-
-		this.component.updateValue(this.date);
 	}
 }

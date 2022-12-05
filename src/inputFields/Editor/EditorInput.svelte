@@ -5,8 +5,8 @@
 
 	export let onValueChange: (value: any) => void;
 	export let editorInput: EditorInputField;
+	export let value: string;
 
-	let value: string;
 	let focus: boolean = false;
 	let renderEl: HTMLElement;
 	let inputEl: HTMLElement;
@@ -20,18 +20,17 @@
 
 	export function updateValue(v: string): void {
 		value = v;
-		renderEl.innerHTML = '';
 		render();
 	}
 
-	function render() {
+	export function render() {
+		renderEl.innerHTML = '';
 		MarkdownRenderer.renderMarkdown(value, renderEl, editorInput.inputFieldMarkdownRenderChild.filePath, editorInput.inputFieldMarkdownRenderChild);
 	}
 
 	function focusOut(event: MouseEvent) {
 		renderEl.toggleVisibility(true);
 		inputEl.toggleVisibility(false);
-		renderEl.innerHTML = '';
 		render();
 	}
 
@@ -41,18 +40,15 @@
 		inputEl.toggleVisibility(true);
 		inputEl.focus();
 	}
-
-	function log() {
-		console.log('focus');
-	}
 </script>
 
 <style>
 	.editor-input {
-		width:    100%;
-		height:   500px;
-		padding:  0;
-		position: relative;
+		background: var(--background-secondary);
+		width:      100%;
+		height:     500px;
+		padding:    0;
+		position:   relative;
 	}
 
 	.editor-input > textarea {
