@@ -24,7 +24,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	type: InputFieldMarkdownRenderChildType;
 
 	fullDeclaration: string;
-	inputFieldDeclaration: InputFieldDeclaration | undefined;
+	inputFieldDeclaration: InputFieldDeclaration;
 	bindTargetFile: TFile | undefined;
 	bindTargetMetadataPath: string[] | undefined;
 
@@ -32,18 +32,15 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	metadataValueUpdateQueue: any[];
 	inputFieldValueUpdateQueue: any[];
 
-	constructor(
-		containerEl: HTMLElement,
-		type: InputFieldMarkdownRenderChildType,
-		declaration: InputFieldDeclaration,
-		plugin: MetaBindPlugin,
-		filePath: string,
-		uuid: string,
-		error?: string
-	) {
+	constructor(containerEl: HTMLElement, type: InputFieldMarkdownRenderChildType, declaration: InputFieldDeclaration, plugin: MetaBindPlugin, filePath: string, uuid: string) {
 		super(containerEl);
 
-		this.error = error || '';
+		if (!declaration.error) {
+			this.error = '';
+		} else {
+			this.error = declaration.error instanceof Error ? declaration.error.message : declaration.error;
+		}
+
 		this.filePath = filePath;
 		this.uuid = uuid;
 		this.plugin = plugin;
@@ -55,7 +52,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		this.intervalCounter = 0;
 		this.inputFieldDeclaration = declaration;
 
-		if (!error) {
+		if (!this.error) {
 			try {
 				if (this.inputFieldDeclaration.isBound) {
 					this.parseBindTarget();
@@ -158,8 +155,8 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	}
 
 	getArguments(name: InputFieldArgumentType): AbstractInputFieldArgument[] {
-		if (!this.inputFieldDeclaration) {
-			throw new MetaBindInternalError('inputFieldDeclaration is undefined, can not retrieve arguments');
+		if (this.inputFieldDeclaration.error) {
+			throw new MetaBindInternalError('inputFieldDeclaration has errors, can not retrieve arguments');
 		}
 
 		return this.inputFieldDeclaration.argumentContainer.arguments.filter(x => x.identifier === name);
