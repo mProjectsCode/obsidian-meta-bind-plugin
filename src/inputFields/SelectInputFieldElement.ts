@@ -27,10 +27,10 @@ export class SelectInputFieldElement {
 		this.element = parentElement.createDiv({ cls: this.cssClass });
 		this.element.id = this.getHTMLId();
 		this.element.on('click', '#' + this.getHTMLId(), () => {
-			this.setActive(!this.active);
 			if (!this.selectInputField.allowMultiSelect) {
 				this.selectInputField.disableAllOtherElements(this.id);
 			}
+			this.setActive(!this.active, true);
 		});
 		this.element.on('mouseenter', '#' + this.getHTMLId(), () => {
 			this.setHighlighted(true);
@@ -41,7 +41,7 @@ export class SelectInputFieldElement {
 	}
 
 	getHTMLId(): string {
-		return `meta-bind-select-input-element-${this.selectInputField.inputFieldMarkdownRenderChild.uid}-${this.id}`;
+		return `meta-bind-select-input-element-${this.selectInputField.inputFieldMarkdownRenderChild.uuid}-${this.id}`;
 	}
 
 	isHighlighted(): boolean {
