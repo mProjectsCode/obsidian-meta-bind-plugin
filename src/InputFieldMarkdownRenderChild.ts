@@ -2,8 +2,7 @@ import { MarkdownRenderChild, TFile } from 'obsidian';
 import MetaBindPlugin from './main';
 import { AbstractInputField } from './inputFields/AbstractInputField';
 import { InputFieldFactory } from './inputFields/InputFieldFactory';
-import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
-import { isFalsy, isTruthy, MetaBindBindTargetError, MetaBindInternalError } from './utils/Utils';
+import { InputFieldArgumentType, InputFieldDeclaration } from './parsers/InputFieldDeclarationParser';
 import { AbstractInputFieldArgument } from './inputFieldArguments/AbstractInputFieldArgument';
 import { ClassInputFieldArgument } from './inputFieldArguments/ClassInputFieldArgument';
 import { parsePath, traverseObjectByPath } from '@opd-libs/opd-metadata-lib/lib/Utils';
@@ -33,7 +32,15 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	metadataValueUpdateQueue: any[];
 	inputFieldValueUpdateQueue: any[];
 
-	constructor(containerEl: HTMLElement, type: InputFieldMarkdownRenderChildType, fullDeclaration: string, plugin: MetaBindPlugin, filePath: string, uuid: string, error?: string) {
+	constructor(
+		containerEl: HTMLElement,
+		type: InputFieldMarkdownRenderChildType,
+		declaration: InputFieldDeclaration,
+		plugin: MetaBindPlugin,
+		filePath: string,
+		uuid: string,
+		error?: string
+	) {
 		super(containerEl);
 
 		this.error = error || '';
@@ -48,24 +55,20 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		this.intervalCounter = 0;
 		this.inputFieldDeclaration = declaration;
 
-		this.uid = this.plugin.markDownInputFieldIndex;
-		this.plugin.markDownInputFieldIndex += 1;
-
 		if (!error) {
-            try {
-			    if (this.inputFieldDeclaration.isBound) {
-			    	this.parseBindTarget();
-			    }
+			try {
+				if (this.inputFieldDeclaration.isBound) {
+					this.parseBindTarget();
+				}
 
-
-			    this.inputField = InputFieldFactory.createInputField(this.inputFieldDeclaration.inputFieldType, {
-				    type: type,
-				    inputFieldMarkdownRenderChild: this,
-				    onValueChanged: this.updateMetadataManager.bind(this),
-			    });
-		    } catch (e: any) {
-			    this.error = e.message;
-                console.warn(e);
+				this.inputField = InputFieldFactory.createInputField(this.inputFieldDeclaration.inputFieldType, {
+					type: type,
+					inputFieldMarkdownRenderChild: this,
+					onValueChanged: this.updateMetadataManager.bind(this),
+				});
+			} catch (e: any) {
+				this.error = e.message;
+				console.warn(e);
 			}
 		}
 	}

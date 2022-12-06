@@ -1,11 +1,11 @@
 import { CachedMetadata, editorEditorField, MarkdownPostProcessorContext, Plugin, TFile } from 'obsidian';
-import { Plugin, TFile } from 'obsidian';
 import { DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab } from './settings/Settings';
 import { InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType } from './InputFieldMarkdownRenderChild';
 import { getFileName, isPath, removeFileEnding } from './utils/Utils';
 import { DateParser } from './parsers/DateParser';
-import { InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
+import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser, InputFieldType } from './parsers/InputFieldDeclarationParser';
 import { MetadataManager } from './MetadataManager';
+import { MetaBindBindTargetError } from './utils/MetaBindErrors';
 
 export default class MetaBindPlugin extends Plugin {
 	// defined in `loadSettings`
@@ -83,7 +83,7 @@ export default class MetaBindPlugin extends Plugin {
 			}
 		}
 
-		return new InputFieldMarkdownRenderChild(container, renderType, declaration as InputFieldDeclaration, this, sourcePath, error);
+		return new InputFieldMarkdownRenderChild(container, renderType, declaration as InputFieldDeclaration, this, sourcePath, crypto.randomUUID(), error);
 	}
 
 	/**
