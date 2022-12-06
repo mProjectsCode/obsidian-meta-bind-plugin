@@ -53,7 +53,6 @@ export class MetadataManager {
 			this.plugin.app.vault.cachedRead(file).then(value => {
 				c.metadata = getMetaDataFromFileContent(value);
 				console.log(`meta-bind | MetadataManager >> loaded metadata for file ${file.path}`, c.metadata);
-				debugger;
 				this.notifyListeners(c);
 			});
 

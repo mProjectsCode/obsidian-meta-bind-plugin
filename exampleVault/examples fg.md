@@ -3,7 +3,7 @@ rating: 31
 title: test title test test
 completed: false
 toggle1: true
-slider1: 24
+slider1: 8
 slider2: 8
 text1: Testa
 text_area1: test test test
@@ -103,7 +103,7 @@ INPUT[editor:editor]
 > `INPUT[slider(addLabels, minValue(1), maxValue(10)):slider1]`
 
 ## Nested data
-`INPUT[text:nested.object]`
+`INPUT[text:nested["object"]]`
 
 ---
 

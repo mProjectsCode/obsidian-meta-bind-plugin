@@ -1,4 +1,4 @@
-import { CachedMetadata, editorEditorField, MarkdownPostProcessorContext, Plugin, TFile } from 'obsidian';
+import { Plugin, TFile } from 'obsidian';
 import { DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab } from './settings/Settings';
 import { InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType } from './InputFieldMarkdownRenderChild';
 import { getFileName, isPath, removeFileEnding } from './utils/Utils';
@@ -68,22 +68,13 @@ export default class MetaBindPlugin extends Plugin {
 		container: HTMLElement,
 		renderType: InputFieldMarkdownRenderChildType = InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK
 	): InputFieldMarkdownRenderChild {
-		let error: string | undefined;
-
-		try {
-			if (typeof declaration === 'string') {
-				declaration = InputFieldDeclarationParser.parseString(declaration);
-			} else {
-				declaration = InputFieldDeclarationParser.parseDeclaration(declaration);
-			}
-		} catch (e: any) {
-			if (e instanceof Error) {
-				error = e.message;
-				console.warn(e);
-			}
+		if (typeof declaration === 'string') {
+			declaration = InputFieldDeclarationParser.parseString(declaration);
+		} else {
+			declaration = InputFieldDeclarationParser.parseDeclaration(declaration);
 		}
 
-		return new InputFieldMarkdownRenderChild(container, renderType, declaration as InputFieldDeclaration, this, sourcePath, crypto.randomUUID(), error);
+		return new InputFieldMarkdownRenderChild(container, renderType, declaration, this, sourcePath, crypto.randomUUID());
 	}
 
 	/**
