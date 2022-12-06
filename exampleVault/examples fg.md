@@ -3,18 +3,17 @@ rating: 31
 title: test title test test
 completed: false
 toggle1: true
-slider1: 17
+slider1: 24
 slider2: 8
 text1: Testa
 text_area1: test test test
 date1: Wednesday, July 20th 2022
-select: option c
+select: option b
 nested:
   object: dfgdf
 multi_select:
   - option a
-  - option b
-  - option c
+  - option d
 time1: 10:17
 suggest: test
 editor: test **test**

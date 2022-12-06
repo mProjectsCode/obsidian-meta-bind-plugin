@@ -1,10 +1,11 @@
 ---
 tags: test
 title: "test test test "
-select: option c
+select: option b
 date: Tuesday, June 21st 2022
 time: 19:20
 multi-select:
+  - option a
   - option b
   - option c
 ---
