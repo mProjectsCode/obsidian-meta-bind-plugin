@@ -1,9 +1,10 @@
 import { AbstractInputField } from './AbstractInputField';
 import { SelectInputFieldElement } from './SelectInputFieldElement';
-import { MetaBindInternalError, mod } from '../utils/Utils';
+import { mod } from '../utils/Utils';
 import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
 import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
 import { AbstractInputFieldArgument } from '../inputFieldArguments/AbstractInputFieldArgument';
+import { MetaBindInternalError } from '../utils/MetaBindErrors';
 
 export class SelectInputField extends AbstractInputField {
 	static allowInlineCodeBlock: boolean = false;
@@ -52,7 +53,7 @@ export class SelectInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | render selectInputField ${this.inputFieldMarkdownRenderChild.uid}`);
+		console.debug(`meta-bind | SelectInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
 
 		container.addClass('meta-bind-plugin-select-input-bg');
 		this.container = container;
@@ -83,7 +84,7 @@ export class SelectInputField extends AbstractInputField {
 	disableAllOtherElements(elementId: number): void {
 		for (const selectModalElement of this.elements) {
 			if (selectModalElement.id !== elementId) {
-				selectModalElement.setActive(false);
+				selectModalElement.setActive(false, false);
 			}
 		}
 	}

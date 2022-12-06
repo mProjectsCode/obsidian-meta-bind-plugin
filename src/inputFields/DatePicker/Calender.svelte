@@ -12,11 +12,23 @@
 	export let year: number;
 
 	// local vars to help in render
-	let cells;
+	let cells: number[];
 
 	// function helpers
 	function onChange(date: number) {
 		dispatch('dateChange', moment(new Date(year, month, date)));
+	}
+
+	function selectCell(value: number | undefined) {
+		if (value) {
+			onChange(value);
+		}
+	}
+
+	function selectCellKey(event: KeyboardEvent, value: number | undefined) {
+		if (event.key === ' ') {
+			selectCell(value);
+		}
 	}
 
 	$: cells = getDateRows(month, year);
@@ -31,23 +43,22 @@
 		display:         flex;
 		justify-content: space-around;
 		flex-wrap:       wrap;
-		gap:             2px;
-		background:      var(--background-primary);
+		gap:             var(--size-4-1);
+		background:      var(--background-secondary);
 		border-radius:   var(--meta-bind-plugin-border-radius);
-		margin-bottom:   2px;
+		margin-bottom:   var(--size-4-1);;
 	}
 
 	.calendar-content {
 		display:               grid;
 		flex-wrap:             wrap;
 		grid-template-columns: repeat(7, 1fr);
-		gap:                   2px;
+		gap:                   var(--size-4-1);
 	}
 
 	.cell {
 		min-width:       40px;
-		height:          30px;
-		padding:         5px;
+		padding:         var(--size-4-2);
 		display:         flex;
 		justify-content: center;
 		align-items:     center;
@@ -64,7 +75,7 @@
 	}
 
 	.selected {
-		background: var(--background-modifier-success);
+		background: var(--interactive-accent);
 	}
 
 	.highlight:hover {
@@ -72,7 +83,7 @@
 	}
 
 	.selected.highlight:hover {
-		background: green;
+		background: var(--interactive-accent-hover);
 	}
 </style>
 
@@ -89,7 +100,8 @@
 		{#each cells as value (uuid())}
 			<div
 				class="cell"
-				on:click={value ? () => onChange(value) : () => {}}
+				on:click={() => selectCell(value)}
+				on:keydown={(event) => selectCellKey(event, value)}
 				class:highlight={value}
 				class:content-cell={value}
 				class:selected={selectedDate.year() === year && selectedDate.month() === month && selectedDate.date() === value}>

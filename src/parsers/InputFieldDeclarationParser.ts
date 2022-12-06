@@ -1,7 +1,8 @@
 import { EnclosingPair, ParserUtils } from '../utils/ParserUtils';
-import { isTruthy, MetaBindParsingError } from '../utils/Utils';
+import { isTruthy } from '../utils/Utils';
 import { InputFieldArgumentFactory } from '../inputFieldArguments/InputFieldArgumentFactory';
 import { InputFieldArgumentContainer } from '../inputFieldArguments/InputFieldArgumentContainer';
+import { MetaBindParsingError } from '../utils/MetaBindErrors';
 import { AbstractInputFieldArgument } from 'src/inputFieldArguments/AbstractInputFieldArgument';
 
 export enum InputFieldType {
@@ -15,6 +16,8 @@ export enum InputFieldType {
 	TIME = 'time',
 	DATE_PICKER = 'date_picker',
 	NUMBER = 'number',
+	SUGGESTER = 'suggester',
+	EDITOR = 'editor',
 
 	INVALID = 'invalid',
 }
@@ -27,6 +30,8 @@ export enum InputFieldArgumentType {
 	OPTION = 'option',
 	TITLE = 'title',
 	ALIGN_RIGHT = 'alignRight',
+	SUGGEST_OPTION = 'suggestOption',
+	SUGGEST_OPTION_QUERY = 'suggestOptionQuery',
 
 	INVALID = 'invalid',
 }
@@ -207,7 +212,7 @@ export class InputFieldDeclarationParser {
 			}
 		}
 
-		console.log(InputFieldDeclarationParser.templates);
+		console.log(`meta-bind | InputFieldDeclarationParser >> parsed templates`, InputFieldDeclarationParser.templates);
 	}
 
 	static parseArguments(inputFieldArgumentsString: string, inputFieldType: InputFieldType): InputFieldArgumentContainer {
@@ -225,7 +230,7 @@ export class InputFieldDeclarationParser {
 
 			if (!inputFieldArgument.isAllowed(inputFieldType)) {
 				throw new MetaBindParsingError(
-					`argument \'${inputFieldArgumentIdentifier}\' is only applicable to ${inputFieldArgument.getAllowedInputFieldsAsString()} input fields`
+					`argument '${inputFieldArgumentIdentifier}' is only applicable to ${inputFieldArgument.getAllowedInputFieldsAsString()} input fields`
 				);
 			}
 
@@ -250,7 +255,7 @@ export class InputFieldDeclarationParser {
 
 		const argumentValue = ParserUtils.getInBetween(argumentString, InputFieldDeclarationParser.roundBracesPair) as string;
 		if (!argumentValue) {
-			throw new MetaBindParsingError(`argument \'${argumentName}\' requires a non empty value`);
+			throw new MetaBindParsingError(`argument '${argumentName}' requires a non empty value`);
 		}
 
 		return argumentValue;

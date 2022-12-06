@@ -2,7 +2,7 @@ import { AbstractInputField } from './AbstractInputField';
 import { DropdownComponent } from 'obsidian';
 import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
 import { Time, TimeParser } from '../parsers/TimeParser';
-import { MetaBindBindValueError, MetaBindInternalError } from '../utils/Utils';
+import { MetaBindInternalError, MetaBindValueError } from '../utils/MetaBindErrors';
 
 export class TimeInputField extends AbstractInputField {
 	container: HTMLDivElement | undefined;
@@ -52,7 +52,7 @@ export class TimeInputField extends AbstractInputField {
 
 		this.time = TimeParser.parse(value);
 		if (!this.time) {
-			console.warn(new MetaBindBindValueError(`invalid value \'${value}\' at timeInputField ${this.inputFieldMarkdownRenderChild.uid}`));
+			console.warn(new MetaBindValueError(`invalid value '${value}' at timeInputField ${this.inputFieldMarkdownRenderChild.uuid}`));
 			this.time = TimeParser.getDefaultTime();
 		}
 		// console.log(this.time);
@@ -69,7 +69,7 @@ export class TimeInputField extends AbstractInputField {
 	}
 
 	public render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | render timeInputField ${this.inputFieldMarkdownRenderChild.uid}`);
+		console.debug(`meta-bind | TimeInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
 
 		this.time = TimeParser.parse(this.inputFieldMarkdownRenderChild.getInitialValue()) ?? TimeParser.getDefaultTime();
 

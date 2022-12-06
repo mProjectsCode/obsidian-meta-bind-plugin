@@ -1,4 +1,5 @@
-import { equalOrIncludes, isFalsy, MetaBindInternalError } from './Utils';
+import { equalOrIncludes, isFalsy } from './Utils';
+import { MetaBindInternalError } from './MetaBindErrors';
 
 export class EnclosingPair {
 	readonly openingEqualsClosing: boolean;

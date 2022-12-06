@@ -1,8 +1,8 @@
 import { AbstractInputField } from './AbstractInputField';
 import { SliderComponent } from 'obsidian';
 import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
-import { MetaBindBindValueError, MetaBindInternalError } from '../utils/Utils';
 import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
+import { MetaBindInternalError, MetaBindValueError } from '../utils/MetaBindErrors';
 
 export class SliderInputField extends AbstractInputField {
 	sliderComponent: SliderComponent | undefined;
@@ -33,7 +33,7 @@ export class SliderInputField extends AbstractInputField {
 				this.sliderComponent.setValue(value);
 			}
 		} else {
-			console.warn(new MetaBindBindValueError(`invalid value \'${value}\' at sliderInputField ${this.inputFieldMarkdownRenderChild.uid}`));
+			console.warn(new MetaBindValueError(`invalid value '${value}' at sliderInputField ${this.inputFieldMarkdownRenderChild.uuid}`));
 			this.sliderComponent.setValue(this.getDefaultValue());
 		}
 	}
@@ -55,7 +55,7 @@ export class SliderInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | render slider ${this.inputFieldMarkdownRenderChild.uid}`);
+		console.debug(`meta-bind | SliderInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
 
 		container.removeClass('meta-bind-plugin-input-wrapper');
 		container.addClass('meta-bind-plugin-flex-input-wrapper');
