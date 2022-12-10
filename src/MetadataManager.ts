@@ -1,9 +1,9 @@
 import { CachedMetadata, TFile } from 'obsidian';
 import MetaBindPlugin from './main';
 import { setFrontmatterOfTFile } from '@opd-libs/opd-metadata-lib/lib/API';
-import { traverseObjectByPath } from '@opd-libs/opd-metadata-lib/lib/Utils';
 import { Internal } from '@opd-libs/opd-metadata-lib/lib/Internal';
 import { arrayEquals, traverseObjectToParentByPath } from './utils/Utils';
+import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import getMetaDataFromFileContent = Internal.getMetaDataFromFileContent;
 
 export interface MetadataFileCache {
@@ -51,7 +51,7 @@ export class MetadataManager {
 			};
 
 			this.plugin.app.vault.cachedRead(file).then(value => {
-				c.metadata = getMetaDataFromFileContent(value);
+				c.metadata = getMetaDataFromFileContent(value) ?? {};
 				console.log(`meta-bind | MetadataManager >> loaded metadata for file ${file.path}`, c.metadata);
 				this.notifyListeners(c);
 			});
@@ -114,7 +114,7 @@ export class MetadataManager {
 
 	updatePropertyInMetadataFileCache(value: any, pathParts: string[], file: TFile, uuid?: string | undefined): void {
 		console.debug(`meta-bind | MetadataManager >> updating ${pathParts} in ${file.path} metadata cache to`, value);
-		console.trace();
+		// console.trace();
 
 		const fileCache = this.getCacheForFile(file);
 		if (!fileCache) {

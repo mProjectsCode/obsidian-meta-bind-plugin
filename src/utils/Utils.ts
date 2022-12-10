@@ -1,4 +1,6 @@
-import { KeyValuePair, traverseObjectByPath } from '@opd-libs/opd-metadata-lib/lib/Utils';
+import { FileSystemAdapter } from 'obsidian';
+import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
+import { KeyValuePair } from '@opd-libs/opd-utils-lib/lib/Utils';
 
 /**
  * Gets the file name from a path
@@ -128,4 +130,51 @@ export function traverseObjectToParentByPath(pathParts: string[], o: any): { par
 		parent: { key: parentPath, value: parentObject },
 		child: { key: childKey, value: parentObject[childKey] },
 	};
+}
+
+export function getVaultBasePath(): string | null {
+	const adapter = app.vault.adapter;
+	if (adapter instanceof FileSystemAdapter) {
+		return adapter.getBasePath();
+	}
+	return null;
+}
+
+export function pathJoin(path1: string, path2: string): string {
+	if (path1 == null) {
+		throw new Error('path1 must not be null');
+	}
+
+	if (path2 == null) {
+		throw new Error('path2 must not be null');
+	}
+
+	path1 = path1.replaceAll('\\', '/');
+	path2 = path2.replaceAll('\\', '/');
+
+	let result: string;
+
+	if (path1.endsWith('/') && path2.startsWith('/')) {
+		result = path1 + path2.substring(1);
+	} else if (path1.endsWith('/') && !path2.startsWith('/')) {
+		result = path1 + path2;
+	} else if (!path1.endsWith('/') && path2.startsWith('/')) {
+		result = path1 + path2;
+	} else {
+		result = path1 + '/' + path2;
+	}
+
+	if (result.startsWith('/') && result.endsWith('/')) {
+		return result.substring(1, result.length - 1);
+	} else if (result.startsWith('/')) {
+		return result.substring(1);
+	} else if (result.endsWith('/')) {
+		return result.substring(0, result.length - 1);
+	} else {
+		return result;
+	}
+}
+
+export function imagePathToUri(imagePath: string): string {
+	return `app://local/${pathJoin(getVaultBasePath() ?? '', imagePath)}`;
 }
