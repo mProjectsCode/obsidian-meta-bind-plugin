@@ -44,11 +44,12 @@
 
 <style>
 	.editor-input {
-		background: var(--background-secondary);
-		width:      100%;
-		height:     500px;
-		padding:    0;
-		position:   relative;
+		background:  var(--background-secondary);
+		width:       100%;
+		height:      500px;
+		padding:     0;
+		position:    relative;
+		margin-left: 0;
 	}
 
 	.editor-input > textarea {

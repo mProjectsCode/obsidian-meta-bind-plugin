@@ -10,6 +10,7 @@ import { SuggestOptionInputFieldArgument } from './SuggestOptionInputFieldArgume
 import { SuggestOptionQueryInputFieldArgument } from './SuggestOptionQueryInputFieldArgument';
 import { MetaBindParsingError } from '../utils/MetaBindErrors';
 import { AbstractInputFieldArgument } from './AbstractInputFieldArgument';
+import { ShowcaseInputFieldArgument } from './ShowcaseInputFieldArgument';
 
 export class InputFieldArgumentFactory {
 	static createInputFieldArgument(argumentIdentifier: string): AbstractInputFieldArgument {
@@ -31,8 +32,10 @@ export class InputFieldArgumentFactory {
 			return new SuggestOptionInputFieldArgument();
 		} else if (argumentIdentifier === InputFieldArgumentType.SUGGEST_OPTION_QUERY) {
 			return new SuggestOptionQueryInputFieldArgument();
+		} else if (argumentIdentifier === InputFieldArgumentType.SHOWCASE) {
+			return new ShowcaseInputFieldArgument();
 		} else {
-			throw new MetaBindParsingError(`unknown argument \'${argumentIdentifier}\'`);
+			throw new MetaBindParsingError(`unknown argument '${argumentIdentifier}'`);
 		}
 	}
 }

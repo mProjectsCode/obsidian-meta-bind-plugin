@@ -107,6 +107,22 @@ body {
 	border-radius: 0 var(--meta-bind-plugin-border-radius) var(--meta-bind-plugin-border-radius) 0;
 }
 
+.meta-bind-plugin-showcase {
+	padding: var(--size-4-2);
+	margin: var(--size-4-2) 0;
+	border-radius: var(--meta-bind-plugin-border-radius);
+	border: var(--meta-bind-plugin-border-width) solid var(--background-modifier-border);
+}
+
+.meta-bind-plugin-showcase > code {
+	margin-top: var(--size-4-2);
+	display: block;
+}
+
+.meta-bind-plugin-showcase > h3 {
+	margin-top: 0;
+}
+
 .meta-bind-full-width {
 	width: 100%;
 }

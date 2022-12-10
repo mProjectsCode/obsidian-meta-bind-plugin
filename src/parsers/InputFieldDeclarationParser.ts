@@ -18,6 +18,7 @@ export enum InputFieldType {
 	NUMBER = 'number',
 	SUGGESTER = 'suggester',
 	EDITOR = 'editor',
+	IMAGE_SUGGESTER = 'imageSuggester',
 
 	INVALID = 'invalid',
 }
@@ -32,6 +33,7 @@ export enum InputFieldArgumentType {
 	ALIGN_RIGHT = 'alignRight',
 	SUGGEST_OPTION = 'suggestOption',
 	SUGGEST_OPTION_QUERY = 'suggestOptionQuery',
+	SHOWCASE = 'showcase',
 
 	INVALID = 'invalid',
 }

@@ -5,9 +5,9 @@ import { InputFieldFactory } from './inputFields/InputFieldFactory';
 import { InputFieldArgumentType, InputFieldDeclaration } from './parsers/InputFieldDeclarationParser';
 import { AbstractInputFieldArgument } from './inputFieldArguments/AbstractInputFieldArgument';
 import { ClassInputFieldArgument } from './inputFieldArguments/ClassInputFieldArgument';
-import { parsePath, traverseObjectByPath } from '@opd-libs/opd-metadata-lib/lib/Utils';
 import { MetaBindBindTargetError, MetaBindInternalError } from './utils/MetaBindErrors';
 import { MetadataFileCache } from './MetadataManager';
+import { parsePath, traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 
 export enum InputFieldMarkdownRenderChildType {
 	INLINE_CODE_BLOCK,
@@ -169,7 +169,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	async onload(): Promise<void> {
 		console.debug('meta-bind | InputFieldMarkdownRenderChild >> load', this);
 
-		const container: HTMLDivElement = this.containerEl.createDiv();
+		const container: HTMLDivElement = createDiv();
 		container.addClass('meta-bind-plugin-input-wrapper');
 		this.containerEl.addClass('meta-bind-plugin-input');
 
@@ -202,7 +202,14 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		}
 
 		this.containerEl.empty();
-		this.containerEl.appendChild(container);
+
+		if (this.getArgument(InputFieldArgumentType.SHOWCASE)) {
+			const showcaseContainer: HTMLDivElement = this.containerEl.createDiv({ cls: 'meta-bind-plugin-showcase' });
+			showcaseContainer.appendChild(container);
+			showcaseContainer.createEl('code', { text: ` ${this.fullDeclaration} ` });
+		} else {
+			this.containerEl.appendChild(container);
+		}
 	}
 
 	onunload(): void {

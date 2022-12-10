@@ -14,6 +14,7 @@ import { NumberInputField } from './NumberInputField';
 import { SuggestInputField } from './Suggest/SuggestInputField';
 import { MetaBindParsingError } from '../utils/MetaBindErrors';
 import { EditorInputField } from './Editor/EditorInputField';
+import { ImageSuggestInputField } from './ImageSuggest/ImageSuggestInputField';
 
 export class InputFieldFactory {
 	static allowCodeBlockMap: Record<string, { codeBlock: boolean; inlineCodeBlock: boolean }> = {
@@ -65,6 +66,10 @@ export class InputFieldFactory {
 			codeBlock: EditorInputField.allowCodeBlock,
 			inlineCodeBlock: EditorInputField.allowInlineCodeBlock,
 		},
+		[InputFieldType.IMAGE_SUGGESTER]: {
+			codeBlock: ImageSuggestInputField.allowCodeBlock,
+			inlineCodeBlock: ImageSuggestInputField.allowInlineCodeBlock,
+		},
 	};
 
 	static createInputField(
@@ -107,6 +112,9 @@ export class InputFieldFactory {
 		} else if (inputFieldType === InputFieldType.EDITOR) {
 			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new EditorInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+		} else if (inputFieldType === InputFieldType.IMAGE_SUGGESTER) {
+			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
+			return new ImageSuggestInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		}
 
 		return undefined;
