@@ -1,12 +1,9 @@
 ---
 editor: |-
-  This is some text.
+  test
 
-  **Some bold text.**
-
-  # And a Heading
+  **test**
 ---
-
 
 ```meta-bind
 INPUT[editor(showcase):editor]

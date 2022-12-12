@@ -1,4 +1,8 @@
 ---
+slider1: 1
+---
+
+---
 slider1: 7
 nested:
   object: dfgdf
