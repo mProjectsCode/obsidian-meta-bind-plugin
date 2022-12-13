@@ -92,6 +92,8 @@ export class TimeInputField extends AbstractInputField {
 		this.container = container;
 	}
 
+	public destroy(): void {}
+
 	private onHourChange(value: string): void {
 		this.time?.setHourFromString(value);
 		this.onValueChange(this.getValue());

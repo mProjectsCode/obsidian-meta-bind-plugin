@@ -86,4 +86,8 @@ export class DatePickerInputField extends AbstractInputField {
 			},
 		});
 	}
+
+	public destroy(): void {
+		this.component?.$destroy();
+	}
 }

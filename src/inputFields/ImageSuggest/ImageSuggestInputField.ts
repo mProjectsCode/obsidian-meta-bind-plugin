@@ -116,4 +116,8 @@ export class ImageSuggestInputField extends AbstractInputField {
 
 		this.component.updateValue(this.value);
 	}
+
+	public destroy(): void {
+		this.component?.$destroy();
+	}
 }
