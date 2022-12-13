@@ -50,4 +50,6 @@ export class TextAreaInputField extends AbstractInputField {
 		component.onChange(this.onValueChange);
 		this.textAreaComponent = component;
 	}
+
+	public destroy(): void {}
 }

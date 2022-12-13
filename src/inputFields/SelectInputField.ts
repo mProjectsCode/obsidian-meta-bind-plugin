@@ -81,6 +81,8 @@ export class SelectInputField extends AbstractInputField {
 		this.setValue(this.inputFieldMarkdownRenderChild.getInitialValue());
 	}
 
+	public destroy(): void {}
+
 	disableAllOtherElements(elementId: number): void {
 		for (const selectModalElement of this.elements) {
 			if (selectModalElement.id !== elementId) {

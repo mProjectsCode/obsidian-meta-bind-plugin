@@ -55,4 +55,6 @@ export class NumberInputField extends AbstractInputField {
 		});
 		this.numberComponent = component;
 	}
+
+	public destroy(): void {}
 }

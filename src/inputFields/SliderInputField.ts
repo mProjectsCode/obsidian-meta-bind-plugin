@@ -78,4 +78,6 @@ export class SliderInputField extends AbstractInputField {
 
 		this.sliderComponent = component;
 	}
+
+	public destroy(): void {}
 }

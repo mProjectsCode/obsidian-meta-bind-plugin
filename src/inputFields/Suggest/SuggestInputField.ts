@@ -120,4 +120,8 @@ export class SuggestInputField extends AbstractInputField {
 
 		this.component.updateValue(this.value);
 	}
+
+	destroy(): void {
+		this.component?.$destroy();
+	}
 }

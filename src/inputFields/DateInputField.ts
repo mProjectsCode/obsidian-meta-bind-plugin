@@ -141,6 +141,8 @@ export class DateInputField extends AbstractInputField {
 		this.container = container;
 	}
 
+	public destroy(): void {}
+
 	private onMonthChange(value: string): void {
 		this.date.month(value);
 

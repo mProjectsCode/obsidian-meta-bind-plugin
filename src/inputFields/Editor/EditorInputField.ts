@@ -58,4 +58,8 @@ export class EditorInputField extends AbstractInputField {
 
 		this.component.render();
 	}
+
+	public destroy(): void {
+		this.component?.$destroy();
+	}
 }

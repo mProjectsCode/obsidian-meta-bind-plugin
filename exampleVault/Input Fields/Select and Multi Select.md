@@ -1,8 +1,8 @@
 ---
-select: option 1
+select: option 2
 multiSelect:
   - option 1
-  - option 2
+  - option 3
 ---
 
 ### Select
@@ -23,4 +23,5 @@ option(option 2),
 option(option 3), 
 showcase
 ):multiSelect]
+
 ```

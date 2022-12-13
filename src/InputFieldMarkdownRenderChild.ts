@@ -167,7 +167,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	}
 
 	async onload(): Promise<void> {
-		console.debug('meta-bind | InputFieldMarkdownRenderChild >> load', this);
+		console.log('meta-bind | InputFieldMarkdownRenderChild >> load', this);
 
 		const container: HTMLDivElement = createDiv();
 		container.addClass('meta-bind-plugin-input-wrapper');
@@ -213,8 +213,9 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	}
 
 	onunload(): void {
-		console.debug('meta-bind | InputFieldMarkdownRenderChild >> unload', this);
+		console.log('meta-bind | InputFieldMarkdownRenderChild >> unload', this);
 
+		this.inputField?.destroy();
 		this.plugin.unregisterInputFieldMarkdownRenderChild(this);
 		this.unregisterSelfFromMetadataManager();
 

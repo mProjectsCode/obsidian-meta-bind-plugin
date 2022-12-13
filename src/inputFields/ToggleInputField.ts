@@ -49,4 +49,6 @@ export class ToggleInputField extends AbstractInputField {
 		component.onChange(this.onValueChange);
 		this.toggleComponent = component;
 	}
+
+	public destroy(): void {}
 }
