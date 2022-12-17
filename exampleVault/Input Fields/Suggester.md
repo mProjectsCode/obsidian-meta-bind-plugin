@@ -1,6 +1,6 @@
 ---
-fileSuggest: "[[Other/Example Notes/Example Note with Embeds.md|Example Note with Embeds]]"
-suggest: option 1
+fileSuggest: "[[Other/Example Notes/Example Note with Image.md|Example Note with Image]]"
+suggest: option 2
 ---
 
 ### Simple Suggester

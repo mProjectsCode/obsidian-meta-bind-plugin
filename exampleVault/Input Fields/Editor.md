@@ -3,6 +3,8 @@ editor: |-
   test
 
   **test**
+
+  # Heading
 ---
 
 ```meta-bind
