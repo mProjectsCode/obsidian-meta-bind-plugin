@@ -5,6 +5,7 @@ import { Internal } from '@opd-libs/opd-metadata-lib/lib/Internal';
 import { arrayEquals, traverseObjectToParentByPath } from './utils/Utils';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import getMetaDataFromFileContent = Internal.getMetaDataFromFileContent;
+import getMetadataFromFileCache = Internal.getMetadataFromFileCache;
 
 export interface MetadataFileCache {
 	file: TFile;
@@ -44,17 +45,12 @@ export class MetadataManager {
 			console.debug(`meta-bind | MetadataManager >> registered ${uuid} to newly created file cache ${file.path} -> ${metadataPath}`);
 			const c: MetadataFileCache = {
 				file: file,
-				metadata: {},
+				metadata: getMetadataFromFileCache(file, this.plugin),
 				listeners: [{ onCacheUpdate, metadataPath, uuid }],
 				cyclesSinceLastUpdate: 0,
 				changed: false,
 			};
-
-			this.plugin.app.vault.cachedRead(file).then(value => {
-				c.metadata = getMetaDataFromFileContent(value) ?? {};
-				console.log(`meta-bind | MetadataManager >> loaded metadata for file ${file.path}`, c.metadata);
-				this.notifyListeners(c);
-			});
+			console.log(`meta-bind | MetadataManager >> loaded metadata for file ${file.path}`, c.metadata);
 
 			this.cache.push(c);
 			return c;

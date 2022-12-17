@@ -1,9 +1,5 @@
 ---
-slider1: 1
----
-
----
-slider1: 7
+slider1: 9
 nested:
   object: dfgdf
 suggest: test
