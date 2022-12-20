@@ -6,6 +6,7 @@ import { arrayEquals, traverseObjectToParentByPath } from './utils/Utils';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import getMetaDataFromFileContent = Internal.getMetaDataFromFileContent;
 import getMetadataFromFileCache = Internal.getMetadataFromFileCache;
+import { file } from '@babel/types';
 
 export interface MetadataFileCache {
 	file: TFile;
@@ -89,9 +90,10 @@ export class MetadataManager {
 
 	async updateFrontmatter(fileCache: MetadataFileCache): Promise<void> {
 		console.debug(`meta-bind | MetadataManager >> updating frontmatter of ${fileCache.file.path} to`, fileCache.metadata);
-
-		fileCache.changed = false;
-		await setFrontmatterOfTFile(fileCache.metadata, fileCache.file, this.plugin);
+		await this.plugin.app.fileManager.processFrontMatter(fileCache.file, frontMatter => {
+			fileCache.changed = false;
+			Object.assign(frontMatter, fileCache.metadata);
+		});
 	}
 
 	updateMetadataFileCache(metadata: Record<string, any>, file: TFile, uuid?: string | undefined): void {
