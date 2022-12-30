@@ -1,88 +1,12 @@
 ---
-rating: 31
-title: test title test test
-completed: false
-toggle1: false
-slider1: 6
-slider2: 6
-text1: Test
-text_area1: Test test
-date1: Wednesday, July 20th 2022
-select: option b
+slider1: 5
 nested:
   object: dfgdf
-multi_select:
-  - option a
-  - option c
-time1: 10:17
-suggest: "[[other note.md|other note]]"
+suggest: test
+toggle1: false
+Domestic_tasks:
+  - Lunch 🍲
 ---
-
-## Components
-### Toggle
-- `INPUT[toggle:toggle1]` Toggle
-
-### Slider
-- `INPUT[slider:slider1]` Slider
-- `INPUT[slider(addLabels):slider1]` Slider with labels
-- `INPUT[slider(addLabels, minValue(1), maxValue(10)):slider2]` Slider with custom range
-
-### Text and text area
-- `INPUT[text:text1]` Text
-- `INPUT[text_area:text_area1]` Text Area
-
-### Date
-- `INPUT[date:date1]` Date
-
-### Time
-- `INPUT[time:time1]` Time
-
-### Select
-Select
-```meta-bind
-INPUT[select(
-option(option a),
-option(option b),
-option(option c),
-option(option d)
-):select]
-```
-
-Select with title
-```meta-bind
-INPUT[select(
-title(select with title),
-option(option a),
-option(option b),
-option(option c),
-option(option d)
-):select]
-```
-
-### Multi-Select
-Multi-Select
-```meta-bind
-INPUT[multi_select(
-option(option a),
-option(option b),
-option(option c),
-option(option d)
-):multi_select]
-```
-
-Multi-Select with title
-```meta-bind
-INPUT[multi_select(
-title(some title),
-option(option a),
-option(option b),
-option(option c),
-option(option d)
-):multi_select]
-```
-
-### Suggester
-`INPUT[suggester(suggestOption(test), suggestOptionQuery(#test)):suggest]`
 
 ## In callouts
 > quote
@@ -95,7 +19,7 @@ option(option d)
 > `INPUT[slider(addLabels, minValue(1), maxValue(10)):slider1]`
 
 ## Nested data
-`INPUT[text:nested.object]`
+`INPUT[text:nested["object"]]`
 
 ---
 
@@ -104,6 +28,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sit amet p
 
 ```meta-bind
 INPUT[text_area(
+title(text area),
 class(meta-bind-full-width),
 class(meta-bind-high)
 ):other note#title]

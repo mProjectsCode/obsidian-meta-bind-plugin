@@ -44,24 +44,6 @@ body {
 	color: var(--text-muted);
 }
 
-.meta-bind-plugin-select-input-bg {
-	display: flex;
-	flex-direction: column;
-	border: var(--meta-bind-plugin-border-width) solid var(--background-modifier-border);
-	border-radius: var(--meta-bind-plugin-border-radius);
-}
-
-.meta-bind-plugin-select-input-wrapper {
-	margin: 0 5px 0 5px;
-	flex: 1;
-	overflow-y: auto;
-}
-
-.meta-bind-plugin-select-input-header {
-	margin: 5px 5px 5px 5px;
-	font-weight: bold;
-}
-
 .meta-bind-plugin-select-input-element {
 	cursor: pointer;
 	padding: 5px;
@@ -105,6 +87,22 @@ body {
 
 .meta-bind-plugin-input-element-group .meta-bind-plugin-input-element-group-element:last-child {
 	border-radius: 0 var(--meta-bind-plugin-border-radius) var(--meta-bind-plugin-border-radius) 0;
+}
+
+.meta-bind-plugin-card {
+	padding: var(--size-4-2);
+	margin: var(--size-4-2) 0;
+	border-radius: var(--meta-bind-plugin-border-radius);
+	border: var(--meta-bind-plugin-border-width) solid var(--background-modifier-border);
+}
+
+.meta-bind-plugin-card > code {
+	margin-top: var(--size-4-2);
+	display: block;
+}
+
+.meta-bind-plugin-card > h3 {
+	margin-top: 0;
 }
 
 .meta-bind-full-width {

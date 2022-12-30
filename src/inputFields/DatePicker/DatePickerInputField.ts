@@ -67,7 +67,7 @@ export class DatePickerInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | render datePickerInputField ${this.inputFieldMarkdownRenderChild.uid}`);
+		console.debug(`meta-bind | DatePickerInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
 
 		this.container = container;
 
@@ -82,9 +82,12 @@ export class DatePickerInputField extends AbstractInputField {
 			props: {
 				dateFormat: this.inputFieldMarkdownRenderChild.plugin.settings.preferredDateFormat,
 				showDatePicker: () => this.showDatePicker(),
+				selectedDate: this.date,
 			},
 		});
+	}
 
-		this.component.updateValue(this.date);
+	public destroy(): void {
+		this.component?.$destroy();
 	}
 }

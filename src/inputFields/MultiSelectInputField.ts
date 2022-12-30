@@ -1,6 +1,6 @@
 import { SelectInputField } from './SelectInputField';
 import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
-import { arrayEquals } from '../utils/Utils';
+import { doArraysContainEqualValues } from '../utils/Utils';
 
 export class MultiSelectInputField extends SelectInputField {
 	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
@@ -13,7 +13,7 @@ export class MultiSelectInputField extends SelectInputField {
 	}
 
 	setValue(value: string[]): void {
-		if (value.length === 0) {
+		if (!value || value.length === 0) {
 			for (const element of this.elements) {
 				element.setActive(false, false);
 			}
@@ -36,7 +36,7 @@ export class MultiSelectInputField extends SelectInputField {
 			return false;
 		}
 
-		return arrayEquals(this.getValue(), value);
+		return doArraysContainEqualValues(this.getValue(), value);
 	}
 
 	getDefaultValue(): string[] {

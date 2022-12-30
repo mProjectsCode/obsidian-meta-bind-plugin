@@ -13,6 +13,9 @@ import { DatePickerInputField } from './DatePicker/DatePickerInputField';
 import { NumberInputField } from './NumberInputField';
 import { SuggestInputField } from './Suggest/SuggestInputField';
 import { MetaBindParsingError } from '../utils/MetaBindErrors';
+import { EditorInputField } from './Editor/EditorInputField';
+import { ImageSuggestInputField } from './ImageSuggest/ImageSuggestInputField';
+import MetaBindPlugin from '../main';
 
 export class InputFieldFactory {
 	static allowCodeBlockMap: Record<string, { codeBlock: boolean; inlineCodeBlock: boolean }> = {
@@ -60,51 +63,60 @@ export class InputFieldFactory {
 			codeBlock: SuggestInputField.allowCodeBlock,
 			inlineCodeBlock: SuggestInputField.allowInlineCodeBlock,
 		},
+		[InputFieldType.EDITOR]: {
+			codeBlock: EditorInputField.allowCodeBlock,
+			inlineCodeBlock: EditorInputField.allowInlineCodeBlock,
+		},
+		[InputFieldType.IMAGE_SUGGESTER]: {
+			codeBlock: ImageSuggestInputField.allowCodeBlock,
+			inlineCodeBlock: ImageSuggestInputField.allowInlineCodeBlock,
+		},
 	};
 
 	static createInputField(
 		inputFieldType: InputFieldType,
 		args: { type: InputFieldMarkdownRenderChildType; inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild; onValueChanged: (value: any) => void | Promise<void> }
 	): AbstractInputField | undefined {
+		if (inputFieldType !== InputFieldType.INVALID) {
+			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type, args.inputFieldMarkdownRenderChild.plugin);
+		}
+
 		if (inputFieldType === InputFieldType.TOGGLE) {
-			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new ToggleInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		} else if (inputFieldType === InputFieldType.SLIDER) {
-			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new SliderInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		} else if (inputFieldType === InputFieldType.TEXT) {
-			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new TextInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		} else if (inputFieldType === InputFieldType.TEXT_AREA) {
-			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new TextAreaInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		} else if (inputFieldType === InputFieldType.SELECT) {
-			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new SelectInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		} else if (inputFieldType === InputFieldType.MULTI_SELECT) {
-			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new MultiSelectInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		} else if (inputFieldType === InputFieldType.DATE) {
-			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new DateInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		} else if (inputFieldType === InputFieldType.TIME) {
-			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new TimeInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		} else if (inputFieldType === InputFieldType.DATE_PICKER) {
-			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new DatePickerInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		} else if (inputFieldType === InputFieldType.NUMBER) {
-			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new NumberInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		} else if (inputFieldType === InputFieldType.SUGGESTER) {
-			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type);
 			return new SuggestInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+		} else if (inputFieldType === InputFieldType.EDITOR) {
+			return new EditorInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+		} else if (inputFieldType === InputFieldType.IMAGE_SUGGESTER) {
+			return new ImageSuggestInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
 		}
 
 		return undefined;
 	}
 
-	static checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType: InputFieldType, type: InputFieldMarkdownRenderChildType): void {
+	static checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType: InputFieldType, type: InputFieldMarkdownRenderChildType, plugin: MetaBindPlugin): void {
+		if (plugin.settings.ignoreCodeBlockRestrictions) {
+			return;
+		}
+
 		const allowCodeBlock: { codeBlock: boolean; inlineCodeBlock: boolean } = InputFieldFactory.allowCodeBlockMap[inputFieldType];
 		if (type === InputFieldMarkdownRenderChildType.CODE_BLOCK && !allowCodeBlock.codeBlock) {
 			throw new MetaBindParsingError(`'${inputFieldType}' is not allowed as code block`);

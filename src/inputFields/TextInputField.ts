@@ -21,7 +21,7 @@ export class TextInputField extends AbstractInputField {
 		if (value != null && typeof value == 'string') {
 			this.textComponent.setValue(value);
 		} else {
-			console.warn(new MetaBindValueError(`invalid value '${value}' at textInputField ${this.inputFieldMarkdownRenderChild.uid}`));
+			console.warn(new MetaBindValueError(`invalid value '${value}' at textInputField ${this.inputFieldMarkdownRenderChild.uuid}`));
 			this.textComponent.setValue('');
 		}
 	}
@@ -43,11 +43,13 @@ export class TextInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | render textInputField ${this.inputFieldMarkdownRenderChild.uid}`);
+		console.debug(`meta-bind | TextInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
 
 		const component = new TextComponent(container);
 		component.setValue(this.inputFieldMarkdownRenderChild.getInitialValue());
 		component.onChange(this.onValueChange);
 		this.textComponent = component;
 	}
+
+	public destroy(): void {}
 }

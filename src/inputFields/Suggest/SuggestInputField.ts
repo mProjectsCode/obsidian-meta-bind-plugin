@@ -1,12 +1,14 @@
 import { InputFieldMarkdownRenderChild } from '../../InputFieldMarkdownRenderChild';
 import { AbstractInputField } from '../AbstractInputField';
-import Suggest from './Suggest.svelte';
+import SuggestInput from './SuggestInput.svelte';
 import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
 import { DataArray, getAPI, Literal } from 'obsidian-dataview';
 import { AbstractInputFieldArgument } from '../../inputFieldArguments/AbstractInputFieldArgument';
 import { SuggestInputModal } from './SuggestInputModal';
 import { Notice, TFile } from 'obsidian';
 import { MetaBindArgumentError, MetaBindInternalError } from '../../utils/MetaBindErrors';
+import { OptionInputFieldArgument } from '../../inputFieldArguments/OptionInputFieldArgument';
+import { OptionQueryInputFieldArgument } from '../../inputFieldArguments/OptionQueryInputFieldArgument';
 
 export interface SuggestOption {
 	value: string;
@@ -15,7 +17,7 @@ export interface SuggestOption {
 
 export class SuggestInputField extends AbstractInputField {
 	container: HTMLDivElement | undefined;
-	component: Suggest | undefined;
+	component: SuggestInput | undefined;
 	value: string;
 	options: SuggestOption[];
 
@@ -33,7 +35,7 @@ export class SuggestInputField extends AbstractInputField {
 	}
 
 	getValue(): string {
-		return '';
+		return this.value;
 	}
 
 	setValue(value: any): void {
@@ -58,20 +60,20 @@ export class SuggestInputField extends AbstractInputField {
 	}
 
 	needsDataview(): boolean {
-		return this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.SUGGEST_OPTION_QUERY).length > 0;
+		return this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.OPTION_QUERY).length > 0;
 	}
 
 	async getOptions(): Promise<void> {
 		this.options = [];
 
-		const suggestOptionsArguments: AbstractInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.SUGGEST_OPTION);
-		const suggestOptionsQueryArguments: AbstractInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.SUGGEST_OPTION_QUERY);
+		const optionArguments: OptionInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.OPTION);
+		const optionQueryArguments: OptionQueryInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.OPTION_QUERY);
 
-		for (const suggestOptionsArgument of suggestOptionsArguments) {
+		for (const suggestOptionsArgument of optionArguments) {
 			this.options.push({ value: suggestOptionsArgument.value, displayValue: suggestOptionsArgument.value });
 		}
 
-		if (suggestOptionsQueryArguments.length > 0) {
+		if (optionQueryArguments.length > 0) {
 			const dv = getAPI(this.inputFieldMarkdownRenderChild.plugin.app);
 
 			if (!dv) {
@@ -79,7 +81,7 @@ export class SuggestInputField extends AbstractInputField {
 				return;
 			}
 
-			for (const suggestOptionsQueryArgument of suggestOptionsQueryArguments) {
+			for (const suggestOptionsQueryArgument of optionQueryArguments) {
 				const result: DataArray<Record<string, Literal>> = await dv.pages(suggestOptionsQueryArgument.value, this.inputFieldMarkdownRenderChild.filePath);
 				result.forEach((file: Record<string, Literal>) => {
 					try {
@@ -105,13 +107,13 @@ export class SuggestInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | render suggestInputField ${this.inputFieldMarkdownRenderChild.uid}`);
+		console.debug(`meta-bind | SuggestInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
 
 		this.container = container;
 
 		this.value = this.inputFieldMarkdownRenderChild.getInitialValue();
 
-		this.component = new Suggest({
+		this.component = new SuggestInput({
 			target: container,
 			props: {
 				showSuggest: () => this.showSuggest(),
@@ -119,5 +121,9 @@ export class SuggestInputField extends AbstractInputField {
 		});
 
 		this.component.updateValue(this.value);
+	}
+
+	destroy(): void {
+		this.component?.$destroy();
 	}
 }
