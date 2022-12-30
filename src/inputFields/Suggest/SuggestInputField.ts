@@ -7,6 +7,8 @@ import { AbstractInputFieldArgument } from '../../inputFieldArguments/AbstractIn
 import { SuggestInputModal } from './SuggestInputModal';
 import { Notice, TFile } from 'obsidian';
 import { MetaBindArgumentError, MetaBindInternalError } from '../../utils/MetaBindErrors';
+import { OptionInputFieldArgument } from '../../inputFieldArguments/OptionInputFieldArgument';
+import { OptionQueryInputFieldArgument } from '../../inputFieldArguments/OptionQueryInputFieldArgument';
 
 export interface SuggestOption {
 	value: string;
@@ -58,20 +60,20 @@ export class SuggestInputField extends AbstractInputField {
 	}
 
 	needsDataview(): boolean {
-		return this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.SUGGEST_OPTION_QUERY).length > 0;
+		return this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.OPTION_QUERY).length > 0;
 	}
 
 	async getOptions(): Promise<void> {
 		this.options = [];
 
-		const suggestOptionsArguments: AbstractInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.SUGGEST_OPTION);
-		const suggestOptionsQueryArguments: AbstractInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.SUGGEST_OPTION_QUERY);
+		const optionArguments: OptionInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.OPTION);
+		const optionQueryArguments: OptionQueryInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.OPTION_QUERY);
 
-		for (const suggestOptionsArgument of suggestOptionsArguments) {
+		for (const suggestOptionsArgument of optionArguments) {
 			this.options.push({ value: suggestOptionsArgument.value, displayValue: suggestOptionsArgument.value });
 		}
 
-		if (suggestOptionsQueryArguments.length > 0) {
+		if (optionQueryArguments.length > 0) {
 			const dv = getAPI(this.inputFieldMarkdownRenderChild.plugin.app);
 
 			if (!dv) {
@@ -79,7 +81,7 @@ export class SuggestInputField extends AbstractInputField {
 				return;
 			}
 
-			for (const suggestOptionsQueryArgument of suggestOptionsQueryArguments) {
+			for (const suggestOptionsQueryArgument of optionQueryArguments) {
 				const result: DataArray<Record<string, Literal>> = await dv.pages(suggestOptionsQueryArgument.value, this.inputFieldMarkdownRenderChild.filePath);
 				result.forEach((file: Record<string, Literal>) => {
 					try {
