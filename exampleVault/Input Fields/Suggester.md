@@ -6,9 +6,9 @@ suggest: option 3
 ### Simple Suggester
 ```meta-bind
 INPUT[suggester(
-suggestOption(option 1),
-suggestOption(option 2),
-suggestOption(option 3),
+option(option 1),
+option(option 2),
+option(option 3),
 showcase
 ):suggest]
 ```
@@ -16,5 +16,5 @@ showcase
 ### Suggester with Dataview
 Note, that this will error, if dataview is not enabled. 
 ```meta-bind
-INPUT[suggester(suggestOptionQuery(#example-note), showcase):fileSuggest]
+INPUT[suggester(optionQuery(#example-note), showcase):fileSuggest]
 ```

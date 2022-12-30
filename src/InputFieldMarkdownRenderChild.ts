@@ -2,12 +2,15 @@ import { MarkdownRenderChild, TFile } from 'obsidian';
 import MetaBindPlugin from './main';
 import { AbstractInputField } from './inputFields/AbstractInputField';
 import { InputFieldFactory } from './inputFields/InputFieldFactory';
-import { InputFieldArgumentType, InputFieldDeclaration } from './parsers/InputFieldDeclarationParser';
+import { InputFieldArgumentType, InputFieldDeclaration, InputFieldType } from './parsers/InputFieldDeclarationParser';
 import { AbstractInputFieldArgument } from './inputFieldArguments/AbstractInputFieldArgument';
 import { ClassInputFieldArgument } from './inputFieldArguments/ClassInputFieldArgument';
 import { MetaBindBindTargetError, MetaBindInternalError } from './utils/MetaBindErrors';
 import { MetadataFileCache } from './MetadataManager';
 import { parsePath, traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
+import { ShowcaseInputFieldArgument } from './inputFieldArguments/ShowcaseInputFieldArgument';
+import { TitleInputFieldArgument } from './inputFieldArguments/TitleInputFieldArgument';
+import { isTruthy } from './utils/Utils';
 
 export enum InputFieldMarkdownRenderChildType {
 	INLINE_CODE_BLOCK,
@@ -166,6 +169,16 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		return this.getArguments(name).at(0);
 	}
 
+	addCardContainer(): boolean {
+		return (
+			this.type === InputFieldMarkdownRenderChildType.CODE_BLOCK &&
+			(isTruthy(this.getArgument(InputFieldArgumentType.SHOWCASE)) ||
+				isTruthy(this.getArgument(InputFieldArgumentType.TITLE)) ||
+				this.inputFieldDeclaration.inputFieldType === InputFieldType.SELECT ||
+				this.inputFieldDeclaration.inputFieldType === InputFieldType.MULTI_SELECT)
+		);
+	}
+
 	async onload(): Promise<void> {
 		console.log('meta-bind | InputFieldMarkdownRenderChild >> load', this);
 
@@ -203,10 +216,21 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 		this.containerEl.empty();
 
-		if (this.getArgument(InputFieldArgumentType.SHOWCASE)) {
-			const showcaseContainer: HTMLDivElement = this.containerEl.createDiv({ cls: 'meta-bind-plugin-showcase' });
-			showcaseContainer.appendChild(container);
-			showcaseContainer.createEl('code', { text: ` ${this.fullDeclaration} ` });
+		const showcaseArgument: ShowcaseInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.SHOWCASE);
+		const titleArgument: TitleInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.TITLE);
+
+		if (this.addCardContainer()) {
+			const cardContainer: HTMLDivElement = this.containerEl.createDiv({ cls: 'meta-bind-plugin-card' });
+
+			if (titleArgument) {
+				cardContainer.createEl('h3', { text: titleArgument.value });
+			}
+
+			cardContainer.appendChild(container);
+
+			if (showcaseArgument) {
+				cardContainer.createEl('code', { text: ` ${this.fullDeclaration} ` });
+			}
 		} else {
 			this.containerEl.appendChild(container);
 		}

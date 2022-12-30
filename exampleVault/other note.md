@@ -1,6 +1,6 @@
 ---
 tags: test
-title: "test test test "
+title: test
 select: option b
 date: Friday, June 10th 2022
 time: 19:20

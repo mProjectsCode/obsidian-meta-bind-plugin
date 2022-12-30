@@ -1,8 +1,8 @@
 import { AbstractInputFieldArgument } from './AbstractInputFieldArgument';
 import { InputFieldArgumentType, InputFieldType } from '../parsers/InputFieldDeclarationParser';
 
-export class SuggestOptionQueryInputFieldArgument extends AbstractInputFieldArgument {
-	identifier: InputFieldArgumentType = InputFieldArgumentType.SUGGEST_OPTION_QUERY;
+export class OptionQueryInputFieldArgument extends AbstractInputFieldArgument {
+	identifier: InputFieldArgumentType = InputFieldArgumentType.OPTION_QUERY;
 	allowedInputFields: InputFieldType[] = [InputFieldType.SUGGESTER, InputFieldType.IMAGE_SUGGESTER];
 	value: string = '';
 	requiresValue: boolean = true;
