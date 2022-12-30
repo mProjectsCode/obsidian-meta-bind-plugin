@@ -1,5 +1,5 @@
 ---
-slider1: 44
+slider1: 57
 slider2: 11
 ---
 

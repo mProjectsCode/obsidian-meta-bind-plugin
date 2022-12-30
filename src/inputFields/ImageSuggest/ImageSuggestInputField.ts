@@ -3,9 +3,10 @@ import ImageSuggestInput from './ImageSuggestInput.svelte';
 import { InputFieldMarkdownRenderChild } from '../../InputFieldMarkdownRenderChild';
 import { MetaBindArgumentError, MetaBindInternalError } from '../../utils/MetaBindErrors';
 import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
-import { AbstractInputFieldArgument } from '../../inputFieldArguments/AbstractInputFieldArgument';
 import { Notice, TFile, TFolder } from 'obsidian';
 import { ImageSuggestModal } from './ImageSuggestModal';
+import { OptionQueryInputFieldArgument } from '../../inputFieldArguments/OptionQueryInputFieldArgument';
+import { OptionInputFieldArgument } from '../../inputFieldArguments/OptionInputFieldArgument';
 
 export class ImageSuggestInputField extends AbstractInputField {
 	static allowInlineCodeBlock: boolean = false;
@@ -53,7 +54,7 @@ export class ImageSuggestInputField extends AbstractInputField {
 	}
 
 	async getOptions(): Promise<void> {
-		const folderPaths: AbstractInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.SUGGEST_OPTION_QUERY);
+		const folderPaths: OptionQueryInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.OPTION_QUERY);
 		const images: string[] = [];
 
 		for (const folderPath of folderPaths) {
@@ -87,6 +88,35 @@ export class ImageSuggestInputField extends AbstractInputField {
 					images.push(child.path);
 				}
 			}
+		}
+
+		const imagePaths: OptionInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.OPTION);
+
+		for (const imagePath of imagePaths) {
+			const imageFile = this.inputFieldMarkdownRenderChild.plugin.app.vault.getAbstractFileByPath(imagePath.value);
+
+			if (!imageFile) {
+				const error = new MetaBindArgumentError(`expected suggest option ${imagePath.value} for image suggester to exist`);
+				new Notice(`meta-bind | ${error.message}`);
+				console.warn(error);
+				continue;
+			}
+
+			if (!(imageFile instanceof TFile)) {
+				const error = new MetaBindArgumentError(`expected suggest option ${imagePath.value} for image suggester to be a file`);
+				new Notice(`meta-bind | ${error.message}`);
+				console.warn(error);
+				continue;
+			}
+
+			if (!this.isImageExtension(imageFile.extension)) {
+				const error = new MetaBindArgumentError(`expected suggest option ${imagePath.value} for image suggester to be an image file`);
+				new Notice(`meta-bind | ${error.message}`);
+				console.warn(error);
+				continue;
+			}
+
+			images.push(imagePath.value);
 		}
 
 		this.options = images;

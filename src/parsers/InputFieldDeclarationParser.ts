@@ -31,8 +31,7 @@ export enum InputFieldArgumentType {
 	OPTION = 'option',
 	TITLE = 'title',
 	ALIGN_RIGHT = 'alignRight',
-	SUGGEST_OPTION = 'suggestOption',
-	SUGGEST_OPTION_QUERY = 'suggestOptionQuery',
+	OPTION_QUERY = 'optionQuery',
 	SHOWCASE = 'showcase',
 
 	INVALID = 'invalid',

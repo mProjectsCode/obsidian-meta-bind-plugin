@@ -3,7 +3,7 @@ import { InputFieldArgumentType, InputFieldType } from '../parsers/InputFieldDec
 
 export class TitleInputFieldArgument extends AbstractInputFieldArgument {
 	identifier: InputFieldArgumentType = InputFieldArgumentType.TITLE;
-	allowedInputFields: InputFieldType[] = [InputFieldType.SELECT, InputFieldType.MULTI_SELECT];
+	allowedInputFields: InputFieldType[] = [];
 	value: string = '';
 	requiresValue: boolean = true;
 	allowMultiple: boolean = false;

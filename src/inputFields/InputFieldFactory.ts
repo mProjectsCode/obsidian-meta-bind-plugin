@@ -1,20 +1,20 @@
-import {ToggleInputField} from './ToggleInputField';
-import {InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType} from '../InputFieldMarkdownRenderChild';
-import {TextInputField} from './TextInputField';
-import {SliderInputField} from './SliderInputField';
-import {TextAreaInputField} from './TextAreaInputField';
-import {SelectInputField} from './SelectInputField';
-import {MultiSelectInputField} from './MultiSelectInputField';
-import {DateInputField} from './DateInputField';
-import {TimeInputField} from './TimeInputField';
-import {AbstractInputField} from './AbstractInputField';
-import {InputFieldType} from '../parsers/InputFieldDeclarationParser';
-import {DatePickerInputField} from './DatePicker/DatePickerInputField';
-import {NumberInputField} from './NumberInputField';
-import {SuggestInputField} from './Suggest/SuggestInputField';
-import {MetaBindParsingError} from '../utils/MetaBindErrors';
-import {EditorInputField} from './Editor/EditorInputField';
-import {ImageSuggestInputField} from './ImageSuggest/ImageSuggestInputField';
+import { ToggleInputField } from './ToggleInputField';
+import { InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType } from '../InputFieldMarkdownRenderChild';
+import { TextInputField } from './TextInputField';
+import { SliderInputField } from './SliderInputField';
+import { TextAreaInputField } from './TextAreaInputField';
+import { SelectInputField } from './SelectInputField';
+import { MultiSelectInputField } from './MultiSelectInputField';
+import { DateInputField } from './DateInputField';
+import { TimeInputField } from './TimeInputField';
+import { AbstractInputField } from './AbstractInputField';
+import { InputFieldType } from '../parsers/InputFieldDeclarationParser';
+import { DatePickerInputField } from './DatePicker/DatePickerInputField';
+import { NumberInputField } from './NumberInputField';
+import { SuggestInputField } from './Suggest/SuggestInputField';
+import { MetaBindParsingError } from '../utils/MetaBindErrors';
+import { EditorInputField } from './Editor/EditorInputField';
+import { ImageSuggestInputField } from './ImageSuggest/ImageSuggestInputField';
 import MetaBindPlugin from '../main';
 
 export class InputFieldFactory {

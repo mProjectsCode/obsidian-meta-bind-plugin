@@ -6,8 +6,7 @@ import { MaxValueInputFieldArgument } from './MaxValueInputFieldArgument';
 import { OptionInputFieldArgument } from './OptionInputFieldArgument';
 import { TitleInputFieldArgument } from './TitleInputFieldArgument';
 import { AlignRightInputFieldArgument } from './AlignRightInputFieldArgument';
-import { SuggestOptionInputFieldArgument } from './SuggestOptionInputFieldArgument';
-import { SuggestOptionQueryInputFieldArgument } from './SuggestOptionQueryInputFieldArgument';
+import { OptionQueryInputFieldArgument } from './OptionQueryInputFieldArgument';
 import { MetaBindParsingError } from '../utils/MetaBindErrors';
 import { AbstractInputFieldArgument } from './AbstractInputFieldArgument';
 import { ShowcaseInputFieldArgument } from './ShowcaseInputFieldArgument';
@@ -28,10 +27,8 @@ export class InputFieldArgumentFactory {
 			return new TitleInputFieldArgument();
 		} else if (argumentIdentifier === InputFieldArgumentType.ALIGN_RIGHT) {
 			return new AlignRightInputFieldArgument();
-		} else if (argumentIdentifier === InputFieldArgumentType.SUGGEST_OPTION) {
-			return new SuggestOptionInputFieldArgument();
-		} else if (argumentIdentifier === InputFieldArgumentType.SUGGEST_OPTION_QUERY) {
-			return new SuggestOptionQueryInputFieldArgument();
+		} else if (argumentIdentifier === InputFieldArgumentType.OPTION_QUERY) {
+			return new OptionQueryInputFieldArgument();
 		} else if (argumentIdentifier === InputFieldArgumentType.SHOWCASE) {
 			return new ShowcaseInputFieldArgument();
 		} else {
