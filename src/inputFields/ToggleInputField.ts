@@ -20,7 +20,7 @@ export class ToggleInputField extends AbstractInputField {
 		if (value != null && typeof value == 'boolean') {
 			this.toggleComponent.setValue(value);
 		} else {
-			console.warn(new MetaBindValueError(`invalid value '${value}' at toggleInputField ${this.inputFieldMarkdownRenderChild.uid}`));
+			console.warn(new MetaBindValueError(`invalid value '${value}' at toggleInputField ${this.inputFieldMarkdownRenderChild.uuid}`));
 			this.toggleComponent.setValue(false);
 		}
 	}
@@ -42,11 +42,13 @@ export class ToggleInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | render toggleInputField ${this.inputFieldMarkdownRenderChild.uid}`);
+		console.debug(`meta-bind | ToggleInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
 
 		const component = new ToggleComponent(container);
 		component.setValue(this.inputFieldMarkdownRenderChild.getInitialValue());
 		component.onChange(this.onValueChange);
 		this.toggleComponent = component;
 	}
+
+	public destroy(): void {}
 }

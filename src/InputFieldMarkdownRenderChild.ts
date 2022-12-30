@@ -2,12 +2,15 @@ import { MarkdownRenderChild, TFile } from 'obsidian';
 import MetaBindPlugin from './main';
 import { AbstractInputField } from './inputFields/AbstractInputField';
 import { InputFieldFactory } from './inputFields/InputFieldFactory';
-import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser } from './parsers/InputFieldDeclarationParser';
+import { InputFieldArgumentType, InputFieldDeclaration, InputFieldType } from './parsers/InputFieldDeclarationParser';
 import { AbstractInputFieldArgument } from './inputFieldArguments/AbstractInputFieldArgument';
 import { ClassInputFieldArgument } from './inputFieldArguments/ClassInputFieldArgument';
-import { getFrontmatterOfTFile, updateOrInsertFieldInTFile } from '@opd-libs/opd-metadata-lib/lib/API';
-import { traverseObject, validatePath as validateObjectPath } from '@opd-libs/opd-metadata-lib/lib/Utils';
 import { MetaBindBindTargetError, MetaBindInternalError } from './utils/MetaBindErrors';
+import { MetadataFileCache } from './MetadataManager';
+import { parsePath, traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
+import { ShowcaseInputFieldArgument } from './inputFieldArguments/ShowcaseInputFieldArgument';
+import { TitleInputFieldArgument } from './inputFieldArguments/TitleInputFieldArgument';
+import { isTruthy } from './utils/Utils';
 
 export enum InputFieldMarkdownRenderChildType {
 	INLINE_CODE_BLOCK,
@@ -16,55 +19,57 @@ export enum InputFieldMarkdownRenderChildType {
 
 export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	plugin: MetaBindPlugin;
-	metaData: any;
+	metadataCache: MetadataFileCache | undefined;
 	filePath: string;
-	uid: number;
+	uuid: string;
 	inputField: AbstractInputField | undefined;
 	error: string;
 	type: InputFieldMarkdownRenderChildType;
 
 	fullDeclaration: string;
-	inputFieldDeclaration: InputFieldDeclaration | undefined;
+	inputFieldDeclaration: InputFieldDeclaration;
 	bindTargetFile: TFile | undefined;
-	bindTargetMetadataField: string | undefined;
+	bindTargetMetadataPath: string[] | undefined;
 
-	limitInterval: number | undefined;
 	intervalCounter: number;
 	metadataValueUpdateQueue: any[];
 	inputFieldValueUpdateQueue: any[];
 
-	constructor(containerEl: HTMLElement, type: InputFieldMarkdownRenderChildType, fullDeclaration: string, plugin: MetaBindPlugin, filePath: string, uid: number) {
+	constructor(containerEl: HTMLElement, type: InputFieldMarkdownRenderChildType, declaration: InputFieldDeclaration, plugin: MetaBindPlugin, filePath: string, uuid: string) {
 		super(containerEl);
 
-		this.error = '';
+		if (!declaration.error) {
+			this.error = '';
+		} else {
+			this.error = declaration.error instanceof Error ? declaration.error.message : declaration.error;
+		}
+
 		this.filePath = filePath;
-		this.uid = uid;
+		this.uuid = uuid;
 		this.plugin = plugin;
 		this.type = type;
-		this.fullDeclaration = fullDeclaration;
+		this.fullDeclaration = declaration.fullDeclaration;
 
 		this.metadataValueUpdateQueue = [];
 		this.inputFieldValueUpdateQueue = [];
 		this.intervalCounter = 0;
+		this.inputFieldDeclaration = declaration;
 
-		try {
-			this.inputFieldDeclaration = InputFieldDeclarationParser.parse(fullDeclaration);
+		if (!this.error) {
+			try {
+				if (this.inputFieldDeclaration.isBound) {
+					this.parseBindTarget();
+				}
 
-			if (this.inputFieldDeclaration.isBound) {
-				this.parseBindTarget();
-				this.metaData = getFrontmatterOfTFile(this.bindTargetFile as TFile, this.plugin);
+				this.inputField = InputFieldFactory.createInputField(this.inputFieldDeclaration.inputFieldType, {
+					type: type,
+					inputFieldMarkdownRenderChild: this,
+					onValueChanged: this.updateMetadataManager.bind(this),
+				});
+			} catch (e: any) {
+				this.error = e.message;
+				console.warn(e);
 			}
-
-			this.inputField = InputFieldFactory.createInputField(this.inputFieldDeclaration.inputFieldType, {
-				type: type,
-				inputFieldMarkdownRenderChild: this,
-				onValueChanged: this.pushToMetadataValueUpdateQueue.bind(this),
-			});
-
-			this.limitInterval = window.setInterval(() => this.applyValueUpdateQueues(), this.plugin.settings.syncInterval);
-		} catch (e: any) {
-			this.error = e.message;
-			console.warn(e);
 		}
 	}
 
@@ -73,9 +78,9 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 			throw new MetaBindInternalError('inputFieldDeclaration is undefined, can not parse bind target');
 		}
 
-		const bindTargetParts = this.inputFieldDeclaration.bindTarget.split('#');
-		let bindTargetFileName;
-		let bindTargetMetadataFieldName;
+		const bindTargetParts: string[] = this.inputFieldDeclaration.bindTarget.split('#');
+		let bindTargetFileName: string;
+		let bindTargetMetadataFieldName: string;
 
 		if (bindTargetParts.length === 1) {
 			// the bind target is in the same file
@@ -90,14 +95,12 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		}
 
 		try {
-			validateObjectPath(bindTargetMetadataFieldName);
+			this.bindTargetMetadataPath = parsePath(bindTargetMetadataFieldName);
 		} catch (e) {
 			if (e instanceof Error) {
 				throw new MetaBindBindTargetError(`bind target parsing error: ${e?.message}`);
 			}
 		}
-
-		this.bindTargetMetadataField = bindTargetMetadataFieldName;
 
 		const files: TFile[] = this.plugin.getFilesByName(bindTargetFileName);
 		if (files.length === 0) {
@@ -109,92 +112,54 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		}
 	}
 
-	// use this interval to reduce writing operations
-	async applyValueUpdateQueues(): Promise<void> {
-		if (this.metadataValueUpdateQueue.length !== 0) {
-			console.debug(`meta-bind | applying to metadataUpdateQueue to field ${this.uid}`);
-			await this.applyMetadataValueUpdateQueue();
-			this.cleanUpUpdateQueues();
+	registerSelfToMetadataManager(): MetadataFileCache | undefined {
+		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetFile || !this.bindTargetMetadataPath || this.bindTargetMetadataPath?.length === 0) {
 			return;
 		}
 
-		if (this.inputFieldValueUpdateQueue.length !== 0) {
-			console.debug(`meta-bind | applying to inputFieldValueUpdateQueue to field ${this.uid}`);
-			await this.applyInputFieldValueUpdateQueue();
-			this.cleanUpUpdateQueues();
+		return this.plugin.metadataManager.register(
+			this.bindTargetFile,
+			value => {
+				if (!this.inputField) {
+					throw new MetaBindInternalError('inputField is undefined, can not update inputField');
+				}
+
+				if (!this.inputField.isEqualValue(value)) {
+					this.inputField.setValue(value);
+				}
+			},
+			this.bindTargetMetadataPath,
+			this.uuid
+		);
+	}
+
+	unregisterSelfFromMetadataManager(): void {
+		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetFile || !this.bindTargetMetadataPath || this.bindTargetMetadataPath?.length === 0) {
 			return;
 		}
+
+		this.plugin.metadataManager.unregister(this.bindTargetFile, this.uuid);
 	}
 
-	async applyMetadataValueUpdateQueue(): Promise<void> {
-		if (!this.inputFieldDeclaration) {
-			throw new MetaBindInternalError('inputFieldDeclaration is undefined, can not update metadata');
-		}
-		if (!this.inputFieldDeclaration.isBound) {
+	updateMetadataManager(value: any): void {
+		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetFile || !this.bindTargetMetadataPath || this.bindTargetMetadataPath?.length === 0) {
 			return;
 		}
-		if (!this.bindTargetMetadataField || !this.bindTargetFile) {
-			throw new MetaBindInternalError('bindTargetMetadataField or bindTargetFile is undefined, can not update metadata');
-		}
 
-		if (this.metadataValueUpdateQueue.length > 0) {
-			await updateOrInsertFieldInTFile(this.bindTargetMetadataField, this.metadataValueUpdateQueue.at(-1), this.bindTargetFile, this.plugin);
-		} else {
-			throw new MetaBindInternalError(`cannot apply metadataValueUpdateQueue to inputField ${this.uid}, metadataValueUpdateQueue is empty`);
-		}
-	}
-
-	async applyInputFieldValueUpdateQueue(): Promise<void> {
-		if (!this.inputFieldDeclaration) {
-			throw new MetaBindInternalError('inputFieldDeclaration is undefined, can not update inputField');
-		}
-		if (!this.inputField) {
-			throw new MetaBindInternalError('inputField is undefined, can not update inputField');
-		}
-
-		if (this.inputFieldValueUpdateQueue.length > 0) {
-			let value = this.inputFieldValueUpdateQueue.at(-1);
-
-			if (value == null) {
-				value = this.inputField.getDefaultValue();
-			}
-
-			this.inputField.setValue(value);
-		} else {
-			throw new MetaBindInternalError(`cannot apply inputFieldValueUpdateQueue to inputField ${this.uid}, inputFieldValueUpdateQueue is empty`);
-		}
-	}
-
-	cleanUpUpdateQueues(): void {
-		this.metadataValueUpdateQueue = [];
-		this.inputFieldValueUpdateQueue = [];
-	}
-
-	pushToMetadataValueUpdateQueue(value: any): void {
-		if (this.inputFieldDeclaration?.isBound) {
-			console.debug(`meta-bind | pushed value ${value} (typeof ${typeof value}) to metadataUpdateQueue on field ${this.uid}`);
-			this.metadataValueUpdateQueue.push(value);
-		}
-	}
-
-	pushToInputFieldValueUpdateQueue(value: any): void {
-		if (!this.inputField?.isEqualValue(value)) {
-			console.debug(`meta-bind | pushed value ${value} (typeof ${typeof value}) to inputFieldValueUpdateQueue on field ${this.uid}`);
-			this.inputFieldValueUpdateQueue.push(value);
-		}
+		this.plugin.metadataManager.updatePropertyInMetadataFileCache(value, this.bindTargetMetadataPath, this.bindTargetFile, this.uuid);
 	}
 
 	getInitialValue(): any | undefined {
-		if (this.inputFieldDeclaration?.isBound && this.bindTargetMetadataField) {
-			const value = traverseObject(this.bindTargetMetadataField, this.metaData);
-			console.debug(`meta-bind | setting initial value to ${value} (typeof ${typeof value}) for input field ${this.uid}`);
+		if (this.inputFieldDeclaration?.isBound && this.bindTargetMetadataPath) {
+			const value = traverseObjectByPath(this.bindTargetMetadataPath, this.metadataCache?.metadata);
+			console.debug(`meta-bind | InputFieldMarkdownRenderChild >> setting initial value to ${value} (typeof ${typeof value}) for input field ${this.uuid}`);
 			return value ?? this.inputField?.getDefaultValue();
 		}
 	}
 
 	getArguments(name: InputFieldArgumentType): AbstractInputFieldArgument[] {
-		if (!this.inputFieldDeclaration) {
-			throw new MetaBindInternalError('inputFieldDeclaration is undefined, can not retrieve arguments');
+		if (this.inputFieldDeclaration.error) {
+			throw new MetaBindInternalError('inputFieldDeclaration has errors, can not retrieve arguments');
 		}
 
 		return this.inputFieldDeclaration.argumentContainer.arguments.filter(x => x.identifier === name);
@@ -204,12 +169,20 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		return this.getArguments(name).at(0);
 	}
 
+	addCardContainer(): boolean {
+		return (
+			this.type === InputFieldMarkdownRenderChildType.CODE_BLOCK &&
+			(isTruthy(this.getArgument(InputFieldArgumentType.SHOWCASE)) ||
+				isTruthy(this.getArgument(InputFieldArgumentType.TITLE)) ||
+				this.inputFieldDeclaration.inputFieldType === InputFieldType.SELECT ||
+				this.inputFieldDeclaration.inputFieldType === InputFieldType.MULTI_SELECT)
+		);
+	}
+
 	async onload(): Promise<void> {
-		console.debug('meta-bind | load inputFieldMarkdownRenderChild', this);
+		console.log('meta-bind | InputFieldMarkdownRenderChild >> load', this);
 
-		this.metaData = await this.metaData;
-
-		const container: HTMLDivElement = this.containerEl.createDiv();
+		const container: HTMLDivElement = createDiv();
 		container.addClass('meta-bind-plugin-input-wrapper');
 		this.containerEl.addClass('meta-bind-plugin-input');
 
@@ -231,6 +204,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 			return;
 		}
 
+		this.metadataCache = this.registerSelfToMetadataManager();
 		this.plugin.registerInputFieldMarkdownRenderChild(this);
 
 		this.inputField.render(container);
@@ -241,16 +215,34 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		}
 
 		this.containerEl.empty();
-		this.containerEl.appendChild(container);
+
+		const showcaseArgument: ShowcaseInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.SHOWCASE);
+		const titleArgument: TitleInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.TITLE);
+
+		if (this.addCardContainer()) {
+			const cardContainer: HTMLDivElement = this.containerEl.createDiv({ cls: 'meta-bind-plugin-card' });
+
+			if (titleArgument) {
+				cardContainer.createEl('h3', { text: titleArgument.value });
+			}
+
+			cardContainer.appendChild(container);
+
+			if (showcaseArgument) {
+				cardContainer.createEl('code', { text: ` ${this.fullDeclaration} ` });
+			}
+		} else {
+			this.containerEl.appendChild(container);
+		}
 	}
 
 	onunload(): void {
-		console.debug('meta-bind | unload inputFieldMarkdownRenderChild', this);
+		console.log('meta-bind | InputFieldMarkdownRenderChild >> unload', this);
 
+		this.inputField?.destroy();
 		this.plugin.unregisterInputFieldMarkdownRenderChild(this);
+		this.unregisterSelfFromMetadataManager();
 
 		super.onunload();
-
-		window.clearInterval(this.limitInterval);
 	}
 }

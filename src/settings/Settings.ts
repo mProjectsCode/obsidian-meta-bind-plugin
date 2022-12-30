@@ -3,6 +3,7 @@ import MetaBindPlugin from '../main';
 
 export interface MetaBindPluginSettings {
 	devMode: boolean;
+	ignoreCodeBlockRestrictions: boolean;
 	preferredDateFormat: string;
 	useUsDateInputOrder: boolean;
 	syncInterval: number;
@@ -14,6 +15,7 @@ export interface MetaBindPluginSettings {
 
 export const DEFAULT_SETTINGS: MetaBindPluginSettings = {
 	devMode: false,
+	ignoreCodeBlockRestrictions: false,
 	preferredDateFormat: 'YYYY-MM-DD',
 	useUsDateInputOrder: false,
 	syncInterval: 200,
@@ -105,6 +107,17 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				cb.setValue(this.plugin.settings.devMode);
 				cb.onChange(data => {
 					this.plugin.settings.devMode = data;
+					this.plugin.saveSettings();
+				});
+			});
+
+		new Setting(containerEl)
+			.setName('Disable Code Block Restrictions')
+			.setDesc('Disable restrictions on which input fields can be created in which code blocks. Not recommended unless you know what you are doing.')
+			.addToggle(cb => {
+				cb.setValue(this.plugin.settings.ignoreCodeBlockRestrictions);
+				cb.onChange(data => {
+					this.plugin.settings.ignoreCodeBlockRestrictions = data;
 					this.plugin.saveSettings();
 				});
 			});

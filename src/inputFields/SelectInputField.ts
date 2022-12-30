@@ -53,23 +53,14 @@ export class SelectInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | render selectInputField ${this.inputFieldMarkdownRenderChild.uid}`);
-
-		container.addClass('meta-bind-plugin-select-input-bg');
+		console.debug(`meta-bind | SelectInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
 		this.container = container;
-
-		const elementWrapper = container.createDiv({ cls: 'meta-bind-plugin-select-input-wrapper' });
-
-		const titleArgument = this.inputFieldMarkdownRenderChild.getArgument(InputFieldArgumentType.TITLE);
-		if (titleArgument) {
-			elementWrapper.createEl('div', { text: titleArgument.value, cls: 'meta-bind-plugin-select-input-header' });
-		}
 
 		const elementArguments: AbstractInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.OPTION);
 
 		let i = 0;
 		for (const elementArgument of elementArguments) {
-			const selectInputFieldElement = new SelectInputFieldElement(elementArgument.value, elementWrapper, i, this, false);
+			const selectInputFieldElement = new SelectInputFieldElement(elementArgument.value, container, i, this, false);
 
 			this.elements.push(selectInputFieldElement);
 
@@ -81,10 +72,12 @@ export class SelectInputField extends AbstractInputField {
 		this.setValue(this.inputFieldMarkdownRenderChild.getInitialValue());
 	}
 
+	public destroy(): void {}
+
 	disableAllOtherElements(elementId: number): void {
 		for (const selectModalElement of this.elements) {
 			if (selectModalElement.id !== elementId) {
-				selectModalElement.setActive(false);
+				selectModalElement.setActive(false, false);
 			}
 		}
 	}

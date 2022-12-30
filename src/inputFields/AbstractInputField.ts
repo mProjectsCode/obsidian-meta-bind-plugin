@@ -46,4 +46,6 @@ export abstract class AbstractInputField {
 	 * @param container
 	 */
 	abstract render(container: HTMLDivElement): void;
+
+	abstract destroy(): void;
 }

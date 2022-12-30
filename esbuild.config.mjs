@@ -52,6 +52,7 @@ esbuild
 		sourcemap: prod ? false : 'inline',
 		treeShaking: true,
 		outfile: 'main.js',
+		minify: true,
 		plugins: [
 			esbuildSvelte({
 				compilerOptions: { css: true },
