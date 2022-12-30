@@ -1,9 +1,11 @@
 ---
-slider1: 9
+slider1: 5
 nested:
   object: dfgdf
 suggest: test
 toggle1: false
+Domestic_tasks:
+  - Lunch 🍲
 ---
 
 ## In callouts
@@ -26,6 +28,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sit amet p
 
 ```meta-bind
 INPUT[text_area(
+title(text area),
 class(meta-bind-full-width),
 class(meta-bind-high)
 ):other note#title]
