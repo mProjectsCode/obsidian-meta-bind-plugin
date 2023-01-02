@@ -6,10 +6,11 @@ import { DateParser } from './parsers/DateParser';
 import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser, InputFieldType } from './parsers/InputFieldDeclarationParser';
 import { MetadataManager } from './MetadataManager';
 import { MetaBindBindTargetError } from './utils/MetaBindErrors';
+import { API } from './API';
 
 export default class MetaBindPlugin extends Plugin {
-	// defined in `loadSettings`
-	settings: MetaBindPluginSettings = null!;
+	// @ts-ignore defined in `onload`
+	settings: MetaBindPluginSettings;
 
 	// @ts-ignore defined in `onload`
 	activeMarkdownInputFields: InputFieldMarkdownRenderChild[];
@@ -17,35 +18,42 @@ export default class MetaBindPlugin extends Plugin {
 	// @ts-ignore defined in `onload`
 	metadataManager: MetadataManager;
 
+	// @ts-ignore defined in `onload`
+	api: API;
+
 	async onload(): Promise<void> {
 		console.log(`meta-bind | Main >> load`);
 
 		await this.loadSettings();
 
+		this.api = new API(this);
+
 		DateParser.dateFormat = this.settings.preferredDateFormat;
-		InputFieldDeclarationParser.parseTemplates(this.settings.inputTemplates);
+		this.api.parser.parseTemplates(this.settings.inputTemplates);
 
 		this.activeMarkdownInputFields = [];
 		this.metadataManager = new MetadataManager(this);
 
-		this.registerMarkdownPostProcessor((element, context) => {
-			const codeBlocks = element.querySelectorAll('code');
+		this.registerMarkdownPostProcessor((el, ctx) => {
+			const codeBlocks = el.querySelectorAll('code');
 			for (let index = 0; index < codeBlocks.length; index++) {
 				const codeBlock = codeBlocks.item(index);
-				const text = codeBlock.innerText;
-				const isInputField = text.startsWith('INPUT[') && text.endsWith(']');
+				const content = codeBlock.innerText;
+				const isInputField = content.startsWith('INPUT[') && content.endsWith(']');
 				if (isInputField) {
-					context.addChild(this.buildInputFieldMarkdownRenderChild(text, context.sourcePath, codeBlock, InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK));
+					const inputField = this.api.createInputFieldFromString(content, InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK, ctx.sourcePath, codeBlock);
+					ctx.addChild(inputField);
 				}
 			}
 		}, 100);
 
 		this.registerMarkdownCodeBlockProcessor('meta-bind', (source, el, ctx) => {
 			const codeBlock = el;
-			const text = source.replace(/\n/g, '');
-			const isInputField = text.startsWith('INPUT[') && text.endsWith(']');
+			const content = source.replace(/\n/g, '');
+			const isInputField = content.startsWith('INPUT[') && content.endsWith(']');
 			if (isInputField) {
-				ctx.addChild(this.buildInputFieldMarkdownRenderChild(text, ctx.sourcePath, codeBlock, InputFieldMarkdownRenderChildType.CODE_BLOCK));
+				const inputField = this.api.createInputFieldFromString(content, InputFieldMarkdownRenderChildType.CODE_BLOCK, ctx.sourcePath, codeBlock);
+				ctx.addChild(inputField);
 			}
 		});
 
@@ -62,20 +70,20 @@ export default class MetaBindPlugin extends Plugin {
 	 *
 	 * @returns The render child produced.
 	 */
-	buildInputFieldMarkdownRenderChild(
-		declaration: string | InputFieldDeclaration,
-		sourcePath: string,
-		container: HTMLElement,
-		renderType: InputFieldMarkdownRenderChildType = InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK
-	): InputFieldMarkdownRenderChild {
-		if (typeof declaration === 'string') {
-			declaration = InputFieldDeclarationParser.parseString(declaration);
-		} else {
-			declaration = InputFieldDeclarationParser.parseDeclaration(declaration);
-		}
-
-		return new InputFieldMarkdownRenderChild(container, renderType, declaration, this, sourcePath, crypto.randomUUID());
-	}
+	// buildInputFieldMarkdownRenderChild(
+	// 	declaration: string | InputFieldDeclaration,
+	// 	sourcePath: string,
+	// 	container: HTMLElement,
+	// 	renderType: InputFieldMarkdownRenderChildType = InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK
+	// ): InputFieldMarkdownRenderChild {
+	// 	if (typeof declaration === 'string') {
+	// 		declaration = InputFieldDeclarationParser.parseString(declaration);
+	// 	} else {
+	// 		declaration = InputFieldDeclarationParser.parseDeclaration(declaration);
+	// 	}
+	//
+	// 	return new InputFieldMarkdownRenderChild(container, renderType, declaration, this, sourcePath, crypto.randomUUID());
+	// }
 
 	/**
 	 * Helper method to build a declaration from some initial data or a string.
@@ -89,31 +97,31 @@ export default class MetaBindPlugin extends Plugin {
 	 *
 	 * @returns A constructed InputFieldDeclaration.
 	 */
-	buildDeclaration(
-		declarationData: string | InputFieldDeclaration | {},
-		inputFieldArguments?: Record<InputFieldArgumentType, string> | {},
-		inputFieldType?: InputFieldType,
-		isBound?: boolean,
-		bindTarget?: string,
-		templateName?: string
-	): InputFieldDeclaration {
-		if (typeof declarationData === 'string') {
-			return InputFieldDeclarationParser.parseString(declarationData);
-		} else {
-			const declarationBase = declarationData as InputFieldDeclaration;
-			declarationBase.inputFieldType = inputFieldType ?? declarationBase.inputFieldType ?? InputFieldType.INVALID;
-			declarationBase.isBound = isBound ?? declarationBase.isBound ?? false;
-			declarationBase.bindTarget = bindTarget ?? declarationBase.bindTarget ?? undefined;
-
-			// if the input field is bound should be determined by `isBound`
-			// `isBound` is true, `bindTarget` must be set
-			if (declarationBase.isBound && !declarationBase.bindTarget) {
-				throw new MetaBindBindTargetError('input field declaration is bound but bind target is undefined');
-			}
-
-			return InputFieldDeclarationParser.parseDeclaration(declarationBase, inputFieldArguments, templateName);
-		}
-	}
+	// buildDeclaration(
+	// 	declarationData: string | InputFieldDeclaration | {},
+	// 	inputFieldArguments?: Record<InputFieldArgumentType, string> | {},
+	// 	inputFieldType?: InputFieldType,
+	// 	isBound?: boolean,
+	// 	bindTarget?: string,
+	// 	templateName?: string
+	// ): InputFieldDeclaration {
+	// 	if (typeof declarationData === 'string') {
+	// 		return InputFieldDeclarationParser.parseString(declarationData);
+	// 	} else {
+	// 		const declarationBase = declarationData as InputFieldDeclaration;
+	// 		declarationBase.inputFieldType = inputFieldType ?? declarationBase.inputFieldType ?? InputFieldType.INVALID;
+	// 		declarationBase.isBound = isBound ?? declarationBase.isBound ?? false;
+	// 		declarationBase.bindTarget = bindTarget ?? declarationBase.bindTarget ?? undefined;
+	//
+	// 		// if the input field is bound should be determined by `isBound`
+	// 		// `isBound` is true, `bindTarget` must be set
+	// 		if (declarationBase.isBound && !declarationBase.bindTarget) {
+	// 			throw new MetaBindBindTargetError('input field declaration is bound but bind target is undefined');
+	// 		}
+	//
+	// 		return InputFieldDeclarationParser.parseDeclaration(declarationBase, inputFieldArguments, templateName);
+	// 	}
+	// }
 
 	onunload(): void {
 		console.log(`meta-bind | Main >> unload`);
@@ -164,7 +172,7 @@ export default class MetaBindPlugin extends Plugin {
 		console.log(`meta-bind | Main >> settings save`);
 
 		DateParser.dateFormat = this.settings.preferredDateFormat;
-		InputFieldDeclarationParser.parseTemplates(this.settings.inputTemplates);
+		this.api.parser.parseTemplates(this.settings.inputTemplates);
 		await this.saveData(this.settings);
 	}
 }
