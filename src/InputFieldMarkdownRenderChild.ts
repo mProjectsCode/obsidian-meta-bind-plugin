@@ -26,7 +26,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	error: string;
 	type: InputFieldMarkdownRenderChildType;
 
-	fullDeclaration: string;
+	fullDeclaration?: string;
 	inputFieldDeclaration: InputFieldDeclaration;
 	bindTargetFile: TFile | undefined;
 	bindTargetMetadataPath: string[] | undefined;
