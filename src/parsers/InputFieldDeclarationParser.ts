@@ -238,10 +238,13 @@ export class InputFieldDeclarationParser {
 				const inputFieldArgument: AbstractInputFieldArgument = InputFieldArgumentFactory.createInputFieldArgument(argument.type);
 
 				if (!inputFieldArgument.isAllowed(inputFieldType)) {
-					throw new MetaBindParsingError(`argument '${argument.type}' is only applicable to ${inputFieldArgument.getAllowedInputFieldsAsString()} input fields`);
+					throw new MetaBindParsingError(`argument '${argument.type}' is only applicable to '${inputFieldArgument.getAllowedInputFieldsAsString()}' input fields`);
 				}
 
 				if (inputFieldArgument.requiresValue) {
+					if (!argument.value) {
+						throw new MetaBindParsingError(`argument '${argument.type}' requires a non empty value`);
+					}
 					inputFieldArgument.parseValue(argument.value);
 				}
 
@@ -259,14 +262,7 @@ export class InputFieldDeclarationParser {
 	}
 
 	extractInputFieldArgumentValue(argumentString: string): string {
-		const argumentName = this.extractInputFieldArgumentIdentifier(argumentString);
-
-		const argumentValue = ParserUtils.getInBetween(argumentString, this.roundBracesPair) as string;
-		if (!argumentValue) {
-			throw new MetaBindParsingError(`argument '${argumentName}' requires a non empty value`);
-		}
-
-		return argumentValue;
+		return ParserUtils.getInBetween(argumentString, this.roundBracesPair) as string;
 	}
 
 	getInputFieldArgumentType(str: string): InputFieldArgumentType {
