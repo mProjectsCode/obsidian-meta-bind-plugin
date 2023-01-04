@@ -1,11 +1,13 @@
 import { App, PluginSettingTab, Setting, TextAreaComponent } from 'obsidian';
 import MetaBindPlugin from '../main';
+import { firstWeekday, setFirstWeekday, Weekday, weekdays } from '../inputFields/DatePicker/DatePickerInputSvelteHelpers';
 
 export interface MetaBindPluginSettings {
 	devMode: boolean;
 	ignoreCodeBlockRestrictions: boolean;
 	preferredDateFormat: string;
 	useUsDateInputOrder: boolean;
+	firstWeekday: Weekday;
 	syncInterval: number;
 	maxSyncInterval: number;
 	minSyncInterval: number;
@@ -18,6 +20,7 @@ export const DEFAULT_SETTINGS: MetaBindPluginSettings = {
 	ignoreCodeBlockRestrictions: false,
 	preferredDateFormat: 'YYYY-MM-DD',
 	useUsDateInputOrder: false,
+	firstWeekday: weekdays[1],
 	syncInterval: 200,
 	minSyncInterval: 50,
 	maxSyncInterval: 1000,
@@ -82,6 +85,21 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				cb.setValue(this.plugin.settings.useUsDateInputOrder);
 				cb.onChange(data => {
 					this.plugin.settings.useUsDateInputOrder = data;
+					this.plugin.saveSettings();
+				});
+			});
+
+		new Setting(containerEl)
+			.setName('First Weekday')
+			.setDesc(`Specify the first weekday for the datepicker.`)
+			.addDropdown(cb => {
+				for (const weekday of weekdays) {
+					cb.addOption(weekday.name, weekday.name);
+				}
+				cb.setValue(this.plugin.settings.firstWeekday.name);
+				cb.onChange(data => {
+					const w: Weekday = weekdays.find(x => x.name === data)!;
+					this.plugin.settings.firstWeekday = w;
 					this.plugin.saveSettings();
 				});
 			});

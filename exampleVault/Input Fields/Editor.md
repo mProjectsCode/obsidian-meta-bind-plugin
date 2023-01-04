@@ -1,5 +1,5 @@
 ---
-editor: |--
+editor: |-
   test
 
   **test**

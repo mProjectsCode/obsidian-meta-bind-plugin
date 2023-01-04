@@ -1,7 +1,4 @@
 ---
-image: Other/Images/img_butterfly.webp
----
----
 image: Other/Images/img_flower.webp
 ---
 

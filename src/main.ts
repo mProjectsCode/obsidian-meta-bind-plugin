@@ -9,6 +9,9 @@ import { MetaBindBindTargetError } from './utils/MetaBindErrors';
 import { API } from './API';
 import { ScriptMarkdownRenderChild } from './ScriptMarkdownRenderChild';
 import { plugins } from 'pretty-format';
+import { Extension } from '@codemirror/state';
+import { cmPlugin } from './frontmatterDisplay/CmPlugin';
+import { setFirstWeekday } from './inputFields/DatePicker/DatePickerInputSvelteHelpers';
 
 export default class MetaBindPlugin extends Plugin {
 	// @ts-ignore defined in `onload`
@@ -23,6 +26,9 @@ export default class MetaBindPlugin extends Plugin {
 	// @ts-ignore defined in `onload`
 	api: API;
 
+	// @ts-ignore defined in `onload`
+	editorExtensions: Extension[];
+
 	async onload(): Promise<void> {
 		console.log(`meta-bind | Main >> load`);
 
@@ -32,6 +38,7 @@ export default class MetaBindPlugin extends Plugin {
 
 		DateParser.dateFormat = this.settings.preferredDateFormat;
 		this.api.parser.parseTemplates(this.settings.inputTemplates);
+		setFirstWeekday(this.settings.firstWeekday);
 
 		this.activeMarkdownInputFields = [];
 		this.metadataManager = new MetadataManager(this);
@@ -63,71 +70,10 @@ export default class MetaBindPlugin extends Plugin {
 			ctx.addChild(new ScriptMarkdownRenderChild(el, source, ctx, this));
 		});
 
+		// this.registerEditorExtension(cmPlugin);
+
 		this.addSettingTab(new MetaBindSettingTab(this.app, this));
 	}
-
-	/**
-	 * Accessible function for building an input field.
-	 *
-	 * @param {string|InputFieldDeclaration} declaration The input field declaration as a string or object.
-	 * @param {string} sourcePath The path of the file the element will be inserted into.
-	 * @param {HTMLElement} container The container element for the input element.
-	 * @param {RenderChildType} renderType Inline or Code Block.
-	 *
-	 * @returns The render child produced.
-	 */
-	// buildInputFieldMarkdownRenderChild(
-	// 	declaration: string | InputFieldDeclaration,
-	// 	sourcePath: string,
-	// 	container: HTMLElement,
-	// 	renderType: InputFieldMarkdownRenderChildType = InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK
-	// ): InputFieldMarkdownRenderChild {
-	// 	if (typeof declaration === 'string') {
-	// 		declaration = InputFieldDeclarationParser.parseString(declaration);
-	// 	} else {
-	// 		declaration = InputFieldDeclarationParser.parseDeclaration(declaration);
-	// 	}
-	//
-	// 	return new InputFieldMarkdownRenderChild(container, renderType, declaration, this, sourcePath, crypto.randomUUID());
-	// }
-
-	/**
-	 * Helper method to build a declaration from some initial data or a string.
-	 *
-	 * @param {string | InputFieldDeclaration | {}} declarationData The base declaration data or a string to parse for it. Can also be an empty object with the other arguments provided to fill it.
-	 * @param {Record<InputFieldArgumentType, string> | {} | undefined} inputFieldArguments (Optional) The input field arguments, indexed by argument name.
-	 * @param {InputFieldType | undefined} inputFieldType (Optional) The input field type if not provided in the base object.
-	 * @param {boolean | undefined} isBound (Optional) If the field should try to be bound to a bindTarget.
-	 * @param {string | undefined} bindTarget (Optional) The bind target of the field.
-	 * @param {string | undefined} templateName (Optional) A template to use.
-	 *
-	 * @returns A constructed InputFieldDeclaration.
-	 */
-	// buildDeclaration(
-	// 	declarationData: string | InputFieldDeclaration | {},
-	// 	inputFieldArguments?: Record<InputFieldArgumentType, string> | {},
-	// 	inputFieldType?: InputFieldType,
-	// 	isBound?: boolean,
-	// 	bindTarget?: string,
-	// 	templateName?: string
-	// ): InputFieldDeclaration {
-	// 	if (typeof declarationData === 'string') {
-	// 		return InputFieldDeclarationParser.parseString(declarationData);
-	// 	} else {
-	// 		const declarationBase = declarationData as InputFieldDeclaration;
-	// 		declarationBase.inputFieldType = inputFieldType ?? declarationBase.inputFieldType ?? InputFieldType.INVALID;
-	// 		declarationBase.isBound = isBound ?? declarationBase.isBound ?? false;
-	// 		declarationBase.bindTarget = bindTarget ?? declarationBase.bindTarget ?? undefined;
-	//
-	// 		// if the input field is bound should be determined by `isBound`
-	// 		// `isBound` is true, `bindTarget` must be set
-	// 		if (declarationBase.isBound && !declarationBase.bindTarget) {
-	// 			throw new MetaBindBindTargetError('input field declaration is bound but bind target is undefined');
-	// 		}
-	//
-	// 		return InputFieldDeclarationParser.parseDeclaration(declarationBase, inputFieldArguments, templateName);
-	// 	}
-	// }
 
 	onunload(): void {
 		console.log(`meta-bind | Main >> unload`);
@@ -179,6 +125,7 @@ export default class MetaBindPlugin extends Plugin {
 
 		DateParser.dateFormat = this.settings.preferredDateFormat;
 		this.api.parser.parseTemplates(this.settings.inputTemplates);
+		setFirstWeekday(this.settings.firstWeekday);
 		await this.saveData(this.settings);
 	}
 }
