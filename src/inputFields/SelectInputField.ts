@@ -7,7 +7,7 @@ import { AbstractInputFieldArgument } from '../inputFieldArguments/AbstractInput
 import { MetaBindInternalError } from '../utils/MetaBindErrors';
 
 export class SelectInputField extends AbstractInputField {
-	static allowInlineCodeBlock: boolean = false;
+	static allowInline: boolean = false;
 	elements: SelectInputFieldElement[];
 	allowMultiSelect: boolean;
 	container: HTMLDivElement | undefined;

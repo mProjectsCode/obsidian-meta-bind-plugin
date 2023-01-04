@@ -94,11 +94,17 @@ body {
 	margin: var(--size-4-2) 0;
 	border-radius: var(--meta-bind-plugin-border-radius);
 	border: var(--meta-bind-plugin-border-width) solid var(--background-modifier-border);
+	display: flex;
+	flex-direction: column;
+	gap: var(--size-4-2);
 }
 
 .meta-bind-plugin-card > code {
-	margin-top: var(--size-4-2);
 	display: block;
+}
+
+.meta-bind-plugin-card > pre {
+	margin: 0;
 }
 
 .meta-bind-plugin-card > h3 {

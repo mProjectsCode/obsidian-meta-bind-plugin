@@ -27,3 +27,9 @@ export class MetaBindArgumentError extends Error {
 		super(`[MB_ARGUMENT_ERROR] ${message}`);
 	}
 }
+
+export class MetaBindJsError extends Error {
+	constructor(message: string) {
+		super(`[MB_JS_ERROR] ${message}`);
+	}
+}

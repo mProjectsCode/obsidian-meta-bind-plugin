@@ -12,9 +12,9 @@ import { ShowcaseInputFieldArgument } from './inputFieldArguments/ShowcaseInputF
 import { TitleInputFieldArgument } from './inputFieldArguments/TitleInputFieldArgument';
 import { isTruthy } from './utils/Utils';
 
-export enum InputFieldMarkdownRenderChildType {
-	INLINE_CODE_BLOCK,
-	CODE_BLOCK,
+export enum RenderChildType {
+	INLINE = 'inline',
+	BLOCK = 'block',
 }
 
 export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
@@ -24,7 +24,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	uuid: string;
 	inputField: AbstractInputField | undefined;
 	error: string;
-	type: InputFieldMarkdownRenderChildType;
+	renderChildType: RenderChildType;
 
 	fullDeclaration?: string;
 	inputFieldDeclaration: InputFieldDeclaration;
@@ -35,7 +35,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	metadataValueUpdateQueue: any[];
 	inputFieldValueUpdateQueue: any[];
 
-	constructor(containerEl: HTMLElement, type: InputFieldMarkdownRenderChildType, declaration: InputFieldDeclaration, plugin: MetaBindPlugin, filePath: string, uuid: string) {
+	constructor(containerEl: HTMLElement, type: RenderChildType, declaration: InputFieldDeclaration, plugin: MetaBindPlugin, filePath: string, uuid: string) {
 		super(containerEl);
 
 		if (!declaration.error) {
@@ -47,7 +47,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		this.filePath = filePath;
 		this.uuid = uuid;
 		this.plugin = plugin;
-		this.type = type;
+		this.renderChildType = type;
 		this.fullDeclaration = declaration.fullDeclaration;
 
 		this.metadataValueUpdateQueue = [];
@@ -171,7 +171,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 	addCardContainer(): boolean {
 		return (
-			this.type === InputFieldMarkdownRenderChildType.CODE_BLOCK &&
+			this.renderChildType === RenderChildType.BLOCK &&
 			(isTruthy(this.getArgument(InputFieldArgumentType.SHOWCASE)) ||
 				isTruthy(this.getArgument(InputFieldArgumentType.TITLE)) ||
 				this.inputFieldDeclaration.inputFieldType === InputFieldType.SELECT ||

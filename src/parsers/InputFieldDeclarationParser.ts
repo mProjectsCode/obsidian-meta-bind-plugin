@@ -91,14 +91,14 @@ export class InputFieldDeclarationParser {
 
 	parseDeclaration(
 		declaration: InputFieldDeclaration,
-		inputFieldArguments?: Record<InputFieldArgumentType, string> | undefined,
+		inputFieldArguments?: { type: InputFieldArgumentType; value: string }[] | undefined,
 		templateName?: string | undefined
 	): InputFieldDeclaration {
 		// field type check
 		declaration.inputFieldType = this.getInputFieldType(declaration.inputFieldType);
 
 		try {
-			// template check:
+			// template check
 			const useTemplate: boolean = isTruthy(templateName);
 			if (useTemplate) {
 				this.applyTemplate(declaration, templateName);
@@ -108,27 +108,8 @@ export class InputFieldDeclarationParser {
 				throw new MetaBindParsingError(`unknown input field type`);
 			}
 
-			// arguments check:
-			declaration.argumentContainer = new InputFieldArgumentContainer();
-			if (inputFieldArguments) {
-				for (const inputFieldArgumentIdentifier in Object.keys(inputFieldArguments)) {
-					const inputFieldArgument: AbstractInputFieldArgument = InputFieldArgumentFactory.createInputFieldArgument(inputFieldArgumentIdentifier);
-
-					if (!inputFieldArgument.isAllowed(declaration.inputFieldType)) {
-						throw new MetaBindParsingError(
-							`argument \'${inputFieldArgumentIdentifier}\' is only applicable to ${inputFieldArgument.getAllowedInputFieldsAsString()} input fields`
-						);
-					}
-
-					if (inputFieldArgument.requiresValue) {
-						inputFieldArgument.parseValue((inputFieldArguments as Record<InputFieldArgumentType, string>)[inputFieldArgumentIdentifier as InputFieldArgumentType]);
-					}
-
-					declaration.argumentContainer.add(inputFieldArgument);
-				}
-
-				declaration.argumentContainer.validate();
-			}
+			// arguments check
+			declaration.argumentContainer.mergeByOverride(this.parseArguments(declaration.inputFieldType, inputFieldArguments));
 		} catch (e) {
 			if (e instanceof Error) {
 				declaration.error = e;
@@ -179,7 +160,7 @@ export class InputFieldDeclarationParser {
 				const inputFieldArgumentsString: string = ParserUtils.getInBetween(inputFieldTypeWithArguments, this.roundBracesPair) as string;
 				// console.log(inputFieldArgumentsString);
 				if (inputFieldArgumentsString) {
-					inputFieldDeclaration.argumentContainer = this.parseArguments(inputFieldArgumentsString, inputFieldDeclaration.inputFieldType);
+					inputFieldDeclaration.argumentContainer = this.parseArgumentString(inputFieldDeclaration.inputFieldType, inputFieldArgumentsString);
 				} else {
 					inputFieldDeclaration.argumentContainer = new InputFieldArgumentContainer();
 				}
@@ -228,35 +209,49 @@ export class InputFieldDeclarationParser {
 		console.log(`meta-bind | InputFieldDeclarationParser >> parsed templates`, this.templates);
 	}
 
-	parseArguments(inputFieldArgumentsString: string, inputFieldType: InputFieldType): InputFieldArgumentContainer {
-		// console.log('inputFieldArgumentsString', inputFieldArgumentsString);
+	parseArgumentString(inputFieldType: InputFieldType, inputFieldArgumentsString: string): InputFieldArgumentContainer {
 		let inputFieldArgumentStrings: string[] = ParserUtils.split(inputFieldArgumentsString, ',', this.roundBracesPair);
 		inputFieldArgumentStrings = inputFieldArgumentStrings.map(x => x.trim());
 
-		const inputFieldArgumentContainer: InputFieldArgumentContainer = new InputFieldArgumentContainer();
+		const inputFieldArguments: { type: InputFieldArgumentType; value: string }[] = [];
 
 		for (const inputFieldArgumentString of inputFieldArgumentStrings) {
-			const inputFieldArgumentIdentifier: string = this.extractInputFieldArgumentIdentifier(inputFieldArgumentString);
-			// console.log(inputFieldArgumentIdentifier);
+			const inputFieldArgumentTypeString: string = this.extractInputFieldArgumentIdentifier(inputFieldArgumentString);
+			const inputFieldArgumentType: InputFieldArgumentType = this.getInputFieldArgumentType(inputFieldArgumentTypeString);
+			const inputFieldArgumentValue: string = this.extractInputFieldArgumentValue(inputFieldArgumentString);
 
-			const inputFieldArgument = InputFieldArgumentFactory.createInputFieldArgument(inputFieldArgumentIdentifier);
-
-			if (!inputFieldArgument.isAllowed(inputFieldType)) {
-				throw new MetaBindParsingError(
-					`argument '${inputFieldArgumentIdentifier}' is only applicable to ${inputFieldArgument.getAllowedInputFieldsAsString()} input fields`
-				);
+			if (inputFieldArgumentType === InputFieldArgumentType.INVALID) {
+				throw new MetaBindParsingError(`unknown argument '${inputFieldArgumentTypeString}'`);
 			}
 
-			if (inputFieldArgument.requiresValue) {
-				inputFieldArgument.parseValue(this.extractInputFieldArgumentValue(inputFieldArgumentString));
+			inputFieldArguments.push({ type: inputFieldArgumentType, value: inputFieldArgumentValue });
+		}
+		return this.parseArguments(inputFieldType, inputFieldArguments);
+	}
+
+	parseArguments(inputFieldType: InputFieldType, inputFieldArguments?: { type: InputFieldArgumentType; value: string }[] | undefined): InputFieldArgumentContainer {
+		console.log('-> inputFieldArguments', inputFieldArguments);
+		const argumentContainer: InputFieldArgumentContainer = new InputFieldArgumentContainer();
+
+		if (inputFieldArguments) {
+			for (const argument of inputFieldArguments) {
+				const inputFieldArgument: AbstractInputFieldArgument = InputFieldArgumentFactory.createInputFieldArgument(argument.type);
+
+				if (!inputFieldArgument.isAllowed(inputFieldType)) {
+					throw new MetaBindParsingError(`argument '${argument.type}' is only applicable to ${inputFieldArgument.getAllowedInputFieldsAsString()} input fields`);
+				}
+
+				if (inputFieldArgument.requiresValue) {
+					inputFieldArgument.parseValue(argument.value);
+				}
+
+				argumentContainer.add(inputFieldArgument);
 			}
 
-			inputFieldArgumentContainer.add(inputFieldArgument);
+			argumentContainer.validate();
 		}
 
-		inputFieldArgumentContainer.validate();
-
-		return inputFieldArgumentContainer;
+		return argumentContainer;
 	}
 
 	extractInputFieldArgumentIdentifier(argumentString: string): string {
@@ -274,6 +269,16 @@ export class InputFieldDeclarationParser {
 		return argumentValue;
 	}
 
+	getInputFieldArgumentType(str: string): InputFieldArgumentType {
+		for (const entry of Object.entries(InputFieldArgumentType)) {
+			if (entry[1] === str) {
+				return entry[1];
+			}
+		}
+
+		return InputFieldArgumentType.INVALID;
+	}
+
 	getInputFieldType(str: string): InputFieldType {
 		for (const entry of Object.entries(InputFieldType)) {
 			if (entry[1] === str) {
@@ -284,7 +289,7 @@ export class InputFieldDeclarationParser {
 		return InputFieldType.INVALID;
 	}
 
-	applyTemplate(inputFieldDeclaration: InputFieldDeclaration, templateName: string | null | undefined) {
+	applyTemplate(inputFieldDeclaration: InputFieldDeclaration, templateName: string | null | undefined): void {
 		if (!templateName) {
 			return;
 		}
