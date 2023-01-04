@@ -230,7 +230,6 @@ export class InputFieldDeclarationParser {
 	}
 
 	parseArguments(inputFieldType: InputFieldType, inputFieldArguments?: { type: InputFieldArgumentType; value: string }[] | undefined): InputFieldArgumentContainer {
-		console.log('-> inputFieldArguments', inputFieldArguments);
 		const argumentContainer: InputFieldArgumentContainer = new InputFieldArgumentContainer();
 
 		if (inputFieldArguments) {
