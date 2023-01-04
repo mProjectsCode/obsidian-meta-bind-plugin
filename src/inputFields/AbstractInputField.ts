@@ -1,8 +1,8 @@
 import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
 
 export abstract class AbstractInputField {
-	static allowCodeBlock: boolean = true;
-	static allowInlineCodeBlock: boolean = true;
+	static allowBlock: boolean = true;
+	static allowInline: boolean = true;
 	inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild;
 	onValueChange: (value: any) => void | Promise<void>;
 

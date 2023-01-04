@@ -1,5 +1,5 @@
 import { ToggleInputField } from './ToggleInputField';
-import { InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType } from '../InputFieldMarkdownRenderChild';
+import { InputFieldMarkdownRenderChild, RenderChildType } from '../InputFieldMarkdownRenderChild';
 import { TextInputField } from './TextInputField';
 import { SliderInputField } from './SliderInputField';
 import { TextAreaInputField } from './TextAreaInputField';
@@ -18,67 +18,67 @@ import { ImageSuggestInputField } from './ImageSuggest/ImageSuggestInputField';
 import MetaBindPlugin from '../main';
 
 export class InputFieldFactory {
-	static allowCodeBlockMap: Record<string, { codeBlock: boolean; inlineCodeBlock: boolean }> = {
+	static allowCodeBlockMap: Record<string, { block: boolean; inline: boolean }> = {
 		[InputFieldType.TOGGLE]: {
-			codeBlock: ToggleInputField.allowCodeBlock,
-			inlineCodeBlock: ToggleInputField.allowInlineCodeBlock,
+			block: ToggleInputField.allowBlock,
+			inline: ToggleInputField.allowInline,
 		},
 		[InputFieldType.SLIDER]: {
-			codeBlock: SliderInputField.allowCodeBlock,
-			inlineCodeBlock: SliderInputField.allowInlineCodeBlock,
+			block: SliderInputField.allowBlock,
+			inline: SliderInputField.allowInline,
 		},
 		[InputFieldType.TEXT]: {
-			codeBlock: TextInputField.allowCodeBlock,
-			inlineCodeBlock: TextInputField.allowInlineCodeBlock,
+			block: TextInputField.allowBlock,
+			inline: TextInputField.allowInline,
 		},
 		[InputFieldType.TEXT_AREA]: {
-			codeBlock: TextAreaInputField.allowCodeBlock,
-			inlineCodeBlock: TextAreaInputField.allowInlineCodeBlock,
+			block: TextAreaInputField.allowBlock,
+			inline: TextAreaInputField.allowInline,
 		},
 		[InputFieldType.SELECT]: {
-			codeBlock: SelectInputField.allowCodeBlock,
-			inlineCodeBlock: SelectInputField.allowInlineCodeBlock,
+			block: SelectInputField.allowBlock,
+			inline: SelectInputField.allowInline,
 		},
 		[InputFieldType.MULTI_SELECT]: {
-			codeBlock: MultiSelectInputField.allowCodeBlock,
-			inlineCodeBlock: MultiSelectInputField.allowInlineCodeBlock,
+			block: MultiSelectInputField.allowBlock,
+			inline: MultiSelectInputField.allowInline,
 		},
 		[InputFieldType.DATE]: {
-			codeBlock: DateInputField.allowCodeBlock,
-			inlineCodeBlock: DateInputField.allowInlineCodeBlock,
+			block: DateInputField.allowBlock,
+			inline: DateInputField.allowInline,
 		},
 		[InputFieldType.TIME]: {
-			codeBlock: TimeInputField.allowCodeBlock,
-			inlineCodeBlock: TimeInputField.allowInlineCodeBlock,
+			block: TimeInputField.allowBlock,
+			inline: TimeInputField.allowInline,
 		},
 		[InputFieldType.DATE_PICKER]: {
-			codeBlock: DatePickerInputField.allowCodeBlock,
-			inlineCodeBlock: DatePickerInputField.allowInlineCodeBlock,
+			block: DatePickerInputField.allowBlock,
+			inline: DatePickerInputField.allowInline,
 		},
 		[InputFieldType.NUMBER]: {
-			codeBlock: NumberInputField.allowCodeBlock,
-			inlineCodeBlock: NumberInputField.allowInlineCodeBlock,
+			block: NumberInputField.allowBlock,
+			inline: NumberInputField.allowInline,
 		},
 		[InputFieldType.SUGGESTER]: {
-			codeBlock: SuggestInputField.allowCodeBlock,
-			inlineCodeBlock: SuggestInputField.allowInlineCodeBlock,
+			block: SuggestInputField.allowBlock,
+			inline: SuggestInputField.allowInline,
 		},
 		[InputFieldType.EDITOR]: {
-			codeBlock: EditorInputField.allowCodeBlock,
-			inlineCodeBlock: EditorInputField.allowInlineCodeBlock,
+			block: EditorInputField.allowBlock,
+			inline: EditorInputField.allowInline,
 		},
 		[InputFieldType.IMAGE_SUGGESTER]: {
-			codeBlock: ImageSuggestInputField.allowCodeBlock,
-			inlineCodeBlock: ImageSuggestInputField.allowInlineCodeBlock,
+			block: ImageSuggestInputField.allowBlock,
+			inline: ImageSuggestInputField.allowInline,
 		},
 	};
 
 	static createInputField(
 		inputFieldType: InputFieldType,
-		args: { type: InputFieldMarkdownRenderChildType; inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild; onValueChanged: (value: any) => void | Promise<void> }
+		args: { type: RenderChildType; inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild; onValueChanged: (value: any) => void | Promise<void> }
 	): AbstractInputField | undefined {
 		if (inputFieldType !== InputFieldType.INVALID) {
-			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type, args.inputFieldMarkdownRenderChild.plugin);
+			InputFieldFactory.checkRenderChildTypeAllowed(inputFieldType, args.type, args.inputFieldMarkdownRenderChild.plugin);
 		}
 
 		if (inputFieldType === InputFieldType.TOGGLE) {
@@ -112,16 +112,16 @@ export class InputFieldFactory {
 		return undefined;
 	}
 
-	static checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType: InputFieldType, type: InputFieldMarkdownRenderChildType, plugin: MetaBindPlugin): void {
+	static checkRenderChildTypeAllowed(inputFieldType: InputFieldType, renderChildType: RenderChildType, plugin: MetaBindPlugin): void {
 		if (plugin.settings.ignoreCodeBlockRestrictions) {
 			return;
 		}
 
-		const allowCodeBlock: { codeBlock: boolean; inlineCodeBlock: boolean } = InputFieldFactory.allowCodeBlockMap[inputFieldType];
-		if (type === InputFieldMarkdownRenderChildType.CODE_BLOCK && !allowCodeBlock.codeBlock) {
+		const allowCodeBlock: { block: boolean; inline: boolean } = InputFieldFactory.allowCodeBlockMap[inputFieldType];
+		if (renderChildType === RenderChildType.BLOCK && !allowCodeBlock.block) {
 			throw new MetaBindParsingError(`'${inputFieldType}' is not allowed as code block`);
 		}
-		if (type === InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK && !allowCodeBlock.inlineCodeBlock) {
+		if (renderChildType === RenderChildType.INLINE && !allowCodeBlock.inline) {
 			throw new MetaBindParsingError(`'${inputFieldType}' is not allowed as inline code block`);
 		}
 	}

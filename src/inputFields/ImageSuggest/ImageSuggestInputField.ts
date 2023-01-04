@@ -9,7 +9,7 @@ import { OptionQueryInputFieldArgument } from '../../inputFieldArguments/OptionQ
 import { OptionInputFieldArgument } from '../../inputFieldArguments/OptionInputFieldArgument';
 
 export class ImageSuggestInputField extends AbstractInputField {
-	static allowInlineCodeBlock: boolean = false;
+	static allowInline: boolean = false;
 	container: HTMLDivElement | undefined;
 	component: ImageSuggestInput | undefined;
 	value: string;

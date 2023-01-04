@@ -1,12 +1,14 @@
 import { Plugin, TFile } from 'obsidian';
 import { DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab } from './settings/Settings';
-import { InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType } from './InputFieldMarkdownRenderChild';
+import { InputFieldMarkdownRenderChild, RenderChildType } from './InputFieldMarkdownRenderChild';
 import { getFileName, isPath, removeFileEnding } from './utils/Utils';
 import { DateParser } from './parsers/DateParser';
 import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser, InputFieldType } from './parsers/InputFieldDeclarationParser';
 import { MetadataManager } from './MetadataManager';
 import { MetaBindBindTargetError } from './utils/MetaBindErrors';
 import { API } from './API';
+import { ScriptMarkdownRenderChild } from './ScriptMarkdownRenderChild';
+import { plugins } from 'pretty-format';
 
 export default class MetaBindPlugin extends Plugin {
 	// @ts-ignore defined in `onload`
@@ -41,7 +43,7 @@ export default class MetaBindPlugin extends Plugin {
 				const content = codeBlock.innerText;
 				const isInputField = content.startsWith('INPUT[') && content.endsWith(']');
 				if (isInputField) {
-					const inputField = this.api.createInputFieldFromString(content, InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK, ctx.sourcePath, codeBlock);
+					const inputField = this.api.createInputFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock);
 					ctx.addChild(inputField);
 				}
 			}
@@ -52,9 +54,13 @@ export default class MetaBindPlugin extends Plugin {
 			const content = source.replace(/\n/g, '');
 			const isInputField = content.startsWith('INPUT[') && content.endsWith(']');
 			if (isInputField) {
-				const inputField = this.api.createInputFieldFromString(content, InputFieldMarkdownRenderChildType.CODE_BLOCK, ctx.sourcePath, codeBlock);
+				const inputField = this.api.createInputFieldFromString(content, RenderChildType.BLOCK, ctx.sourcePath, codeBlock);
 				ctx.addChild(inputField);
 			}
+		});
+
+		this.registerMarkdownCodeBlockProcessor('meta-bind-js', (source, el, ctx) => {
+			ctx.addChild(new ScriptMarkdownRenderChild(el, source, ctx, this));
 		});
 
 		this.addSettingTab(new MetaBindSettingTab(this.app, this));
@@ -66,7 +72,7 @@ export default class MetaBindPlugin extends Plugin {
 	 * @param {string|InputFieldDeclaration} declaration The input field declaration as a string or object.
 	 * @param {string} sourcePath The path of the file the element will be inserted into.
 	 * @param {HTMLElement} container The container element for the input element.
-	 * @param {InputFieldMarkdownRenderChildType} renderType Inline or Code Block.
+	 * @param {RenderChildType} renderType Inline or Code Block.
 	 *
 	 * @returns The render child produced.
 	 */
