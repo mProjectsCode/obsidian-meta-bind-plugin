@@ -3,15 +3,14 @@ import { DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab } from './
 import { InputFieldMarkdownRenderChild, RenderChildType } from './InputFieldMarkdownRenderChild';
 import { getFileName, isPath, removeFileEnding } from './utils/Utils';
 import { DateParser } from './parsers/DateParser';
-import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser, InputFieldType } from './parsers/InputFieldDeclarationParser';
 import { MetadataManager } from './MetadataManager';
-import { MetaBindBindTargetError } from './utils/MetaBindErrors';
 import { API } from './API';
 import { ScriptMarkdownRenderChild } from './ScriptMarkdownRenderChild';
-import { plugins } from 'pretty-format';
 import { Extension } from '@codemirror/state';
-import { cmPlugin } from './frontmatterDisplay/CmPlugin';
 import { setFirstWeekday } from './inputFields/DatePicker/DatePickerInputSvelteHelpers';
+import { StreamLanguage, StreamParser } from '@codemirror/language';
+import './frontmatterDisplay/custom_overlay';
+import { Mode } from 'codemirror';
 
 export default class MetaBindPlugin extends Plugin {
 	// @ts-ignore defined in `onload`
@@ -71,8 +70,111 @@ export default class MetaBindPlugin extends Plugin {
 		});
 
 		// this.registerEditorExtension(cmPlugin);
+		// const languageCompartment = new Compartment();
+		// this.registerEditorExtension(languageCompartment.of(javascript()));
+
+		// this.addCommand({
+		// 	id: 'mb-test-command',
+		// 	name: 'test command',
+		// 	editorCallback: (editor: Editor, view: MarkdownView | MarkdownFileInfo) => {
+		// 		console.log(editor);
+		// 	},
+		// });
+
+		if (this.settings.devMode) {
+			this.addCommand({
+				id: 'meta-bind-debug',
+				name: 'Trip Debugger',
+				callback: () => {
+					debugger;
+				},
+			});
+		}
+
+		this.app.workspace.onLayoutReady(async () => {
+			await this.registerCodeMirrorMode();
+			const mode = window.CodeMirror.getMode({}, { name: 'meta-bind-js' });
+			this.registerEditorExtension(StreamLanguage.define(mode as any));
+		});
 
 		this.addSettingTab(new MetaBindSettingTab(this.app, this));
+	}
+
+	/**
+	 * Inspired by https://github.com/SilentVoid13/Templater/blob/487805b5ad1fd7fbc145040ed82b4c41fc2c48e2/src/editor/Editor.ts#L67
+	 */
+	async registerCodeMirrorMode(): Promise<void> {
+		let js_mode: Mode<any> = window.CodeMirror.getMode({}, 'javascript');
+		if (js_mode == null || js_mode.name === 'null') {
+			console.log("Couldn't find js mode, can't enable syntax highlighting.");
+			return;
+		}
+
+		console.log(js_mode);
+
+		// Custom overlay mode used to handle edge cases
+		// @ts-ignore
+		const overlay_mode = window.CodeMirror.customOverlayMode;
+		if (overlay_mode == null) {
+			console.log("Couldn't find customOverlayMode, can't enable syntax highlighting.");
+			return;
+		}
+
+		// if templater enabled, this only runs on the code blocks, otherwise this runs on the whole document
+
+		window.CodeMirror.defineMode('meta-bind-js', function (config) {
+			const mbOverlay: any = {
+				startState: () => {
+					const js_state = window.CodeMirror.startState(js_mode);
+					return {
+						...js_state,
+						inMBScriptCodeBlock: false,
+					};
+				},
+				blankLine: (state: any) => {
+					console.log(state, 'blank');
+					return null;
+				},
+				copyState: (state: any) => {
+					const js_state = window.CodeMirror.startState(js_mode);
+					return {
+						...js_state,
+						inMBScriptCodeBlock: state.inMBScriptCodeBlock,
+					};
+				},
+				token: (stream: any, state: any) => {
+					const globals = ['app', 'mb', 'dv', 'filePath', 'ctx'];
+
+					console.log(stream);
+
+					if (state.inMBScriptCodeBlock) {
+						if (stream.match(/```/, true)) {
+							state.inMBScriptCodeBlock = false;
+						} else {
+							for (const global of globals) {
+								if (stream.match(global)) {
+									return 'atom';
+								}
+							}
+
+							const js_result = js_mode.token && js_mode.token(stream, state);
+							return `line-HyperMD-codeblock ${js_result}`;
+						}
+					}
+
+					const match = stream.match(/```meta-bind-js/, true);
+					console.log(match);
+					if (match != null) {
+						state.inMBScriptCodeBlock = true;
+					}
+
+					while (stream.next() != null && !stream.match(/```meta-bind-js/, false));
+					return null;
+				},
+			};
+
+			return overlay_mode(window.CodeMirror.getMode(config, 'hypermd'), mbOverlay);
+		});
 	}
 
 	onunload(): void {
