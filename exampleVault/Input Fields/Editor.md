@@ -5,6 +5,8 @@ editor: |-
   **test**
 
   # Heading
+
+  [[Slider]]
 ---
 
 ```meta-bind

@@ -17,3 +17,7 @@ INPUT[slider(addLabels, showcase):slider1]
 ```meta-bind
 INPUT[slider(addLabels, minValue(-20), maxValue(20), showcase):slider2]
 ```
+
+```js
+let a = 5;
+```
