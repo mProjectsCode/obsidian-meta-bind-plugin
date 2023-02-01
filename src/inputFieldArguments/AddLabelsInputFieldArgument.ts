@@ -8,7 +8,11 @@ export class AddLabelsInputFieldArgument extends AbstractInputFieldArgument {
 	requiresValue: boolean = false;
 	allowMultiple: boolean = false;
 
-	parseValue(valueStr: string): void {
-		this.value = valueStr.toLowerCase() === 'true';
+	override parseValue(value: any): void {
+		if (typeof value === 'boolean') {
+			this.value = value;
+		} else if (typeof value === 'string') {
+			this.value = value.toLowerCase() === 'true';
+		}
 	}
 }

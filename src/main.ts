@@ -93,8 +93,6 @@ export default class MetaBindPlugin extends Plugin {
 
 		this.app.workspace.onLayoutReady(async () => {
 			await this.registerCodeMirrorMode();
-			const mode = window.CodeMirror.getMode({}, { name: 'meta-bind-js' });
-			this.registerEditorExtension(StreamLanguage.define(mode as any));
 		});
 
 		this.addSettingTab(new MetaBindSettingTab(this.app, this));
@@ -104,76 +102,48 @@ export default class MetaBindPlugin extends Plugin {
 	 * Inspired by https://github.com/SilentVoid13/Templater/blob/487805b5ad1fd7fbc145040ed82b4c41fc2c48e2/src/editor/Editor.ts#L67
 	 */
 	async registerCodeMirrorMode(): Promise<void> {
-		let js_mode: Mode<any> = window.CodeMirror.getMode({}, 'javascript');
+		const js_mode: Mode<any> = window.CodeMirror.getMode({}, 'javascript');
 		if (js_mode == null || js_mode.name === 'null') {
 			console.log("Couldn't find js mode, can't enable syntax highlighting.");
 			return;
 		}
 
-		console.log(js_mode);
-
-		// Custom overlay mode used to handle edge cases
-		// @ts-ignore
-		const overlay_mode = window.CodeMirror.customOverlayMode;
-		if (overlay_mode == null) {
-			console.log("Couldn't find customOverlayMode, can't enable syntax highlighting.");
-			return;
-		}
-
 		// if templater enabled, this only runs on the code blocks, otherwise this runs on the whole document
 
-		window.CodeMirror.defineMode('meta-bind-js', function (config) {
+		window.CodeMirror.defineMode('meta-bind-js', config => {
 			const mbOverlay: any = {
 				startState: () => {
 					const js_state = window.CodeMirror.startState(js_mode);
 					return {
 						...js_state,
-						inMBScriptCodeBlock: false,
 					};
 				},
 				blankLine: (state: any) => {
-					console.log(state, 'blank');
 					return null;
 				},
 				copyState: (state: any) => {
 					const js_state = window.CodeMirror.startState(js_mode);
 					return {
 						...js_state,
-						inMBScriptCodeBlock: state.inMBScriptCodeBlock,
 					};
 				},
 				token: (stream: any, state: any) => {
-					const globals = ['app', 'mb', 'dv', 'filePath', 'ctx'];
+					// const globals = ['app', 'mb', 'dv', 'filePath', 'ctx'];
 
-					console.log(stream);
+					// console.log(stream);
 
-					if (state.inMBScriptCodeBlock) {
-						if (stream.match(/```/, true)) {
-							state.inMBScriptCodeBlock = false;
-						} else {
-							for (const global of globals) {
-								if (stream.match(global)) {
-									return 'atom';
-								}
-							}
+					// for (const global of globals) {
+					// 	if (stream.match(global)) {
+					// 		return 'variable';
+					// 	}
+					// }
 
-							const js_result = js_mode.token && js_mode.token(stream, state);
-							return `line-HyperMD-codeblock ${js_result}`;
-						}
-					}
-
-					const match = stream.match(/```meta-bind-js/, true);
-					console.log(match);
-					if (match != null) {
-						state.inMBScriptCodeBlock = true;
-					}
-
-					while (stream.next() != null && !stream.match(/```meta-bind-js/, false));
-					return null;
+					const js_result = js_mode.token && js_mode.token(stream, state);
+					return `line-HyperMD-codeblock ${js_result}`;
 				},
 			};
 
-			return overlay_mode(window.CodeMirror.getMode(config, 'hypermd'), mbOverlay);
+			return mbOverlay;
 		});
 	}
 
