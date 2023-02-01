@@ -6,6 +6,8 @@ suggest: test
 toggle1: false
 Domestic_tasks:
   - Lunch 🍲
+Meditate: 100
+Slept: 00:00
 ---
 
 ## In callouts
@@ -13,10 +15,12 @@ Domestic_tasks:
 > `INPUT[slider(addLabels, minValue(1), maxValue(10)):slider1]`
 
 > [!INFO]
-> `INPUT[slider(addLabels, minValue(1), maxValue(10)):slider1]` Slider
+> `INPUT[slider(addLabels, minValue(1), maxValue(10)):slider1]`
 
 > [!INFO]
-> `INPUT[slider(addLabels, minValue(1), maxValue(10)):slider1]`
+> ```meta-bind
+> INPUT[slider(addLabels, minValue(1), maxValue(10)):slider1]
+> ```
 
 ## Nested data
 `INPUT[text:nested["object"]]`
@@ -72,3 +76,39 @@ Code block error
 ```meta-bind
 INPUT[slider(nonExistantArgument)]
 ```
+
+
+
+
+
+>[!info]+ Trackers
+>`````col
+>flexgrow=2
+>===
+>````col-md
+>##### ○ Slept
+>```meta-bind
+>INPUT[time(class(meta-bind-full-width)):Slept]
+>```
+>````
+>
+>````col-md
+>##### ○ Woke Up
+>```meta-bind
+>INPUT[time(class(meta-bind-full-width)):WokeUp]
+>```
+>````
+>````col-md
+>##### ○ Stretch (minutes)
+>```meta-bind
+>INPUT[number(class(meta-bind-full-width)):Stretch]
+>```
+>````
+>
+>````col-md
+>##### ○ Meditate (minutes)
+>```meta-bind
+>INPUT[number(class(meta-bind-full-width)):Meditate]
+>```
+>````
+>`````

@@ -243,6 +243,9 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		this.plugin.unregisterInputFieldMarkdownRenderChild(this);
 		this.unregisterSelfFromMetadataManager();
 
+		this.containerEl.empty();
+		this.containerEl.remove();
+
 		super.onunload();
 	}
 }

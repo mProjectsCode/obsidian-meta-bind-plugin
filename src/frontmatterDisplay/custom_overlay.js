@@ -17,29 +17,25 @@
 
 	CodeMirror.customOverlayMode = function (base, overlay, combine) {
 		return {
-			startState: function () {
-				return {
-					base: CodeMirror.startState(base),
-					overlay: CodeMirror.startState(overlay),
-					basePos: 0,
-					baseCur: null,
-					overlayPos: 0,
-					overlayCur: null,
-					streamSeen: null,
-				};
-			},
-			copyState: function (state) {
-				return {
-					base: CodeMirror.copyState(base, state.base),
-					overlay: CodeMirror.copyState(overlay, state.overlay),
-					basePos: state.basePos,
-					baseCur: null,
-					overlayPos: state.overlayPos,
-					overlayCur: null,
-				};
-			},
+			startState: () => ({
+				base: CodeMirror.startState(base),
+				overlay: CodeMirror.startState(overlay),
+				basePos: 0,
+				baseCur: null,
+				overlayPos: 0,
+				overlayCur: null,
+				streamSeen: null,
+			}),
+			copyState: state => ({
+				base: CodeMirror.copyState(base, state.base),
+				overlay: CodeMirror.copyState(overlay, state.overlay),
+				basePos: state.basePos,
+				baseCur: null,
+				overlayPos: state.overlayPos,
+				overlayCur: null,
+			}),
 
-			token: function (stream, state) {
+			token: (stream, state) => {
 				if (stream != state.streamSeen || Math.min(state.basePos, state.overlayPos) < stream.start) {
 					state.streamSeen = stream;
 					state.basePos = state.overlayPos = stream.start;
@@ -56,39 +52,25 @@
 				}
 				stream.pos = Math.min(state.basePos, state.overlayPos);
 
-				// // Edge case for codeblocks in templater mode
-				// if (
-				//     state.baseCur &&
-				//     state.overlayCur &&
-				//     state.baseCur.contains("line-HyperMD-codeblock")
-				// ) {
-				//     state.overlayCur = state.overlayCur.replace(
-				//         "line-templater-inline",
-				//         ""
-				//     );
-				//     state.overlayCur += ` line-background-HyperMD-codeblock-bg`;
-				// }
-
 				// state.overlay.combineTokens always takes precedence over combine,
 				// unless set to null
-				if (state.overlayCur == null) return state.baseCur;
-				else if ((state.baseCur != null && state.overlay.combineTokens) || (combine && state.overlay.combineTokens == null)) return state.baseCur + ' ' + state.overlayCur;
-				else return state.overlayCur;
+				if (state.overlayCur == null) {
+					return state.baseCur;
+				} else if ((state.baseCur != null && state.overlay.combineTokens) || (combine && state.overlay.combineTokens == null)) {
+					return state.baseCur + ' ' + state.overlayCur;
+				} else {
+					return state.overlayCur;
+				}
 			},
 
-			indent:
-				base.indent &&
-				function (state, textAfter, line) {
-					return base.indent(state.base, textAfter, line);
-				},
+			indent: base.indent && ((state, textAfter, line) => base.indent(state.base, textAfter, line)),
+
 			electricChars: base.electricChars,
 
-			innerMode: function (state) {
-				return { state: state.base, mode: base };
-			},
+			innerMode: state => ({ state: state.base, mode: base }),
 
-			blankLine: function (state) {
-				var baseToken, overlayToken;
+			blankLine: state => {
+				let baseToken, overlayToken;
 				if (base.blankLine) baseToken = base.blankLine(state.base);
 				if (overlay.blankLine) overlayToken = overlay.blankLine(state.overlay);
 
