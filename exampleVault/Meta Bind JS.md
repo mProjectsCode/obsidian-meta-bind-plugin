@@ -1,5 +1,5 @@
 ---
-select: d
+select: c
 ---
 
 test
@@ -9,11 +9,14 @@ const declaration = mb.createDeclaration(
 	[
 		{type: 'option', value: 'a'},
 		{type: 'option', value: 'c'},
-	],
-	'select'
+	]
 );
 
+mb.bindDeclaration(declaration, 'select');
+
 const inputField = mb.createInputField(declaration, undefined, 'block');
+
+inputField.readSignal.registerListener({callback: (value) => console.log(`test ${value}`)})
 
 ctx.addChild(inputField);
 ```
@@ -24,9 +27,10 @@ const declaration = mb.createDeclaration(
 	[
 		{type: 'option', value: 'd'},
 		{type: 'option', value: 'e'},
-	],
-	'select'
+	]
 );
+
+mb.bindDeclaration(declaration, 'select');
 
 const inputField = mb.createInputField(declaration, undefined, 'block');
 

@@ -41,16 +41,7 @@ export class API {
 		return new InputFieldMarkdownRenderChild(container, renderType, declaration, this.plugin, filePath, crypto.randomUUID());
 	}
 
-	public createDeclaration(
-		inputFieldType: InputFieldType,
-		inputFieldArguments?: { type: InputFieldArgumentType; value: string }[],
-		bindTargetField?: string,
-		bindTargetFile?: string
-	): InputFieldDeclaration {
-		if (bindTargetFile && !bindTargetField) {
-			throw new MetaBindBindTargetError('if a bind target file is specified, a bind target field must also be specified');
-		}
-
+	public createDeclaration(inputFieldType: InputFieldType, inputFieldArguments?: { type: InputFieldArgumentType; value: string }[]): InputFieldDeclaration {
 		if (this.parser.getInputFieldType(inputFieldType) === InputFieldType.INVALID) {
 			throw new MetaBindParsingError(`input field type '${inputFieldType}' is invalid`);
 		}
@@ -60,13 +51,24 @@ export class API {
 			fullDeclaration: undefined,
 			inputFieldType: inputFieldType,
 			argumentContainer: this.parser.parseArguments(inputFieldType, inputFieldArguments),
-			isBound: isTruthy(bindTargetField),
-			bindTarget: bindTargetFile ? bindTargetFile + '#' + bindTargetField : bindTargetField,
+			isBound: false,
+			bindTarget: '',
 			error: undefined,
 		} as InputFieldDeclaration;
 	}
 
 	public createDeclarationFromString(fullDeclaration: string): InputFieldDeclaration {
 		return this.parser.parseString(fullDeclaration);
+	}
+
+	public bindDeclaration(declaration: InputFieldDeclaration, bindTargetField: string, bindTargetFile?: string): InputFieldDeclaration {
+		if (bindTargetFile && !bindTargetField) {
+			throw new MetaBindBindTargetError('if a bind target file is specified, a bind target field must also be specified');
+		}
+
+		declaration.isBound = isTruthy(bindTargetField);
+		declaration.bindTarget = bindTargetFile ? bindTargetFile + '#' + bindTargetField : bindTargetField;
+
+		return declaration;
 	}
 }

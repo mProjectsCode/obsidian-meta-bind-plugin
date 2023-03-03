@@ -21,14 +21,14 @@ export class SuggestInputField extends AbstractInputField {
 	value: string;
 	options: SuggestOption[];
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
-		super(inputFieldMarkdownRenderChild, onValueChange);
+	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild) {
+		super(inputFieldMarkdownRenderChild);
 
 		this.value = '';
 		this.options = [];
 
 		if (this.needsDataview()) {
-			if (!getAPI(this.inputFieldMarkdownRenderChild.plugin.app)) {
+			if (!getAPI(this.renderChild.plugin.app)) {
 				throw new MetaBindArgumentError(`dataview needs to be installed and enabled to use suggest option queries`);
 			}
 		}
@@ -60,21 +60,21 @@ export class SuggestInputField extends AbstractInputField {
 	}
 
 	needsDataview(): boolean {
-		return this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.OPTION_QUERY).length > 0;
+		return this.renderChild.getArguments(InputFieldArgumentType.OPTION_QUERY).length > 0;
 	}
 
 	async getOptions(): Promise<void> {
 		this.options = [];
 
-		const optionArguments: OptionInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.OPTION);
-		const optionQueryArguments: OptionQueryInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.OPTION_QUERY);
+		const optionArguments: OptionInputFieldArgument[] = this.renderChild.getArguments(InputFieldArgumentType.OPTION);
+		const optionQueryArguments: OptionQueryInputFieldArgument[] = this.renderChild.getArguments(InputFieldArgumentType.OPTION_QUERY);
 
 		for (const suggestOptionsArgument of optionArguments) {
 			this.options.push({ value: suggestOptionsArgument.value, displayValue: suggestOptionsArgument.value });
 		}
 
 		if (optionQueryArguments.length > 0) {
-			const dv = getAPI(this.inputFieldMarkdownRenderChild.plugin.app);
+			const dv = getAPI(this.renderChild.plugin.app);
 
 			if (!dv) {
 				new Notice('meta-bind | dataview needs to be installed and enabled to use suggest option queries');
@@ -82,7 +82,7 @@ export class SuggestInputField extends AbstractInputField {
 			}
 
 			for (const suggestOptionsQueryArgument of optionQueryArguments) {
-				const result: DataArray<Record<string, Literal>> = await dv.pages(suggestOptionsQueryArgument.value, this.inputFieldMarkdownRenderChild.filePath);
+				const result: DataArray<Record<string, Literal>> = await dv.pages(suggestOptionsQueryArgument.value, this.renderChild.filePath);
 				result.forEach((file: Record<string, Literal>) => {
 					try {
 						const tFile: TFile = file.file as TFile;
@@ -100,18 +100,18 @@ export class SuggestInputField extends AbstractInputField {
 
 	async showSuggest(): Promise<void> {
 		await this.getOptions();
-		new SuggestInputModal(this.inputFieldMarkdownRenderChild.plugin.app, this.options, item => {
+		new SuggestInputModal(this.renderChild.plugin.app, this.options, item => {
 			this.setValue(item.value);
 			this.onValueChange(item.value);
 		}).open();
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | SuggestInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | SuggestInputField >> render ${this.renderChild.uuid}`);
 
 		this.container = container;
 
-		this.value = this.inputFieldMarkdownRenderChild.getInitialValue();
+		this.value = this.renderChild.getInitialValue();
 
 		this.component = new SuggestInput({
 			target: container,

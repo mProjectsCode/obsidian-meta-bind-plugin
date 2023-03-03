@@ -1,4 +1,7 @@
 ---
+"1": A
+"2": C
+"6": false
 tags: test
 title: test
 select: option b
@@ -38,3 +41,4 @@ option(option c),
 option(option d)
 ):select]
 ```
+

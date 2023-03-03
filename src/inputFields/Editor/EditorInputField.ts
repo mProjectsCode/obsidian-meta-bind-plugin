@@ -9,8 +9,8 @@ export class EditorInputField extends AbstractInputField {
 	component: EditorInput | undefined;
 	value: string;
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
-		super(inputFieldMarkdownRenderChild, onValueChange);
+	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild) {
+		super(inputFieldMarkdownRenderChild);
 
 		this.value = '';
 	}
@@ -41,11 +41,11 @@ export class EditorInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | EditorInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | EditorInputField >> render ${this.renderChild.uuid}`);
 
 		this.container = container;
 
-		this.value = this.inputFieldMarkdownRenderChild.getInitialValue();
+		this.value = this.renderChild.getInitialValue();
 
 		this.component = new EditorInput({
 			target: container,

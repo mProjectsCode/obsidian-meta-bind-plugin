@@ -1,6 +1,8 @@
 import { API } from './API';
 import { InputFieldArgumentType, InputFieldDeclaration, InputFieldType } from './parsers/InputFieldDeclarationParser';
 import { InputFieldMarkdownRenderChild, RenderChildType } from './InputFieldMarkdownRenderChild';
+import { MetaBindBindTargetError } from './utils/MetaBindErrors';
+import { isTruthy } from './utils/Utils';
 
 export class InlineAPI {
 	public api: API;
@@ -42,16 +44,15 @@ export class InlineAPI {
 		return this.api.createInputFieldFromString(fullDeclaration, renderType, filePath, container);
 	}
 
-	public createDeclaration(
-		inputFieldType: InputFieldType,
-		inputFieldArguments?: { type: InputFieldArgumentType; value: string }[],
-		bindTargetField?: string,
-		bindTargetFile?: string
-	): InputFieldDeclaration {
-		return this.api.createDeclaration(inputFieldType, inputFieldArguments, bindTargetField, bindTargetFile);
+	public createDeclaration(inputFieldType: InputFieldType, inputFieldArguments?: { type: InputFieldArgumentType; value: string }[]): InputFieldDeclaration {
+		return this.api.createDeclaration(inputFieldType, inputFieldArguments);
 	}
 
 	public createDeclarationFromString(fullDeclaration: string): InputFieldDeclaration {
 		return this.api.createDeclarationFromString(fullDeclaration);
+	}
+
+	public bindDeclaration(declaration: InputFieldDeclaration, bindTargetField: string, bindTargetFile?: string): InputFieldDeclaration {
+		return this.api.bindDeclaration(declaration, bindTargetField, bindTargetFile);
 	}
 }

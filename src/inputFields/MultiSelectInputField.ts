@@ -3,8 +3,8 @@ import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild'
 import { doArraysContainEqualValues } from '../utils/Utils';
 
 export class MultiSelectInputField extends SelectInputField {
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
-		super(inputFieldMarkdownRenderChild, onValueChange);
+	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild) {
+		super(inputFieldMarkdownRenderChild);
 		this.allowMultiSelect = true;
 	}
 

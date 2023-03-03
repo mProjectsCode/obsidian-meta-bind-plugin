@@ -13,8 +13,8 @@ export class DatePickerInputField extends AbstractInputField {
 	modal: DatePickerModal | undefined;
 	date: moment.Moment;
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
-		super(inputFieldMarkdownRenderChild, onValueChange);
+	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild) {
+		super(inputFieldMarkdownRenderChild);
 
 		this.date = DateParser.getDefaultDate();
 	}
@@ -62,16 +62,16 @@ export class DatePickerInputField extends AbstractInputField {
 	}
 
 	showDatePicker(): void {
-		this.modal = new DatePickerModal(this.inputFieldMarkdownRenderChild.plugin.app, this);
+		this.modal = new DatePickerModal(this.renderChild.plugin.app, this);
 		this.modal.open();
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | DatePickerInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | DatePickerInputField >> render ${this.renderChild.uuid}`);
 
 		this.container = container;
 
-		this.date = DateParser.parse(this.inputFieldMarkdownRenderChild.getInitialValue()) ?? DateParser.getDefaultDate();
+		this.date = DateParser.parse(this.renderChild.getInitialValue()) ?? DateParser.getDefaultDate();
 		if (!this.date.isValid()) {
 			this.date = DateParser.getDefaultDate();
 			this.onValueChange(this.getValue());
@@ -80,7 +80,7 @@ export class DatePickerInputField extends AbstractInputField {
 		this.component = new DatePickerInput({
 			target: container,
 			props: {
-				dateFormat: this.inputFieldMarkdownRenderChild.plugin.settings.preferredDateFormat,
+				dateFormat: this.renderChild.plugin.settings.preferredDateFormat,
 				showDatePicker: () => this.showDatePicker(),
 				selectedDate: this.date,
 			},

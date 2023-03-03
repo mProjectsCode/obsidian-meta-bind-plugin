@@ -1,21 +1,19 @@
 import { CachedMetadata, TFile } from 'obsidian';
 import MetaBindPlugin from './main';
-import { setFrontmatterOfTFile } from '@opd-libs/opd-metadata-lib/lib/API';
 import { Internal } from '@opd-libs/opd-metadata-lib/lib/Internal';
 import { arrayEquals, traverseObjectToParentByPath } from './utils/Utils';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
-import getMetaDataFromFileContent = Internal.getMetaDataFromFileContent;
 import getMetadataFromFileCache = Internal.getMetadataFromFileCache;
-import { file } from '@babel/types';
+import { Listener, Signal } from './utils/Signal';
+
+export interface MetadataFileCacheListener extends Listener<any | undefined> {
+	metadataPath: string[];
+}
 
 export interface MetadataFileCache {
 	file: TFile;
 	metadata: Record<string, any>;
-	listeners: {
-		onCacheUpdate: (value: any | undefined) => void;
-		metadataPath: string[];
-		uuid: string;
-	}[];
+	listeners: MetadataFileCacheListener[];
 	cyclesSinceLastUpdate: number;
 	changed: boolean;
 }
@@ -36,18 +34,28 @@ export class MetadataManager {
 		this.interval = window.setInterval(() => this.update(), this.plugin.settings.syncInterval);
 	}
 
-	register(file: TFile, onCacheUpdate: (value: any) => void, metadataPath: string[], uuid: string): MetadataFileCache {
+	register(file: TFile, signal: Signal<any | undefined>, metadataPath: string[], uuid: string): MetadataFileCache {
 		const fileCache = this.getCacheForFile(file);
 		if (fileCache) {
 			console.debug(`meta-bind | MetadataManager >> registered ${uuid} to existing file cache ${file.path} -> ${metadataPath}`);
-			fileCache.listeners.push({ onCacheUpdate, metadataPath, uuid });
+			fileCache.listeners.push({
+				callback: (value: any) => signal.set(value),
+				metadataPath: metadataPath,
+				uuid: uuid,
+			});
 			return fileCache;
 		} else {
 			console.debug(`meta-bind | MetadataManager >> registered ${uuid} to newly created file cache ${file.path} -> ${metadataPath}`);
 			const c: MetadataFileCache = {
 				file: file,
 				metadata: getMetadataFromFileCache(file, this.plugin),
-				listeners: [{ onCacheUpdate, metadataPath, uuid }],
+				listeners: [
+					{
+						callback: (value: any) => signal.set(value),
+						metadataPath: metadataPath,
+						uuid: uuid,
+					},
+				],
 				cyclesSinceLastUpdate: 0,
 				changed: false,
 			};
@@ -165,6 +173,8 @@ export class MetadataManager {
 			value = traverseObjectByPath(metadataPath, fileCache.metadata);
 		}
 
+		console.log(fileCache);
+
 		for (const listener of fileCache.listeners) {
 			if (exceptUuid && exceptUuid === listener.uuid) {
 				continue;
@@ -173,11 +183,11 @@ export class MetadataManager {
 			if (metadataPath) {
 				if (arrayEquals(metadataPath, listener.metadataPath)) {
 					console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata`);
-					listener.onCacheUpdate(value);
+					listener.callback(value);
 				}
 			} else {
 				console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata`);
-				listener.onCacheUpdate(traverseObjectByPath(listener.metadataPath, fileCache.metadata));
+				listener.callback(traverseObjectByPath(listener.metadataPath, fileCache.metadata));
 			}
 		}
 	}

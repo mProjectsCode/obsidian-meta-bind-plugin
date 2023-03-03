@@ -75,38 +75,38 @@ export class InputFieldFactory {
 
 	static createInputField(
 		inputFieldType: InputFieldType,
-		args: { type: RenderChildType; inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild; onValueChanged: (value: any) => void | Promise<void> }
+		args: { renderChildType: RenderChildType; inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild }
 	): AbstractInputField | undefined {
 		if (inputFieldType !== InputFieldType.INVALID) {
-			InputFieldFactory.checkRenderChildTypeAllowed(inputFieldType, args.type, args.inputFieldMarkdownRenderChild.plugin);
+			InputFieldFactory.checkRenderChildTypeAllowed(inputFieldType, args.renderChildType, args.inputFieldMarkdownRenderChild.plugin);
 		}
 
 		if (inputFieldType === InputFieldType.TOGGLE) {
-			return new ToggleInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new ToggleInputField(args.inputFieldMarkdownRenderChild);
 		} else if (inputFieldType === InputFieldType.SLIDER) {
-			return new SliderInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new SliderInputField(args.inputFieldMarkdownRenderChild);
 		} else if (inputFieldType === InputFieldType.TEXT) {
-			return new TextInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new TextInputField(args.inputFieldMarkdownRenderChild);
 		} else if (inputFieldType === InputFieldType.TEXT_AREA) {
-			return new TextAreaInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new TextAreaInputField(args.inputFieldMarkdownRenderChild);
 		} else if (inputFieldType === InputFieldType.SELECT) {
-			return new SelectInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new SelectInputField(args.inputFieldMarkdownRenderChild);
 		} else if (inputFieldType === InputFieldType.MULTI_SELECT) {
-			return new MultiSelectInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new MultiSelectInputField(args.inputFieldMarkdownRenderChild);
 		} else if (inputFieldType === InputFieldType.DATE) {
-			return new DateInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new DateInputField(args.inputFieldMarkdownRenderChild);
 		} else if (inputFieldType === InputFieldType.TIME) {
-			return new TimeInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new TimeInputField(args.inputFieldMarkdownRenderChild);
 		} else if (inputFieldType === InputFieldType.DATE_PICKER) {
-			return new DatePickerInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new DatePickerInputField(args.inputFieldMarkdownRenderChild);
 		} else if (inputFieldType === InputFieldType.NUMBER) {
-			return new NumberInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new NumberInputField(args.inputFieldMarkdownRenderChild);
 		} else if (inputFieldType === InputFieldType.SUGGESTER) {
-			return new SuggestInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new SuggestInputField(args.inputFieldMarkdownRenderChild);
 		} else if (inputFieldType === InputFieldType.EDITOR) {
-			return new EditorInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new EditorInputField(args.inputFieldMarkdownRenderChild);
 		} else if (inputFieldType === InputFieldType.IMAGE_SUGGESTER) {
-			return new ImageSuggestInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new ImageSuggestInputField(args.inputFieldMarkdownRenderChild);
 		}
 
 		return undefined;
