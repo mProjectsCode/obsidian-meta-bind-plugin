@@ -28,8 +28,8 @@ export class DateInputField extends AbstractInputField {
 	dayComponent: DropdownComponent | undefined;
 	yearComponent: TextComponent | undefined;
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
-		super(inputFieldMarkdownRenderChild, onValueChange);
+	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild) {
+		super(inputFieldMarkdownRenderChild);
 
 		this.date = DateParser.getDefaultDate();
 
@@ -64,7 +64,7 @@ export class DateInputField extends AbstractInputField {
 
 		this.date = DateParser.parse(value);
 		if (!this.date) {
-			console.warn(new MetaBindValueError(`invalid value '${value}' at dateInputField ${this.inputFieldMarkdownRenderChild.uuid}`));
+			console.warn(new MetaBindValueError(`invalid value '${value}' at dateInputField ${this.renderChild.uuid}`));
 			this.date = DateParser.getDefaultDate();
 		}
 
@@ -88,15 +88,15 @@ export class DateInputField extends AbstractInputField {
 	}
 
 	public render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | DateInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | DateInputField >> render ${this.renderChild.uuid}`);
 
-		this.date = DateParser.parse(this.inputFieldMarkdownRenderChild.getInitialValue()) ?? DateParser.getDefaultDate();
+		this.date = DateParser.parse(this.renderChild.getInitialValue()) ?? DateParser.getDefaultDate();
 		if (!this.date.isValid()) {
 			this.date = DateParser.getDefaultDate();
 			this.onValueChange(this.getValue());
 		}
 
-		let useUsInputOrder = this.inputFieldMarkdownRenderChild.plugin.settings.useUsDateInputOrder;
+		let useUsInputOrder = this.renderChild.plugin.settings.useUsDateInputOrder;
 
 		container.removeClass('meta-bind-plugin-input-wrapper');
 		container.addClass('meta-bind-plugin-flex-input-wrapper', 'meta-bind-plugin-input-element-group');

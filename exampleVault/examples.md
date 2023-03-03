@@ -72,43 +72,10 @@ Lorem ipsum dolor sit amet, `INPUT[date():other note#date]` consectetur adipisci
 - `INPUT[slider(nonExistantArgument)]`
 - `INPUT[select(option(option a),option(option b),option(option c),option(option d)):select]`
 
+
+Lorem ipsum dolor sit amet, `INPUT[text():meta bind/nonExistantFile#title]` consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. `INPUT[slider(nonExistantArgument)]` Curabitur sed rhoncus nisl. Maecenas nisi justo, viverra vel tempus vel, hendrerit at metus. `INPUT[select(option(option a),option(option b),option(option c),option(option d)):select]`  asdasd asdasdasd
+
 Code block error
 ```meta-bind
 INPUT[slider(nonExistantArgument)]
 ```
-
-
-
-
-
->[!info]+ Trackers
->`````col
->flexgrow=2
->===
->````col-md
->##### ○ Slept
->```meta-bind
->INPUT[time(class(meta-bind-full-width)):Slept]
->```
->````
->
->````col-md
->##### ○ Woke Up
->```meta-bind
->INPUT[time(class(meta-bind-full-width)):WokeUp]
->```
->````
->````col-md
->##### ○ Stretch (minutes)
->```meta-bind
->INPUT[number(class(meta-bind-full-width)):Stretch]
->```
->````
->
->````col-md
->##### ○ Meditate (minutes)
->```meta-bind
->INPUT[number(class(meta-bind-full-width)):Meditate]
->```
->````
->`````

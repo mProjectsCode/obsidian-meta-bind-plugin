@@ -14,8 +14,8 @@ export class TimeInputField extends AbstractInputField {
 	hourComponent: DropdownComponent | undefined;
 	minuteComponent: DropdownComponent | undefined;
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
-		super(inputFieldMarkdownRenderChild, onValueChange);
+	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild) {
+		super(inputFieldMarkdownRenderChild);
 
 		this.time = TimeParser.getDefaultTime();
 
@@ -52,7 +52,7 @@ export class TimeInputField extends AbstractInputField {
 
 		this.time = TimeParser.parse(value);
 		if (!this.time) {
-			console.warn(new MetaBindValueError(`invalid value '${value}' at timeInputField ${this.inputFieldMarkdownRenderChild.uuid}`));
+			console.warn(new MetaBindValueError(`invalid value '${value}' at timeInputField ${this.renderChild.uuid}`));
 			this.time = TimeParser.getDefaultTime();
 		}
 		// console.log(this.time);
@@ -69,9 +69,9 @@ export class TimeInputField extends AbstractInputField {
 	}
 
 	public render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | TimeInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | TimeInputField >> render ${this.renderChild.uuid}`);
 
-		this.time = TimeParser.parse(this.inputFieldMarkdownRenderChild.getInitialValue()) ?? TimeParser.getDefaultTime();
+		this.time = TimeParser.parse(this.renderChild.getInitialValue()) ?? TimeParser.getDefaultTime();
 
 		container.removeClass('meta-bind-plugin-input-wrapper');
 		container.addClass('meta-bind-plugin-flex-input-wrapper', 'meta-bind-plugin-input-element-group');

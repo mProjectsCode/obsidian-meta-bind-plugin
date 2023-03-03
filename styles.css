@@ -8,6 +8,7 @@ body {
 
 .meta-bind-plugin-input {
 	background-color: transparent !important;
+	border: none !important;
 }
 
 .meta-bind-plugin-input-wrapper {
@@ -29,10 +30,13 @@ body {
 }
 
 .meta-bind-plugin-error {
-	display: block;
-	color: #ff0000;
+	color: var(--text-error) !important;
 	font-weight: bold;
 	font-family: var(--font-monospace);
+}
+
+code.meta-bind-plugin-error {
+	color: var(--text-error) !important;
 }
 
 .meta-bind-code {
@@ -94,9 +98,13 @@ body {
 	margin: var(--size-4-2) 0;
 	border-radius: var(--meta-bind-plugin-border-radius);
 	border: var(--meta-bind-plugin-border-width) solid var(--background-modifier-border);
-	display: flex;
+	display: inline-flex;
 	flex-direction: column;
 	gap: var(--size-4-2);
+}
+
+[class*='block-language-'] > .meta-bind-plugin-card {
+	display: flex;
 }
 
 .meta-bind-plugin-card > code {

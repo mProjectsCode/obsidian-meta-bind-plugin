@@ -11,6 +11,7 @@ import { parsePath, traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/Obj
 import { ShowcaseInputFieldArgument } from './inputFieldArguments/ShowcaseInputFieldArgument';
 import { TitleInputFieldArgument } from './inputFieldArguments/TitleInputFieldArgument';
 import { isTruthy } from './utils/Utils';
+import { Listener, Signal } from './utils/Signal';
 
 export enum RenderChildType {
 	INLINE = 'inline',
@@ -30,12 +31,19 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	inputFieldDeclaration: InputFieldDeclaration;
 	bindTargetFile: TFile | undefined;
 	bindTargetMetadataPath: string[] | undefined;
+	private metadataManagerReadSignalListener: Listener<any> | undefined;
 
-	intervalCounter: number;
-	metadataValueUpdateQueue: any[];
-	inputFieldValueUpdateQueue: any[];
+	// maybe 2: in/out
+	/**
+	 * Signal to write to the input field
+	 */
+	public writeSignal: Signal<any>;
+	/**
+	 * Signal to read from the input field
+	 */
+	public readSignal: Signal<any>;
 
-	constructor(containerEl: HTMLElement, type: RenderChildType, declaration: InputFieldDeclaration, plugin: MetaBindPlugin, filePath: string, uuid: string) {
+	constructor(containerEl: HTMLElement, renderChildType: RenderChildType, declaration: InputFieldDeclaration, plugin: MetaBindPlugin, filePath: string, uuid: string) {
 		super(containerEl);
 
 		if (!declaration.error) {
@@ -47,13 +55,12 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		this.filePath = filePath;
 		this.uuid = uuid;
 		this.plugin = plugin;
-		this.renderChildType = type;
+		this.renderChildType = renderChildType;
 		this.fullDeclaration = declaration.fullDeclaration;
-
-		this.metadataValueUpdateQueue = [];
-		this.inputFieldValueUpdateQueue = [];
-		this.intervalCounter = 0;
 		this.inputFieldDeclaration = declaration;
+
+		this.writeSignal = new Signal<any>(undefined);
+		this.readSignal = new Signal<any>(undefined);
 
 		if (!this.error) {
 			try {
@@ -62,9 +69,8 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 				}
 
 				this.inputField = InputFieldFactory.createInputField(this.inputFieldDeclaration.inputFieldType, {
-					type: type,
+					renderChildType: renderChildType,
 					inputFieldMarkdownRenderChild: this,
-					onValueChanged: this.updateMetadataManager.bind(this),
 				});
 			} catch (e: any) {
 				this.error = e.message;
@@ -113,35 +119,31 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	}
 
 	registerSelfToMetadataManager(): MetadataFileCache | undefined {
+		// if bind target is invalid, return
 		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetFile || !this.bindTargetMetadataPath || this.bindTargetMetadataPath?.length === 0) {
 			return;
 		}
 
-		return this.plugin.metadataManager.register(
-			this.bindTargetFile,
-			value => {
-				if (!this.inputField) {
-					throw new MetaBindInternalError('inputField is undefined, can not update inputField');
-				}
+		this.metadataManagerReadSignalListener = this.readSignal.registerListener({ callback: this.updateMetadataManager.bind(this) });
 
-				if (!this.inputField.isEqualValue(value)) {
-					this.inputField.setValue(value);
-				}
-			},
-			this.bindTargetMetadataPath,
-			this.uuid
-		);
+		return this.plugin.metadataManager.register(this.bindTargetFile, this.writeSignal, this.bindTargetMetadataPath, this.uuid);
 	}
 
 	unregisterSelfFromMetadataManager(): void {
+		// if bind target is invalid, return
 		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetFile || !this.bindTargetMetadataPath || this.bindTargetMetadataPath?.length === 0) {
 			return;
+		}
+
+		if (this.metadataManagerReadSignalListener) {
+			this.readSignal.unregisterListener(this.metadataManagerReadSignalListener);
 		}
 
 		this.plugin.metadataManager.unregister(this.bindTargetFile, this.uuid);
 	}
 
 	updateMetadataManager(value: any): void {
+		// if bind target is invalid, return
 		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetFile || !this.bindTargetMetadataPath || this.bindTargetMetadataPath?.length === 0) {
 			return;
 		}
@@ -179,32 +181,31 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		);
 	}
 
+	hasValidBindTarget(): boolean {
+		return isTruthy(this.inputFieldDeclaration?.isBound) && isTruthy(this.bindTargetFile) && isTruthy(this.bindTargetMetadataPath) && this.bindTargetMetadataPath?.length !== 0;
+	}
+
 	async onload(): Promise<void> {
 		console.log('meta-bind | InputFieldMarkdownRenderChild >> load', this);
 
-		const container: HTMLDivElement = createDiv();
-		container.addClass('meta-bind-plugin-input-wrapper');
 		this.containerEl.addClass('meta-bind-plugin-input');
 
+		const container: HTMLDivElement = createDiv();
+		container.addClass('meta-bind-plugin-input-wrapper');
+
 		if (this.error) {
-			this.containerEl.empty();
-			this.containerEl.createEl('span', { text: this.fullDeclaration, cls: 'meta-bind-code' });
-			container.innerText = ` -> ERROR: ${this.error}`;
-			container.addClass('meta-bind-plugin-error');
-			this.containerEl.appendChild(container);
+			this.renderError(this.error);
 			return;
 		}
 
 		if (!this.inputField) {
-			this.containerEl.empty();
-			this.containerEl.createEl('span', { text: this.fullDeclaration, cls: 'meta-bind-code' });
-			container.innerText = ` -> ERROR: ${new MetaBindInternalError('input field is undefined and error is empty').message}`;
-			container.addClass('meta-bind-plugin-error');
-			this.containerEl.appendChild(container);
+			this.renderError(new MetaBindInternalError('input field is undefined and error is empty').message);
 			return;
 		}
 
-		this.metadataCache = this.registerSelfToMetadataManager();
+		if (this.hasValidBindTarget()) {
+			this.metadataCache = this.registerSelfToMetadataManager();
+		}
 		this.plugin.registerInputFieldMarkdownRenderChild(this);
 
 		this.inputField.render(container);
@@ -236,6 +237,20 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		}
 	}
 
+	renderError(message: string): void {
+		this.containerEl.empty();
+
+		if (this.renderChildType === RenderChildType.BLOCK) {
+			const cardContainer: HTMLDivElement = this.containerEl.createDiv({ cls: 'meta-bind-plugin-card' });
+
+			cardContainer.createEl('code', { text: ` ${this.fullDeclaration} ` });
+			cardContainer.createEl('span', { text: message, cls: 'meta-bind-plugin-error' });
+		} else {
+			this.containerEl.createEl('code', { text: ` ${this.fullDeclaration}` });
+			this.containerEl.createEl('code', { text: `-> ${message}`, cls: 'meta-bind-plugin-error' });
+		}
+	}
+
 	onunload(): void {
 		console.log('meta-bind | InputFieldMarkdownRenderChild >> unload', this);
 
@@ -244,7 +259,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		this.unregisterSelfFromMetadataManager();
 
 		this.containerEl.empty();
-		this.containerEl.remove();
+		this.containerEl.createEl('span', { text: 'unloaded meta bind input field', cls: 'meta-bind-plugin-error' });
 
 		super.onunload();
 	}

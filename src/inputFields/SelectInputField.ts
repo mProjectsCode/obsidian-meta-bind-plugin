@@ -12,8 +12,8 @@ export class SelectInputField extends AbstractInputField {
 	allowMultiSelect: boolean;
 	container: HTMLDivElement | undefined;
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
-		super(inputFieldMarkdownRenderChild, onValueChange);
+	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild) {
+		super(inputFieldMarkdownRenderChild);
 		this.elements = [];
 		this.allowMultiSelect = false;
 	}
@@ -53,10 +53,10 @@ export class SelectInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | SelectInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | SelectInputField >> render ${this.renderChild.uuid}`);
 		this.container = container;
 
-		const elementArguments: AbstractInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.OPTION);
+		const elementArguments: AbstractInputFieldArgument[] = this.renderChild.getArguments(InputFieldArgumentType.OPTION);
 
 		let i = 0;
 		for (const elementArgument of elementArguments) {
@@ -69,7 +69,7 @@ export class SelectInputField extends AbstractInputField {
 			i += 1;
 		}
 
-		this.setValue(this.inputFieldMarkdownRenderChild.getInitialValue());
+		this.setValue(this.renderChild.getInitialValue());
 	}
 
 	public destroy(): void {}

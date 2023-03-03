@@ -25,7 +25,7 @@
 
 	export function render() {
 		renderEl.innerHTML = '';
-		MarkdownRenderer.renderMarkdown(value, renderEl, editorInput.inputFieldMarkdownRenderChild.filePath, editorInput.inputFieldMarkdownRenderChild);
+		MarkdownRenderer.renderMarkdown(value, renderEl, editorInput.renderChild.filePath, editorInput.renderChild);
 	}
 
 	function focusOut(event: MouseEvent) {

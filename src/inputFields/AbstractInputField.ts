@@ -1,14 +1,26 @@
 import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
+import { MetaBindInternalError } from '../utils/MetaBindErrors';
 
 export abstract class AbstractInputField {
 	static allowBlock: boolean = true;
 	static allowInline: boolean = true;
-	inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild;
+	renderChild: InputFieldMarkdownRenderChild;
 	onValueChange: (value: any) => void | Promise<void>;
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
-		this.inputFieldMarkdownRenderChild = inputFieldMarkdownRenderChild;
-		this.onValueChange = onValueChange;
+	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild) {
+		this.renderChild = inputFieldMarkdownRenderChild;
+
+		this.onValueChange = (value: any) => {
+			this.renderChild.readSignal.set(value);
+		};
+
+		this.renderChild.writeSignal.registerListener({
+			callback: (value: any) => {
+				if (!this.isEqualValue(value)) {
+					this.setValue(value);
+				}
+			},
+		});
 	}
 
 	/**

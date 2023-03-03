@@ -9,8 +9,8 @@ export class SliderInputField extends AbstractInputField {
 	minValue: number;
 	maxValue: number;
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
-		super(inputFieldMarkdownRenderChild, onValueChange);
+	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild) {
+		super(inputFieldMarkdownRenderChild);
 		this.minValue = inputFieldMarkdownRenderChild.getArgument(InputFieldArgumentType.MIN_VALUE)?.value ?? 0;
 		this.maxValue = inputFieldMarkdownRenderChild.getArgument(InputFieldArgumentType.MAX_VALUE)?.value ?? 100;
 	}
@@ -33,7 +33,7 @@ export class SliderInputField extends AbstractInputField {
 				this.sliderComponent.setValue(value);
 			}
 		} else {
-			console.warn(new MetaBindValueError(`invalid value '${value}' at sliderInputField ${this.inputFieldMarkdownRenderChild.uuid}`));
+			console.warn(new MetaBindValueError(`invalid value '${value}' at sliderInputField ${this.renderChild.uuid}`));
 			this.sliderComponent.setValue(this.getDefaultValue());
 		}
 	}
@@ -55,18 +55,18 @@ export class SliderInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | SliderInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | SliderInputField >> render ${this.renderChild.uuid}`);
 
 		container.removeClass('meta-bind-plugin-input-wrapper');
 		container.addClass('meta-bind-plugin-flex-input-wrapper');
 
-		const labelArgument = this.inputFieldMarkdownRenderChild.getArgument(InputFieldArgumentType.ADD_LABELS);
+		const labelArgument = this.renderChild.getArgument(InputFieldArgumentType.ADD_LABELS);
 		if (labelArgument && labelArgument.value === true) {
 			container.createSpan({ text: this.minValue.toString(), cls: 'meta-bind-plugin-slider-input-label' });
 		}
 
 		const component = new SliderComponent(container);
-		component.setValue(this.inputFieldMarkdownRenderChild.getInitialValue());
+		component.setValue(this.renderChild.getInitialValue());
 		component.onChange(this.onValueChange);
 		component.setDynamicTooltip();
 		component.setLimits(this.minValue, this.maxValue, 1);

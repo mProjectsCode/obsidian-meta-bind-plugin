@@ -15,8 +15,8 @@ export class ImageSuggestInputField extends AbstractInputField {
 	value: string;
 	options: string[];
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
-		super(inputFieldMarkdownRenderChild, onValueChange);
+	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild) {
+		super(inputFieldMarkdownRenderChild);
 
 		this.value = '';
 		this.options = [];
@@ -54,7 +54,7 @@ export class ImageSuggestInputField extends AbstractInputField {
 	}
 
 	async getOptions(): Promise<void> {
-		const folderPaths: OptionQueryInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.OPTION_QUERY);
+		const folderPaths: OptionQueryInputFieldArgument[] = this.renderChild.getArguments(InputFieldArgumentType.OPTION_QUERY);
 		const images: string[] = [];
 
 		for (const folderPath of folderPaths) {
@@ -68,7 +68,7 @@ export class ImageSuggestInputField extends AbstractInputField {
 				continue;
 			}
 
-			const folder = this.inputFieldMarkdownRenderChild.plugin.app.vault.getAbstractFileByPath(folderPathString);
+			const folder = this.renderChild.plugin.app.vault.getAbstractFileByPath(folderPathString);
 			if (folder == null) {
 				const error = new MetaBindArgumentError(`expected suggest option query ${folderPathString} for image suggester to exist`);
 				new Notice(`meta-bind | ${error.message}`);
@@ -90,10 +90,10 @@ export class ImageSuggestInputField extends AbstractInputField {
 			}
 		}
 
-		const imagePaths: OptionInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.OPTION);
+		const imagePaths: OptionInputFieldArgument[] = this.renderChild.getArguments(InputFieldArgumentType.OPTION);
 
 		for (const imagePath of imagePaths) {
-			const imageFile = this.inputFieldMarkdownRenderChild.plugin.app.vault.getAbstractFileByPath(imagePath.value);
+			const imageFile = this.renderChild.plugin.app.vault.getAbstractFileByPath(imagePath.value);
 
 			if (!imageFile) {
 				const error = new MetaBindArgumentError(`expected suggest option ${imagePath.value} for image suggester to exist`);
@@ -124,18 +124,18 @@ export class ImageSuggestInputField extends AbstractInputField {
 
 	async showSuggest(): Promise<void> {
 		await this.getOptions();
-		new ImageSuggestModal(this.inputFieldMarkdownRenderChild.plugin.app, this.options, item => {
+		new ImageSuggestModal(this.renderChild.plugin.app, this.options, item => {
 			this.setValue(item);
 			this.onValueChange(item);
 		}).open();
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | SuggestInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | SuggestInputField >> render ${this.renderChild.uuid}`);
 
 		this.container = container;
 
-		this.value = this.inputFieldMarkdownRenderChild.getInitialValue();
+		this.value = this.renderChild.getInitialValue();
 
 		this.component = new ImageSuggestInput({
 			target: container,
