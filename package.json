@@ -9,7 +9,8 @@
 		"version": "node version-bump.mjs && git add manifest.json versions.json",
 		"test": "jest",
 		"format": "prettier --write .",
-		"lint": "eslint --max-warnings=0 src/**"
+		"lint": "eslint --max-warnings=0 src/**",
+		"types": "tsc -p \"./tsconfig.types.json\""
 	},
 	"keywords": [],
 	"author": "Moritz Jung",
