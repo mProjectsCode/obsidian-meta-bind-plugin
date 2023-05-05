@@ -176,5 +176,6 @@ export function pathJoin(path1: string, path2: string): string {
 }
 
 export function imagePathToUri(imagePath: string): string {
-	return `app://local/${pathJoin(getVaultBasePath() ?? '', imagePath)}`;
+	// return `app://local/${pathJoin(getVaultBasePath() ?? '', imagePath)}`;
+	return app.vault.adapter.getResourcePath(imagePath);
 }
