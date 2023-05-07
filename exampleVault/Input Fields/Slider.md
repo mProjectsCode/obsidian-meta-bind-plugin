@@ -1,6 +1,6 @@
 ---
-slider1: 57
-slider2: 11
+slider1: 22
+slider2: -4
 ---
 
 ### Simple Slider
