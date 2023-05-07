@@ -65,9 +65,9 @@ export default class MetaBindPlugin extends Plugin {
 			}
 		});
 
-		this.registerMarkdownCodeBlockProcessor('meta-bind-js', (source, el, ctx) => {
-			ctx.addChild(new ScriptMarkdownRenderChild(el, source, ctx, this));
-		});
+		// this.registerMarkdownCodeBlockProcessor('meta-bind-js', (source, el, ctx) => {
+		// 	ctx.addChild(new ScriptMarkdownRenderChild(el, source, ctx, this));
+		// });
 
 		// this.registerEditorExtension(cmPlugin);
 		// const languageCompartment = new Compartment();
@@ -81,19 +81,19 @@ export default class MetaBindPlugin extends Plugin {
 		// 	},
 		// });
 
-		if (this.settings.devMode) {
-			this.addCommand({
-				id: 'meta-bind-debug',
-				name: 'Trip Debugger',
-				callback: () => {
-					debugger;
-				},
-			});
-		}
-
-		this.app.workspace.onLayoutReady(async () => {
-			await this.registerCodeMirrorMode();
-		});
+		// if (this.settings.devMode) {
+		// 	this.addCommand({
+		// 		id: 'meta-bind-debug',
+		// 		name: 'Trip Debugger',
+		// 		callback: () => {
+		// 			debugger;
+		// 		},
+		// 	});
+		// }
+		//
+		// this.app.workspace.onLayoutReady(async () => {
+		// 	await this.registerCodeMirrorMode();
+		// });
 
 		this.addSettingTab(new MetaBindSettingTab(this.app, this));
 	}
