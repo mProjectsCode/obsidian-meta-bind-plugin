@@ -65,7 +65,7 @@ Lorem ipsum dolor sit amet, `INPUT[date():other note#date]` consectetur adipisci
 - unknown tempalate
 	- `INPUT[][toggle:toggle1]`
 	- `INPUT[nonExistantTemplate][toggle:toggle1]`
-- `INPUT[toggleTemplate][:toggle1]`
+- `INPUT[toggleTemplate][]`
 
 ## Error Messages
 - `INPUT[text():meta bind/nonExistantFile#title]`

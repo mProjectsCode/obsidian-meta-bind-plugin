@@ -19,7 +19,7 @@ export class Notifier<T, L extends Listener<T>> implements NotifierInterface<T, 
 
 	public registerListener(listener: Omit<L, 'uuid'>): L {
 		const l: L = listener as L;
-		l.uuid = crypto.randomUUID();
+		l.uuid = self.crypto.randomUUID();
 
 		this.listeners.push(l);
 
