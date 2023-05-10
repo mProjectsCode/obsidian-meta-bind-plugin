@@ -143,7 +143,7 @@ export class InputFieldDeclarationParser {
 			}
 
 			// declaration parts
-			const declarationParts: string[] = ParserUtils.split(inputFieldDeclaration.declaration, ':', this.squareBracesPair);
+			const declarationParts: string[] = inputFieldDeclaration.declaration ? ParserUtils.split(inputFieldDeclaration.declaration, ':', this.squareBracesPair) : [''];
 
 			// bind target
 			inputFieldDeclaration.bindTarget = declarationParts[1] ?? '';

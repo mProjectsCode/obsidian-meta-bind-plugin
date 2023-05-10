@@ -33,12 +33,12 @@ export class API {
 			throw new MetaBindParsingError(`unknown render child type '${renderChildType}'`);
 		}
 		declaration = this.parser.parseDeclaration(declaration, undefined, templateName);
-		return new InputFieldMarkdownRenderChild(container, renderChildType, declaration, this.plugin, filePath, crypto.randomUUID());
+		return new InputFieldMarkdownRenderChild(container, renderChildType, declaration, this.plugin, filePath, self.crypto.randomUUID());
 	}
 
 	public createInputFieldFromString(fullDeclaration: string, renderType: RenderChildType, filePath: string, container: HTMLElement): InputFieldMarkdownRenderChild {
 		const declaration: InputFieldDeclaration = this.parser.parseString(fullDeclaration);
-		return new InputFieldMarkdownRenderChild(container, renderType, declaration, this.plugin, filePath, crypto.randomUUID());
+		return new InputFieldMarkdownRenderChild(container, renderType, declaration, this.plugin, filePath, self.crypto.randomUUID());
 	}
 
 	public createDeclaration(inputFieldType: InputFieldType, inputFieldArguments?: { type: InputFieldArgumentType; value: string }[]): InputFieldDeclaration {
