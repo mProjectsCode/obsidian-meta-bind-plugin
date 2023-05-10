@@ -173,7 +173,7 @@ export class MetadataManager {
 			value = traverseObjectByPath(metadataPath, fileCache.metadata);
 		}
 
-		console.log(fileCache);
+		// console.log(fileCache);
 
 		for (const listener of fileCache.listeners) {
 			if (exceptUuid && exceptUuid === listener.uuid) {
