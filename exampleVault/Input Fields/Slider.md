@@ -1,6 +1,7 @@
 ---
 slider1: 22
 slider2: -4
+slider3: 795
 ---
 
 ### Simple Slider
@@ -18,6 +19,6 @@ INPUT[slider(addLabels, showcase):slider1]
 INPUT[slider(addLabels, minValue(-20), maxValue(20), showcase):slider2]
 ```
 
-```js
-let a = 5;
+```meta-bind
+INPUT[slider(addLabels, minValue(0), maxValue(1000), showcase):slider3]
 ```

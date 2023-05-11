@@ -66,10 +66,10 @@ export class SliderInputField extends AbstractInputField {
 		}
 
 		const component = new SliderComponent(container);
+		component.setLimits(this.minValue, this.maxValue, 1);
 		component.setValue(this.renderChild.getInitialValue());
 		component.onChange(this.onValueChange);
 		component.setDynamicTooltip();
-		component.setLimits(this.minValue, this.maxValue, 1);
 		component.sliderEl.addClass('meta-bind-plugin-slider-input');
 
 		if (labelArgument && labelArgument.value === true) {
