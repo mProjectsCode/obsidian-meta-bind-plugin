@@ -12,6 +12,7 @@ import { StreamLanguage, StreamParser } from '@codemirror/language';
 import './frontmatterDisplay/custom_overlay';
 import { Mode } from 'codemirror';
 import {ViewFieldMarkdownRenderChild} from './ViewFieldMarkdownRenderChild';
+import {createInputFieldEditorPlugin, createViewFieldEditorPlugin} from './cm6/ViewFieldCm6';
 
 export default class MetaBindPlugin extends Plugin {
 	// @ts-ignore defined in `onload`
@@ -78,7 +79,8 @@ export default class MetaBindPlugin extends Plugin {
 		// 	ctx.addChild(new ScriptMarkdownRenderChild(el, source, ctx, this));
 		// });
 
-		// this.registerEditorExtension(cmPlugin);
+		this.registerEditorExtension(createViewFieldEditorPlugin(this));
+		this.registerEditorExtension(createInputFieldEditorPlugin(this));
 		// const languageCompartment = new Compartment();
 		// this.registerEditorExtension(languageCompartment.of(javascript()));
 
