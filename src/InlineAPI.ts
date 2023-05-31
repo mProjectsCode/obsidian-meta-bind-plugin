@@ -45,14 +45,14 @@ export class InlineAPI {
 	}
 
 	public createDeclaration(inputFieldType: InputFieldType, inputFieldArguments?: { type: InputFieldArgumentType; value: string }[]): InputFieldDeclaration {
-		return this.api.createDeclaration(inputFieldType, inputFieldArguments);
+		return this.api.createInputFieldDeclaration(inputFieldType, inputFieldArguments);
 	}
 
 	public createDeclarationFromString(fullDeclaration: string): InputFieldDeclaration {
-		return this.api.createDeclarationFromString(fullDeclaration);
+		return this.api.createInputFieldDeclarationFromString(fullDeclaration);
 	}
 
 	public bindDeclaration(declaration: InputFieldDeclaration, bindTargetField: string, bindTargetFile?: string): InputFieldDeclaration {
-		return this.api.bindDeclaration(declaration, bindTargetField, bindTargetFile);
+		return this.api.bindInputFieldDeclaration(declaration, bindTargetField, bindTargetFile);
 	}
 }

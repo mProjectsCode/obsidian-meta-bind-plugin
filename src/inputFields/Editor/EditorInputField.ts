@@ -15,7 +15,10 @@ export class EditorInputField extends AbstractInputField {
 		this.value = '';
 	}
 
-	getValue(): string {
+	getValue(): string | undefined {
+		if (!this.component) {
+			return undefined;
+		}
 		return this.value;
 	}
 

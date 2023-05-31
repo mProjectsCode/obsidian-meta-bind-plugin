@@ -15,6 +15,21 @@ body {
 	display: inline;
 }
 
+code.meta-bind-plugin-view {
+	background-color: transparent;
+	border: none ;
+	color: inherit;
+	font-size: inherit;
+	font-family: inherit;
+	padding: 0;
+	margin: 0;
+
+}
+
+div.meta-bind-plugin-view-wrapper {
+	display: inline;
+}
+
 .meta-bind-plugin-flex-input-wrapper {
 	display: inline-flex;
 }

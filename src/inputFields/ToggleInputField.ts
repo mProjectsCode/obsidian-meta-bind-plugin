@@ -5,16 +5,16 @@ import { MetaBindInternalError, MetaBindValueError } from '../utils/MetaBindErro
 export class ToggleInputField extends AbstractInputField {
 	toggleComponent: ToggleComponent | undefined;
 
-	getValue(): boolean {
+	getValue(): boolean | undefined {
 		if (!this.toggleComponent) {
-			throw new MetaBindInternalError('toggle input component is undefined');
+			return undefined;
 		}
 		return this.toggleComponent.getValue();
 	}
 
 	setValue(value: any): void {
 		if (!this.toggleComponent) {
-			throw new MetaBindInternalError('toggle input component is undefined');
+			return;
 		}
 
 		if (value != null && typeof value == 'boolean') {

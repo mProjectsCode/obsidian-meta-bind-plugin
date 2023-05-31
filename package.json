@@ -41,6 +41,7 @@
 	},
 	"dependencies": {
 		"@opd-libs/opd-metadata-lib": "0.0.4",
-		"@opd-libs/opd-utils-lib": "0.0.2"
+		"@opd-libs/opd-utils-lib": "0.0.2",
+		"mathjs": "^11.8.0"
 	}
 }

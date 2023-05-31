@@ -9,6 +9,9 @@ export class MultiSelectInputField extends SelectInputField {
 	}
 
 	getValue(): any {
+		if (!this.container) {
+			return undefined;
+		}
 		return this.elements.filter(x => x.isActive()).map(x => x.value);
 	}
 

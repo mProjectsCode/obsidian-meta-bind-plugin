@@ -38,16 +38,23 @@ export class TimeInputField extends AbstractInputField {
 		return this.container;
 	}
 
-	public getValue(): string {
+	public getValue(): string | undefined {
+		if (!this.hourComponent) {
+			return undefined;
+		}
+		if (!this.minuteComponent) {
+			return undefined;
+		}
+
 		return TimeParser.stringify(this.time as Time);
 	}
 
 	public setValue(value: string): void {
 		if (!this.hourComponent) {
-			throw new MetaBindInternalError('time input hour component is undefined');
+			return;
 		}
 		if (!this.minuteComponent) {
-			throw new MetaBindInternalError('time input minute component is undefined');
+			return;
 		}
 
 		this.time = TimeParser.parse(value);

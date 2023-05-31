@@ -26,7 +26,10 @@ export class SelectInputField extends AbstractInputField {
 		return this.container;
 	}
 
-	getValue(): string {
+	getValue(): string | undefined {
+		if (!this.container) {
+			return undefined;
+		}
 		return this.elements.filter(x => x.isActive()).first()?.value ?? '';
 	}
 

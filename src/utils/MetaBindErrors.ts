@@ -33,3 +33,9 @@ export class MetaBindJsError extends Error {
 		super(`[MB_JS_ERROR] ${message}`);
 	}
 }
+
+export class MetaBindExpressionError extends Error {
+	constructor(message: string) {
+		super(`[MB_EXPRESSION_ERROR] ${message}`);
+	}
+}

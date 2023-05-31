@@ -15,9 +15,9 @@ export class SliderInputField extends AbstractInputField {
 		this.maxValue = inputFieldMarkdownRenderChild.getArgument(InputFieldArgumentType.MAX_VALUE)?.value ?? 100;
 	}
 
-	getValue(): number {
+	getValue(): number | undefined {
 		if (!this.sliderComponent) {
-			throw new MetaBindInternalError('slider input component is undefined');
+			return undefined;
 		}
 
 		return this.sliderComponent.getValue();
@@ -25,7 +25,7 @@ export class SliderInputField extends AbstractInputField {
 
 	setValue(value: any): void {
 		if (!this.sliderComponent) {
-			throw new MetaBindInternalError('slider input component is undefined');
+			return;
 		}
 
 		if (value != null && typeof value == 'number') {

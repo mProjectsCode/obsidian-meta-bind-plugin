@@ -35,7 +35,7 @@ export class MetadataManager {
 	}
 
 	register(file: TFile, signal: Signal<any | undefined>, metadataPath: string[], uuid: string): MetadataFileCache {
-		const fileCache = this.getCacheForFile(file);
+		const fileCache: MetadataFileCache | undefined = this.getCacheForFile(file);
 		if (fileCache) {
 			console.debug(`meta-bind | MetadataManager >> registered ${uuid} to existing file cache ${file.path} -> ${metadataPath}`);
 			fileCache.listeners.push({
@@ -43,6 +43,7 @@ export class MetadataManager {
 				metadataPath: metadataPath,
 				uuid: uuid,
 			});
+			signal.set(traverseObjectByPath(metadataPath, fileCache.metadata));
 			return fileCache;
 		} else {
 			console.debug(`meta-bind | MetadataManager >> registered ${uuid} to newly created file cache ${file.path} -> ${metadataPath}`);
@@ -60,6 +61,7 @@ export class MetadataManager {
 				changed: false,
 			};
 			console.log(`meta-bind | MetadataManager >> loaded metadata for file ${file.path}`, c.metadata);
+			signal.set(traverseObjectByPath(metadataPath, c.metadata));
 
 			this.cache.push(c);
 			return c;
