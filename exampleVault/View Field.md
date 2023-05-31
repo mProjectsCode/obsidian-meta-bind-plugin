@@ -4,7 +4,7 @@ number2: 1254
 unit: m
 ---
 
-`INPUT[number:number]`
+`INPUT[number:number1]`
 `INPUT[number:number2]`
 `INPUT[text:unit]`
 

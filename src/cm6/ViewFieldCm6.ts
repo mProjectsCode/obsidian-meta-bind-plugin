@@ -4,7 +4,7 @@ import {syntaxTree} from '@codemirror/language';
 import {SyntaxNodeRef} from '@lezer/common';
 import {editorInfoField} from 'obsidian';
 import MetaBindPlugin from '../main';
-import {RenderChildType} from '../InputFieldMarkdownRenderChild';
+import {InputFieldMarkdownRenderChild, RenderChildType} from '../InputFieldMarkdownRenderChild';
 import {ViewFieldMarkdownRenderChild} from '../ViewFieldMarkdownRenderChild';
 
 export class ViewFieldWidget extends WidgetType {
@@ -35,7 +35,6 @@ export class ViewFieldWidget extends WidgetType {
 	}
 
 	public destroy(dom: HTMLElement): void {
-		console.log('test')
 		this.viewField?.unload();
 		super.destroy(dom);
 	}
@@ -94,7 +93,7 @@ export class InputFieldWidget extends WidgetType {
 	content: string;
 	filePath: string;
 	plugin: MetaBindPlugin;
-
+	inputField?: InputFieldMarkdownRenderChild;
 
 	constructor(content: string, filePath: string, plugin: MetaBindPlugin) {
 		super();
@@ -110,9 +109,15 @@ export class InputFieldWidget extends WidgetType {
 	public toDOM(view: EditorView): HTMLElement {
 		const div = document.createElement("code");
 
-		this.plugin.api.createInputFieldFromString(this.content, RenderChildType.INLINE, this.filePath, div).load();
+		this.inputField = this.plugin.api.createInputFieldFromString(this.content, RenderChildType.INLINE, this.filePath, div);
+		this.inputField.load();
 
 		return div;
+	}
+
+	public destroy(dom: HTMLElement): void {
+		this.inputField?.unload();
+		super.destroy(dom);
 	}
 }
 
