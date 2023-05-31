@@ -20,6 +20,9 @@ export class DatePickerInputField extends AbstractInputField {
 	}
 
 	getValue(): any {
+		if (!this.component) {
+			return undefined;
+		}
 		return DateParser.stringify(this.date);
 	}
 

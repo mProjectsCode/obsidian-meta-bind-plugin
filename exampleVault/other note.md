@@ -1,11 +1,8 @@
 ---
-"1": A
-"2": C
-"6": false
 tags: test
 title: test
-select: option b
-date: Friday, June 10th 2022
+select: option a
+date: 2023-05-19
 time: 19:20
 multi-select:
   - option a

@@ -1,7 +1,7 @@
 ---
-slider1: 5
+slider1: 4
 nested:
-  object: dfgdf
+  object: d
 suggest: test
 toggle1: false
 Domestic_tasks:

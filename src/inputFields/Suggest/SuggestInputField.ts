@@ -34,7 +34,10 @@ export class SuggestInputField extends AbstractInputField {
 		}
 	}
 
-	getValue(): string {
+	getValue(): string | undefined {
+		if (!this.component) {
+			return undefined;
+		}
 		return this.value;
 	}
 

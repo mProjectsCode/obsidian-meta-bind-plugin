@@ -47,19 +47,29 @@ export class DateInputField extends AbstractInputField {
 		return this.container;
 	}
 
-	public getValue(): string {
+	public getValue(): string | undefined {
+		if (!this.monthComponent) {
+			return undefined;
+		}
+		if (!this.dayComponent) {
+			return undefined;
+		}
+		if (!this.yearComponent) {
+			return undefined;
+		}
+
 		return DateParser.stringify(this.date);
 	}
 
 	public setValue(value: string): void {
 		if (!this.monthComponent) {
-			throw new MetaBindInternalError('date input month component is undefined');
+			return;
 		}
 		if (!this.dayComponent) {
-			throw new MetaBindInternalError('date input day component is undefined');
+			return;
 		}
 		if (!this.yearComponent) {
-			throw new MetaBindInternalError('date input hour component is undefined');
+			return;
 		}
 
 		this.date = DateParser.parse(value);

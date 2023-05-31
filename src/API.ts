@@ -5,17 +5,24 @@ import { InputFieldMarkdownRenderChild, RenderChildType } from './InputFieldMark
 import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser, InputFieldType } from './parsers/InputFieldDeclarationParser';
 import { MetaBindBindTargetError, MetaBindParsingError } from './utils/MetaBindErrors';
 import { isTruthy } from './utils/Utils';
+import {ViewFieldDeclaration, ViewFieldDeclarationParser} from './parsers/ViewFieldDeclarationParser';
+import {BindTargetParser} from './parsers/BindTargetParser';
+import {ViewFieldMarkdownRenderChild} from './ViewFieldMarkdownRenderChild';
 
 export class API {
 	public app: App;
 	public plugin: MetaBindPlugin;
-	public parser: InputFieldDeclarationParser;
+	public inputFieldParser: InputFieldDeclarationParser;
+	public viewFieldParser: ViewFieldDeclarationParser;
+	public bindTargetParser: BindTargetParser;
 
 	constructor(plugin: MetaBindPlugin) {
 		this.plugin = plugin;
 
 		this.app = plugin.app;
-		this.parser = new InputFieldDeclarationParser();
+		this.inputFieldParser = new InputFieldDeclarationParser();
+		this.viewFieldParser = new ViewFieldDeclarationParser();
+		this.bindTargetParser = new BindTargetParser(this.plugin);
 	}
 
 	public createInlineAPI(filePath: string, container?: HTMLElement): InlineAPI {
@@ -32,17 +39,22 @@ export class API {
 		if (!Object.values(RenderChildType).contains(renderChildType)) {
 			throw new MetaBindParsingError(`unknown render child type '${renderChildType}'`);
 		}
-		declaration = this.parser.parseDeclaration(declaration, undefined, templateName);
+		declaration = this.inputFieldParser.parseDeclaration(declaration, undefined, templateName);
 		return new InputFieldMarkdownRenderChild(container, renderChildType, declaration, this.plugin, filePath, self.crypto.randomUUID());
 	}
 
 	public createInputFieldFromString(fullDeclaration: string, renderType: RenderChildType, filePath: string, container: HTMLElement): InputFieldMarkdownRenderChild {
-		const declaration: InputFieldDeclaration = this.parser.parseString(fullDeclaration);
+		const declaration: InputFieldDeclaration = this.inputFieldParser.parseString(fullDeclaration);
 		return new InputFieldMarkdownRenderChild(container, renderType, declaration, this.plugin, filePath, self.crypto.randomUUID());
 	}
 
-	public createDeclaration(inputFieldType: InputFieldType, inputFieldArguments?: { type: InputFieldArgumentType; value: string }[]): InputFieldDeclaration {
-		if (this.parser.getInputFieldType(inputFieldType) === InputFieldType.INVALID) {
+	public createViewFieldFromString(fullDeclaration: string, renderType: RenderChildType, filePath: string, container: HTMLElement): ViewFieldMarkdownRenderChild {
+		const declaration: ViewFieldDeclaration = this.viewFieldParser.parseString(fullDeclaration);
+		return new ViewFieldMarkdownRenderChild(container, renderType, declaration, this.plugin, filePath, self.crypto.randomUUID());
+	}
+
+	public createInputFieldDeclaration(inputFieldType: InputFieldType, inputFieldArguments?: { type: InputFieldArgumentType; value: string }[]): InputFieldDeclaration {
+		if (this.inputFieldParser.getInputFieldType(inputFieldType) === InputFieldType.INVALID) {
 			throw new MetaBindParsingError(`input field type '${inputFieldType}' is invalid`);
 		}
 
@@ -50,18 +62,18 @@ export class API {
 			declaration: undefined,
 			fullDeclaration: undefined,
 			inputFieldType: inputFieldType,
-			argumentContainer: this.parser.parseArguments(inputFieldType, inputFieldArguments),
+			argumentContainer: this.inputFieldParser.parseArguments(inputFieldType, inputFieldArguments),
 			isBound: false,
 			bindTarget: '',
 			error: undefined,
 		} as InputFieldDeclaration;
 	}
 
-	public createDeclarationFromString(fullDeclaration: string): InputFieldDeclaration {
-		return this.parser.parseString(fullDeclaration);
+	public createInputFieldDeclarationFromString(fullDeclaration: string): InputFieldDeclaration {
+		return this.inputFieldParser.parseString(fullDeclaration);
 	}
 
-	public bindDeclaration(declaration: InputFieldDeclaration, bindTargetField: string, bindTargetFile?: string): InputFieldDeclaration {
+	public bindInputFieldDeclaration(declaration: InputFieldDeclaration, bindTargetField: string, bindTargetFile?: string): InputFieldDeclaration {
 		if (bindTargetFile && !bindTargetField) {
 			throw new MetaBindBindTargetError('if a bind target file is specified, a bind target field must also be specified');
 		}

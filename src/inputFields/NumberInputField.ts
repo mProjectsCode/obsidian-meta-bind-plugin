@@ -6,9 +6,9 @@ import { MetaBindInternalError, MetaBindValueError } from '../utils/MetaBindErro
 export class NumberInputField extends AbstractInputField {
 	numberComponent: TextComponent | undefined;
 
-	getValue(): number {
+	getValue(): number | undefined {
 		if (!this.numberComponent) {
-			throw new MetaBindInternalError('number input component is undefined');
+			return undefined;
 		}
 		const value = parseFloat(this.numberComponent.getValue());
 		return isNaN(value) ? 0 : value;
@@ -16,7 +16,7 @@ export class NumberInputField extends AbstractInputField {
 
 	setValue(value: any): void {
 		if (!this.numberComponent) {
-			throw new MetaBindInternalError('number input component is undefined');
+			return;
 		}
 
 		if (value != null && (typeof value == 'number' || typeof value == 'string')) {

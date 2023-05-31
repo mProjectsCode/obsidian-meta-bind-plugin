@@ -5,9 +5,9 @@ import { MetaBindInternalError, MetaBindValueError } from '../utils/MetaBindErro
 export class TextAreaInputField extends AbstractInputField {
 	textAreaComponent: TextAreaComponent | undefined;
 
-	getValue(): string {
+	getValue(): string | undefined {
 		if (!this.textAreaComponent) {
-			throw new MetaBindInternalError('text area input component is undefined');
+			return undefined;
 		}
 
 		return this.textAreaComponent.getValue();
@@ -15,7 +15,7 @@ export class TextAreaInputField extends AbstractInputField {
 
 	setValue(value: any): void {
 		if (!this.textAreaComponent) {
-			throw new MetaBindInternalError('text area input component is undefined');
+			return;
 		}
 
 		if (value != null && typeof value == 'string') {

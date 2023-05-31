@@ -11,6 +11,7 @@ import { setFirstWeekday } from './inputFields/DatePicker/DatePickerInputSvelteH
 import { StreamLanguage, StreamParser } from '@codemirror/language';
 import './frontmatterDisplay/custom_overlay';
 import { Mode } from 'codemirror';
+import {ViewFieldMarkdownRenderChild} from './ViewFieldMarkdownRenderChild';
 
 export default class MetaBindPlugin extends Plugin {
 	// @ts-ignore defined in `onload`
@@ -18,6 +19,8 @@ export default class MetaBindPlugin extends Plugin {
 
 	// @ts-ignore defined in `onload`
 	activeMarkdownInputFields: InputFieldMarkdownRenderChild[];
+	// @ts-ignore defined in `onload`
+	activeMarkdownViewFields: ViewFieldMarkdownRenderChild[];
 
 	// @ts-ignore defined in `onload`
 	metadataManager: MetadataManager;
@@ -36,10 +39,11 @@ export default class MetaBindPlugin extends Plugin {
 		this.api = new API(this);
 
 		DateParser.dateFormat = this.settings.preferredDateFormat;
-		this.api.parser.parseTemplates(this.settings.inputTemplates);
+		this.api.inputFieldParser.parseTemplates(this.settings.inputTemplates);
 		setFirstWeekday(this.settings.firstWeekday);
 
 		this.activeMarkdownInputFields = [];
+		this.activeMarkdownViewFields = [];
 		this.metadataManager = new MetadataManager(this);
 
 		this.registerMarkdownPostProcessor((el, ctx) => {
@@ -48,8 +52,13 @@ export default class MetaBindPlugin extends Plugin {
 				const codeBlock = codeBlocks.item(index);
 				const content = codeBlock.innerText;
 				const isInputField = content.startsWith('INPUT[') && content.endsWith(']');
+				const isViewField = content.startsWith('VIEW[') && content.endsWith(']');
 				if (isInputField) {
 					const inputField = this.api.createInputFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock);
+					ctx.addChild(inputField);
+				}
+				if (isViewField) {
+					const inputField = this.api.createViewFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock);
 					ctx.addChild(inputField);
 				}
 			}
@@ -152,6 +161,10 @@ export default class MetaBindPlugin extends Plugin {
 		for (const activeMarkdownInputField of this.activeMarkdownInputFields) {
 			activeMarkdownInputField.unload();
 		}
+
+		for (const activeMarkdownViewField of this.activeMarkdownViewFields) {
+			activeMarkdownViewField.unload();
+		}
 	}
 
 	registerInputFieldMarkdownRenderChild(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild): void {
@@ -162,6 +175,16 @@ export default class MetaBindPlugin extends Plugin {
 	unregisterInputFieldMarkdownRenderChild(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild): void {
 		console.debug(`meta-bind | Main >> unregistered input field ${inputFieldMarkdownRenderChild.uuid}`);
 		this.activeMarkdownInputFields = this.activeMarkdownInputFields.filter(x => x.uuid !== inputFieldMarkdownRenderChild.uuid);
+	}
+
+	registerViewFieldMarkdownRenderChild(viewFieldMarkdownRenderChild: ViewFieldMarkdownRenderChild): void {
+		console.debug(`meta-bind | Main >> registered view field ${viewFieldMarkdownRenderChild.uuid}`);
+		this.activeMarkdownViewFields.push(viewFieldMarkdownRenderChild);
+	}
+
+	unregisterViewFieldMarkdownRenderChild(viewFieldMarkdownRenderChild: ViewFieldMarkdownRenderChild): void {
+		console.debug(`meta-bind | Main >> unregistered view field ${viewFieldMarkdownRenderChild.uuid}`);
+		this.activeMarkdownViewFields = this.activeMarkdownViewFields.filter(x => x.uuid !== viewFieldMarkdownRenderChild.uuid);
 	}
 
 	getFilesByName(name: string): TFile[] {
@@ -196,7 +219,7 @@ export default class MetaBindPlugin extends Plugin {
 		console.log(`meta-bind | Main >> settings save`);
 
 		DateParser.dateFormat = this.settings.preferredDateFormat;
-		this.api.parser.parseTemplates(this.settings.inputTemplates);
+		this.api.inputFieldParser.parseTemplates(this.settings.inputTemplates);
 		setFirstWeekday(this.settings.firstWeekday);
 		await this.saveData(this.settings);
 	}
