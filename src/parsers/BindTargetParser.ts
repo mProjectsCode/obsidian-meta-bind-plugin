@@ -1,8 +1,7 @@
-import {MetaBindBindTargetError, MetaBindInternalError} from '../utils/MetaBindErrors';
-import {parsePath} from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
-import {TFile} from 'obsidian';
+import { MetaBindBindTargetError } from '../utils/MetaBindErrors';
+import { parsePath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
+import { TFile } from 'obsidian';
 import MetaBindPlugin from '../main';
-import {tSBigIntKeyword} from '@babel/types';
 
 export interface BindTargetDeclaration {
 	file: TFile;
@@ -14,14 +13,13 @@ export interface BindTargetDeclaration {
 export class BindTargetParser {
 	plugin: MetaBindPlugin;
 
-
 	constructor(plugin: MetaBindPlugin) {
 		this.plugin = plugin;
 	}
 
 	parseBindTarget(bindTargetString: string, fallbackFilePath: string): BindTargetDeclaration {
 		if (!bindTargetString) {
-			throw new MetaBindBindTargetError("bind target is empty");
+			throw new MetaBindBindTargetError('bind target is empty');
 		}
 
 		const bindTargetDeclaration: BindTargetDeclaration = {} as BindTargetDeclaration;

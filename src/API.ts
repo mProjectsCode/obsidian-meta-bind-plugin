@@ -5,9 +5,9 @@ import { InputFieldMarkdownRenderChild, RenderChildType } from './InputFieldMark
 import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser, InputFieldType } from './parsers/InputFieldDeclarationParser';
 import { MetaBindBindTargetError, MetaBindParsingError } from './utils/MetaBindErrors';
 import { isTruthy } from './utils/Utils';
-import {ViewFieldDeclaration, ViewFieldDeclarationParser} from './parsers/ViewFieldDeclarationParser';
-import {BindTargetParser} from './parsers/BindTargetParser';
-import {ViewFieldMarkdownRenderChild} from './ViewFieldMarkdownRenderChild';
+import { ViewFieldDeclaration, ViewFieldDeclarationParser } from './parsers/ViewFieldDeclarationParser';
+import { BindTargetParser } from './parsers/BindTargetParser';
+import { ViewFieldMarkdownRenderChild } from './ViewFieldMarkdownRenderChild';
 
 export class API {
 	public app: App;

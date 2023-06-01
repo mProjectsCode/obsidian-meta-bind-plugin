@@ -1,7 +1,5 @@
-import {InputFieldArgumentContainer} from '../inputFieldArguments/InputFieldArgumentContainer';
-import {InputFieldType} from './InputFieldDeclarationParser';
-import {EnclosingPair, ParserUtils} from '../utils/ParserUtils';
-import {MetaBindParsingError} from '../utils/MetaBindErrors';
+import { EnclosingPair, ParserUtils } from '../utils/ParserUtils';
+import { MetaBindParsingError } from '../utils/MetaBindErrors';
 
 export interface ViewFieldDeclaration {
 	/**

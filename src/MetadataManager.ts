@@ -3,8 +3,8 @@ import MetaBindPlugin from './main';
 import { Internal } from '@opd-libs/opd-metadata-lib/lib/Internal';
 import { arrayEquals, traverseObjectToParentByPath } from './utils/Utils';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
-import getMetadataFromFileCache = Internal.getMetadataFromFileCache;
 import { Listener, Signal } from './utils/Signal';
+import getMetadataFromFileCache = Internal.getMetadataFromFileCache;
 
 export interface MetadataFileCacheListener extends Listener<any | undefined> {
 	metadataPath: string[];

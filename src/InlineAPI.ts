@@ -1,8 +1,6 @@
 import { API } from './API';
 import { InputFieldArgumentType, InputFieldDeclaration, InputFieldType } from './parsers/InputFieldDeclarationParser';
 import { InputFieldMarkdownRenderChild, RenderChildType } from './InputFieldMarkdownRenderChild';
-import { MetaBindBindTargetError } from './utils/MetaBindErrors';
-import { isTruthy } from './utils/Utils';
 
 export class InlineAPI {
 	public api: API;

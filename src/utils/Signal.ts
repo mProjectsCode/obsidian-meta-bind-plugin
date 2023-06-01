@@ -1,5 +1,3 @@
-import * as crypto from 'crypto';
-
 export interface NotifierInterface<T, L extends Listener<T>> {
 	registerListener(listener: Omit<L, 'uuid'>): L;
 
