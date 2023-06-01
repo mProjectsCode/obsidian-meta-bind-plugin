@@ -5,14 +5,12 @@ import { getFileName, isPath, removeFileEnding } from './utils/Utils';
 import { DateParser } from './parsers/DateParser';
 import { MetadataManager } from './MetadataManager';
 import { API } from './API';
-import { ScriptMarkdownRenderChild } from './ScriptMarkdownRenderChild';
 import { Extension } from '@codemirror/state';
 import { setFirstWeekday } from './inputFields/DatePicker/DatePickerInputSvelteHelpers';
-import { StreamLanguage, StreamParser } from '@codemirror/language';
 import './frontmatterDisplay/custom_overlay';
 import { Mode } from 'codemirror';
-import {ViewFieldMarkdownRenderChild} from './ViewFieldMarkdownRenderChild';
-import {createInputFieldEditorPlugin, createViewFieldEditorPlugin} from './cm6/ViewFieldCm6';
+import { ViewFieldMarkdownRenderChild } from './ViewFieldMarkdownRenderChild';
+import { createMarkdownRenderChildWidgetEditorPlugin } from './cm6/Cm6_ViewPlugin';
 
 export default class MetaBindPlugin extends Plugin {
 	// @ts-ignore defined in `onload`
@@ -79,8 +77,7 @@ export default class MetaBindPlugin extends Plugin {
 		// 	ctx.addChild(new ScriptMarkdownRenderChild(el, source, ctx, this));
 		// });
 
-		this.registerEditorExtension(createViewFieldEditorPlugin(this));
-		this.registerEditorExtension(createInputFieldEditorPlugin(this));
+		this.registerEditorExtension(createMarkdownRenderChildWidgetEditorPlugin(this));
 		// const languageCompartment = new Compartment();
 		// this.registerEditorExtension(languageCompartment.of(javascript()));
 

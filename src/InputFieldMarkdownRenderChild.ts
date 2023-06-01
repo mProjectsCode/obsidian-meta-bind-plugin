@@ -1,18 +1,18 @@
-import { MarkdownRenderChild, TFile } from 'obsidian';
+import { MarkdownRenderChild } from 'obsidian';
 import MetaBindPlugin from './main';
 import { AbstractInputField } from './inputFields/AbstractInputField';
 import { InputFieldFactory } from './inputFields/InputFieldFactory';
 import { InputFieldArgumentType, InputFieldDeclaration, InputFieldType } from './parsers/InputFieldDeclarationParser';
 import { AbstractInputFieldArgument } from './inputFieldArguments/AbstractInputFieldArgument';
 import { ClassInputFieldArgument } from './inputFieldArguments/ClassInputFieldArgument';
-import { MetaBindBindTargetError, MetaBindInternalError } from './utils/MetaBindErrors';
+import { MetaBindInternalError } from './utils/MetaBindErrors';
 import { MetadataFileCache } from './MetadataManager';
-import { parsePath, traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
+import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { ShowcaseInputFieldArgument } from './inputFieldArguments/ShowcaseInputFieldArgument';
 import { TitleInputFieldArgument } from './inputFieldArguments/TitleInputFieldArgument';
 import { isTruthy } from './utils/Utils';
 import { Listener, Signal } from './utils/Signal';
-import {BindTargetDeclaration} from './parsers/BindTargetParser';
+import { BindTargetDeclaration } from './parsers/BindTargetParser';
 
 export enum RenderChildType {
 	INLINE = 'inline',

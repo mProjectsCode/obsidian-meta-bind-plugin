@@ -1,5 +1,4 @@
 import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
-import { MetaBindInternalError } from '../utils/MetaBindErrors';
 
 export abstract class AbstractInputField {
 	static allowBlock: boolean = true;

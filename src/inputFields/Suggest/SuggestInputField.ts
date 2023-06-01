@@ -3,7 +3,6 @@ import { AbstractInputField } from '../AbstractInputField';
 import SuggestInput from './SuggestInput.svelte';
 import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
 import { DataArray, getAPI, Literal } from 'obsidian-dataview';
-import { AbstractInputFieldArgument } from '../../inputFieldArguments/AbstractInputFieldArgument';
 import { SuggestInputModal } from './SuggestInputModal';
 import { Notice, TFile } from 'obsidian';
 import { MetaBindArgumentError, MetaBindInternalError } from '../../utils/MetaBindErrors';

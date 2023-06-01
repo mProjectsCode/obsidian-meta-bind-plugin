@@ -1,27 +1,18 @@
-import { MarkdownRenderChild, TFile } from 'obsidian';
+import { MarkdownRenderChild } from 'obsidian';
 import MetaBindPlugin from './main';
-import { AbstractInputField } from './inputFields/AbstractInputField';
-import { InputFieldFactory } from './inputFields/InputFieldFactory';
-import { InputFieldArgumentType, InputFieldDeclaration, InputFieldType } from './parsers/InputFieldDeclarationParser';
-import { AbstractInputFieldArgument } from './inputFieldArguments/AbstractInputFieldArgument';
-import { ClassInputFieldArgument } from './inputFieldArguments/ClassInputFieldArgument';
-import {MetaBindBindTargetError, MetaBindExpressionError, MetaBindInternalError} from './utils/MetaBindErrors';
+import { MetaBindExpressionError } from './utils/MetaBindErrors';
 import { MetadataFileCache } from './MetadataManager';
-import { parsePath, traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
-import { ShowcaseInputFieldArgument } from './inputFieldArguments/ShowcaseInputFieldArgument';
-import { TitleInputFieldArgument } from './inputFieldArguments/TitleInputFieldArgument';
-import { isTruthy } from './utils/Utils';
 import { Listener, Signal } from './utils/Signal';
-import {RenderChildType} from './InputFieldMarkdownRenderChild';
-import {ViewFieldDeclaration} from './parsers/ViewFieldDeclarationParser';
-import {BindTargetDeclaration} from './parsers/BindTargetParser';
-import {ViewField} from './viewFields/ViewField';
+import { RenderChildType } from './InputFieldMarkdownRenderChild';
+import { ViewFieldDeclaration } from './parsers/ViewFieldDeclarationParser';
+import { BindTargetDeclaration } from './parsers/BindTargetParser';
+import { ViewField } from './viewFields/ViewField';
 import * as MathJs from 'mathjs';
 
 export interface ViewFieldVariable {
-	bindTargetDeclaration: BindTargetDeclaration,
-	writeSignal: Signal<any>,
-	uuid: string,
+	bindTargetDeclaration: BindTargetDeclaration;
+	writeSignal: Signal<any>;
+	uuid: string;
 	metadataCache: MetadataFileCache | undefined;
 	writeSignalListener: Listener<any> | undefined;
 	contextName: string | undefined;
@@ -82,7 +73,7 @@ export class ViewFieldMarkdownRenderChild extends MarkdownRenderChild {
 	}
 
 	parseExpression() {
-		const declaration = this.viewFieldDeclaration.declaration ?? "";
+		const declaration = this.viewFieldDeclaration.declaration ?? '';
 		let varCounter = 0;
 
 		this.expressionStr = declaration.replace(/{.*?}/g, (substring: string): string => {
@@ -99,7 +90,7 @@ export class ViewFieldMarkdownRenderChild extends MarkdownRenderChild {
 			}
 
 			// this should be unreachable
-			return "MB_VAR_NOT_FOUND";
+			return 'MB_VAR_NOT_FOUND';
 		});
 
 		this.expression = MathJs.compile(this.expressionStr);
@@ -112,7 +103,7 @@ export class ViewFieldMarkdownRenderChild extends MarkdownRenderChild {
 				continue;
 			}
 
-			context[variable.contextName] = variable.writeSignal.get() ?? "";
+			context[variable.contextName] = variable.writeSignal.get() ?? '';
 		}
 
 		return context;
@@ -120,7 +111,7 @@ export class ViewFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 	evaluateExpression(): string {
 		if (!this.expression) {
-			throw new Error("Can't evaluate expression. Expression is undefined.")
+			throw new Error("Can't evaluate expression. Expression is undefined.");
 		}
 
 		const context = this.buildContext();
@@ -132,7 +123,7 @@ export class ViewFieldMarkdownRenderChild extends MarkdownRenderChild {
 				expression: this.expressionStr,
 				context: context,
 			});
-			throw new MetaBindExpressionError(`failed to evaluate expression "${this.viewFieldDeclaration.declaration}" with reason: ${e.message}`)
+			throw new MetaBindExpressionError(`failed to evaluate expression "${this.viewFieldDeclaration.declaration}" with reason: ${e.message}`);
 		}
 	}
 
@@ -141,14 +132,14 @@ export class ViewFieldMarkdownRenderChild extends MarkdownRenderChild {
 			variable.writeSignalListener = variable.writeSignal.registerListener({
 				callback: () => {
 					this.viewField.update();
-				}
+				},
 			});
 
 			variable.metadataCache = this.plugin.metadataManager.register(
 				variable.bindTargetDeclaration.file,
 				variable.writeSignal,
 				variable.bindTargetDeclaration.metadataPath,
-				this.uuid + "/" + variable.uuid,
+				this.uuid + '/' + variable.uuid
 			);
 		}
 	}
@@ -158,15 +149,12 @@ export class ViewFieldMarkdownRenderChild extends MarkdownRenderChild {
 			if (variable.writeSignalListener) {
 				variable.writeSignal.unregisterListener(variable.writeSignalListener);
 			}
-			this.plugin.metadataManager.unregister(
-				variable.bindTargetDeclaration.file,
-				this.uuid + "/" + variable.uuid,
-			);
+			this.plugin.metadataManager.unregister(variable.bindTargetDeclaration.file, this.uuid + '/' + variable.uuid);
 		}
 	}
 
 	getInitialValue(): string {
-		return ""
+		return '';
 	}
 
 	async onload(): Promise<void> {

@@ -1,6 +1,6 @@
 import { App, PluginSettingTab, Setting, TextAreaComponent } from 'obsidian';
 import MetaBindPlugin from '../main';
-import { firstWeekday, setFirstWeekday, Weekday, weekdays } from '../inputFields/DatePicker/DatePickerInputSvelteHelpers';
+import { Weekday, weekdays } from '../inputFields/DatePicker/DatePickerInputSvelteHelpers';
 
 export interface MetaBindPluginSettings {
 	devMode: boolean;
