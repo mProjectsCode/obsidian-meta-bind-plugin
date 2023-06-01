@@ -24,7 +24,8 @@ export abstract class MarkdownRenderChildWidget<T extends MarkdownRenderChild> e
 	abstract createRenderChild(container: HTMLElement): T;
 
 	public toDOM(view: EditorView): HTMLElement {
-		const div = document.createElement('code');
+		const div = document.createElement('span');
+		div.addClass("cm-inline-code");
 
 		this.renderChild = this.createRenderChild(div);
 		this.renderChild.load();

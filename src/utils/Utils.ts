@@ -66,6 +66,13 @@ export function mod(n: number, m: number): number {
  * @param arr2
  */
 export function doArraysContainEqualValues<T>(arr1: T[], arr2: T[]): boolean {
+	if (arr1 == null && arr2 == null) {
+		return true;
+	}
+	if (arr1 == null || arr2 == null) {
+		return false;
+	}
+
 	if (arr1.length !== arr2.length) {
 		return false;
 	}
