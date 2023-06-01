@@ -15,7 +15,8 @@ body {
 	display: inline;
 }
 
-code.meta-bind-plugin-view {
+/* For higher specificity */
+:is(code, span).meta-bind-plugin-view:has(> div.meta-bind-plugin-view-wrapper) {
 	background-color: transparent;
 	border: none ;
 	color: inherit;

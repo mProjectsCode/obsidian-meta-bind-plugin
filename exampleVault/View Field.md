@@ -1,10 +1,10 @@
 ---
 number1: 11
-number2: 15
+number2: 20
 unit: m
 ---
 
-`INPUT[number:number1]`
+hello `INPUT[number:number1]` test
 `INPUT[number:number2]`
 `INPUT[text:unit]`
 
