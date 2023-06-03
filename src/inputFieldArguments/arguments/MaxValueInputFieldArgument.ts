@@ -1,6 +1,6 @@
-import { AbstractInputFieldArgument } from './AbstractInputFieldArgument';
-import { InputFieldArgumentType, InputFieldType } from '../parsers/InputFieldDeclarationParser';
-import { MetaBindParsingError } from '../utils/MetaBindErrors';
+import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
+import { InputFieldArgumentType, InputFieldType } from '../../parsers/InputFieldDeclarationParser';
+import { MetaBindParsingError } from '../../utils/MetaBindErrors';
 
 export class MaxValueInputFieldArgument extends AbstractInputFieldArgument {
 	identifier: InputFieldArgumentType = InputFieldArgumentType.MAX_VALUE;

@@ -1,12 +1,12 @@
 import { AbstractInputField } from '../AbstractInputField';
 import ImageSuggestInput from './ImageSuggestInput.svelte';
-import { InputFieldMarkdownRenderChild } from '../../InputFieldMarkdownRenderChild';
 import { MetaBindArgumentError, MetaBindInternalError } from '../../utils/MetaBindErrors';
 import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
 import { Notice, TFile, TFolder } from 'obsidian';
 import { ImageSuggestModal } from './ImageSuggestModal';
-import { OptionQueryInputFieldArgument } from '../../inputFieldArguments/OptionQueryInputFieldArgument';
-import { OptionInputFieldArgument } from '../../inputFieldArguments/OptionInputFieldArgument';
+import { OptionQueryInputFieldArgument } from '../../inputFieldArguments/arguments/OptionQueryInputFieldArgument';
+import { OptionInputFieldArgument } from '../../inputFieldArguments/arguments/OptionInputFieldArgument';
+import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 
 export class ImageSuggestInputField extends AbstractInputField {
 	static allowInline: boolean = false;
@@ -15,8 +15,8 @@ export class ImageSuggestInputField extends AbstractInputField {
 	value: string;
 	options: string[];
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild) {
-		super(inputFieldMarkdownRenderChild);
+	constructor(inputFieldMDRC: InputFieldMDRC) {
+		super(inputFieldMDRC);
 
 		this.value = '';
 		this.options = [];

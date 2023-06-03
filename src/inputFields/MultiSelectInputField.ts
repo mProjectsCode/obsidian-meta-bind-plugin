@@ -1,10 +1,10 @@
 import { SelectInputField } from './SelectInputField';
-import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
 import { doArraysContainEqualValues } from '../utils/Utils';
+import { InputFieldMDRC } from '../renderChildren/InputFieldMDRC';
 
 export class MultiSelectInputField extends SelectInputField {
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild) {
-		super(inputFieldMarkdownRenderChild);
+	constructor(inputFieldMDRC: InputFieldMDRC) {
+		super(inputFieldMDRC);
 		this.allowMultiSelect = true;
 	}
 

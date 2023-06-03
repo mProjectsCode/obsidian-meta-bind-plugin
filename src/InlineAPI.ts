@@ -1,6 +1,6 @@
 import { API } from './API';
 import { InputFieldArgumentType, InputFieldDeclaration, InputFieldType } from './parsers/InputFieldDeclarationParser';
-import { InputFieldMarkdownRenderChild, RenderChildType } from './InputFieldMarkdownRenderChild';
+import { InputFieldMDRC, RenderChildType } from './renderChildren/InputFieldMDRC';
 
 export class InlineAPI {
 	public api: API;
@@ -13,7 +13,7 @@ export class InlineAPI {
 		this.container = container;
 	}
 
-	public createInputField(declaration: InputFieldDeclaration, templateName: string | undefined, renderType: RenderChildType): InputFieldMarkdownRenderChild {
+	public createInputField(declaration: InputFieldDeclaration, templateName: string | undefined, renderType: RenderChildType): InputFieldMDRC {
 		if (!this.container) {
 			throw new Error('inline API was instanced without a container, please use "createInputFieldInContainer"');
 		}
@@ -26,11 +26,11 @@ export class InlineAPI {
 		templateName: string | undefined,
 		renderChildType: RenderChildType,
 		container: HTMLElement
-	): InputFieldMarkdownRenderChild {
+	): InputFieldMDRC {
 		return this.api.createInputField(declaration, templateName, renderChildType, this.filePath, container);
 	}
 
-	public createInputFieldFromString(fullDeclaration: string, renderType: RenderChildType, filePath: string): InputFieldMarkdownRenderChild {
+	public createInputFieldFromString(fullDeclaration: string, renderType: RenderChildType, filePath: string): InputFieldMDRC {
 		if (!this.container) {
 			throw new Error('inline API was instanced without a container, please use "createInputFieldFromStringInContainer"');
 		}
@@ -38,7 +38,7 @@ export class InlineAPI {
 		return this.api.createInputFieldFromString(fullDeclaration, renderType, filePath, this.container);
 	}
 
-	public createInputFieldFromStringInContainer(fullDeclaration: string, renderType: RenderChildType, filePath: string, container: HTMLElement): InputFieldMarkdownRenderChild {
+	public createInputFieldFromStringInContainer(fullDeclaration: string, renderType: RenderChildType, filePath: string, container: HTMLElement): InputFieldMDRC {
 		return this.api.createInputFieldFromString(fullDeclaration, renderType, filePath, container);
 	}
 

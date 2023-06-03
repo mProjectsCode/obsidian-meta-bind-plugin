@@ -1,6 +1,6 @@
-import { AbstractInputFieldArgument } from './AbstractInputFieldArgument';
-import { InputFieldArgumentType, InputFieldType } from '../parsers/InputFieldDeclarationParser';
-import { MetaBindParsingError } from '../utils/MetaBindErrors';
+import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
+import { InputFieldArgumentType, InputFieldType } from '../../parsers/InputFieldDeclarationParser';
+import { MetaBindParsingError } from '../../utils/MetaBindErrors';
 
 export class MinValueInputFieldArgument extends AbstractInputFieldArgument {
 	identifier: InputFieldArgumentType = InputFieldArgumentType.MIN_VALUE;

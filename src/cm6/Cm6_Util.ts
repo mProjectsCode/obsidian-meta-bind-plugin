@@ -1,9 +1,10 @@
 import { EditorSelection, EditorState } from '@codemirror/state';
 import MetaBindPlugin from '../main';
-import { editorInfoField, MarkdownRenderChild, TFile } from 'obsidian';
+import { editorInfoField, TFile } from 'obsidian';
 import { MetaBindInternalError } from '../utils/MetaBindErrors';
 import { InputFieldWidget, MarkdownRenderChildWidget, MBWidgetType, ViewFieldWidget } from './Cm6_Widgets';
 import { DecorationSet, EditorView } from '@codemirror/view';
+import { AbstractMDRC } from '../renderChildren/AbstractMDRC';
 
 export class Cm6_Util {
 	static checkSelectionOverlap(selection: EditorSelection | undefined, from: number, to: number): boolean {
@@ -29,7 +30,7 @@ export class Cm6_Util {
 		content: string,
 		filePath: string,
 		plugin: MetaBindPlugin
-	): MarkdownRenderChildWidget<MarkdownRenderChild> | undefined {
+	): MarkdownRenderChildWidget<AbstractMDRC> | undefined {
 		if (widgetType === MBWidgetType.INPUT_FIELD_WIDGET) {
 			return new InputFieldWidget(content, filePath, plugin);
 		} else if (widgetType === MBWidgetType.VIEW_FIELD_WIDGET) {

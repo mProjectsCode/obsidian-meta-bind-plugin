@@ -1,5 +1,5 @@
 import { ToggleInputField } from './ToggleInputField';
-import { InputFieldMarkdownRenderChild, RenderChildType } from '../InputFieldMarkdownRenderChild';
+import { InputFieldMDRC, RenderChildType } from '../renderChildren/InputFieldMDRC';
 import { TextInputField } from './TextInputField';
 import { SliderInputField } from './SliderInputField';
 import { TextAreaInputField } from './TextAreaInputField';
@@ -73,40 +73,37 @@ export class InputFieldFactory {
 		},
 	};
 
-	static createInputField(
-		inputFieldType: InputFieldType,
-		args: { renderChildType: RenderChildType; inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild }
-	): AbstractInputField | undefined {
+	static createInputField(inputFieldType: InputFieldType, args: { renderChildType: RenderChildType; inputFieldMDRC: InputFieldMDRC }): AbstractInputField | undefined {
 		if (inputFieldType !== InputFieldType.INVALID) {
-			InputFieldFactory.checkRenderChildTypeAllowed(inputFieldType, args.renderChildType, args.inputFieldMarkdownRenderChild.plugin);
+			InputFieldFactory.checkRenderChildTypeAllowed(inputFieldType, args.renderChildType, args.inputFieldMDRC.plugin);
 		}
 
 		if (inputFieldType === InputFieldType.TOGGLE) {
-			return new ToggleInputField(args.inputFieldMarkdownRenderChild);
+			return new ToggleInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.SLIDER) {
-			return new SliderInputField(args.inputFieldMarkdownRenderChild);
+			return new SliderInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.TEXT) {
-			return new TextInputField(args.inputFieldMarkdownRenderChild);
+			return new TextInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.TEXT_AREA) {
-			return new TextAreaInputField(args.inputFieldMarkdownRenderChild);
+			return new TextAreaInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.SELECT) {
-			return new SelectInputField(args.inputFieldMarkdownRenderChild);
+			return new SelectInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.MULTI_SELECT) {
-			return new MultiSelectInputField(args.inputFieldMarkdownRenderChild);
+			return new MultiSelectInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.DATE) {
-			return new DateInputField(args.inputFieldMarkdownRenderChild);
+			return new DateInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.TIME) {
-			return new TimeInputField(args.inputFieldMarkdownRenderChild);
+			return new TimeInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.DATE_PICKER) {
-			return new DatePickerInputField(args.inputFieldMarkdownRenderChild);
+			return new DatePickerInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.NUMBER) {
-			return new NumberInputField(args.inputFieldMarkdownRenderChild);
+			return new NumberInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.SUGGESTER) {
-			return new SuggestInputField(args.inputFieldMarkdownRenderChild);
+			return new SuggestInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.EDITOR) {
-			return new EditorInputField(args.inputFieldMarkdownRenderChild);
+			return new EditorInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.IMAGE_SUGGESTER) {
-			return new ImageSuggestInputField(args.inputFieldMarkdownRenderChild);
+			return new ImageSuggestInputField(args.inputFieldMDRC);
 		}
 
 		return undefined;

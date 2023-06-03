@@ -1,32 +1,27 @@
-import { MarkdownRenderChild } from 'obsidian';
-import MetaBindPlugin from './main';
-import { AbstractInputField } from './inputFields/AbstractInputField';
-import { InputFieldFactory } from './inputFields/InputFieldFactory';
-import { InputFieldArgumentType, InputFieldDeclaration, InputFieldType } from './parsers/InputFieldDeclarationParser';
-import { AbstractInputFieldArgument } from './inputFieldArguments/AbstractInputFieldArgument';
-import { ClassInputFieldArgument } from './inputFieldArguments/ClassInputFieldArgument';
-import { MetaBindInternalError } from './utils/MetaBindErrors';
-import { MetadataFileCache } from './MetadataManager';
+import MetaBindPlugin from '../main';
+import { AbstractInputField } from '../inputFields/AbstractInputField';
+import { InputFieldFactory } from '../inputFields/InputFieldFactory';
+import { InputFieldArgumentType, InputFieldDeclaration, InputFieldType } from '../parsers/InputFieldDeclarationParser';
+import { AbstractInputFieldArgument } from '../inputFieldArguments/AbstractInputFieldArgument';
+import { ClassInputFieldArgument } from '../inputFieldArguments/arguments/ClassInputFieldArgument';
+import { MetaBindInternalError } from '../utils/MetaBindErrors';
+import { MetadataFileCache } from '../MetadataManager';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
-import { ShowcaseInputFieldArgument } from './inputFieldArguments/ShowcaseInputFieldArgument';
-import { TitleInputFieldArgument } from './inputFieldArguments/TitleInputFieldArgument';
-import { isTruthy } from './utils/Utils';
-import { Listener, Signal } from './utils/Signal';
-import { BindTargetDeclaration } from './parsers/BindTargetParser';
+import { ShowcaseInputFieldArgument } from '../inputFieldArguments/arguments/ShowcaseInputFieldArgument';
+import { TitleInputFieldArgument } from '../inputFieldArguments/arguments/TitleInputFieldArgument';
+import { isTruthy } from '../utils/Utils';
+import { Listener, Signal } from '../utils/Signal';
+import { BindTargetDeclaration } from '../parsers/BindTargetParser';
+import { AbstractMDRC } from './AbstractMDRC';
 
 export enum RenderChildType {
 	INLINE = 'inline',
 	BLOCK = 'block',
 }
 
-export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
-	plugin: MetaBindPlugin;
+export class InputFieldMDRC extends AbstractMDRC {
 	metadataCache: MetadataFileCache | undefined;
-	filePath: string;
-	uuid: string;
 	inputField: AbstractInputField | undefined;
-	error: string;
-	renderChildType: RenderChildType;
 
 	fullDeclaration?: string;
 	inputFieldDeclaration: InputFieldDeclaration;
@@ -44,7 +39,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 	public readSignal: Signal<any>;
 
 	constructor(containerEl: HTMLElement, renderChildType: RenderChildType, declaration: InputFieldDeclaration, plugin: MetaBindPlugin, filePath: string, uuid: string) {
-		super(containerEl);
+		super(containerEl, renderChildType, plugin, filePath, uuid);
 
 		if (!declaration.error) {
 			this.error = '';
@@ -52,10 +47,6 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 			this.error = declaration.error instanceof Error ? declaration.error.message : declaration.error;
 		}
 
-		this.filePath = filePath;
-		this.uuid = uuid;
-		this.plugin = plugin;
-		this.renderChildType = renderChildType;
 		this.fullDeclaration = declaration.fullDeclaration;
 		this.inputFieldDeclaration = declaration;
 
@@ -70,7 +61,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 				this.inputField = InputFieldFactory.createInputField(this.inputFieldDeclaration.inputFieldType, {
 					renderChildType: renderChildType,
-					inputFieldMarkdownRenderChild: this,
+					inputFieldMDRC: this,
 				});
 			} catch (e: any) {
 				this.error = e.message;
@@ -109,7 +100,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 			return;
 		}
 
-		this.plugin.metadataManager.updatePropertyInMetadataFileCache(value, this.bindTargetDeclaration.metadataPath, this.bindTargetDeclaration.file, this.uuid);
+		this.plugin.metadataManager.updatePropertyInCache(value, this.bindTargetDeclaration.metadataPath, this.bindTargetDeclaration.file, this.uuid);
 	}
 
 	getInitialValue(): any | undefined {
@@ -167,7 +158,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		if (this.hasValidBindTarget()) {
 			this.metadataCache = this.registerSelfToMetadataManager();
 		}
-		this.plugin.registerInputFieldMarkdownRenderChild(this);
+		this.plugin.registerMarkdownRenderChild(this);
 
 		this.inputField.render(container);
 
@@ -216,7 +207,7 @@ export class InputFieldMarkdownRenderChild extends MarkdownRenderChild {
 		console.log('meta-bind | InputFieldMarkdownRenderChild >> unload', this);
 
 		this.inputField?.destroy();
-		this.plugin.unregisterInputFieldMarkdownRenderChild(this);
+		this.plugin.unregisterMarkdownRenderChild(this);
 		this.unregisterSelfFromMetadataManager();
 
 		this.containerEl.empty();

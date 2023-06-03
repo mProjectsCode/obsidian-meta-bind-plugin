@@ -1,4 +1,3 @@
-import { InputFieldMarkdownRenderChild } from '../../InputFieldMarkdownRenderChild';
 import { AbstractInputField } from '../AbstractInputField';
 import DatePickerInput from './DatePickerInput.svelte';
 import { moment } from 'obsidian';
@@ -6,6 +5,7 @@ import { DateParser } from '../../parsers/DateParser';
 import { DatePickerModal } from './DatePickerModal';
 import { Moment } from 'moment';
 import { MetaBindInternalError } from '../../utils/MetaBindErrors';
+import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 
 export class DatePickerInputField extends AbstractInputField {
 	container: HTMLDivElement | undefined;
@@ -13,8 +13,8 @@ export class DatePickerInputField extends AbstractInputField {
 	modal: DatePickerModal | undefined;
 	date: moment.Moment;
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild) {
-		super(inputFieldMarkdownRenderChild);
+	constructor(inputFieldMDRC: InputFieldMDRC) {
+		super(inputFieldMDRC);
 
 		this.date = DateParser.getDefaultDate();
 	}

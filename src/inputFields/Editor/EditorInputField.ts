@@ -1,7 +1,7 @@
 import { AbstractInputField } from '../AbstractInputField';
 import EditorInput from './EditorInput.svelte';
-import { InputFieldMarkdownRenderChild } from '../../InputFieldMarkdownRenderChild';
 import { MetaBindInternalError } from '../../utils/MetaBindErrors';
+import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 
 export class EditorInputField extends AbstractInputField {
 	static allowInlineCodeBlock: boolean = false;
@@ -9,8 +9,8 @@ export class EditorInputField extends AbstractInputField {
 	component: EditorInput | undefined;
 	value: string;
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild) {
-		super(inputFieldMarkdownRenderChild);
+	constructor(inputFieldMDRC: InputFieldMDRC) {
+		super(inputFieldMDRC);
 
 		this.value = '';
 	}

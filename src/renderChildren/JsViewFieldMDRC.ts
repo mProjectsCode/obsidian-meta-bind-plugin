@@ -1,40 +1,25 @@
-import { MarkdownRenderChild } from 'obsidian';
-import MetaBindPlugin from './main';
-import { MetaBindExpressionError } from './utils/MetaBindErrors';
-import { MetadataFileCache } from './MetadataManager';
-import { Listener, Signal } from './utils/Signal';
-import { RenderChildType } from './InputFieldMarkdownRenderChild';
-import { ViewFieldDeclaration } from './parsers/ViewFieldDeclarationParser';
-import { BindTargetDeclaration } from './parsers/BindTargetParser';
-import { ViewField } from './viewFields/ViewField';
-import * as MathJs from 'mathjs';
+import MetaBindPlugin from '../main';
+import { MetaBindExpressionError } from '../utils/MetaBindErrors';
+import { Listener, Signal } from '../utils/Signal';
+import { RenderChildType } from './InputFieldMDRC';
+import { JsViewFieldDeclaration } from '../parsers/ViewFieldDeclarationParser';
+import { ViewField } from '../viewFields/ViewField';
+import { ViewFieldVariable } from './ViewFieldMDRC';
+import { getAPI } from 'obsidian-dataview';
+import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
 
-export interface ViewFieldVariable {
-	bindTargetDeclaration: BindTargetDeclaration;
-	writeSignal: Signal<any>;
-	uuid: string;
-	metadataCache: MetadataFileCache | undefined;
-	writeSignalListener: Listener<any> | undefined;
-	contextName: string | undefined;
-}
-
-export class ViewFieldMarkdownRenderChild extends MarkdownRenderChild {
-	plugin: MetaBindPlugin;
-	filePath: string;
-	uuid: string;
+export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 	viewField: ViewField;
-	error: string;
-	renderChildType: RenderChildType;
 
 	fullDeclaration?: string;
-	expressionStr?: string;
-	expression?: MathJs.EvalFunction;
-	viewFieldDeclaration: ViewFieldDeclaration;
+	// user code function
+	expression?: any;
+	viewFieldDeclaration: JsViewFieldDeclaration;
 	variables: ViewFieldVariable[];
 	private metadataManagerReadSignalListener: Listener<any> | undefined;
 
-	constructor(containerEl: HTMLElement, renderChildType: RenderChildType, declaration: ViewFieldDeclaration, plugin: MetaBindPlugin, filePath: string, uuid: string) {
-		super(containerEl);
+	constructor(containerEl: HTMLElement, renderChildType: RenderChildType, declaration: JsViewFieldDeclaration, plugin: MetaBindPlugin, filePath: string, uuid: string) {
+		super(containerEl, renderChildType, plugin, filePath, uuid);
 
 		if (!declaration.error) {
 			this.error = '';
@@ -42,11 +27,7 @@ export class ViewFieldMarkdownRenderChild extends MarkdownRenderChild {
 			this.error = declaration.error instanceof Error ? declaration.error.message : declaration.error;
 		}
 
-		this.filePath = filePath;
-		this.uuid = uuid;
 		this.viewField = new ViewField(this);
-		this.plugin = plugin;
-		this.renderChildType = renderChildType;
 		this.fullDeclaration = declaration.fullDeclaration;
 		this.viewFieldDeclaration = declaration;
 		this.variables = [];
@@ -55,12 +36,12 @@ export class ViewFieldMarkdownRenderChild extends MarkdownRenderChild {
 			try {
 				for (const bindTarget of this.viewFieldDeclaration.bindTargets ?? []) {
 					this.variables.push({
-						bindTargetDeclaration: this.plugin.api.bindTargetParser.parseBindTarget(bindTarget, this.filePath),
+						bindTargetDeclaration: this.plugin.api.bindTargetParser.parseBindTarget(bindTarget.bindTarget, this.filePath),
 						writeSignal: new Signal<any>(undefined),
 						uuid: self.crypto.randomUUID(),
 						metadataCache: undefined,
 						writeSignalListener: undefined,
-						contextName: undefined,
+						contextName: bindTarget.name,
 					});
 				}
 
@@ -73,27 +54,13 @@ export class ViewFieldMarkdownRenderChild extends MarkdownRenderChild {
 	}
 
 	parseExpression() {
-		const declaration = this.viewFieldDeclaration.declaration ?? '';
-		let varCounter = 0;
+		if (!this.viewFieldDeclaration.code) {
+			return;
+		}
 
-		this.expressionStr = declaration.replace(/{.*?}/g, (substring: string): string => {
-			// remove braces and leading and trailing spaces
-			substring = substring.substring(1, substring.length - 1).trim();
-			// replace by variable name;
-			for (const variable of this.variables) {
-				if (variable.bindTargetDeclaration.metadataFieldName === substring) {
-					let varName = `MB_VAR_${varCounter}`;
-					variable.contextName = varName;
-					varCounter += 1;
-					return varName;
-				}
-			}
-
-			// this should be unreachable
-			return 'MB_VAR_NOT_FOUND';
-		});
-
-		this.expression = MathJs.compile(this.expressionStr);
+		const isAsync = this.viewFieldDeclaration.code.contains('await');
+		const funcConstructor = isAsync ? async function (): Promise<void> {}.constructor : Function;
+		this.expression = funcConstructor('app', 'mb', 'dv', 'filePath', 'context', this.viewFieldDeclaration.code);
 	}
 
 	buildContext(): Record<string, any> {
@@ -109,21 +76,20 @@ export class ViewFieldMarkdownRenderChild extends MarkdownRenderChild {
 		return context;
 	}
 
-	evaluateExpression(): string {
+	async evaluateExpression(): Promise<string> {
 		if (!this.expression) {
 			throw new Error("Can't evaluate expression. Expression is undefined.");
 		}
 
 		const context = this.buildContext();
 		try {
-			return this.expression.evaluate(context);
+			return await Promise.resolve<string>(this.expression(this.plugin.app, this.plugin.api, getAPI(this.plugin.app), this.filePath, context));
 		} catch (e: any) {
-			console.warn(new MetaBindExpressionError(`failed to evaluate expression`), {
-				declaration: this.viewFieldDeclaration.declaration,
-				expression: this.expressionStr,
+			console.warn(new MetaBindExpressionError(`failed to evaluate js expression`), {
+				declaration: this.viewFieldDeclaration.code,
 				context: context,
 			});
-			throw new MetaBindExpressionError(`failed to evaluate expression "${this.viewFieldDeclaration.declaration}" with reason: ${e.message}`);
+			throw new MetaBindExpressionError(`failed to evaluate js expression with reason: ${e.message}`);
 		}
 	}
 
@@ -172,7 +138,7 @@ export class ViewFieldMarkdownRenderChild extends MarkdownRenderChild {
 
 		this.registerSelfToMetadataManager();
 
-		this.plugin.registerViewFieldMarkdownRenderChild(this);
+		this.plugin.registerMarkdownRenderChild(this);
 
 		// TODO: render into `container`
 		this.viewField.render(container);
@@ -191,7 +157,7 @@ export class ViewFieldMarkdownRenderChild extends MarkdownRenderChild {
 	onunload(): void {
 		console.log('meta-bind | ViewFieldMarkdownRenderChild >> unload', this);
 
-		this.plugin.unregisterViewFieldMarkdownRenderChild(this);
+		this.plugin.unregisterMarkdownRenderChild(this);
 		this.unregisterSelfFromMetadataManager();
 
 		this.containerEl.empty();
