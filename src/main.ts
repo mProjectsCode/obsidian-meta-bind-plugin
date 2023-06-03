@@ -1,6 +1,6 @@
 import { Plugin, TFile } from 'obsidian';
 import { DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab } from './settings/Settings';
-import { InputFieldMarkdownRenderChild, RenderChildType } from './InputFieldMarkdownRenderChild';
+import { RenderChildType } from './renderChildren/InputFieldMDRC';
 import { getFileName, isPath, removeFileEnding } from './utils/Utils';
 import { DateParser } from './parsers/DateParser';
 import { MetadataManager } from './MetadataManager';
@@ -9,17 +9,18 @@ import { Extension } from '@codemirror/state';
 import { setFirstWeekday } from './inputFields/DatePicker/DatePickerInputSvelteHelpers';
 import './frontmatterDisplay/custom_overlay';
 import { Mode } from 'codemirror';
-import { ViewFieldMarkdownRenderChild } from './ViewFieldMarkdownRenderChild';
+import { ViewFieldMDRC } from './renderChildren/ViewFieldMDRC';
 import { createMarkdownRenderChildWidgetEditorPlugin } from './cm6/Cm6_ViewPlugin';
+import { AbstractMDRC } from './renderChildren/AbstractMDRC';
 
 export default class MetaBindPlugin extends Plugin {
 	// @ts-ignore defined in `onload`
 	settings: MetaBindPluginSettings;
 
 	// @ts-ignore defined in `onload`
-	activeMarkdownInputFields: InputFieldMarkdownRenderChild[];
+	activeMDRCs: AbstractMDRC[];
 	// @ts-ignore defined in `onload`
-	activeMarkdownViewFields: ViewFieldMarkdownRenderChild[];
+	activeMarkdownViewFields: ViewFieldMDRC[];
 
 	// @ts-ignore defined in `onload`
 	metadataManager: MetadataManager;
@@ -41,7 +42,7 @@ export default class MetaBindPlugin extends Plugin {
 		this.api.inputFieldParser.parseTemplates(this.settings.inputTemplates);
 		setFirstWeekday(this.settings.firstWeekday);
 
-		this.activeMarkdownInputFields = [];
+		this.activeMDRCs = [];
 		this.activeMarkdownViewFields = [];
 		this.metadataManager = new MetadataManager(this);
 
@@ -71,6 +72,11 @@ export default class MetaBindPlugin extends Plugin {
 				const inputField = this.api.createInputFieldFromString(content, RenderChildType.BLOCK, ctx.sourcePath, codeBlock);
 				ctx.addChild(inputField);
 			}
+		});
+
+		this.registerMarkdownCodeBlockProcessor('meta-bind-js-view', (source, el, ctx) => {
+			const inputField = this.api.createJsViewFieldFromString(source, RenderChildType.BLOCK, ctx.sourcePath, el);
+			ctx.addChild(inputField);
 		});
 
 		// this.registerMarkdownCodeBlockProcessor('meta-bind-js', (source, el, ctx) => {
@@ -157,7 +163,7 @@ export default class MetaBindPlugin extends Plugin {
 
 	onunload(): void {
 		console.log(`meta-bind | Main >> unload`);
-		for (const activeMarkdownInputField of this.activeMarkdownInputFields) {
+		for (const activeMarkdownInputField of this.activeMDRCs) {
 			activeMarkdownInputField.unload();
 		}
 
@@ -166,24 +172,14 @@ export default class MetaBindPlugin extends Plugin {
 		}
 	}
 
-	registerInputFieldMarkdownRenderChild(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild): void {
-		console.debug(`meta-bind | Main >> registered input field ${inputFieldMarkdownRenderChild.uuid}`);
-		this.activeMarkdownInputFields.push(inputFieldMarkdownRenderChild);
+	registerMarkdownRenderChild(mdrc: AbstractMDRC): void {
+		console.debug(`meta-bind | Main >> registered MDRC ${mdrc.uuid}`);
+		this.activeMDRCs.push(mdrc);
 	}
 
-	unregisterInputFieldMarkdownRenderChild(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild): void {
-		console.debug(`meta-bind | Main >> unregistered input field ${inputFieldMarkdownRenderChild.uuid}`);
-		this.activeMarkdownInputFields = this.activeMarkdownInputFields.filter(x => x.uuid !== inputFieldMarkdownRenderChild.uuid);
-	}
-
-	registerViewFieldMarkdownRenderChild(viewFieldMarkdownRenderChild: ViewFieldMarkdownRenderChild): void {
-		console.debug(`meta-bind | Main >> registered view field ${viewFieldMarkdownRenderChild.uuid}`);
-		this.activeMarkdownViewFields.push(viewFieldMarkdownRenderChild);
-	}
-
-	unregisterViewFieldMarkdownRenderChild(viewFieldMarkdownRenderChild: ViewFieldMarkdownRenderChild): void {
-		console.debug(`meta-bind | Main >> unregistered view field ${viewFieldMarkdownRenderChild.uuid}`);
-		this.activeMarkdownViewFields = this.activeMarkdownViewFields.filter(x => x.uuid !== viewFieldMarkdownRenderChild.uuid);
+	unregisterMarkdownRenderChild(mdrc: AbstractMDRC): void {
+		console.debug(`meta-bind | Main >> unregistered MDRC ${mdrc.uuid}`);
+		this.activeMDRCs = this.activeMDRCs.filter(x => x.uuid !== mdrc.uuid);
 	}
 
 	getFilesByName(name: string): TFile[] {

@@ -1,8 +1,11 @@
-import { MarkdownPostProcessorContext, MarkdownRenderChild } from 'obsidian';
-import MetaBindPlugin from './main';
-import { getAPI } from 'obsidian-dataview';
-import { MetaBindJsError } from './utils/MetaBindErrors';
+import {MarkdownPostProcessorContext, MarkdownRenderChild} from 'obsidian';
+import MetaBindPlugin from '../main';
+import {getAPI} from 'obsidian-dataview';
+import {MetaBindJsError} from '../utils/MetaBindErrors';
 
+/**
+ * @deprecated
+ */
 export class ScriptMarkdownRenderChild extends MarkdownRenderChild {
 	content: string;
 	ctx: MarkdownPostProcessorContext;

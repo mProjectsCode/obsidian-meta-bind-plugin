@@ -1,4 +1,3 @@
-import { InputFieldMarkdownRenderChild } from '../../InputFieldMarkdownRenderChild';
 import { AbstractInputField } from '../AbstractInputField';
 import SuggestInput from './SuggestInput.svelte';
 import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
@@ -6,8 +5,9 @@ import { DataArray, getAPI, Literal } from 'obsidian-dataview';
 import { SuggestInputModal } from './SuggestInputModal';
 import { Notice, TFile } from 'obsidian';
 import { MetaBindArgumentError, MetaBindInternalError } from '../../utils/MetaBindErrors';
-import { OptionInputFieldArgument } from '../../inputFieldArguments/OptionInputFieldArgument';
-import { OptionQueryInputFieldArgument } from '../../inputFieldArguments/OptionQueryInputFieldArgument';
+import { OptionInputFieldArgument } from '../../inputFieldArguments/arguments/OptionInputFieldArgument';
+import { OptionQueryInputFieldArgument } from '../../inputFieldArguments/arguments/OptionQueryInputFieldArgument';
+import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 
 export interface SuggestOption {
 	value: string;
@@ -20,8 +20,8 @@ export class SuggestInputField extends AbstractInputField {
 	value: string;
 	options: SuggestOption[];
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild) {
-		super(inputFieldMarkdownRenderChild);
+	constructor(inputFieldMDRC: InputFieldMDRC) {
+		super(inputFieldMDRC);
 
 		this.value = '';
 		this.options = [];

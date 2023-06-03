@@ -33,6 +33,8 @@ export enum InputFieldArgumentType {
 	ALIGN_RIGHT = 'alignRight',
 	OPTION_QUERY = 'optionQuery',
 	SHOWCASE = 'showcase',
+	ON_VALUE = 'onValue',
+	OFF_VALUE = 'offValue',
 
 	INVALID = 'invalid',
 }

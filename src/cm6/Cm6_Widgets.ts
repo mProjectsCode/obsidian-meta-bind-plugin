@@ -1,10 +1,10 @@
-import { MarkdownRenderChild } from 'obsidian';
 import { EditorView, WidgetType } from '@codemirror/view';
 import MetaBindPlugin from '../main';
-import { ViewFieldMarkdownRenderChild } from '../ViewFieldMarkdownRenderChild';
-import { InputFieldMarkdownRenderChild, RenderChildType } from '../InputFieldMarkdownRenderChild';
+import { AbstractMDRC } from '../renderChildren/AbstractMDRC';
+import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
+import { InputFieldMDRC, RenderChildType } from '../renderChildren/InputFieldMDRC';
 
-export abstract class MarkdownRenderChildWidget<T extends MarkdownRenderChild> extends WidgetType {
+export abstract class MarkdownRenderChildWidget<T extends AbstractMDRC> extends WidgetType {
 	content: string;
 	filePath: string;
 	plugin: MetaBindPlugin;
@@ -25,7 +25,7 @@ export abstract class MarkdownRenderChildWidget<T extends MarkdownRenderChild> e
 
 	public toDOM(view: EditorView): HTMLElement {
 		const div = document.createElement('span');
-		div.addClass("cm-inline-code");
+		div.addClass('cm-inline-code');
 
 		this.renderChild = this.createRenderChild(div);
 		this.renderChild.load();
@@ -39,14 +39,14 @@ export abstract class MarkdownRenderChildWidget<T extends MarkdownRenderChild> e
 	}
 }
 
-export class ViewFieldWidget extends MarkdownRenderChildWidget<ViewFieldMarkdownRenderChild> {
-	public createRenderChild(container: HTMLElement): ViewFieldMarkdownRenderChild {
+export class ViewFieldWidget extends MarkdownRenderChildWidget<ViewFieldMDRC> {
+	public createRenderChild(container: HTMLElement): ViewFieldMDRC {
 		return this.plugin.api.createViewFieldFromString(this.content, RenderChildType.INLINE, this.filePath, container);
 	}
 }
 
-export class InputFieldWidget extends MarkdownRenderChildWidget<InputFieldMarkdownRenderChild> {
-	public createRenderChild(container: HTMLElement): InputFieldMarkdownRenderChild {
+export class InputFieldWidget extends MarkdownRenderChildWidget<InputFieldMDRC> {
+	public createRenderChild(container: HTMLElement): InputFieldMDRC {
 		return this.plugin.api.createInputFieldFromString(this.content, RenderChildType.INLINE, this.filePath, container);
 	}
 }

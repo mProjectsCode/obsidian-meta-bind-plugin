@@ -4,7 +4,7 @@ number2: 20
 unit: m
 ---
 
-hello `INPUT[number:number1]` test
+`INPUT[number:number1]`
 `INPUT[number:number2]`
 `INPUT[text:unit]`
 

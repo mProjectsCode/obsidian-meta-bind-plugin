@@ -1,10 +1,10 @@
 import { AbstractInputField } from './AbstractInputField';
 import { SelectInputFieldElement } from './SelectInputFieldElement';
 import { mod } from '../utils/Utils';
-import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
 import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
 import { AbstractInputFieldArgument } from '../inputFieldArguments/AbstractInputFieldArgument';
 import { MetaBindInternalError } from '../utils/MetaBindErrors';
+import { InputFieldMDRC } from '../renderChildren/InputFieldMDRC';
 
 export class SelectInputField extends AbstractInputField {
 	static allowInline: boolean = false;
@@ -12,8 +12,8 @@ export class SelectInputField extends AbstractInputField {
 	allowMultiSelect: boolean;
 	container: HTMLDivElement | undefined;
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild) {
-		super(inputFieldMarkdownRenderChild);
+	constructor(inputFieldMDRC: InputFieldMDRC) {
+		super(inputFieldMDRC);
 		this.elements = [];
 		this.allowMultiSelect = false;
 	}

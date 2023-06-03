@@ -1,6 +1,13 @@
 import { EnclosingPair, ParserUtils } from '../utils/ParserUtils';
 import { MetaBindParsingError } from '../utils/MetaBindErrors';
 
+export enum ViewFieldType {
+	MATH = 'math',
+	JS = 'js',
+
+	INVALID = 'invalid',
+}
+
 export interface ViewFieldDeclaration {
 	/**
 	 * The full declaration of the view field including the "VIEW[]".
@@ -20,6 +27,18 @@ export interface ViewFieldDeclaration {
 	 * x
 	 */
 	bindTargets?: string[];
+
+	error?: Error | string;
+}
+
+export interface JsViewFieldDeclaration {
+	/**
+	 * The full declaration of the view field.
+	 */
+	fullDeclaration?: string;
+	code?: string;
+	variables?: string;
+	bindTargets?: { bindTarget: string; name: string }[];
 
 	error?: Error | string;
 }
@@ -58,5 +77,68 @@ export class ViewFieldDeclarationParser {
 		}
 
 		return viewFieldDeclaration;
+	}
+
+	parseJsString(fullDeclaration: string): JsViewFieldDeclaration {
+		const jsViewFieldDeclaration: JsViewFieldDeclaration = {} as JsViewFieldDeclaration;
+
+		try {
+			// declaration
+			jsViewFieldDeclaration.fullDeclaration = fullDeclaration;
+			const declarationParts = ParserUtils.split(jsViewFieldDeclaration.fullDeclaration, '\n---\n');
+			if (declarationParts.length === 1) {
+				throw new MetaBindParsingError('invalid view field declaration');
+			} else {
+				jsViewFieldDeclaration.variables = declarationParts[0];
+				jsViewFieldDeclaration.code = declarationParts.slice(1).join('\n---\n');
+			}
+
+			// variables
+			const variableLines = ParserUtils.split(jsViewFieldDeclaration.variables, '\n');
+			jsViewFieldDeclaration.bindTargets = [];
+			for (const variableLine of variableLines) {
+				const variableLineParts = ParserUtils.split(variableLine, ' as ');
+				if (variableLineParts.length !== 2) {
+					throw new MetaBindParsingError('invalid view field declaration');
+				}
+
+				let bindTarget = variableLineParts[0].trim();
+				if (bindTarget.startsWith('{') && bindTarget.endsWith('}')) {
+					bindTarget = bindTarget.substring(1, bindTarget.length - 1);
+				} else {
+					throw new MetaBindParsingError('invalid view field declaration');
+				}
+
+				if (!this.isValidVariableName(variableLineParts[1])) {
+					throw new MetaBindParsingError('invalid view field declaration');
+				}
+
+				jsViewFieldDeclaration.bindTargets.push({
+					bindTarget: bindTarget,
+					name: variableLineParts[1],
+				});
+			}
+		} catch (e) {
+			if (e instanceof Error) {
+				jsViewFieldDeclaration.error = e;
+				console.warn(e);
+			}
+		}
+
+		return jsViewFieldDeclaration;
+	}
+
+	isValidVariableName(varName: string): boolean {
+		if (!varName) {
+			throw new MetaBindParsingError('variable name can not be empty');
+		}
+
+		if (varName.contains(' ')) {
+			throw new MetaBindParsingError('variable name can not contain a space');
+		}
+
+		return true;
+
+		// TODO: make this better
 	}
 }

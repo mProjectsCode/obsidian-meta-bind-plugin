@@ -1,5 +1,5 @@
-import { AbstractInputFieldArgument } from './AbstractInputFieldArgument';
-import { InputFieldArgumentType, InputFieldType } from '../parsers/InputFieldDeclarationParser';
+import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
+import { InputFieldArgumentType, InputFieldType } from '../../parsers/InputFieldDeclarationParser';
 
 export class AlignRightInputFieldArgument extends AbstractInputFieldArgument {
 	identifier: InputFieldArgumentType = InputFieldArgumentType.ALIGN_RIGHT;

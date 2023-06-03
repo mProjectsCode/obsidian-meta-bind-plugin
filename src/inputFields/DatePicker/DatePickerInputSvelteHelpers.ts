@@ -88,11 +88,11 @@ export function getWeekDays(): string[] {
 		.sort((a, b) => {
 			return a.index - b.index;
 		});
-	console.log(sortedWeekdays);
+	// console.log(sortedWeekdays);
 	return sortedWeekdays.map(x => x.shortName);
 }
 
-export function uuid(): () => number {
+export function genSvelteId(): () => number {
 	let id = 0;
 	return () => {
 		return ++id;

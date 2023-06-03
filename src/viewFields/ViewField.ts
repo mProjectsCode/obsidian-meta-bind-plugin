@@ -1,11 +1,11 @@
-import { ViewFieldMarkdownRenderChild } from '../ViewFieldMarkdownRenderChild';
+import { AbstractViewFieldMDRC } from '../renderChildren/AbstractViewFieldMDRC';
 
 export class ViewField {
-	viewFieldMarkdownRenderChild: ViewFieldMarkdownRenderChild;
+	viewFieldMDRC: AbstractViewFieldMDRC;
 	container?: HTMLDivElement;
 
-	constructor(viewFieldMarkdownRenderChild: ViewFieldMarkdownRenderChild) {
-		this.viewFieldMarkdownRenderChild = viewFieldMarkdownRenderChild;
+	constructor(viewFieldMDRC: AbstractViewFieldMDRC) {
+		this.viewFieldMDRC = viewFieldMDRC;
 	}
 
 	render(container: HTMLDivElement) {
@@ -13,13 +13,13 @@ export class ViewField {
 		this.update();
 	}
 
-	update() {
+	async update() {
 		if (!this.container) {
 			return;
 		}
 
 		try {
-			this.container.innerText = this.viewFieldMarkdownRenderChild.evaluateExpression();
+			this.container.innerText = await this.viewFieldMDRC.evaluateExpression();
 			this.container.removeClass('meta-bind-plugin-error');
 		} catch (e) {
 			if (e instanceof Error) {

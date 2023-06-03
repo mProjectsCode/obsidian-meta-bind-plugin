@@ -1,15 +1,16 @@
-import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
+import { InputFieldMDRC } from '../renderChildren/InputFieldMDRC';
 
 export abstract class AbstractInputField {
 	static allowBlock: boolean = true;
 	static allowInline: boolean = true;
-	renderChild: InputFieldMarkdownRenderChild;
+	renderChild: InputFieldMDRC;
 	onValueChange: (value: any) => void | Promise<void>;
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild) {
-		this.renderChild = inputFieldMarkdownRenderChild;
+	constructor(inputFieldMDRC: InputFieldMDRC) {
+		this.renderChild = inputFieldMDRC;
 
 		this.onValueChange = (value: any) => {
+			console.log('input field on change', this, value);
 			this.renderChild.readSignal.set(value);
 		};
 
