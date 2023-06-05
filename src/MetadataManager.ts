@@ -185,12 +185,13 @@ export class MetadataManager {
 
 			if (metadataPath) {
 				if (arrayEquals(metadataPath, listener.metadataPath)) {
-					console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata`);
+					console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata value`, value);
 					listener.callback(value);
 				}
 			} else {
-				console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata`);
-				listener.callback(traverseObjectByPath(listener.metadataPath, fileCache.metadata));
+				const v = traverseObjectByPath(listener.metadataPath, fileCache.metadata);
+				console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata`, listener.metadataPath, fileCache.metadata, v);
+				listener.callback(v);
 			}
 		}
 	}
