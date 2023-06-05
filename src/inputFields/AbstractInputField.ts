@@ -10,7 +10,7 @@ export abstract class AbstractInputField {
 		this.renderChild = inputFieldMDRC;
 
 		this.onValueChange = (value: any) => {
-			console.log('input field on change', this, value);
+			console.debug(`meta-bind | input field on value change`, value);
 			this.renderChild.readSignal.set(value);
 		};
 

@@ -4,18 +4,14 @@ title: test
 select: option a
 date: 2023-05-19
 time: 19:20
+select: option d
 multi-select:
-  - option a
+  - option b
   - option c
 ---
 
 ## This is another note
 This note is to test syncing to another note.
-
-
-```dataview
-table without id FROM #example-note
-```
 
 ### Select
 Select
