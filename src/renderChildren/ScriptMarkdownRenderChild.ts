@@ -1,12 +1,10 @@
-import {MarkdownPostProcessorContext, MarkdownRenderChild} from 'obsidian';
-import MetaBindPlugin from '../main';
-import {getAPI} from 'obsidian-dataview';
-import {MetaBindJsError} from '../utils/MetaBindErrors';
+import { MarkdownRenderChild } from 'obsidian';
 
 /**
  * @deprecated
  */
 export class ScriptMarkdownRenderChild extends MarkdownRenderChild {
+	/*
 	content: string;
 	ctx: MarkdownPostProcessorContext;
 	plugin: MetaBindPlugin;
@@ -51,4 +49,5 @@ export class ScriptMarkdownRenderChild extends MarkdownRenderChild {
 			const errorEl = this.containerEl.createEl('span', { text: m, cls: 'meta-bind-plugin-error' });
 		}
 	}
+*/
 }

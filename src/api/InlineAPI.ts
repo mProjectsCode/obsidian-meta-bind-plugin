@@ -1,6 +1,6 @@
 import { API } from './API';
-import { InputFieldArgumentType, InputFieldDeclaration, InputFieldType } from './parsers/InputFieldDeclarationParser';
-import { InputFieldMDRC, RenderChildType } from './renderChildren/InputFieldMDRC';
+import { InputFieldArgumentType, InputFieldDeclaration, InputFieldType } from '../parsers/InputFieldDeclarationParser';
+import { InputFieldMDRC, RenderChildType } from '../renderChildren/InputFieldMDRC';
 
 export class InlineAPI {
 	public api: API;

@@ -1,6 +1,6 @@
 import { AbstractInputField } from './AbstractInputField';
 import { TextAreaComponent } from 'obsidian';
-import { MetaBindInternalError, MetaBindValueError } from '../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../utils/errors/MetaBindErrors';
 
 export class TextAreaInputField extends AbstractInputField {
 	textAreaComponent: TextAreaComponent | undefined;
@@ -21,7 +21,7 @@ export class TextAreaInputField extends AbstractInputField {
 		if (value != null && typeof value == 'string') {
 			this.textAreaComponent.setValue(value);
 		} else {
-			console.warn(new MetaBindValueError(`invalid value '${value}' at textAreaInputField ${this.renderChild.uuid}`));
+			console.warn(new MetaBindValueError(ErrorLevel.WARNING, 'failed to set value', `invalid value '${value}' at textAreaInputField ${this.renderChild.uuid}`));
 			this.textAreaComponent.setValue('');
 		}
 	}
@@ -36,7 +36,7 @@ export class TextAreaInputField extends AbstractInputField {
 
 	getHtmlElement(): HTMLElement {
 		if (!this.textAreaComponent) {
-			throw new MetaBindInternalError('text area input component is undefined');
+			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
 		}
 
 		return this.textAreaComponent.inputEl;

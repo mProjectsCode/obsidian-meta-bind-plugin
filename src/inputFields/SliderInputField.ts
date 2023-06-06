@@ -1,7 +1,7 @@
 import { AbstractInputField } from './AbstractInputField';
 import { SliderComponent } from 'obsidian';
 import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
-import { MetaBindInternalError, MetaBindValueError } from '../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../utils/errors/MetaBindErrors';
 import { InputFieldMDRC } from '../renderChildren/InputFieldMDRC';
 
 export class SliderInputField extends AbstractInputField {
@@ -33,7 +33,7 @@ export class SliderInputField extends AbstractInputField {
 				this.sliderComponent.setValue(value);
 			}
 		} else {
-			console.warn(new MetaBindValueError(`invalid value '${value}' at sliderInputField ${this.renderChild.uuid}`));
+			console.warn(new MetaBindValueError(ErrorLevel.WARNING, 'failed to set value', `invalid value '${value}' at sliderInputField ${this.renderChild.uuid}`));
 			this.sliderComponent.setValue(this.getDefaultValue());
 		}
 	}
@@ -48,7 +48,7 @@ export class SliderInputField extends AbstractInputField {
 
 	getHtmlElement(): HTMLElement {
 		if (!this.sliderComponent) {
-			throw new MetaBindInternalError('slider input component is undefined');
+			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
 		}
 
 		return this.sliderComponent.sliderEl;

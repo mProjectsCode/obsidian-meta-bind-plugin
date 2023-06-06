@@ -1,9 +1,10 @@
 import { CachedMetadata, TFile } from 'obsidian';
-import MetaBindPlugin from './main';
+import MetaBindPlugin from '../main';
 import { Internal } from '@opd-libs/opd-metadata-lib/lib/Internal';
-import { arrayEquals, traverseObjectToParentByPath } from './utils/Utils';
+import { arrayEquals, traverseObjectToParentByPath } from '../utils/Utils';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
-import { Listener, Signal } from './utils/Signal';
+import { Listener, Signal } from '../utils/Signal';
+import { AbstractMetadataManager } from './AbstractMetadataManager';
 import getMetadataFromFileCache = Internal.getMetadataFromFileCache;
 
 export interface MetadataFileCacheListener extends Listener<any | undefined> {
@@ -18,26 +19,28 @@ export interface MetadataFileCache {
 	changed: boolean;
 }
 
-export class MetadataManager {
+export class MetadataManager extends AbstractMetadataManager<MetadataFileCache> {
 	cache: MetadataFileCache[];
 	plugin: MetaBindPlugin;
 	updateCycleThreshold = 5;
 	interval: number | undefined;
 
 	constructor(plugin: MetaBindPlugin) {
+		super();
+
 		this.plugin = plugin;
 
 		this.cache = [];
 
-		this.plugin.registerEvent(this.plugin.app.metadataCache.on('changed', this.updateCacheOnFrontmatterUpdate.bind(this)));
+		this.plugin.registerEvent(this.plugin.app.metadataCache.on('changed', (file, data, cache) => this.updateCacheOnFrontmatterUpdate(file.path, data, cache)));
 
 		this.interval = window.setInterval(() => this.update(), this.plugin.settings.syncInterval);
 	}
 
-	register(file: TFile, signal: Signal<any | undefined>, metadataPath: string[], uuid: string): MetadataFileCache {
-		const fileCache: MetadataFileCache | undefined = this.getCacheForFile(file);
+	register(filePath: string, frontmatter: any | null | undefined, signal: Signal<any | undefined>, metadataPath: string[], uuid: string): MetadataFileCache {
+		const fileCache: MetadataFileCache | undefined = this.getCacheForFile(filePath);
 		if (fileCache) {
-			console.debug(`meta-bind | MetadataManager >> registered ${uuid} to existing file cache ${file.path} -> ${metadataPath}`);
+			console.debug(`meta-bind | MetadataManager >> registered ${uuid} to existing file cache ${filePath} -> ${metadataPath}`);
 			fileCache.listeners.push({
 				callback: (value: any) => signal.set(value),
 				metadataPath: metadataPath,
@@ -46,7 +49,8 @@ export class MetadataManager {
 			signal.set(traverseObjectByPath(metadataPath, fileCache.metadata));
 			return fileCache;
 		} else {
-			console.debug(`meta-bind | MetadataManager >> registered ${uuid} to newly created file cache ${file.path} -> ${metadataPath}`);
+			console.debug(`meta-bind | MetadataManager >> registered ${uuid} to newly created file cache ${filePath} -> ${metadataPath}`);
+			const file = this.plugin.app.vault.getAbstractFileByPath(filePath) as TFile;
 			const c: MetadataFileCache = {
 				file: file,
 				metadata: getMetadataFromFileCache(file, this.plugin),
@@ -68,23 +72,23 @@ export class MetadataManager {
 		}
 	}
 
-	unregister(file: TFile, uuid: string): void {
-		const fileCache = this.getCacheForFile(file);
+	unregister(filePath: string, uuid: string): void {
+		const fileCache = this.getCacheForFile(filePath);
 		if (!fileCache) {
 			return;
 		}
 
-		console.debug(`meta-bind | MetadataManager >> unregistered ${uuid} to from file cache ${file.path}`);
+		console.debug(`meta-bind | MetadataManager >> unregistered ${uuid} to from file cache ${filePath}`);
 
 		fileCache.listeners = fileCache.listeners.filter(x => x.uuid !== uuid);
 		if (fileCache.listeners.length === 0) {
-			console.debug(`meta-bind | MetadataManager >> deleted unused file cache ${file.path}`);
-			this.cache = this.cache.filter(x => x.file.path !== file.path);
+			console.debug(`meta-bind | MetadataManager >> deleted unused file cache ${filePath}`);
+			this.cache = this.cache.filter(x => x.file.path !== filePath);
 		}
 	}
 
-	getCacheForFile(file: TFile): MetadataFileCache | undefined {
-		return this.cache.find(x => x.file.path === file.path);
+	getCacheForFile(filePath: string): MetadataFileCache | undefined {
+		return this.cache.find(x => x.file.path === filePath);
 	}
 
 	private update(): void {
@@ -106,10 +110,10 @@ export class MetadataManager {
 		});
 	}
 
-	updateCache(metadata: Record<string, any>, file: TFile, uuid?: string | undefined): void {
-		console.debug(`meta-bind | MetadataManager >> updating metadata in ${file.path} metadata cache to`, metadata);
+	updateCache(metadata: Record<string, any>, filePath: string, uuid?: string | undefined): void {
+		console.debug(`meta-bind | MetadataManager >> updating metadata in ${filePath} metadata cache to`, metadata);
 
-		const fileCache = this.getCacheForFile(file);
+		const fileCache = this.getCacheForFile(filePath);
 		if (!fileCache) {
 			return;
 		}
@@ -120,11 +124,11 @@ export class MetadataManager {
 		this.notifyListeners(fileCache, undefined, uuid);
 	}
 
-	updatePropertyInCache(value: any, pathParts: string[], file: TFile, uuid?: string | undefined): void {
-		console.debug(`meta-bind | MetadataManager >> updating "${JSON.stringify(pathParts)}" in "${file.path}" metadata cache to`, value);
+	updatePropertyInCache(value: any, pathParts: string[], filePath: string, uuid?: string | undefined): void {
+		console.debug(`meta-bind | MetadataManager >> updating "${JSON.stringify(pathParts)}" in "${filePath}" metadata cache to`, value);
 		// console.trace();
 
-		const fileCache = this.getCacheForFile(file);
+		const fileCache = this.getCacheForFile(filePath);
 		if (!fileCache) {
 			return;
 		}
@@ -136,7 +140,7 @@ export class MetadataManager {
 		}
 
 		if (child.value === value) {
-			console.debug(`meta-bind | MetadataManager >> skipping redundant update of "${JSON.stringify(pathParts)}" in "${file.path}" metadata cache`, value);
+			console.debug(`meta-bind | MetadataManager >> skipping redundant update of "${JSON.stringify(pathParts)}" in "${filePath}" metadata cache`, value);
 			return;
 		}
 
@@ -147,8 +151,8 @@ export class MetadataManager {
 		this.notifyListeners(fileCache, pathParts, uuid);
 	}
 
-	updateCacheOnFrontmatterUpdate(file: TFile, data: string, cache: CachedMetadata): void {
-		const fileCache = this.getCacheForFile(file);
+	updateCacheOnFrontmatterUpdate(filePath: string, data: string, cache: CachedMetadata): void {
+		const fileCache = this.getCacheForFile(filePath);
 		if (!fileCache) {
 			return;
 		}
@@ -161,7 +165,7 @@ export class MetadataManager {
 		const metadata: Record<string, any> = Object.assign({}, cache.frontmatter); // copy
 		delete metadata.position;
 
-		console.debug(`meta-bind | MetadataManager >> updating "${file.path}" on frontmatter update`, metadata);
+		console.debug(`meta-bind | MetadataManager >> updating "${filePath}" on frontmatter update`, metadata);
 
 		fileCache.metadata = metadata;
 		fileCache.cyclesSinceLastUserInput = 0;

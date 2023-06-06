@@ -12,10 +12,10 @@ import { InputFieldType } from '../parsers/InputFieldDeclarationParser';
 import { DatePickerInputField } from './DatePicker/DatePickerInputField';
 import { NumberInputField } from './NumberInputField';
 import { SuggestInputField } from './Suggest/SuggestInputField';
-import { MetaBindParsingError } from '../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
 import { EditorInputField } from './Editor/EditorInputField';
 import { ImageSuggestInputField } from './ImageSuggest/ImageSuggestInputField';
-import MetaBindPlugin from '../main';
+import { AbstractPlugin } from '../AbstractPlugin';
 
 export class InputFieldFactory {
 	static allowCodeBlockMap: Record<string, { block: boolean; inline: boolean }> = {
@@ -109,17 +109,17 @@ export class InputFieldFactory {
 		return undefined;
 	}
 
-	static checkRenderChildTypeAllowed(inputFieldType: InputFieldType, renderChildType: RenderChildType, plugin: MetaBindPlugin): void {
+	static checkRenderChildTypeAllowed(inputFieldType: InputFieldType, renderChildType: RenderChildType, plugin: AbstractPlugin): void {
 		if (plugin.settings.ignoreCodeBlockRestrictions) {
 			return;
 		}
 
 		const allowCodeBlock: { block: boolean; inline: boolean } = InputFieldFactory.allowCodeBlockMap[inputFieldType];
 		if (renderChildType === RenderChildType.BLOCK && !allowCodeBlock.block) {
-			throw new MetaBindParsingError(`'${inputFieldType}' is not allowed as code block`);
+			throw new MetaBindParsingError(ErrorLevel.CRITICAL, 'can not create input field', `'${inputFieldType}' is not allowed as code block`);
 		}
 		if (renderChildType === RenderChildType.INLINE && !allowCodeBlock.inline) {
-			throw new MetaBindParsingError(`'${inputFieldType}' is not allowed as inline code block`);
+			throw new MetaBindParsingError(ErrorLevel.CRITICAL, 'can not create input field', `'${inputFieldType}' is not allowed as inline code block`);
 		}
 	}
 }

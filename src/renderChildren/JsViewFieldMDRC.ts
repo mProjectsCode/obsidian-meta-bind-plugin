@@ -1,5 +1,5 @@
 import MetaBindPlugin from '../main';
-import { MetaBindExpressionError } from '../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindExpressionError } from '../utils/errors/MetaBindErrors';
 import { Listener, Signal } from '../utils/Signal';
 import { RenderChildType } from './InputFieldMDRC';
 import { JsViewFieldDeclaration } from '../parsers/ViewFieldDeclarationParser';
@@ -7,6 +7,7 @@ import { ViewField } from '../viewFields/ViewField';
 import { ViewFieldVariable } from './ViewFieldMDRC';
 import { getAPI } from 'obsidian-dataview';
 import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
+import { AbstractPlugin } from '../AbstractPlugin';
 
 export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 	viewField: ViewField;
@@ -18,21 +19,25 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 	variables: ViewFieldVariable[];
 	private metadataManagerReadSignalListener: Listener<any> | undefined;
 
-	constructor(containerEl: HTMLElement, renderChildType: RenderChildType, declaration: JsViewFieldDeclaration, plugin: MetaBindPlugin, filePath: string, uuid: string) {
-		super(containerEl, renderChildType, plugin, filePath, uuid);
+	constructor(
+		containerEl: HTMLElement,
+		renderChildType: RenderChildType,
+		declaration: JsViewFieldDeclaration,
+		plugin: AbstractPlugin,
+		filePath: string,
+		uuid: string,
+		frontmatter: any | null | undefined = undefined
+	) {
+		super(containerEl, renderChildType, plugin, filePath, uuid, frontmatter);
 
-		if (!declaration.error) {
-			this.error = '';
-		} else {
-			this.error = declaration.error instanceof Error ? declaration.error.message : declaration.error;
-		}
+		this.errorCollection.merge(declaration.errorCollection);
 
 		this.viewField = new ViewField(this);
 		this.fullDeclaration = declaration.fullDeclaration;
 		this.viewFieldDeclaration = declaration;
 		this.variables = [];
 
-		if (!this.error) {
+		if (this.errorCollection.isEmpty()) {
 			try {
 				for (const bindTarget of this.viewFieldDeclaration.bindTargets ?? []) {
 					this.variables.push({
@@ -47,8 +52,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 
 				this.parseExpression();
 			} catch (e: any) {
-				this.error = e.message;
-				console.warn(e);
+				this.errorCollection.add(e);
 			}
 		}
 	}
@@ -80,16 +84,18 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 		if (!this.expression) {
 			throw new Error("Can't evaluate expression. Expression is undefined.");
 		}
+		if (!(this.plugin instanceof MetaBindPlugin)) {
+			throw new Error("Can't evaluate expression. JS expressions are unsupported outside of obsidian.");
+		}
 
 		const context = this.buildContext();
 		try {
 			return await Promise.resolve<string>(this.expression(this.plugin.app, this.plugin.api, getAPI(this.plugin.app), this.filePath, context));
 		} catch (e: any) {
-			console.warn(new MetaBindExpressionError(`failed to evaluate js expression`), {
+			throw new MetaBindExpressionError(ErrorLevel.ERROR, `failed to evaluate js expression`, e, {
 				declaration: this.viewFieldDeclaration.code,
 				context: context,
 			});
-			throw new MetaBindExpressionError(`failed to evaluate js expression with reason: ${e.message}`);
 		}
 	}
 
@@ -102,7 +108,8 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 			});
 
 			variable.metadataCache = this.plugin.metadataManager.register(
-				variable.bindTargetDeclaration.file,
+				variable.bindTargetDeclaration.filePath,
+				this.frontmatter,
 				variable.writeSignal,
 				variable.bindTargetDeclaration.metadataPath,
 				this.uuid + '/' + variable.uuid
@@ -115,7 +122,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 			if (variable.writeSignalListener) {
 				variable.writeSignal.unregisterListener(variable.writeSignalListener);
 			}
-			this.plugin.metadataManager.unregister(variable.bindTargetDeclaration.file, this.uuid + '/' + variable.uuid);
+			this.plugin.metadataManager.unregister(variable.bindTargetDeclaration.filePath, this.uuid + '/' + variable.uuid);
 		}
 	}
 
@@ -131,33 +138,25 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 		const container: HTMLDivElement = createDiv();
 		container.addClass('meta-bind-plugin-view-wrapper');
 
-		if (this.error) {
-			this.renderError(this.error);
+		this.errorCollection.render(this.containerEl);
+		if (this.errorCollection.hasErrors()) {
 			return;
 		}
 
 		this.registerSelfToMetadataManager();
 
-		this.plugin.registerMarkdownRenderChild(this);
+		this.plugin.mdrcManager.registerMDRC(this);
 
-		// TODO: render into `container`
 		this.viewField.render(container);
 
 		this.containerEl.empty();
 		this.containerEl.appendChild(container);
 	}
 
-	renderError(message: string): void {
-		this.containerEl.empty();
-
-		this.containerEl.createEl('code', { text: ` ${this.fullDeclaration}` });
-		this.containerEl.createEl('code', { text: `-> ${message}`, cls: 'meta-bind-plugin-error' });
-	}
-
 	onunload(): void {
 		console.log('meta-bind | ViewFieldMarkdownRenderChild >> unload', this);
 
-		this.plugin.unregisterMarkdownRenderChild(this);
+		this.plugin.mdrcManager.unregisterMDRC(this);
 		this.unregisterSelfFromMetadataManager();
 
 		this.containerEl.empty();

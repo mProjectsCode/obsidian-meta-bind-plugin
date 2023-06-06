@@ -1,26 +1,24 @@
-import { App } from 'obsidian';
-import MetaBindPlugin from './main';
 import { InlineAPI } from './InlineAPI';
-import { InputFieldMDRC, RenderChildType } from './renderChildren/InputFieldMDRC';
-import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser, InputFieldType } from './parsers/InputFieldDeclarationParser';
-import { MetaBindBindTargetError, MetaBindParsingError } from './utils/MetaBindErrors';
-import { isTruthy } from './utils/Utils';
-import { JsViewFieldDeclaration, ViewFieldDeclaration, ViewFieldDeclarationParser } from './parsers/ViewFieldDeclarationParser';
-import { BindTargetParser } from './parsers/BindTargetParser';
-import { ViewFieldMDRC } from './renderChildren/ViewFieldMDRC';
-import { JsViewFieldMDRC } from './renderChildren/JsViewFieldMDRC';
+import { InputFieldMDRC, RenderChildType } from '../renderChildren/InputFieldMDRC';
+import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser, InputFieldType } from '../parsers/InputFieldDeclarationParser';
+import { ErrorLevel, MetaBindBindTargetError, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
+import { isTruthy } from '../utils/Utils';
+import { JsViewFieldDeclaration, ViewFieldDeclaration, ViewFieldDeclarationParser } from '../parsers/ViewFieldDeclarationParser';
+import { BindTargetParser } from '../parsers/BindTargetParser';
+import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
+import { JsViewFieldMDRC } from '../renderChildren/JsViewFieldMDRC';
+import { AbstractPlugin } from '../AbstractPlugin';
+import { ErrorCollection } from '../utils/errors/ErrorCollection';
 
 export class API {
-	public app: App;
-	public plugin: MetaBindPlugin;
+	public plugin: AbstractPlugin;
 	public inputFieldParser: InputFieldDeclarationParser;
 	public viewFieldParser: ViewFieldDeclarationParser;
 	public bindTargetParser: BindTargetParser;
 
-	constructor(plugin: MetaBindPlugin) {
+	constructor(plugin: AbstractPlugin) {
 		this.plugin = plugin;
 
-		this.app = plugin.app;
 		this.inputFieldParser = new InputFieldDeclarationParser();
 		this.viewFieldParser = new ViewFieldDeclarationParser();
 		this.bindTargetParser = new BindTargetParser(this.plugin);
@@ -38,7 +36,7 @@ export class API {
 		container: HTMLElement
 	): InputFieldMDRC {
 		if (!Object.values(RenderChildType).contains(renderChildType)) {
-			throw new MetaBindParsingError(`unknown render child type '${renderChildType}'`);
+			throw new MetaBindParsingError(ErrorLevel.CRITICAL, 'failed to create input field', `unknown render child type '${renderChildType}'`);
 		}
 		declaration = this.inputFieldParser.parseDeclaration(declaration, undefined, templateName);
 		return new InputFieldMDRC(container, renderChildType, declaration, this.plugin, filePath, self.crypto.randomUUID());
@@ -61,7 +59,7 @@ export class API {
 
 	public createInputFieldDeclaration(inputFieldType: InputFieldType, inputFieldArguments?: { type: InputFieldArgumentType; value: string }[]): InputFieldDeclaration {
 		if (this.inputFieldParser.getInputFieldType(inputFieldType) === InputFieldType.INVALID) {
-			throw new MetaBindParsingError(`input field type '${inputFieldType}' is invalid`);
+			throw new MetaBindParsingError(ErrorLevel.CRITICAL, 'failed to create input field declaration', `input field type '${inputFieldType}' is invalid`);
 		}
 
 		return {
@@ -71,7 +69,7 @@ export class API {
 			argumentContainer: this.inputFieldParser.parseArguments(inputFieldType, inputFieldArguments),
 			isBound: false,
 			bindTarget: '',
-			error: undefined,
+			errorCollection: new ErrorCollection('InputFieldDeclaration'),
 		} as InputFieldDeclaration;
 	}
 
@@ -81,7 +79,11 @@ export class API {
 
 	public bindInputFieldDeclaration(declaration: InputFieldDeclaration, bindTargetField: string, bindTargetFile?: string): InputFieldDeclaration {
 		if (bindTargetFile && !bindTargetField) {
-			throw new MetaBindBindTargetError('if a bind target file is specified, a bind target field must also be specified');
+			throw new MetaBindBindTargetError(
+				ErrorLevel.ERROR,
+				'failed to bind input field declaration',
+				'if a bind target file is specified, a bind target field must also be specified'
+			);
 		}
 
 		declaration.isBound = isTruthy(bindTargetField);
