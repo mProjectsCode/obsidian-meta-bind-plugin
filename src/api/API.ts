@@ -7,16 +7,16 @@ import { JsViewFieldDeclaration, ViewFieldDeclaration, ViewFieldDeclarationParse
 import { BindTargetParser } from '../parsers/BindTargetParser';
 import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
 import { JsViewFieldMDRC } from '../renderChildren/JsViewFieldMDRC';
-import { AbstractPlugin } from '../AbstractPlugin';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
+import MetaBindPlugin from '../main';
 
 export class API {
-	public plugin: AbstractPlugin;
+	public plugin: MetaBindPlugin;
 	public inputFieldParser: InputFieldDeclarationParser;
 	public viewFieldParser: ViewFieldDeclarationParser;
 	public bindTargetParser: BindTargetParser;
 
-	constructor(plugin: AbstractPlugin) {
+	constructor(plugin: MetaBindPlugin) {
 		this.plugin = plugin;
 
 		this.inputFieldParser = new InputFieldDeclarationParser();

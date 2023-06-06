@@ -66,10 +66,6 @@ export class DatePickerInputField extends AbstractInputField {
 	}
 
 	showDatePicker(): void {
-		if (!(this.renderChild.plugin instanceof MetaBindPlugin)) {
-			console.warn(new MetaBindArgumentError(ErrorLevel.WARNING, 'can not use input field', `input field only supported in the obsidian app`));
-			return;
-		}
 		this.modal = new DatePickerModal(this.renderChild.plugin.app, this);
 		this.modal.open();
 	}

@@ -3,31 +3,17 @@ import MetaBindPlugin from '../main';
 import { Internal } from '@opd-libs/opd-metadata-lib/lib/Internal';
 import { arrayEquals, traverseObjectToParentByPath } from '../utils/Utils';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
-import { Listener, Signal } from '../utils/Signal';
-import { AbstractMetadataManager } from './AbstractMetadataManager';
+import { Signal } from '../utils/Signal';
 import getMetadataFromFileCache = Internal.getMetadataFromFileCache;
+import { MetadataFileCache } from './MetadataFileCache';
 
-export interface MetadataFileCacheListener extends Listener<any | undefined> {
-	metadataPath: string[];
-}
-
-export interface MetadataFileCache {
-	file: TFile;
-	metadata: Record<string, any>;
-	listeners: MetadataFileCacheListener[];
-	cyclesSinceLastUserInput: number;
-	changed: boolean;
-}
-
-export class MetadataManager extends AbstractMetadataManager<MetadataFileCache> {
+export class MetadataManager {
 	cache: MetadataFileCache[];
 	plugin: MetaBindPlugin;
 	updateCycleThreshold = 5;
 	interval: number | undefined;
 
 	constructor(plugin: MetaBindPlugin) {
-		super();
-
 		this.plugin = plugin;
 
 		this.cache = [];

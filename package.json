@@ -45,6 +45,7 @@
 		"@codemirror/language": "https://github.com/lishid/cm-language",
 		"@opd-libs/opd-metadata-lib": "0.0.4",
 		"@opd-libs/opd-utils-lib": "0.0.2",
+		"esbuild-plugin-conditional-build": "^1.0.2",
 		"mathjs": "^11.8.0"
 	}
 }

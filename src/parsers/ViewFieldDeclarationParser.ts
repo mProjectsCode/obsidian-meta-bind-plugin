@@ -52,6 +52,7 @@ export class ViewFieldDeclarationParser {
 
 	parseString(fullDeclaration: string): ViewFieldDeclaration {
 		const declaration: ViewFieldDeclaration = {} as ViewFieldDeclaration;
+		declaration.errorCollection = new ErrorCollection('ViewFieldDeclaration');
 
 		try {
 			// declaration

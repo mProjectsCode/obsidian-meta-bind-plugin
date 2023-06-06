@@ -63,11 +63,6 @@ export class ImageSuggestInputField extends AbstractInputField {
 		const folderPaths: OptionQueryInputFieldArgument[] = this.renderChild.getArguments(InputFieldArgumentType.OPTION_QUERY);
 		const images: string[] = [];
 
-		if (!(this.renderChild.plugin instanceof MetaBindPlugin)) {
-			this.options = [];
-			return;
-		}
-
 		for (const folderPath of folderPaths) {
 			let folderPathString: string = folderPath.value;
 			if (folderPathString.startsWith('"') && folderPathString.endsWith('"')) {
@@ -158,10 +153,6 @@ export class ImageSuggestInputField extends AbstractInputField {
 	}
 
 	async showSuggest(): Promise<void> {
-		if (!(this.renderChild.plugin instanceof MetaBindPlugin)) {
-			console.warn(new MetaBindArgumentError(ErrorLevel.WARNING, 'can not use input field', `input field only supported in the obsidian app`));
-			return;
-		}
 		await this.getOptions();
 		new ImageSuggestModal(this.renderChild.plugin.app, this.options, item => {
 			this.setValue(item);
