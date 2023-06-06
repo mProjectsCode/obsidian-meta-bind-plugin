@@ -1,12 +1,13 @@
 import { AbstractInputField } from '../AbstractInputField';
 import ImageSuggestInput from './ImageSuggestInput.svelte';
-import { MetaBindArgumentError, MetaBindInternalError } from '../../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindArgumentError, MetaBindInternalError, MetaBindPublishError } from '../../utils/errors/MetaBindErrors';
 import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
 import { Notice, TFile, TFolder } from 'obsidian';
 import { ImageSuggestModal } from './ImageSuggestModal';
 import { OptionQueryInputFieldArgument } from '../../inputFieldArguments/arguments/OptionQueryInputFieldArgument';
 import { OptionInputFieldArgument } from '../../inputFieldArguments/arguments/OptionInputFieldArgument';
 import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
+import MetaBindPlugin from '../../main';
 
 export class ImageSuggestInputField extends AbstractInputField {
 	static allowInline: boolean = false;
@@ -20,6 +21,8 @@ export class ImageSuggestInputField extends AbstractInputField {
 
 		this.value = '';
 		this.options = [];
+
+		this.renderChild.errorCollection.add(new MetaBindPublishError(ErrorLevel.WARNING, 'can not interact with input field', 'input field only supported in the obsidian app'));
 	}
 
 	getValue(): string | undefined {
@@ -45,7 +48,7 @@ export class ImageSuggestInputField extends AbstractInputField {
 
 	getHtmlElement(): HTMLElement {
 		if (!this.container) {
-			throw new MetaBindInternalError('');
+			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
 		}
 
 		return this.container;
@@ -60,12 +63,21 @@ export class ImageSuggestInputField extends AbstractInputField {
 		const folderPaths: OptionQueryInputFieldArgument[] = this.renderChild.getArguments(InputFieldArgumentType.OPTION_QUERY);
 		const images: string[] = [];
 
+		if (!(this.renderChild.plugin instanceof MetaBindPlugin)) {
+			this.options = [];
+			return;
+		}
+
 		for (const folderPath of folderPaths) {
 			let folderPathString: string = folderPath.value;
 			if (folderPathString.startsWith('"') && folderPathString.endsWith('"')) {
 				folderPathString = folderPathString.substring(1, folderPathString.length - 1);
 			} else {
-				const error = new MetaBindArgumentError(`expected suggest option query for image suggester to start and end with double quotation marks`);
+				const error = new MetaBindArgumentError(
+					ErrorLevel.ERROR,
+					'failed to get suggest options',
+					`expected suggest option query for image suggester to start and end with double quotation marks`
+				);
 				new Notice(`meta-bind | ${error.message}`);
 				console.warn(error);
 				continue;
@@ -73,14 +85,22 @@ export class ImageSuggestInputField extends AbstractInputField {
 
 			const folder = this.renderChild.plugin.app.vault.getAbstractFileByPath(folderPathString);
 			if (folder == null) {
-				const error = new MetaBindArgumentError(`expected suggest option query ${folderPathString} for image suggester to exist`);
+				const error = new MetaBindArgumentError(
+					ErrorLevel.ERROR,
+					'failed to get suggest options',
+					`expected suggest option query ${folderPathString} for image suggester to exist`
+				);
 				new Notice(`meta-bind | ${error.message}`);
 				console.warn(error);
 				continue;
 			}
 
 			if (!(folder instanceof TFolder)) {
-				const error = new MetaBindArgumentError(`expected suggest option query ${folderPath.value} for image suggester to be a folder`);
+				const error = new MetaBindArgumentError(
+					ErrorLevel.ERROR,
+					'failed to get suggest options',
+					`expected suggest option query ${folderPath.value} for image suggester to be a folder`
+				);
 				new Notice(`meta-bind | ${error.message}`);
 				console.warn(error);
 				continue;
@@ -99,21 +119,33 @@ export class ImageSuggestInputField extends AbstractInputField {
 			const imageFile = this.renderChild.plugin.app.vault.getAbstractFileByPath(imagePath.value);
 
 			if (!imageFile) {
-				const error = new MetaBindArgumentError(`expected suggest option ${imagePath.value} for image suggester to exist`);
+				const error = new MetaBindArgumentError(
+					ErrorLevel.ERROR,
+					'failed to get suggest options',
+					`expected suggest option ${imagePath.value} for image suggester to exist`
+				);
 				new Notice(`meta-bind | ${error.message}`);
 				console.warn(error);
 				continue;
 			}
 
 			if (!(imageFile instanceof TFile)) {
-				const error = new MetaBindArgumentError(`expected suggest option ${imagePath.value} for image suggester to be a file`);
+				const error = new MetaBindArgumentError(
+					ErrorLevel.ERROR,
+					'failed to get suggest options',
+					`expected suggest option ${imagePath.value} for image suggester to be a file`
+				);
 				new Notice(`meta-bind | ${error.message}`);
 				console.warn(error);
 				continue;
 			}
 
 			if (!this.isImageExtension(imageFile.extension)) {
-				const error = new MetaBindArgumentError(`expected suggest option ${imagePath.value} for image suggester to be an image file`);
+				const error = new MetaBindArgumentError(
+					ErrorLevel.ERROR,
+					'failed to get suggest options',
+					`expected suggest option ${imagePath.value} for image suggester to be an image file`
+				);
 				new Notice(`meta-bind | ${error.message}`);
 				console.warn(error);
 				continue;
@@ -126,6 +158,10 @@ export class ImageSuggestInputField extends AbstractInputField {
 	}
 
 	async showSuggest(): Promise<void> {
+		if (!(this.renderChild.plugin instanceof MetaBindPlugin)) {
+			console.warn(new MetaBindArgumentError(ErrorLevel.WARNING, 'can not use input field', `input field only supported in the obsidian app`));
+			return;
+		}
 		await this.getOptions();
 		new ImageSuggestModal(this.renderChild.plugin.app, this.options, item => {
 			this.setValue(item);

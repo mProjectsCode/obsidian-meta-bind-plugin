@@ -1,6 +1,6 @@
 import { AbstractInputField } from './AbstractInputField';
 import { ToggleComponent } from 'obsidian';
-import { MetaBindInternalError, MetaBindValueError } from '../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../utils/errors/MetaBindErrors';
 import { InputFieldMDRC } from '../renderChildren/InputFieldMDRC';
 import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
 
@@ -33,7 +33,7 @@ export class ToggleInputField extends AbstractInputField {
 		} else if (value === this.offValue) {
 			this.toggleComponent.setValue(false);
 		} else {
-			console.warn(new MetaBindValueError(`invalid value '${value}' at toggleInputField ${this.renderChild.uuid}`));
+			console.warn(new MetaBindValueError(ErrorLevel.WARNING, 'failed to set value', `invalid value '${value}' at toggleInputField ${this.renderChild.uuid}`));
 			this.toggleComponent.setValue(false);
 		}
 	}
@@ -48,7 +48,7 @@ export class ToggleInputField extends AbstractInputField {
 
 	getHtmlElement(): HTMLElement {
 		if (!this.toggleComponent) {
-			throw new MetaBindInternalError('toggle input component is undefined');
+			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
 		}
 
 		return this.toggleComponent.toggleEl;

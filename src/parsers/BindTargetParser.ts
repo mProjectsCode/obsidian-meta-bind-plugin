@@ -1,25 +1,24 @@
-import { MetaBindBindTargetError } from '../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindBindTargetError } from '../utils/errors/MetaBindErrors';
 import { parsePath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
-import { TFile } from 'obsidian';
-import MetaBindPlugin from '../main';
+import { AbstractPlugin } from '../AbstractPlugin';
 
 export interface BindTargetDeclaration {
-	file: TFile;
+	filePath: string;
 	fileName: string;
 	metadataFieldName: string;
 	metadataPath: string[];
 }
 
 export class BindTargetParser {
-	plugin: MetaBindPlugin;
+	plugin: AbstractPlugin;
 
-	constructor(plugin: MetaBindPlugin) {
+	constructor(plugin: AbstractPlugin) {
 		this.plugin = plugin;
 	}
 
 	parseBindTarget(bindTargetString: string, fallbackFilePath: string): BindTargetDeclaration {
 		if (!bindTargetString) {
-			throw new MetaBindBindTargetError('bind target is empty');
+			throw new MetaBindBindTargetError(ErrorLevel.CRITICAL, 'failed to parse bind target', 'bind target is empty');
 		}
 
 		const bindTargetDeclaration: BindTargetDeclaration = {} as BindTargetDeclaration;
@@ -35,24 +34,24 @@ export class BindTargetParser {
 			bindTargetDeclaration.fileName = bindTargetParts[0];
 			bindTargetDeclaration.metadataFieldName = bindTargetParts[1];
 		} else {
-			throw new MetaBindBindTargetError("bind target may only contain one '#' to specify the metadata field");
+			throw new MetaBindBindTargetError(ErrorLevel.CRITICAL, 'failed to parse bind target', "bind target may only contain one '#' to specify the metadata field");
 		}
 
 		try {
 			bindTargetDeclaration.metadataPath = parsePath(bindTargetDeclaration.metadataFieldName);
 		} catch (e) {
 			if (e instanceof Error) {
-				throw new MetaBindBindTargetError(`bind target path parsing error: ${e?.message}`);
+				throw new MetaBindBindTargetError(ErrorLevel.CRITICAL, 'failed to parse bind target', `bind target path parsing error: ${e?.message}`);
 			}
 		}
 
-		const files: TFile[] = this.plugin.getFilesByName(bindTargetDeclaration.fileName);
-		if (files.length === 0) {
-			throw new MetaBindBindTargetError('bind target file not found');
-		} else if (files.length === 1) {
-			bindTargetDeclaration.file = files[0];
+		const filePaths: string[] = this.plugin.getFilePathsByName(bindTargetDeclaration.fileName);
+		if (filePaths.length === 0) {
+			throw new MetaBindBindTargetError(ErrorLevel.CRITICAL, 'failed to parse bind target', 'bind target file not found');
+		} else if (filePaths.length === 1) {
+			bindTargetDeclaration.filePath = filePaths[0];
 		} else {
-			throw new MetaBindBindTargetError('bind target resolves to multiple files, please also specify the file path');
+			throw new MetaBindBindTargetError(ErrorLevel.CRITICAL, 'failed to parse bind target', 'bind target resolves to multiple files, please also specify the file path');
 		}
 
 		return bindTargetDeclaration;

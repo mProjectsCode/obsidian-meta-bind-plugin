@@ -1,6 +1,6 @@
 import { AbstractInputField } from '../AbstractInputField';
 import EditorInput from './EditorInput.svelte';
-import { MetaBindInternalError } from '../../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
 import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 
 export class EditorInputField extends AbstractInputField {
@@ -37,7 +37,7 @@ export class EditorInputField extends AbstractInputField {
 
 	getHtmlElement(): HTMLElement {
 		if (!this.container) {
-			throw new MetaBindInternalError('');
+			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
 		}
 
 		return this.container;

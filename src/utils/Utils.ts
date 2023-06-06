@@ -1,6 +1,6 @@
-import {FileSystemAdapter} from 'obsidian';
-import {traverseObjectByPath} from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
-import {KeyValuePair} from '@opd-libs/opd-utils-lib/lib/Utils';
+import { FileSystemAdapter } from 'obsidian';
+import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
+import { KeyValuePair } from '@opd-libs/opd-utils-lib/lib/Utils';
 
 /**
  * Gets the file name from a path

@@ -4,10 +4,11 @@ import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParse
 import { DataArray, getAPI, Literal } from 'obsidian-dataview';
 import { SuggestInputModal } from './SuggestInputModal';
 import { Notice, TFile } from 'obsidian';
-import { MetaBindArgumentError, MetaBindInternalError } from '../../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindArgumentError, MetaBindInternalError, MetaBindPublishError } from '../../utils/errors/MetaBindErrors';
 import { OptionInputFieldArgument } from '../../inputFieldArguments/arguments/OptionInputFieldArgument';
 import { OptionQueryInputFieldArgument } from '../../inputFieldArguments/arguments/OptionQueryInputFieldArgument';
 import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
+import MetaBindPlugin from '../../main';
 
 export interface SuggestOption {
 	value: string;
@@ -26,10 +27,20 @@ export class SuggestInputField extends AbstractInputField {
 		this.value = '';
 		this.options = [];
 
-		if (this.needsDataview()) {
-			if (!getAPI(this.renderChild.plugin.app)) {
-				throw new MetaBindArgumentError(`dataview needs to be installed and enabled to use suggest option queries`);
+		if (this.renderChild.plugin instanceof MetaBindPlugin) {
+			if (this.needsDataview()) {
+				if (!getAPI(this.renderChild.plugin.app)) {
+					throw new MetaBindArgumentError(
+						ErrorLevel.ERROR,
+						'can not create suggest input field',
+						`dataview needs to be installed and enabled to use suggest option queries`
+					);
+				}
 			}
+		} else {
+			this.renderChild.errorCollection.add(
+				new MetaBindPublishError(ErrorLevel.WARNING, 'can not interact with input field', 'input field only supported in the obsidian app')
+			);
 		}
 	}
 
@@ -55,7 +66,7 @@ export class SuggestInputField extends AbstractInputField {
 
 	getHtmlElement(): HTMLElement {
 		if (!this.container) {
-			throw new MetaBindInternalError('');
+			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
 		}
 
 		return this.container;
@@ -75,7 +86,7 @@ export class SuggestInputField extends AbstractInputField {
 			this.options.push({ value: suggestOptionsArgument.value, displayValue: suggestOptionsArgument.value });
 		}
 
-		if (optionQueryArguments.length > 0) {
+		if (this.renderChild.plugin instanceof MetaBindPlugin && optionQueryArguments.length > 0) {
 			const dv = getAPI(this.renderChild.plugin.app);
 
 			if (!dv) {
@@ -101,6 +112,10 @@ export class SuggestInputField extends AbstractInputField {
 	}
 
 	async showSuggest(): Promise<void> {
+		if (!(this.renderChild.plugin instanceof MetaBindPlugin)) {
+			console.warn(new MetaBindArgumentError(ErrorLevel.WARNING, 'can not use input field', `input field only supported in the obsidian app`));
+			return;
+		}
 		await this.getOptions();
 		new SuggestInputModal(this.renderChild.plugin.app, this.options, item => {
 			this.setValue(item.value);

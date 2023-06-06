@@ -1,7 +1,7 @@
 import { AbstractInputField } from './AbstractInputField';
 import { DropdownComponent, moment, TextComponent } from 'obsidian';
 import { DateParser } from '../parsers/DateParser';
-import { MetaBindInternalError, MetaBindValueError } from '../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../utils/errors/MetaBindErrors';
 import { InputFieldMDRC } from '../renderChildren/InputFieldMDRC';
 
 export class DateInputField extends AbstractInputField {
@@ -41,7 +41,7 @@ export class DateInputField extends AbstractInputField {
 
 	public getHtmlElement(): HTMLElement {
 		if (!this.container) {
-			throw new MetaBindInternalError('toggle input container is undefined');
+			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
 		}
 
 		return this.container;
@@ -74,7 +74,7 @@ export class DateInputField extends AbstractInputField {
 
 		this.date = DateParser.parse(value);
 		if (!this.date) {
-			console.warn(new MetaBindValueError(`invalid value '${value}' at dateInputField ${this.renderChild.uuid}`));
+			console.warn(new MetaBindValueError(ErrorLevel.WARNING, 'failed to set value', `invalid value '${value}' at dateInputField ${this.renderChild.uuid}`));
 			this.date = DateParser.getDefaultDate();
 		}
 

@@ -1,35 +1,29 @@
-import { Plugin, TFile } from 'obsidian';
+import { Plugin } from 'obsidian';
 import { DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab } from './settings/Settings';
 import { RenderChildType } from './renderChildren/InputFieldMDRC';
 import { getFileName, isPath, removeFileEnding } from './utils/Utils';
 import { DateParser } from './parsers/DateParser';
-import { MetadataManager } from './MetadataManager';
-import { API } from './API';
-import { Extension } from '@codemirror/state';
+import { MetadataManager } from './metadata/MetadataManager';
+import { API } from './api/API';
 import { setFirstWeekday } from './inputFields/DatePicker/DatePickerInputSvelteHelpers';
 import './frontmatterDisplay/custom_overlay';
 import { Mode } from 'codemirror';
-import { ViewFieldMDRC } from './renderChildren/ViewFieldMDRC';
 import { createMarkdownRenderChildWidgetEditorPlugin } from './cm6/Cm6_ViewPlugin';
-import { AbstractMDRC } from './renderChildren/AbstractMDRC';
+import { AbstractPlugin } from './AbstractPlugin';
+import { MDRCManager } from './MDRCManager';
 
-export default class MetaBindPlugin extends Plugin {
+export default class MetaBindPlugin extends Plugin implements AbstractPlugin {
 	// @ts-ignore defined in `onload`
 	settings: MetaBindPluginSettings;
 
 	// @ts-ignore defined in `onload`
-	activeMDRCs: AbstractMDRC[];
-	// @ts-ignore defined in `onload`
-	activeMarkdownViewFields: ViewFieldMDRC[];
+	mdrcManager: MDRCManager;
 
 	// @ts-ignore defined in `onload`
 	metadataManager: MetadataManager;
 
 	// @ts-ignore defined in `onload`
 	api: API;
-
-	// @ts-ignore defined in `onload`
-	editorExtensions: Extension[];
 
 	async onload(): Promise<void> {
 		console.log(`meta-bind | Main >> load`);
@@ -42,8 +36,7 @@ export default class MetaBindPlugin extends Plugin {
 		this.api.inputFieldParser.parseTemplates(this.settings.inputTemplates);
 		setFirstWeekday(this.settings.firstWeekday);
 
-		this.activeMDRCs = [];
-		this.activeMarkdownViewFields = [];
+		this.mdrcManager = new MDRCManager();
 		this.metadataManager = new MetadataManager(this);
 
 		this.registerMarkdownPostProcessor((el, ctx) => {
@@ -58,8 +51,8 @@ export default class MetaBindPlugin extends Plugin {
 					ctx.addChild(inputField);
 				}
 				if (isViewField) {
-					const inputField = this.api.createViewFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock);
-					ctx.addChild(inputField);
+					const viewField = this.api.createViewFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock);
+					ctx.addChild(viewField);
 				}
 			}
 		}, 100);
@@ -163,45 +156,29 @@ export default class MetaBindPlugin extends Plugin {
 
 	onunload(): void {
 		console.log(`meta-bind | Main >> unload`);
-		for (const activeMarkdownInputField of this.activeMDRCs) {
-			activeMarkdownInputField.unload();
-		}
-
-		for (const activeMarkdownViewField of this.activeMarkdownViewFields) {
-			activeMarkdownViewField.unload();
-		}
+		this.mdrcManager.unload();
 	}
 
-	registerMarkdownRenderChild(mdrc: AbstractMDRC): void {
-		console.debug(`meta-bind | Main >> registered MDRC ${mdrc.uuid}`);
-		this.activeMDRCs.push(mdrc);
-	}
-
-	unregisterMarkdownRenderChild(mdrc: AbstractMDRC): void {
-		console.debug(`meta-bind | Main >> unregistered MDRC ${mdrc.uuid}`);
-		this.activeMDRCs = this.activeMDRCs.filter(x => x.uuid !== mdrc.uuid);
-	}
-
-	getFilesByName(name: string): TFile[] {
+	getFilePathsByName(name: string): string[] {
 		const fileNameIsPath = isPath(name);
 		const processedFileName = fileNameIsPath ? removeFileEnding(name) : getFileName(removeFileEnding(name));
 
 		const allFiles = this.app.vault.getMarkdownFiles();
-		const files: TFile[] = [];
+		const filePaths: string[] = [];
 		for (const file of allFiles) {
 			// console.log(removeFileEnding(file.path));
 			if (fileNameIsPath) {
 				if (removeFileEnding(file.path) === processedFileName) {
-					files.push(file);
+					filePaths.push(file.path);
 				}
 			} else {
 				if (getFileName(removeFileEnding(file.name)) === processedFileName) {
-					files.push(file);
+					filePaths.push(file.path);
 				}
 			}
 		}
 
-		return files;
+		return filePaths;
 	}
 
 	async loadSettings(): Promise<void> {

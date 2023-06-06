@@ -7,7 +7,7 @@ import { OptionInputFieldArgument } from './arguments/OptionInputFieldArgument';
 import { TitleInputFieldArgument } from './arguments/TitleInputFieldArgument';
 import { AlignRightInputFieldArgument } from './arguments/AlignRightInputFieldArgument';
 import { OptionQueryInputFieldArgument } from './arguments/OptionQueryInputFieldArgument';
-import { MetaBindParsingError } from '../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
 import { AbstractInputFieldArgument } from './AbstractInputFieldArgument';
 import { ShowcaseInputFieldArgument } from './arguments/ShowcaseInputFieldArgument';
 import { OffValueInputFieldArgument } from './arguments/OffValueInputFieldArgument';
@@ -38,7 +38,7 @@ export class InputFieldArgumentFactory {
 		} else if (argumentIdentifier === InputFieldArgumentType.ON_VALUE) {
 			return new OnValueInputFieldArgument();
 		} else {
-			throw new MetaBindParsingError(`unknown argument '${argumentIdentifier}'`);
+			throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not crate input field argument', `unknown argument '${argumentIdentifier}'`);
 		}
 	}
 }

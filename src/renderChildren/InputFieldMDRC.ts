@@ -1,11 +1,10 @@
-import MetaBindPlugin from '../main';
 import { AbstractInputField } from '../inputFields/AbstractInputField';
 import { InputFieldFactory } from '../inputFields/InputFieldFactory';
 import { InputFieldArgumentType, InputFieldDeclaration, InputFieldType } from '../parsers/InputFieldDeclarationParser';
 import { AbstractInputFieldArgument } from '../inputFieldArguments/AbstractInputFieldArgument';
 import { ClassInputFieldArgument } from '../inputFieldArguments/arguments/ClassInputFieldArgument';
-import { MetaBindInternalError } from '../utils/MetaBindErrors';
-import { MetadataFileCache } from '../MetadataManager';
+import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
+import { MetadataFileCache } from '../metadata/MetadataManager';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { ShowcaseInputFieldArgument } from '../inputFieldArguments/arguments/ShowcaseInputFieldArgument';
 import { TitleInputFieldArgument } from '../inputFieldArguments/arguments/TitleInputFieldArgument';
@@ -13,6 +12,8 @@ import { isTruthy } from '../utils/Utils';
 import { Listener, Signal } from '../utils/Signal';
 import { BindTargetDeclaration } from '../parsers/BindTargetParser';
 import { AbstractMDRC } from './AbstractMDRC';
+import { PublishMetadataFileCache } from '../metadata/PublishMetadataManager';
+import { AbstractPlugin } from '../AbstractPlugin';
 
 export enum RenderChildType {
 	INLINE = 'inline',
@@ -20,7 +21,7 @@ export enum RenderChildType {
 }
 
 export class InputFieldMDRC extends AbstractMDRC {
-	metadataCache: MetadataFileCache | undefined;
+	metadataCache: MetadataFileCache | PublishMetadataFileCache | undefined;
 	inputField: AbstractInputField | undefined;
 
 	fullDeclaration?: string;
@@ -38,14 +39,18 @@ export class InputFieldMDRC extends AbstractMDRC {
 	 */
 	public readSignal: Signal<any>;
 
-	constructor(containerEl: HTMLElement, renderChildType: RenderChildType, declaration: InputFieldDeclaration, plugin: MetaBindPlugin, filePath: string, uuid: string) {
-		super(containerEl, renderChildType, plugin, filePath, uuid);
+	constructor(
+		containerEl: HTMLElement,
+		renderChildType: RenderChildType,
+		declaration: InputFieldDeclaration,
+		plugin: AbstractPlugin,
+		filePath: string,
+		uuid: string,
+		frontmatter: any | null | undefined = undefined
+	) {
+		super(containerEl, renderChildType, plugin, filePath, uuid, frontmatter);
 
-		if (!declaration.error) {
-			this.error = '';
-		} else {
-			this.error = declaration.error instanceof Error ? declaration.error.message : declaration.error;
-		}
+		this.errorCollection.merge(declaration.errorCollection);
 
 		this.fullDeclaration = declaration.fullDeclaration;
 		this.inputFieldDeclaration = declaration;
@@ -53,7 +58,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 		this.writeSignal = new Signal<any>(undefined);
 		this.readSignal = new Signal<any>(undefined);
 
-		if (!this.error) {
+		if (!this.errorCollection.hasErrors()) {
 			try {
 				if (this.inputFieldDeclaration.isBound) {
 					this.bindTargetDeclaration = this.plugin.api.bindTargetParser.parseBindTarget(this.inputFieldDeclaration.bindTarget, this.filePath);
@@ -64,13 +69,12 @@ export class InputFieldMDRC extends AbstractMDRC {
 					inputFieldMDRC: this,
 				});
 			} catch (e: any) {
-				this.error = e.message;
-				console.warn(e);
+				this.errorCollection.add(e);
 			}
 		}
 	}
 
-	registerSelfToMetadataManager(): MetadataFileCache | undefined {
+	registerSelfToMetadataManager(): MetadataFileCache | PublishMetadataFileCache | undefined {
 		// if bind target is invalid, return
 		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetDeclaration) {
 			return;
@@ -78,7 +82,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 
 		this.metadataManagerReadSignalListener = this.readSignal.registerListener({ callback: this.updateMetadataManager.bind(this) });
 
-		return this.plugin.metadataManager.register(this.bindTargetDeclaration.file, this.writeSignal, this.bindTargetDeclaration.metadataPath, this.uuid);
+		return this.plugin.metadataManager.register(this.bindTargetDeclaration.filePath, undefined, this.writeSignal, this.bindTargetDeclaration.metadataPath, this.uuid);
 	}
 
 	unregisterSelfFromMetadataManager(): void {
@@ -91,7 +95,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 			this.readSignal.unregisterListener(this.metadataManagerReadSignalListener);
 		}
 
-		this.plugin.metadataManager.unregister(this.bindTargetDeclaration.file, this.uuid);
+		this.plugin.metadataManager.unregister(this.bindTargetDeclaration.filePath, this.uuid);
 	}
 
 	updateMetadataManager(value: any): void {
@@ -100,7 +104,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 			return;
 		}
 
-		this.plugin.metadataManager.updatePropertyInCache(value, this.bindTargetDeclaration.metadataPath, this.bindTargetDeclaration.file, this.uuid);
+		this.plugin.metadataManager.updatePropertyInCache(value, this.bindTargetDeclaration.metadataPath, this.bindTargetDeclaration.filePath, this.uuid);
 	}
 
 	getInitialValue(): any | undefined {
@@ -112,8 +116,8 @@ export class InputFieldMDRC extends AbstractMDRC {
 	}
 
 	getArguments(name: InputFieldArgumentType): AbstractInputFieldArgument[] {
-		if (this.inputFieldDeclaration.error) {
-			throw new MetaBindInternalError('inputFieldDeclaration has errors, can not retrieve arguments');
+		if (this.inputFieldDeclaration.errorCollection.hasErrors()) {
+			throw new MetaBindInternalError(ErrorLevel.ERROR, 'can not retrieve arguments', 'inputFieldDeclaration has errors');
 		}
 
 		return this.inputFieldDeclaration.argumentContainer.arguments.filter(x => x.identifier === name);
@@ -145,26 +149,25 @@ export class InputFieldMDRC extends AbstractMDRC {
 		const container: HTMLDivElement = createDiv();
 		container.addClass('meta-bind-plugin-input-wrapper');
 
-		if (this.error) {
-			this.renderError(this.error);
-			return;
+		if (!this.inputField) {
+			this.errorCollection.add(new MetaBindInternalError(ErrorLevel.CRITICAL, "can't render input field", 'input field is undefined'));
 		}
 
-		if (!this.inputField) {
-			this.renderError(new MetaBindInternalError('input field is undefined and error is empty').message);
+		this.renderError();
+		if (this.errorCollection.hasErrors()) {
 			return;
 		}
 
 		if (this.hasValidBindTarget()) {
 			this.metadataCache = this.registerSelfToMetadataManager();
 		}
-		this.plugin.registerMarkdownRenderChild(this);
+		this.plugin.mdrcManager.registerMDRC(this);
 
-		this.inputField.render(container);
+		this.inputField?.render(container);
 
 		const classArguments: ClassInputFieldArgument[] = this.getArguments(InputFieldArgumentType.CLASS);
 		if (classArguments) {
-			this.inputField.getHtmlElement().addClasses(classArguments.map(x => x.value).flat());
+			this.inputField?.getHtmlElement().addClasses(classArguments.map(x => x.value).flat());
 		}
 
 		this.containerEl.empty();
@@ -189,17 +192,16 @@ export class InputFieldMDRC extends AbstractMDRC {
 		}
 	}
 
-	renderError(message: string): void {
-		this.containerEl.empty();
-
+	renderError(): void {
 		if (this.renderChildType === RenderChildType.BLOCK) {
-			const cardContainer: HTMLDivElement = this.containerEl.createDiv({ cls: 'meta-bind-plugin-card' });
+			this.containerEl.empty();
 
+			const cardContainer: HTMLDivElement = this.containerEl.createDiv({ cls: 'meta-bind-plugin-card' });
 			cardContainer.createEl('code', { text: ` ${this.fullDeclaration} ` });
-			cardContainer.createEl('span', { text: message, cls: 'meta-bind-plugin-error' });
+
+			this.errorCollection.render(cardContainer);
 		} else {
-			this.containerEl.createEl('code', { text: ` ${this.fullDeclaration}` });
-			this.containerEl.createEl('code', { text: `-> ${message}`, cls: 'meta-bind-plugin-error' });
+			this.errorCollection.render(this.containerEl);
 		}
 	}
 
@@ -207,7 +209,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 		console.log('meta-bind | InputFieldMarkdownRenderChild >> unload', this);
 
 		this.inputField?.destroy();
-		this.plugin.unregisterMarkdownRenderChild(this);
+		this.plugin.mdrcManager.unregisterMDRC(this);
 		this.unregisterSelfFromMetadataManager();
 
 		this.containerEl.empty();

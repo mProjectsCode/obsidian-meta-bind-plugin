@@ -4,8 +4,9 @@ import { moment } from 'obsidian';
 import { DateParser } from '../../parsers/DateParser';
 import { DatePickerModal } from './DatePickerModal';
 import { Moment } from 'moment';
-import { MetaBindInternalError } from '../../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindArgumentError, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
 import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
+import MetaBindPlugin from '../../main';
 
 export class DatePickerInputField extends AbstractInputField {
 	container: HTMLDivElement | undefined;
@@ -47,7 +48,7 @@ export class DatePickerInputField extends AbstractInputField {
 
 	getHtmlElement(): HTMLElement {
 		if (!this.container) {
-			throw new MetaBindInternalError('');
+			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
 		}
 
 		return this.container;
@@ -65,6 +66,10 @@ export class DatePickerInputField extends AbstractInputField {
 	}
 
 	showDatePicker(): void {
+		if (!(this.renderChild.plugin instanceof MetaBindPlugin)) {
+			console.warn(new MetaBindArgumentError(ErrorLevel.WARNING, 'can not use input field', `input field only supported in the obsidian app`));
+			return;
+		}
 		this.modal = new DatePickerModal(this.renderChild.plugin.app, this);
 		this.modal.open();
 	}

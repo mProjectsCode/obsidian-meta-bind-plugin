@@ -3,7 +3,7 @@ import { SelectInputFieldElement } from './SelectInputFieldElement';
 import { mod } from '../utils/Utils';
 import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
 import { AbstractInputFieldArgument } from '../inputFieldArguments/AbstractInputFieldArgument';
-import { MetaBindInternalError } from '../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
 import { InputFieldMDRC } from '../renderChildren/InputFieldMDRC';
 
 export class SelectInputField extends AbstractInputField {
@@ -20,7 +20,7 @@ export class SelectInputField extends AbstractInputField {
 
 	getHtmlElement(): HTMLElement {
 		if (!this.container) {
-			throw new MetaBindInternalError('select input container is undefined');
+			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
 		}
 
 		return this.container;

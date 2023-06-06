@@ -1,7 +1,7 @@
 import { EditorSelection, EditorState } from '@codemirror/state';
 import MetaBindPlugin from '../main';
 import { editorInfoField, TFile } from 'obsidian';
-import { MetaBindInternalError } from '../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
 import { InputFieldWidget, MarkdownRenderChildWidget, MBWidgetType, ViewFieldWidget } from './Cm6_Widgets';
 import { DecorationSet, EditorView } from '@codemirror/view';
 import { AbstractMDRC } from '../renderChildren/AbstractMDRC';
@@ -47,7 +47,7 @@ export class Cm6_Util {
 			return 'VIEW';
 		}
 
-		throw new MetaBindInternalError(`Invalid widget type "${widgetType}"`);
+		throw new MetaBindInternalError(ErrorLevel.ERROR, 'failed to get declaration prefix', `Invalid widget type "${widgetType}"`);
 	}
 
 	static isDeclaration(widgetType: MBWidgetType, str: string): boolean {
