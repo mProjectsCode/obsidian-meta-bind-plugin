@@ -1,5 +1,5 @@
 import { Plugin } from 'obsidian';
-import { DEFAULT_SETTINGS, MetaBindPluginSettings, MetaBindSettingTab } from './settings/Settings';
+import { MetaBindSettingTab } from './settings/SettingsTab';
 import { RenderChildType } from './renderChildren/InputFieldMDRC';
 import { getFileName, isPath, removeFileEnding } from './utils/Utils';
 import { DateParser } from './parsers/DateParser';
@@ -9,10 +9,11 @@ import { setFirstWeekday } from './inputFields/DatePicker/DatePickerInputSvelteH
 import './frontmatterDisplay/custom_overlay';
 import { Mode } from 'codemirror';
 import { createMarkdownRenderChildWidgetEditorPlugin } from './cm6/Cm6_ViewPlugin';
-import { AbstractPlugin } from './AbstractPlugin';
 import { MDRCManager } from './MDRCManager';
+import { DEFAULT_SETTINGS, MetaBindPluginSettings } from './settings/Settings';
+import { IPlugin } from './IPlugin';
 
-export default class MetaBindPlugin extends Plugin implements AbstractPlugin {
+export default class MetaBindPlugin extends Plugin implements IPlugin {
 	// @ts-ignore defined in `onload`
 	settings: MetaBindPluginSettings;
 

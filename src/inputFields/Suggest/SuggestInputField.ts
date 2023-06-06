@@ -27,20 +27,10 @@ export class SuggestInputField extends AbstractInputField {
 		this.value = '';
 		this.options = [];
 
-		if (this.renderChild.plugin instanceof MetaBindPlugin) {
-			if (this.needsDataview()) {
-				if (!getAPI(this.renderChild.plugin.app)) {
-					throw new MetaBindArgumentError(
-						ErrorLevel.ERROR,
-						'can not create suggest input field',
-						`dataview needs to be installed and enabled to use suggest option queries`
-					);
-				}
+		if (this.needsDataview()) {
+			if (!getAPI(this.renderChild.plugin.app)) {
+				throw new MetaBindArgumentError(ErrorLevel.ERROR, 'can not create suggest input field', `dataview needs to be installed and enabled to use suggest option queries`);
 			}
-		} else {
-			this.renderChild.errorCollection.add(
-				new MetaBindPublishError(ErrorLevel.WARNING, 'can not interact with input field', 'input field only supported in the obsidian app')
-			);
 		}
 	}
 
@@ -86,7 +76,7 @@ export class SuggestInputField extends AbstractInputField {
 			this.options.push({ value: suggestOptionsArgument.value, displayValue: suggestOptionsArgument.value });
 		}
 
-		if (this.renderChild.plugin instanceof MetaBindPlugin && optionQueryArguments.length > 0) {
+		if (optionQueryArguments.length > 0) {
 			const dv = getAPI(this.renderChild.plugin.app);
 
 			if (!dv) {
@@ -112,10 +102,6 @@ export class SuggestInputField extends AbstractInputField {
 	}
 
 	async showSuggest(): Promise<void> {
-		if (!(this.renderChild.plugin instanceof MetaBindPlugin)) {
-			console.warn(new MetaBindArgumentError(ErrorLevel.WARNING, 'can not use input field', `input field only supported in the obsidian app`));
-			return;
-		}
 		await this.getOptions();
 		new SuggestInputModal(this.renderChild.plugin.app, this.options, item => {
 			this.setValue(item.value);

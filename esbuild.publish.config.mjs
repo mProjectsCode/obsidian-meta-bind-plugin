@@ -1,7 +1,6 @@
 import esbuild from 'esbuild';
 import process from 'process';
 import builtins from 'builtin-modules';
-import copy from 'esbuild-plugin-copy-watch';
 import esbuildSvelte from 'esbuild-svelte';
 import sveltePreprocess from 'svelte-preprocess';
 
@@ -18,7 +17,7 @@ esbuild
 		banner: {
 			js: banner,
 		},
-		entryPoints: ['src/Publish.ts'],
+		entryPoints: ['src/publish/Publish.ts'],
 		bundle: true,
 		external: [
 			'obsidian',
@@ -53,13 +52,12 @@ esbuild
 		logLevel: 'info',
 		sourcemap: prod ? false : 'inline',
 		treeShaking: true,
-		outdir: './',
-		outbase: 'src',
+		outfile: './Publish.js',
 		plugins: [
 			esbuildSvelte({
 				compilerOptions: { css: true },
 				preprocess: sveltePreprocess(),
-			}),
+			})
 		],
 	})
 	.catch(() => process.exit(1));

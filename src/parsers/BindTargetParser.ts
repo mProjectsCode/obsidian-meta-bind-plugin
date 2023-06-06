@@ -1,6 +1,6 @@
 import { ErrorLevel, MetaBindBindTargetError } from '../utils/errors/MetaBindErrors';
 import { parsePath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
-import { AbstractPlugin } from '../AbstractPlugin';
+import { IPlugin } from '../IPlugin';
 
 export interface BindTargetDeclaration {
 	filePath: string;
@@ -10,9 +10,9 @@ export interface BindTargetDeclaration {
 }
 
 export class BindTargetParser {
-	plugin: AbstractPlugin;
+	plugin: IPlugin;
 
-	constructor(plugin: AbstractPlugin) {
+	constructor(plugin: IPlugin) {
 		this.plugin = plugin;
 	}
 

@@ -7,7 +7,6 @@ import { ViewField } from '../viewFields/ViewField';
 import { ViewFieldVariable } from './ViewFieldMDRC';
 import { getAPI } from 'obsidian-dataview';
 import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
-import { AbstractPlugin } from '../AbstractPlugin';
 
 export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 	viewField: ViewField;
@@ -23,7 +22,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 		containerEl: HTMLElement,
 		renderChildType: RenderChildType,
 		declaration: JsViewFieldDeclaration,
-		plugin: AbstractPlugin,
+		plugin: MetaBindPlugin,
 		filePath: string,
 		uuid: string,
 		frontmatter: any | null | undefined = undefined

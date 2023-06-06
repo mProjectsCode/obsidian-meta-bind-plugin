@@ -1,5 +1,4 @@
 import { ErrorLevel, MetaBindExpressionError } from '../utils/errors/MetaBindErrors';
-import { MetadataFileCache } from '../metadata/MetadataManager';
 import { Listener, Signal } from '../utils/Signal';
 import { RenderChildType } from './InputFieldMDRC';
 import { ViewFieldDeclaration } from '../parsers/ViewFieldDeclarationParser';
@@ -7,14 +6,15 @@ import { BindTargetDeclaration } from '../parsers/BindTargetParser';
 import { ViewField } from '../viewFields/ViewField';
 import * as MathJs from 'mathjs';
 import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
-import { PublishMetadataFileCache } from '../metadata/PublishMetadataManager';
-import { AbstractPlugin } from '../AbstractPlugin';
+import { IPlugin } from '../IPlugin';
+import MetaBindPlugin from '../main';
+import { MetadataFileCache } from '../metadata/MetadataFileCache';
 
 export interface ViewFieldVariable {
 	bindTargetDeclaration: BindTargetDeclaration;
 	writeSignal: Signal<any>;
 	uuid: string;
-	metadataCache: MetadataFileCache | PublishMetadataFileCache | undefined;
+	metadataCache: MetadataFileCache | undefined;
 	writeSignalListener: Listener<any> | undefined;
 	contextName: string | undefined;
 }
@@ -33,7 +33,7 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 		containerEl: HTMLElement,
 		renderChildType: RenderChildType,
 		declaration: ViewFieldDeclaration,
-		plugin: AbstractPlugin,
+		plugin: MetaBindPlugin,
 		filePath: string,
 		uuid: string,
 		frontmatter: any | null | undefined = undefined

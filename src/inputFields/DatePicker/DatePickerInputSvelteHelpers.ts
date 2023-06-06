@@ -1,51 +1,6 @@
 import { moment } from 'obsidian';
 import { mod } from '../../utils/Utils';
-
-const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-export interface Weekday {
-	index: number;
-	name: string;
-	shortName: string;
-}
-
-export const weekdays: Weekday[] = [
-	{
-		index: 0,
-		name: 'Sunday',
-		shortName: 'Su',
-	},
-	{
-		index: 1,
-		name: 'Monday',
-		shortName: 'Mo',
-	},
-	{
-		index: 2,
-		name: 'Tuesday',
-		shortName: 'Tu',
-	},
-	{
-		index: 3,
-		name: 'Wednesday',
-		shortName: 'We',
-	},
-	{
-		index: 4,
-		name: 'Thursday',
-		shortName: 'Th',
-	},
-	{
-		index: 5,
-		name: 'Friday',
-		shortName: 'Fr',
-	},
-	{
-		index: 6,
-		name: 'Saturday',
-		shortName: 'Sa',
-	},
-];
+import { monthNames, Weekday, weekdays } from '../../settings/Settings';
 
 export let firstWeekday: Weekday = weekdays[1];
 

@@ -4,7 +4,6 @@ import { InputFieldArgumentType, InputFieldDeclaration, InputFieldType } from '.
 import { AbstractInputFieldArgument } from '../inputFieldArguments/AbstractInputFieldArgument';
 import { ClassInputFieldArgument } from '../inputFieldArguments/arguments/ClassInputFieldArgument';
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
-import { MetadataFileCache } from '../metadata/MetadataManager';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { ShowcaseInputFieldArgument } from '../inputFieldArguments/arguments/ShowcaseInputFieldArgument';
 import { TitleInputFieldArgument } from '../inputFieldArguments/arguments/TitleInputFieldArgument';
@@ -12,8 +11,8 @@ import { isTruthy } from '../utils/Utils';
 import { Listener, Signal } from '../utils/Signal';
 import { BindTargetDeclaration } from '../parsers/BindTargetParser';
 import { AbstractMDRC } from './AbstractMDRC';
-import { PublishMetadataFileCache } from '../metadata/PublishMetadataManager';
-import { AbstractPlugin } from '../AbstractPlugin';
+import { MetadataFileCache } from '../metadata/MetadataFileCache';
+import MetaBindPlugin from '../main';
 
 export enum RenderChildType {
 	INLINE = 'inline',
@@ -21,7 +20,7 @@ export enum RenderChildType {
 }
 
 export class InputFieldMDRC extends AbstractMDRC {
-	metadataCache: MetadataFileCache | PublishMetadataFileCache | undefined;
+	metadataCache: MetadataFileCache | undefined;
 	inputField: AbstractInputField | undefined;
 
 	fullDeclaration?: string;
@@ -43,7 +42,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 		containerEl: HTMLElement,
 		renderChildType: RenderChildType,
 		declaration: InputFieldDeclaration,
-		plugin: AbstractPlugin,
+		plugin: MetaBindPlugin,
 		filePath: string,
 		uuid: string,
 		frontmatter: any | null | undefined = undefined
@@ -74,7 +73,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 		}
 	}
 
-	registerSelfToMetadataManager(): MetadataFileCache | PublishMetadataFileCache | undefined {
+	registerSelfToMetadataManager(): MetadataFileCache | undefined {
 		// if bind target is invalid, return
 		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetDeclaration) {
 			return;

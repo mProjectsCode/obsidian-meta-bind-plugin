@@ -1,4 +1,3 @@
-import { FileSystemAdapter } from 'obsidian';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { KeyValuePair } from '@opd-libs/opd-utils-lib/lib/Utils';
 
@@ -137,14 +136,6 @@ export function traverseObjectToParentByPath(pathParts: string[], o: any): { par
 		parent: { key: parentPath, value: parentObject },
 		child: { key: childKey, value: parentObject[childKey] },
 	};
-}
-
-export function getVaultBasePath(): string | null {
-	const adapter = app.vault.adapter;
-	if (adapter instanceof FileSystemAdapter) {
-		return adapter.getBasePath();
-	}
-	return null;
 }
 
 export function pathJoin(path1: string, path2: string): string {

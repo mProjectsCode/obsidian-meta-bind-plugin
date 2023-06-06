@@ -1,17 +1,17 @@
 import { MarkdownRenderChild } from 'obsidian';
 import { RenderChildType } from './InputFieldMDRC';
-import { AbstractPlugin } from '../AbstractPlugin';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
+import MetaBindPlugin from '../main';
 
 export class AbstractMDRC extends MarkdownRenderChild {
-	plugin: AbstractPlugin;
+	plugin: MetaBindPlugin;
 	filePath: string;
 	uuid: string;
 	renderChildType: RenderChildType;
 	frontmatter: any | null | undefined;
 	errorCollection: ErrorCollection;
 
-	constructor(containerEl: HTMLElement, renderChildType: RenderChildType, plugin: AbstractPlugin, filePath: string, uuid: string, frontmatter: any | null | undefined) {
+	constructor(containerEl: HTMLElement, renderChildType: RenderChildType, plugin: MetaBindPlugin, filePath: string, uuid: string, frontmatter: any | null | undefined) {
 		super(containerEl);
 
 		this.renderChildType = renderChildType;
