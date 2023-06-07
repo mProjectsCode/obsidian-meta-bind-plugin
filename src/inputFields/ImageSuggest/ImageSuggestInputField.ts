@@ -21,8 +21,6 @@ export class ImageSuggestInputField extends AbstractInputField {
 
 		this.value = '';
 		this.options = [];
-
-		this.renderChild.errorCollection.add(new MetaBindPublishError(ErrorLevel.WARNING, 'can not interact with input field', 'input field only supported in the obsidian app'));
 	}
 
 	getValue(): string | undefined {

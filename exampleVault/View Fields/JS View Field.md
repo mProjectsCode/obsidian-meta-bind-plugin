@@ -1,5 +1,6 @@
 ---
 number1: 22
+number2: 1
 ---
 `INPUT[number:number1]`
 `INPUT[number:number2]`

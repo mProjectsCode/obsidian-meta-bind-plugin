@@ -1,6 +1,6 @@
 import { AbstractInputFieldArgument } from './AbstractInputFieldArgument';
 import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
-import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
 
 export class InputFieldArgumentContainer {
 	arguments: AbstractInputFieldArgument[] = [];
@@ -63,5 +63,13 @@ export class InputFieldArgumentContainer {
 		this.validate();
 
 		return this;
+	}
+
+	getAll(name: InputFieldArgumentType): AbstractInputFieldArgument[] {
+		return this.arguments.filter(x => x.identifier === name);
+	}
+
+	get(name: InputFieldArgumentType): AbstractInputFieldArgument | undefined {
+		return this.getAll(name).at(0);
 	}
 }

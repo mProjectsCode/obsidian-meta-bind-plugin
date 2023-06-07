@@ -4,9 +4,8 @@ import { moment } from 'obsidian';
 import { DateParser } from '../../parsers/DateParser';
 import { DatePickerModal } from './DatePickerModal';
 import { Moment } from 'moment';
-import { ErrorLevel, MetaBindArgumentError, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
 import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
-import MetaBindPlugin from '../../main';
 
 export class DatePickerInputField extends AbstractInputField {
 	container: HTMLDivElement | undefined;

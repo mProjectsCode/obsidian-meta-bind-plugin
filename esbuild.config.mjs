@@ -59,7 +59,7 @@ esbuild
 				compilerOptions: { css: true },
 				preprocess: sveltePreprocess(),
 			}),
-			conditionalBuild([])
+			conditionalBuild([]),
 		],
 	})
 	.catch(() => process.exit(1));

@@ -15,7 +15,7 @@ import { SuggestInputField } from './Suggest/SuggestInputField';
 import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
 import { EditorInputField } from './Editor/EditorInputField';
 import { ImageSuggestInputField } from './ImageSuggest/ImageSuggestInputField';
-import { IPlugin } from '../IPlugin';
+import MetaBindPlugin from '../main';
 
 export class InputFieldFactory {
 	static allowCodeBlockMap: Record<string, { block: boolean; inline: boolean }> = {
@@ -109,7 +109,7 @@ export class InputFieldFactory {
 		return undefined;
 	}
 
-	static checkRenderChildTypeAllowed(inputFieldType: InputFieldType, renderChildType: RenderChildType, plugin: IPlugin): void {
+	static checkRenderChildTypeAllowed(inputFieldType: InputFieldType, renderChildType: RenderChildType, plugin: MetaBindPlugin): void {
 		if (plugin.settings.ignoreCodeBlockRestrictions) {
 			return;
 		}

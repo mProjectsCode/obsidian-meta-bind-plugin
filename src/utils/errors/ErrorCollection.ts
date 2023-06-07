@@ -1,4 +1,5 @@
 import { ErrorLevel, MetaBindError } from './MetaBindErrors';
+import ErrorCollectionComponent from '../../publish/PublishFieldComponent.svelte';
 
 export class ErrorCollection {
 	errors: MetaBindError[];
@@ -76,5 +77,12 @@ export class ErrorCollection {
 		return this.errors.length === 0 || !this.otherError;
 	}
 
-	render(containerEl: HTMLElement): void {}
+	getErrors(): (MetaBindError | Error)[] {
+		const errors: (MetaBindError | Error)[] = this.errors.filter(x => x.errorLevel === ErrorLevel.ERROR || x.errorLevel === ErrorLevel.CRITICAL);
+		return this.otherError ? errors.concat([this.otherError]) : errors;
+	}
+
+	getWarnings(): (MetaBindError | Error)[] {
+		return this.errors.filter(x => x.errorLevel === ErrorLevel.WARNING);
+	}
 }

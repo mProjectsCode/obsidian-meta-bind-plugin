@@ -7,6 +7,7 @@ import { ViewField } from '../viewFields/ViewField';
 import { ViewFieldVariable } from './ViewFieldMDRC';
 import { getAPI } from 'obsidian-dataview';
 import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
+import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
 
 export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 	viewField: ViewField;
@@ -133,22 +134,28 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 		console.log('meta-bind | ViewFieldMarkdownRenderChild >> load', this);
 
 		this.containerEl.addClass('meta-bind-plugin-view');
+		this.containerEl.empty();
 
-		const container: HTMLDivElement = createDiv();
-		container.addClass('meta-bind-plugin-view-wrapper');
-
-		this.errorCollection.render(this.containerEl);
+		new ErrorIndicatorComponent({
+			target: this.containerEl,
+			props: {
+				app: this.plugin.app,
+				errorCollection: this.errorCollection,
+				declaration: this.fullDeclaration,
+			},
+		});
 		if (this.errorCollection.hasErrors()) {
 			return;
 		}
 
 		this.registerSelfToMetadataManager();
-
 		this.plugin.mdrcManager.registerMDRC(this);
+
+		const container: HTMLDivElement = createDiv();
+		container.addClass('meta-bind-plugin-view-wrapper');
 
 		this.viewField.render(container);
 
-		this.containerEl.empty();
 		this.containerEl.appendChild(container);
 	}
 

@@ -1,6 +1,6 @@
 ---
-slider1: 37
-slider2: 2
+slider1: 31
+slider2: 6
 slider3: 580
 ---
 
