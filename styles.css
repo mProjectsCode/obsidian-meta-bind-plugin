@@ -18,13 +18,12 @@ body {
 /* For higher specificity */
 :is(code, span).meta-bind-plugin-view:has(> div.meta-bind-plugin-view-wrapper) {
 	background-color: transparent;
-	border: none ;
+	border: none;
 	color: inherit;
 	font-size: inherit;
 	font-family: inherit;
 	padding: 0;
 	margin: 0;
-
 }
 
 div.meta-bind-plugin-view-wrapper {
@@ -141,4 +140,37 @@ code.meta-bind-plugin-error {
 
 .meta-bind-high {
 	height: 200px;
+}
+
+.meta-bind-error-collection-card {
+	padding: var(--size-4-2);
+	margin: var(--size-4-2) 0;
+	border-radius: var(--meta-bind-plugin-border-radius);
+	border: var(--meta-bind-plugin-border-width) solid var(--background-modifier-border);
+	color: var(--text-normal);
+	font-family: var(--font-default);
+}
+
+.meta-bind-error-collection {
+	display: inline-block;
+	position: relative;
+	cursor: pointer;
+}
+
+.meta-bind-error-collection > svg {
+	width: var(--font-text-size);
+	height: var(--font-text-size);
+	vertical-align: text-bottom;
+}
+
+.meta-bind-error-collection > svg.lucide-alert-circle {
+	color: var(--color-red);
+}
+
+.meta-bind-error-collection > svg.lucide-alert-triangle {
+	color: var(--color-orange);
+}
+
+.meta-bind-error-collection > svg.lucide-info {
+	color: var(--text-normal);
 }

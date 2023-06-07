@@ -2,13 +2,14 @@ import { MarkdownRenderChild } from 'obsidian/publish';
 import { PublishAPI } from './PublishAPI';
 import { BindTargetDeclaration } from '../parsers/BindTargetParser';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
-import { traverseObjectToParentByPath } from '../utils/Utils';
 import { ViewFieldDeclaration } from '../parsers/ViewFieldDeclarationParser';
 import * as MathJs from 'mathjs';
-import { ErrorLevel, MetaBindExpressionError } from '../utils/errors/MetaBindErrors';
+import { ErrorLevel, MetaBindBindTargetError, MetaBindExpressionError } from '../utils/errors/MetaBindErrors';
 import { ViewFieldVariable } from '../renderChildren/ViewFieldMDRC';
 import { Signal } from '../utils/Signal';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
+import PublishErrorCollectionComponent from './PublishFieldComponent.svelte';
+import PublishFieldComponent from './PublishFieldComponent.svelte';
 
 export class PublishViewFieldMDRC extends MarkdownRenderChild {
 	api: PublishAPI;
@@ -44,10 +45,10 @@ export class PublishViewFieldMDRC extends MarkdownRenderChild {
 			try {
 				for (const bindTarget of this.declaration.bindTargets ?? []) {
 					const parsedBindTarget = this.api.bindTargetParser.parseBindTarget(bindTarget, this.filePath);
-					const value = parsedBindTarget.filePath === this.filePath ? traverseObjectByPath(parsedBindTarget.metadataPath, metadata) : undefined;
+
 					this.variables.push({
 						bindTargetDeclaration: parsedBindTarget,
-						writeSignal: new Signal<any>(value),
+						writeSignal: new Signal<any>(this.getValue(parsedBindTarget)),
 						uuid: self.crypto.randomUUID(),
 						metadataCache: undefined,
 						writeSignalListener: undefined,
@@ -118,31 +119,36 @@ export class PublishViewFieldMDRC extends MarkdownRenderChild {
 		}
 	}
 
+	getValue(bindTarget: BindTargetDeclaration): any {
+		if (bindTarget.filePath !== this.filePath) {
+			throw new MetaBindBindTargetError(ErrorLevel.ERROR, 'failed to render view field', 'can not load metadata of another file in obsidian publish');
+		}
+
+		return traverseObjectByPath(bindTarget.metadataPath, this.metadata);
+	}
+
 	async onload(): Promise<void> {
 		console.log('meta-bind | InputFieldMarkdownRenderChild >> load', this);
 
 		this.containerEl.addClass('meta-bind-plugin-view');
 		this.containerEl.empty();
 
-		this.errorCollection.render(this.containerEl);
-		if (this.errorCollection.hasErrors()) {
-			return;
-		}
-
-		const container: HTMLDivElement = createDiv();
-		container.addClass('meta-bind-plugin-view-wrapper');
-
-		const span = container.createEl('span');
+		let value = 'placeholder';
 
 		try {
-			span.innerText = await this.evaluateExpression();
+			value = await this.evaluateExpression();
 		} catch (e) {
-			if (e instanceof Error) {
-				span.innerText = e.message;
-				span.addClass('meta-bind-plugin-error');
-			}
+			this.errorCollection.add(e);
 		}
 
-		this.containerEl.appendChild(container);
+		new PublishFieldComponent({
+			target: this.containerEl,
+			props: {
+				errorCollection: this.errorCollection,
+				declaration: this.declaration.fullDeclaration,
+				value: value,
+				fieldType: 'VIEW',
+			},
+		});
 	}
 }

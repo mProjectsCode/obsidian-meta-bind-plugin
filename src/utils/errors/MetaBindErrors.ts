@@ -18,7 +18,7 @@ export enum ErrorType {
 }
 
 export abstract class MetaBindError extends Error {
-	abstract errorType: ErrorType;
+	abstract getErrorType(): ErrorType;
 	errorLevel: ErrorLevel;
 	effect: string;
 	cause: string | Error;
@@ -37,9 +37,9 @@ export abstract class MetaBindError extends Error {
 
 	private updateMessage(): void {
 		if (this.cause instanceof Error) {
-			this.message = `[${this.errorType}] "${this.effect}" caused by error "${this.cause.message}"`;
+			this.message = `[${this.getErrorType()}] "${this.effect}" caused by error "${this.cause.message}"`;
 		} else {
-			this.message = `[${this.errorType}] "${this.effect}" caused by "${this.cause}"`;
+			this.message = `[${this.getErrorType()}] "${this.effect}" caused by "${this.cause}"`;
 		}
 	}
 
@@ -49,33 +49,49 @@ export abstract class MetaBindError extends Error {
 }
 
 export class MetaBindInternalError extends MetaBindError {
-	errorType: ErrorType = ErrorType.INTERNAL;
+	public getErrorType(): ErrorType {
+		return ErrorType.INTERNAL;
+	}
 }
 
 export class MetaBindParsingError extends MetaBindError {
-	errorType: ErrorType = ErrorType.PARSING;
+	public getErrorType(): ErrorType {
+		return ErrorType.PARSING;
+	}
 }
 
 export class MetaBindBindTargetError extends MetaBindError {
-	errorType: ErrorType = ErrorType.BIND_TARGET;
+	public getErrorType(): ErrorType {
+		return ErrorType.BIND_TARGET;
+	}
 }
 
 export class MetaBindValueError extends MetaBindError {
-	errorType: ErrorType = ErrorType.VALUE;
+	public getErrorType(): ErrorType {
+		return ErrorType.VALUE;
+	}
 }
 
 export class MetaBindArgumentError extends MetaBindError {
-	errorType: ErrorType = ErrorType.ARGUMENT;
+	public getErrorType(): ErrorType {
+		return ErrorType.ARGUMENT;
+	}
 }
 
 export class MetaBindJsError extends MetaBindError {
-	errorType: ErrorType = ErrorType.JS;
+	public getErrorType(): ErrorType {
+		return ErrorType.JS;
+	}
 }
 
 export class MetaBindExpressionError extends MetaBindError {
-	errorType: ErrorType = ErrorType.EXPRESSION;
+	public getErrorType(): ErrorType {
+		return ErrorType.EXPRESSION;
+	}
 }
 
 export class MetaBindPublishError extends MetaBindError {
-	errorType: ErrorType = ErrorType.PUBLISH;
+	public getErrorType(): ErrorType {
+		return ErrorType.PUBLISH;
+	}
 }

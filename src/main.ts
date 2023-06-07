@@ -44,6 +44,10 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			const codeBlocks = el.querySelectorAll('code');
 			for (let index = 0; index < codeBlocks.length; index++) {
 				const codeBlock = codeBlocks.item(index);
+				if (codeBlock.hasClass('meta-bind-none')) {
+					continue;
+				}
+
 				const content = codeBlock.innerText;
 				const isInputField = content.startsWith('INPUT[') && content.endsWith(']');
 				const isViewField = content.startsWith('VIEW[') && content.endsWith(']');

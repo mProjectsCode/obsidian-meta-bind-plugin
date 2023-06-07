@@ -57,7 +57,7 @@ esbuild
 			esbuildSvelte({
 				compilerOptions: { css: true },
 				preprocess: sveltePreprocess(),
-			})
+			}),
 		],
 	})
 	.catch(() => process.exit(1));

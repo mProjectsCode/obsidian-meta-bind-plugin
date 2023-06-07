@@ -13,6 +13,7 @@ import { BindTargetDeclaration } from '../parsers/BindTargetParser';
 import { AbstractMDRC } from './AbstractMDRC';
 import { MetadataFileCache } from '../metadata/MetadataFileCache';
 import MetaBindPlugin from '../main';
+import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
 
 export enum RenderChildType {
 	INLINE = 'inline',
@@ -119,7 +120,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 			throw new MetaBindInternalError(ErrorLevel.ERROR, 'can not retrieve arguments', 'inputFieldDeclaration has errors');
 		}
 
-		return this.inputFieldDeclaration.argumentContainer.arguments.filter(x => x.identifier === name);
+		return this.inputFieldDeclaration.argumentContainer.getAll(name);
 	}
 
 	getArgument(name: InputFieldArgumentType): AbstractInputFieldArgument | undefined {
@@ -144,23 +145,61 @@ export class InputFieldMDRC extends AbstractMDRC {
 		console.log('meta-bind | InputFieldMarkdownRenderChild >> load', this);
 
 		this.containerEl.addClass('meta-bind-plugin-input');
-
-		const container: HTMLDivElement = createDiv();
-		container.addClass('meta-bind-plugin-input-wrapper');
+		this.containerEl.empty();
 
 		if (!this.inputField) {
 			this.errorCollection.add(new MetaBindInternalError(ErrorLevel.CRITICAL, "can't render input field", 'input field is undefined'));
 		}
 
-		this.renderError();
+		// if there is an error, render error then quit
 		if (this.errorCollection.hasErrors()) {
+			new ErrorIndicatorComponent({
+				target: this.containerEl,
+				props: {
+					app: this.plugin.app,
+					errorCollection: this.errorCollection,
+					declaration: this.fullDeclaration,
+				},
+			});
 			return;
+		}
+
+		// if card container this points to the container.
+		let wrapperContainer: HTMLElement;
+
+		const showcaseArgument: ShowcaseInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.SHOWCASE);
+		const titleArgument: TitleInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.TITLE);
+
+		if (this.addCardContainer()) {
+			const cardContainer: HTMLDivElement = this.containerEl.createDiv({ cls: 'meta-bind-plugin-card' });
+			if (titleArgument) {
+				cardContainer.createEl('h3', { text: titleArgument.value });
+			}
+
+			wrapperContainer = cardContainer;
+		} else {
+			wrapperContainer = this.containerEl;
+		}
+
+		if (this.errorCollection.hasWarnings()) {
+			new ErrorIndicatorComponent({
+				target: wrapperContainer,
+				props: {
+					app: this.plugin.app,
+					errorCollection: this.errorCollection,
+					declaration: this.fullDeclaration,
+				},
+			});
 		}
 
 		if (this.hasValidBindTarget()) {
 			this.metadataCache = this.registerSelfToMetadataManager();
 		}
 		this.plugin.mdrcManager.registerMDRC(this);
+
+		// input field container
+		const container: HTMLDivElement = createDiv();
+		container.addClass('meta-bind-plugin-input-wrapper');
 
 		this.inputField?.render(container);
 
@@ -169,38 +208,10 @@ export class InputFieldMDRC extends AbstractMDRC {
 			this.inputField?.getHtmlElement().addClasses(classArguments.map(x => x.value).flat());
 		}
 
-		this.containerEl.empty();
+		wrapperContainer.appendChild(container);
 
-		const showcaseArgument: ShowcaseInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.SHOWCASE);
-		const titleArgument: TitleInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.TITLE);
-
-		if (this.addCardContainer()) {
-			const cardContainer: HTMLDivElement = this.containerEl.createDiv({ cls: 'meta-bind-plugin-card' });
-
-			if (titleArgument) {
-				cardContainer.createEl('h3', { text: titleArgument.value });
-			}
-
-			cardContainer.appendChild(container);
-
-			if (showcaseArgument) {
-				cardContainer.createEl('code', { text: ` ${this.fullDeclaration} ` });
-			}
-		} else {
-			this.containerEl.appendChild(container);
-		}
-	}
-
-	renderError(): void {
-		if (this.renderChildType === RenderChildType.BLOCK) {
-			this.containerEl.empty();
-
-			const cardContainer: HTMLDivElement = this.containerEl.createDiv({ cls: 'meta-bind-plugin-card' });
-			cardContainer.createEl('code', { text: ` ${this.fullDeclaration} ` });
-
-			this.errorCollection.render(cardContainer);
-		} else {
-			this.errorCollection.render(this.containerEl);
+		if (this.addCardContainer() && showcaseArgument) {
+			wrapperContainer.createEl('code', { text: this.fullDeclaration, cls: 'meta-bind-none' });
 		}
 	}
 

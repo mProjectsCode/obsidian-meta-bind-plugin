@@ -9,6 +9,7 @@ import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
 import { IPlugin } from '../IPlugin';
 import MetaBindPlugin from '../main';
 import { MetadataFileCache } from '../metadata/MetadataFileCache';
+import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
 
 export interface ViewFieldVariable {
 	bindTargetDeclaration: BindTargetDeclaration;
@@ -156,23 +157,28 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 		console.log('meta-bind | ViewFieldMarkdownRenderChild >> load', this);
 
 		this.containerEl.addClass('meta-bind-plugin-view');
+		this.containerEl.empty();
 
-		const container: HTMLDivElement = createDiv();
-		container.addClass('meta-bind-plugin-view-wrapper');
-
-		this.errorCollection.render(this.containerEl);
+		new ErrorIndicatorComponent({
+			target: this.containerEl,
+			props: {
+				app: this.plugin.app,
+				errorCollection: this.errorCollection,
+				declaration: this.fullDeclaration,
+			},
+		});
 		if (this.errorCollection.hasErrors()) {
 			return;
 		}
 
 		this.registerSelfToMetadataManager();
-
 		this.plugin.mdrcManager.registerMDRC(this);
 
-		// TODO: render into `container`
+		const container: HTMLDivElement = createDiv();
+		container.addClass('meta-bind-plugin-view-wrapper');
+
 		this.viewField.render(container);
 
-		this.containerEl.empty();
 		this.containerEl.appendChild(container);
 	}
 
