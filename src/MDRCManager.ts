@@ -1,25 +1,26 @@
 import { AbstractMDRC } from './renderChildren/AbstractMDRC';
 
 export class MDRCManager {
-	activeMDRCs: AbstractMDRC[];
+	activeMDRCs: Map<string, AbstractMDRC>;
 
 	constructor() {
-		this.activeMDRCs = [];
+		this.activeMDRCs = new Map<string, AbstractMDRC>();
 	}
 
-	unload() {
-		for (const activeMDRC of this.activeMDRCs) {
-			activeMDRC.unload();
+	unload(): void {
+		for (const mdrc of this.activeMDRCs.values()) {
+			console.debug(`meta-bind | MDRCManager >> unregistered MDRC ${mdrc.uuid}`);
+			mdrc.unload();
 		}
 	}
 
 	registerMDRC(mdrc: AbstractMDRC): void {
 		console.debug(`meta-bind | MDRCManager >> registered MDRC ${mdrc.uuid}`);
-		this.activeMDRCs.push(mdrc);
+		this.activeMDRCs.set(mdrc.uuid, mdrc);
 	}
 
 	unregisterMDRC(mdrc: AbstractMDRC): void {
 		console.debug(`meta-bind | MDRCManager >> unregistered MDRC ${mdrc.uuid}`);
-		this.activeMDRCs = this.activeMDRCs.filter(x => x.uuid !== mdrc.uuid);
+		this.activeMDRCs.delete(mdrc.uuid);
 	}
 }

@@ -10,7 +10,7 @@ export class InputFieldArgumentContainer {
 	}
 
 	validate(): void {
-		let map: Record<string, number> = {};
+		const map: Record<string, number> = {};
 		for (const inputFieldArgumentType of Object.values(InputFieldArgumentType)) {
 			map[inputFieldArgumentType] = 0;
 		}
@@ -18,7 +18,7 @@ export class InputFieldArgumentContainer {
 		for (const argument of this.arguments) {
 			map[argument.identifier] += 1;
 			if (map[argument.identifier] > 1 && !argument.allowMultiple) {
-				throw new MetaBindParsingError(ErrorLevel.ERROR, 'failed to validate argument container', `argument '${argument.identifier}' does not allow duplicates`);
+				throw new MetaBindParsingError(ErrorLevel.CRITICAL, 'failed to validate argument container', `argument '${argument.identifier}' does not allow duplicates`);
 			}
 		}
 	}

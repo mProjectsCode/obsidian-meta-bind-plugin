@@ -5,19 +5,6 @@ import { InputFieldArgumentContainer } from '../inputFieldArguments/InputFieldAr
 import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
 import { AbstractInputFieldArgument } from 'src/inputFieldArguments/AbstractInputFieldArgument';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
-import { ToggleInputField } from '../inputFields/ToggleInputField';
-import { SliderInputField } from '../inputFields/SliderInputField';
-import { TextInputField } from '../inputFields/TextInputField';
-import { TextAreaInputField } from '../inputFields/TextAreaInputField';
-import { SelectInputField } from '../inputFields/SelectInputField';
-import { MultiSelectInputField } from '../inputFields/MultiSelectInputField';
-import { DateInputField } from '../inputFields/DateInputField';
-import { TimeInputField } from '../inputFields/TimeInputField';
-import { DatePickerInputField } from '../inputFields/DatePicker/DatePickerInputField';
-import { NumberInputField } from '../inputFields/NumberInputField';
-import { SuggestInputField } from '../inputFields/Suggest/SuggestInputField';
-import { EditorInputField } from '../inputFields/Editor/EditorInputField';
-import { ImageSuggestInputField } from '../inputFields/ImageSuggest/ImageSuggestInputField';
 
 export enum InputFieldType {
 	TOGGLE = 'toggle',
@@ -33,6 +20,8 @@ export enum InputFieldType {
 	SUGGESTER = 'suggester',
 	EDITOR = 'editor',
 	IMAGE_SUGGESTER = 'imageSuggester',
+	PROGRESS_BAR = 'progressBar',
+	INLINE_SELECT = 'inlineSelect',
 
 	INVALID = 'invalid',
 }
@@ -128,7 +117,8 @@ export class InputFieldDeclarationParser {
 			}
 
 			// arguments check
-			declaration.argumentContainer.mergeByOverride(this.parseArguments(declaration.inputFieldType, inputFieldArguments));
+			const argumentContainer: InputFieldArgumentContainer = this.parseArguments(declaration.inputFieldType, inputFieldArguments, declaration.errorCollection);
+			declaration.argumentContainer.mergeByOverride(argumentContainer);
 		} catch (e) {
 			declaration.errorCollection.add(e);
 		}
@@ -180,7 +170,7 @@ export class InputFieldDeclarationParser {
 				const inputFieldArgumentsString: string = ParserUtils.getInBetween(inputFieldTypeWithArguments, this.roundBracesPair) as string;
 				// console.log(inputFieldArgumentsString);
 				if (inputFieldArgumentsString) {
-					declaration.argumentContainer = this.parseArgumentString(declaration.inputFieldType, inputFieldArgumentsString);
+					declaration.argumentContainer = this.parseArgumentString(declaration.inputFieldType, inputFieldArgumentsString, declaration.errorCollection);
 				} else {
 					declaration.argumentContainer = new InputFieldArgumentContainer();
 				}
@@ -226,7 +216,7 @@ export class InputFieldDeclarationParser {
 		console.log(`meta-bind | InputFieldDeclarationParser >> parsed templates`, this.templates);
 	}
 
-	parseArgumentString(inputFieldType: InputFieldType, inputFieldArgumentsString: string): InputFieldArgumentContainer {
+	parseArgumentString(inputFieldType: InputFieldType, inputFieldArgumentsString: string, errorCollection: ErrorCollection): InputFieldArgumentContainer {
 		let inputFieldArgumentStrings: string[] = ParserUtils.split(inputFieldArgumentsString, ',', this.roundBracesPair);
 		inputFieldArgumentStrings = inputFieldArgumentStrings.map(x => x.trim());
 
@@ -238,15 +228,22 @@ export class InputFieldDeclarationParser {
 			const inputFieldArgumentValue: string = this.extractInputFieldArgumentValue(inputFieldArgumentString);
 
 			if (inputFieldArgumentType === InputFieldArgumentType.INVALID) {
-				throw new MetaBindParsingError(ErrorLevel.CRITICAL, 'failed to parse input field arguments', `unknown input field argument "${inputFieldArgumentTypeString}"`);
+				errorCollection.add(
+					new MetaBindParsingError(ErrorLevel.WARNING, 'failed to parse input field arguments', `unknown input field argument "${inputFieldArgumentTypeString}"`)
+				);
+				continue;
 			}
 
 			inputFieldArguments.push({ type: inputFieldArgumentType, value: inputFieldArgumentValue });
 		}
-		return this.parseArguments(inputFieldType, inputFieldArguments);
+		return this.parseArguments(inputFieldType, inputFieldArguments, errorCollection);
 	}
 
-	parseArguments(inputFieldType: InputFieldType, inputFieldArguments?: { type: InputFieldArgumentType; value: any }[] | undefined): InputFieldArgumentContainer {
+	parseArguments(
+		inputFieldType: InputFieldType,
+		inputFieldArguments: { type: InputFieldArgumentType; value: any }[] | undefined,
+		errorCollection: ErrorCollection
+	): InputFieldArgumentContainer {
 		const argumentContainer: InputFieldArgumentContainer = new InputFieldArgumentContainer();
 
 		if (inputFieldArguments) {
@@ -254,16 +251,22 @@ export class InputFieldDeclarationParser {
 				const inputFieldArgument: AbstractInputFieldArgument = InputFieldArgumentFactory.createInputFieldArgument(argument.type);
 
 				if (!inputFieldArgument.isAllowed(inputFieldType)) {
-					throw new MetaBindParsingError(
-						ErrorLevel.CRITICAL,
-						'failed to parse input field arguments',
-						`argument "${argument.type}" is only applicable to "${inputFieldArgument.getAllowedInputFieldsAsString()}" input fields`
+					errorCollection.add(
+						new MetaBindParsingError(
+							ErrorLevel.WARNING,
+							'failed to parse input field arguments',
+							`argument "${argument.type}" is only applicable to "${inputFieldArgument.getAllowedInputFieldsAsString()}" input fields`
+						)
 					);
+					continue;
 				}
 
 				if (inputFieldArgument.requiresValue) {
 					if (!argument.value) {
-						throw new MetaBindParsingError(ErrorLevel.CRITICAL, 'failed to parse input field arguments', `argument "${argument.type}" requires a non empty value`);
+						errorCollection.add(
+							new MetaBindParsingError(ErrorLevel.WARNING, 'failed to parse input field arguments', `argument "${argument.type}" requires a non empty value`)
+						);
+						continue;
 					}
 					inputFieldArgument.parseValue(argument.value);
 				}
@@ -271,7 +274,11 @@ export class InputFieldDeclarationParser {
 				argumentContainer.add(inputFieldArgument);
 			}
 
-			argumentContainer.validate();
+			try {
+				argumentContainer.validate();
+			} catch (e) {
+				errorCollection.add(e);
+			}
 		}
 
 		return argumentContainer;
@@ -322,6 +329,12 @@ export class InputFieldDeclarationParser {
 		inputFieldDeclaration.argumentContainer = template.argumentContainer.mergeByOverride(inputFieldDeclaration.argumentContainer);
 	}
 
+	/**
+	 * Used for publish.
+	 * Returns the default value for the input field declaration, for if it's bind target is unavailable.
+	 *
+	 * @param declaration
+	 */
 	getDefaultValue(declaration: InputFieldDeclaration): any {
 		const placeholderString = 'placeholder';
 
@@ -356,6 +369,12 @@ export class InputFieldDeclarationParser {
 			return placeholderString;
 		} else if (declaration.inputFieldType === InputFieldType.IMAGE_SUGGESTER) {
 			return placeholderString;
+		} else if (declaration.inputFieldType === InputFieldType.PROGRESS_BAR) {
+			const minArgument = declaration.argumentContainer.get(InputFieldArgumentType.MIN_VALUE);
+			return minArgument ? minArgument.value : 0;
+		} else if (declaration.inputFieldType === InputFieldType.INLINE_SELECT) {
+			const firstOptionArgument = declaration.argumentContainer.get(InputFieldArgumentType.OPTION);
+			return firstOptionArgument ? firstOptionArgument.value : placeholderString;
 		}
 
 		return placeholderString;

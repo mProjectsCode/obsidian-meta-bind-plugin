@@ -28,7 +28,7 @@ export class ErrorCollection {
 	 *
 	 * @param other another error container.
 	 */
-	merge(other: ErrorCollection) {
+	merge(other: ErrorCollection): void {
 		this.errors = this.errors.concat(other.errors);
 		if (other.otherError) {
 			this.otherError = other.otherError;
@@ -74,7 +74,7 @@ export class ErrorCollection {
 	}
 
 	isEmpty(): boolean {
-		return this.errors.length === 0 || !this.otherError;
+		return this.errors.length === 0 && !this.otherError;
 	}
 
 	getErrors(): (MetaBindError | Error)[] {

@@ -155,6 +155,7 @@ code.meta-bind-plugin-error {
 	display: inline-block;
 	position: relative;
 	cursor: pointer;
+	margin-inline: var(--size-4-2);
 }
 
 .meta-bind-error-collection > svg {

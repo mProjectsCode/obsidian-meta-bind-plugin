@@ -4,7 +4,7 @@ import { ErrorLevel, MetaBindParsingError } from '../../utils/errors/MetaBindErr
 
 export class MaxValueInputFieldArgument extends AbstractInputFieldArgument {
 	identifier: InputFieldArgumentType = InputFieldArgumentType.MAX_VALUE;
-	allowedInputFields: InputFieldType[] = [InputFieldType.SLIDER];
+	allowedInputFields: InputFieldType[] = [InputFieldType.SLIDER, InputFieldType.PROGRESS_BAR];
 	value: number = 100;
 	requiresValue: boolean = true;
 	allowMultiple: boolean = false;

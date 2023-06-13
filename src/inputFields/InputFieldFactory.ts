@@ -16,6 +16,8 @@ import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors
 import { EditorInputField } from './Editor/EditorInputField';
 import { ImageSuggestInputField } from './ImageSuggest/ImageSuggestInputField';
 import MetaBindPlugin from '../main';
+import { ProgressBarInputField } from './ProgressBar/ProgressBarInputField';
+import { InlineSelectInputField } from './InlineSelectInputField';
 
 export class InputFieldFactory {
 	static allowCodeBlockMap: Record<string, { block: boolean; inline: boolean }> = {
@@ -71,6 +73,14 @@ export class InputFieldFactory {
 			block: ImageSuggestInputField.allowBlock,
 			inline: ImageSuggestInputField.allowInline,
 		},
+		[InputFieldType.PROGRESS_BAR]: {
+			block: ProgressBarInputField.allowBlock,
+			inline: ProgressBarInputField.allowInline,
+		},
+		[InputFieldType.INLINE_SELECT]: {
+			block: InlineSelectInputField.allowBlock,
+			inline: InlineSelectInputField.allowInline,
+		},
 	};
 
 	static createInputField(inputFieldType: InputFieldType, args: { renderChildType: RenderChildType; inputFieldMDRC: InputFieldMDRC }): AbstractInputField | undefined {
@@ -104,6 +114,10 @@ export class InputFieldFactory {
 			return new EditorInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.IMAGE_SUGGESTER) {
 			return new ImageSuggestInputField(args.inputFieldMDRC);
+		} else if (inputFieldType === InputFieldType.PROGRESS_BAR) {
+			return new ProgressBarInputField(args.inputFieldMDRC);
+		} else if (inputFieldType === InputFieldType.INLINE_SELECT) {
+			return new InlineSelectInputField(args.inputFieldMDRC);
 		}
 
 		return undefined;

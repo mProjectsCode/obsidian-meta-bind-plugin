@@ -62,14 +62,16 @@ export class API {
 			throw new MetaBindParsingError(ErrorLevel.CRITICAL, 'failed to create input field declaration', `input field type '${inputFieldType}' is invalid`);
 		}
 
+		const errorCollection = new ErrorCollection('InputFieldDeclaration');
+
 		return {
 			declaration: undefined,
 			fullDeclaration: undefined,
 			inputFieldType: inputFieldType,
-			argumentContainer: this.inputFieldParser.parseArguments(inputFieldType, inputFieldArguments),
+			argumentContainer: this.inputFieldParser.parseArguments(inputFieldType, inputFieldArguments, errorCollection),
 			isBound: false,
 			bindTarget: '',
-			errorCollection: new ErrorCollection('InputFieldDeclaration'),
+			errorCollection: errorCollection,
 		} as InputFieldDeclaration;
 	}
 

@@ -1,6 +1,6 @@
 import { EditorSelection, EditorState } from '@codemirror/state';
 import MetaBindPlugin from '../main';
-import { editorInfoField, TFile } from 'obsidian';
+import { Component, editorInfoField, TFile } from 'obsidian';
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
 import { InputFieldWidget, MarkdownRenderChildWidget, MBWidgetType, ViewFieldWidget } from './Cm6_Widgets';
 import { DecorationSet, EditorView } from '@codemirror/view';
@@ -29,12 +29,13 @@ export class Cm6_Util {
 		widgetType: MBWidgetType,
 		content: string,
 		filePath: string,
+		component: Component,
 		plugin: MetaBindPlugin
 	): MarkdownRenderChildWidget<AbstractMDRC> | undefined {
 		if (widgetType === MBWidgetType.INPUT_FIELD_WIDGET) {
-			return new InputFieldWidget(content, filePath, plugin);
+			return new InputFieldWidget(content, filePath, component, plugin);
 		} else if (widgetType === MBWidgetType.VIEW_FIELD_WIDGET) {
-			return new ViewFieldWidget(content, filePath, plugin);
+			return new ViewFieldWidget(content, filePath, component, plugin);
 		}
 
 		return undefined;
