@@ -1,4 +1,4 @@
-import { Plugin } from 'obsidian';
+import { Editor, MarkdownFileInfo, MarkdownView, Plugin } from 'obsidian';
 import { MetaBindSettingTab } from './settings/SettingsTab';
 import { RenderChildType } from './renderChildren/InputFieldMDRC';
 import { getFileName, isPath, removeFileEnding } from './utils/Utils';
@@ -92,6 +92,18 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		// 		console.log(editor);
 		// 	},
 		// });
+
+		this.addCommand({
+			id: 'mb-test-command',
+			name: 'test command',
+			editorCallback: (editor: Editor, view: MarkdownView | MarkdownFileInfo) => {
+				if (view.file) {
+					this.app.fileManager.processFrontMatter(view.file, frontmatter => {
+						return frontmatter;
+					});
+				}
+			},
+		});
 
 		// if (this.settings.devMode) {
 		// 	this.addCommand({

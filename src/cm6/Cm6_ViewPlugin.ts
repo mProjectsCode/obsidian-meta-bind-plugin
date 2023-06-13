@@ -1,10 +1,10 @@
 import { Decoration, DecorationSet, EditorView, ViewPlugin, ViewUpdate } from '@codemirror/view';
-import { Range } from '@codemirror/state';
+import { Range, RangeSet } from '@codemirror/state';
 import { syntaxTree, tokenClassNodeProp } from '@codemirror/language';
 import { SyntaxNode } from '@lezer/common';
 import { Component, editorLivePreviewField, TFile } from 'obsidian';
 import MetaBindPlugin from '../main';
-import { MBWidgetType } from './Cm6_Widgets';
+import { MarkdownRenderChildWidget, MBWidgetType } from './Cm6_Widgets';
 import { Cm6_Util } from './Cm6_Util';
 
 export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlugin) {
@@ -19,10 +19,9 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				this.decorations = this.renderWidgets(view) ?? Decoration.none;
 			}
 
-			update(update: ViewUpdate) {
+			update(update: ViewUpdate): void {
 				// only activate in LP and not source mode
 				if (!update.state.field(editorLivePreviewField)) {
-					console.log('not LP');
 					this.decorations = Decoration.none;
 					return;
 				}
@@ -40,7 +39,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				}
 			}
 
-			updateTree(view: EditorView) {
+			updateTree(view: EditorView): void {
 				for (const { from, to } of view.visibleRanges) {
 					syntaxTree(view.state).iterate({
 						from,
@@ -69,7 +68,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				}
 			}
 
-			removeDecoration(node: SyntaxNode) {
+			removeDecoration(node: SyntaxNode): void {
 				this.decorations.between(node.from - 1, node.to + 1, (from, to, value) => {
 					this.decorations = this.decorations.update({
 						filterFrom: from,
@@ -79,7 +78,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				});
 			}
 
-			addDecoration(node: SyntaxNode, view: EditorView, content: string, widgetType: MBWidgetType) {
+			addDecoration(node: SyntaxNode, view: EditorView, content: string, widgetType: MBWidgetType): void {
 				const from = node.from - 1;
 				const to = node.to + 1;
 
@@ -93,7 +92,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 					return;
 				}
 
-				const newDecoration = this.renderWidget(node, widgetType, content, currentFile)?.value;
+				const newDecoration: Decoration | undefined = this.renderWidget(node, widgetType, content, currentFile)?.value;
 				if (!newDecoration) {
 					return;
 				}
@@ -145,10 +144,10 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				};
 			}
 
-			renderWidgets(view: EditorView) {
+			renderWidgets(view: EditorView): RangeSet<Decoration> | undefined {
 				const currentFile = Cm6_Util.getCurrentFile(view);
 				if (!currentFile) {
-					return;
+					return undefined;
 				}
 
 				const widgets: Range<Decoration>[] = [];
@@ -184,8 +183,8 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				return Decoration.set(widgets, true);
 			}
 
-			renderWidget(node: SyntaxNode, widgetType: MBWidgetType, content: string, currentFile: TFile) {
-				const widget = Cm6_Util.constructMarkdownRenderChildWidget(widgetType, content, currentFile.path, plugin);
+			renderWidget(node: SyntaxNode, widgetType: MBWidgetType, content: string, currentFile: TFile): Range<Decoration> | undefined {
+				const widget = Cm6_Util.constructMarkdownRenderChildWidget(widgetType, content, currentFile.path, this.component, plugin);
 				if (!widget) {
 					return;
 				}
@@ -195,7 +194,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				}).range(node.from - 1, node.to + 1);
 			}
 
-			destroy() {
+			destroy(): void {
 				this.component.unload();
 			}
 		},

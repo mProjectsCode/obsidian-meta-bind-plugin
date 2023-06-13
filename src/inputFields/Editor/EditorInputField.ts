@@ -4,7 +4,7 @@ import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindEr
 import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 
 export class EditorInputField extends AbstractInputField {
-	static allowInlineCodeBlock: boolean = false;
+	static allowInline: boolean = false;
 	container: HTMLDivElement | undefined;
 	component: EditorInput | undefined;
 	value: string;

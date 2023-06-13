@@ -48,6 +48,10 @@ export function clamp(num: number, min: number, max: number): number {
 	return Math.min(Math.max(num, min), max);
 }
 
+export function remapRange(old_value: number, old_min: number, old_max: number, new_min: number, new_max: number): number {
+	return ((old_value - old_min) / (old_max - old_min)) * (new_max - new_min) + new_min;
+}
+
 /**
  * js can't even implement modulo correctly...
  *

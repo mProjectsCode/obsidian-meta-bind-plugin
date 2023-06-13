@@ -3,7 +3,13 @@ import { InputFieldArgumentType, InputFieldType } from '../../parsers/InputField
 
 export class OptionInputFieldArgument extends AbstractInputFieldArgument {
 	identifier: InputFieldArgumentType = InputFieldArgumentType.OPTION;
-	allowedInputFields: InputFieldType[] = [InputFieldType.SELECT, InputFieldType.MULTI_SELECT, InputFieldType.SUGGESTER, InputFieldType.IMAGE_SUGGESTER];
+	allowedInputFields: InputFieldType[] = [
+		InputFieldType.SELECT,
+		InputFieldType.MULTI_SELECT,
+		InputFieldType.SUGGESTER,
+		InputFieldType.IMAGE_SUGGESTER,
+		InputFieldType.INLINE_SELECT,
+	];
 	value: string = '';
 	requiresValue: boolean = true;
 	allowMultiple: boolean = true;

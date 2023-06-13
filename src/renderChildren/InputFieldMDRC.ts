@@ -112,6 +112,8 @@ export class InputFieldMDRC extends AbstractMDRC {
 			const value = traverseObjectByPath(this.bindTargetDeclaration.metadataPath, this.metadataCache?.metadata);
 			console.debug(`meta-bind | InputFieldMarkdownRenderChild >> setting initial value to ${value} (typeof ${typeof value}) for input field ${this.uuid}`);
 			return value ?? this.inputField?.getDefaultValue();
+		} else {
+			return this.inputField?.getDefaultValue();
 		}
 	}
 
@@ -147,7 +149,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 		this.containerEl.addClass('meta-bind-plugin-input');
 		this.containerEl.empty();
 
-		if (!this.inputField) {
+		if (!this.errorCollection.hasErrors() && !this.inputField) {
 			this.errorCollection.add(new MetaBindInternalError(ErrorLevel.CRITICAL, "can't render input field", 'input field is undefined'));
 		}
 
@@ -181,16 +183,14 @@ export class InputFieldMDRC extends AbstractMDRC {
 			wrapperContainer = this.containerEl;
 		}
 
-		if (this.errorCollection.hasWarnings()) {
-			new ErrorIndicatorComponent({
-				target: wrapperContainer,
-				props: {
-					app: this.plugin.app,
-					errorCollection: this.errorCollection,
-					declaration: this.fullDeclaration,
-				},
-			});
-		}
+		new ErrorIndicatorComponent({
+			target: wrapperContainer,
+			props: {
+				app: this.plugin.app,
+				errorCollection: this.errorCollection,
+				declaration: this.fullDeclaration,
+			},
+		});
 
 		if (this.hasValidBindTarget()) {
 			this.metadataCache = this.registerSelfToMetadataManager();

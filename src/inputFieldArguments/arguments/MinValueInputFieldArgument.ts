@@ -4,7 +4,7 @@ import { ErrorLevel, MetaBindParsingError } from '../../utils/errors/MetaBindErr
 
 export class MinValueInputFieldArgument extends AbstractInputFieldArgument {
 	identifier: InputFieldArgumentType = InputFieldArgumentType.MIN_VALUE;
-	allowedInputFields: InputFieldType[] = [InputFieldType.SLIDER];
+	allowedInputFields: InputFieldType[] = [InputFieldType.SLIDER, InputFieldType.PROGRESS_BAR];
 	value: number = 0;
 	requiresValue: boolean = true;
 	allowMultiple: boolean = false;

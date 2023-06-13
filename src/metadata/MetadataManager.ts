@@ -7,16 +7,18 @@ import { Signal } from '../utils/Signal';
 import getMetadataFromFileCache = Internal.getMetadataFromFileCache;
 import { MetadataFileCache } from './MetadataFileCache';
 
+export const metadataCacheUpdateCycleThreshold = 5; // {syncInterval (200)} * 5 = 1s
+export const metadataCacheInactiveCycleThreshold = 5 * 60; // {syncInterval (200)} * 5 * 60 = 1 minute
+
 export class MetadataManager {
-	cache: MetadataFileCache[];
+	cache: Map<string, MetadataFileCache>;
 	plugin: MetaBindPlugin;
-	updateCycleThreshold = 5;
 	interval: number | undefined;
 
 	constructor(plugin: MetaBindPlugin) {
 		this.plugin = plugin;
 
-		this.cache = [];
+		this.cache = new Map<string, MetadataFileCache>();
 
 		this.plugin.registerEvent(this.plugin.app.metadataCache.on('changed', (file, data, cache) => this.updateCacheOnFrontmatterUpdate(file.path, data, cache)));
 
@@ -27,15 +29,20 @@ export class MetadataManager {
 		const fileCache: MetadataFileCache | undefined = this.getCacheForFile(filePath);
 		if (fileCache) {
 			console.debug(`meta-bind | MetadataManager >> registered ${uuid} to existing file cache ${filePath} -> ${metadataPath}`);
+
+			fileCache.inactive = false;
+			fileCache.cyclesSinceInactive = 0;
 			fileCache.listeners.push({
 				callback: (value: any) => signal.set(value),
 				metadataPath: metadataPath,
 				uuid: uuid,
 			});
 			signal.set(traverseObjectByPath(metadataPath, fileCache.metadata));
+
 			return fileCache;
 		} else {
 			console.debug(`meta-bind | MetadataManager >> registered ${uuid} to newly created file cache ${filePath} -> ${metadataPath}`);
+
 			const file = this.plugin.app.vault.getAbstractFileByPath(filePath) as TFile;
 			const c: MetadataFileCache = {
 				file: file,
@@ -47,13 +54,15 @@ export class MetadataManager {
 						uuid: uuid,
 					},
 				],
-				cyclesSinceLastUserInput: 0,
+				cyclesSinceLastChange: 0,
+				cyclesSinceInactive: 0,
+				inactive: false,
 				changed: false,
 			};
 			console.log(`meta-bind | MetadataManager >> loaded metadata for file ${file.path}`, c.metadata);
 			signal.set(traverseObjectByPath(metadataPath, c.metadata));
 
-			this.cache.push(c);
+			this.cache.set(filePath, c);
 			return c;
 		}
 	}
@@ -68,23 +77,37 @@ export class MetadataManager {
 
 		fileCache.listeners = fileCache.listeners.filter(x => x.uuid !== uuid);
 		if (fileCache.listeners.length === 0) {
-			console.debug(`meta-bind | MetadataManager >> deleted unused file cache ${filePath}`);
-			this.cache = this.cache.filter(x => x.file.path !== filePath);
+			console.debug(`meta-bind | MetadataManager >> marked unused file cache as inactive ${filePath}`);
+			fileCache.inactive = true;
 		}
 	}
 
 	getCacheForFile(filePath: string): MetadataFileCache | undefined {
-		return this.cache.find(x => x.file.path === filePath);
+		return this.cache.get(filePath);
 	}
 
 	private update(): void {
 		// console.debug('meta-bind | updating metadata manager');
+		const markedForDelete: string[] = [];
 
-		for (const entry of this.cache) {
-			if (entry.changed) {
-				this.updateFrontmatter(entry);
+		for (const [filePath, cacheEntry] of this.cache) {
+			// if the entry changed, update the frontmatter of the note
+			if (cacheEntry.changed) {
+				this.updateFrontmatter(cacheEntry);
 			}
-			entry.cyclesSinceLastUserInput += 1;
+			cacheEntry.cyclesSinceLastChange += 1;
+
+			// if the cache is inactive, count cycles, then delete the cache
+			if (cacheEntry.inactive) {
+				cacheEntry.cyclesSinceInactive += 1;
+			}
+			if (cacheEntry.cyclesSinceInactive > metadataCacheInactiveCycleThreshold) {
+				markedForDelete.push(filePath);
+			}
+		}
+
+		for (const filePath of markedForDelete) {
+			this.cache.delete(filePath);
 		}
 	}
 
@@ -105,7 +128,8 @@ export class MetadataManager {
 		}
 
 		fileCache.metadata = metadata;
-		fileCache.cyclesSinceLastUserInput = 0;
+		fileCache.cyclesSinceLastChange = 0;
+		fileCache.changed = true;
 
 		this.notifyListeners(fileCache, undefined, uuid);
 	}
@@ -131,7 +155,7 @@ export class MetadataManager {
 		}
 
 		parent.value[child.key] = value;
-		fileCache.cyclesSinceLastUserInput = 0;
+		fileCache.cyclesSinceLastChange = 0;
 		fileCache.changed = true;
 
 		this.notifyListeners(fileCache, pathParts, uuid);
@@ -144,7 +168,7 @@ export class MetadataManager {
 		}
 
 		// don't update if the user recently changed the cache
-		if (fileCache.cyclesSinceLastUserInput < this.updateCycleThreshold) {
+		if (fileCache.cyclesSinceLastChange < metadataCacheUpdateCycleThreshold) {
 			return;
 		}
 
@@ -154,8 +178,6 @@ export class MetadataManager {
 		console.debug(`meta-bind | MetadataManager >> updating "${filePath}" on frontmatter update`, metadata);
 
 		fileCache.metadata = metadata;
-		fileCache.cyclesSinceLastUserInput = 0;
-		// fileCache.changed = true;
 
 		this.notifyListeners(fileCache);
 	}

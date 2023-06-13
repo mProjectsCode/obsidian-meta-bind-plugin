@@ -3,7 +3,7 @@ import { InputFieldArgumentType, InputFieldType } from '../../parsers/InputField
 
 export class AddLabelsInputFieldArgument extends AbstractInputFieldArgument {
 	identifier: InputFieldArgumentType = InputFieldArgumentType.ADD_LABELS;
-	allowedInputFields: InputFieldType[] = [InputFieldType.SLIDER];
+	allowedInputFields: InputFieldType[] = [InputFieldType.SLIDER, InputFieldType.PROGRESS_BAR];
 	value: boolean = true;
 	requiresValue: boolean = false;
 	allowMultiple: boolean = false;

@@ -3,17 +3,20 @@ import MetaBindPlugin from '../main';
 import { AbstractMDRC } from '../renderChildren/AbstractMDRC';
 import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
 import { InputFieldMDRC, RenderChildType } from '../renderChildren/InputFieldMDRC';
+import { Component } from 'obsidian';
 
 export abstract class MarkdownRenderChildWidget<T extends AbstractMDRC> extends WidgetType {
 	content: string;
 	filePath: string;
+	parentComponent: Component;
 	plugin: MetaBindPlugin;
 	renderChild?: T;
 
-	constructor(content: string, filePath: string, plugin: MetaBindPlugin) {
+	constructor(content: string, filePath: string, component: Component, plugin: MetaBindPlugin) {
 		super();
 		this.content = content;
 		this.filePath = filePath;
+		this.parentComponent = component;
 		this.plugin = plugin;
 	}
 
@@ -29,6 +32,8 @@ export abstract class MarkdownRenderChildWidget<T extends AbstractMDRC> extends 
 
 		this.renderChild = this.createRenderChild(div);
 		this.renderChild.load();
+
+		this.parentComponent.addChild(this.renderChild);
 
 		return div;
 	}
