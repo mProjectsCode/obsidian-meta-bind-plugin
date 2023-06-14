@@ -1,5 +1,5 @@
 import MetaBindPlugin from '../main';
-import { ErrorLevel, MetaBindExpressionError } from '../utils/errors/MetaBindErrors';
+import { ErrorLevel, MetaBindExpressionError, MetaBindJsError } from '../utils/errors/MetaBindErrors';
 import { Listener, Signal } from '../utils/Signal';
 import { RenderChildType } from './InputFieldMDRC';
 import { JsViewFieldDeclaration } from '../parsers/ViewFieldDeclarationParser';
@@ -82,10 +82,10 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 
 	async evaluateExpression(): Promise<string> {
 		if (!this.expression) {
-			throw new Error("Can't evaluate expression. Expression is undefined.");
+			throw new MetaBindJsError(ErrorLevel.CRITICAL, "Can't evaluate expression.", 'Expression is undefined.');
 		}
-		if (!(this.plugin instanceof MetaBindPlugin)) {
-			throw new Error("Can't evaluate expression. JS expressions are unsupported outside of obsidian.");
+		if (!this.plugin.settings.enableJs) {
+			throw new MetaBindJsError(ErrorLevel.CRITICAL, "Can't evaluate expression.", 'JS expressions are disabled in the plugin settings.');
 		}
 
 		const context = this.buildContext();
