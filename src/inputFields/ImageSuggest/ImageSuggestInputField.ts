@@ -1,28 +1,32 @@
 import { AbstractInputField } from '../AbstractInputField';
 import ImageSuggestInput from './ImageSuggestInput.svelte';
-import { InputFieldMarkdownRenderChild } from '../../InputFieldMarkdownRenderChild';
-import { MetaBindArgumentError, MetaBindInternalError } from '../../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindArgumentError, MetaBindInternalError, MetaBindPublishError } from '../../utils/errors/MetaBindErrors';
 import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
 import { Notice, TFile, TFolder } from 'obsidian';
 import { ImageSuggestModal } from './ImageSuggestModal';
-import { OptionQueryInputFieldArgument } from '../../inputFieldArguments/OptionQueryInputFieldArgument';
-import { OptionInputFieldArgument } from '../../inputFieldArguments/OptionInputFieldArgument';
+import { OptionQueryInputFieldArgument } from '../../inputFieldArguments/arguments/OptionQueryInputFieldArgument';
+import { OptionInputFieldArgument } from '../../inputFieldArguments/arguments/OptionInputFieldArgument';
+import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
+import MetaBindPlugin from '../../main';
 
 export class ImageSuggestInputField extends AbstractInputField {
-	static allowInlineCodeBlock: boolean = false;
+	static allowInline: boolean = false;
 	container: HTMLDivElement | undefined;
 	component: ImageSuggestInput | undefined;
 	value: string;
 	options: string[];
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
-		super(inputFieldMarkdownRenderChild, onValueChange);
+	constructor(inputFieldMDRC: InputFieldMDRC) {
+		super(inputFieldMDRC);
 
 		this.value = '';
 		this.options = [];
 	}
 
-	getValue(): string {
+	getValue(): string | undefined {
+		if (!this.component) {
+			return undefined;
+		}
 		return this.value;
 	}
 
@@ -42,7 +46,7 @@ export class ImageSuggestInputField extends AbstractInputField {
 
 	getHtmlElement(): HTMLElement {
 		if (!this.container) {
-			throw new MetaBindInternalError('');
+			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
 		}
 
 		return this.container;
@@ -54,7 +58,7 @@ export class ImageSuggestInputField extends AbstractInputField {
 	}
 
 	async getOptions(): Promise<void> {
-		const folderPaths: OptionQueryInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.OPTION_QUERY);
+		const folderPaths: OptionQueryInputFieldArgument[] = this.renderChild.getArguments(InputFieldArgumentType.OPTION_QUERY);
 		const images: string[] = [];
 
 		for (const folderPath of folderPaths) {
@@ -62,22 +66,34 @@ export class ImageSuggestInputField extends AbstractInputField {
 			if (folderPathString.startsWith('"') && folderPathString.endsWith('"')) {
 				folderPathString = folderPathString.substring(1, folderPathString.length - 1);
 			} else {
-				const error = new MetaBindArgumentError(`expected suggest option query for image suggester to start and end with double quotation marks`);
+				const error = new MetaBindArgumentError(
+					ErrorLevel.ERROR,
+					'failed to get suggest options',
+					`expected suggest option query for image suggester to start and end with double quotation marks`
+				);
 				new Notice(`meta-bind | ${error.message}`);
 				console.warn(error);
 				continue;
 			}
 
-			const folder = this.inputFieldMarkdownRenderChild.plugin.app.vault.getAbstractFileByPath(folderPathString);
+			const folder = this.renderChild.plugin.app.vault.getAbstractFileByPath(folderPathString);
 			if (folder == null) {
-				const error = new MetaBindArgumentError(`expected suggest option query ${folderPathString} for image suggester to exist`);
+				const error = new MetaBindArgumentError(
+					ErrorLevel.ERROR,
+					'failed to get suggest options',
+					`expected suggest option query ${folderPathString} for image suggester to exist`
+				);
 				new Notice(`meta-bind | ${error.message}`);
 				console.warn(error);
 				continue;
 			}
 
 			if (!(folder instanceof TFolder)) {
-				const error = new MetaBindArgumentError(`expected suggest option query ${folderPath.value} for image suggester to be a folder`);
+				const error = new MetaBindArgumentError(
+					ErrorLevel.ERROR,
+					'failed to get suggest options',
+					`expected suggest option query ${folderPath.value} for image suggester to be a folder`
+				);
 				new Notice(`meta-bind | ${error.message}`);
 				console.warn(error);
 				continue;
@@ -90,27 +106,39 @@ export class ImageSuggestInputField extends AbstractInputField {
 			}
 		}
 
-		const imagePaths: OptionInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.OPTION);
+		const imagePaths: OptionInputFieldArgument[] = this.renderChild.getArguments(InputFieldArgumentType.OPTION);
 
 		for (const imagePath of imagePaths) {
-			const imageFile = this.inputFieldMarkdownRenderChild.plugin.app.vault.getAbstractFileByPath(imagePath.value);
+			const imageFile = this.renderChild.plugin.app.vault.getAbstractFileByPath(imagePath.value);
 
 			if (!imageFile) {
-				const error = new MetaBindArgumentError(`expected suggest option ${imagePath.value} for image suggester to exist`);
+				const error = new MetaBindArgumentError(
+					ErrorLevel.ERROR,
+					'failed to get suggest options',
+					`expected suggest option ${imagePath.value} for image suggester to exist`
+				);
 				new Notice(`meta-bind | ${error.message}`);
 				console.warn(error);
 				continue;
 			}
 
 			if (!(imageFile instanceof TFile)) {
-				const error = new MetaBindArgumentError(`expected suggest option ${imagePath.value} for image suggester to be a file`);
+				const error = new MetaBindArgumentError(
+					ErrorLevel.ERROR,
+					'failed to get suggest options',
+					`expected suggest option ${imagePath.value} for image suggester to be a file`
+				);
 				new Notice(`meta-bind | ${error.message}`);
 				console.warn(error);
 				continue;
 			}
 
 			if (!this.isImageExtension(imageFile.extension)) {
-				const error = new MetaBindArgumentError(`expected suggest option ${imagePath.value} for image suggester to be an image file`);
+				const error = new MetaBindArgumentError(
+					ErrorLevel.ERROR,
+					'failed to get suggest options',
+					`expected suggest option ${imagePath.value} for image suggester to be an image file`
+				);
 				new Notice(`meta-bind | ${error.message}`);
 				console.warn(error);
 				continue;
@@ -124,18 +152,18 @@ export class ImageSuggestInputField extends AbstractInputField {
 
 	async showSuggest(): Promise<void> {
 		await this.getOptions();
-		new ImageSuggestModal(this.inputFieldMarkdownRenderChild.plugin.app, this.options, item => {
+		new ImageSuggestModal(this.renderChild.plugin.app, this.options, item => {
 			this.setValue(item);
 			this.onValueChange(item);
 		}).open();
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | SuggestInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | SuggestInputField >> render ${this.renderChild.uuid}`);
 
 		this.container = container;
 
-		this.value = this.inputFieldMarkdownRenderChild.getInitialValue();
+		this.value = this.renderChild.getInitialValue();
 
 		this.component = new ImageSuggestInput({
 			target: container,

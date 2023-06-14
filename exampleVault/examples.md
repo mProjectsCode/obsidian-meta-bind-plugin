@@ -1,11 +1,13 @@
 ---
-slider1: 5
+slider1: 4
 nested:
-  object: dfgdf
+  object: test
 suggest: test
 toggle1: false
 Domestic_tasks:
   - Lunch 🍲
+Meditate: 100
+Slept: 00:00
 ---
 
 ## In callouts
@@ -13,10 +15,12 @@ Domestic_tasks:
 > `INPUT[slider(addLabels, minValue(1), maxValue(10)):slider1]`
 
 > [!INFO]
-> `INPUT[slider(addLabels, minValue(1), maxValue(10)):slider1]` Slider
+> `INPUT[slider(addLabels, minValue(1), maxValue(10)):slider1]`
 
 > [!INFO]
-> `INPUT[slider(addLabels, minValue(1), maxValue(10)):slider1]`
+> ```meta-bind
+> INPUT[slider(addLabels, minValue(1), maxValue(10)):slider1]
+> ```
 
 ## Nested data
 `INPUT[text:nested["object"]]`
@@ -61,12 +65,15 @@ Lorem ipsum dolor sit amet, `INPUT[date():other note#date]` consectetur adipisci
 - unknown tempalate
 	- `INPUT[][toggle:toggle1]`
 	- `INPUT[nonExistantTemplate][toggle:toggle1]`
-- `INPUT[toggleTemplate][:toggle1]`
+- `INPUT[toggleTemplate][]`
 
 ## Error Messages
 - `INPUT[text():meta bind/nonExistantFile#title]`
 - `INPUT[slider(nonExistantArgument)]`
 - `INPUT[select(option(option a),option(option b),option(option c),option(option d)):select]`
+
+
+Lorem ipsum dolor sit amet, `INPUT[text():meta bind/nonExistantFile#title]` consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. `INPUT[slider(nonExistantArgument)]` Curabitur sed rhoncus nisl. Maecenas nisi justo, viverra vel tempus vel, hendrerit at metus. `INPUT[select(option(option a),option(option b),option(option c),option(option d)):select]` asdasd asdasdasd
 
 Code block error
 ```meta-bind

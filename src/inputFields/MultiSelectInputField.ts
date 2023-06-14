@@ -1,14 +1,17 @@
 import { SelectInputField } from './SelectInputField';
-import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
 import { doArraysContainEqualValues } from '../utils/Utils';
+import { InputFieldMDRC } from '../renderChildren/InputFieldMDRC';
 
 export class MultiSelectInputField extends SelectInputField {
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
-		super(inputFieldMarkdownRenderChild, onValueChange);
+	constructor(inputFieldMDRC: InputFieldMDRC) {
+		super(inputFieldMDRC);
 		this.allowMultiSelect = true;
 	}
 
 	getValue(): any {
+		if (!this.container) {
+			return undefined;
+		}
 		return this.elements.filter(x => x.isActive()).map(x => x.value);
 	}
 

@@ -16,7 +16,7 @@ export class DateParser {
 	}
 
 	public static getDefaultDay(): number {
-		return 1;
+		return new Date().getDate();
 	}
 
 	public static getDefaultMonth(): number {
@@ -24,6 +24,6 @@ export class DateParser {
 	}
 
 	public static getDefaultYear(): number {
-		return 2022;
+		return new Date().getFullYear();
 	}
 }

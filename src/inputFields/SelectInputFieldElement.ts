@@ -41,7 +41,7 @@ export class SelectInputFieldElement {
 	}
 
 	getHTMLId(): string {
-		return `meta-bind-select-input-element-${this.selectInputField.inputFieldMarkdownRenderChild.uuid}-${this.id}`;
+		return `meta-bind-select-input-element-${this.selectInputField.renderChild.uuid}-${this.id}`;
 	}
 
 	isHighlighted(): boolean {

@@ -1,13 +1,13 @@
 import { AbstractInputField } from './AbstractInputField';
 import { TextAreaComponent } from 'obsidian';
-import { MetaBindInternalError, MetaBindValueError } from '../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../utils/errors/MetaBindErrors';
 
 export class TextAreaInputField extends AbstractInputField {
 	textAreaComponent: TextAreaComponent | undefined;
 
-	getValue(): string {
+	getValue(): string | undefined {
 		if (!this.textAreaComponent) {
-			throw new MetaBindInternalError('text area input component is undefined');
+			return undefined;
 		}
 
 		return this.textAreaComponent.getValue();
@@ -15,13 +15,13 @@ export class TextAreaInputField extends AbstractInputField {
 
 	setValue(value: any): void {
 		if (!this.textAreaComponent) {
-			throw new MetaBindInternalError('text area input component is undefined');
+			return;
 		}
 
 		if (value != null && typeof value == 'string') {
 			this.textAreaComponent.setValue(value);
 		} else {
-			console.warn(new MetaBindValueError(`invalid value '${value}' at textAreaInputField ${this.inputFieldMarkdownRenderChild.uuid}`));
+			console.warn(new MetaBindValueError(ErrorLevel.WARNING, 'failed to set value', `invalid value '${value}' at textAreaInputField ${this.renderChild.uuid}`));
 			this.textAreaComponent.setValue('');
 		}
 	}
@@ -36,17 +36,17 @@ export class TextAreaInputField extends AbstractInputField {
 
 	getHtmlElement(): HTMLElement {
 		if (!this.textAreaComponent) {
-			throw new MetaBindInternalError('text area input component is undefined');
+			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
 		}
 
 		return this.textAreaComponent.inputEl;
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | TextAreaInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | TextAreaInputField >> render ${this.renderChild.uuid}`);
 
 		const component = new TextAreaComponent(container);
-		component.setValue(this.inputFieldMarkdownRenderChild.getInitialValue());
+		component.setValue(this.renderChild.getInitialValue());
 		component.onChange(this.onValueChange);
 		this.textAreaComponent = component;
 	}

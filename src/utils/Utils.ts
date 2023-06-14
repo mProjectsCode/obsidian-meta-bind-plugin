@@ -1,4 +1,3 @@
-import { FileSystemAdapter } from 'obsidian';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { KeyValuePair } from '@opd-libs/opd-utils-lib/lib/Utils';
 
@@ -49,6 +48,10 @@ export function clamp(num: number, min: number, max: number): number {
 	return Math.min(Math.max(num, min), max);
 }
 
+export function remapRange(old_value: number, old_min: number, old_max: number, new_min: number, new_max: number): number {
+	return ((old_value - old_min) / (old_max - old_min)) * (new_max - new_min) + new_min;
+}
+
 /**
  * js can't even implement modulo correctly...
  *
@@ -66,6 +69,13 @@ export function mod(n: number, m: number): number {
  * @param arr2
  */
 export function doArraysContainEqualValues<T>(arr1: T[], arr2: T[]): boolean {
+	if (arr1 == null && arr2 == null) {
+		return true;
+	}
+	if (arr1 == null || arr2 == null) {
+		return false;
+	}
+
 	if (arr1.length !== arr2.length) {
 		return false;
 	}
@@ -132,14 +142,6 @@ export function traverseObjectToParentByPath(pathParts: string[], o: any): { par
 	};
 }
 
-export function getVaultBasePath(): string | null {
-	const adapter = app.vault.adapter;
-	if (adapter instanceof FileSystemAdapter) {
-		return adapter.getBasePath();
-	}
-	return null;
-}
-
 export function pathJoin(path1: string, path2: string): string {
 	if (path1 == null) {
 		throw new Error('path1 must not be null');
@@ -176,5 +178,6 @@ export function pathJoin(path1: string, path2: string): string {
 }
 
 export function imagePathToUri(imagePath: string): string {
-	return `app://local/${pathJoin(getVaultBasePath() ?? '', imagePath)}`;
+	// return `app://local/${pathJoin(getVaultBasePath() ?? '', imagePath)}`;
+	return app.vault.adapter.getResourcePath(imagePath);
 }

@@ -1,8 +1,8 @@
 import { AbstractInputField } from './AbstractInputField';
 import { DropdownComponent } from 'obsidian';
-import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
 import { Time, TimeParser } from '../parsers/TimeParser';
-import { MetaBindInternalError, MetaBindValueError } from '../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../utils/errors/MetaBindErrors';
+import { InputFieldMDRC } from '../renderChildren/InputFieldMDRC';
 
 export class TimeInputField extends AbstractInputField {
 	container: HTMLDivElement | undefined;
@@ -14,8 +14,8 @@ export class TimeInputField extends AbstractInputField {
 	hourComponent: DropdownComponent | undefined;
 	minuteComponent: DropdownComponent | undefined;
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
-		super(inputFieldMarkdownRenderChild, onValueChange);
+	constructor(inputFieldMDRC: InputFieldMDRC) {
+		super(inputFieldMDRC);
 
 		this.time = TimeParser.getDefaultTime();
 
@@ -32,27 +32,34 @@ export class TimeInputField extends AbstractInputField {
 
 	public getHtmlElement(): HTMLElement {
 		if (!this.container) {
-			throw new MetaBindInternalError('time input container is undefined');
+			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
 		}
 
 		return this.container;
 	}
 
-	public getValue(): string {
+	public getValue(): string | undefined {
+		if (!this.hourComponent) {
+			return undefined;
+		}
+		if (!this.minuteComponent) {
+			return undefined;
+		}
+
 		return TimeParser.stringify(this.time as Time);
 	}
 
 	public setValue(value: string): void {
 		if (!this.hourComponent) {
-			throw new MetaBindInternalError('time input hour component is undefined');
+			return;
 		}
 		if (!this.minuteComponent) {
-			throw new MetaBindInternalError('time input minute component is undefined');
+			return;
 		}
 
 		this.time = TimeParser.parse(value);
 		if (!this.time) {
-			console.warn(new MetaBindValueError(`invalid value '${value}' at timeInputField ${this.inputFieldMarkdownRenderChild.uuid}`));
+			console.warn(new MetaBindValueError(ErrorLevel.WARNING, 'failed to set value', `invalid value '${value}' at timeInputField ${this.renderChild.uuid}`));
 			this.time = TimeParser.getDefaultTime();
 		}
 		// console.log(this.time);
@@ -69,9 +76,9 @@ export class TimeInputField extends AbstractInputField {
 	}
 
 	public render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | TimeInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | TimeInputField >> render ${this.renderChild.uuid}`);
 
-		this.time = TimeParser.parse(this.inputFieldMarkdownRenderChild.getInitialValue()) ?? TimeParser.getDefaultTime();
+		this.time = TimeParser.parse(this.renderChild.getInitialValue()) ?? TimeParser.getDefaultTime();
 
 		container.removeClass('meta-bind-plugin-input-wrapper');
 		container.addClass('meta-bind-plugin-flex-input-wrapper', 'meta-bind-plugin-input-element-group');

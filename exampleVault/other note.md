@@ -2,7 +2,7 @@
 tags: test
 title: test
 select: option b
-date: Friday, June 10th 2022
+date: Tuesday, January 10th 2023
 time: 19:20
 multi-select:
   - option a
@@ -11,11 +11,6 @@ multi-select:
 
 ## This is another note
 This note is to test syncing to another note.
-
-
-```dataview
-table without id FROM #example-note
-```
 
 ### Select
 Select
@@ -38,3 +33,4 @@ option(option c),
 option(option d)
 ):select]
 ```
+

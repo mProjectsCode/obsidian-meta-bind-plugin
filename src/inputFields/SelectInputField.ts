@@ -1,32 +1,35 @@
 import { AbstractInputField } from './AbstractInputField';
 import { SelectInputFieldElement } from './SelectInputFieldElement';
 import { mod } from '../utils/Utils';
-import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
 import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
 import { AbstractInputFieldArgument } from '../inputFieldArguments/AbstractInputFieldArgument';
-import { MetaBindInternalError } from '../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
+import { InputFieldMDRC } from '../renderChildren/InputFieldMDRC';
 
 export class SelectInputField extends AbstractInputField {
-	static allowInlineCodeBlock: boolean = false;
+	static allowInline: boolean = false;
 	elements: SelectInputFieldElement[];
 	allowMultiSelect: boolean;
 	container: HTMLDivElement | undefined;
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
-		super(inputFieldMarkdownRenderChild, onValueChange);
+	constructor(inputFieldMDRC: InputFieldMDRC) {
+		super(inputFieldMDRC);
 		this.elements = [];
 		this.allowMultiSelect = false;
 	}
 
 	getHtmlElement(): HTMLElement {
 		if (!this.container) {
-			throw new MetaBindInternalError('select input container is undefined');
+			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
 		}
 
 		return this.container;
 	}
 
-	getValue(): string {
+	getValue(): string | undefined {
+		if (!this.container) {
+			return undefined;
+		}
 		return this.elements.filter(x => x.isActive()).first()?.value ?? '';
 	}
 
@@ -53,10 +56,10 @@ export class SelectInputField extends AbstractInputField {
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | SelectInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | SelectInputField >> render ${this.renderChild.uuid}`);
 		this.container = container;
 
-		const elementArguments: AbstractInputFieldArgument[] = this.inputFieldMarkdownRenderChild.getArguments(InputFieldArgumentType.OPTION);
+		const elementArguments: AbstractInputFieldArgument[] = this.renderChild.getArguments(InputFieldArgumentType.OPTION);
 
 		let i = 0;
 		for (const elementArgument of elementArguments) {
@@ -69,7 +72,7 @@ export class SelectInputField extends AbstractInputField {
 			i += 1;
 		}
 
-		this.setValue(this.inputFieldMarkdownRenderChild.getInitialValue());
+		this.setValue(this.renderChild.getInitialValue());
 	}
 
 	public destroy(): void {}

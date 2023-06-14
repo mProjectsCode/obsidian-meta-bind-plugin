@@ -1,0 +1,15 @@
+{
+	"include": ["src/**/*.ts"],
+	"compilerOptions": {
+		"baseUrl": ".",
+		"module": "ESNext",
+		"target": "ES6",
+		"allowJs": true,
+		"declaration": true,
+		"moduleResolution": "node",
+		"emitDeclarationOnly": true,
+		"outFile": "meta-bind.d.ts",
+		"lib": ["DOM", "ES5", "ES6", "ES7", "Es2021"],
+		"types": ["svelte", "node", "jest"]
+	}
+}

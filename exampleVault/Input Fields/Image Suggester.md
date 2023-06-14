@@ -1,5 +1,5 @@
 ---
-image: Other/Images/img_flower.webp
+image: Other/Images/img_frozen_branch.jpg
 ---
 
 ```meta-bind
