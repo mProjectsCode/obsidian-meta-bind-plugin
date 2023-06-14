@@ -1,26 +1,39 @@
 import { AbstractInputField } from './AbstractInputField';
 import { ToggleComponent } from 'obsidian';
-import { MetaBindInternalError, MetaBindValueError } from '../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../utils/errors/MetaBindErrors';
+import { InputFieldMDRC } from '../renderChildren/InputFieldMDRC';
+import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
 
 export class ToggleInputField extends AbstractInputField {
 	toggleComponent: ToggleComponent | undefined;
+	onValue: boolean | string | number;
+	offValue: boolean | string | number;
 
-	getValue(): boolean {
+	constructor(inputFieldMDRC: InputFieldMDRC) {
+		super(inputFieldMDRC);
+
+		this.onValue = this.renderChild.getArgument(InputFieldArgumentType.ON_VALUE)?.value ?? true;
+		this.offValue = this.renderChild.getArgument(InputFieldArgumentType.OFF_VALUE)?.value ?? false;
+	}
+
+	getValue(): boolean | string | number | undefined {
 		if (!this.toggleComponent) {
-			throw new MetaBindInternalError('toggle input component is undefined');
+			return undefined;
 		}
-		return this.toggleComponent.getValue();
+		return this.mapValue(this.toggleComponent.getValue());
 	}
 
 	setValue(value: any): void {
 		if (!this.toggleComponent) {
-			throw new MetaBindInternalError('toggle input component is undefined');
+			return;
 		}
 
-		if (value != null && typeof value == 'boolean') {
-			this.toggleComponent.setValue(value);
+		if (value === this.onValue) {
+			this.toggleComponent.setValue(true);
+		} else if (value === this.offValue) {
+			this.toggleComponent.setValue(false);
 		} else {
-			console.warn(new MetaBindValueError(`invalid value '${value}' at toggleInputField ${this.inputFieldMarkdownRenderChild.uuid}`));
+			console.warn(new MetaBindValueError(ErrorLevel.WARNING, 'failed to set value', `invalid value '${value}' at toggleInputField ${this.renderChild.uuid}`));
 			this.toggleComponent.setValue(false);
 		}
 	}
@@ -35,19 +48,23 @@ export class ToggleInputField extends AbstractInputField {
 
 	getHtmlElement(): HTMLElement {
 		if (!this.toggleComponent) {
-			throw new MetaBindInternalError('toggle input component is undefined');
+			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
 		}
 
 		return this.toggleComponent.toggleEl;
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | ToggleInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | ToggleInputField >> render ${this.renderChild.uuid}`);
 
 		const component = new ToggleComponent(container);
-		component.setValue(this.inputFieldMarkdownRenderChild.getInitialValue());
-		component.onChange(this.onValueChange);
+		component.setValue(this.renderChild.getInitialValue());
+		component.onChange((value: boolean) => this.onValueChange(this.mapValue(value)));
 		this.toggleComponent = component;
+	}
+
+	mapValue(value: boolean): boolean | string | number {
+		return value ? this.onValue : this.offValue;
 	}
 
 	public destroy(): void {}

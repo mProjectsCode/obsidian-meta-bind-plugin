@@ -1,21 +1,24 @@
 import { AbstractInputField } from '../AbstractInputField';
 import EditorInput from './EditorInput.svelte';
-import { InputFieldMarkdownRenderChild } from '../../InputFieldMarkdownRenderChild';
-import { MetaBindInternalError } from '../../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
+import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 
 export class EditorInputField extends AbstractInputField {
-	static allowInlineCodeBlock: boolean = false;
+	static allowInline: boolean = false;
 	container: HTMLDivElement | undefined;
 	component: EditorInput | undefined;
 	value: string;
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
-		super(inputFieldMarkdownRenderChild, onValueChange);
+	constructor(inputFieldMDRC: InputFieldMDRC) {
+		super(inputFieldMDRC);
 
 		this.value = '';
 	}
 
-	getValue(): string {
+	getValue(): string | undefined {
+		if (!this.component) {
+			return undefined;
+		}
 		return this.value;
 	}
 
@@ -34,18 +37,18 @@ export class EditorInputField extends AbstractInputField {
 
 	getHtmlElement(): HTMLElement {
 		if (!this.container) {
-			throw new MetaBindInternalError('');
+			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
 		}
 
 		return this.container;
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | EditorInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | EditorInputField >> render ${this.renderChild.uuid}`);
 
 		this.container = container;
 
-		this.value = this.inputFieldMarkdownRenderChild.getInitialValue();
+		this.value = this.renderChild.getInitialValue();
 
 		this.component = new EditorInput({
 			target: container,

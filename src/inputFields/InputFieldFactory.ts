@@ -1,5 +1,5 @@
 import { ToggleInputField } from './ToggleInputField';
-import { InputFieldMarkdownRenderChild, InputFieldMarkdownRenderChildType } from '../InputFieldMarkdownRenderChild';
+import { InputFieldMDRC, RenderChildType } from '../renderChildren/InputFieldMDRC';
 import { TextInputField } from './TextInputField';
 import { SliderInputField } from './SliderInputField';
 import { TextAreaInputField } from './TextAreaInputField';
@@ -12,117 +12,128 @@ import { InputFieldType } from '../parsers/InputFieldDeclarationParser';
 import { DatePickerInputField } from './DatePicker/DatePickerInputField';
 import { NumberInputField } from './NumberInputField';
 import { SuggestInputField } from './Suggest/SuggestInputField';
-import { MetaBindParsingError } from '../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
 import { EditorInputField } from './Editor/EditorInputField';
 import { ImageSuggestInputField } from './ImageSuggest/ImageSuggestInputField';
 import MetaBindPlugin from '../main';
+import { ProgressBarInputField } from './ProgressBar/ProgressBarInputField';
+import { InlineSelectInputField } from './InlineSelectInputField';
 
 export class InputFieldFactory {
-	static allowCodeBlockMap: Record<string, { codeBlock: boolean; inlineCodeBlock: boolean }> = {
+	static allowCodeBlockMap: Record<string, { block: boolean; inline: boolean }> = {
 		[InputFieldType.TOGGLE]: {
-			codeBlock: ToggleInputField.allowCodeBlock,
-			inlineCodeBlock: ToggleInputField.allowInlineCodeBlock,
+			block: ToggleInputField.allowBlock,
+			inline: ToggleInputField.allowInline,
 		},
 		[InputFieldType.SLIDER]: {
-			codeBlock: SliderInputField.allowCodeBlock,
-			inlineCodeBlock: SliderInputField.allowInlineCodeBlock,
+			block: SliderInputField.allowBlock,
+			inline: SliderInputField.allowInline,
 		},
 		[InputFieldType.TEXT]: {
-			codeBlock: TextInputField.allowCodeBlock,
-			inlineCodeBlock: TextInputField.allowInlineCodeBlock,
+			block: TextInputField.allowBlock,
+			inline: TextInputField.allowInline,
 		},
 		[InputFieldType.TEXT_AREA]: {
-			codeBlock: TextAreaInputField.allowCodeBlock,
-			inlineCodeBlock: TextAreaInputField.allowInlineCodeBlock,
+			block: TextAreaInputField.allowBlock,
+			inline: TextAreaInputField.allowInline,
 		},
 		[InputFieldType.SELECT]: {
-			codeBlock: SelectInputField.allowCodeBlock,
-			inlineCodeBlock: SelectInputField.allowInlineCodeBlock,
+			block: SelectInputField.allowBlock,
+			inline: SelectInputField.allowInline,
 		},
 		[InputFieldType.MULTI_SELECT]: {
-			codeBlock: MultiSelectInputField.allowCodeBlock,
-			inlineCodeBlock: MultiSelectInputField.allowInlineCodeBlock,
+			block: MultiSelectInputField.allowBlock,
+			inline: MultiSelectInputField.allowInline,
 		},
 		[InputFieldType.DATE]: {
-			codeBlock: DateInputField.allowCodeBlock,
-			inlineCodeBlock: DateInputField.allowInlineCodeBlock,
+			block: DateInputField.allowBlock,
+			inline: DateInputField.allowInline,
 		},
 		[InputFieldType.TIME]: {
-			codeBlock: TimeInputField.allowCodeBlock,
-			inlineCodeBlock: TimeInputField.allowInlineCodeBlock,
+			block: TimeInputField.allowBlock,
+			inline: TimeInputField.allowInline,
 		},
 		[InputFieldType.DATE_PICKER]: {
-			codeBlock: DatePickerInputField.allowCodeBlock,
-			inlineCodeBlock: DatePickerInputField.allowInlineCodeBlock,
+			block: DatePickerInputField.allowBlock,
+			inline: DatePickerInputField.allowInline,
 		},
 		[InputFieldType.NUMBER]: {
-			codeBlock: NumberInputField.allowCodeBlock,
-			inlineCodeBlock: NumberInputField.allowInlineCodeBlock,
+			block: NumberInputField.allowBlock,
+			inline: NumberInputField.allowInline,
 		},
 		[InputFieldType.SUGGESTER]: {
-			codeBlock: SuggestInputField.allowCodeBlock,
-			inlineCodeBlock: SuggestInputField.allowInlineCodeBlock,
+			block: SuggestInputField.allowBlock,
+			inline: SuggestInputField.allowInline,
 		},
 		[InputFieldType.EDITOR]: {
-			codeBlock: EditorInputField.allowCodeBlock,
-			inlineCodeBlock: EditorInputField.allowInlineCodeBlock,
+			block: EditorInputField.allowBlock,
+			inline: EditorInputField.allowInline,
 		},
 		[InputFieldType.IMAGE_SUGGESTER]: {
-			codeBlock: ImageSuggestInputField.allowCodeBlock,
-			inlineCodeBlock: ImageSuggestInputField.allowInlineCodeBlock,
+			block: ImageSuggestInputField.allowBlock,
+			inline: ImageSuggestInputField.allowInline,
+		},
+		[InputFieldType.PROGRESS_BAR]: {
+			block: ProgressBarInputField.allowBlock,
+			inline: ProgressBarInputField.allowInline,
+		},
+		[InputFieldType.INLINE_SELECT]: {
+			block: InlineSelectInputField.allowBlock,
+			inline: InlineSelectInputField.allowInline,
 		},
 	};
 
-	static createInputField(
-		inputFieldType: InputFieldType,
-		args: { type: InputFieldMarkdownRenderChildType; inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild; onValueChanged: (value: any) => void | Promise<void> }
-	): AbstractInputField | undefined {
+	static createInputField(inputFieldType: InputFieldType, args: { renderChildType: RenderChildType; inputFieldMDRC: InputFieldMDRC }): AbstractInputField | undefined {
 		if (inputFieldType !== InputFieldType.INVALID) {
-			InputFieldFactory.checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType, args.type, args.inputFieldMarkdownRenderChild.plugin);
+			InputFieldFactory.checkRenderChildTypeAllowed(inputFieldType, args.renderChildType, args.inputFieldMDRC.plugin);
 		}
 
 		if (inputFieldType === InputFieldType.TOGGLE) {
-			return new ToggleInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new ToggleInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.SLIDER) {
-			return new SliderInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new SliderInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.TEXT) {
-			return new TextInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new TextInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.TEXT_AREA) {
-			return new TextAreaInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new TextAreaInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.SELECT) {
-			return new SelectInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new SelectInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.MULTI_SELECT) {
-			return new MultiSelectInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new MultiSelectInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.DATE) {
-			return new DateInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new DateInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.TIME) {
-			return new TimeInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new TimeInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.DATE_PICKER) {
-			return new DatePickerInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new DatePickerInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.NUMBER) {
-			return new NumberInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new NumberInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.SUGGESTER) {
-			return new SuggestInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new SuggestInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.EDITOR) {
-			return new EditorInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new EditorInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.IMAGE_SUGGESTER) {
-			return new ImageSuggestInputField(args.inputFieldMarkdownRenderChild, args.onValueChanged);
+			return new ImageSuggestInputField(args.inputFieldMDRC);
+		} else if (inputFieldType === InputFieldType.PROGRESS_BAR) {
+			return new ProgressBarInputField(args.inputFieldMDRC);
+		} else if (inputFieldType === InputFieldType.INLINE_SELECT) {
+			return new InlineSelectInputField(args.inputFieldMDRC);
 		}
 
 		return undefined;
 	}
 
-	static checkInputFieldMarkdownRenderChildTypeAllowed(inputFieldType: InputFieldType, type: InputFieldMarkdownRenderChildType, plugin: MetaBindPlugin): void {
+	static checkRenderChildTypeAllowed(inputFieldType: InputFieldType, renderChildType: RenderChildType, plugin: MetaBindPlugin): void {
 		if (plugin.settings.ignoreCodeBlockRestrictions) {
 			return;
 		}
 
-		const allowCodeBlock: { codeBlock: boolean; inlineCodeBlock: boolean } = InputFieldFactory.allowCodeBlockMap[inputFieldType];
-		if (type === InputFieldMarkdownRenderChildType.CODE_BLOCK && !allowCodeBlock.codeBlock) {
-			throw new MetaBindParsingError(`'${inputFieldType}' is not allowed as code block`);
+		const allowCodeBlock: { block: boolean; inline: boolean } = InputFieldFactory.allowCodeBlockMap[inputFieldType];
+		if (renderChildType === RenderChildType.BLOCK && !allowCodeBlock.block) {
+			throw new MetaBindParsingError(ErrorLevel.CRITICAL, 'can not create input field', `'${inputFieldType}' is not allowed as code block`);
 		}
-		if (type === InputFieldMarkdownRenderChildType.INLINE_CODE_BLOCK && !allowCodeBlock.inlineCodeBlock) {
-			throw new MetaBindParsingError(`'${inputFieldType}' is not allowed as inline code block`);
+		if (renderChildType === RenderChildType.INLINE && !allowCodeBlock.inline) {
+			throw new MetaBindParsingError(ErrorLevel.CRITICAL, 'can not create input field', `'${inputFieldType}' is not allowed as inline code block`);
 		}
 	}
 }

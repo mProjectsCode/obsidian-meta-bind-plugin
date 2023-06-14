@@ -1,11 +1,11 @@
-import { InputFieldMarkdownRenderChild } from '../../InputFieldMarkdownRenderChild';
 import { AbstractInputField } from '../AbstractInputField';
 import DatePickerInput from './DatePickerInput.svelte';
 import { moment } from 'obsidian';
 import { DateParser } from '../../parsers/DateParser';
 import { DatePickerModal } from './DatePickerModal';
 import { Moment } from 'moment';
-import { MetaBindInternalError } from '../../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
+import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 
 export class DatePickerInputField extends AbstractInputField {
 	container: HTMLDivElement | undefined;
@@ -13,13 +13,16 @@ export class DatePickerInputField extends AbstractInputField {
 	modal: DatePickerModal | undefined;
 	date: moment.Moment;
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
-		super(inputFieldMarkdownRenderChild, onValueChange);
+	constructor(inputFieldMDRC: InputFieldMDRC) {
+		super(inputFieldMDRC);
 
 		this.date = DateParser.getDefaultDate();
 	}
 
 	getValue(): any {
+		if (!this.component) {
+			return undefined;
+		}
 		return DateParser.stringify(this.date);
 	}
 
@@ -44,7 +47,7 @@ export class DatePickerInputField extends AbstractInputField {
 
 	getHtmlElement(): HTMLElement {
 		if (!this.container) {
-			throw new MetaBindInternalError('');
+			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
 		}
 
 		return this.container;
@@ -62,16 +65,16 @@ export class DatePickerInputField extends AbstractInputField {
 	}
 
 	showDatePicker(): void {
-		this.modal = new DatePickerModal(this.inputFieldMarkdownRenderChild.plugin.app, this);
+		this.modal = new DatePickerModal(this.renderChild.plugin.app, this);
 		this.modal.open();
 	}
 
 	render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | DatePickerInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | DatePickerInputField >> render ${this.renderChild.uuid}`);
 
 		this.container = container;
 
-		this.date = DateParser.parse(this.inputFieldMarkdownRenderChild.getInitialValue()) ?? DateParser.getDefaultDate();
+		this.date = DateParser.parse(this.renderChild.getInitialValue()) ?? DateParser.getDefaultDate();
 		if (!this.date.isValid()) {
 			this.date = DateParser.getDefaultDate();
 			this.onValueChange(this.getValue());
@@ -80,7 +83,7 @@ export class DatePickerInputField extends AbstractInputField {
 		this.component = new DatePickerInput({
 			target: container,
 			props: {
-				dateFormat: this.inputFieldMarkdownRenderChild.plugin.settings.preferredDateFormat,
+				dateFormat: this.renderChild.plugin.settings.preferredDateFormat,
 				showDatePicker: () => this.showDatePicker(),
 				selectedDate: this.date,
 			},

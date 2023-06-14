@@ -8,9 +8,25 @@ body {
 
 .meta-bind-plugin-input {
 	background-color: transparent !important;
+	border: none !important;
 }
 
 .meta-bind-plugin-input-wrapper {
+	display: inline;
+}
+
+/* For higher specificity */
+:is(code, span).meta-bind-plugin-view:has(> div.meta-bind-plugin-view-wrapper) {
+	background-color: transparent;
+	border: none;
+	color: inherit;
+	font-size: inherit;
+	font-family: inherit;
+	padding: 0;
+	margin: 0;
+}
+
+div.meta-bind-plugin-view-wrapper {
 	display: inline;
 }
 
@@ -29,10 +45,13 @@ body {
 }
 
 .meta-bind-plugin-error {
-	display: block;
-	color: #ff0000;
+	color: var(--text-error) !important;
 	font-weight: bold;
 	font-family: var(--font-monospace);
+}
+
+code.meta-bind-plugin-error {
+	color: var(--text-error) !important;
 }
 
 .meta-bind-code {
@@ -94,11 +113,21 @@ body {
 	margin: var(--size-4-2) 0;
 	border-radius: var(--meta-bind-plugin-border-radius);
 	border: var(--meta-bind-plugin-border-width) solid var(--background-modifier-border);
+	display: inline-flex;
+	flex-direction: column;
+	gap: var(--size-4-2);
+}
+
+[class*='block-language-'] > .meta-bind-plugin-card {
+	display: flex;
 }
 
 .meta-bind-plugin-card > code {
-	margin-top: var(--size-4-2);
 	display: block;
+}
+
+.meta-bind-plugin-card > pre {
+	margin: 0;
 }
 
 .meta-bind-plugin-card > h3 {
@@ -111,4 +140,42 @@ body {
 
 .meta-bind-high {
 	height: 200px;
+}
+
+.meta-bind-error-collection-card {
+	padding: var(--size-4-2);
+	margin: var(--size-4-2) 0;
+	border-radius: var(--meta-bind-plugin-border-radius);
+	border: var(--meta-bind-plugin-border-width) solid var(--background-modifier-border);
+	color: var(--text-normal);
+	font-family: var(--font-default);
+}
+
+.meta-bind-error-collection {
+	display: inline-block;
+	position: relative;
+	cursor: pointer;
+	margin-inline: var(--size-4-2);
+}
+
+.publish-renderer .meta-bind-error-collection {
+	margin-inline: 0;
+}
+
+.meta-bind-error-collection > svg {
+	width: var(--font-text-size);
+	height: var(--font-text-size);
+	vertical-align: text-bottom;
+}
+
+.meta-bind-error-collection > svg.lucide-alert-circle {
+	color: var(--color-red);
+}
+
+.meta-bind-error-collection > svg.lucide-alert-triangle {
+	color: var(--color-orange);
+}
+
+.meta-bind-error-collection > svg.lucide-info {
+	color: var(--text-normal);
 }

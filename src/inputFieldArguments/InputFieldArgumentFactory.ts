@@ -1,15 +1,17 @@
 import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
-import { ClassInputFieldArgument } from './ClassInputFieldArgument';
-import { AddLabelsInputFieldArgument } from './AddLabelsInputFieldArgument';
-import { MinValueInputFieldArgument } from './MinValueInputFieldArgument';
-import { MaxValueInputFieldArgument } from './MaxValueInputFieldArgument';
-import { OptionInputFieldArgument } from './OptionInputFieldArgument';
-import { TitleInputFieldArgument } from './TitleInputFieldArgument';
-import { AlignRightInputFieldArgument } from './AlignRightInputFieldArgument';
-import { OptionQueryInputFieldArgument } from './OptionQueryInputFieldArgument';
-import { MetaBindParsingError } from '../utils/MetaBindErrors';
+import { ClassInputFieldArgument } from './arguments/ClassInputFieldArgument';
+import { AddLabelsInputFieldArgument } from './arguments/AddLabelsInputFieldArgument';
+import { MinValueInputFieldArgument } from './arguments/MinValueInputFieldArgument';
+import { MaxValueInputFieldArgument } from './arguments/MaxValueInputFieldArgument';
+import { OptionInputFieldArgument } from './arguments/OptionInputFieldArgument';
+import { TitleInputFieldArgument } from './arguments/TitleInputFieldArgument';
+import { AlignRightInputFieldArgument } from './arguments/AlignRightInputFieldArgument';
+import { OptionQueryInputFieldArgument } from './arguments/OptionQueryInputFieldArgument';
+import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
 import { AbstractInputFieldArgument } from './AbstractInputFieldArgument';
-import { ShowcaseInputFieldArgument } from './ShowcaseInputFieldArgument';
+import { ShowcaseInputFieldArgument } from './arguments/ShowcaseInputFieldArgument';
+import { OffValueInputFieldArgument } from './arguments/OffValueInputFieldArgument';
+import { OnValueInputFieldArgument } from './arguments/OnValueInputFieldArgument';
 
 export class InputFieldArgumentFactory {
 	static createInputFieldArgument(argumentIdentifier: string): AbstractInputFieldArgument {
@@ -31,8 +33,12 @@ export class InputFieldArgumentFactory {
 			return new OptionQueryInputFieldArgument();
 		} else if (argumentIdentifier === InputFieldArgumentType.SHOWCASE) {
 			return new ShowcaseInputFieldArgument();
+		} else if (argumentIdentifier === InputFieldArgumentType.OFF_VALUE) {
+			return new OffValueInputFieldArgument();
+		} else if (argumentIdentifier === InputFieldArgumentType.ON_VALUE) {
+			return new OnValueInputFieldArgument();
 		} else {
-			throw new MetaBindParsingError(`unknown argument '${argumentIdentifier}'`);
+			throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not crate input field argument', `unknown argument '${argumentIdentifier}'`);
 		}
 	}
 }

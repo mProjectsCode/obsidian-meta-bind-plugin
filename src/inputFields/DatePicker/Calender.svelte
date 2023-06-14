@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {getDateRows, getWeekDays, uuid} from './DatePickerInputSvelteHelpers.js';
+	import {genSvelteId, getDateRows, getWeekDays} from './DatePickerInputSvelteHelpers.js';
 	import {createEventDispatcher} from 'svelte';
 	import {moment} from 'obsidian';
 	import type {Moment} from 'moment';
@@ -97,7 +97,7 @@
 	</div>
 
 	<div class="calendar-content">
-		{#each cells as value (uuid())}
+		{#each cells as value (genSvelteId())}
 			<div
 				class="cell"
 				on:click={() => selectCell(value)}

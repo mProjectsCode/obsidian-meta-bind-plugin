@@ -1,0 +1,17 @@
+name: Close Invalid Issue
+on:
+    issues:
+        types:
+            - labeled
+jobs:
+    closeIssue:
+        if: github.event.label.name == 'invalid'
+        runs-on: ubuntu-latest
+        permissions:
+            issues: write
+        steps:
+            - name: Close Issue
+              uses: peter-evans/close-issue@v2
+              with:
+                  comment: This issue is invalid. Please conform to the issue templates.
+                  close-reason: not_planned

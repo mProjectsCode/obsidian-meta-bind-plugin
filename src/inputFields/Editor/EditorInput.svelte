@@ -2,6 +2,7 @@
 	import {MarkdownRenderer} from 'obsidian';
 	import {EditorInputField} from './EditorInputField';
 	import {onMount} from 'svelte';
+	import MetaBindPlugin from '../../main';
 
 	export let onValueChange: (value: any) => void;
 	export let editorInput: EditorInputField;
@@ -25,7 +26,11 @@
 
 	export function render() {
 		renderEl.innerHTML = '';
-		MarkdownRenderer.renderMarkdown(value, renderEl, editorInput.inputFieldMarkdownRenderChild.filePath, editorInput.inputFieldMarkdownRenderChild);
+		if (editorInput.renderChild.plugin instanceof MetaBindPlugin) {
+			MarkdownRenderer.renderMarkdown(value, renderEl, editorInput.renderChild.filePath, editorInput.renderChild);
+		} else {
+			renderEl.innerText = value;
+		}
 	}
 
 	function focusOut(event: MouseEvent) {

@@ -1,8 +1,8 @@
 import { AbstractInputField } from './AbstractInputField';
 import { DropdownComponent, moment, TextComponent } from 'obsidian';
-import { InputFieldMarkdownRenderChild } from '../InputFieldMarkdownRenderChild';
 import { DateParser } from '../parsers/DateParser';
-import { MetaBindInternalError, MetaBindValueError } from '../utils/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../utils/errors/MetaBindErrors';
+import { InputFieldMDRC } from '../renderChildren/InputFieldMDRC';
 
 export class DateInputField extends AbstractInputField {
 	container: HTMLDivElement | undefined;
@@ -28,8 +28,8 @@ export class DateInputField extends AbstractInputField {
 	dayComponent: DropdownComponent | undefined;
 	yearComponent: TextComponent | undefined;
 
-	constructor(inputFieldMarkdownRenderChild: InputFieldMarkdownRenderChild, onValueChange: (value: any) => void | Promise<void>) {
-		super(inputFieldMarkdownRenderChild, onValueChange);
+	constructor(inputFieldMDRC: InputFieldMDRC) {
+		super(inputFieldMDRC);
 
 		this.date = DateParser.getDefaultDate();
 
@@ -41,36 +41,46 @@ export class DateInputField extends AbstractInputField {
 
 	public getHtmlElement(): HTMLElement {
 		if (!this.container) {
-			throw new MetaBindInternalError('toggle input container is undefined');
+			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
 		}
 
 		return this.container;
 	}
 
-	public getValue(): string {
+	public getValue(): string | undefined {
+		if (!this.monthComponent) {
+			return undefined;
+		}
+		if (!this.dayComponent) {
+			return undefined;
+		}
+		if (!this.yearComponent) {
+			return undefined;
+		}
+
 		return DateParser.stringify(this.date);
 	}
 
 	public setValue(value: string): void {
 		if (!this.monthComponent) {
-			throw new MetaBindInternalError('date input month component is undefined');
+			return;
 		}
 		if (!this.dayComponent) {
-			throw new MetaBindInternalError('date input day component is undefined');
+			return;
 		}
 		if (!this.yearComponent) {
-			throw new MetaBindInternalError('date input hour component is undefined');
+			return;
 		}
 
 		this.date = DateParser.parse(value);
 		if (!this.date) {
-			console.warn(new MetaBindValueError(`invalid value '${value}' at dateInputField ${this.inputFieldMarkdownRenderChild.uuid}`));
+			console.warn(new MetaBindValueError(ErrorLevel.WARNING, 'failed to set value', `invalid value '${value}' at dateInputField ${this.renderChild.uuid}`));
 			this.date = DateParser.getDefaultDate();
 		}
 
 		if (!this.date.isValid()) {
 			this.date = DateParser.getDefaultDate();
-			this.onValueChange(this.getValue());
+			// this.onValueChange(this.getValue());
 		}
 
 		// console.log(this.date);
@@ -88,15 +98,15 @@ export class DateInputField extends AbstractInputField {
 	}
 
 	public render(container: HTMLDivElement): void {
-		console.debug(`meta-bind | DateInputField >> render ${this.inputFieldMarkdownRenderChild.uuid}`);
+		console.debug(`meta-bind | DateInputField >> render ${this.renderChild.uuid}`);
 
-		this.date = DateParser.parse(this.inputFieldMarkdownRenderChild.getInitialValue()) ?? DateParser.getDefaultDate();
+		this.date = DateParser.parse(this.renderChild.getInitialValue()) ?? DateParser.getDefaultDate();
 		if (!this.date.isValid()) {
 			this.date = DateParser.getDefaultDate();
 			this.onValueChange(this.getValue());
 		}
 
-		let useUsInputOrder = this.inputFieldMarkdownRenderChild.plugin.settings.useUsDateInputOrder;
+		let useUsInputOrder = this.renderChild.plugin.settings.useUsDateInputOrder;
 
 		container.removeClass('meta-bind-plugin-input-wrapper');
 		container.addClass('meta-bind-plugin-flex-input-wrapper', 'meta-bind-plugin-input-element-group');
