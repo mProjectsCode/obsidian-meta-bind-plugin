@@ -53,6 +53,7 @@ export interface MetaBindPluginSettings {
 	syncInterval: number;
 	maxSyncInterval: number;
 	minSyncInterval: number;
+	enableJs: boolean;
 
 	inputTemplates: string;
 }
@@ -66,6 +67,7 @@ export const DEFAULT_SETTINGS: MetaBindPluginSettings = {
 	syncInterval: 200,
 	minSyncInterval: 50,
 	maxSyncInterval: 1000,
+	enableJs: false,
 
 	inputTemplates: '',
 };

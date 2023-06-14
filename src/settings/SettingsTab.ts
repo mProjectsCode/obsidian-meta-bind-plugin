@@ -104,6 +104,17 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
+			.setName('Enable JS Input Fields')
+			.setDesc("Enable the processing of JavaScript input fields. This is potentially DANGEROUS, thus it's disabled by default. RESTART REQUIRED.")
+			.addToggle(cb => {
+				cb.setValue(this.plugin.settings.enableJs);
+				cb.onChange(data => {
+					this.plugin.settings.enableJs = data;
+					this.plugin.saveSettings();
+				});
+			});
+
+		new Setting(containerEl)
 			.setName('Disable Code Block Restrictions')
 			.setDesc('Disable restrictions on which input fields can be created in which code blocks. Not recommended unless you know what you are doing.')
 			.addToggle(cb => {
