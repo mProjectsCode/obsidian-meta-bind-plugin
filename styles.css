@@ -158,6 +158,10 @@ code.meta-bind-plugin-error {
 	margin-inline: var(--size-4-2);
 }
 
+.publish-renderer .meta-bind-error-collection {
+	margin-inline: 0;
+}
+
 .meta-bind-error-collection > svg {
 	width: var(--font-text-size);
 	height: var(--font-text-size);

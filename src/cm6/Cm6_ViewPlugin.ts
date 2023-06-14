@@ -4,10 +4,10 @@ import { syntaxTree, tokenClassNodeProp } from '@codemirror/language';
 import { SyntaxNode } from '@lezer/common';
 import { Component, editorLivePreviewField, TFile } from 'obsidian';
 import MetaBindPlugin from '../main';
-import { MarkdownRenderChildWidget, MBWidgetType } from './Cm6_Widgets';
+import { MBWidgetType } from './Cm6_Widgets';
 import { Cm6_Util } from './Cm6_Util';
 
-export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlugin) {
+export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlugin): ViewPlugin<any> {
 	return ViewPlugin.fromClass(
 		class {
 			decorations: DecorationSet;
@@ -151,13 +151,6 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				}
 
 				const widgets: Range<Decoration>[] = [];
-				/* before:
-				 *     em for italics
-				 *     highlight for highlight
-				 * after:
-				 *     strong for bold
-				 *     strikethrough for strikethrough
-				 */
 
 				for (const range of view.visibleRanges) {
 					syntaxTree(view.state).iterate({
