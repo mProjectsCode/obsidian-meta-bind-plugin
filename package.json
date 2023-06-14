@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-meta-bind-plugin",
-	"version": "0.5.0",
+	"version": "0.5.1",
 	"description": "This plugin can create input fields inside your notes and bind them to metadata fields.",
 	"main": "main.js",
 	"scripts": {
