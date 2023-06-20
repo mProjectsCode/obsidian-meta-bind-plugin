@@ -28,22 +28,15 @@ export class ToggleInputField extends AbstractInputField {
 			return;
 		}
 
-		if (value === this.onValue) {
-			this.toggleComponent.setValue(true);
-		} else if (value === this.offValue) {
-			this.toggleComponent.setValue(false);
-		} else {
-			console.warn(new MetaBindValueError(ErrorLevel.WARNING, 'failed to set value', `invalid value '${value}' at toggleInputField ${this.renderChild.uuid}`));
-			this.toggleComponent.setValue(false);
-		}
+		this.toggleComponent.setValue(this.reverseMapValue(value));
 	}
 
 	isEqualValue(value: any): boolean {
 		return this.getValue() == value;
 	}
 
-	getDefaultValue(): boolean {
-		return false;
+	getDefaultValue(): boolean | string | number {
+		return this.offValue;
 	}
 
 	getHtmlElement(): HTMLElement {
@@ -58,13 +51,24 @@ export class ToggleInputField extends AbstractInputField {
 		console.debug(`meta-bind | ToggleInputField >> render ${this.renderChild.uuid}`);
 
 		const component = new ToggleComponent(container);
-		component.setValue(this.renderChild.getInitialValue());
+		component.setValue(this.reverseMapValue(this.renderChild.getInitialValue()));
 		component.onChange((value: boolean) => this.onValueChange(this.mapValue(value)));
 		this.toggleComponent = component;
 	}
 
 	mapValue(value: boolean): boolean | string | number {
 		return value ? this.onValue : this.offValue;
+	}
+
+	reverseMapValue(value: boolean | string | number): boolean {
+		if (value === this.onValue) {
+			return true;
+		} else if (value === this.offValue) {
+			return false;
+		} else {
+			console.warn(new MetaBindValueError(ErrorLevel.WARNING, 'failed to reverse map value', `invalid value '${value}' at toggleInputField ${this.renderChild.uuid}`));
+			return false;
+		}
 	}
 
 	public destroy(): void {}
