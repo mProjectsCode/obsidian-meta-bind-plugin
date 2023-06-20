@@ -2,6 +2,7 @@ import { SelectInputField } from './SelectInputField';
 
 export class SelectInputFieldElement {
 	value: string;
+	name: string;
 	selectInputField: SelectInputField;
 	readonly id: number;
 	element: HTMLDivElement;
@@ -13,8 +14,9 @@ export class SelectInputFieldElement {
 	private active: boolean;
 	private highlighted: boolean;
 
-	constructor(value: string, parentElement: HTMLElement, id: number, multiSelectInputField: SelectInputField, active: boolean = false) {
+	constructor(value: string, name: string, parentElement: HTMLElement, id: number, multiSelectInputField: SelectInputField, active: boolean = false) {
 		this.value = value;
+		this.name = name;
 		this.id = id;
 		this.active = active;
 		this.highlighted = false;
@@ -91,6 +93,6 @@ export class SelectInputFieldElement {
 	}
 
 	render(): void {
-		this.element.createEl('div', { text: this.value });
+		this.element.createEl('div', { text: this.name });
 	}
 }

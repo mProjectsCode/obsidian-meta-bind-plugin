@@ -1,5 +1,5 @@
 ---
-select: option 2
+select: "1"
 multiSelect:
   - option 1
   - option 3
@@ -8,9 +8,9 @@ multiSelect:
 ### Select
 ```meta-bind
 INPUT[select(
-option(option 1), 
-option(option 2), 
-option(option 3), 
+option(1, option 1), 
+option(2, option 2), 
+option(3, option 3), 
 showcase
 ):select]
 ```

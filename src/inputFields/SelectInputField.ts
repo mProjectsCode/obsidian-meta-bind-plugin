@@ -5,6 +5,7 @@ import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
 import { AbstractInputFieldArgument } from '../inputFieldArguments/AbstractInputFieldArgument';
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
 import { InputFieldMDRC } from '../renderChildren/InputFieldMDRC';
+import { OptionInputFieldArgument } from '../inputFieldArguments/arguments/OptionInputFieldArgument';
 
 export class SelectInputField extends AbstractInputField {
 	static allowInline: boolean = false;
@@ -59,11 +60,11 @@ export class SelectInputField extends AbstractInputField {
 		console.debug(`meta-bind | SelectInputField >> render ${this.renderChild.uuid}`);
 		this.container = container;
 
-		const elementArguments: AbstractInputFieldArgument[] = this.renderChild.getArguments(InputFieldArgumentType.OPTION);
+		const optionArguments: OptionInputFieldArgument[] = this.renderChild.getArguments(InputFieldArgumentType.OPTION) as OptionInputFieldArgument[];
 
 		let i = 0;
-		for (const elementArgument of elementArguments) {
-			const selectInputFieldElement = new SelectInputFieldElement(elementArgument.value, container, i, this, false);
+		for (const optionArgument of optionArguments) {
+			const selectInputFieldElement = new SelectInputFieldElement(optionArgument.value, optionArgument.name, container, i, this, false);
 
 			this.elements.push(selectInputFieldElement);
 
