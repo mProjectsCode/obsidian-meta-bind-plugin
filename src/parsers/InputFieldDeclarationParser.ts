@@ -268,7 +268,12 @@ export class InputFieldDeclarationParser {
 						);
 						continue;
 					}
-					inputFieldArgument.parseValue(argument.value);
+					try {
+						inputFieldArgument.parseValue(argument.value);
+					} catch (e) {
+						errorCollection.add(e);
+						continue;
+					}
 				}
 
 				argumentContainer.add(inputFieldArgument);

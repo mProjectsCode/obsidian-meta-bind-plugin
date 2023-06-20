@@ -3,16 +3,17 @@ import { DropdownComponent } from 'obsidian';
 import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../utils/errors/MetaBindErrors';
 import { InputFieldMDRC } from '../renderChildren/InputFieldMDRC';
 import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
+import { OptionInputFieldArgument } from '../inputFieldArguments/arguments/OptionInputFieldArgument';
 
 export class InlineSelectInputField extends AbstractInputField {
 	static allowBlock: boolean = false;
 	selectComponent: DropdownComponent | undefined;
-	options: string[];
+	options: OptionInputFieldArgument[];
 
 	constructor(inputFieldMDRC: InputFieldMDRC) {
 		super(inputFieldMDRC);
 
-		this.options = inputFieldMDRC.getArguments(InputFieldArgumentType.OPTION).map(x => x.value) as string[];
+		this.options = inputFieldMDRC.getArguments(InputFieldArgumentType.OPTION) as OptionInputFieldArgument[];
 	}
 
 	getValue(): string | undefined {
@@ -57,7 +58,7 @@ export class InlineSelectInputField extends AbstractInputField {
 
 		const component = new DropdownComponent(container);
 		for (const option of this.options) {
-			component.addOption(option, option);
+			component.addOption(option.value, option.name);
 		}
 		component.setValue(this.renderChild.getInitialValue());
 		component.onChange(this.onValueChange);
