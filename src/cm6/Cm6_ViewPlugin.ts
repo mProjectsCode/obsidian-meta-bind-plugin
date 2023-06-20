@@ -73,7 +73,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 					this.decorations = this.decorations.update({
 						filterFrom: from,
 						filterTo: to,
-						filter: (from, to, value) => false,
+						filter: () => false,
 					});
 				});
 			}
@@ -110,7 +110,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			 */
 			getRenderInfo(view: EditorView, node: SyntaxNode): { shouldRender: boolean; content: string | undefined; widgetType: MBWidgetType | undefined } {
 				// get the node props
-				const propsString: String | undefined = node.type.prop<String>(tokenClassNodeProp);
+				const propsString: string | undefined = node.type.prop<string>(tokenClassNodeProp);
 				const props: Set<any> = new Set(propsString?.split(' '));
 
 				// node is inline code
