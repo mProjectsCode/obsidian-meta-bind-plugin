@@ -45,7 +45,10 @@
 		"@codemirror/language": "https://github.com/lishid/cm-language",
 		"@opd-libs/opd-metadata-lib": "0.0.4",
 		"@opd-libs/opd-utils-lib": "0.0.2",
+		"@popperjs/core": "^2.11.8",
 		"esbuild-plugin-conditional-build": "^1.0.2",
-		"mathjs": "^11.8.0"
+		"mathjs": "^11.8.0",
+		"obsidian-svelte": "^0.1.9",
+		"svelte-portal": "^2.2.0"
 	}
 }

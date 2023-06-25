@@ -1,23 +1,24 @@
-import { ToggleInputField } from './ToggleInputField';
+import { ToggleInputField } from './fields/ToggleInputField';
 import { InputFieldMDRC, RenderChildType } from '../renderChildren/InputFieldMDRC';
-import { TextInputField } from './TextInputField';
-import { SliderInputField } from './SliderInputField';
-import { TextAreaInputField } from './TextAreaInputField';
-import { SelectInputField } from './SelectInputField';
-import { MultiSelectInputField } from './MultiSelectInputField';
-import { DateInputField } from './DateInputField';
-import { TimeInputField } from './TimeInputField';
+import { TextInputField } from './fields/TextInputField';
+import { SliderInputField } from './fields/SliderInputField';
+import { TextAreaInputField } from './fields/TextAreaInputField';
+import { SelectInputField } from './fields/SelectInputField';
+import { MultiSelectInputField } from './fields/MultiSelectInputField';
+import { DateInputField } from './fields/DateInputField';
+import { TimeInputField } from './fields/TimeInputField';
 import { AbstractInputField } from './AbstractInputField';
 import { InputFieldType } from '../parsers/InputFieldDeclarationParser';
-import { DatePickerInputField } from './DatePicker/DatePickerInputField';
-import { NumberInputField } from './NumberInputField';
-import { SuggestInputField } from './Suggest/SuggestInputField';
+import { DatePickerInputField } from './fields/DatePicker/DatePickerInputField';
+import { NumberInputField } from './fields/NumberInputField';
+import { SuggestInputField } from './fields/Suggest/SuggestInputField';
 import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
-import { EditorInputField } from './Editor/EditorInputField';
-import { ImageSuggestInputField } from './ImageSuggest/ImageSuggestInputField';
+import { EditorInputField } from './fields/Editor/EditorInputField';
+import { ImageSuggestInputField } from './fields/ImageSuggest/ImageSuggestInputField';
 import MetaBindPlugin from '../main';
-import { ProgressBarInputField } from './ProgressBar/ProgressBarInputField';
-import { InlineSelectInputField } from './InlineSelectInputField';
+import { ProgressBarInputField } from './fields/ProgressBar/ProgressBarInputField';
+import { InlineSelectInputField } from './fields/InlineSelectInputField';
+import { ListInputField } from './fields/List/ListInputField';
 
 export class InputFieldFactory {
 	static allowCodeBlockMap: Record<string, { block: boolean; inline: boolean }> = {
@@ -81,6 +82,10 @@ export class InputFieldFactory {
 			block: InlineSelectInputField.allowBlock,
 			inline: InlineSelectInputField.allowInline,
 		},
+		[InputFieldType.LIST]: {
+			block: ListInputField.allowBlock,
+			inline: ListInputField.allowInline,
+		},
 	};
 
 	static createInputField(inputFieldType: InputFieldType, args: { renderChildType: RenderChildType; inputFieldMDRC: InputFieldMDRC }): AbstractInputField | undefined {
@@ -118,6 +123,8 @@ export class InputFieldFactory {
 			return new ProgressBarInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.INLINE_SELECT) {
 			return new InlineSelectInputField(args.inputFieldMDRC);
+		} else if (inputFieldType === InputFieldType.LIST) {
+			return new ListInputField(args.inputFieldMDRC);
 		}
 
 		return undefined;

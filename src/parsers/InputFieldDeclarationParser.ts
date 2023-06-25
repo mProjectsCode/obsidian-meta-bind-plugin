@@ -22,6 +22,7 @@ export enum InputFieldType {
 	IMAGE_SUGGESTER = 'imageSuggester',
 	PROGRESS_BAR = 'progressBar',
 	INLINE_SELECT = 'inlineSelect',
+	LIST = 'list',
 
 	INVALID = 'invalid',
 }
@@ -380,6 +381,8 @@ export class InputFieldDeclarationParser {
 		} else if (declaration.inputFieldType === InputFieldType.INLINE_SELECT) {
 			const firstOptionArgument = declaration.argumentContainer.get(InputFieldArgumentType.OPTION);
 			return firstOptionArgument ? firstOptionArgument.value : placeholderString;
+		} else if (declaration.inputFieldType === InputFieldType.LIST) {
+			return placeholderString;
 		}
 
 		return placeholderString;
