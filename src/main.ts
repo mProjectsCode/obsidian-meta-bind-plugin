@@ -5,7 +5,7 @@ import { getFileName, isPath, removeFileEnding } from './utils/Utils';
 import { DateParser } from './parsers/DateParser';
 import { MetadataManager } from './metadata/MetadataManager';
 import { API } from './api/API';
-import { setFirstWeekday } from './inputFields/DatePicker/DatePickerInputSvelteHelpers';
+import { setFirstWeekday } from './inputFields/fields/DatePicker/DatePickerInputSvelteHelpers';
 import './frontmatterDisplay/custom_overlay';
 import { Mode } from 'codemirror';
 import { createMarkdownRenderChildWidgetEditorPlugin } from './cm6/Cm6_ViewPlugin';

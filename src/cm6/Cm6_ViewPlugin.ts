@@ -130,7 +130,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			}
 
 			/**
-			 * reads the node, returning it's content and widgetType.
+			 * reads the node, returning its content and widgetType.
 			 *
 			 * @param view
 			 * @param from

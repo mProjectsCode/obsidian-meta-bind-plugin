@@ -181,3 +181,91 @@ export function imagePathToUri(imagePath: string): string {
 	// return `app://local/${pathJoin(getVaultBasePath() ?? '', imagePath)}`;
 	return app.vault.adapter.getResourcePath(imagePath);
 }
+
+export function isObject(object: unknown): boolean {
+	return object != null && typeof object === 'object';
+}
+
+export function deepEquals(any1: unknown, any2: unknown): boolean {
+	// undefined check
+	if (any1 === undefined && any2 === undefined) {
+		return true;
+	} else if (any1 === undefined) {
+		return false;
+	} else if (any2 === undefined) {
+		return false;
+	}
+
+	// null check
+	if (any1 === null && any2 === null) {
+		return true;
+	} else if (any1 === null) {
+		return false;
+	} else if (any2 === null) {
+		return false;
+	}
+
+	if (typeof any1 === 'object' && typeof any2 === 'object') {
+		// array check
+		if (Array.isArray(any1) && Array.isArray(any2)) {
+			if (any1.length !== any2.length) {
+				return false;
+			}
+
+			for (let i = 0; i < any1.length; i++) {
+				if (!deepEquals(any1[i], any2[i])) {
+					return false;
+				}
+			}
+
+			return true;
+		} else if (Array.isArray(any1)) {
+			return false;
+		} else if (Array.isArray(any2)) {
+			return false;
+		}
+
+		const objKeys1 = Object.keys(any1);
+		const objKeys2 = Object.keys(any2);
+
+		if (objKeys1.length !== objKeys2.length) {
+			return false;
+		}
+
+		for (const key of objKeys1) {
+			// @ts-ignore
+			if (!deepEquals(any1[key], any2[key])) {
+				return false;
+			}
+		}
+
+		return true;
+	} else if (typeof any1 === 'object') {
+		return false;
+	} else if (typeof any2 === 'object') {
+		return false;
+	}
+
+	return any1 === any2;
+}
+
+export function deepFreeze<T extends object>(object: T): T {
+	// Retrieve the property names defined on object
+	const propNames: (string | symbol)[] = Reflect.ownKeys(object);
+
+	// Freeze properties before freezing self
+	for (const name of propNames) {
+		// @ts-ignores
+		const value: any = object[name];
+
+		if ((value && typeof value === 'object') || typeof value === 'function') {
+			deepFreeze(value);
+		}
+	}
+
+	return Object.freeze(object);
+}
+
+export function deepCopy<T extends object>(object: T): T {
+	return structuredClone(object);
+}

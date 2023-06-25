@@ -1,7 +1,7 @@
 import { CachedMetadata, TFile } from 'obsidian';
 import MetaBindPlugin from '../main';
 import { Internal } from '@opd-libs/opd-metadata-lib/lib/Internal';
-import { arrayEquals, traverseObjectToParentByPath } from '../utils/Utils';
+import { arrayEquals, deepEquals, traverseObjectToParentByPath } from '../utils/Utils';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { Signal } from '../utils/Signal';
 import getMetadataFromFileCache = Internal.getMetadataFromFileCache;
@@ -149,10 +149,11 @@ export class MetadataManager {
 			throw Error(`The parent of "${JSON.stringify(pathParts)}" does not exist in Object, please create the parent first`);
 		}
 
-		if (child.value === value) {
-			console.debug(`meta-bind | MetadataManager >> skipping redundant update of "${JSON.stringify(pathParts)}" in "${filePath}" metadata cache`, value);
-			return;
-		}
+		// disabled because of mutated data in the cache
+		// if (deepEquals(child.value, value)) {
+		// 	console.debug(`meta-bind | MetadataManager >> skipping redundant update of "${JSON.stringify(pathParts)}" in "${filePath}" metadata cache`, value);
+		// 	return;
+		// }
 
 		parent.value[child.key] = value;
 		fileCache.cyclesSinceLastChange = 0;

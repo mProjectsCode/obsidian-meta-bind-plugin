@@ -179,3 +179,31 @@ code.meta-bind-plugin-error {
 .meta-bind-error-collection > svg.lucide-info {
 	color: var(--text-normal);
 }
+
+.mb-list-input {
+	display: flex;
+	gap: var(--size-4-2);
+}
+
+.mb-list-input > div:has(> input) {
+	flex-grow: 1;
+}
+
+.mb-list-empty {
+	color: var(--text-faint);
+}
+
+.mb-list-items {
+	margin-bottom: var(--size-4-4);
+	display: flex;
+	flex-direction: column;
+	gap: var(--size-4-2);
+}
+
+.mb-list-item {
+	display: flex;
+}
+
+.mb-list-item > span {
+	flex-grow: 1;
+}
