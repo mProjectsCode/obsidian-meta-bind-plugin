@@ -3,6 +3,7 @@ import { parsePath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { IPlugin } from '../IPlugin';
 
 export interface BindTargetDeclaration {
+	fullDeclaration: string;
 	filePath: string;
 	fileName: string;
 	metadataFieldName: string;
@@ -22,6 +23,7 @@ export class BindTargetParser {
 		}
 
 		const bindTargetDeclaration: BindTargetDeclaration = {} as BindTargetDeclaration;
+		bindTargetDeclaration.fullDeclaration = bindTargetString;
 
 		const bindTargetParts: string[] = bindTargetString.split('#');
 
