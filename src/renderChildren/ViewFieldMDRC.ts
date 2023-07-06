@@ -67,7 +67,7 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 		}
 	}
 
-	parseExpression() {
+	parseExpression(): void {
 		const declaration = this.viewFieldDeclaration.declaration ?? '';
 		let varCounter = 0;
 
@@ -76,7 +76,7 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 			substring = substring.substring(1, substring.length - 1).trim();
 			// replace by variable name;
 			for (const variable of this.variables) {
-				if (variable.bindTargetDeclaration.metadataFieldName === substring) {
+				if (variable.bindTargetDeclaration.fullDeclaration === substring) {
 					let varName = `MB_VAR_${varCounter}`;
 					variable.contextName = varName;
 					varCounter += 1;
