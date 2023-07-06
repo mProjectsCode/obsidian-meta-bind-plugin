@@ -57,7 +57,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 		}
 	}
 
-	parseExpression() {
+	parseExpression(): void {
 		if (!this.viewFieldDeclaration.code) {
 			return;
 		}
