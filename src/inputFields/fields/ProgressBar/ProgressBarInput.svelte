@@ -74,13 +74,13 @@
 		if (keydownAcceleration < 50) keydownAcceleration++;
 		let throttled = Math.ceil(keydownAcceleration / 5);
 
-		if (e.key === "ArrowUp" || e.key === "ArrowRight") {
+		if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
 			let newValue = clamp(value + throttled, progressBarInput.minValue, progressBarInput.maxValue);
-			setValue(newValue)
+			setValue(newValue);
 		}
-		if (e.key === "ArrowDown" || e.key === "ArrowLeft") {
+		if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
 			let newValue = clamp(value - throttled, progressBarInput.minValue, progressBarInput.maxValue);
-			setValue(newValue)
+			setValue(newValue);
 		}
 
 		// Reset acceleration after 100ms of no events
@@ -93,12 +93,12 @@
 
 <style>
 	.mb-progress-bar-input {
-		height: 32px;
-		width: 100%;
+		height:        32px;
+		width:         100%;
 		border-radius: var(--meta-bind-plugin-border-radius);
-		border: var(--meta-bind-plugin-border-width) solid var(--background-modifier-border);
-		position: relative;
-		cursor: col-resize;
+		border:        var(--meta-bind-plugin-border-width) solid var(--background-modifier-border);
+		position:      relative;
+		cursor:        col-resize;
 	}
 
 	.mb-progress-bar-input:focus-visible {
@@ -106,30 +106,30 @@
 	}
 
 	.mb-progress-bar-progress {
-		height: 32px;
-		background: var(--color-accent);
+		height:        32px;
+		background:    var(--color-accent);
 		border-radius: var(--meta-bind-plugin-border-radius);
 	}
 
 	.mb-progress-bar-value {
-		position: absolute;
-		top: 50%;
-		left: 50%;
+		position:  absolute;
+		top:       50%;
+		left:      50%;
 		transform: translate(-50%, -50%);
 	}
 
 	.mb-progress-bar-label-left {
-		position: absolute;
-		top: 50%;
+		position:  absolute;
+		top:       50%;
 		transform: translate(0, -50%);
-		left: var(--size-4-2);
+		left:      var(--size-4-2);
 	}
 
 	.mb-progress-bar-label-right {
-		position: absolute;
-		top: 50%;
+		position:  absolute;
+		top:       50%;
 		transform: translate(0, -50%);
-		right: var(--size-4-2);
+		right:     var(--size-4-2);
 	}
 
 
@@ -154,7 +154,8 @@
 	on:keydown={onKeyPress}
 	on:mousedown={onTrackEvent}
 	on:touchstart={onTrackEvent}>
-	<div class="mb-progress-bar-progress" style={`width: ${getProgressPercent(value)}%`} on:dragstart={() => drag = true}></div>
+	<div class="mb-progress-bar-progress" style={`width: ${getProgressPercent(value)}%`}
+		 on:dragstart={() => drag = true}></div>
 	<span class="mb-progress-bar-value">{value}</span>
 	<span class="mb-progress-bar-label-left">{progressBarInput.minValue}</span>
 	<span class="mb-progress-bar-label-right">{progressBarInput.maxValue}</span>

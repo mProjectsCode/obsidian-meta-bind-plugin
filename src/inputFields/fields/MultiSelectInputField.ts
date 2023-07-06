@@ -1,5 +1,5 @@
 import { SelectInputField } from './SelectInputField';
-import { doArraysContainEqualValues } from '../../utils/Utils';
+import { doArraysContainEqualValues, MBLiteral } from '../../utils/Utils';
 import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 
 export class MultiSelectInputField extends SelectInputField {
@@ -15,7 +15,7 @@ export class MultiSelectInputField extends SelectInputField {
 		return this.elements.filter(x => x.isActive()).map(x => x.value);
 	}
 
-	setValue(value: string[]): void {
+	setValue(value: MBLiteral[]): void {
 		if (!value || value.length === 0) {
 			for (const element of this.elements) {
 				element.setActive(false, false);
@@ -42,7 +42,7 @@ export class MultiSelectInputField extends SelectInputField {
 		return doArraysContainEqualValues(this.getValue(), value);
 	}
 
-	getDefaultValue(): string[] {
+	getDefaultValue(): MBLiteral[] {
 		return [];
 	}
 }

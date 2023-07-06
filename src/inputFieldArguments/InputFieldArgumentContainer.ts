@@ -1,6 +1,6 @@
 import { AbstractInputFieldArgument } from './AbstractInputFieldArgument';
 import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
-import { ErrorLevel, MetaBindInternalError, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
+import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
 
 export class InputFieldArgumentContainer {
 	arguments: AbstractInputFieldArgument[] = [];

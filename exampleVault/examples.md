@@ -1,7 +1,5 @@
 ---
-slider1: 4
-nested:
-  object: test
+slider1: 5
 suggest: test
 toggle1: false
 Domestic_tasks:

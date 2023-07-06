@@ -8,7 +8,6 @@ import { ErrorLevel, MetaBindBindTargetError, MetaBindExpressionError } from '..
 import { ViewFieldVariable } from '../renderChildren/ViewFieldMDRC';
 import { Signal } from '../utils/Signal';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
-import PublishErrorCollectionComponent from './PublishFieldComponent.svelte';
 import PublishFieldComponent from './PublishFieldComponent.svelte';
 
 export class PublishViewFieldMDRC extends MarkdownRenderChild {

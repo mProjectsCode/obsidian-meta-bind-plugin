@@ -3,11 +3,12 @@ import { ToggleComponent } from 'obsidian';
 import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../../utils/errors/MetaBindErrors';
 import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
+import { MBLiteral } from '../../utils/Utils';
 
 export class ToggleInputField extends AbstractInputField {
 	toggleComponent: ToggleComponent | undefined;
-	onValue: boolean | string | number;
-	offValue: boolean | string | number;
+	onValue: MBLiteral;
+	offValue: MBLiteral;
 
 	constructor(inputFieldMDRC: InputFieldMDRC) {
 		super(inputFieldMDRC);
@@ -16,7 +17,7 @@ export class ToggleInputField extends AbstractInputField {
 		this.offValue = this.renderChild.getArgument(InputFieldArgumentType.OFF_VALUE)?.value ?? false;
 	}
 
-	getValue(): boolean | string | number | undefined {
+	getValue(): MBLiteral {
 		if (!this.toggleComponent) {
 			return undefined;
 		}
@@ -35,7 +36,7 @@ export class ToggleInputField extends AbstractInputField {
 		return this.getValue() == value;
 	}
 
-	getDefaultValue(): boolean | string | number {
+	getDefaultValue(): MBLiteral {
 		return this.offValue;
 	}
 
@@ -56,11 +57,11 @@ export class ToggleInputField extends AbstractInputField {
 		this.toggleComponent = component;
 	}
 
-	mapValue(value: boolean): boolean | string | number {
+	mapValue(value: boolean): MBLiteral {
 		return value ? this.onValue : this.offValue;
 	}
 
-	reverseMapValue(value: boolean | string | number): boolean {
+	reverseMapValue(value: MBLiteral): boolean {
 		if (value === this.onValue) {
 			return true;
 		} else if (value === this.offValue) {

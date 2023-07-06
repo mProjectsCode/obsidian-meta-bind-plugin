@@ -1,8 +1,7 @@
 import { AbstractInputField } from '../AbstractInputField';
 import { SelectInputFieldElement } from './SelectInputFieldElement';
-import { mod } from '../../utils/Utils';
+import { MBLiteral, mod } from '../../utils/Utils';
 import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
-import { AbstractInputFieldArgument } from '../../inputFieldArguments/AbstractInputFieldArgument';
 import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
 import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 import { OptionInputFieldArgument } from '../../inputFieldArguments/arguments/OptionInputFieldArgument';
@@ -27,11 +26,11 @@ export class SelectInputField extends AbstractInputField {
 		return this.container;
 	}
 
-	getValue(): string | undefined {
+	getValue(): MBLiteral {
 		if (!this.container) {
 			return undefined;
 		}
-		return this.elements.filter(x => x.isActive()).first()?.value ?? '';
+		return this.elements.filter(x => x.isActive()).first()?.value ?? null;
 	}
 
 	setValue(value: any): void {

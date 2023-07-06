@@ -4,11 +4,10 @@ import { InputFieldArgumentType } from '../../../parsers/InputFieldDeclarationPa
 import { DataArray, getAPI, Literal } from 'obsidian-dataview';
 import { SuggestInputModal } from './SuggestInputModal';
 import { Notice, TFile } from 'obsidian';
-import { ErrorLevel, MetaBindArgumentError, MetaBindInternalError, MetaBindPublishError } from '../../../utils/errors/MetaBindErrors';
+import { ErrorLevel, MetaBindArgumentError, MetaBindInternalError } from '../../../utils/errors/MetaBindErrors';
 import { OptionInputFieldArgument } from '../../../inputFieldArguments/arguments/OptionInputFieldArgument';
 import { OptionQueryInputFieldArgument } from '../../../inputFieldArguments/arguments/OptionQueryInputFieldArgument';
 import { InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
-import MetaBindPlugin from '../../../main';
 
 export interface SuggestOption {
 	value: string;

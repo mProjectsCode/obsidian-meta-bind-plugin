@@ -1,5 +1,4 @@
 import { ErrorLevel, MetaBindError } from './MetaBindErrors';
-import ErrorCollectionComponent from '../../publish/PublishFieldComponent.svelte';
 
 export class ErrorCollection {
 	errors: MetaBindError[];
