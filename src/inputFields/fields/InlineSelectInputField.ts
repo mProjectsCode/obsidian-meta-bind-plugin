@@ -4,6 +4,7 @@ import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../../uti
 import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
 import { OptionInputFieldArgument } from '../../inputFieldArguments/arguments/OptionInputFieldArgument';
+import { MBLiteral, parseLiteral, stringifyLiteral } from '../../utils/Utils';
 
 export class InlineSelectInputField extends AbstractInputField {
 	static allowBlock: boolean = false;
@@ -16,21 +17,21 @@ export class InlineSelectInputField extends AbstractInputField {
 		this.options = inputFieldMDRC.getArguments(InputFieldArgumentType.OPTION) as OptionInputFieldArgument[];
 	}
 
-	getValue(): string | undefined {
+	getValue(): MBLiteral {
 		if (!this.selectComponent) {
 			return undefined;
 		}
 
-		return this.selectComponent.getValue();
+		return parseLiteral(this.selectComponent.getValue());
 	}
 
-	setValue(value: any): void {
+	setValue(value: MBLiteral): void {
 		if (!this.selectComponent) {
 			return;
 		}
 
-		if (value != null && typeof value == 'string') {
-			this.selectComponent.setValue(value);
+		if (typeof value !== 'object') {
+			this.selectComponent.setValue(stringifyLiteral(value));
 		} else {
 			console.warn(new MetaBindValueError(ErrorLevel.WARNING, 'failed to set value', `invalid value '${value}' at inlineSelectInputField ${this.renderChild.uuid}`));
 			this.selectComponent.setValue('');
@@ -58,7 +59,7 @@ export class InlineSelectInputField extends AbstractInputField {
 
 		const component = new DropdownComponent(container);
 		for (const option of this.options) {
-			component.addOption(option.value, option.name);
+			component.addOption(stringifyLiteral(option.value), option.name);
 		}
 		component.setValue(this.renderChild.getInitialValue());
 		component.onChange(this.onValueChange);

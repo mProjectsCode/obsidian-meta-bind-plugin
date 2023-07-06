@@ -6,7 +6,6 @@ import { BindTargetDeclaration } from '../parsers/BindTargetParser';
 import { ViewField } from '../viewFields/ViewField';
 import * as MathJs from 'mathjs';
 import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
-import { IPlugin } from '../IPlugin';
 import MetaBindPlugin from '../main';
 import { MetadataFileCache } from '../metadata/MetadataFileCache';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';

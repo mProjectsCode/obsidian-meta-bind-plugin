@@ -1,13 +1,13 @@
 import { AbstractInputField } from '../../AbstractInputField';
 import ImageSuggestInput from './ImageSuggestInput.svelte';
-import { ErrorLevel, MetaBindArgumentError, MetaBindInternalError, MetaBindPublishError } from '../../../utils/errors/MetaBindErrors';
+import { ErrorLevel, MetaBindArgumentError, MetaBindInternalError } from '../../../utils/errors/MetaBindErrors';
 import { InputFieldArgumentType } from '../../../parsers/InputFieldDeclarationParser';
 import { Notice, TFile, TFolder } from 'obsidian';
 import { ImageSuggestModal } from './ImageSuggestModal';
 import { OptionQueryInputFieldArgument } from '../../../inputFieldArguments/arguments/OptionQueryInputFieldArgument';
 import { OptionInputFieldArgument } from '../../../inputFieldArguments/arguments/OptionInputFieldArgument';
 import { InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
-import MetaBindPlugin from '../../../main';
+import { stringifyLiteral } from '../../../utils/Utils';
 
 export class ImageSuggestInputField extends AbstractInputField {
 	static allowInline: boolean = false;
@@ -106,10 +106,19 @@ export class ImageSuggestInputField extends AbstractInputField {
 			}
 		}
 
-		const imagePaths: OptionInputFieldArgument[] = this.renderChild.getArguments(InputFieldArgumentType.OPTION);
+		const imagePaths: OptionInputFieldArgument[] = this.renderChild.getArguments(InputFieldArgumentType.OPTION) as OptionInputFieldArgument[];
 
 		for (const imagePath of imagePaths) {
-			const imageFile = this.renderChild.plugin.app.vault.getAbstractFileByPath(imagePath.value);
+			const imagePathString = stringifyLiteral(imagePath.value);
+
+			if (!imagePathString) {
+				const error = new MetaBindArgumentError(ErrorLevel.ERROR, 'failed to get suggest options', `expected suggest option ${imagePath.value} to be truthy`);
+				new Notice(`meta-bind | ${error.message}`);
+				console.warn(error);
+				continue;
+			}
+
+			const imageFile = this.renderChild.plugin.app.vault.getAbstractFileByPath(imagePathString);
 
 			if (!imageFile) {
 				const error = new MetaBindArgumentError(
@@ -144,7 +153,7 @@ export class ImageSuggestInputField extends AbstractInputField {
 				continue;
 			}
 
-			images.push(imagePath.value);
+			images.push(imagePathString);
 		}
 
 		this.options = images;

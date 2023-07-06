@@ -1,7 +1,8 @@
 import { SelectInputField } from './SelectInputField';
+import { MBLiteral } from '../../utils/Utils';
 
 export class SelectInputFieldElement {
-	value: string;
+	value: MBLiteral;
 	name: string;
 	selectInputField: SelectInputField;
 	readonly id: number;
@@ -14,7 +15,7 @@ export class SelectInputFieldElement {
 	private active: boolean;
 	private highlighted: boolean;
 
-	constructor(value: string, name: string, parentElement: HTMLElement, id: number, multiSelectInputField: SelectInputField, active: boolean = false) {
+	constructor(value: MBLiteral, name: string, parentElement: HTMLElement, id: number, multiSelectInputField: SelectInputField, active: boolean = false) {
 		this.value = value;
 		this.name = name;
 		this.id = id;

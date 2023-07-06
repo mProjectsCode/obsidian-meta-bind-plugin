@@ -7,13 +7,13 @@
 	export let onValueChange: (value: any) => void;
 	export let listInput: ListInputField;
 
-	let addValue: string = "";
+	let addValue: string = '';
 
 	function add() {
 		value.push(addValue);
 		// call with copy of array
 		onValueChange(value);
-		addValue = "";
+		addValue = '';
 		// tell svelte to update
 		value = value;
 	}
@@ -32,7 +32,7 @@
 		<div class="mb-list-item">
 			<span>{entry}</span>
 			<Button on:click={() => remove(i)}>
-				<Icon iconName="x" />
+				<Icon iconName="x"/>
 			</Button>
 		</div>
 	{:else}
@@ -42,7 +42,7 @@
 <div class="mb-list-input">
 	<TextInput bind:value={addValue} placeholder="add entry..." width="100%"></TextInput>
 	<Button on:click={() => add()} disabled="{!addValue}">
-		<Icon iconName="plus" />
+		<Icon iconName="plus"/>
 	</Button>
 </div>
 

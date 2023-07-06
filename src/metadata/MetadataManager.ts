@@ -1,11 +1,11 @@
 import { CachedMetadata, TFile } from 'obsidian';
 import MetaBindPlugin from '../main';
 import { Internal } from '@opd-libs/opd-metadata-lib/lib/Internal';
-import { arrayEquals, deepEquals, traverseObjectToParentByPath } from '../utils/Utils';
+import { arrayEquals, traverseObjectToParentByPath } from '../utils/Utils';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { Signal } from '../utils/Signal';
-import getMetadataFromFileCache = Internal.getMetadataFromFileCache;
 import { MetadataFileCache } from './MetadataFileCache';
+import getMetadataFromFileCache = Internal.getMetadataFromFileCache;
 
 export const metadataCacheUpdateCycleThreshold = 5; // {syncInterval (200)} * 5 = 1s
 export const metadataCacheInactiveCycleThreshold = 5 * 60; // {syncInterval (200)} * 5 * 60 = 1 minute

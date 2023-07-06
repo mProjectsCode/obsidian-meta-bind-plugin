@@ -19,6 +19,7 @@ export enum ErrorType {
 
 export abstract class MetaBindError extends Error {
 	abstract getErrorType(): ErrorType;
+
 	errorLevel: ErrorLevel;
 	effect: string;
 	cause: string | Error;

@@ -269,3 +269,38 @@ export function deepFreeze<T extends object>(object: T): T {
 export function deepCopy<T extends object>(object: T): T {
 	return structuredClone(object);
 }
+
+export type MBLiteral = string | number | boolean | null | undefined;
+
+export function parseLiteral(literalString: string): MBLiteral {
+	if (literalString.toLowerCase() === 'null') {
+		return null;
+	} else if (literalString === 'true') {
+		return true;
+	} else if (literalString === 'false') {
+		return false;
+	} else {
+		const parsedNumber = Number.parseFloat(literalString);
+		return !Number.isNaN(parsedNumber) ? parsedNumber : literalString;
+	}
+}
+
+export function stringifyLiteral(literal: MBLiteral): string {
+	if (literal === undefined) {
+		return '';
+	}
+
+	if (literal === null) {
+		return 'null';
+	}
+
+	if (typeof literal === 'string') {
+		return literal;
+	} else if (typeof literal === 'boolean') {
+		return literal ? 'true' : 'false';
+	} else if (typeof literal === 'number') {
+		return literal.toString();
+	}
+
+	return '';
+}
