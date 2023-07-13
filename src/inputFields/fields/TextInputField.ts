@@ -16,8 +16,8 @@ export class TextInputField extends AbstractInputField<T> {
 		return this.textComponent.getValue();
 	}
 
-	filterValue(value: MBExtendedLiteral | undefined): T {
-		return value != null ? stringifyLiteral(value) : this.getDefaultValue();
+	filterValue(value: MBExtendedLiteral | undefined): T | undefined {
+		return value != null ? stringifyLiteral(value) : undefined;
 	}
 
 	updateDisplayValue(value: T): void {
@@ -28,7 +28,7 @@ export class TextInputField extends AbstractInputField<T> {
 		return this.getValue() == value;
 	}
 
-	getDefaultValue(): string {
+	getFallbackDefaultValue(): string {
 		return '';
 	}
 

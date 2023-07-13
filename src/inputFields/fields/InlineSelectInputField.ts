@@ -27,9 +27,9 @@ export class InlineSelectInputField extends AbstractInputField<T> {
 		return parseLiteral(this.selectComponent.getValue());
 	}
 
-	filterValue(value: MBExtendedLiteral | undefined): T {
+	filterValue(value: MBExtendedLiteral | undefined): T | undefined {
 		if (value === undefined || typeof value === 'object') {
-			return this.getDefaultValue();
+			return undefined;
 		}
 
 		return value;
@@ -39,7 +39,7 @@ export class InlineSelectInputField extends AbstractInputField<T> {
 		this.selectComponent?.setValue(stringifyLiteral(value));
 	}
 
-	getDefaultValue(): T {
+	getFallbackDefaultValue(): T {
 		return '';
 	}
 

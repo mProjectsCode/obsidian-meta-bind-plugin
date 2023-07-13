@@ -26,8 +26,8 @@ export class ToggleInputField extends AbstractInputField<T> {
 		return this.mapValue(this.toggleComponent.getValue());
 	}
 
-	filterValue(value: MBExtendedLiteral | undefined): T {
-		return isLiteral(value) ? value : this.getDefaultValue();
+	filterValue(value: MBExtendedLiteral | undefined): T | undefined {
+		return isLiteral(value) ? value : undefined;
 	}
 
 	updateDisplayValue(value: T): void {
@@ -38,7 +38,7 @@ export class ToggleInputField extends AbstractInputField<T> {
 		return this.getValue() == value;
 	}
 
-	getDefaultValue(): MBLiteral {
+	getFallbackDefaultValue(): MBLiteral {
 		return this.offValue;
 	}
 

@@ -26,7 +26,7 @@ export class SuggestInputField extends AbstractInputField<T> {
 	constructor(inputFieldMDRC: InputFieldMDRC) {
 		super(inputFieldMDRC);
 
-		this.value = this.getDefaultValue();
+		this.value = this.getFallbackDefaultValue();
 		this.options = [];
 
 		if (this.needsDataview()) {
@@ -43,9 +43,9 @@ export class SuggestInputField extends AbstractInputField<T> {
 		return parseLiteral(this.value);
 	}
 
-	filterValue(value: MBExtendedLiteral): T {
+	filterValue(value: MBExtendedLiteral | undefined): T | undefined {
 		if (value === undefined || typeof value === 'object') {
-			return this.getDefaultValue();
+			return undefined;
 		}
 
 		return value;
@@ -56,7 +56,7 @@ export class SuggestInputField extends AbstractInputField<T> {
 		this.component?.updateValue(this.value);
 	}
 
-	getDefaultValue(): string {
+	getFallbackDefaultValue(): string {
 		return '';
 	}
 

@@ -15,7 +15,7 @@ export class EditorInputField extends AbstractInputField<T> {
 	constructor(inputFieldMDRC: InputFieldMDRC) {
 		super(inputFieldMDRC);
 
-		this.value = this.getDefaultValue();
+		this.value = this.getFallbackDefaultValue();
 	}
 
 	getValue(): T | undefined {
@@ -25,9 +25,9 @@ export class EditorInputField extends AbstractInputField<T> {
 		return this.value;
 	}
 
-	filterValue(value: MBExtendedLiteral): T {
+	filterValue(value: MBExtendedLiteral | undefined): T | undefined {
 		if (value == null || typeof value !== 'string') {
-			return this.getDefaultValue();
+			return undefined;
 		}
 
 		return value;
@@ -38,7 +38,7 @@ export class EditorInputField extends AbstractInputField<T> {
 		this.component?.updateValue(value);
 	}
 
-	getDefaultValue(): T {
+	getFallbackDefaultValue(): T {
 		return '';
 	}
 

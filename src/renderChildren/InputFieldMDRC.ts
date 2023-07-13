@@ -114,11 +114,11 @@ export class InputFieldMDRC extends AbstractMDRC {
 
 		if (this.inputFieldDeclaration?.isBound && this.bindTargetDeclaration) {
 			let value: MBExtendedLiteral | undefined = traverseObjectByPath(this.bindTargetDeclaration.metadataPath, this.metadataCache?.metadata);
-			value = value === undefined ? this.inputField.getDefaultValue() : value;
+			value = value === undefined ? this.inputField.getFallbackDefaultValue() : value;
 			console.debug(`meta-bind | InputFieldMarkdownRenderChild >> setting initial value to ${value} (typeof ${typeof value}) for input field ${this.uuid}`);
 			return value;
 		} else {
-			return this.inputField.getDefaultValue();
+			return this.inputField.getFallbackDefaultValue();
 		}
 	}
 

@@ -12,6 +12,7 @@ import { AbstractInputFieldArgument } from './AbstractInputFieldArgument';
 import { ShowcaseInputFieldArgument } from './arguments/ShowcaseInputFieldArgument';
 import { OffValueInputFieldArgument } from './arguments/OffValueInputFieldArgument';
 import { OnValueInputFieldArgument } from './arguments/OnValueInputFieldArgument';
+import { DefaultValueInputFieldArgument } from './arguments/DefaultValueInputFieldArgument';
 
 export class InputFieldArgumentFactory {
 	static createInputFieldArgument(argumentIdentifier: string): AbstractInputFieldArgument {
@@ -37,6 +38,8 @@ export class InputFieldArgumentFactory {
 			return new OffValueInputFieldArgument();
 		} else if (argumentIdentifier === InputFieldArgumentType.ON_VALUE) {
 			return new OnValueInputFieldArgument();
+		} else if (argumentIdentifier === InputFieldArgumentType.DEFAULT_VALUE) {
+			return new DefaultValueInputFieldArgument();
 		} else {
 			throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not crate input field argument', `unknown argument '${argumentIdentifier}'`);
 		}

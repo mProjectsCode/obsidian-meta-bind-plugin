@@ -56,15 +56,15 @@ export class DateInputField extends AbstractInputField<T> {
 		return DateParser.stringify(this.date);
 	}
 
-	public filterValue(value: MBExtendedLiteral | undefined): T {
+	public filterValue(value: MBExtendedLiteral | undefined): T | undefined {
 		if (value === undefined || typeof value !== 'string') {
-			return this.getDefaultValue();
+			return undefined;
 		}
 		const date = DateParser.parse(value);
 		if (date.isValid()) {
 			return DateParser.stringify(date);
 		} else {
-			return this.getDefaultValue();
+			return undefined;
 		}
 	}
 
@@ -82,7 +82,7 @@ export class DateInputField extends AbstractInputField<T> {
 		this.yearComponent?.setValue(this.date.year().toString());
 	}
 
-	public getDefaultValue(): T {
+	public getFallbackDefaultValue(): T {
 		return DateParser.stringify(DateParser.getDefaultDate());
 	}
 

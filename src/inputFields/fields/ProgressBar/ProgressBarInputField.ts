@@ -22,7 +22,7 @@ export class ProgressBarInputField extends AbstractInputField<T> {
 		this.minValue = inputFieldMDRC.getArgument(InputFieldArgumentType.MIN_VALUE)?.value ?? 0;
 		this.maxValue = inputFieldMDRC.getArgument(InputFieldArgumentType.MAX_VALUE)?.value ?? 100;
 		this.addLabels = inputFieldMDRC.getArgument(InputFieldArgumentType.ADD_LABELS)?.value ?? false;
-		this.value = this.getDefaultValue();
+		this.value = this.getFallbackDefaultValue();
 	}
 
 	getValue(): T | undefined {
@@ -32,18 +32,18 @@ export class ProgressBarInputField extends AbstractInputField<T> {
 		return this.value;
 	}
 
-	filterValue(value: MBExtendedLiteral | undefined): T {
+	filterValue(value: MBExtendedLiteral | undefined): T | undefined {
 		if (typeof value === 'number') {
 			return value;
 		} else if (typeof value === 'string') {
 			const v = Number.parseFloat(value);
 			if (Number.isNaN(v)) {
-				return this.getDefaultValue();
+				return undefined;
 			} else {
 				return clamp(v, this.minValue, this.maxValue);
 			}
 		} else {
-			return this.getDefaultValue();
+			return undefined;
 		}
 	}
 
@@ -52,7 +52,7 @@ export class ProgressBarInputField extends AbstractInputField<T> {
 		this.component?.updateValue(value);
 	}
 
-	getDefaultValue(): T {
+	getFallbackDefaultValue(): T {
 		return this.minValue;
 	}
 

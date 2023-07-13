@@ -17,9 +17,9 @@ export class MultiSelectInputField extends AbstractSelectInputField<T> {
 		return this.elements.filter(x => x.isActive()).map(x => x.value);
 	}
 
-	filterValue(value: MBExtendedLiteral): T {
+	filterValue(value: MBExtendedLiteral | undefined): T | undefined {
 		if (value == null) {
-			return [];
+			return undefined;
 		}
 
 		if (Array.isArray(value)) {
@@ -56,7 +56,7 @@ export class MultiSelectInputField extends AbstractSelectInputField<T> {
 		return doArraysContainEqualValues(this.getValue(), value);
 	}
 
-	getDefaultValue(): T {
+	getFallbackDefaultValue(): T {
 		return [];
 	}
 }
