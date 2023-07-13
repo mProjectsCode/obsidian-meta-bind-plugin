@@ -1,10 +1,12 @@
 import { AbstractInputField } from '../../AbstractInputField';
 import ListInput from './ListInput.svelte';
 import { InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
-import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../../../utils/errors/MetaBindErrors';
-import { doArraysContainEqualValues } from '../../../utils/Utils';
+import { ErrorLevel, MetaBindInternalError } from '../../../utils/errors/MetaBindErrors';
+import { doArraysContainEqualValues, MBExtendedLiteral, MBLiteral, parseLiteral, stringifyLiteral } from '../../../utils/Utils';
 
-export class ListInputField extends AbstractInputField {
+type T = MBLiteral[];
+
+export class ListInputField extends AbstractInputField<T> {
 	static allowInline: boolean = false;
 	container: HTMLDivElement | undefined;
 	component: ListInput | undefined;
@@ -16,32 +18,35 @@ export class ListInputField extends AbstractInputField {
 		this.value = this.getDefaultValue();
 	}
 
-	getValue(): string[] | undefined {
+	getValue(): T | undefined {
 		if (!this.component) {
 			return undefined;
 		}
-		return this.value;
+		return this.value.map(x => parseLiteral(x));
 	}
 
-	setValue(value: any): void {
-		if (value != null && Array.isArray(value)) {
-			this.value = value;
-		} else {
-			console.warn(new MetaBindValueError(ErrorLevel.WARNING, 'failed to set value', `invalid value '${value}' at listInputField ${this.renderChild.uuid}`));
-			this.value = this.getDefaultValue();
+	filterValue(value: MBExtendedLiteral | undefined): T {
+		if (value == null || !Array.isArray(value)) {
+			return this.getDefaultValue();
 		}
-		this.component?.updateValue(value);
+
+		return value;
 	}
 
-	isEqualValue(value: any): boolean {
+	updateDisplayValue(value: T): void {
+		this.value = value.map(x => stringifyLiteral(x));
+		this.component?.updateValue(this.value);
+	}
+
+	isEqualValue(value: T | undefined): boolean {
 		if (!Array.isArray(value)) {
 			return false;
 		}
 
-		return doArraysContainEqualValues(this.getValue() ?? [], value);
+		return doArraysContainEqualValues(this.getValue(), value);
 	}
 
-	getDefaultValue(): any {
+	getDefaultValue(): string[] {
 		return [];
 	}
 
@@ -58,7 +63,7 @@ export class ListInputField extends AbstractInputField {
 
 		this.container = container;
 
-		this.value = this.renderChild.getInitialValue();
+		this.updateDisplayValue(this.getInitialValue());
 
 		this.component = new ListInput({
 			target: container,

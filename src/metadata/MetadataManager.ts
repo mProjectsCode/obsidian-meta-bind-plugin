@@ -134,7 +134,7 @@ export class MetadataManager {
 		this.notifyListeners(fileCache, undefined, uuid);
 	}
 
-	updatePropertyInCache(value: any, pathParts: string[], filePath: string, uuid?: string | undefined): void {
+	updatePropertyInCache(value: unknown, pathParts: string[], filePath: string, uuid?: string | undefined): void {
 		console.debug(`meta-bind | MetadataManager >> updating "${JSON.stringify(pathParts)}" in "${filePath}" metadata cache to`, value);
 		// console.trace();
 

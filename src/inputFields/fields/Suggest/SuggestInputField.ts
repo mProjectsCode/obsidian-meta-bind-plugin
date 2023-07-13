@@ -8,13 +8,16 @@ import { ErrorLevel, MetaBindArgumentError, MetaBindInternalError } from '../../
 import { OptionInputFieldArgument } from '../../../inputFieldArguments/arguments/OptionInputFieldArgument';
 import { OptionQueryInputFieldArgument } from '../../../inputFieldArguments/arguments/OptionQueryInputFieldArgument';
 import { InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
+import { MBExtendedLiteral, MBLiteral, parseLiteral, stringifyLiteral } from '../../../utils/Utils';
 
 export interface SuggestOption {
-	value: string;
+	value: MBLiteral;
 	displayValue: string;
 }
 
-export class SuggestInputField extends AbstractInputField {
+type T = MBLiteral;
+
+export class SuggestInputField extends AbstractInputField<T> {
 	container: HTMLDivElement | undefined;
 	component: SuggestInput | undefined;
 	value: string;
@@ -23,7 +26,7 @@ export class SuggestInputField extends AbstractInputField {
 	constructor(inputFieldMDRC: InputFieldMDRC) {
 		super(inputFieldMDRC);
 
-		this.value = '';
+		this.value = this.getDefaultValue();
 		this.options = [];
 
 		if (this.needsDataview()) {
@@ -33,23 +36,27 @@ export class SuggestInputField extends AbstractInputField {
 		}
 	}
 
-	getValue(): string | undefined {
+	getValue(): T | undefined {
 		if (!this.component) {
 			return undefined;
 		}
-		return this.value;
+		return parseLiteral(this.value);
 	}
 
-	setValue(value: any): void {
-		this.value = value;
-		this.component?.updateValue(value);
+	filterValue(value: MBExtendedLiteral): T {
+		if (value === undefined || typeof value === 'object') {
+			return this.getDefaultValue();
+		}
+
+		return value;
 	}
 
-	isEqualValue(value: any): boolean {
-		return this.value == value;
+	updateDisplayValue(value: T): void {
+		this.value = stringifyLiteral(value);
+		this.component?.updateValue(this.value);
 	}
 
-	getDefaultValue(): any {
+	getDefaultValue(): string {
 		return '';
 	}
 
@@ -68,11 +75,11 @@ export class SuggestInputField extends AbstractInputField {
 	async getOptions(): Promise<void> {
 		this.options = [];
 
-		const optionArguments: OptionInputFieldArgument[] = this.renderChild.getArguments(InputFieldArgumentType.OPTION);
+		const optionArguments: OptionInputFieldArgument[] = this.renderChild.getArguments(InputFieldArgumentType.OPTION) as OptionInputFieldArgument[];
 		const optionQueryArguments: OptionQueryInputFieldArgument[] = this.renderChild.getArguments(InputFieldArgumentType.OPTION_QUERY);
 
 		for (const suggestOptionsArgument of optionArguments) {
-			this.options.push({ value: suggestOptionsArgument.value, displayValue: suggestOptionsArgument.value });
+			this.options.push({ value: suggestOptionsArgument.value, displayValue: suggestOptionsArgument.name });
 		}
 
 		if (optionQueryArguments.length > 0) {
@@ -103,7 +110,7 @@ export class SuggestInputField extends AbstractInputField {
 	async showSuggest(): Promise<void> {
 		await this.getOptions();
 		new SuggestInputModal(this.renderChild.plugin.app, this.options, item => {
-			this.setValue(item.value);
+			this.filterValue(item.value);
 			this.onValueChange(item.value);
 		}).open();
 	}
@@ -113,7 +120,7 @@ export class SuggestInputField extends AbstractInputField {
 
 		this.container = container;
 
-		this.value = this.renderChild.getInitialValue();
+		this.updateDisplayValue(this.getInitialValue());
 
 		this.component = new SuggestInput({
 			target: container,

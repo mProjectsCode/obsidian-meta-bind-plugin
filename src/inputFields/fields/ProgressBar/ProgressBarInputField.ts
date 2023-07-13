@@ -1,10 +1,13 @@
 import { AbstractInputField } from '../../AbstractInputField';
 import ProgressBarInput from './ProgressBarInput.svelte';
 import { InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
-import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../../../utils/errors/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError } from '../../../utils/errors/MetaBindErrors';
 import { InputFieldArgumentType } from '../../../parsers/InputFieldDeclarationParser';
+import { clamp, MBExtendedLiteral } from '../../../utils/Utils';
 
-export class ProgressBarInputField extends AbstractInputField {
+type T = number;
+
+export class ProgressBarInputField extends AbstractInputField<T> {
 	static allowInline: boolean = false;
 	container: HTMLDivElement | undefined;
 	component: ProgressBarInput | undefined;
@@ -22,30 +25,34 @@ export class ProgressBarInputField extends AbstractInputField {
 		this.value = this.getDefaultValue();
 	}
 
-	getValue(): number | undefined {
+	getValue(): T | undefined {
 		if (!this.component) {
 			return undefined;
 		}
 		return this.value;
 	}
 
-	setValue(value: any): void {
-		if (value != null && typeof value == 'number') {
-			if (value >= this.minValue && value <= this.maxValue) {
-				this.value = value;
+	filterValue(value: MBExtendedLiteral | undefined): T {
+		if (typeof value === 'number') {
+			return value;
+		} else if (typeof value === 'string') {
+			const v = Number.parseFloat(value);
+			if (Number.isNaN(v)) {
+				return this.getDefaultValue();
+			} else {
+				return clamp(v, this.minValue, this.maxValue);
 			}
 		} else {
-			console.warn(new MetaBindValueError(ErrorLevel.WARNING, 'failed to set value', `invalid value '${value}' at progressBarInputField ${this.renderChild.uuid}`));
-			this.value = this.getDefaultValue();
+			return this.getDefaultValue();
 		}
+	}
+
+	updateDisplayValue(value: T): void {
+		this.value = value;
 		this.component?.updateValue(value);
 	}
 
-	isEqualValue(value: any): boolean {
-		return this.value == value;
-	}
-
-	getDefaultValue(): any {
+	getDefaultValue(): T {
 		return this.minValue;
 	}
 
@@ -62,7 +69,7 @@ export class ProgressBarInputField extends AbstractInputField {
 
 		this.container = container;
 
-		this.value = this.renderChild.getInitialValue();
+		this.updateDisplayValue(this.getInitialValue());
 
 		this.component = new ProgressBarInput({
 			target: container,

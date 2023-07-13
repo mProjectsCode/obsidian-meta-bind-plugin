@@ -1,21 +1,24 @@
-import { AbstractInputField } from '../AbstractInputField';
+import { AbstractInputField } from '../../AbstractInputField';
+import { MBExtendedLiteral, mod } from '../../../utils/Utils';
 import { SelectInputFieldElement } from './SelectInputFieldElement';
-import { MBLiteral, mod } from '../../utils/Utils';
-import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
-import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
-import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
-import { OptionInputFieldArgument } from '../../inputFieldArguments/arguments/OptionInputFieldArgument';
+import { InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
+import { ErrorLevel, MetaBindInternalError } from '../../../utils/errors/MetaBindErrors';
+import { OptionInputFieldArgument } from '../../../inputFieldArguments/arguments/OptionInputFieldArgument';
+import { InputFieldArgumentType } from '../../../parsers/InputFieldDeclarationParser';
 
-export class SelectInputField extends AbstractInputField {
-	static allowInline: boolean = false;
+export abstract class AbstractSelectInputField<T extends MBExtendedLiteral> extends AbstractInputField<T> {
 	elements: SelectInputFieldElement[];
 	allowMultiSelect: boolean;
 	container: HTMLDivElement | undefined;
 
-	constructor(inputFieldMDRC: InputFieldMDRC) {
+	protected constructor(inputFieldMDRC: InputFieldMDRC) {
 		super(inputFieldMDRC);
 		this.elements = [];
 		this.allowMultiSelect = false;
+	}
+
+	onChange(): void {
+		this.onValueChange(this.getValue());
 	}
 
 	getHtmlElement(): HTMLElement {
@@ -24,35 +27,6 @@ export class SelectInputField extends AbstractInputField {
 		}
 
 		return this.container;
-	}
-
-	getValue(): MBLiteral {
-		if (!this.container) {
-			return undefined;
-		}
-		return this.elements.filter(x => x.isActive()).first()?.value ?? null;
-	}
-
-	setValue(value: any): void {
-		for (const element of this.elements) {
-			if (value === element.value) {
-				element.setActive(true, false);
-			} else {
-				element.setActive(false, false);
-			}
-		}
-	}
-
-	isEqualValue(value: any): boolean {
-		return this.getValue() == value;
-	}
-
-	getDefaultValue(): any {
-		return '';
-	}
-
-	onChange(): void {
-		this.onValueChange(this.getValue());
 	}
 
 	render(container: HTMLDivElement): void {
@@ -72,7 +46,7 @@ export class SelectInputField extends AbstractInputField {
 			i += 1;
 		}
 
-		this.setValue(this.renderChild.getInitialValue());
+		this.updateDisplayValue(this.getInitialValue());
 	}
 
 	public destroy(): void {}

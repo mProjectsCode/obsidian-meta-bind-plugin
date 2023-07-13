@@ -6,12 +6,15 @@ import { DatePickerModal } from './DatePickerModal';
 import { Moment } from 'moment';
 import { ErrorLevel, MetaBindInternalError } from '../../../utils/errors/MetaBindErrors';
 import { InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
+import { MBExtendedLiteral } from '../../../utils/Utils';
 
-export class DatePickerInputField extends AbstractInputField {
+type T = string | null;
+
+export class DatePickerInputField extends AbstractInputField<T> {
 	container: HTMLDivElement | undefined;
 	component: DatePickerInput | undefined;
 	modal: DatePickerModal | undefined;
-	date: moment.Moment;
+	date: moment.Moment | null;
 
 	constructor(inputFieldMDRC: InputFieldMDRC) {
 		super(inputFieldMDRC);
@@ -19,29 +22,31 @@ export class DatePickerInputField extends AbstractInputField {
 		this.date = DateParser.getDefaultDate();
 	}
 
-	getValue(): any {
+	getValue(): T | undefined {
 		if (!this.component) {
 			return undefined;
 		}
-		return DateParser.stringify(this.date);
+		return this.date !== null ? DateParser.stringify(this.date) : null;
 	}
 
-	setValue(value: any): void {
-		this.date = DateParser.parse(value) ?? DateParser.getDefaultDate();
-
-		if (!this.date.isValid()) {
-			this.date = DateParser.getDefaultDate();
-			this.onValueChange(this.getValue());
+	filterValue(value: MBExtendedLiteral): T {
+		if (value === undefined || typeof value !== 'string') {
+			return null;
 		}
-
-		this.component?.$set({ selectedDate: this.date });
+		const date = DateParser.parse(value);
+		if (date.isValid()) {
+			return DateParser.stringify(date);
+		} else {
+			return null;
+		}
 	}
 
-	isEqualValue(value: any): boolean {
-		return this.getValue() == value;
+	updateDisplayValue(value: T): void {
+		this.date = value !== null ? DateParser.parse(value) : null;
+		this.component?.updateValue(this.date);
 	}
 
-	getDefaultValue(): any {
+	getDefaultValue(): string {
 		return DateParser.stringify(DateParser.getDefaultDate());
 	}
 
@@ -53,13 +58,13 @@ export class DatePickerInputField extends AbstractInputField {
 		return this.container;
 	}
 
-	datePickerValueChanged(date: Moment): void {
+	datePickerValueChanged(date: Moment | null): void {
 		this.date = date;
 		this.component?.updateValue(this.date);
 		this.modal?.close();
 		// console.log('date picker value change', this.date);
 
-		if (this.date.isValid()) {
+		if (!this.date || this.date.isValid()) {
 			this.onValueChange(this.getValue());
 		}
 	}
@@ -74,11 +79,8 @@ export class DatePickerInputField extends AbstractInputField {
 
 		this.container = container;
 
-		this.date = DateParser.parse(this.renderChild.getInitialValue()) ?? DateParser.getDefaultDate();
-		if (!this.date.isValid()) {
-			this.date = DateParser.getDefaultDate();
-			this.onValueChange(this.getValue());
-		}
+		const initialValue = this.getInitialValue();
+		this.date = initialValue !== null ? DateParser.parse(initialValue) : null;
 
 		this.component = new DatePickerInput({
 			target: container,

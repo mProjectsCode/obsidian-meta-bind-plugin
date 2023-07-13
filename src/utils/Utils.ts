@@ -63,12 +63,12 @@ export function mod(n: number, m: number): number {
 }
 
 /**
- * Checks if 2 arrays contain equal values, the arrays should have the same datatype
+ * Checks if 2 arrays contain equal values, the arrays should have the same datatype. Order of the elements matters.
  *
  * @param arr1
  * @param arr2
  */
-export function doArraysContainEqualValues<T>(arr1: T[], arr2: T[]): boolean {
+export function doArraysContainEqualValues<T>(arr1: T[] | undefined, arr2: T[] | undefined): boolean {
 	if (arr1 == null && arr2 == null) {
 		return true;
 	}
@@ -80,8 +80,8 @@ export function doArraysContainEqualValues<T>(arr1: T[], arr2: T[]): boolean {
 		return false;
 	}
 
-	for (const arr1Element of arr1) {
-		if (!arr2.contains(arr1Element)) {
+	for (let i = 0; i < arr1.length; i++) {
+		if (arr1[i] !== arr2[i]) {
 			return false;
 		}
 	}
@@ -270,7 +270,8 @@ export function deepCopy<T extends object>(object: T): T {
 	return structuredClone(object);
 }
 
-export type MBLiteral = string | number | boolean | null | undefined;
+export type MBLiteral = string | number | boolean | null;
+export type MBExtendedLiteral = MBLiteral | MBLiteral[];
 
 export function parseLiteral(literalString: string): MBLiteral {
 	if (literalString.toLowerCase() === 'null') {
@@ -285,7 +286,7 @@ export function parseLiteral(literalString: string): MBLiteral {
 	}
 }
 
-export function stringifyLiteral(literal: MBLiteral): string {
+export function stringifyLiteral(literal: MBExtendedLiteral | undefined): string {
 	if (literal === undefined) {
 		return '';
 	}
@@ -298,9 +299,12 @@ export function stringifyLiteral(literal: MBLiteral): string {
 		return literal;
 	} else if (typeof literal === 'boolean') {
 		return literal ? 'true' : 'false';
-	} else if (typeof literal === 'number') {
+	} else {
+		// typeof number
 		return literal.toString();
 	}
+}
 
-	return '';
+export function isLiteral(literal: unknown): literal is MBLiteral {
+	return literal === null || typeof literal === 'string' || typeof literal === 'boolean' || typeof literal === 'number';
 }

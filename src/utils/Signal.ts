@@ -47,6 +47,8 @@ export interface Listener<T> {
 
 export type ListenerCallback<T> = (value: T) => void;
 
+export type SignalLike<T> = Signal<T> | ComputedSignal<any, T>;
+
 export class Signal<T> extends Notifier<T, Listener<T>> {
 	value: T;
 
@@ -63,5 +65,34 @@ export class Signal<T> extends Notifier<T, Listener<T>> {
 		this.value = value;
 		// console.debug('meta-bind | setting signal to', value);
 		this.notifyListeners(value);
+	}
+}
+
+export class ComputedSignal<R, T> extends Notifier<T, Listener<T>> {
+	value: T;
+	dependency: SignalLike<R>;
+	dependencyListener: Listener<R>;
+
+	constructor(dependency: SignalLike<R>, compute: (signal: R) => T) {
+		super();
+		this.dependency = dependency;
+
+		this.value = compute(dependency.get());
+
+		this.dependencyListener = dependency.registerListener({ callback: (value: R) => this.set(compute(value)) });
+	}
+
+	public get(): T {
+		return this.value;
+	}
+
+	public set(value: T): void {
+		this.value = value;
+		// console.debug('meta-bind | setting signal to', value);
+		this.notifyListeners(value);
+	}
+
+	public destroy(): void {
+		this.dependency.unregisterListener(this.dependencyListener);
 	}
 }

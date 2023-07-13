@@ -1,12 +1,14 @@
 import { AbstractInputField } from '../AbstractInputField';
 import { DropdownComponent } from 'obsidian';
-import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../../utils/errors/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
 import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
 import { OptionInputFieldArgument } from '../../inputFieldArguments/arguments/OptionInputFieldArgument';
-import { MBLiteral, parseLiteral, stringifyLiteral } from '../../utils/Utils';
+import { MBExtendedLiteral, MBLiteral, parseLiteral, stringifyLiteral } from '../../utils/Utils';
 
-export class InlineSelectInputField extends AbstractInputField {
+type T = MBLiteral;
+
+export class InlineSelectInputField extends AbstractInputField<T> {
 	static allowBlock: boolean = false;
 	selectComponent: DropdownComponent | undefined;
 	options: OptionInputFieldArgument[];
@@ -17,7 +19,7 @@ export class InlineSelectInputField extends AbstractInputField {
 		this.options = inputFieldMDRC.getArguments(InputFieldArgumentType.OPTION) as OptionInputFieldArgument[];
 	}
 
-	getValue(): MBLiteral {
+	getValue(): T | undefined {
 		if (!this.selectComponent) {
 			return undefined;
 		}
@@ -25,24 +27,19 @@ export class InlineSelectInputField extends AbstractInputField {
 		return parseLiteral(this.selectComponent.getValue());
 	}
 
-	setValue(value: MBLiteral): void {
-		if (!this.selectComponent) {
-			return;
+	filterValue(value: MBExtendedLiteral | undefined): T {
+		if (value === undefined || typeof value === 'object') {
+			return this.getDefaultValue();
 		}
 
-		if (typeof value !== 'object') {
-			this.selectComponent.setValue(stringifyLiteral(value));
-		} else {
-			console.warn(new MetaBindValueError(ErrorLevel.WARNING, 'failed to set value', `invalid value '${value}' at inlineSelectInputField ${this.renderChild.uuid}`));
-			this.selectComponent.setValue('');
-		}
+		return value;
 	}
 
-	isEqualValue(value: any): boolean {
-		return this.getValue() == value;
+	updateDisplayValue(value: T): void {
+		this.selectComponent?.setValue(stringifyLiteral(value));
 	}
 
-	getDefaultValue(): any {
+	getDefaultValue(): T {
 		return '';
 	}
 
@@ -61,7 +58,7 @@ export class InlineSelectInputField extends AbstractInputField {
 		for (const option of this.options) {
 			component.addOption(stringifyLiteral(option.value), option.name);
 		}
-		component.setValue(this.renderChild.getInitialValue());
+		component.setValue(stringifyLiteral(this.getInitialValue()));
 		component.onChange(this.onValueChange);
 		this.selectComponent = component;
 	}

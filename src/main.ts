@@ -42,8 +42,15 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		this.registerMarkdownPostProcessor((el, ctx) => {
 			const codeBlocks = el.querySelectorAll('code');
+
+			// console.log(el.outerHTML);
+
 			for (let index = 0; index < codeBlocks.length; index++) {
 				const codeBlock = codeBlocks.item(index);
+
+				// console.log(codeBlock.outerHTML);
+				// console.log(codeBlock.tagName, codeBlock.className, codeBlock.innerText);
+
 				if (codeBlock.hasClass('meta-bind-none')) {
 					continue;
 				}
@@ -64,7 +71,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		this.registerMarkdownCodeBlockProcessor('meta-bind', (source, el, ctx) => {
 			const codeBlock = el;
-			const content = source.replace(/\n/g, '');
+			const content = source.replaceAll('\n', '').trim();
 			const isInputField = content.startsWith('INPUT[') && content.endsWith(']');
 			if (isInputField) {
 				const inputField = this.api.createInputFieldFromString(content, RenderChildType.BLOCK, ctx.sourcePath, codeBlock);
@@ -85,13 +92,13 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		// const languageCompartment = new Compartment();
 		// this.registerEditorExtension(languageCompartment.of(javascript()));
 
-		// this.addCommand({
-		// 	id: 'mb-test-command',
-		// 	name: 'test command',
-		// 	editorCallback: (editor: Editor, view: MarkdownView | MarkdownFileInfo) => {
-		// 		console.log(editor);
-		// 	},
-		// });
+		this.addCommand({
+			id: 'mb-debugger-command',
+			name: 'debugger',
+			callback: () => {
+				debugger;
+			},
+		});
 
 		this.addCommand({
 			id: 'mb-test-command',

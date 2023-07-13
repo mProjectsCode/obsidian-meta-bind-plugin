@@ -7,10 +7,9 @@
 
 	const dispatch = createEventDispatcher();
 
-	export let selectedDate: Moment = moment();
-	export let dateChangeCallback: (date: Moment) => void;
+	export let selectedDate: Moment | null = moment();
+	export let dateChangeCallback: (date: Moment | null) => void;
 
-	let date: number;
 	let month: number;
 	let year: number;
 	let isDatePickerVisible: boolean;
@@ -18,9 +17,14 @@
 	// so that these change with props
 	$: {
 		console.log('update date picker', selectedDate);
-		date = selectedDate.date();
-		month = selectedDate.month();
-		year = selectedDate.year();
+		if (selectedDate) {
+			month = selectedDate.month();
+			year = selectedDate.year();
+		} else {
+			const now = moment();
+			month = now.month();
+			year = now.year();
+		}
 	}
 
 	function nextMonth(): void {
@@ -53,6 +57,12 @@
 		isDatePickerVisible = false;
 		selectedDate = d.detail;
 		dateChangeCallback(d.detail);
+	}
+
+	function setDateToNull(): void {
+		isDatePickerVisible = false;
+		selectedDate = null;
+		dateChangeCallback(null);
 	}
 </script>
 
@@ -92,6 +102,17 @@
 	.month-switch-button {
 		margin: 0;
 	}
+
+	.date-picker-footer {
+		display:         flex;
+		gap:             var(--size-4-2);
+		align-items:     center;
+		justify-content: center;
+	}
+
+	.none-button {
+		margin: 0;
+	}
 </style>
 
 <div class="date-picker">
@@ -110,4 +131,7 @@
 		year={year}
 		selectedDate={selectedDate}>
 	</Calender>
+	<div class="date-picker-footer">
+		<button class="none-button" on:click={setDateToNull}>Set no Date</button>
+	</div>
 </div>
