@@ -1,10 +1,13 @@
 import { AbstractInputField } from '../AbstractInputField';
 import { DropdownComponent, moment, TextComponent } from 'obsidian';
 import { DateParser } from '../../parsers/DateParser';
-import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../../utils/errors/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
 import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
+import { MBExtendedLiteral } from '../../utils/Utils';
 
-export class DateInputField extends AbstractInputField {
+type T = string;
+
+export class DateInputField extends AbstractInputField<T> {
 	container: HTMLDivElement | undefined;
 	date: moment.Moment;
 
@@ -39,15 +42,7 @@ export class DateInputField extends AbstractInputField {
 		}
 	}
 
-	public getHtmlElement(): HTMLElement {
-		if (!this.container) {
-			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
-		}
-
-		return this.container;
-	}
-
-	public getValue(): string | undefined {
+	public getValue(): T | undefined {
 		if (!this.monthComponent) {
 			return undefined;
 		}
@@ -61,52 +56,54 @@ export class DateInputField extends AbstractInputField {
 		return DateParser.stringify(this.date);
 	}
 
-	public setValue(value: string): void {
-		if (!this.monthComponent) {
-			return;
+	public filterValue(value: MBExtendedLiteral | undefined): T {
+		if (value === undefined || typeof value !== 'string') {
+			return this.getDefaultValue();
 		}
-		if (!this.dayComponent) {
-			return;
+		const date = DateParser.parse(value);
+		if (date.isValid()) {
+			return DateParser.stringify(date);
+		} else {
+			return this.getDefaultValue();
 		}
-		if (!this.yearComponent) {
-			return;
-		}
+	}
 
+	/**
+	 * Assumes a correct Date string as input.
+	 *
+	 * @param value
+	 */
+	public updateDisplayValue(value: T): void {
 		this.date = DateParser.parse(value);
-		if (!this.date) {
-			console.warn(new MetaBindValueError(ErrorLevel.WARNING, 'failed to set value', `invalid value '${value}' at dateInputField ${this.renderChild.uuid}`));
-			this.date = DateParser.getDefaultDate();
-		}
-
-		if (!this.date.isValid()) {
-			this.date = DateParser.getDefaultDate();
-			// this.onValueChange(this.getValue());
-		}
 
 		// console.log(this.date);
-		this.monthComponent.setValue(this.date.month().toString());
-		this.dayComponent.setValue(this.date.date().toString());
-		this.yearComponent.setValue(this.date.year().toString());
+		this.monthComponent?.setValue(this.date.month().toString());
+		this.dayComponent?.setValue(this.date.date().toString());
+		this.yearComponent?.setValue(this.date.year().toString());
 	}
 
-	public isEqualValue(value: any): boolean {
-		return value == this.getValue();
-	}
-
-	public getDefaultValue(): any {
+	public getDefaultValue(): T {
 		return DateParser.stringify(DateParser.getDefaultDate());
+	}
+
+	public getHtmlElement(): HTMLElement {
+		if (!this.container) {
+			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
+		}
+
+		return this.container;
 	}
 
 	public render(container: HTMLDivElement): void {
 		console.debug(`meta-bind | DateInputField >> render ${this.renderChild.uuid}`);
 
-		this.date = DateParser.parse(this.renderChild.getInitialValue()) ?? DateParser.getDefaultDate();
-		if (!this.date.isValid()) {
-			this.date = DateParser.getDefaultDate();
-			this.onValueChange(this.getValue());
-		}
+		this.date = DateParser.parse(this.getInitialValue());
+		// if (!this.date.isValid()) {
+		// 	this.date = DateParser.getDefaultDate();
+		// 	this.onValueChange(this.getValue());
+		// }
 
-		let useUsInputOrder = this.renderChild.plugin.settings.useUsDateInputOrder;
+		const useUsInputOrder = this.renderChild.plugin.settings.useUsDateInputOrder;
 
 		container.removeClass('meta-bind-plugin-input-wrapper');
 		container.addClass('meta-bind-plugin-flex-input-wrapper', 'meta-bind-plugin-input-element-group');

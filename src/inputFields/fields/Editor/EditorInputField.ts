@@ -2,8 +2,11 @@ import { AbstractInputField } from '../../AbstractInputField';
 import EditorInput from './EditorInput.svelte';
 import { ErrorLevel, MetaBindInternalError } from '../../../utils/errors/MetaBindErrors';
 import { InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
+import { MBExtendedLiteral } from '../../../utils/Utils';
 
-export class EditorInputField extends AbstractInputField {
+type T = string;
+
+export class EditorInputField extends AbstractInputField<T> {
 	static allowInline: boolean = false;
 	container: HTMLDivElement | undefined;
 	component: EditorInput | undefined;
@@ -12,26 +15,30 @@ export class EditorInputField extends AbstractInputField {
 	constructor(inputFieldMDRC: InputFieldMDRC) {
 		super(inputFieldMDRC);
 
-		this.value = '';
+		this.value = this.getDefaultValue();
 	}
 
-	getValue(): string | undefined {
+	getValue(): T | undefined {
 		if (!this.component) {
 			return undefined;
 		}
 		return this.value;
 	}
 
-	setValue(value: any): void {
+	filterValue(value: MBExtendedLiteral): T {
+		if (value == null || typeof value !== 'string') {
+			return this.getDefaultValue();
+		}
+
+		return value;
+	}
+
+	updateDisplayValue(value: T): void {
 		this.value = value;
 		this.component?.updateValue(value);
 	}
 
-	isEqualValue(value: any): boolean {
-		return this.value == value;
-	}
-
-	getDefaultValue(): any {
+	getDefaultValue(): T {
 		return '';
 	}
 
@@ -48,7 +55,7 @@ export class EditorInputField extends AbstractInputField {
 
 		this.container = container;
 
-		this.value = this.renderChild.getInitialValue();
+		this.updateDisplayValue(this.getInitialValue());
 
 		this.component = new EditorInput({
 			target: container,

@@ -7,7 +7,7 @@
 	const dispatch = createEventDispatcher();
 
 	// props
-	export let selectedDate: Moment;
+	export let selectedDate: Moment | null;
 	export let month: number;
 	export let year: number;
 
@@ -104,7 +104,7 @@
 				on:keydown={(event) => selectCellKey(event, value)}
 				class:highlight={value}
 				class:content-cell={value}
-				class:selected={selectedDate.year() === year && selectedDate.month() === month && selectedDate.date() === value}>
+				class:selected={selectedDate?.year() === year && selectedDate?.month() === month && selectedDate?.date() === value}>
 				<span class="cell-text">{value || ''}</span>
 			</div>
 		{/each}

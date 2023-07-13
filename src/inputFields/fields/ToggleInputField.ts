@@ -3,9 +3,11 @@ import { ToggleComponent } from 'obsidian';
 import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../../utils/errors/MetaBindErrors';
 import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
-import { MBLiteral } from '../../utils/Utils';
+import { isLiteral, MBExtendedLiteral, MBLiteral } from '../../utils/Utils';
 
-export class ToggleInputField extends AbstractInputField {
+type T = MBLiteral;
+
+export class ToggleInputField extends AbstractInputField<T> {
 	toggleComponent: ToggleComponent | undefined;
 	onValue: MBLiteral;
 	offValue: MBLiteral;
@@ -17,22 +19,22 @@ export class ToggleInputField extends AbstractInputField {
 		this.offValue = this.renderChild.getArgument(InputFieldArgumentType.OFF_VALUE)?.value ?? false;
 	}
 
-	getValue(): MBLiteral {
+	getValue(): MBLiteral | undefined {
 		if (!this.toggleComponent) {
 			return undefined;
 		}
 		return this.mapValue(this.toggleComponent.getValue());
 	}
 
-	setValue(value: any): void {
-		if (!this.toggleComponent) {
-			return;
-		}
-
-		this.toggleComponent.setValue(this.reverseMapValue(value));
+	filterValue(value: MBExtendedLiteral | undefined): T {
+		return isLiteral(value) ? value : this.getDefaultValue();
 	}
 
-	isEqualValue(value: any): boolean {
+	updateDisplayValue(value: T): void {
+		this.toggleComponent?.setValue(this.reverseMapValue(value));
+	}
+
+	isEqualValue(value: T | undefined): boolean {
 		return this.getValue() == value;
 	}
 
@@ -52,7 +54,7 @@ export class ToggleInputField extends AbstractInputField {
 		console.debug(`meta-bind | ToggleInputField >> render ${this.renderChild.uuid}`);
 
 		const component = new ToggleComponent(container);
-		component.setValue(this.reverseMapValue(this.renderChild.getInitialValue()));
+		component.setValue(this.reverseMapValue(this.getInitialValue()));
 		component.onChange((value: boolean) => this.onValueChange(this.mapValue(value)));
 		this.toggleComponent = component;
 	}
@@ -61,7 +63,7 @@ export class ToggleInputField extends AbstractInputField {
 		return value ? this.onValue : this.offValue;
 	}
 
-	reverseMapValue(value: MBLiteral): boolean {
+	reverseMapValue(value: MBLiteral | undefined): boolean {
 		if (value === this.onValue) {
 			return true;
 		} else if (value === this.offValue) {

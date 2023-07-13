@@ -1,11 +1,14 @@
 import { AbstractInputField } from '../AbstractInputField';
 import { TextComponent } from 'obsidian';
-import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../../utils/errors/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
+import { MBExtendedLiteral, stringifyLiteral } from '../../utils/Utils';
 
-export class TextInputField extends AbstractInputField {
+type T = string;
+
+export class TextInputField extends AbstractInputField<T> {
 	textComponent: TextComponent | undefined;
 
-	getValue(): string | undefined {
+	getValue(): T | undefined {
 		if (!this.textComponent) {
 			return undefined;
 		}
@@ -13,24 +16,19 @@ export class TextInputField extends AbstractInputField {
 		return this.textComponent.getValue();
 	}
 
-	setValue(value: any): void {
-		if (!this.textComponent) {
-			return;
-		}
-
-		if (value != null && typeof value == 'string') {
-			this.textComponent.setValue(value);
-		} else {
-			console.warn(new MetaBindValueError(ErrorLevel.WARNING, 'failed to set value', `invalid value '${value}' at textInputField ${this.renderChild.uuid}`));
-			this.textComponent.setValue('');
-		}
+	filterValue(value: MBExtendedLiteral | undefined): T {
+		return value != null ? stringifyLiteral(value) : this.getDefaultValue();
 	}
 
-	isEqualValue(value: any): boolean {
+	updateDisplayValue(value: T): void {
+		this.textComponent?.setValue(value ?? this.getDefaultValue());
+	}
+
+	isEqualValue(value: T): boolean {
 		return this.getValue() == value;
 	}
 
-	getDefaultValue(): any {
+	getDefaultValue(): string {
 		return '';
 	}
 
@@ -46,7 +44,7 @@ export class TextInputField extends AbstractInputField {
 		console.debug(`meta-bind | TextInputField >> render ${this.renderChild.uuid}`);
 
 		const component = new TextComponent(container);
-		component.setValue(this.renderChild.getInitialValue());
+		component.setValue(this.getInitialValue() ?? this.getDefaultValue());
 		component.onChange(this.onValueChange);
 		this.textComponent = component;
 	}

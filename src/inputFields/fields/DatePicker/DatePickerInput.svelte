@@ -1,14 +1,13 @@
 <script lang="ts">
-	import {moment} from 'obsidian';
 	import type {Moment} from 'moment';
 	import Icon from '../../../utils/Icon.svelte';
 
 	export let showDatePicker: () => void;
 
-	export let selectedDate: Moment = moment();
-	export let dateFormat: string = 'dddd, MMMM Do YYYY';
+	export let selectedDate: Moment | null;
+	export let dateFormat: string;
 
-	export function updateValue(value: Moment) {
+	export function updateValue(value: Moment | null) {
 		selectedDate = value;
 	}
 
@@ -47,7 +46,7 @@
 	on:click={datePicker}
 	on:keydown={datePickerKey}>
 	<div class="date-picker-text">
-		<span>{selectedDate.format(dateFormat)}</span>
+		<span>{selectedDate ? selectedDate.format(dateFormat) : "none"}</span>
 	</div>
 	<Icon iconName="calendar"/>
 </div>

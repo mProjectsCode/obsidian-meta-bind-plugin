@@ -7,7 +7,7 @@ import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindError
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { ShowcaseInputFieldArgument } from '../inputFieldArguments/arguments/ShowcaseInputFieldArgument';
 import { TitleInputFieldArgument } from '../inputFieldArguments/arguments/TitleInputFieldArgument';
-import { isTruthy } from '../utils/Utils';
+import { isTruthy, MBExtendedLiteral } from '../utils/Utils';
 import { Listener, Signal } from '../utils/Signal';
 import { BindTargetDeclaration } from '../parsers/BindTargetParser';
 import { AbstractMDRC } from './AbstractMDRC';
@@ -22,22 +22,22 @@ export enum RenderChildType {
 
 export class InputFieldMDRC extends AbstractMDRC {
 	metadataCache: MetadataFileCache | undefined;
-	inputField: AbstractInputField | undefined;
+	inputField: AbstractInputField<MBExtendedLiteral> | undefined;
 
 	fullDeclaration?: string;
 	inputFieldDeclaration: InputFieldDeclaration;
 	bindTargetDeclaration?: BindTargetDeclaration;
-	private metadataManagerReadSignalListener: Listener<any> | undefined;
+	private metadataManagerReadSignalListener: Listener<MBExtendedLiteral | undefined> | undefined;
 
 	// maybe 2: in/out
 	/**
 	 * Signal to write to the input field
 	 */
-	public writeSignal: Signal<any>;
+	public writeSignal: Signal<MBExtendedLiteral | undefined>;
 	/**
 	 * Signal to read from the input field
 	 */
-	public readSignal: Signal<any>;
+	public readSignal: Signal<MBExtendedLiteral | undefined>;
 
 	constructor(
 		containerEl: HTMLElement,
@@ -55,8 +55,8 @@ export class InputFieldMDRC extends AbstractMDRC {
 		this.fullDeclaration = declaration.fullDeclaration;
 		this.inputFieldDeclaration = declaration;
 
-		this.writeSignal = new Signal<any>(undefined);
-		this.readSignal = new Signal<any>(undefined);
+		this.writeSignal = new Signal<MBExtendedLiteral | undefined>(undefined);
+		this.readSignal = new Signal<MBExtendedLiteral | undefined>(undefined);
 
 		if (!this.errorCollection.hasErrors()) {
 			try {
@@ -98,7 +98,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 		this.plugin.metadataManager.unregister(this.bindTargetDeclaration.filePath, this.uuid);
 	}
 
-	updateMetadataManager(value: any): void {
+	updateMetadataManager(value: unknown): void {
 		// if bind target is invalid, return
 		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetDeclaration) {
 			return;
@@ -107,13 +107,18 @@ export class InputFieldMDRC extends AbstractMDRC {
 		this.plugin.metadataManager.updatePropertyInCache(value, this.bindTargetDeclaration.metadataPath, this.bindTargetDeclaration.filePath, this.uuid);
 	}
 
-	getInitialValue(): any | undefined {
+	getInitialValue(): MBExtendedLiteral {
+		if (!this.inputField) {
+			throw new MetaBindInternalError(ErrorLevel.CRITICAL, 'can not get initial value for input field', 'input field is undefined');
+		}
+
 		if (this.inputFieldDeclaration?.isBound && this.bindTargetDeclaration) {
-			const value = traverseObjectByPath(this.bindTargetDeclaration.metadataPath, this.metadataCache?.metadata);
+			let value: MBExtendedLiteral | undefined = traverseObjectByPath(this.bindTargetDeclaration.metadataPath, this.metadataCache?.metadata);
+			value = value === undefined ? this.inputField.getDefaultValue() : value;
 			console.debug(`meta-bind | InputFieldMarkdownRenderChild >> setting initial value to ${value} (typeof ${typeof value}) for input field ${this.uuid}`);
-			return value ?? this.inputField?.getDefaultValue();
+			return value;
 		} else {
-			return this.inputField?.getDefaultValue();
+			return this.inputField.getDefaultValue();
 		}
 	}
 
@@ -202,6 +207,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 		const container: HTMLDivElement = createDiv();
 		container.addClass('meta-bind-plugin-input-wrapper');
 
+		this.inputField?.filterValue(this.getInitialValue());
 		this.inputField?.render(container);
 
 		const classArguments: ClassInputFieldArgument[] = this.getArguments(InputFieldArgumentType.CLASS);

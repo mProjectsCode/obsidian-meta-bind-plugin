@@ -1,5 +1,5 @@
 ---
-progress1: -7
+progress1: 1
 ---
 
 ```meta-bind

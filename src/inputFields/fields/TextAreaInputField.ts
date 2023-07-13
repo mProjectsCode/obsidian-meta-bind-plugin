@@ -1,11 +1,14 @@
 import { AbstractInputField } from '../AbstractInputField';
 import { TextAreaComponent } from 'obsidian';
-import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../../utils/errors/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
+import { MBExtendedLiteral, stringifyLiteral } from '../../utils/Utils';
 
-export class TextAreaInputField extends AbstractInputField {
+type T = string;
+
+export class TextAreaInputField extends AbstractInputField<T> {
 	textAreaComponent: TextAreaComponent | undefined;
 
-	getValue(): string | undefined {
+	getValue(): T | undefined {
 		if (!this.textAreaComponent) {
 			return undefined;
 		}
@@ -13,24 +16,19 @@ export class TextAreaInputField extends AbstractInputField {
 		return this.textAreaComponent.getValue();
 	}
 
-	setValue(value: any): void {
-		if (!this.textAreaComponent) {
-			return;
-		}
-
-		if (value != null && typeof value == 'string') {
-			this.textAreaComponent.setValue(value);
-		} else {
-			console.warn(new MetaBindValueError(ErrorLevel.WARNING, 'failed to set value', `invalid value '${value}' at textAreaInputField ${this.renderChild.uuid}`));
-			this.textAreaComponent.setValue('');
-		}
+	filterValue(value: MBExtendedLiteral | undefined): T {
+		return value != null ? stringifyLiteral(value) : this.getDefaultValue();
 	}
 
-	isEqualValue(value: any): boolean {
+	updateDisplayValue(value: T): void {
+		this.textAreaComponent?.setValue(value ?? this.getDefaultValue());
+	}
+
+	isEqualValue(value: T): boolean {
 		return this.getValue() == value;
 	}
 
-	getDefaultValue(): any {
+	getDefaultValue(): string {
 		return '';
 	}
 
@@ -46,7 +44,7 @@ export class TextAreaInputField extends AbstractInputField {
 		console.debug(`meta-bind | TextAreaInputField >> render ${this.renderChild.uuid}`);
 
 		const component = new TextAreaComponent(container);
-		component.setValue(this.renderChild.getInitialValue());
+		component.setValue(this.getInitialValue());
 		component.onChange(this.onValueChange);
 		this.textAreaComponent = component;
 	}

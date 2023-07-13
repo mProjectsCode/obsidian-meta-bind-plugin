@@ -1,51 +1,61 @@
 import { InputFieldMDRC } from '../renderChildren/InputFieldMDRC';
+import { MBExtendedLiteral } from '../utils/Utils';
+import { ComputedSignal } from '../utils/Signal';
 
-export abstract class AbstractInputField {
-	static allowBlock: boolean = true;
-	static allowInline: boolean = true;
+export type GetInputFieldType<T extends AbstractInputField<any>> = T extends AbstractInputField<infer R> ? R : unknown;
+
+export abstract class AbstractInputField<T extends MBExtendedLiteral> {
 	renderChild: InputFieldMDRC;
-	onValueChange: (value: any) => void | Promise<void>;
+	filteredWriteSignal: ComputedSignal<MBExtendedLiteral | undefined, T>;
+	onValueChange: (value: T | undefined) => void;
 
 	constructor(inputFieldMDRC: InputFieldMDRC) {
 		this.renderChild = inputFieldMDRC;
 
-		this.onValueChange = (value: any): void => {
+		this.onValueChange = (value: T | undefined) => {
 			console.debug(`meta-bind | input field on value change`, value);
 			this.renderChild.readSignal.set(value);
 		};
 
-		this.renderChild.writeSignal.registerListener({
-			callback: (value: any) => {
+		this.filteredWriteSignal = new ComputedSignal<MBExtendedLiteral | undefined, T>(this.renderChild.writeSignal, (value: MBExtendedLiteral | undefined) => {
+			return this.filterValue(value);
+		});
+
+		this.filteredWriteSignal.registerListener({
+			callback: (value: T): void => {
 				if (!this.isEqualValue(value)) {
-					this.setValue(value);
+					this.updateDisplayValue(value);
 				}
 			},
 		});
 	}
 
+	getInitialValue(): T {
+		return this.filteredWriteSignal.get();
+	}
+
+	isEqualValue(value: T | undefined): boolean {
+		return this.getValue() === value;
+	}
+
 	/**
 	 * Returns the current content of the input field
 	 */
-	abstract getValue(): any;
+	abstract getValue(): T | undefined;
 
 	/**
-	 * Sets the value on this input field, overriding the current content
+	 * Maps an extended literal to the value for the input field
 	 *
 	 * @param value
 	 */
-	abstract setValue(value: any): void;
+	abstract filterValue(value: MBExtendedLiteral | undefined): T;
 
-	/**
-	 * Checks if the value is the same as the value of this input field
-	 *
-	 * @param value
-	 */
-	abstract isEqualValue(value: any): boolean;
+	abstract updateDisplayValue(value: T): void;
 
 	/**
 	 * Returns the default value of this input field
 	 */
-	abstract getDefaultValue(): any;
+	abstract getDefaultValue(): T;
 
 	/**
 	 * Returns the HTML element this input field is wrapped in

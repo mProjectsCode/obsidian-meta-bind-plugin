@@ -1,22 +1,36 @@
-import { SelectInputField } from './SelectInputField';
-import { doArraysContainEqualValues, MBLiteral } from '../../utils/Utils';
-import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
+import { doArraysContainEqualValues, MBExtendedLiteral, MBLiteral } from '../../../utils/Utils';
+import { InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
+import { AbstractSelectInputField } from './AbstractSelectInputField';
 
-export class MultiSelectInputField extends SelectInputField {
+type T = MBLiteral[];
+
+export class MultiSelectInputField extends AbstractSelectInputField<T> {
 	constructor(inputFieldMDRC: InputFieldMDRC) {
 		super(inputFieldMDRC);
 		this.allowMultiSelect = true;
 	}
 
-	getValue(): any {
+	getValue(): T | undefined {
 		if (!this.container) {
 			return undefined;
 		}
 		return this.elements.filter(x => x.isActive()).map(x => x.value);
 	}
 
-	setValue(value: MBLiteral[]): void {
-		if (!value || value.length === 0) {
+	filterValue(value: MBExtendedLiteral): T {
+		if (value == null) {
+			return [];
+		}
+
+		if (Array.isArray(value)) {
+			return value;
+		} else {
+			return [value];
+		}
+	}
+
+	updateDisplayValue(value: T): void {
+		if (value.length === 0) {
 			for (const element of this.elements) {
 				element.setActive(false, false);
 			}
@@ -34,7 +48,7 @@ export class MultiSelectInputField extends SelectInputField {
 		}
 	}
 
-	isEqualValue(value: any): boolean {
+	isEqualValue(value: T | undefined): boolean {
 		if (!Array.isArray(value)) {
 			return false;
 		}
@@ -42,7 +56,7 @@ export class MultiSelectInputField extends SelectInputField {
 		return doArraysContainEqualValues(this.getValue(), value);
 	}
 
-	getDefaultValue(): MBLiteral[] {
+	getDefaultValue(): T {
 		return [];
 	}
 }

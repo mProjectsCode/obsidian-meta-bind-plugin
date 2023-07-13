@@ -1,37 +1,40 @@
 import { AbstractInputField } from '../AbstractInputField';
 import { TextComponent } from 'obsidian';
-import { numberToString } from '../../utils/Utils';
-import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../../utils/errors/MetaBindErrors';
+import { MBExtendedLiteral, numberToString } from '../../utils/Utils';
+import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
 
-export class NumberInputField extends AbstractInputField {
+type T = number;
+
+export class NumberInputField extends AbstractInputField<T> {
 	numberComponent: TextComponent | undefined;
 
-	getValue(): number | undefined {
+	getValue(): T | undefined {
 		if (!this.numberComponent) {
 			return undefined;
 		}
-		const value = parseFloat(this.numberComponent.getValue());
-		return isNaN(value) ? 0 : value;
+
+		return parseFloat(this.numberComponent.getValue());
 	}
 
-	setValue(value: any): void {
-		if (!this.numberComponent) {
-			return;
-		}
-
-		if (value != null && (typeof value == 'number' || typeof value == 'string')) {
-			this.numberComponent.setValue(numberToString(value));
+	filterValue(value: MBExtendedLiteral | undefined): T {
+		if (typeof value === 'number') {
+			return value;
+		} else if (typeof value === 'string') {
+			return Number.parseFloat(value);
 		} else {
-			console.warn(new MetaBindValueError(ErrorLevel.WARNING, 'failed to set value', `invalid value '${value}' at numberInputField ${this.renderChild.uuid}`));
-			this.numberComponent.setValue(this.getDefaultValue());
+			return this.getDefaultValue();
 		}
 	}
 
-	isEqualValue(value: any): boolean {
+	updateDisplayValue(value: T): void {
+		this.numberComponent?.setValue(value.toString());
+	}
+
+	isEqualValue(value: T | undefined): boolean {
 		return this.getValue() == value;
 	}
 
-	getDefaultValue(): any {
+	getDefaultValue(): T {
 		return 0;
 	}
 
@@ -48,7 +51,7 @@ export class NumberInputField extends AbstractInputField {
 
 		const component = new TextComponent(container);
 		component.inputEl.type = 'number';
-		component.setValue(numberToString(this.renderChild.getInitialValue()));
+		component.setValue(numberToString(this.getInitialValue()));
 		component.onChange(value => {
 			const n = parseFloat(value);
 			this.onValueChange(isNaN(n) ? 0 : n);

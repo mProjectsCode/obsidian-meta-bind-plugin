@@ -1,10 +1,13 @@
 import { AbstractInputField } from '../AbstractInputField';
 import { SliderComponent } from 'obsidian';
 import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
-import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../../utils/errors/MetaBindErrors';
+import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
 import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
+import { clamp, MBExtendedLiteral } from '../../utils/Utils';
 
-export class SliderInputField extends AbstractInputField {
+type T = number;
+
+export class SliderInputField extends AbstractInputField<T> {
 	sliderComponent: SliderComponent | undefined;
 	minValue: number;
 	maxValue: number;
@@ -15,7 +18,7 @@ export class SliderInputField extends AbstractInputField {
 		this.maxValue = inputFieldMDRC.getArgument(InputFieldArgumentType.MAX_VALUE)?.value ?? 100;
 	}
 
-	getValue(): number | undefined {
+	getValue(): T | undefined {
 		if (!this.sliderComponent) {
 			return undefined;
 		}
@@ -23,26 +26,26 @@ export class SliderInputField extends AbstractInputField {
 		return this.sliderComponent.getValue();
 	}
 
-	setValue(value: any): void {
-		if (!this.sliderComponent) {
-			return;
-		}
-
-		if (value != null && typeof value == 'number') {
-			if (value >= this.minValue && value <= this.maxValue) {
-				this.sliderComponent.setValue(value);
+	filterValue(value: MBExtendedLiteral | undefined): T {
+		if (typeof value === 'number') {
+			return value;
+		} else if (typeof value === 'string') {
+			const v = Number.parseFloat(value);
+			if (Number.isNaN(v)) {
+				return this.getDefaultValue();
+			} else {
+				return clamp(v, this.minValue, this.maxValue);
 			}
 		} else {
-			console.warn(new MetaBindValueError(ErrorLevel.WARNING, 'failed to set value', `invalid value '${value}' at sliderInputField ${this.renderChild.uuid}`));
-			this.sliderComponent.setValue(this.getDefaultValue());
+			return this.getDefaultValue();
 		}
 	}
 
-	isEqualValue(value: any): boolean {
-		return this.getValue() == value;
+	updateDisplayValue(value: T): void {
+		this.sliderComponent?.setValue(value);
 	}
 
-	getDefaultValue(): any {
+	getDefaultValue(): T {
 		return this.minValue;
 	}
 
@@ -67,7 +70,7 @@ export class SliderInputField extends AbstractInputField {
 
 		const component = new SliderComponent(container);
 		component.setLimits(this.minValue, this.maxValue, 1);
-		component.setValue(this.renderChild.getInitialValue());
+		component.setValue(this.getInitialValue());
 		component.onChange(this.onValueChange);
 		component.setDynamicTooltip();
 		component.sliderEl.addClass('meta-bind-plugin-slider-input');

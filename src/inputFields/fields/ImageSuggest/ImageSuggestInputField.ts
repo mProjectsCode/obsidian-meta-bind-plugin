@@ -7,9 +7,11 @@ import { ImageSuggestModal } from './ImageSuggestModal';
 import { OptionQueryInputFieldArgument } from '../../../inputFieldArguments/arguments/OptionQueryInputFieldArgument';
 import { OptionInputFieldArgument } from '../../../inputFieldArguments/arguments/OptionInputFieldArgument';
 import { InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
-import { stringifyLiteral } from '../../../utils/Utils';
+import { MBExtendedLiteral, stringifyLiteral } from '../../../utils/Utils';
 
-export class ImageSuggestInputField extends AbstractInputField {
+type T = string;
+
+export class ImageSuggestInputField extends AbstractInputField<T> {
 	static allowInline: boolean = false;
 	container: HTMLDivElement | undefined;
 	component: ImageSuggestInput | undefined;
@@ -19,19 +21,26 @@ export class ImageSuggestInputField extends AbstractInputField {
 	constructor(inputFieldMDRC: InputFieldMDRC) {
 		super(inputFieldMDRC);
 
-		this.value = '';
+		this.value = this.getDefaultValue();
 		this.options = [];
 	}
 
-	getValue(): string | undefined {
+	getValue(): T | undefined {
 		if (!this.component) {
 			return undefined;
 		}
 		return this.value;
 	}
 
-	setValue(value: string): void {
-		value = value ?? this.getDefaultValue();
+	filterValue(value: MBExtendedLiteral): T {
+		if (value == null || typeof value !== 'string') {
+			return this.getDefaultValue();
+		}
+
+		return value;
+	}
+
+	updateDisplayValue(value: T): void {
 		this.value = value;
 		this.component?.updateValue(value);
 	}
@@ -40,7 +49,7 @@ export class ImageSuggestInputField extends AbstractInputField {
 		return this.value == value;
 	}
 
-	getDefaultValue(): any {
+	getDefaultValue(): T {
 		return '';
 	}
 
@@ -162,7 +171,7 @@ export class ImageSuggestInputField extends AbstractInputField {
 	async showSuggest(): Promise<void> {
 		await this.getOptions();
 		new ImageSuggestModal(this.renderChild.plugin.app, this.options, item => {
-			this.setValue(item);
+			this.filterValue(item);
 			this.onValueChange(item);
 		}).open();
 	}
@@ -172,7 +181,7 @@ export class ImageSuggestInputField extends AbstractInputField {
 
 		this.container = container;
 
-		this.value = this.renderChild.getInitialValue();
+		this.updateDisplayValue(this.getInitialValue());
 
 		this.component = new ImageSuggestInput({
 			target: container,

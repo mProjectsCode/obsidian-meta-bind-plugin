@@ -3,8 +3,11 @@ import { DropdownComponent } from 'obsidian';
 import { Time, TimeParser } from '../../parsers/TimeParser';
 import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../../utils/errors/MetaBindErrors';
 import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
+import { MBExtendedLiteral, stringifyLiteral } from '../../utils/Utils';
 
-export class TimeInputField extends AbstractInputField {
+type T = string;
+
+export class TimeInputField extends AbstractInputField<T> {
 	container: HTMLDivElement | undefined;
 	time: Time | undefined;
 
@@ -38,18 +41,25 @@ export class TimeInputField extends AbstractInputField {
 		return this.container;
 	}
 
-	public getValue(): string | undefined {
+	public getValue(): T | undefined {
 		if (!this.hourComponent) {
 			return undefined;
 		}
 		if (!this.minuteComponent) {
 			return undefined;
 		}
+		if (this.time === undefined) {
+			return undefined;
+		}
 
-		return TimeParser.stringify(this.time as Time);
+		return TimeParser.stringify(this.time);
 	}
 
-	public setValue(value: string): void {
+	public filterValue(value: MBExtendedLiteral | undefined): T {
+		return value != null ? stringifyLiteral(value) : this.getDefaultValue();
+	}
+
+	public updateDisplayValue(value: T): void {
 		if (!this.hourComponent) {
 			return;
 		}
@@ -67,18 +77,18 @@ export class TimeInputField extends AbstractInputField {
 		this.minuteComponent.setValue(this.time.getMinute().toString());
 	}
 
-	public isEqualValue(value: any): boolean {
+	public isEqualValue(value: T | undefined): boolean {
 		return value == this.getValue();
 	}
 
-	public getDefaultValue(): string {
+	public getDefaultValue(): T {
 		return TimeParser.stringify(TimeParser.getDefaultTime());
 	}
 
 	public render(container: HTMLDivElement): void {
 		console.debug(`meta-bind | TimeInputField >> render ${this.renderChild.uuid}`);
 
-		this.time = TimeParser.parse(this.renderChild.getInitialValue()) ?? TimeParser.getDefaultTime();
+		this.time = TimeParser.parse(this.getInitialValue() ?? this.getDefaultValue()) ?? TimeParser.getDefaultTime();
 
 		container.removeClass('meta-bind-plugin-input-wrapper');
 		container.addClass('meta-bind-plugin-flex-input-wrapper', 'meta-bind-plugin-input-element-group');
