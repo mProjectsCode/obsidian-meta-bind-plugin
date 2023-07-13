@@ -26,18 +26,18 @@ export class SliderInputField extends AbstractInputField<T> {
 		return this.sliderComponent.getValue();
 	}
 
-	filterValue(value: MBExtendedLiteral | undefined): T {
+	filterValue(value: MBExtendedLiteral | undefined): T | undefined {
 		if (typeof value === 'number') {
 			return value;
 		} else if (typeof value === 'string') {
 			const v = Number.parseFloat(value);
 			if (Number.isNaN(v)) {
-				return this.getDefaultValue();
+				return undefined;
 			} else {
 				return clamp(v, this.minValue, this.maxValue);
 			}
 		} else {
-			return this.getDefaultValue();
+			return undefined;
 		}
 	}
 
@@ -45,7 +45,7 @@ export class SliderInputField extends AbstractInputField<T> {
 		this.sliderComponent?.setValue(value);
 	}
 
-	getDefaultValue(): T {
+	getFallbackDefaultValue(): T {
 		return this.minValue;
 	}
 

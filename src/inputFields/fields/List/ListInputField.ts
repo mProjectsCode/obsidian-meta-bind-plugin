@@ -15,7 +15,7 @@ export class ListInputField extends AbstractInputField<T> {
 	constructor(inputFieldMDRC: InputFieldMDRC) {
 		super(inputFieldMDRC);
 
-		this.value = this.getDefaultValue();
+		this.value = this.getFallbackDefaultValue();
 	}
 
 	getValue(): T | undefined {
@@ -25,9 +25,9 @@ export class ListInputField extends AbstractInputField<T> {
 		return this.value.map(x => parseLiteral(x));
 	}
 
-	filterValue(value: MBExtendedLiteral | undefined): T {
+	filterValue(value: MBExtendedLiteral | undefined): T | undefined {
 		if (value == null || !Array.isArray(value)) {
-			return this.getDefaultValue();
+			return undefined;
 		}
 
 		return value;
@@ -46,7 +46,7 @@ export class ListInputField extends AbstractInputField<T> {
 		return doArraysContainEqualValues(this.getValue(), value);
 	}
 
-	getDefaultValue(): string[] {
+	getFallbackDefaultValue(): string[] {
 		return [];
 	}
 

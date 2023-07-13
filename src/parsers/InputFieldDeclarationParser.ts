@@ -39,6 +39,7 @@ export enum InputFieldArgumentType {
 	SHOWCASE = 'showcase',
 	ON_VALUE = 'onValue',
 	OFF_VALUE = 'offValue',
+	DEFAULT_VALUE = 'defaultValue',
 
 	INVALID = 'invalid',
 }

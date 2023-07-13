@@ -18,8 +18,8 @@ export class SelectInputField extends AbstractSelectInputField<T> {
 		return this.elements.filter(x => x.isActive()).first()?.value ?? null;
 	}
 
-	filterValue(value: MBExtendedLiteral | undefined): T {
-		return isLiteral(value) ? value : this.getDefaultValue();
+	filterValue(value: MBExtendedLiteral | undefined): T | undefined {
+		return isLiteral(value) ? value : undefined;
 	}
 
 	updateDisplayValue(value: T): void {
@@ -36,7 +36,7 @@ export class SelectInputField extends AbstractSelectInputField<T> {
 		return this.getValue() == value;
 	}
 
-	getDefaultValue(): T {
+	getFallbackDefaultValue(): T {
 		return '';
 	}
 }

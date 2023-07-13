@@ -55,8 +55,12 @@ export class TimeInputField extends AbstractInputField<T> {
 		return TimeParser.stringify(this.time);
 	}
 
-	public filterValue(value: MBExtendedLiteral | undefined): T {
-		return value != null ? stringifyLiteral(value) : this.getDefaultValue();
+	public filterValue(value: MBExtendedLiteral | undefined): T | undefined {
+		if (value == null || typeof value !== 'string') {
+			return undefined;
+		}
+		const strValue = stringifyLiteral(value);
+		return TimeParser.parse(strValue) ? strValue : undefined;
 	}
 
 	public updateDisplayValue(value: T): void {
@@ -81,7 +85,7 @@ export class TimeInputField extends AbstractInputField<T> {
 		return value == this.getValue();
 	}
 
-	public getDefaultValue(): T {
+	public getFallbackDefaultValue(): T {
 		return TimeParser.stringify(TimeParser.getDefaultTime());
 	}
 

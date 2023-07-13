@@ -16,13 +16,13 @@ export class NumberInputField extends AbstractInputField<T> {
 		return parseFloat(this.numberComponent.getValue());
 	}
 
-	filterValue(value: MBExtendedLiteral | undefined): T {
+	filterValue(value: MBExtendedLiteral | undefined): T | undefined {
 		if (typeof value === 'number') {
 			return value;
 		} else if (typeof value === 'string') {
 			return Number.parseFloat(value);
 		} else {
-			return this.getDefaultValue();
+			return undefined;
 		}
 	}
 
@@ -34,7 +34,7 @@ export class NumberInputField extends AbstractInputField<T> {
 		return this.getValue() == value;
 	}
 
-	getDefaultValue(): T {
+	getFallbackDefaultValue(): T {
 		return 0;
 	}
 

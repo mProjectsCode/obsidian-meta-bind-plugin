@@ -29,7 +29,7 @@ export class DatePickerInputField extends AbstractInputField<T> {
 		return this.date !== null ? DateParser.stringify(this.date) : null;
 	}
 
-	filterValue(value: MBExtendedLiteral): T {
+	filterValue(value: MBExtendedLiteral | undefined): T | undefined {
 		if (value === undefined || typeof value !== 'string') {
 			return null;
 		}
@@ -46,7 +46,7 @@ export class DatePickerInputField extends AbstractInputField<T> {
 		this.component?.updateValue(this.date);
 	}
 
-	getDefaultValue(): string {
+	getFallbackDefaultValue(): string {
 		return DateParser.stringify(DateParser.getDefaultDate());
 	}
 

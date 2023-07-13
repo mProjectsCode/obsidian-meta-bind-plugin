@@ -1,6 +1,8 @@
 import { InputFieldMDRC } from '../renderChildren/InputFieldMDRC';
 import { MBExtendedLiteral } from '../utils/Utils';
 import { ComputedSignal } from '../utils/Signal';
+import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
+import { DefaultValueInputFieldArgument } from '../inputFieldArguments/arguments/DefaultValueInputFieldArgument';
 
 export type GetInputFieldType<T extends AbstractInputField<any>> = T extends AbstractInputField<infer R> ? R : unknown;
 
@@ -18,7 +20,8 @@ export abstract class AbstractInputField<T extends MBExtendedLiteral> {
 		};
 
 		this.filteredWriteSignal = new ComputedSignal<MBExtendedLiteral | undefined, T>(this.renderChild.writeSignal, (value: MBExtendedLiteral | undefined) => {
-			return this.filterValue(value);
+			const filteredValue = this.filterValue(value);
+			return filteredValue !== undefined ? filteredValue : this.getDefaultValue();
 		});
 
 		this.filteredWriteSignal.registerListener({
@@ -38,6 +41,15 @@ export abstract class AbstractInputField<T extends MBExtendedLiteral> {
 		return this.getValue() === value;
 	}
 
+	getDefaultValue(): T {
+		const defaultValueArgument = this.renderChild.getArgument(InputFieldArgumentType.DEFAULT_VALUE) as DefaultValueInputFieldArgument | undefined;
+		if (!defaultValueArgument) {
+			return this.getFallbackDefaultValue();
+		}
+		const filteredValue = this.filterValue(defaultValueArgument.value);
+		return filteredValue !== undefined ? filteredValue : this.getFallbackDefaultValue();
+	}
+
 	/**
 	 * Returns the current content of the input field
 	 */
@@ -48,14 +60,14 @@ export abstract class AbstractInputField<T extends MBExtendedLiteral> {
 	 *
 	 * @param value
 	 */
-	abstract filterValue(value: MBExtendedLiteral | undefined): T;
+	abstract filterValue(value: MBExtendedLiteral | undefined): T | undefined;
 
 	abstract updateDisplayValue(value: T): void;
 
 	/**
 	 * Returns the default value of this input field
 	 */
-	abstract getDefaultValue(): T;
+	abstract getFallbackDefaultValue(): T;
 
 	/**
 	 * Returns the HTML element this input field is wrapped in
