@@ -1,11 +1,12 @@
 ---
-slider1: 6
+slider1: 5
 suggest: test
 toggle1: false
 Domestic_tasks:
   - Lunch 🍲
 Meditate: 100
 Slept: 00:00
+select: option a
 ---
 
 ## In callouts
@@ -68,7 +69,8 @@ Lorem ipsum dolor sit amet, `INPUT[date():other note#date]` consectetur adipisci
 ## Error Messages
 - `INPUT[text():meta bind/nonExistantFile#title]`
 - `INPUT[slider(nonExistantArgument)]`
-- `INPUT[select(option(option a),option(option b),option(option c),option(option d)):select]`
+
+- `INPUT[inlineSelect(option(option a),option(option b),option(option c),option(option d)):select]`
 
 
 Lorem ipsum dolor sit amet, `INPUT[text():meta bind/nonExistantFile#title]` consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. `INPUT[slider(nonExistantArgument)]` Curabitur sed rhoncus nisl. Maecenas nisi justo, viverra vel tempus vel, hendrerit at metus. `INPUT[select(option(option a),option(option b),option(option c),option(option d)):select]` asdasd asdasdasd
