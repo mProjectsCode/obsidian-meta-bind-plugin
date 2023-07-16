@@ -1,0 +1,496 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ast parser tests simple closure test 1`] = `
+ASTEL_Root {
+  "children": Array [
+    ASTEL_Literal {
+      "token": Object {
+        "literal": "hello world",
+        "range": Object {
+          "from": 0,
+          "to": 10,
+        },
+        "type": "WORD",
+      },
+      "type": "LITERAL",
+    },
+    ASTEL_Closure {
+      "children": Array [
+        ASTEL_Literal {
+          "token": Object {
+            "literal": "this is a message to all people",
+            "range": Object {
+              "from": 12,
+              "to": 42,
+            },
+            "type": "WORD",
+          },
+          "type": "LITERAL",
+        },
+      ],
+      "endLiteral": ASTEL_Literal {
+        "token": Object {
+          "literal": ")",
+          "range": Object {
+            "from": 43,
+            "to": 43,
+          },
+          "type": ")",
+        },
+        "type": "LITERAL",
+      },
+      "startLiteral": ASTEL_Literal {
+        "token": Object {
+          "literal": "(",
+          "range": Object {
+            "from": 11,
+            "to": 11,
+          },
+          "type": "(",
+        },
+        "type": "LITERAL",
+      },
+      "type": "CLOSURE",
+    },
+  ],
+  "str": "hello world(this is a message to all people)",
+  "type": "ROOT",
+}
+`;
+
+exports[`ast parser tests simple input field declaration 1 1`] = `
+ASTEL_Root {
+  "children": Array [
+    ASTEL_Literal {
+      "token": Object {
+        "literal": "INPUT",
+        "range": Object {
+          "from": 0,
+          "to": 4,
+        },
+        "type": "WORD",
+      },
+      "type": "LITERAL",
+    },
+    ASTEL_Closure {
+      "children": Array [
+        ASTEL_Literal {
+          "token": Object {
+            "literal": "text",
+            "range": Object {
+              "from": 6,
+              "to": 9,
+            },
+            "type": "WORD",
+          },
+          "type": "LITERAL",
+        },
+        ASTEL_Literal {
+          "token": Object {
+            "literal": ":",
+            "range": Object {
+              "from": 10,
+              "to": 10,
+            },
+            "type": ":",
+          },
+          "type": "LITERAL",
+        },
+        ASTEL_Literal {
+          "token": Object {
+            "literal": "nested",
+            "range": Object {
+              "from": 11,
+              "to": 16,
+            },
+            "type": "WORD",
+          },
+          "type": "LITERAL",
+        },
+        ASTEL_Closure {
+          "children": Array [
+            ASTEL_Literal {
+              "token": Object {
+                "literal": "\\"",
+                "range": Object {
+                  "from": 18,
+                  "to": 18,
+                },
+                "type": "\\"",
+              },
+              "type": "LITERAL",
+            },
+            ASTEL_Literal {
+              "token": Object {
+                "literal": "object",
+                "range": Object {
+                  "from": 19,
+                  "to": 24,
+                },
+                "type": "WORD",
+              },
+              "type": "LITERAL",
+            },
+            ASTEL_Literal {
+              "token": Object {
+                "literal": "\\"",
+                "range": Object {
+                  "from": 25,
+                  "to": 25,
+                },
+                "type": "\\"",
+              },
+              "type": "LITERAL",
+            },
+          ],
+          "endLiteral": ASTEL_Literal {
+            "token": Object {
+              "literal": "]",
+              "range": Object {
+                "from": 26,
+                "to": 26,
+              },
+              "type": "]",
+            },
+            "type": "LITERAL",
+          },
+          "startLiteral": ASTEL_Literal {
+            "token": Object {
+              "literal": "[",
+              "range": Object {
+                "from": 17,
+                "to": 17,
+              },
+              "type": "[",
+            },
+            "type": "LITERAL",
+          },
+          "type": "CLOSURE",
+        },
+      ],
+      "endLiteral": ASTEL_Literal {
+        "token": Object {
+          "literal": "]",
+          "range": Object {
+            "from": 27,
+            "to": 27,
+          },
+          "type": "]",
+        },
+        "type": "LITERAL",
+      },
+      "startLiteral": ASTEL_Literal {
+        "token": Object {
+          "literal": "[",
+          "range": Object {
+            "from": 5,
+            "to": 5,
+          },
+          "type": "[",
+        },
+        "type": "LITERAL",
+      },
+      "type": "CLOSURE",
+    },
+  ],
+  "str": "INPUT[text:nested[\\"object\\"]]",
+  "type": "ROOT",
+}
+`;
+
+exports[`tokenizer tests tokenize all simple tokens 1`] = `
+Array [
+  Object {
+    "literal": "(",
+    "range": Object {
+      "from": 0,
+      "to": 0,
+    },
+    "type": "(",
+  },
+  Object {
+    "literal": ")",
+    "range": Object {
+      "from": 1,
+      "to": 1,
+    },
+    "type": ")",
+  },
+  Object {
+    "literal": "[",
+    "range": Object {
+      "from": 2,
+      "to": 2,
+    },
+    "type": "[",
+  },
+  Object {
+    "literal": "]",
+    "range": Object {
+      "from": 3,
+      "to": 3,
+    },
+    "type": "]",
+  },
+  Object {
+    "literal": ":",
+    "range": Object {
+      "from": 4,
+      "to": 4,
+    },
+    "type": ":",
+  },
+  Object {
+    "literal": "#",
+    "range": Object {
+      "from": 5,
+      "to": 5,
+    },
+    "type": "#",
+  },
+  Object {
+    "literal": ",",
+    "range": Object {
+      "from": 6,
+      "to": 6,
+    },
+    "type": ",",
+  },
+  Object {
+    "literal": ".",
+    "range": Object {
+      "from": 7,
+      "to": 7,
+    },
+    "type": ".",
+  },
+  Object {
+    "literal": "eof",
+    "range": Object {
+      "from": 8,
+      "to": 8,
+    },
+    "type": "EOF",
+  },
+]
+`;
+
+exports[`tokenizer tests tokenize complex quotes 1`] = `
+Array [
+  Object {
+    "literal": "hello world",
+    "range": Object {
+      "from": 0,
+      "to": 10,
+    },
+    "type": "WORD",
+  },
+  Object {
+    "literal": "(",
+    "range": Object {
+      "from": 11,
+      "to": 11,
+    },
+    "type": "(",
+  },
+  Object {
+    "literal": "\\"",
+    "range": Object {
+      "from": 12,
+      "to": 12,
+    },
+    "type": "\\"",
+  },
+  Object {
+    "literal": "this is a message to all people []",
+    "range": Object {
+      "from": 13,
+      "to": 46,
+    },
+    "type": "WORD",
+  },
+  Object {
+    "literal": "\\"",
+    "range": Object {
+      "from": 47,
+      "to": 47,
+    },
+    "type": "\\"",
+  },
+  Object {
+    "literal": " test ",
+    "range": Object {
+      "from": 48,
+      "to": 53,
+    },
+    "type": "WORD",
+  },
+  Object {
+    "literal": "[",
+    "range": Object {
+      "from": 54,
+      "to": 54,
+    },
+    "type": "[",
+  },
+  Object {
+    "literal": "]",
+    "range": Object {
+      "from": 55,
+      "to": 55,
+    },
+    "type": "]",
+  },
+  Object {
+    "literal": " ",
+    "range": Object {
+      "from": 56,
+      "to": 56,
+    },
+    "type": "WORD",
+  },
+  Object {
+    "literal": "\\"",
+    "range": Object {
+      "from": 57,
+      "to": 57,
+    },
+    "type": "\\"",
+  },
+  Object {
+    "literal": ":",
+    "range": Object {
+      "from": 58,
+      "to": 58,
+    },
+    "type": "WORD",
+  },
+  Object {
+    "literal": "\\"",
+    "range": Object {
+      "from": 59,
+      "to": 59,
+    },
+    "type": "\\"",
+  },
+  Object {
+    "literal": ")",
+    "range": Object {
+      "from": 60,
+      "to": 60,
+    },
+    "type": ")",
+  },
+  Object {
+    "literal": "eof",
+    "range": Object {
+      "from": 61,
+      "to": 61,
+    },
+    "type": "EOF",
+  },
+]
+`;
+
+exports[`tokenizer tests tokenize simple mix of tokens and words 1`] = `
+Array [
+  Object {
+    "literal": "hello world",
+    "range": Object {
+      "from": 0,
+      "to": 10,
+    },
+    "type": "WORD",
+  },
+  Object {
+    "literal": "(",
+    "range": Object {
+      "from": 11,
+      "to": 11,
+    },
+    "type": "(",
+  },
+  Object {
+    "literal": "this is a message to all people",
+    "range": Object {
+      "from": 12,
+      "to": 42,
+    },
+    "type": "WORD",
+  },
+  Object {
+    "literal": ")",
+    "range": Object {
+      "from": 43,
+      "to": 43,
+    },
+    "type": ")",
+  },
+  Object {
+    "literal": "eof",
+    "range": Object {
+      "from": 44,
+      "to": 44,
+    },
+    "type": "EOF",
+  },
+]
+`;
+
+exports[`tokenizer tests tokenize simple quotes 1`] = `
+Array [
+  Object {
+    "literal": "\\"",
+    "range": Object {
+      "from": 0,
+      "to": 0,
+    },
+    "type": "\\"",
+  },
+  Object {
+    "literal": "hello world(this is a message to all people)",
+    "range": Object {
+      "from": 1,
+      "to": 44,
+    },
+    "type": "WORD",
+  },
+  Object {
+    "literal": "\\"",
+    "range": Object {
+      "from": 45,
+      "to": 45,
+    },
+    "type": "\\"",
+  },
+  Object {
+    "literal": "eof",
+    "range": Object {
+      "from": 46,
+      "to": 46,
+    },
+    "type": "EOF",
+  },
+]
+`;
+
+exports[`tokenizer tests tokenize simple word 1`] = `
+Array [
+  Object {
+    "literal": "hello world",
+    "range": Object {
+      "from": 0,
+      "to": 10,
+    },
+    "type": "WORD",
+  },
+  Object {
+    "literal": "eof",
+    "range": Object {
+      "from": 11,
+      "to": 11,
+    },
+    "type": "EOF",
+  },
+]
+`;
