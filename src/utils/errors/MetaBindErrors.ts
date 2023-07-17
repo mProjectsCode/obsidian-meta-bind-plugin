@@ -36,7 +36,7 @@ export abstract class MetaBindError extends Error {
 		this.updateMessage();
 	}
 
-	private updateMessage(): void {
+	protected updateMessage(): void {
 		if (this.cause instanceof Error) {
 			this.message = `[${this.getErrorType()}] "${this.effect}" caused by error "${this.cause.message}"`;
 		} else {

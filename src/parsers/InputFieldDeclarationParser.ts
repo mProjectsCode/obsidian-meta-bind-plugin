@@ -243,7 +243,7 @@ export class InputFieldDeclarationParser {
 
 	parseArguments(
 		inputFieldType: InputFieldType,
-		inputFieldArguments: { type: InputFieldArgumentType; value: any }[] | undefined,
+		inputFieldArguments: { type: InputFieldArgumentType; value: string }[] | undefined,
 		errorCollection: ErrorCollection
 	): InputFieldArgumentContainer {
 		const argumentContainer: InputFieldArgumentContainer = new InputFieldArgumentContainer();

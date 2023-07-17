@@ -1,5 +1,123 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ast parser tests complex closure test 2 1`] = `
+ASTEL_Root {
+  "children": Array [
+    ASTEL_Literal {
+      "token": Object {
+        "literal": "hello world",
+        "range": Object {
+          "from": 0,
+          "to": 10,
+        },
+        "type": "WORD",
+      },
+      "type": "LITERAL",
+    },
+    ASTEL_Closure {
+      "children": Array [
+        ASTEL_Literal {
+          "token": Object {
+            "literal": "this is a message to all people",
+            "range": Object {
+              "from": 12,
+              "to": 42,
+            },
+            "type": "WORD",
+          },
+          "type": "LITERAL",
+        },
+      ],
+      "endLiteral": ASTEL_Literal {
+        "token": Object {
+          "literal": "]",
+          "range": Object {
+            "from": 43,
+            "to": 43,
+          },
+          "type": "]",
+        },
+        "type": "LITERAL",
+      },
+      "startLiteral": ASTEL_Literal {
+        "token": Object {
+          "literal": "[",
+          "range": Object {
+            "from": 11,
+            "to": 11,
+          },
+          "type": "[",
+        },
+        "type": "LITERAL",
+      },
+      "type": "CLOSURE",
+    },
+    ASTEL_Literal {
+      "token": Object {
+        "literal": "test",
+        "range": Object {
+          "from": 44,
+          "to": 47,
+        },
+        "type": "WORD",
+      },
+      "type": "LITERAL",
+    },
+    ASTEL_Closure {
+      "children": Array [
+        ASTEL_Literal {
+          "token": Object {
+            "literal": "a",
+            "range": Object {
+              "from": 49,
+              "to": 49,
+            },
+            "type": "WORD",
+          },
+          "type": "LITERAL",
+        },
+      ],
+      "endLiteral": ASTEL_Literal {
+        "token": Object {
+          "literal": ")",
+          "range": Object {
+            "from": 50,
+            "to": 50,
+          },
+          "type": ")",
+        },
+        "type": "LITERAL",
+      },
+      "startLiteral": ASTEL_Literal {
+        "token": Object {
+          "literal": "(",
+          "range": Object {
+            "from": 48,
+            "to": 48,
+          },
+          "type": "(",
+        },
+        "type": "LITERAL",
+      },
+      "type": "CLOSURE",
+    },
+    ASTEL_Literal {
+      "token": Object {
+        "literal": "b",
+        "range": Object {
+          "from": 51,
+          "to": 51,
+        },
+        "type": "WORD",
+      },
+      "type": "LITERAL",
+    },
+  ],
+  "str": "hello world[this is a message to all people]test(a)b",
+  "type": "ROOT",
+}
+`;
+
 exports[`ast parser tests simple closure test 1`] = `
 ASTEL_Root {
   "children": Array [
@@ -196,6 +314,13 @@ ASTEL_Root {
   "str": "INPUT[text:nested[\\"object\\"]]",
   "type": "ROOT",
 }
+`;
+
+exports[`ast parser tests unclosed closure test 1`] = `
+"[MB_PARSING_ERROR] \\"failed to parse\\" caused by \\"Encountered invalid token. Active closure is not the closure that this token closes.\\"
+hello world[this is a message to all (people]test)b
+                                            ^
+"
 `;
 
 exports[`tokenizer tests tokenize all simple tokens 1`] = `
