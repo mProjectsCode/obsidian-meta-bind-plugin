@@ -7,7 +7,7 @@ export abstract class AbstractInputFieldArgument {
 	requiresValue: boolean = false;
 	allowMultiple: boolean = false;
 
-	abstract parseValue(value: any): void;
+	abstract parseValue(value: string): void;
 
 	isAllowed(inputFieldType: InputFieldType): boolean {
 		if (this.allowedInputFields.length === 0) {
