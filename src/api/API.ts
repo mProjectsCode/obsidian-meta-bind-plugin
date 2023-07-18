@@ -9,10 +9,12 @@ import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
 import { JsViewFieldMDRC } from '../renderChildren/JsViewFieldMDRC';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
 import MetaBindPlugin from '../main';
+import { DeclarationParser, NewInputFieldDeclarationParser } from '../parsers/newInputFieldParser/InputFieldParser';
 
 export class API {
 	public plugin: MetaBindPlugin;
 	public inputFieldParser: InputFieldDeclarationParser;
+	public newInputFieldParser: NewInputFieldDeclarationParser;
 	public viewFieldParser: ViewFieldDeclarationParser;
 	public bindTargetParser: BindTargetParser;
 
@@ -20,6 +22,7 @@ export class API {
 		this.plugin = plugin;
 
 		this.inputFieldParser = new InputFieldDeclarationParser();
+		this.newInputFieldParser = new NewInputFieldDeclarationParser(this.plugin);
 		this.viewFieldParser = new ViewFieldDeclarationParser();
 		this.bindTargetParser = new BindTargetParser(this.plugin);
 	}
@@ -43,7 +46,7 @@ export class API {
 	}
 
 	public createInputFieldFromString(fullDeclaration: string, renderType: RenderChildType, filePath: string, container: HTMLElement): InputFieldMDRC {
-		const declaration: InputFieldDeclaration = this.inputFieldParser.parseString(fullDeclaration);
+		const declaration: InputFieldDeclaration = this.newInputFieldParser.parseString(fullDeclaration, filePath);
 		return new InputFieldMDRC(container, renderType, declaration, this.plugin, filePath, self.crypto.randomUUID());
 	}
 

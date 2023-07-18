@@ -3,7 +3,7 @@ select: 2
 multiSelect:
   - option 1
   - option 3
-select2: null
+select2: false
 ---
 
 ### Select

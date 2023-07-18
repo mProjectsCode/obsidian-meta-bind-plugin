@@ -17,6 +17,8 @@ export class ErrorCollection {
 			} else {
 				this.otherError = error;
 			}
+
+			console.warn(error);
 		} else {
 			console.warn(`[MB_ERROR_CONTAINER] received invalid error type`, error);
 		}
