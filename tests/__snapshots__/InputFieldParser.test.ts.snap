@@ -1,9 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ast parser tests complex closure test 2 1`] = `
-ASTEL_Root {
+AST_Root {
   "children": Array [
-    ASTEL_Literal {
+    AST_Literal {
+      "str": "hello world[this is a message to all people]test(a)b",
       "token": Object {
         "literal": "hello world",
         "range": Object {
@@ -14,9 +15,10 @@ ASTEL_Root {
       },
       "type": "LITERAL",
     },
-    ASTEL_Closure {
+    AST_Closure {
       "children": Array [
-        ASTEL_Literal {
+        AST_Literal {
+          "str": "hello world[this is a message to all people]test(a)b",
           "token": Object {
             "literal": "this is a message to all people",
             "range": Object {
@@ -28,7 +30,8 @@ ASTEL_Root {
           "type": "LITERAL",
         },
       ],
-      "endLiteral": ASTEL_Literal {
+      "endLiteral": AST_Literal {
+        "str": "hello world[this is a message to all people]test(a)b",
         "token": Object {
           "literal": "]",
           "range": Object {
@@ -39,7 +42,8 @@ ASTEL_Root {
         },
         "type": "LITERAL",
       },
-      "startLiteral": ASTEL_Literal {
+      "startLiteral": AST_Literal {
+        "str": "hello world[this is a message to all people]test(a)b",
         "token": Object {
           "literal": "[",
           "range": Object {
@@ -50,9 +54,11 @@ ASTEL_Root {
         },
         "type": "LITERAL",
       },
+      "str": "hello world[this is a message to all people]test(a)b",
       "type": "CLOSURE",
     },
-    ASTEL_Literal {
+    AST_Literal {
+      "str": "hello world[this is a message to all people]test(a)b",
       "token": Object {
         "literal": "test",
         "range": Object {
@@ -63,9 +69,10 @@ ASTEL_Root {
       },
       "type": "LITERAL",
     },
-    ASTEL_Closure {
+    AST_Closure {
       "children": Array [
-        ASTEL_Literal {
+        AST_Literal {
+          "str": "hello world[this is a message to all people]test(a)b",
           "token": Object {
             "literal": "a",
             "range": Object {
@@ -77,7 +84,8 @@ ASTEL_Root {
           "type": "LITERAL",
         },
       ],
-      "endLiteral": ASTEL_Literal {
+      "endLiteral": AST_Literal {
+        "str": "hello world[this is a message to all people]test(a)b",
         "token": Object {
           "literal": ")",
           "range": Object {
@@ -88,7 +96,8 @@ ASTEL_Root {
         },
         "type": "LITERAL",
       },
-      "startLiteral": ASTEL_Literal {
+      "startLiteral": AST_Literal {
+        "str": "hello world[this is a message to all people]test(a)b",
         "token": Object {
           "literal": "(",
           "range": Object {
@@ -99,9 +108,11 @@ ASTEL_Root {
         },
         "type": "LITERAL",
       },
+      "str": "hello world[this is a message to all people]test(a)b",
       "type": "CLOSURE",
     },
-    ASTEL_Literal {
+    AST_Literal {
+      "str": "hello world[this is a message to all people]test(a)b",
       "token": Object {
         "literal": "b",
         "range": Object {
@@ -114,14 +125,97 @@ ASTEL_Root {
     },
   ],
   "str": "hello world[this is a message to all people]test(a)b",
+  "tokens": Array [
+    Object {
+      "literal": "hello world",
+      "range": Object {
+        "from": 0,
+        "to": 10,
+      },
+      "type": "WORD",
+    },
+    Object {
+      "literal": "[",
+      "range": Object {
+        "from": 11,
+        "to": 11,
+      },
+      "type": "[",
+    },
+    Object {
+      "literal": "this is a message to all people",
+      "range": Object {
+        "from": 12,
+        "to": 42,
+      },
+      "type": "WORD",
+    },
+    Object {
+      "literal": "]",
+      "range": Object {
+        "from": 43,
+        "to": 43,
+      },
+      "type": "]",
+    },
+    Object {
+      "literal": "test",
+      "range": Object {
+        "from": 44,
+        "to": 47,
+      },
+      "type": "WORD",
+    },
+    Object {
+      "literal": "(",
+      "range": Object {
+        "from": 48,
+        "to": 48,
+      },
+      "type": "(",
+    },
+    Object {
+      "literal": "a",
+      "range": Object {
+        "from": 49,
+        "to": 49,
+      },
+      "type": "WORD",
+    },
+    Object {
+      "literal": ")",
+      "range": Object {
+        "from": 50,
+        "to": 50,
+      },
+      "type": ")",
+    },
+    Object {
+      "literal": "b",
+      "range": Object {
+        "from": 51,
+        "to": 51,
+      },
+      "type": "WORD",
+    },
+    Object {
+      "literal": "eof",
+      "range": Object {
+        "from": 52,
+        "to": 52,
+      },
+      "type": "EOF",
+    },
+  ],
   "type": "ROOT",
 }
 `;
 
 exports[`ast parser tests simple closure test 1`] = `
-ASTEL_Root {
+AST_Root {
   "children": Array [
-    ASTEL_Literal {
+    AST_Literal {
+      "str": "hello world(this is a message to all people)",
       "token": Object {
         "literal": "hello world",
         "range": Object {
@@ -132,9 +226,10 @@ ASTEL_Root {
       },
       "type": "LITERAL",
     },
-    ASTEL_Closure {
+    AST_Closure {
       "children": Array [
-        ASTEL_Literal {
+        AST_Literal {
+          "str": "hello world(this is a message to all people)",
           "token": Object {
             "literal": "this is a message to all people",
             "range": Object {
@@ -146,7 +241,8 @@ ASTEL_Root {
           "type": "LITERAL",
         },
       ],
-      "endLiteral": ASTEL_Literal {
+      "endLiteral": AST_Literal {
+        "str": "hello world(this is a message to all people)",
         "token": Object {
           "literal": ")",
           "range": Object {
@@ -157,7 +253,8 @@ ASTEL_Root {
         },
         "type": "LITERAL",
       },
-      "startLiteral": ASTEL_Literal {
+      "startLiteral": AST_Literal {
+        "str": "hello world(this is a message to all people)",
         "token": Object {
           "literal": "(",
           "range": Object {
@@ -168,18 +265,62 @@ ASTEL_Root {
         },
         "type": "LITERAL",
       },
+      "str": "hello world(this is a message to all people)",
       "type": "CLOSURE",
     },
   ],
   "str": "hello world(this is a message to all people)",
+  "tokens": Array [
+    Object {
+      "literal": "hello world",
+      "range": Object {
+        "from": 0,
+        "to": 10,
+      },
+      "type": "WORD",
+    },
+    Object {
+      "literal": "(",
+      "range": Object {
+        "from": 11,
+        "to": 11,
+      },
+      "type": "(",
+    },
+    Object {
+      "literal": "this is a message to all people",
+      "range": Object {
+        "from": 12,
+        "to": 42,
+      },
+      "type": "WORD",
+    },
+    Object {
+      "literal": ")",
+      "range": Object {
+        "from": 43,
+        "to": 43,
+      },
+      "type": ")",
+    },
+    Object {
+      "literal": "eof",
+      "range": Object {
+        "from": 44,
+        "to": 44,
+      },
+      "type": "EOF",
+    },
+  ],
   "type": "ROOT",
 }
 `;
 
 exports[`ast parser tests simple input field declaration 1 1`] = `
-ASTEL_Root {
+AST_Root {
   "children": Array [
-    ASTEL_Literal {
+    AST_Literal {
+      "str": "INPUT[text:nested[\\"object\\"]]",
       "token": Object {
         "literal": "INPUT",
         "range": Object {
@@ -190,9 +331,10 @@ ASTEL_Root {
       },
       "type": "LITERAL",
     },
-    ASTEL_Closure {
+    AST_Closure {
       "children": Array [
-        ASTEL_Literal {
+        AST_Literal {
+          "str": "INPUT[text:nested[\\"object\\"]]",
           "token": Object {
             "literal": "text",
             "range": Object {
@@ -203,7 +345,8 @@ ASTEL_Root {
           },
           "type": "LITERAL",
         },
-        ASTEL_Literal {
+        AST_Literal {
+          "str": "INPUT[text:nested[\\"object\\"]]",
           "token": Object {
             "literal": ":",
             "range": Object {
@@ -214,7 +357,8 @@ ASTEL_Root {
           },
           "type": "LITERAL",
         },
-        ASTEL_Literal {
+        AST_Literal {
+          "str": "INPUT[text:nested[\\"object\\"]]",
           "token": Object {
             "literal": "nested",
             "range": Object {
@@ -225,9 +369,10 @@ ASTEL_Root {
           },
           "type": "LITERAL",
         },
-        ASTEL_Closure {
+        AST_Closure {
           "children": Array [
-            ASTEL_Literal {
+            AST_Literal {
+              "str": "INPUT[text:nested[\\"object\\"]]",
               "token": Object {
                 "literal": "\\"",
                 "range": Object {
@@ -238,7 +383,8 @@ ASTEL_Root {
               },
               "type": "LITERAL",
             },
-            ASTEL_Literal {
+            AST_Literal {
+              "str": "INPUT[text:nested[\\"object\\"]]",
               "token": Object {
                 "literal": "object",
                 "range": Object {
@@ -249,7 +395,8 @@ ASTEL_Root {
               },
               "type": "LITERAL",
             },
-            ASTEL_Literal {
+            AST_Literal {
+              "str": "INPUT[text:nested[\\"object\\"]]",
               "token": Object {
                 "literal": "\\"",
                 "range": Object {
@@ -261,7 +408,8 @@ ASTEL_Root {
               "type": "LITERAL",
             },
           ],
-          "endLiteral": ASTEL_Literal {
+          "endLiteral": AST_Literal {
+            "str": "INPUT[text:nested[\\"object\\"]]",
             "token": Object {
               "literal": "]",
               "range": Object {
@@ -272,7 +420,8 @@ ASTEL_Root {
             },
             "type": "LITERAL",
           },
-          "startLiteral": ASTEL_Literal {
+          "startLiteral": AST_Literal {
+            "str": "INPUT[text:nested[\\"object\\"]]",
             "token": Object {
               "literal": "[",
               "range": Object {
@@ -283,10 +432,12 @@ ASTEL_Root {
             },
             "type": "LITERAL",
           },
+          "str": "INPUT[text:nested[\\"object\\"]]",
           "type": "CLOSURE",
         },
       ],
-      "endLiteral": ASTEL_Literal {
+      "endLiteral": AST_Literal {
+        "str": "INPUT[text:nested[\\"object\\"]]",
         "token": Object {
           "literal": "]",
           "range": Object {
@@ -297,7 +448,8 @@ ASTEL_Root {
         },
         "type": "LITERAL",
       },
-      "startLiteral": ASTEL_Literal {
+      "startLiteral": AST_Literal {
+        "str": "INPUT[text:nested[\\"object\\"]]",
         "token": Object {
           "literal": "[",
           "range": Object {
@@ -308,10 +460,109 @@ ASTEL_Root {
         },
         "type": "LITERAL",
       },
+      "str": "INPUT[text:nested[\\"object\\"]]",
       "type": "CLOSURE",
     },
   ],
   "str": "INPUT[text:nested[\\"object\\"]]",
+  "tokens": Array [
+    Object {
+      "literal": "INPUT",
+      "range": Object {
+        "from": 0,
+        "to": 4,
+      },
+      "type": "WORD",
+    },
+    Object {
+      "literal": "[",
+      "range": Object {
+        "from": 5,
+        "to": 5,
+      },
+      "type": "[",
+    },
+    Object {
+      "literal": "text",
+      "range": Object {
+        "from": 6,
+        "to": 9,
+      },
+      "type": "WORD",
+    },
+    Object {
+      "literal": ":",
+      "range": Object {
+        "from": 10,
+        "to": 10,
+      },
+      "type": ":",
+    },
+    Object {
+      "literal": "nested",
+      "range": Object {
+        "from": 11,
+        "to": 16,
+      },
+      "type": "WORD",
+    },
+    Object {
+      "literal": "[",
+      "range": Object {
+        "from": 17,
+        "to": 17,
+      },
+      "type": "[",
+    },
+    Object {
+      "literal": "\\"",
+      "range": Object {
+        "from": 18,
+        "to": 18,
+      },
+      "type": "\\"",
+    },
+    Object {
+      "literal": "object",
+      "range": Object {
+        "from": 19,
+        "to": 24,
+      },
+      "type": "WORD",
+    },
+    Object {
+      "literal": "\\"",
+      "range": Object {
+        "from": 25,
+        "to": 25,
+      },
+      "type": "\\"",
+    },
+    Object {
+      "literal": "]",
+      "range": Object {
+        "from": 26,
+        "to": 26,
+      },
+      "type": "]",
+    },
+    Object {
+      "literal": "]",
+      "range": Object {
+        "from": 27,
+        "to": 27,
+      },
+      "type": "]",
+    },
+    Object {
+      "literal": "eof",
+      "range": Object {
+        "from": 28,
+        "to": 28,
+      },
+      "type": "EOF",
+    },
+  ],
   "type": "ROOT",
 }
 `;
@@ -618,4 +869,765 @@ Array [
     "type": "EOF",
   },
 ]
+`;
+
+exports[`validation tree test simple construct validation graph 1 1`] = `
+ValidationGraph {
+  "nodeIndexCounter": 3,
+  "nodes": Array [
+    ValidationGraphNode {
+      "final": false,
+      "index": -1,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": -1,
+          "input": "CLOSURE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 0,
+        },
+      ],
+      "treeNode": "NONE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 0,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 0,
+          "input": "LITERAL",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 1,
+        },
+      ],
+      "treeNode": "CLOSURE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 1,
+      "loopMax": 3,
+      "loopMin": 1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 1,
+          "input": "LITERAL",
+          "loopMax": 3,
+          "loopMin": -1,
+          "to": 1,
+        },
+        ValidationGraphTransition {
+          "from": 1,
+          "input": "CLOSURE",
+          "loopMax": -1,
+          "loopMin": 1,
+          "to": 2,
+        },
+      ],
+      "treeNode": "LITERAL",
+    },
+    ValidationGraphNode {
+      "final": true,
+      "index": 2,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [],
+      "treeNode": "CLOSURE",
+    },
+  ],
+  "state": Array [],
+}
+`;
+
+exports[`validation tree test simple construct validation graph 2 1`] = `
+ValidationGraph {
+  "nodeIndexCounter": 4,
+  "nodes": Array [
+    ValidationGraphNode {
+      "final": false,
+      "index": -1,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": -1,
+          "input": "CLOSURE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 0,
+        },
+      ],
+      "treeNode": "NONE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 0,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 0,
+          "input": "LITERAL",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 1,
+        },
+        ValidationGraphTransition {
+          "from": 0,
+          "input": "NONE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 1,
+        },
+      ],
+      "treeNode": "CLOSURE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 1,
+      "loopMax": 3,
+      "loopMin": 1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 1,
+          "input": "LITERAL",
+          "loopMax": 3,
+          "loopMin": -1,
+          "to": 1,
+        },
+        ValidationGraphTransition {
+          "from": 1,
+          "input": "CLOSURE",
+          "loopMax": -1,
+          "loopMin": 1,
+          "to": 2,
+        },
+        ValidationGraphTransition {
+          "from": 1,
+          "input": "NONE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 2,
+        },
+      ],
+      "treeNode": "LITERAL",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 2,
+      "loopMax": 3,
+      "loopMin": 1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 2,
+          "input": "CLOSURE",
+          "loopMax": 3,
+          "loopMin": -1,
+          "to": 2,
+        },
+        ValidationGraphTransition {
+          "from": 2,
+          "input": "CLOSURE",
+          "loopMax": -1,
+          "loopMin": 1,
+          "to": 3,
+        },
+      ],
+      "treeNode": "CLOSURE",
+    },
+    ValidationGraphNode {
+      "final": true,
+      "index": 3,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [],
+      "treeNode": "CLOSURE",
+    },
+  ],
+  "state": Array [],
+}
+`;
+
+exports[`validation tree test simple construct validation graph 3 1`] = `
+ValidationGraph {
+  "nodeIndexCounter": 4,
+  "nodes": Array [
+    ValidationGraphNode {
+      "final": false,
+      "index": -1,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": -1,
+          "input": "CLOSURE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 0,
+        },
+      ],
+      "treeNode": "NONE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 0,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 0,
+          "input": "CLOSURE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 1,
+        },
+        ValidationGraphTransition {
+          "from": 0,
+          "input": "NONE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 2,
+        },
+      ],
+      "treeNode": "CLOSURE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 1,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 1,
+          "input": "LITERAL",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 2,
+        },
+      ],
+      "treeNode": "CLOSURE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 2,
+      "loopMax": 3,
+      "loopMin": 1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 2,
+          "input": "CLOSURE",
+          "loopMax": 3,
+          "loopMin": -1,
+          "to": 1,
+        },
+        ValidationGraphTransition {
+          "from": 2,
+          "input": "CLOSURE",
+          "loopMax": -1,
+          "loopMin": 1,
+          "to": 3,
+        },
+      ],
+      "treeNode": "LITERAL",
+    },
+    ValidationGraphNode {
+      "final": true,
+      "index": 3,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [],
+      "treeNode": "CLOSURE",
+    },
+  ],
+  "state": Array [],
+}
+`;
+
+exports[`validation tree test simple construct validation graph 4 1`] = `
+ValidationGraph {
+  "nodeIndexCounter": 4,
+  "nodes": Array [
+    ValidationGraphNode {
+      "final": false,
+      "index": -1,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": -1,
+          "input": "CLOSURE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 0,
+        },
+      ],
+      "treeNode": "NONE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 0,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 0,
+          "input": "CLOSURE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 1,
+        },
+        ValidationGraphTransition {
+          "from": 0,
+          "input": "NONE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 2,
+        },
+      ],
+      "treeNode": "CLOSURE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 1,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 1,
+          "input": "LITERAL",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 2,
+        },
+      ],
+      "treeNode": "CLOSURE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 2,
+      "loopMax": 1,
+      "loopMin": 1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 2,
+          "input": "CLOSURE",
+          "loopMax": 1,
+          "loopMin": -1,
+          "to": 1,
+        },
+        ValidationGraphTransition {
+          "from": 2,
+          "input": "CLOSURE",
+          "loopMax": -1,
+          "loopMin": 1,
+          "to": 3,
+        },
+      ],
+      "treeNode": "LITERAL",
+    },
+    ValidationGraphNode {
+      "final": true,
+      "index": 3,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [],
+      "treeNode": "CLOSURE",
+    },
+  ],
+  "state": Array [],
+}
+`;
+
+exports[`validation tree test simple construct validation graph 5 1`] = `
+ValidationGraph {
+  "layout": Array [
+    "CLOSURE",
+    TreeLayoutOr {
+      "allowNone": false,
+      "option1": Array [],
+      "option2": Array [
+        "LITERAL",
+      ],
+      "type": "OR",
+    },
+    "CLOSURE",
+  ],
+  "nodeIndexCounter": 6,
+  "nodes": Array [
+    ValidationGraphNode {
+      "final": false,
+      "index": -1,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": -1,
+          "input": "CLOSURE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 0,
+        },
+      ],
+      "treeNode": "NONE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 0,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 0,
+          "input": "NONE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 1,
+        },
+      ],
+      "treeNode": "CLOSURE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 1,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 1,
+          "input": "NONE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 2,
+        },
+        ValidationGraphTransition {
+          "from": 1,
+          "input": "LITERAL",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 3,
+        },
+      ],
+      "treeNode": "NONE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 2,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 2,
+          "input": "NONE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 4,
+        },
+      ],
+      "treeNode": "NONE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 3,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 3,
+          "input": "NONE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 4,
+        },
+      ],
+      "treeNode": "LITERAL",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 4,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 4,
+          "input": "CLOSURE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 5,
+        },
+      ],
+      "treeNode": "NONE",
+    },
+    ValidationGraphNode {
+      "final": true,
+      "index": 5,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [],
+      "treeNode": "CLOSURE",
+    },
+  ],
+  "state": Array [],
+}
+`;
+
+exports[`validation tree test simple construct validation graph 6 1`] = `
+ValidationGraph {
+  "layout": Array [
+    "CLOSURE",
+    TreeLayoutOr {
+      "allowNone": false,
+      "option1": Array [
+        TreeLayoutOr {
+          "allowNone": false,
+          "option1": Array [],
+          "option2": Array [
+            "LITERAL",
+          ],
+          "type": "OR",
+        },
+      ],
+      "option2": Array [
+        TreeLayoutOr {
+          "allowNone": false,
+          "option1": Array [],
+          "option2": Array [
+            "CLOSURE",
+          ],
+          "type": "OR",
+        },
+      ],
+      "type": "OR",
+    },
+    "CLOSURE",
+  ],
+  "nodeIndexCounter": 12,
+  "nodes": Array [
+    ValidationGraphNode {
+      "final": false,
+      "index": -1,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": -1,
+          "input": "CLOSURE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 0,
+        },
+      ],
+      "treeNode": "NONE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 0,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 0,
+          "input": "NONE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 1,
+        },
+      ],
+      "treeNode": "CLOSURE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 1,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 1,
+          "input": "NONE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 2,
+        },
+        ValidationGraphTransition {
+          "from": 1,
+          "input": "NONE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 6,
+        },
+      ],
+      "treeNode": "NONE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 2,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 2,
+          "input": "NONE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 3,
+        },
+        ValidationGraphTransition {
+          "from": 2,
+          "input": "LITERAL",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 4,
+        },
+      ],
+      "treeNode": "NONE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 3,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 3,
+          "input": "NONE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 5,
+        },
+      ],
+      "treeNode": "NONE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 4,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 4,
+          "input": "NONE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 5,
+        },
+      ],
+      "treeNode": "LITERAL",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 5,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 5,
+          "input": "NONE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 10,
+        },
+      ],
+      "treeNode": "NONE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 6,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 6,
+          "input": "NONE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 7,
+        },
+        ValidationGraphTransition {
+          "from": 6,
+          "input": "CLOSURE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 8,
+        },
+      ],
+      "treeNode": "NONE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 7,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 7,
+          "input": "NONE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 9,
+        },
+      ],
+      "treeNode": "NONE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 8,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 8,
+          "input": "NONE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 9,
+        },
+      ],
+      "treeNode": "CLOSURE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 9,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 9,
+          "input": "NONE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 10,
+        },
+      ],
+      "treeNode": "NONE",
+    },
+    ValidationGraphNode {
+      "final": false,
+      "index": 10,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [
+        ValidationGraphTransition {
+          "from": 10,
+          "input": "CLOSURE",
+          "loopMax": -1,
+          "loopMin": -1,
+          "to": 11,
+        },
+      ],
+      "treeNode": "NONE",
+    },
+    ValidationGraphNode {
+      "final": true,
+      "index": 11,
+      "loopMax": -1,
+      "loopMin": -1,
+      "transitions": Array [],
+      "treeNode": "CLOSURE",
+    },
+  ],
+  "state": Array [],
+}
 `;

@@ -207,3 +207,11 @@ code.meta-bind-plugin-error {
 .mb-list-item > span {
 	flex-grow: 1;
 }
+
+.meta-bind-pre {
+	overflow-x: scroll;
+}
+
+.meta-bind-pre > code {
+	white-space: pre;
+}

@@ -1,7 +1,7 @@
 ---
 frequency: "[[high]]"
 toggle: false
-needs: Text
+needs: Meta Bind JS
 date: Saturday, July 8th 2023
 text: asdasddas
 ---

@@ -1,8 +1,13 @@
-import { ErrorLevel, ErrorType, MetaBindError } from '../../utils/errors/MetaBindErrors';
-import { InputFieldType } from '../InputFieldDeclarationParser';
+import { ErrorLevel, ErrorType, MetaBindError, MetaBindParsingError } from '../../utils/errors/MetaBindErrors';
+import { InputFieldArgumentType, InputFieldDeclaration, InputFieldType } from '../InputFieldDeclarationParser';
 import { BindTargetDeclaration } from '../BindTargetParser';
 import { InputFieldArgumentContainer } from '../../inputFieldArguments/InputFieldArgumentContainer';
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
+import { TreeLayoutLoop, TreeLayoutOr, ValidationGraph } from './TreeValidator';
+import { IPlugin } from '../../IPlugin';
+import { AbstractInputFieldArgument } from '../../inputFieldArguments/AbstractInputFieldArgument';
+import { InputFieldArgumentFactory } from '../../inputFieldArguments/InputFieldArgumentFactory';
+import { isTruthy } from '../../utils/Utils';
 
 export class ParsingError extends MetaBindError {
 	str: string;
@@ -56,22 +61,22 @@ export interface Closure<TokenType extends string> {
 	closingTokenType: TokenType;
 }
 
-export const InputFieldTokenType = {
-	ILLEGAL: 'ILLEGAL',
-	EOF: 'EOF',
-	WORD: 'WORD',
-	L_PAREN: '(',
-	R_PAREN: ')',
-	L_SQUARE: '[',
-	R_SQUARE: ']',
-	COLON: ':',
-	HASHTAG: '#',
-	DOT: '.',
-	COMMA: ',',
-	QUOTE: '"',
-} as const;
+export enum InputFieldTokenType {
+	ILLEGAL = 'ILLEGAL',
+	EOF = 'EOF',
+	WORD = 'WORD',
+	L_PAREN = '(',
+	R_PAREN = ')',
+	L_SQUARE = '[',
+	R_SQUARE = ']',
+	COLON = ':',
+	HASHTAG = '#',
+	DOT = '.',
+	COMMA = ',',
+	QUOTE = "'",
+}
 
-const InputFieldClosures: Closure<InputFieldTokenItem>[] = [
+const InputFieldClosures: Closure<InputFieldTokenType>[] = [
 	{
 		openingTokenType: InputFieldTokenType.L_PAREN,
 		closingTokenType: InputFieldTokenType.R_PAREN,
@@ -82,16 +87,14 @@ const InputFieldClosures: Closure<InputFieldTokenItem>[] = [
 	},
 ];
 
-type InputFieldTokenItem = typeof InputFieldTokenType[keyof typeof InputFieldTokenType];
-
 export interface Range {
 	from: number;
 	to: number;
 }
 
-export interface InputFieldToken extends AbstractToken<InputFieldTokenItem> {}
+export interface InputFieldToken extends AbstractToken<InputFieldTokenType> {}
 
-function createToken(type: InputFieldTokenItem, literal: string, from: number, to: number): InputFieldToken {
+function createToken(type: InputFieldTokenType, literal: string, from: number, to: number): InputFieldToken {
 	return {
 		type: type,
 		literal: literal,
@@ -135,8 +138,7 @@ export class InputFieldTokenizer {
 		let token: InputFieldToken | undefined;
 
 		if (this.inQuotes) {
-			if (this.ch === '"') {
-				token = this.createToken(InputFieldTokenType.QUOTE);
+			if (this.ch === "'") {
 				this.inQuotes = false;
 			} else if (this.currentToken && this.currentToken.type === InputFieldTokenType.WORD) {
 				this.currentToken.literal += this.ch;
@@ -161,8 +163,7 @@ export class InputFieldTokenizer {
 				token = this.createToken(InputFieldTokenType.DOT);
 			} else if (this.ch === ',') {
 				token = this.createToken(InputFieldTokenType.COMMA);
-			} else if (this.ch === '"') {
-				token = this.createToken(InputFieldTokenType.QUOTE);
+			} else if (this.ch === "'") {
 				this.inQuotes = true;
 			} else if (this.ch === '\0') {
 				token = this.createToken(InputFieldTokenType.EOF, 'eof');
@@ -199,7 +200,7 @@ export class InputFieldTokenizer {
 		}
 	}
 
-	private createToken(type: InputFieldTokenItem, char?: string): InputFieldToken {
+	private createToken(type: InputFieldTokenType, char?: string): InputFieldToken {
 		return createToken(type, char !== undefined ? char : this.ch, this.position, this.position);
 	}
 }
@@ -208,6 +209,8 @@ export enum AST_El_Type {
 	LITERAL = 'LITERAL',
 	CLOSURE = 'CLOSURE',
 	ROOT = 'ROOT',
+	SPECIAL_START = 'SPECIAL_START',
+	SPECIAL_END = 'SPECIAL_END',
 
 	NONE = 'NONE',
 }
@@ -223,39 +226,9 @@ export abstract class Abstract_AST_El {
 
 	abstract getToken(): InputFieldToken | undefined;
 
+	abstract toLiteral(): string;
+
 	abstract toDebugString(): string;
-}
-
-export interface LayoutDefinitionLoop {
-	layout: AST_El_Type[];
-	min: number;
-	max: number;
-}
-
-export type LayoutDefinition = (AST_El_Type | LayoutDefinitionLoop)[];
-
-function simplifyLayoutDefinition(layout: LayoutDefinition): LayoutDefinition {
-	let newLayout: LayoutDefinition = [];
-
-	for (const layoutElement of layout) {
-		if (typeof layoutElement === 'object') {
-			for (let i = 0; i < layoutElement.min; i++) {
-				newLayout = newLayout.concat(layoutElement.layout);
-			}
-
-			if (layoutElement.max - layoutElement.min > 0) {
-				newLayout.push({
-					layout: layoutElement.layout,
-					min: 0,
-					max: layoutElement.max - layoutElement.min,
-				});
-			}
-		} else {
-			newLayout.push(layoutElement);
-		}
-	}
-
-	return newLayout;
 }
 
 export abstract class Abstract_AST_Node extends Abstract_AST_El {
@@ -266,174 +239,7 @@ export abstract class Abstract_AST_Node extends Abstract_AST_El {
 		this.children = children;
 	}
 
-	public test(layout: LayoutDefinition): boolean {
-		layout = simplifyLayoutDefinition(layout);
-		console.log('------------------------------------------------------');
-		console.log(layout);
-
-		const res = this.testLayout(layout, 0, 0);
-
-		// console.log('res', res);
-
-		if (res === -1) {
-			return false;
-		}
-
-		// we expect to be at the end of the children
-		if (this.children[res]) {
-			// console.log('res', res);
-			return false;
-		}
-
-		return true;
-	}
-
-	testLayout(layout: LayoutDefinition, layoutIndex: number, childIndex: number): number {
-		console.log('rec layout', layout, layoutIndex, childIndex);
-
-		while (layoutIndex < layout.length) {
-			const layoutElement = layout[layoutIndex];
-			const child: AST_El | undefined = this.children[childIndex];
-
-			// console.log('iteration', layoutIndex, childIndex, layoutElement, this.children[childIndex]?.type);
-
-			if (child === undefined) {
-				return -1;
-			}
-
-			if (typeof layoutElement === 'object') {
-				let newIndex = -1;
-				let currentChildIndex = childIndex;
-
-				for (let i = 0; i <= layoutElement.max; i++) {
-					let res = childIndex;
-
-					if (i !== 0) {
-						res = this.testLayout(layoutElement.layout, 0, currentChildIndex);
-					}
-
-					// console.log('iter res', layoutIndex, i, res);
-
-					if (res !== -1) {
-						currentChildIndex = res;
-
-						const res2 = this.testLayout(layout, layoutIndex + 1, currentChildIndex);
-						// console.log('iter res2', layoutIndex + 1, currentChildIndex, i, res2);
-						if (res2 !== -1) {
-							newIndex = res2;
-							break;
-						}
-					}
-				}
-
-				if (newIndex !== -1 && layoutIndex < layout.length) {
-					return newIndex + 1;
-				} else {
-					return -1;
-				}
-			} else {
-				if (layoutElement !== child.type) {
-					return -1;
-				}
-				childIndex += 1;
-			}
-
-			layoutIndex += 1;
-		}
-
-		return childIndex;
-	}
-
-	testLayoutRec(layout: LayoutDefinition, childIndex: number, maxRepeats: number): number {
-		console.log('rec layout', JSON.stringify(layout), childIndex, maxRepeats);
-
-		let repeatCounter = 0;
-
-		while (repeatCounter < maxRepeats) {
-			let layoutIndex = 0;
-			const iterStartIndex = childIndex;
-			console.log('repeat', repeatCounter, childIndex, JSON.stringify(layout));
-
-			while (layoutIndex < layout.length) {
-				const layoutElement = layout[layoutIndex];
-				const child: AST_El | undefined = this.children[childIndex];
-
-				if (child === undefined) {
-					console.log('rec parsing failed, child undefined', repeatCounter, childIndex, iterStartIndex);
-					return iterStartIndex;
-				}
-
-				if (typeof layoutElement === 'object') {
-					const res = this.testLayoutRec(layoutElement.layout, childIndex, layoutElement.max);
-					if (res === -1) {
-						console.log('rec parsing failed, rec failed', repeatCounter, childIndex, iterStartIndex);
-						return iterStartIndex;
-					}
-					childIndex = res;
-				} else {
-					if (layoutElement !== child.type) {
-						console.log('rec parsing failed, no token match', repeatCounter, childIndex, iterStartIndex);
-						return iterStartIndex;
-					}
-					childIndex += 1;
-				}
-
-				layoutIndex += 1;
-			}
-
-			repeatCounter += 1;
-		}
-
-		return childIndex;
-	}
-
-	testChildLayout(layout: AST_El_Type[]): boolean {
-		for (let i = 0; i < Math.max(this.children.length, layout.length); i++) {
-			const layoutItem: AST_El_Type | undefined = layout[i];
-			const child: (AST_Literal | AST_Closure) | undefined = this.children[i];
-
-			if (layoutItem === undefined && child === undefined) {
-				throw new Error('this parser sucks');
-			}
-
-			if (layoutItem === undefined) {
-				return false;
-			}
-
-			if (child === undefined || child.getToken().type === InputFieldTokenType.EOF) {
-				return false;
-			}
-
-			if (layoutItem !== child.type) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	testChildLayouts(layouts: AST_El_Type[][]): void {
-		let correct = false;
-		for (const layout of layouts) {
-			if (this.testChildLayout(layout)) {
-				correct = true;
-			}
-		}
-
-		if (!correct) {
-			throw new ParsingError(
-				ErrorLevel.ERROR,
-				'failed to parse',
-				`Encountered invalid token. Expected token types to be of order ${layouts.map(x => x.toString()).join(' or ')} but received ${this.children.map(x => x.type)}.`,
-				{},
-				this.str,
-				this.getToken(),
-				'AST Parser'
-			);
-		}
-	}
-
-	getChild(index: number, expected?: InputFieldTokenItem | undefined): AST_El {
+	getChild(index: number, expected?: InputFieldTokenType | undefined): AST_El {
 		const el = this.children[index];
 		if (!el) {
 			throw new Error('This parser sucks');
@@ -452,6 +258,10 @@ export abstract class Abstract_AST_Node extends Abstract_AST_El {
 		}
 
 		return el;
+	}
+
+	public toLiteral(): string {
+		return this.children.map(x => x.toLiteral()).join('');
 	}
 }
 
@@ -483,6 +293,10 @@ export class AST_Literal extends Abstract_AST_El {
 		}
 	}
 
+	public toLiteral(): string {
+		return this.token.literal;
+	}
+
 	toDebugString(): string {
 		return this.token.literal;
 	}
@@ -508,6 +322,10 @@ export class AST_Closure extends Abstract_AST_Node {
 
 	public getToken(): InputFieldToken {
 		return this.startLiteral.token;
+	}
+
+	public toLiteral(): string {
+		return this.startLiteral.token.literal + this.children.map(x => x.toLiteral()).join('') + this.endLiteral.token.literal;
 	}
 
 	toDebugString(): string {
@@ -547,7 +365,7 @@ export class AST_Root extends Abstract_AST_Node {
 
 export class InputFieldASTParser {
 	private readonly tokens: InputFieldToken[];
-	private readonly closureStack: Closure<InputFieldTokenItem>[];
+	private readonly closureStack: Closure<InputFieldTokenType>[];
 	private readonly astRoot: AST_Root;
 	private position: number;
 
@@ -591,7 +409,7 @@ export class InputFieldASTParser {
 		return astelLiteral;
 	}
 
-	private parseClosure(openingLiteral: AST_Literal, closure: Closure<InputFieldTokenItem>): AST_El | undefined {
+	private parseClosure(openingLiteral: AST_Literal, closure: Closure<InputFieldTokenType>): AST_El | undefined {
 		if (openingLiteral.token.type !== closure.openingTokenType) {
 			return undefined;
 		}
@@ -663,25 +481,49 @@ export interface InputFieldParsingData {
 	ast: AST_Root;
 }
 
-export interface InputFieldDeclaration {
-	parsingData: InputFieldParsingData | undefined;
-	type: InputFieldType;
-	bindTarget: BindTargetDeclaration | undefined;
-	argumentContainer: InputFieldArgumentContainer;
-	errorCollection: ErrorCollection;
+// export interface InputFieldDeclaration {
+// 	parsingData: InputFieldParsingData | undefined;
+// 	type: InputFieldType;
+// 	bindTarget: BindTargetDeclaration | undefined;
+// 	argumentContainer: InputFieldArgumentContainer;
+// 	errorCollection: ErrorCollection;
+// }
+
+function splitAST_Els(list: AST_El[], tokenType: InputFieldTokenType): AST_El[][] {
+	const out: AST_El[][] = [];
+	let current: AST_El[] = [];
+
+	for (const listElement of list) {
+		if (listElement.getToken().type === tokenType) {
+			out.push(current);
+			current = [];
+		} else {
+			current.push(listElement);
+		}
+	}
+
+	out.push(current);
+
+	return out;
 }
 
 export class DeclarationParser {
+	plugin: IPlugin;
+	filePath: string;
+
 	fullDeclaration: string;
 	tokens: InputFieldToken[];
 	ast: AST_Root;
 
 	type: InputFieldType;
 	bindTarget: BindTargetDeclaration | undefined;
+	bindTargetString: string | undefined;
 	argumentContainer: InputFieldArgumentContainer;
 	errorCollection: ErrorCollection;
 
-	constructor(fullDeclaration: string, tokens: InputFieldToken[], ast: AST_Root, errorCollection: ErrorCollection) {
+	constructor(plugin: IPlugin, filePath: string, fullDeclaration: string, tokens: InputFieldToken[], ast: AST_Root, errorCollection: ErrorCollection) {
+		this.plugin = plugin;
+		this.filePath = filePath;
 		this.fullDeclaration = fullDeclaration;
 		this.tokens = tokens;
 		this.ast = ast;
@@ -691,12 +533,20 @@ export class DeclarationParser {
 		this.argumentContainer = new InputFieldArgumentContainer();
 	}
 
+	public parse(): InputFieldDeclaration {
+		try {
+			return this.parseDeclaration();
+		} catch (e) {
+			this.errorCollection.add(e);
+			return this.buildDeclaration();
+		}
+	}
+
 	private parseDeclaration(): InputFieldDeclaration {
 		// literal.closure or literal.closure.closure
-		this.ast.testChildLayouts([
-			[AST_El_Type.LITERAL, AST_El_Type.CLOSURE],
-			[AST_El_Type.LITERAL, AST_El_Type.CLOSURE, AST_El_Type.CLOSURE],
-		]);
+		const layoutValidationGraph = new ValidationGraph([AST_El_Type.LITERAL, new TreeLayoutLoop([AST_El_Type.CLOSURE], 1, 2)]);
+		this.validateNodeAndThrow(this.ast, layoutValidationGraph);
+
 		const inputLiteral = this.ast.getChild(0, InputFieldTokenType.WORD) as AST_Literal;
 		inputLiteral.checkContent('INPUT', false);
 
@@ -705,7 +555,7 @@ export class DeclarationParser {
 			this.parsePureDeclaration(pureDeclarationClosure);
 		} else if (this.ast.children.length === 3) {
 			const templateClosure = this.ast.getChild(1, InputFieldTokenType.L_SQUARE) as AST_Closure;
-			this.parsePureDeclaration(templateClosure);
+			this.parseTemplate(templateClosure);
 
 			const pureDeclarationClosure = this.ast.getChild(2, InputFieldTokenType.L_SQUARE) as AST_Closure;
 			this.parsePureDeclaration(pureDeclarationClosure);
@@ -720,13 +570,10 @@ export class DeclarationParser {
 
 	private buildDeclaration(): InputFieldDeclaration {
 		return {
-			parsingData: {
-				fullDeclaration: this.fullDeclaration,
-				tokens: this.tokens,
-				ast: this.ast,
-			},
-			type: this.type,
-			bindTarget: this.bindTarget,
+			fullDeclaration: this.fullDeclaration,
+			inputFieldType: this.type,
+			isBound: isTruthy(this.bindTargetString),
+			bindTarget: this.bindTargetString ?? '',
 			argumentContainer: this.argumentContainer,
 			errorCollection: this.errorCollection,
 		};
@@ -736,9 +583,310 @@ export class DeclarationParser {
 		// TODO
 	}
 
-	private parsePureDeclaration(closure: AST_Closure): void {}
+	private parsePureDeclaration(closure: AST_Closure): void {
+		const layoutValidationGraph = new ValidationGraph([
+			AST_El_Type.LITERAL, // input field type
+			new TreeLayoutOr([], [AST_El_Type.CLOSURE]), // optional arguments
+			new TreeLayoutOr(
+				[],
+				[
+					AST_El_Type.LITERAL, // bind target separator
+					new TreeLayoutOr(
+						[AST_El_Type.LITERAL, AST_El_Type.LITERAL], // file and hashtag
+						[] // no file
+					),
+					AST_El_Type.LITERAL, // first bind target metadata path part
+					new TreeLayoutLoop([new TreeLayoutLoop([AST_El_Type.LITERAL], 0, -1), new TreeLayoutLoop([AST_El_Type.CLOSURE], 0, -1)], 0, -1), // the other bind target metadata path part
+				]
+			),
+		]);
+		this.validateNodeAndThrow(closure, layoutValidationGraph);
 
-	private parseType(): void {}
+		const inputFieldTypeLiteral = closure.getChild(0, InputFieldTokenType.WORD) as AST_Literal;
+		this.type = this.parseInputFieldType(inputFieldTypeLiteral);
+
+		const tempAST_El = closure.children[1];
+
+		if (tempAST_El === undefined) {
+			return;
+		} else if (tempAST_El instanceof AST_Closure) {
+			// argument closure
+			const argumentClosure = closure.getChild(1, InputFieldTokenType.L_PAREN) as AST_Closure;
+			this.parseArguments(argumentClosure);
+
+			// bind target start
+			const temp2AST_El = closure.children[2];
+			if (temp2AST_El !== undefined) {
+				this.parseBindTarget(closure, 2);
+			}
+		} else {
+			// bind target starts
+			this.parseBindTarget(closure, 1);
+		}
+	}
+
+	/**
+	 * Parses the bind target from a closure from a specific index.
+	 * The index should be the suspected position of the bind target separator.
+	 *
+	 * @param closure
+	 * @param index
+	 * @private
+	 */
+	private parseBindTarget(closure: AST_Closure, index: number): void {
+		if (closure.children[index] === undefined) {
+			// there is no bind target
+			return;
+		}
+
+		// separator
+		closure.getChild(index, InputFieldTokenType.COLON);
+
+		// parsing the bind target with this parser sucks
+		let bindTargetLiteral = '';
+		for (let i = index + 1; i < closure.children.length; i++) {
+			bindTargetLiteral += closure.children[i].toLiteral();
+		}
+
+		this.bindTargetString = bindTargetLiteral;
+
+		// const bindTargetParser = new BindTargetParser(this.plugin);
+		// this.bindTarget = bindTargetParser.parseBindTarget(bindTargetLiteral, this.filePath);
+	}
+
+	private parseArguments(closure: AST_Closure): void {
+		if (closure.children.length === 0) {
+			return;
+		}
+
+		const inputFieldArguments: { type: InputFieldArgumentType; value: string }[] = [];
+
+		const temp = splitAST_Els(closure.children, InputFieldTokenType.COMMA);
+
+		for (const tempElement of temp) {
+			if (tempElement.length === 0) {
+				throw new ParsingError(
+					ErrorLevel.ERROR,
+					'failed to parse',
+					`Encountered invalid token. Expected token to be of type '${InputFieldTokenType.WORD}' but received nothing. Check for double commas in the input field arguments.`,
+					{},
+					closure.str,
+					undefined,
+					'AST Parser'
+				);
+			} else if (tempElement.length === 1) {
+				const argumentNameLiteral = tempElement[0] as AST_Literal;
+				if (argumentNameLiteral.getToken().type !== InputFieldTokenType.WORD) {
+					throw new ParsingError(
+						ErrorLevel.ERROR,
+						'failed to parse',
+						`Encountered invalid token. Expected token to be of type '${InputFieldTokenType.WORD}' but received '${argumentNameLiteral.getToken().type}'.`,
+						{},
+						argumentNameLiteral.str,
+						argumentNameLiteral.getToken(),
+						'AST Parser'
+					);
+				}
+				inputFieldArguments.push(this.parseArgument(argumentNameLiteral, undefined));
+			} else if (tempElement.length === 2) {
+				const argumentNameLiteral = tempElement[0] as AST_Literal;
+				if (argumentNameLiteral.getToken().type !== InputFieldTokenType.WORD) {
+					throw new ParsingError(
+						ErrorLevel.ERROR,
+						'failed to parse',
+						`Encountered invalid token. Expected token to be of type '${InputFieldTokenType.WORD}' but received '${argumentNameLiteral.getToken().type}'.`,
+						{},
+						argumentNameLiteral.str,
+						argumentNameLiteral.getToken(),
+						'AST Parser'
+					);
+				}
+
+				const argumentValueClosure = tempElement[1] as AST_Closure;
+				if (argumentValueClosure.getToken().type !== InputFieldTokenType.L_PAREN) {
+					throw new ParsingError(
+						ErrorLevel.ERROR,
+						'failed to parse',
+						`Encountered invalid token. Expected token to be of type '${InputFieldTokenType.L_PAREN}' but received '${argumentValueClosure.getToken().type}'.`,
+						{},
+						argumentValueClosure.str,
+						argumentValueClosure.getToken(),
+						'AST Parser'
+					);
+				}
+
+				inputFieldArguments.push(this.parseArgument(argumentNameLiteral, argumentValueClosure));
+			} else {
+				throw new ParsingError(
+					ErrorLevel.ERROR,
+					'failed to parse',
+					`Encountered invalid token. Expected token to be of type '${InputFieldTokenType.COMMA}' but received '${tempElement[2].getToken().type}'.`,
+					{},
+					tempElement[2].str,
+					tempElement[2].getToken(),
+					'AST Parser'
+				);
+			}
+		}
+
+		// if (closure.children.length === 2) {
+		// 	const argumentNameLiteral = closure.getChild(0, InputFieldTokenType.WORD) as AST_Literal;
+		// 	const argumentValueClosure = closure.getChild(1, InputFieldTokenType.L_PAREN) as AST_Closure;
+		// 	inputFieldArguments.push(this.parseArgument(argumentNameLiteral, argumentValueClosure));
+		// 	return;
+		// }
+		//
+		// for (let i = 0; i < closure.children.length - 3; i += 3) {
+		// 	const argumentNameLiteral = closure.getChild(i, InputFieldTokenType.WORD) as AST_Literal;
+		// 	const argumentValueClosure = closure.getChild(i + 1, InputFieldTokenType.L_PAREN) as AST_Closure;
+		// 	closure.getChild(i + 2, InputFieldTokenType.COMMA);
+		// 	inputFieldArguments.push(this.parseArgument(argumentNameLiteral, argumentValueClosure));
+		// }
+
+		this.parseArgumentsIntoContainer(inputFieldArguments);
+	}
+
+	private parseArgument(argumentNameLiteral: AST_Literal, argumentValueClosure: AST_Closure | undefined): { type: InputFieldArgumentType; value: string } {
+		let valueString = '';
+		if (argumentValueClosure) {
+			for (const child of argumentValueClosure.children) {
+				valueString += child.toLiteral();
+			}
+		}
+
+		return {
+			type: this.parseInputFieldArgumentType(argumentNameLiteral),
+			value: valueString,
+		};
+	}
+
+	private parseArgumentsIntoContainer(inputFieldArguments: { type: InputFieldArgumentType; value: string }[] | undefined): void {
+		if (inputFieldArguments) {
+			for (const argument of inputFieldArguments) {
+				const inputFieldArgument: AbstractInputFieldArgument = InputFieldArgumentFactory.createInputFieldArgument(argument.type);
+
+				if (!inputFieldArgument.isAllowed(this.type)) {
+					this.errorCollection.add(
+						new MetaBindParsingError(
+							ErrorLevel.WARNING,
+							'failed to parse input field arguments',
+							`argument "${argument.type}" is only applicable to "${inputFieldArgument.getAllowedInputFieldsAsString()}" input fields`
+						)
+					);
+					continue;
+				}
+
+				if (inputFieldArgument.requiresValue) {
+					if (!argument.value) {
+						this.errorCollection.add(
+							new MetaBindParsingError(ErrorLevel.WARNING, 'failed to parse input field arguments', `argument "${argument.type}" requires a non empty value`)
+						);
+						continue;
+					}
+					try {
+						inputFieldArgument.parseValue(argument.value);
+					} catch (e) {
+						this.errorCollection.add(e);
+						continue;
+					}
+				}
+
+				this.argumentContainer.add(inputFieldArgument);
+			}
+
+			try {
+				this.argumentContainer.validate();
+			} catch (e) {
+				this.errorCollection.add(e);
+			}
+		}
+	}
+
+	private validateNodeAndThrow(astNode: Abstract_AST_Node, validationGraph: ValidationGraph): void {
+		if (!validationGraph.validateAST(astNode)) {
+			const layout = validationGraph.layout;
+
+			throw new ParsingError(
+				ErrorLevel.ERROR,
+				'failed to parse',
+				`Encountered invalid token. Expected token types to be of order ${layout} but received ${astNode.children.map(x => x.type)}.`,
+				{},
+				astNode.str,
+				astNode.getToken(),
+				'AST Parser'
+			);
+		}
+	}
+
+	private parseInputFieldType(astLiteral: AST_Literal): InputFieldType {
+		for (const entry of Object.entries(InputFieldType)) {
+			if (entry[1] === astLiteral.toLiteral().trim()) {
+				return entry[1];
+			}
+		}
+
+		throw new ParsingError(
+			ErrorLevel.ERROR,
+			'failed to parse',
+			`Encountered invalid token. Expected token to be an input field type but received '${astLiteral.toLiteral()}'.`,
+			{},
+			astLiteral.str,
+			astLiteral.getToken(),
+			'AST Parser'
+		);
+	}
+
+	private parseInputFieldArgumentType(astLiteral: AST_Literal): InputFieldArgumentType {
+		for (const entry of Object.entries(InputFieldArgumentType)) {
+			if (entry[1] === astLiteral.toLiteral().trim()) {
+				return entry[1];
+			}
+		}
+
+		throw new ParsingError(
+			ErrorLevel.ERROR,
+			'failed to parse',
+			`Encountered invalid token. Expected token to be an input field argument type but received '${astLiteral.toLiteral()}'.`,
+			{},
+			astLiteral.str,
+			astLiteral.getToken(),
+			'AST Parser'
+		);
+	}
+}
+
+export class NewInputFieldDeclarationParser {
+	plugin: IPlugin;
+
+	constructor(plugin: IPlugin) {
+		this.plugin = plugin;
+	}
+
+	public parseString(fullDeclaration: string, filePath: string): InputFieldDeclaration {
+		const errorCollection = new ErrorCollection('InputFieldParser');
+
+		try {
+			const tokenizer = new InputFieldTokenizer(fullDeclaration);
+			const tokens = tokenizer.getTokens();
+			const astParser = new InputFieldASTParser(fullDeclaration, tokens);
+			const ast = astParser.parse();
+			const declarationParser = new DeclarationParser(this.plugin, filePath, fullDeclaration, tokens, ast, errorCollection);
+
+			return declarationParser.parse();
+		} catch (e) {
+			errorCollection.add(e);
+		}
+
+		return {
+			fullDeclaration: fullDeclaration,
+			declaration: undefined,
+			inputFieldType: InputFieldType.INVALID,
+			isBound: false,
+			bindTarget: '',
+			argumentContainer: new InputFieldArgumentContainer(),
+			errorCollection: errorCollection,
+		};
+	}
 }
 
 // export class InputFieldParser {
