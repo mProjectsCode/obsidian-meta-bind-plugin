@@ -1,5 +1,5 @@
 import { AST_El_Type, InputFieldASTParser, InputFieldTokenizer } from '../src/parsers/newInputFieldParser/InputFieldParser';
-import { TreeLayoutOr, ValidationGraph } from '../src/parsers/newInputFieldParser/TreeValidator';
+import { TL_Or, ValidationGraph } from '../src/parsers/newInputFieldParser/TreeValidator';
 
 describe('tokenizer tests', function () {
 	test('tokenize all simple tokens', () => {
@@ -176,7 +176,7 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TreeLayoutOr([], [AST_El_Type.LITERAL]), AST_El_Type.CLOSURE]);
+		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([], [AST_El_Type.LITERAL]), AST_El_Type.CLOSURE]);
 
 		expect(graph.validateAST(ast)).toEqual(true);
 	});
@@ -187,7 +187,7 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TreeLayoutOr([], [AST_El_Type.LITERAL]), AST_El_Type.CLOSURE]);
+		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([], [AST_El_Type.LITERAL]), AST_El_Type.CLOSURE]);
 
 		expect(graph.validateAST(ast)).toEqual(true);
 	});
@@ -198,7 +198,7 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TreeLayoutOr([], [AST_El_Type.LITERAL]), AST_El_Type.CLOSURE]);
+		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([], [AST_El_Type.LITERAL]), AST_El_Type.CLOSURE]);
 
 		expect(graph.validateAST(ast)).toEqual(true);
 	});
@@ -209,11 +209,7 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([
-			AST_El_Type.CLOSURE,
-			new TreeLayoutOr([new TreeLayoutOr([], [AST_El_Type.LITERAL])], [new TreeLayoutOr([], [AST_El_Type.CLOSURE])]),
-			AST_El_Type.CLOSURE,
-		]);
+		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([new TL_Or([], [AST_El_Type.LITERAL])], [new TL_Or([], [AST_El_Type.CLOSURE])]), AST_El_Type.CLOSURE]);
 
 		expect(graph.validateAST(ast)).toEqual(true);
 	});
@@ -224,11 +220,7 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([
-			AST_El_Type.CLOSURE,
-			new TreeLayoutOr([new TreeLayoutOr([], [AST_El_Type.LITERAL])], [new TreeLayoutOr([], [AST_El_Type.CLOSURE])]),
-			AST_El_Type.CLOSURE,
-		]);
+		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([new TL_Or([], [AST_El_Type.LITERAL])], [new TL_Or([], [AST_El_Type.CLOSURE])]), AST_El_Type.CLOSURE]);
 
 		expect(graph.validateAST(ast)).toEqual(true);
 	});
@@ -239,11 +231,7 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([
-			AST_El_Type.CLOSURE,
-			new TreeLayoutOr([new TreeLayoutOr([], [AST_El_Type.LITERAL])], [new TreeLayoutOr([], [AST_El_Type.CLOSURE])]),
-			AST_El_Type.CLOSURE,
-		]);
+		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([new TL_Or([], [AST_El_Type.LITERAL])], [new TL_Or([], [AST_El_Type.CLOSURE])]), AST_El_Type.CLOSURE]);
 
 		expect(graph.validateAST(ast)).toEqual(true);
 	});
@@ -254,11 +242,7 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([
-			AST_El_Type.CLOSURE,
-			new TreeLayoutOr([new TreeLayoutOr([], [AST_El_Type.LITERAL])], [new TreeLayoutOr([], [AST_El_Type.CLOSURE])]),
-			AST_El_Type.CLOSURE,
-		]);
+		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([new TL_Or([], [AST_El_Type.LITERAL])], [new TL_Or([], [AST_El_Type.CLOSURE])]), AST_El_Type.CLOSURE]);
 
 		expect(graph.validateAST(ast)).toEqual(false);
 	});
@@ -269,7 +253,7 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TreeLayoutOr([], [AST_El_Type.LITERAL]), new TreeLayoutOr([], [AST_El_Type.CLOSURE]), AST_El_Type.CLOSURE]);
+		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([], [AST_El_Type.LITERAL]), new TL_Or([], [AST_El_Type.CLOSURE]), AST_El_Type.CLOSURE]);
 
 		expect(graph.validateAST(ast)).toEqual(true);
 	});
@@ -280,7 +264,7 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TreeLayoutOr([], [AST_El_Type.LITERAL]), new TreeLayoutOr([], [AST_El_Type.CLOSURE]), AST_El_Type.CLOSURE]);
+		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([], [AST_El_Type.LITERAL]), new TL_Or([], [AST_El_Type.CLOSURE]), AST_El_Type.CLOSURE]);
 
 		expect(graph.validateAST(ast)).toEqual(true);
 	});
@@ -291,7 +275,7 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TreeLayoutOr([], [AST_El_Type.LITERAL]), new TreeLayoutOr([], [AST_El_Type.CLOSURE]), AST_El_Type.CLOSURE]);
+		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([], [AST_El_Type.LITERAL]), new TL_Or([], [AST_El_Type.CLOSURE]), AST_El_Type.CLOSURE]);
 
 		expect(graph.validateAST(ast)).toEqual(true);
 	});
@@ -302,7 +286,7 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TreeLayoutOr([], [AST_El_Type.LITERAL]), new TreeLayoutOr([], [AST_El_Type.CLOSURE]), AST_El_Type.CLOSURE]);
+		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([], [AST_El_Type.LITERAL]), new TL_Or([], [AST_El_Type.CLOSURE]), AST_El_Type.CLOSURE]);
 
 		expect(graph.validateAST(ast)).toEqual(true);
 	});
@@ -338,17 +322,13 @@ describe('validation tree test', function () {
 	// 	});
 
 	test('simple construct validation graph 5', () => {
-		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TreeLayoutOr([], [AST_El_Type.LITERAL]), AST_El_Type.CLOSURE]);
+		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([], [AST_El_Type.LITERAL]), AST_El_Type.CLOSURE]);
 
 		expect(graph).toMatchSnapshot();
 	});
 
 	test('simple construct validation graph 6', () => {
-		const graph = new ValidationGraph([
-			AST_El_Type.CLOSURE,
-			new TreeLayoutOr([new TreeLayoutOr([], [AST_El_Type.LITERAL])], [new TreeLayoutOr([], [AST_El_Type.CLOSURE])]),
-			AST_El_Type.CLOSURE,
-		]);
+		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([new TL_Or([], [AST_El_Type.LITERAL])], [new TL_Or([], [AST_El_Type.CLOSURE])]), AST_El_Type.CLOSURE]);
 
 		expect(graph).toMatchSnapshot();
 	});
