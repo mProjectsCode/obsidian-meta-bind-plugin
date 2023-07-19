@@ -3,7 +3,7 @@ import { InputFieldArgumentType, InputFieldDeclaration, InputFieldType } from '.
 import { BindTargetDeclaration } from '../BindTargetParser';
 import { InputFieldArgumentContainer } from '../../inputFieldArguments/InputFieldArgumentContainer';
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
-import { TreeLayoutLoop, TreeLayoutOr, ValidationGraph } from './TreeValidator';
+import { TL_C_Literal, TL_C_Loop, TL_C_Optional, TL_C_Or, TL_Loop, TL_Or, ValidationGraph } from './TreeValidator';
 import { IPlugin } from '../../IPlugin';
 import { AbstractInputFieldArgument } from '../../inputFieldArguments/AbstractInputFieldArgument';
 import { InputFieldArgumentFactory } from '../../inputFieldArguments/InputFieldArgumentFactory';
@@ -544,7 +544,11 @@ export class DeclarationParser {
 
 	private parseDeclaration(): InputFieldDeclaration {
 		// literal.closure or literal.closure.closure
-		const layoutValidationGraph = new ValidationGraph([AST_El_Type.LITERAL, new TreeLayoutLoop([AST_El_Type.CLOSURE], 1, 2)]);
+		const layoutValidationGraph = new ValidationGraph([
+			new TL_C_Literal(AST_El_Type.LITERAL, InputFieldTokenType.WORD, 'INPUT'),
+			new TL_C_Loop([new TL_C_Literal(AST_El_Type.CLOSURE, InputFieldTokenType.L_PAREN)], 1, 2),
+			// AST_El_Type.LITERAL, new TL_Loop([AST_El_Type.CLOSURE], 1, 2)
+		]);
 		this.validateNodeAndThrow(this.ast, layoutValidationGraph);
 
 		const inputLiteral = this.ast.getChild(0, InputFieldTokenType.WORD) as AST_Literal;
@@ -584,21 +588,40 @@ export class DeclarationParser {
 	}
 
 	private parsePureDeclaration(closure: AST_Closure): void {
+		// const layoutValidationGraph = new ValidationGraph([
+		// 	AST_El_Type.LITERAL, // input field type
+		// 	new TL_Or([], [AST_El_Type.CLOSURE]), // optional arguments
+		// 	new TL_Or(
+		// 		[],
+		// 		[
+		// 			AST_El_Type.LITERAL, // bind target separator
+		// 			new TL_Or(
+		// 				[AST_El_Type.LITERAL, AST_El_Type.LITERAL], // file and hashtag
+		// 				[] // no file
+		// 			),
+		// 			AST_El_Type.LITERAL, // first bind target metadata path part
+		// 			new TL_Loop([new TL_Loop([AST_El_Type.LITERAL], 0, -1), new TL_Loop([AST_El_Type.CLOSURE], 0, -1)], 0, -1), // the other bind target metadata path part
+		// 		]
+		// 	),
+		// ]);
 		const layoutValidationGraph = new ValidationGraph([
-			AST_El_Type.LITERAL, // input field type
-			new TreeLayoutOr([], [AST_El_Type.CLOSURE]), // optional arguments
-			new TreeLayoutOr(
-				[],
-				[
-					AST_El_Type.LITERAL, // bind target separator
-					new TreeLayoutOr(
-						[AST_El_Type.LITERAL, AST_El_Type.LITERAL], // file and hashtag
-						[] // no file
-					),
-					AST_El_Type.LITERAL, // first bind target metadata path part
-					new TreeLayoutLoop([new TreeLayoutLoop([AST_El_Type.LITERAL], 0, -1), new TreeLayoutLoop([AST_El_Type.CLOSURE], 0, -1)], 0, -1), // the other bind target metadata path part
-				]
-			),
+			new TL_C_Literal(AST_El_Type.LITERAL, InputFieldTokenType.WORD), // input field type
+			new TL_C_Optional([new TL_C_Literal(AST_El_Type.CLOSURE, InputFieldTokenType.L_PAREN)]), // optional arguments
+			new TL_C_Optional([
+				new TL_C_Literal(AST_El_Type.LITERAL, InputFieldTokenType.COLON), // bind target separator
+				new TL_C_Optional([
+					new TL_C_Literal(AST_El_Type.LITERAL, InputFieldTokenType.WORD), // file
+					new TL_C_Literal(AST_El_Type.LITERAL, InputFieldTokenType.HASHTAG), // hashtag
+				]), // optional file and hashtag
+				new TL_C_Literal(AST_El_Type.LITERAL), // first bind target metadata path part
+				new TL_C_Loop(
+					[
+						new TL_C_Or([new TL_C_Literal(AST_El_Type.LITERAL)], [new TL_C_Literal(AST_El_Type.CLOSURE)]), // either literal or closure or none, in a loop
+					],
+					0,
+					-1
+				), // the other bind target metadata path part
+			]),
 		]);
 		this.validateNodeAndThrow(closure, layoutValidationGraph);
 

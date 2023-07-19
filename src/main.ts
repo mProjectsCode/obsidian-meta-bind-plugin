@@ -12,6 +12,7 @@ import { createMarkdownRenderChildWidgetEditorPlugin } from './cm6/Cm6_ViewPlugi
 import { MDRCManager } from './MDRCManager';
 import { DEFAULT_SETTINGS, MetaBindPluginSettings } from './settings/Settings';
 import { IPlugin } from './IPlugin';
+import { ParserTestMDRC } from './renderChildren/ParserTestMDRC';
 
 export default class MetaBindPlugin extends Plugin implements IPlugin {
 	// @ts-ignore defined in `onload`
@@ -82,6 +83,10 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		this.registerMarkdownCodeBlockProcessor('meta-bind-js-view', (source, el, ctx) => {
 			const inputField = this.api.createJsViewFieldFromString(source, RenderChildType.BLOCK, ctx.sourcePath, el);
 			ctx.addChild(inputField);
+		});
+
+		this.registerMarkdownCodeBlockProcessor('meta-bind-parser-test', (source, el, ctx) => {
+			ctx.addChild(new ParserTestMDRC(el, RenderChildType.BLOCK, this, ctx.sourcePath, self.crypto.randomUUID(), {}));
 		});
 
 		// this.registerMarkdownCodeBlockProcessor('meta-bind-js', (source, el, ctx) => {

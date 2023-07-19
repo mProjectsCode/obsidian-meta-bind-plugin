@@ -9,7 +9,7 @@ text: asdasddas
 
 `--INPUT[suggester(option([[low]]), option([[medium]]), option([[high]])):frequency]`
 
-```dataviewjs
+```_dataviewjs
 const setFilter = "" ;
 let filter = "Need | "
 const pages = await dv.pages()
@@ -28,7 +28,7 @@ console.log(`${filter}${backticks}${codeblock}${list}):needs]${backticks}`);
 await dv.paragraph(`${filter}${backticks}${codeblock}${list}):needs]${backticks}`);
 ```
 
-```dataviewjs
+```_dataviewjs
 const setFilter = "" ;
 let filter = "Need | "
 const pages = await dv.pages()
@@ -45,4 +45,8 @@ const backticks = "`";
 console.log(`${filter}${backticks}${codeblock}${backticks}`);
 
 await dv.paragraph(`${filter}${backticks}${codeblock}${backticks}`);
+```
+
+
+```meta-bind-parser-test
 ```
