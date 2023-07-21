@@ -19,12 +19,22 @@ export class PublishAPI {
 		this.bindTargetParser = new BindTargetParser(this.plugin);
 	}
 
-	public createInputFieldFromString(fullDeclaration: string, filePath: string, metadata: Record<string, any> | undefined, container: HTMLElement): PublishInputFieldMDRC {
+	public createInputFieldFromString(
+		fullDeclaration: string,
+		filePath: string,
+		metadata: Record<string, any> | undefined,
+		container: HTMLElement
+	): PublishInputFieldMDRC {
 		const declaration: InputFieldDeclaration = this.inputFieldParser.parseString(fullDeclaration);
 		return new PublishInputFieldMDRC(container, this, declaration, filePath, metadata, self.crypto.randomUUID());
 	}
 
-	public createViewFieldFromString(fullDeclaration: string, filePath: string, metadata: Record<string, any> | undefined, container: HTMLElement): PublishViewFieldMDRC {
+	public createViewFieldFromString(
+		fullDeclaration: string,
+		filePath: string,
+		metadata: Record<string, any> | undefined,
+		container: HTMLElement
+	): PublishViewFieldMDRC {
 		const declaration: ViewFieldDeclaration = this.viewFieldParser.parseString(fullDeclaration);
 		return new PublishViewFieldMDRC(container, this, declaration, filePath, metadata, self.crypto.randomUUID());
 	}

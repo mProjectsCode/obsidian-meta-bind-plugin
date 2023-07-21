@@ -31,7 +31,11 @@ export class SuggestInputField extends AbstractInputField<T> {
 
 		if (this.needsDataview()) {
 			if (!getAPI(this.renderChild.plugin.app)) {
-				throw new MetaBindArgumentError(ErrorLevel.ERROR, 'can not create suggest input field', `dataview needs to be installed and enabled to use suggest option queries`);
+				throw new MetaBindArgumentError(
+					ErrorLevel.ERROR,
+					'can not create suggest input field',
+					`dataview needs to be installed and enabled to use suggest option queries`
+				);
 			}
 		}
 	}
@@ -62,7 +66,11 @@ export class SuggestInputField extends AbstractInputField<T> {
 
 	getHtmlElement(): HTMLElement {
 		if (!this.container) {
-			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
+			throw new MetaBindInternalError(
+				ErrorLevel.WARNING,
+				'failed to get html element for input field',
+				"container is undefined, field hasn't been rendered yet"
+			);
 		}
 
 		return this.container;

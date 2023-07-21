@@ -455,7 +455,11 @@ export class InputFieldASTParser {
 
 		for (const closure of InputFieldClosures) {
 			// if the closure is the current token
-			if (currentClosure && closure.openingTokenType === currentClosure.openingTokenType && closure.closingTokenType === currentClosure.closingTokenType) {
+			if (
+				currentClosure &&
+				closure.openingTokenType === currentClosure.openingTokenType &&
+				closure.closingTokenType === currentClosure.closingTokenType
+			) {
 				continue;
 			}
 
@@ -616,7 +620,7 @@ export class DeclarationParser {
 				new TL_C_Literal(AST_El_Type.LITERAL), // first bind target metadata path part
 				new TL_C_Loop(
 					[
-						new TL_C_Or([new TL_C_Literal(AST_El_Type.LITERAL)], [new TL_C_Literal(AST_El_Type.CLOSURE)]), // either literal or closure or none, in a loop
+						new TL_C_Or([[new TL_C_Literal(AST_El_Type.LITERAL)], [new TL_C_Literal(AST_El_Type.CLOSURE)]]), // either literal or closure or none, in a loop
 					],
 					0,
 					-1
@@ -703,7 +707,9 @@ export class DeclarationParser {
 					throw new ParsingError(
 						ErrorLevel.ERROR,
 						'failed to parse',
-						`Encountered invalid token. Expected token to be of type '${InputFieldTokenType.WORD}' but received '${argumentNameLiteral.getToken().type}'.`,
+						`Encountered invalid token. Expected token to be of type '${InputFieldTokenType.WORD}' but received '${
+							argumentNameLiteral.getToken().type
+						}'.`,
 						{},
 						argumentNameLiteral.str,
 						argumentNameLiteral.getToken(),
@@ -717,7 +723,9 @@ export class DeclarationParser {
 					throw new ParsingError(
 						ErrorLevel.ERROR,
 						'failed to parse',
-						`Encountered invalid token. Expected token to be of type '${InputFieldTokenType.WORD}' but received '${argumentNameLiteral.getToken().type}'.`,
+						`Encountered invalid token. Expected token to be of type '${InputFieldTokenType.WORD}' but received '${
+							argumentNameLiteral.getToken().type
+						}'.`,
 						{},
 						argumentNameLiteral.str,
 						argumentNameLiteral.getToken(),
@@ -730,7 +738,9 @@ export class DeclarationParser {
 					throw new ParsingError(
 						ErrorLevel.ERROR,
 						'failed to parse',
-						`Encountered invalid token. Expected token to be of type '${InputFieldTokenType.L_PAREN}' but received '${argumentValueClosure.getToken().type}'.`,
+						`Encountered invalid token. Expected token to be of type '${InputFieldTokenType.L_PAREN}' but received '${
+							argumentValueClosure.getToken().type
+						}'.`,
 						{},
 						argumentValueClosure.str,
 						argumentValueClosure.getToken(),
@@ -802,7 +812,11 @@ export class DeclarationParser {
 				if (inputFieldArgument.requiresValue) {
 					if (!argument.value) {
 						this.errorCollection.add(
-							new MetaBindParsingError(ErrorLevel.WARNING, 'failed to parse input field arguments', `argument "${argument.type}" requires a non empty value`)
+							new MetaBindParsingError(
+								ErrorLevel.WARNING,
+								'failed to parse input field arguments',
+								`argument "${argument.type}" requires a non empty value`
+							)
 						);
 						continue;
 					}

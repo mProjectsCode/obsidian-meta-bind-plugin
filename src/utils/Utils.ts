@@ -1,6 +1,11 @@
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { KeyValuePair } from '@opd-libs/opd-utils-lib/lib/Utils';
+import structuredClone from '@ungap/structured-clone';
 
+if (!('structuredClone' in globalThis)) {
+	// @ts-ignore
+	globalThis.structuredClone = structuredClone;
+}
 /**
  * Gets the file name from a path
  *

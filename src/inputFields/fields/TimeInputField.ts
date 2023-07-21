@@ -35,7 +35,11 @@ export class TimeInputField extends AbstractInputField<T> {
 
 	public getHtmlElement(): HTMLElement {
 		if (!this.container) {
-			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
+			throw new MetaBindInternalError(
+				ErrorLevel.WARNING,
+				'failed to get html element for input field',
+				"container is undefined, field hasn't been rendered yet"
+			);
 		}
 
 		return this.container;
@@ -73,7 +77,9 @@ export class TimeInputField extends AbstractInputField<T> {
 
 		this.time = TimeParser.parse(value);
 		if (!this.time) {
-			console.warn(new MetaBindValueError(ErrorLevel.WARNING, 'failed to set value', `invalid value '${value}' at timeInputField ${this.renderChild.uuid}`));
+			console.warn(
+				new MetaBindValueError(ErrorLevel.WARNING, 'failed to set value', `invalid value '${value}' at timeInputField ${this.renderChild.uuid}`)
+			);
 			this.time = TimeParser.getDefaultTime();
 		}
 		// console.log(this.time);

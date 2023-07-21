@@ -36,7 +36,11 @@ export class BindTargetParser {
 			bindTargetDeclaration.fileName = bindTargetParts[0];
 			bindTargetDeclaration.metadataFieldName = bindTargetParts[1];
 		} else {
-			throw new MetaBindBindTargetError(ErrorLevel.CRITICAL, 'failed to parse bind target', "bind target may only contain one '#' to specify the metadata field");
+			throw new MetaBindBindTargetError(
+				ErrorLevel.CRITICAL,
+				'failed to parse bind target',
+				"bind target may only contain one '#' to specify the metadata field"
+			);
 		}
 
 		try {
@@ -53,7 +57,11 @@ export class BindTargetParser {
 		} else if (filePaths.length === 1) {
 			bindTargetDeclaration.filePath = filePaths[0];
 		} else {
-			throw new MetaBindBindTargetError(ErrorLevel.CRITICAL, 'failed to parse bind target', 'bind target resolves to multiple files, please also specify the file path');
+			throw new MetaBindBindTargetError(
+				ErrorLevel.CRITICAL,
+				'failed to parse bind target',
+				'bind target resolves to multiple files, please also specify the file path'
+			);
 		}
 
 		return bindTargetDeclaration;

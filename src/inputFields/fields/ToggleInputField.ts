@@ -44,7 +44,11 @@ export class ToggleInputField extends AbstractInputField<T> {
 
 	getHtmlElement(): HTMLElement {
 		if (!this.toggleComponent) {
-			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
+			throw new MetaBindInternalError(
+				ErrorLevel.WARNING,
+				'failed to get html element for input field',
+				"container is undefined, field hasn't been rendered yet"
+			);
 		}
 
 		return this.toggleComponent.toggleEl;
@@ -69,7 +73,13 @@ export class ToggleInputField extends AbstractInputField<T> {
 		} else if (value === this.offValue) {
 			return false;
 		} else {
-			console.warn(new MetaBindValueError(ErrorLevel.WARNING, 'failed to reverse map value', `invalid value '${value}' at toggleInputField ${this.renderChild.uuid}`));
+			console.warn(
+				new MetaBindValueError(
+					ErrorLevel.WARNING,
+					'failed to reverse map value',
+					`invalid value '${value}' at toggleInputField ${this.renderChild.uuid}`
+				)
+			);
 			return false;
 		}
 	}

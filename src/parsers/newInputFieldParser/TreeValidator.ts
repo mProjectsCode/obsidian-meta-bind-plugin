@@ -1,5 +1,6 @@
 import { Abstract_AST_Node, AST_El, AST_El_Type, InputFieldTokenType, ParsingError } from './InputFieldParser';
-import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
+import { deepCopy } from '../../utils/Utils';
+import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 
 export enum TL_Type {
 	LOOP = 'LOOP',
@@ -8,11 +9,13 @@ export enum TL_Type {
 }
 
 export class TL_Literal {
-	type: TL_Type;
-	constraint: VG_Transition_Constraint;
+	readonly type: TL_Type;
+	readonly key: string | undefined;
+	readonly constraint: VG_Transition_Constraint;
 
-	constructor(astType: AST_El_Type, tokenType?: InputFieldTokenType | undefined, literalContent?: string | undefined) {
+	constructor(astType: AST_El_Type, tokenType?: InputFieldTokenType | undefined, literalContent?: string | undefined, key?: string | undefined) {
 		this.type = TL_Type.LITERAL;
+		this.key = key;
 
 		this.constraint = new VG_Transition_Constraint(astType, tokenType, literalContent);
 	}
@@ -33,24 +36,30 @@ export class TL_LoopBound {
 
 	public violates(count: number): boolean {
 		if (this.min !== -1 && count < this.min) {
-			return false;
+			return true;
 		}
 
 		if (this.max !== -1 && count >= this.max) {
-			return false;
+			return true;
 		}
 
-		return true;
+		return false;
+	}
+
+	public isEmpty(): boolean {
+		return this.min === -1 && this.max === -1;
 	}
 }
 
 export class TL_Loop {
 	readonly type: TL_Type;
+	readonly key: string | undefined;
 	readonly loop: TreeLayout;
 	readonly bound: TL_LoopBound;
 
-	constructor(loop: TreeLayout, bound: TL_LoopBound) {
+	constructor(loop: TreeLayout, bound: TL_LoopBound, key?: string | undefined) {
 		this.type = TL_Type.LOOP;
+		this.key = key;
 
 		this.loop = loop;
 		this.bound = bound;
@@ -59,37 +68,38 @@ export class TL_Loop {
 
 export class TL_Or {
 	readonly type: TL_Type;
-	readonly option1: TreeLayout;
-	readonly option2: TreeLayout;
-	readonly allowNone: boolean;
+	readonly key: string | undefined;
+	readonly options: TreeLayout[];
 
-	constructor(option1: TreeLayout, option2: TreeLayout, allowNone: boolean = false) {
+	constructor(options: TreeLayout[], key?: string | undefined) {
 		this.type = TL_Type.OR;
+		this.key = key;
 
-		this.option1 = option1;
-		this.option2 = option2;
-		this.allowNone = allowNone;
+		this.options = options;
 	}
 }
 
 export abstract class Abstract_TL_C {
+	public key: string | undefined;
+
+	protected constructor(key: string | undefined) {
+		this.key = key;
+	}
+
 	abstract toTL(): TL_Element;
 }
 
 export class TL_C_Optional extends Abstract_TL_C {
 	readonly option: ComplexTreeLayout;
 
-	constructor(option: ComplexTreeLayout) {
-		super();
+	constructor(option: ComplexTreeLayout, key?: string | undefined) {
+		super(key);
 
 		this.option = option;
 	}
 
 	public toTL(): TL_Element {
-		return new TL_Or(
-			[],
-			this.option.map(x => x.toTL())
-		);
+		return new TL_Or([[], this.option.map(x => x.toTL())], this.key);
 	}
 }
 
@@ -98,8 +108,8 @@ export class TL_C_Loop extends Abstract_TL_C {
 	readonly min: number;
 	readonly max: number;
 
-	constructor(loop: ComplexTreeLayout, min: number, max: number) {
-		super();
+	constructor(loop: ComplexTreeLayout, min: number, max: number, key?: string | undefined) {
+		super(key);
 
 		this.loop = loop;
 		this.min = min;
@@ -109,30 +119,63 @@ export class TL_C_Loop extends Abstract_TL_C {
 	public toTL(): TL_Element {
 		return new TL_Loop(
 			this.loop.map(x => x.toTL()),
-			new TL_LoopBound(this.min, this.max)
+			new TL_LoopBound(this.min, this.max),
+			this.key
 		);
 	}
 }
 
-export class TL_C_Or extends Abstract_TL_C {
-	readonly option1: ComplexTreeLayout;
-	readonly option2: ComplexTreeLayout;
-	readonly allowNone: boolean;
+export class TL_C_Enumeration extends Abstract_TL_C {
+	readonly loop: ComplexTreeLayout;
+	readonly separator: ComplexTreeLayout;
 
-	constructor(option1: ComplexTreeLayout, option2: ComplexTreeLayout, allowNone: boolean = false) {
-		super();
+	constructor(loop: ComplexTreeLayout, separator: ComplexTreeLayout, key?: string | undefined) {
+		super(key);
 
-		this.option1 = option1;
-		this.option2 = option2;
-		this.allowNone = allowNone;
+		this.loop = loop;
+		this.separator = separator;
 	}
 
 	public toTL(): TL_Element {
-		return new TL_Or(
-			this.option1.map(x => x.toTL()),
-			this.option2.map(x => x.toTL()),
-			this.allowNone
-		);
+		// TODO: test the loop bound 1, 1
+		// the loop bound 1, 1 is done because of the key
+		return new TL_Or([
+			[],
+			[
+				new TL_Loop(
+					this.loop.map(x => x.toTL()),
+					new TL_LoopBound(1, 1),
+					this.key
+				),
+			],
+			[
+				new TL_Loop([...this.loop.map(x => x.toTL()), ...this.separator.map(x => x.toTL())], new TL_LoopBound(-1, -1), this.key),
+				new TL_Loop(
+					this.loop.map(x => x.toTL()),
+					new TL_LoopBound(1, 1),
+					this.key
+				),
+			],
+		]);
+
+		// return new TL_Loop(
+		// 	this.loop.map(x => x.toTL()),
+		// 	new TL_LoopBound(this.min, this.max)
+		// );
+	}
+}
+
+export class TL_C_Or extends Abstract_TL_C {
+	readonly options: ComplexTreeLayout[];
+
+	constructor(options: ComplexTreeLayout[]) {
+		super(undefined);
+
+		this.options = options;
+	}
+
+	public toTL(): TL_Element {
+		return new TL_Or(this.options.map(x => x.map(y => y.toTL())));
 	}
 }
 
@@ -141,15 +184,15 @@ export class TL_C_Literal extends Abstract_TL_C {
 	readonly tokenType: InputFieldTokenType | undefined;
 	readonly literalContent: string | undefined;
 
-	constructor(astType: AST_El_Type, tokenType?: InputFieldTokenType | undefined, literalContent?: string | undefined) {
-		super();
+	constructor(astType: AST_El_Type, tokenType?: InputFieldTokenType | undefined, literalContent?: string | undefined, key?: string | undefined) {
+		super(key);
 		this.astType = astType;
 		this.tokenType = tokenType;
 		this.literalContent = literalContent;
 	}
 
 	public toTL(): TL_Element {
-		return new TL_Literal(this.astType, this.tokenType, this.literalContent);
+		return new TL_Literal(this.astType, this.tokenType, this.literalContent, this.key);
 	}
 }
 
@@ -234,21 +277,48 @@ export class VG_Transition_Constraint {
 	}
 }
 
+export enum ContextActionType {
+	POP = 'POP',
+	PUSH = 'PUSH',
+}
+
+export interface ContextPopAction {
+	type: ContextActionType.POP;
+}
+
+export interface ContextPushAction {
+	type: ContextActionType.PUSH;
+	key: string;
+}
+
+export type ContextAction = ContextPopAction | ContextPushAction;
+
 export class VG_Transition {
 	readonly from: number;
 	readonly to: number;
 	readonly constraint: VG_Transition_Constraint | undefined;
+	readonly key: string | undefined;
+	readonly contextActions: ContextAction[];
 	readonly loopBound: TL_LoopBound;
 
-	constructor(from: number, to: number, constraint: VG_Transition_Constraint | undefined, loopBound: TL_LoopBound | undefined) {
+	constructor(
+		from: number,
+		to: number,
+		constraint: VG_Transition_Constraint | undefined,
+		loopBound: TL_LoopBound | undefined,
+		key: string | undefined,
+		contextActions: ContextAction[] | undefined
+	) {
 		this.from = from;
 		this.to = to;
 		this.constraint = constraint;
 		this.loopBound = loopBound ?? new TL_LoopBound(-1, -1);
+		this.key = key;
+		this.contextActions = contextActions ?? [];
 	}
 
 	public isEqual(other: VG_Transition): boolean {
-		return this.from === other.from && this.to === other.to && this.isConstraintEqual(other) && this.isLoopBoundEqual(other);
+		return this.from === other.from && this.to === other.to && this.isConstraintEqual(other) && this.isLoopBoundEqual(other) && this.key === other.key;
 	}
 
 	private isConstraintEqual(other: VG_Transition): boolean {
@@ -293,15 +363,15 @@ export class VG_Transition {
 		}
 
 		// this is empty, allow transition
-		if (this.isEmpty()) {
+		if (this.constraint === undefined) {
 			return true;
 		}
 
-		return this.constraint?.canTransition(astEl) ?? true;
+		return this.constraint.canTransition(astEl);
 	}
 
 	public isEmpty(): boolean {
-		return this.constraint === undefined;
+		return this.constraint === undefined && this.key === undefined && this.contextActions.length === 0 && this.loopBound.isEmpty();
 	}
 }
 
@@ -311,6 +381,7 @@ export class VG_Node {
 	final: boolean;
 	loopBound: TL_LoopBound;
 	transitions: VG_Transition[];
+	// readonly contextKey: string | undefined;
 
 	constructor(index: number, transitionConstraint: VG_Transition_Constraint | undefined, final: boolean = false, loopBound?: TL_LoopBound | undefined) {
 		this.index = index;
@@ -318,10 +389,17 @@ export class VG_Node {
 		this.final = final;
 		this.loopBound = loopBound ?? new TL_LoopBound(-1, -1);
 		this.transitions = [];
+		// this.contextKey = contextKey;
 	}
 
-	public createTransition(to: number, constraint: VG_Transition_Constraint | undefined, loopBound: TL_LoopBound | undefined): void {
-		const newTransition = new VG_Transition(this.index, to, constraint, loopBound);
+	public createTransition(
+		to: number,
+		constraint: VG_Transition_Constraint | undefined,
+		loopBound: TL_LoopBound | undefined,
+		key: string | undefined,
+		contextActions: ContextAction[] | undefined
+	): void {
+		const newTransition = new VG_Transition(this.index, to, constraint, loopBound, key, contextActions);
 
 		for (const transition of this.transitions) {
 			if (transition.isEqual(newTransition)) {
@@ -345,10 +423,21 @@ type GraphNode = VG_Node; //| ValidationGraphLoopNode;
 
 interface ValidationState {
 	active: boolean;
-	// errors: ParsingError[];
+	currentInputIndex: number;
+	context: ValidationContext;
+	currentContextStack: (string | number)[];
 	failure: ValidationFailure | undefined;
 	nodeStates: number[];
 }
+
+/*
+ * TODO
+ * The state needs a context.
+ * A context can be nested. Meaning a context can contain an array of sub contexts.
+ * A transition can do two context operations:
+ *  - pop the context, meaning go to the parent context
+ *  - push context, meaning create a sub context with a key, creating the sub context array of the key or adding an element to it
+ */
 
 interface ValidationFailure {
 	astEl: AST_El;
@@ -357,9 +446,11 @@ interface ValidationFailure {
 }
 
 interface ValidationConstraint {
-	transitionConstraint: VG_Transition_Constraint;
+	transitionConstraint: VG_Transition_Constraint | undefined;
 	loopBound: TL_LoopBound;
 }
+
+type ValidationContext = Record<string, AST_El | ValidationContext[]>;
 
 export class ValidationGraph {
 	layout: TreeLayout;
@@ -394,7 +485,34 @@ export class ValidationGraph {
 			const currentLayout = treeLayout[i];
 
 			if (currentLayout instanceof TL_Loop) {
-				const res = this.parseTreeLayout(currentLayout.loop, previousNode);
+				// create an empty node before the loop
+				const emptyNodePre = new VG_Node(this.nodeIndexCounter, undefined);
+				this.nodeIndexCounter += 1;
+				this.nodes.push(emptyNodePre);
+
+				// add an empty transition to it
+				if (currentLayout.key !== undefined) {
+					previousNode.createTransition(emptyNodePre.index, undefined, undefined, undefined, [
+						{ type: ContextActionType.PUSH, key: currentLayout.key },
+					]);
+				} else {
+					previousNode.createTransition(emptyNodePre.index, undefined, undefined, undefined, undefined);
+				}
+
+				const res = this.parseTreeLayout(currentLayout.loop, emptyNodePre);
+
+				// create an empty node after the loop
+				const emptyNodePost = new VG_Node(this.nodeIndexCounter, undefined);
+				this.nodeIndexCounter += 1;
+				this.nodes.push(emptyNodePost);
+
+				if (currentLayout.key !== undefined) {
+					res.last.createTransition(emptyNodePost.index, undefined, new TL_LoopBound(currentLayout.bound.min, -1), undefined, [
+						{ type: ContextActionType.POP },
+					]);
+				} else {
+					res.last.createTransition(emptyNodePost.index, undefined, new TL_LoopBound(currentLayout.bound.min, -1), undefined, undefined);
+				}
 
 				// set the min loop bound for the last node this is for the exit transition
 				if (currentLayout.bound.min === 0) {
@@ -402,7 +520,7 @@ export class ValidationGraph {
 					// shouldn't loop bound 0 and -1 behave the same? (more or less)
 					res.last.loopBound.min = 1;
 
-					previousNode.createTransition(res.last.index, undefined, undefined);
+					previousNode.createTransition(emptyNodePost.index, undefined, undefined, undefined, undefined);
 				} else {
 					res.last.loopBound.min = currentLayout.bound.min;
 				}
@@ -411,17 +529,24 @@ export class ValidationGraph {
 				// res.last.loopBound.max = currentLayout.bound.max;
 
 				// create the loop back transition
-				res.last.createTransition(res.first.index, res.first.transitionConstraint, new TL_LoopBound(-1, currentLayout.bound.max));
+				if (currentLayout.key !== undefined) {
+					res.last.createTransition(emptyNodePre.index, undefined, new TL_LoopBound(-1, currentLayout.bound.max), undefined, [
+						{ type: ContextActionType.POP },
+						{ type: ContextActionType.PUSH, key: currentLayout.key },
+					]);
+				} else {
+					res.last.createTransition(emptyNodePre.index, undefined, new TL_LoopBound(-1, currentLayout.bound.max), undefined, undefined);
+				}
 
 				if (!firstNode) {
-					firstNode = res.first;
+					firstNode = emptyNodePre;
 				}
 
 				if (i === treeLayout.length - 1) {
-					lastNode = res.last;
+					lastNode = emptyNodePost;
 				}
 
-				previousNode = res.last;
+				previousNode = emptyNodePost;
 			} else if (currentLayout instanceof TL_Or) {
 				// create an empty node in front of the split
 				const emptyNodePre = new VG_Node(this.nodeIndexCounter, undefined);
@@ -429,11 +554,13 @@ export class ValidationGraph {
 				this.nodes.push(emptyNodePre);
 
 				// add an empty transition to it
-				previousNode.createTransition(emptyNodePre.index, undefined, undefined);
+				previousNode.createTransition(emptyNodePre.index, undefined, undefined, undefined, undefined);
 
-				// to the two options
-				const res1 = this.parseTreeLayout(currentLayout.option1, emptyNodePre);
-				const res2 = this.parseTreeLayout(currentLayout.option2, emptyNodePre);
+				// the options
+				const resArr = [];
+				for (const option of currentLayout.options) {
+					resArr.push(this.parseTreeLayout(option, emptyNodePre));
+				}
 
 				// create an empty node after the split
 				const emptyNodePost = new VG_Node(this.nodeIndexCounter, undefined);
@@ -441,12 +568,8 @@ export class ValidationGraph {
 				this.nodes.push(emptyNodePost);
 
 				// create the empty transitions to the node
-				res1.last.createTransition(emptyNodePost.index, undefined, undefined);
-				res2.last.createTransition(emptyNodePost.index, undefined, undefined);
-
-				// if the or can none, create an empty transition from the pre to the post node
-				if (currentLayout.allowNone) {
-					emptyNodePre.createTransition(emptyNodePost.index, undefined, undefined);
+				for (const res of resArr) {
+					res.last.createTransition(emptyNodePost.index, undefined, undefined, undefined, undefined);
 				}
 
 				if (!firstNode) {
@@ -463,7 +586,9 @@ export class ValidationGraph {
 				this.nodeIndexCounter += 1;
 				this.nodes.push(currentNode);
 
-				previousNode.createTransition(currentNode.index, currentLayout.constraint, previousNode.loopBound);
+				console.log('current layout key', currentLayout.key);
+
+				previousNode.createTransition(currentNode.index, currentLayout.constraint, previousNode.loopBound, currentLayout.key, undefined);
 
 				if (!firstNode) {
 					firstNode = currentNode;
@@ -484,7 +609,7 @@ export class ValidationGraph {
 				this.nodeIndexCounter += 1;
 				this.nodes.push(emptyNode);
 
-				previousNode.createTransition(emptyNode.index, undefined, undefined);
+				previousNode.createTransition(emptyNode.index, undefined, undefined, undefined, undefined);
 
 				firstNode = emptyNode;
 				lastNode = emptyNode;
@@ -501,7 +626,16 @@ export class ValidationGraph {
 	}
 
 	public optimizeParsingGraph(): void {
-		console.log('optimize transitions');
+		for (let i = this.nodes.length - 1; i >= 0; i--) {
+			for (const transition of this.nodes[i].transitions) {
+				if (transition.isEmpty()) {
+					const node = this.getNode(transition.to);
+					if (node?.final) {
+						this.nodes[i].final = true;
+					}
+				}
+			}
+		}
 
 		for (const node of this.nodes) {
 			if (node.index === -1) {
@@ -513,8 +647,6 @@ export class ValidationGraph {
 				continue;
 			}
 
-			console.log('node', node);
-
 			const incomingTransitions = this.getIncomingTransitions(node);
 
 			let hasOnlyEmptyIncomingTransitions = true;
@@ -525,29 +657,26 @@ export class ValidationGraph {
 				}
 			}
 
-			console.log('node transition', incomingTransitions);
-
 			if (hasOnlyEmptyIncomingTransitions) {
 				for (const incomingTransition of incomingTransitions) {
-					console.log('node transition a', incomingTransition);
 					incomingTransition.node.transitions.remove(incomingTransition.transition);
 
 					if (node.index === incomingTransition.node.index) {
 						continue;
 					}
 
-					if (node.final) {
-						incomingTransition.node.final = true;
-					}
-
 					for (const transition of node.transitions) {
-						incomingTransition.node.createTransition(transition.to, transition.constraint, transition.loopBound);
+						incomingTransition.node.createTransition(
+							transition.to,
+							transition.constraint,
+							transition.loopBound,
+							transition.key,
+							transition.contextActions
+						);
 					}
 				}
 			}
 		}
-
-		console.log('remove nodes');
 
 		const newNodes: VG_Node[] = [];
 
@@ -593,91 +722,162 @@ export class ValidationGraph {
 		this.state = [
 			{
 				active: true,
+				currentInputIndex: -1,
+				context: {},
+				currentContextStack: [],
 				failure: undefined,
 				nodeStates: [-1],
 			},
 		];
 
-		for (const astChild of astNode.children) {
-			const newStates: ValidationState[] = [];
+		for (let astIndex = 0; astIndex < astNode.children.length; astIndex++) {
+			const astChild = astNode.children[astIndex];
 
-			for (const validationState of this.state) {
-				if (!validationState.active) {
-					continue;
-				}
+			while (this.hasUnfinishedStates(this.state, astIndex)) {
+				const newStates: ValidationState[] = [];
 
-				const currentState = validationState.nodeStates[validationState.nodeStates.length - 1];
-				const node = this.getNode(currentState);
-				if (!node) {
-					throw new Error('this parser sucks');
-				}
-
-				const loopCount = validationState.nodeStates.filter(x => x === node.index).length;
-
-				// TODO: maybe move this to the graph optimization
-				const transitions = this.preprocessTransitions(node.transitions);
-
-				const violatedConstraints: ValidationConstraint[] = [];
-				let allTransitionsFailed = true;
-
-				for (const transition of transitions) {
-					const transitionError = transition.canTransition(astChild, loopCount);
-
-					if (!transitionError) {
-						newStates.push({
-							active: true,
-							failure: undefined,
-							nodeStates: validationState.nodeStates.concat([transition.to]),
-						});
-						allTransitionsFailed = false;
-					} else {
-						if (!transition.constraint) {
-							throw new Error('This parser sucks');
-						}
-
-						violatedConstraints.push({
-							transitionConstraint: transition.constraint,
-							loopBound: transition.loopBound,
-						});
+				for (const validationState of this.state) {
+					if (!validationState.active || validationState.currentInputIndex === astIndex) {
+						newStates.push(validationState);
+						continue;
 					}
 
-					// if (transition.input === type) {
-					// 	if ((transition.loopMin === -1 || nodeCount >= transition.loopMin) && (transition.loopMax === -1 || nodeCount < transition.loopMax)) {
-					// 		newStates.push({
-					// 			nodeState: validationState.nodeState.concat([transition.to]),
-					// 		});
-					// 	}
-					// }
+					const currentState = validationState.nodeStates[validationState.nodeStates.length - 1];
+					const node = this.getNode(currentState);
+					if (!node) {
+						throw new Error('this parser sucks');
+					}
+
+					const loopCount = validationState.nodeStates.filter(x => x === node.index).length;
+
+					const violatedConstraints: ValidationConstraint[] = [];
+					let allTransitionsFailed = true;
+
+					for (const transition of node.transitions) {
+						const canTransition = transition.canTransition(astChild, loopCount);
+						// console.log(transition, canTransition, astChild);
+
+						if (canTransition) {
+							const newContext = deepCopy(validationState.context);
+							const newContextStack = [...validationState.currentContextStack];
+							let currentContext: ValidationContext = traverseObjectByPath(newContextStack as string[], newContext);
+							console.log(currentContext);
+
+							// do the current key first
+							if (transition.key !== undefined) {
+								currentContext[transition.key] = astChild;
+							}
+
+							// do context actions
+							for (const contextAction of transition.contextActions) {
+								if (contextAction.type === ContextActionType.POP) {
+									newContextStack.pop();
+									newContextStack.pop();
+									currentContext = traverseObjectByPath(newContextStack as string[], newContext);
+								} else {
+									if (currentContext[contextAction.key] === undefined) {
+										currentContext[contextAction.key] = [] as ValidationContext[];
+									}
+
+									const subContextArray = currentContext[contextAction.key] as ValidationContext[];
+									const newSubContext: ValidationContext = {};
+
+									subContextArray.push(newSubContext);
+									newContextStack.push(contextAction.key);
+									newContextStack.push(subContextArray.length - 1);
+									currentContext = newSubContext;
+								}
+							}
+
+							// console.log('test 1');
+
+							if (transition.constraint === undefined) {
+								const transitionToNode = this.getNode(transition.to);
+								if (!transitionToNode) {
+									throw new Error('this parser sucks');
+								}
+								// console.log('test 2');
+
+								for (const relayedTransition of transitionToNode.transitions) {
+									newStates.push({
+										active: true,
+										currentInputIndex: validationState.currentInputIndex,
+										context: deepCopy(newContext),
+										currentContextStack: [...newContextStack],
+										failure: undefined,
+										nodeStates: validationState.nodeStates.concat([transition.to]),
+									});
+								}
+							} else {
+								// push the new state
+								newStates.push({
+									active: true,
+									currentInputIndex: astIndex,
+									context: newContext,
+									currentContextStack: newContextStack,
+									failure: undefined,
+									nodeStates: validationState.nodeStates.concat([transition.to]),
+								});
+							}
+							allTransitionsFailed = false;
+						} else {
+							violatedConstraints.push({
+								transitionConstraint: transition.constraint,
+								loopBound: transition.loopBound,
+							});
+						}
+					}
+
+					if (allTransitionsFailed) {
+						console.log('all transitions failed', node.transitions, node, astIndex, validationState);
+
+						// TODO: maybe modify the object instead of creating a new one.
+						newStates.push({
+							active: false,
+							context: validationState.context,
+							currentInputIndex: astIndex,
+							currentContextStack: validationState.currentContextStack,
+							failure: {
+								astEl: astChild,
+								loopCount: loopCount,
+								violatedConstraints: violatedConstraints,
+							},
+							nodeStates: validationState.nodeStates,
+						});
+					}
 				}
 
-				if (allTransitionsFailed) {
-					// TODO: maybe modify the object instead of creating a new one.
-					newStates.push({
-						active: false,
-						failure: {
-							astEl: astChild,
-							loopCount: loopCount,
-							violatedConstraints: violatedConstraints,
-						},
-						nodeStates: validationState.nodeStates,
-					});
-				}
+				console.log(newStates);
+
+				this.state = newStates;
 			}
-
-			this.state = newStates;
 		}
 
 		console.log('parsing state');
 		console.log(this.state);
 
 		const validResults = this.state.filter(x => {
+			if (!x.active) {
+				return false;
+			}
+
 			const lastNode = this.getNode(x.nodeStates[x.nodeStates.length - 1]);
 			return lastNode ? lastNode.final : false;
 		});
 
-		// console.log(validResults);
+		console.log(validResults);
 
 		return validResults.length > 0;
+	}
+
+	private hasUnfinishedStates(states: ValidationState[], astIndex: number): boolean {
+		for (const state of states) {
+			if (state.active && state.currentInputIndex !== astIndex) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

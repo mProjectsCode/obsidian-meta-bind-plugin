@@ -82,7 +82,13 @@ export class InputFieldMDRC extends AbstractMDRC {
 
 		this.metadataManagerReadSignalListener = this.readSignal.registerListener({ callback: this.updateMetadataManager.bind(this) });
 
-		return this.plugin.metadataManager.register(this.bindTargetDeclaration.filePath, undefined, this.writeSignal, this.bindTargetDeclaration.metadataPath, this.uuid);
+		return this.plugin.metadataManager.register(
+			this.bindTargetDeclaration.filePath,
+			undefined,
+			this.writeSignal,
+			this.bindTargetDeclaration.metadataPath,
+			this.uuid
+		);
 	}
 
 	unregisterSelfFromMetadataManager(): void {
@@ -115,7 +121,9 @@ export class InputFieldMDRC extends AbstractMDRC {
 		if (this.inputFieldDeclaration?.isBound && this.bindTargetDeclaration) {
 			let value: MBExtendedLiteral | undefined = traverseObjectByPath(this.bindTargetDeclaration.metadataPath, this.metadataCache?.metadata);
 			value = value === undefined ? this.inputField.getFallbackDefaultValue() : value;
-			console.debug(`meta-bind | InputFieldMarkdownRenderChild >> setting initial value to ${value} (typeof ${typeof value}) for input field ${this.uuid}`);
+			console.debug(
+				`meta-bind | InputFieldMarkdownRenderChild >> setting initial value to ${value} (typeof ${typeof value}) for input field ${this.uuid}`
+			);
 			return value;
 		} else {
 			return this.inputField.getFallbackDefaultValue();

@@ -1,5 +1,5 @@
 import { AST_El_Type, InputFieldASTParser, InputFieldTokenizer } from '../src/parsers/newInputFieldParser/InputFieldParser';
-import { TL_Or, ValidationGraph } from '../src/parsers/newInputFieldParser/TreeValidator';
+import { TL_C_Literal, TL_C_Or, TL_Or, ValidationGraph } from '../src/parsers/newInputFieldParser/TreeValidator';
 
 describe('tokenizer tests', function () {
 	test('tokenize all simple tokens', () => {
@@ -176,7 +176,11 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([], [AST_El_Type.LITERAL]), AST_El_Type.CLOSURE]);
+		const graph = new ValidationGraph([
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+			new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.LITERAL)]]),
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+		]);
 
 		expect(graph.validateAST(ast)).toEqual(true);
 	});
@@ -187,7 +191,11 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([], [AST_El_Type.LITERAL]), AST_El_Type.CLOSURE]);
+		const graph = new ValidationGraph([
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+			new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.LITERAL)]]),
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+		]);
 
 		expect(graph.validateAST(ast)).toEqual(true);
 	});
@@ -198,7 +206,11 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([], [AST_El_Type.LITERAL]), AST_El_Type.CLOSURE]);
+		const graph = new ValidationGraph([
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+			new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.LITERAL)]]),
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+		]);
 
 		expect(graph.validateAST(ast)).toEqual(true);
 	});
@@ -209,7 +221,11 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([new TL_Or([], [AST_El_Type.LITERAL])], [new TL_Or([], [AST_El_Type.CLOSURE])]), AST_El_Type.CLOSURE]);
+		const graph = new ValidationGraph([
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+			new TL_C_Or([[new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.LITERAL)]])], [new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.CLOSURE)]])]]),
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+		]);
 
 		expect(graph.validateAST(ast)).toEqual(true);
 	});
@@ -220,7 +236,11 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([new TL_Or([], [AST_El_Type.LITERAL])], [new TL_Or([], [AST_El_Type.CLOSURE])]), AST_El_Type.CLOSURE]);
+		const graph = new ValidationGraph([
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+			new TL_C_Or([[new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.LITERAL)]])], [new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.CLOSURE)]])]]),
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+		]);
 
 		expect(graph.validateAST(ast)).toEqual(true);
 	});
@@ -231,7 +251,11 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([new TL_Or([], [AST_El_Type.LITERAL])], [new TL_Or([], [AST_El_Type.CLOSURE])]), AST_El_Type.CLOSURE]);
+		const graph = new ValidationGraph([
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+			new TL_C_Or([[new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.LITERAL)]])], [new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.CLOSURE)]])]]),
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+		]);
 
 		expect(graph.validateAST(ast)).toEqual(true);
 	});
@@ -242,7 +266,11 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([new TL_Or([], [AST_El_Type.LITERAL])], [new TL_Or([], [AST_El_Type.CLOSURE])]), AST_El_Type.CLOSURE]);
+		const graph = new ValidationGraph([
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+			new TL_C_Or([[new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.LITERAL)]])], [new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.CLOSURE)]])]]),
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+		]);
 
 		expect(graph.validateAST(ast)).toEqual(false);
 	});
@@ -253,7 +281,12 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([], [AST_El_Type.LITERAL]), new TL_Or([], [AST_El_Type.CLOSURE]), AST_El_Type.CLOSURE]);
+		const graph = new ValidationGraph([
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+			new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.LITERAL)]]),
+			new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.CLOSURE)]]),
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+		]);
 
 		expect(graph.validateAST(ast)).toEqual(true);
 	});
@@ -264,7 +297,12 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([], [AST_El_Type.LITERAL]), new TL_Or([], [AST_El_Type.CLOSURE]), AST_El_Type.CLOSURE]);
+		const graph = new ValidationGraph([
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+			new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.LITERAL)]]),
+			new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.CLOSURE)]]),
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+		]);
 
 		expect(graph.validateAST(ast)).toEqual(true);
 	});
@@ -275,7 +313,12 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([], [AST_El_Type.LITERAL]), new TL_Or([], [AST_El_Type.CLOSURE]), AST_El_Type.CLOSURE]);
+		const graph = new ValidationGraph([
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+			new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.LITERAL)]]),
+			new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.CLOSURE)]]),
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+		]);
 
 		expect(graph.validateAST(ast)).toEqual(true);
 	});
@@ -286,50 +329,119 @@ describe('tree validation tests', function () {
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldASTParser(input, tokens);
 		const ast = astParser.parse();
-		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([], [AST_El_Type.LITERAL]), new TL_Or([], [AST_El_Type.CLOSURE]), AST_El_Type.CLOSURE]);
+		const graph = new ValidationGraph([
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+			new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.LITERAL)]]),
+			new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.CLOSURE)]]),
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+		]);
 
 		expect(graph.validateAST(ast)).toEqual(true);
 	});
-});
-describe('validation tree test', function () {
-	// 	test('simple construct validation graph 1', () => {
-	// 		const graph = new ValidationGraph([AST_El_Type.CLOSURE, { loop: [AST_El_Type.LITERAL], min: 1, max: 3 }, AST_El_Type.CLOSURE]);
-	//
-	// 		expect(graph).toMatchSnapshot();
-	// 	});
-	//
-	// 	test('simple construct validation graph 2', () => {
-	// 		const graph = new ValidationGraph([
-	// 			AST_El_Type.CLOSURE,
-	// 			{ loop: [AST_El_Type.LITERAL], min: 0, max: 3 },
-	// 			{ loop: [AST_El_Type.CLOSURE], min: 0, max: 3 },
-	// 			AST_El_Type.CLOSURE,
-	// 		]);
-	//
-	// 		expect(graph).toMatchSnapshot();
-	// 	});
-	//
-	// 	test('simple construct validation graph 3', () => {
-	// 		const graph = new ValidationGraph([AST_El_Type.CLOSURE, { loop: [AST_El_Type.CLOSURE, AST_El_Type.LITERAL], min: 0, max: 3 }, AST_El_Type.CLOSURE]);
-	//
-	// 		expect(graph).toMatchSnapshot();
-	// 	});
-	//
-	// 	test('simple construct validation graph 4', () => {
-	// 		const graph = new ValidationGraph([AST_El_Type.CLOSURE, { loop: [AST_El_Type.CLOSURE, AST_El_Type.LITERAL], min: 0, max: 1 }, AST_El_Type.CLOSURE]);
-	//
-	// 		expect(graph).toMatchSnapshot();
-	// 	});
 
-	test('simple construct validation graph 5', () => {
-		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([], [AST_El_Type.LITERAL]), AST_El_Type.CLOSURE]);
+	test('simple closure test 19', () => {
+		const input = '(a)(c)';
+		const tokenizer = new InputFieldTokenizer(input);
+		const tokens = tokenizer.getTokens();
+		const astParser = new InputFieldASTParser(input, tokens);
+		const ast = astParser.parse();
+		const graph = new ValidationGraph([
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+			new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.LITERAL)], [new TL_C_Literal(AST_El_Type.CLOSURE)]]),
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+		]);
 
-		expect(graph).toMatchSnapshot();
+		expect(graph.validateAST(ast)).toEqual(true);
 	});
 
-	test('simple construct validation graph 6', () => {
-		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([new TL_Or([], [AST_El_Type.LITERAL])], [new TL_Or([], [AST_El_Type.CLOSURE])]), AST_El_Type.CLOSURE]);
+	test('simple closure test 20', () => {
+		const input = '(a)a(c)';
+		const tokenizer = new InputFieldTokenizer(input);
+		const tokens = tokenizer.getTokens();
+		const astParser = new InputFieldASTParser(input, tokens);
+		const ast = astParser.parse();
+		const graph = new ValidationGraph([
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+			new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.LITERAL)], [new TL_C_Literal(AST_El_Type.CLOSURE)]]),
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+		]);
 
-		expect(graph).toMatchSnapshot();
+		expect(graph.validateAST(ast)).toEqual(true);
+	});
+
+	test('simple closure test 21', () => {
+		const input = '(a)[](c)';
+		const tokenizer = new InputFieldTokenizer(input);
+		const tokens = tokenizer.getTokens();
+		const astParser = new InputFieldASTParser(input, tokens);
+		const ast = astParser.parse();
+		const graph = new ValidationGraph([
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+			new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.LITERAL)], [new TL_C_Literal(AST_El_Type.CLOSURE)]]),
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+		]);
+
+		expect(graph.validateAST(ast)).toEqual(true);
+	});
+
+	test('simple closure test 22', () => {
+		const input = '(a)a[](c)';
+		const tokenizer = new InputFieldTokenizer(input);
+		const tokens = tokenizer.getTokens();
+		const astParser = new InputFieldASTParser(input, tokens);
+		const ast = astParser.parse();
+		const graph = new ValidationGraph([
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+			new TL_C_Or([[], [new TL_C_Literal(AST_El_Type.LITERAL)], [new TL_C_Literal(AST_El_Type.CLOSURE)]]),
+			new TL_C_Literal(AST_El_Type.CLOSURE),
+		]);
+
+		expect(graph.validateAST(ast)).toEqual(false);
 	});
 });
+// describe('validation tree test', function () {
+// 	// 	test('simple construct validation graph 1', () => {
+// 	// 		const graph = new ValidationGraph([AST_El_Type.CLOSURE, { loop: [AST_El_Type.LITERAL], min: 1, max: 3 }, AST_El_Type.CLOSURE]);
+// 	//
+// 	// 		expect(graph).toMatchSnapshot();
+// 	// 	});
+// 	//
+// 	// 	test('simple construct validation graph 2', () => {
+// 	// 		const graph = new ValidationGraph([
+// 	// 			AST_El_Type.CLOSURE,
+// 	// 			{ loop: [AST_El_Type.LITERAL], min: 0, max: 3 },
+// 	// 			{ loop: [AST_El_Type.CLOSURE], min: 0, max: 3 },
+// 	// 			AST_El_Type.CLOSURE,
+// 	// 		]);
+// 	//
+// 	// 		expect(graph).toMatchSnapshot();
+// 	// 	});
+// 	//
+// 	// 	test('simple construct validation graph 3', () => {
+// 	// 		const graph = new ValidationGraph([AST_El_Type.CLOSURE, { loop: [AST_El_Type.CLOSURE, AST_El_Type.LITERAL], min: 0, max: 3 }, AST_El_Type.CLOSURE]);
+// 	//
+// 	// 		expect(graph).toMatchSnapshot();
+// 	// 	});
+// 	//
+// 	// 	test('simple construct validation graph 4', () => {
+// 	// 		const graph = new ValidationGraph([AST_El_Type.CLOSURE, { loop: [AST_El_Type.CLOSURE, AST_El_Type.LITERAL], min: 0, max: 1 }, AST_El_Type.CLOSURE]);
+// 	//
+// 	// 		expect(graph).toMatchSnapshot();
+// 	// 	});
+//
+// 	test('simple construct validation graph 5', () => {
+// 		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([], [AST_El_Type.LITERAL]), AST_El_Type.CLOSURE]);
+//
+// 		expect(graph).toMatchSnapshot();
+// 	});
+//
+// 	test('simple construct validation graph 6', () => {
+// 		const graph = new ValidationGraph([
+// 			AST_El_Type.CLOSURE,
+// 			new TL_Or([new TL_Or([], [AST_El_Type.LITERAL])], [new TL_Or([], [AST_El_Type.CLOSURE])]),
+// 			AST_El_Type.CLOSURE,
+// 		]);
+//
+// 		expect(graph).toMatchSnapshot();
+// 	});
+// });

@@ -34,7 +34,11 @@ export class TextInputField extends AbstractInputField<T> {
 
 	getHtmlElement(): HTMLElement {
 		if (!this.textComponent) {
-			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
+			throw new MetaBindInternalError(
+				ErrorLevel.WARNING,
+				'failed to get html element for input field',
+				"container is undefined, field hasn't been rendered yet"
+			);
 		}
 
 		return this.textComponent.inputEl;

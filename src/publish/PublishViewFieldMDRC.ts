@@ -26,7 +26,14 @@ export class PublishViewFieldMDRC extends MarkdownRenderChild {
 
 	errorCollection: ErrorCollection;
 
-	constructor(containerEl: HTMLElement, api: PublishAPI, declaration: ViewFieldDeclaration, filePath: string, metadata: Record<string, any> | undefined, uuid: string) {
+	constructor(
+		containerEl: HTMLElement,
+		api: PublishAPI,
+		declaration: ViewFieldDeclaration,
+		filePath: string,
+		metadata: Record<string, any> | undefined,
+		uuid: string
+	) {
 		super(containerEl);
 
 		this.api = api;

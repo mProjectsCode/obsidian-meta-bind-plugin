@@ -20,7 +20,9 @@ export class MetadataManager {
 
 		this.cache = new Map<string, MetadataFileCache>();
 
-		this.plugin.registerEvent(this.plugin.app.metadataCache.on('changed', (file, data, cache) => this.updateCacheOnFrontmatterUpdate(file.path, data, cache)));
+		this.plugin.registerEvent(
+			this.plugin.app.metadataCache.on('changed', (file, data, cache) => this.updateCacheOnFrontmatterUpdate(file.path, data, cache))
+		);
 
 		this.interval = window.setInterval(() => this.update(), this.plugin.settings.syncInterval);
 	}
@@ -203,7 +205,12 @@ export class MetadataManager {
 				}
 			} else {
 				const v = traverseObjectByPath(listener.metadataPath, fileCache.metadata);
-				console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata`, listener.metadataPath, fileCache.metadata, v);
+				console.debug(
+					`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata`,
+					listener.metadataPath,
+					fileCache.metadata,
+					v
+				);
 				listener.callback(v);
 			}
 		}
