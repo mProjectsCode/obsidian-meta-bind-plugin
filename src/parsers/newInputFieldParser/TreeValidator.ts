@@ -18,18 +18,42 @@ export class TL_Literal {
 	}
 }
 
+export class TL_LoopBound {
+	min: number;
+	max: number;
+
+	constructor(min: number, max: number) {
+		this.min = min;
+		this.max = max;
+	}
+
+	public isEqual(other: TL_LoopBound): boolean {
+		return this.min === other.min && this.max === other.max;
+	}
+
+	public violates(count: number): boolean {
+		if (this.min !== -1 && count < this.min) {
+			return false;
+		}
+
+		if (this.max !== -1 && count >= this.max) {
+			return false;
+		}
+
+		return true;
+	}
+}
+
 export class TL_Loop {
 	readonly type: TL_Type;
 	readonly loop: TreeLayout;
-	readonly min: number;
-	readonly max: number;
+	readonly bound: TL_LoopBound;
 
-	constructor(loop: TreeLayout, min: number, max: number) {
+	constructor(loop: TreeLayout, bound: TL_LoopBound) {
 		this.type = TL_Type.LOOP;
 
 		this.loop = loop;
-		this.min = min;
-		this.max = max;
+		this.bound = bound;
 	}
 }
 
@@ -85,8 +109,7 @@ export class TL_C_Loop extends Abstract_TL_C {
 	public toTL(): TL_Element {
 		return new TL_Loop(
 			this.loop.map(x => x.toTL()),
-			this.min,
-			this.max
+			new TL_LoopBound(this.min, this.max)
 		);
 	}
 }
@@ -147,44 +170,47 @@ export class VG_Transition_Constraint {
 		this.literalContent = literalContent;
 	}
 
-	public canTransition(astEl: AST_El): ParsingError | undefined {
+	public canTransition(astEl: AST_El): boolean {
 		if (astEl.type !== this.astType) {
-			return new ParsingError(
-				ErrorLevel.ERROR,
-				'failed to parse',
-				`Encountered invalid token. Expected token to be of type '${this.astType}' but received '${astEl.type}'.`,
-				{},
-				astEl.str,
-				astEl.getToken(),
-				'Validation Graph'
-			);
+			// return new ParsingError(
+			// 	ErrorLevel.ERROR,
+			// 	'failed to parse',
+			// 	`Encountered invalid token. Expected token to be of type '${this.astType}' but received '${astEl.type}'.`,
+			// 	{},
+			// 	astEl.str,
+			// 	astEl.getToken(),
+			// 	'Validation Graph'
+			// );
+			return false;
 		}
 
 		if (this.tokenType !== undefined && astEl.getToken().type !== this.tokenType) {
-			return new ParsingError(
-				ErrorLevel.ERROR,
-				'failed to parse',
-				`Encountered invalid token. Expected token to be '${this.tokenType}' but received '${astEl.getToken().type}'.`,
-				{},
-				astEl.str,
-				astEl.getToken(),
-				'Validation Graph'
-			);
+			// return new ParsingError(
+			// 	ErrorLevel.ERROR,
+			// 	'failed to parse',
+			// 	`Encountered invalid token. Expected token to be '${this.tokenType}' but received '${astEl.getToken().type}'.`,
+			// 	{},
+			// 	astEl.str,
+			// 	astEl.getToken(),
+			// 	'Validation Graph'
+			// );
+			return false;
 		}
 
 		if (this.literalContent !== undefined && astEl.toLiteral() !== this.literalContent) {
-			return new ParsingError(
-				ErrorLevel.ERROR,
-				'failed to parse',
-				`Encountered invalid token. Expected token to contain literal '${this.literalContent}' but received '${astEl.toLiteral()}'.`,
-				{},
-				astEl.str,
-				astEl.getToken(),
-				'Validation Graph'
-			);
+			// return new ParsingError(
+			// 	ErrorLevel.ERROR,
+			// 	'failed to parse',
+			// 	`Encountered invalid token. Expected token to contain literal '${this.literalContent}' but received '${astEl.toLiteral()}'.`,
+			// 	{},
+			// 	astEl.str,
+			// 	astEl.getToken(),
+			// 	'Validation Graph'
+			// );
+			return false;
 		}
 
-		return undefined;
+		return true;
 	}
 
 	public isEqual(other: VG_Transition_Constraint): boolean {
@@ -212,19 +238,17 @@ export class VG_Transition {
 	readonly from: number;
 	readonly to: number;
 	readonly constraint: VG_Transition_Constraint | undefined;
-	readonly loopMin: number;
-	readonly loopMax: number;
+	readonly loopBound: TL_LoopBound;
 
-	constructor(from: number, to: number, constraint: VG_Transition_Constraint | undefined, loopMin: number, loopMax: number) {
+	constructor(from: number, to: number, constraint: VG_Transition_Constraint | undefined, loopBound: TL_LoopBound | undefined) {
 		this.from = from;
 		this.to = to;
 		this.constraint = constraint;
-		this.loopMin = loopMin;
-		this.loopMax = loopMax;
+		this.loopBound = loopBound ?? new TL_LoopBound(-1, -1);
 	}
 
 	public isEqual(other: VG_Transition): boolean {
-		return this.from === other.from && this.to === other.to && this.isConstraintEqual(other) && this.loopMin === other.loopMin && this.loopMax === other.loopMax;
+		return this.from === other.from && this.to === other.to && this.isConstraintEqual(other) && this.isLoopBoundEqual(other);
 	}
 
 	private isConstraintEqual(other: VG_Transition): boolean {
@@ -235,37 +259,45 @@ export class VG_Transition {
 		return this.constraint === undefined && other.constraint === undefined;
 	}
 
-	public canTransition(astEl: AST_El, nodeCount: number): ParsingError | undefined {
-		if (this.loopMin !== -1 && nodeCount < this.loopMin) {
-			return new ParsingError(
-				ErrorLevel.ERROR,
-				'failed to parse',
-				`Loop bound not satisfied. Expected node count '${nodeCount}' to be higher than or equal to '${this.loopMin}'.`,
-				{},
-				astEl.str,
-				astEl.getToken(),
-				'Validation Graph'
-			);
-		}
+	private isLoopBoundEqual(other: VG_Transition): boolean {
+		return this.loopBound.isEqual(other.loopBound);
+	}
 
-		if (this.loopMax !== -1 && nodeCount >= this.loopMax) {
-			return new ParsingError(
-				ErrorLevel.ERROR,
-				'failed to parse',
-				`Loop bound not satisfied. Expected node count '${nodeCount}' to be less than '${this.loopMax}'.`,
-				{},
-				astEl.str,
-				astEl.getToken(),
-				'Validation Graph'
-			);
+	public canTransition(astEl: AST_El, nodeCount: number): boolean {
+		// if (this.loopMin !== -1 && nodeCount < this.loopMin) {
+		// 	return new ParsingError(
+		// 		ErrorLevel.ERROR,
+		// 		'failed to parse',
+		// 		`Loop bound not satisfied. Expected node count '${nodeCount}' to be higher than or equal to '${this.loopMin}'.`,
+		// 		{},
+		// 		astEl.str,
+		// 		astEl.getToken(),
+		// 		'Validation Graph'
+		// 	);
+		// }
+		//
+		// if (this.loopMax !== -1 && nodeCount >= this.loopMax) {
+		// 	return new ParsingError(
+		// 		ErrorLevel.ERROR,
+		// 		'failed to parse',
+		// 		`Loop bound not satisfied. Expected node count '${nodeCount}' to be less than '${this.loopMax}'.`,
+		// 		{},
+		// 		astEl.str,
+		// 		astEl.getToken(),
+		// 		'Validation Graph'
+		// 	);
+		// }
+
+		if (this.loopBound.violates(nodeCount)) {
+			return false;
 		}
 
 		// this is empty, allow transition
 		if (this.isEmpty()) {
-			return undefined;
+			return true;
 		}
 
-		return this.constraint?.canTransition(astEl);
+		return this.constraint?.canTransition(astEl) ?? true;
 	}
 
 	public isEmpty(): boolean {
@@ -277,21 +309,19 @@ export class VG_Node {
 	readonly index: number;
 	transitionConstraint: VG_Transition_Constraint | undefined;
 	final: boolean;
-	loopMin: number;
-	loopMax: number;
+	loopBound: TL_LoopBound;
 	transitions: VG_Transition[];
 
-	constructor(index: number, transitionConstraint: VG_Transition_Constraint | undefined, final: boolean = false, loopMin: number = -1, loopMax: number = -1) {
+	constructor(index: number, transitionConstraint: VG_Transition_Constraint | undefined, final: boolean = false, loopBound?: TL_LoopBound | undefined) {
 		this.index = index;
 		this.transitionConstraint = transitionConstraint;
 		this.final = final;
-		this.loopMin = loopMin;
-		this.loopMax = loopMax;
+		this.loopBound = loopBound ?? new TL_LoopBound(-1, -1);
 		this.transitions = [];
 	}
 
-	public createTransition(to: number, constraint: VG_Transition_Constraint | undefined, loopMin: number = -1, loopMax: number = -1): void {
-		const newTransition = new VG_Transition(this.index, to, constraint, loopMin, loopMax);
+	public createTransition(to: number, constraint: VG_Transition_Constraint | undefined, loopBound: TL_LoopBound | undefined): void {
+		const newTransition = new VG_Transition(this.index, to, constraint, loopBound);
 
 		for (const transition of this.transitions) {
 			if (transition.isEqual(newTransition)) {
@@ -314,7 +344,21 @@ export class VG_Node {
 type GraphNode = VG_Node; //| ValidationGraphLoopNode;
 
 interface ValidationState {
-	nodeState: number[];
+	active: boolean;
+	// errors: ParsingError[];
+	failure: ValidationFailure | undefined;
+	nodeStates: number[];
+}
+
+interface ValidationFailure {
+	astEl: AST_El;
+	loopCount: number;
+	violatedConstraints: ValidationConstraint[];
+}
+
+interface ValidationConstraint {
+	transitionConstraint: VG_Transition_Constraint;
+	loopBound: TL_LoopBound;
 }
 
 export class ValidationGraph {
@@ -352,17 +396,22 @@ export class ValidationGraph {
 			if (currentLayout instanceof TL_Loop) {
 				const res = this.parseTreeLayout(currentLayout.loop, previousNode);
 
-				if (currentLayout.min === 0) {
-					res.last.loopMin = 1;
+				// set the min loop bound for the last node this is for the exit transition
+				if (currentLayout.bound.min === 0) {
+					// TODO: why are we doing this?
+					// shouldn't loop bound 0 and -1 behave the same? (more or less)
+					res.last.loopBound.min = 1;
 
-					previousNode.createTransition(res.last.index, undefined);
+					previousNode.createTransition(res.last.index, undefined, undefined);
 				} else {
-					res.last.loopMin = currentLayout.min;
+					res.last.loopBound.min = currentLayout.bound.min;
 				}
 
-				res.last.loopMax = currentLayout.max;
+				// set the max loop bound for the last node this is for the exit transition
+				// res.last.loopBound.max = currentLayout.bound.max;
 
-				res.last.createTransition(res.first.index, res.first.transitionConstraint, -1, res.last.loopMax);
+				// create the loop back transition
+				res.last.createTransition(res.first.index, res.first.transitionConstraint, new TL_LoopBound(-1, currentLayout.bound.max));
 
 				if (!firstNode) {
 					firstNode = res.first;
@@ -374,24 +423,30 @@ export class ValidationGraph {
 
 				previousNode = res.last;
 			} else if (currentLayout instanceof TL_Or) {
+				// create an empty node in front of the split
 				const emptyNodePre = new VG_Node(this.nodeIndexCounter, undefined);
 				this.nodeIndexCounter += 1;
 				this.nodes.push(emptyNodePre);
 
-				previousNode.createTransition(emptyNodePre.index, undefined);
+				// add an empty transition to it
+				previousNode.createTransition(emptyNodePre.index, undefined, undefined);
 
+				// to the two options
 				const res1 = this.parseTreeLayout(currentLayout.option1, emptyNodePre);
 				const res2 = this.parseTreeLayout(currentLayout.option2, emptyNodePre);
 
+				// create an empty node after the split
 				const emptyNodePost = new VG_Node(this.nodeIndexCounter, undefined);
 				this.nodeIndexCounter += 1;
 				this.nodes.push(emptyNodePost);
 
-				res1.last.createTransition(emptyNodePost.index, undefined);
-				res2.last.createTransition(emptyNodePost.index, undefined);
+				// create the empty transitions to the node
+				res1.last.createTransition(emptyNodePost.index, undefined, undefined);
+				res2.last.createTransition(emptyNodePost.index, undefined, undefined);
 
+				// if the or can none, create an empty transition from the pre to the post node
 				if (currentLayout.allowNone) {
-					emptyNodePre.createTransition(emptyNodePost.index, undefined);
+					emptyNodePre.createTransition(emptyNodePost.index, undefined, undefined);
 				}
 
 				if (!firstNode) {
@@ -408,7 +463,7 @@ export class ValidationGraph {
 				this.nodeIndexCounter += 1;
 				this.nodes.push(currentNode);
 
-				previousNode.createTransition(currentNode.index, currentLayout.constraint, previousNode.loopMin, -1);
+				previousNode.createTransition(currentNode.index, currentLayout.constraint, previousNode.loopBound);
 
 				if (!firstNode) {
 					firstNode = currentNode;
@@ -423,12 +478,13 @@ export class ValidationGraph {
 		}
 
 		if (!firstNode || !lastNode) {
+			// if the tree layout was length 0, create an empty node
 			if (treeLayout.length === 0) {
 				const emptyNode = new VG_Node(this.nodeIndexCounter, undefined);
 				this.nodeIndexCounter += 1;
 				this.nodes.push(emptyNode);
 
-				previousNode.createTransition(emptyNode.index, undefined);
+				previousNode.createTransition(emptyNode.index, undefined, undefined);
 
 				firstNode = emptyNode;
 				lastNode = emptyNode;
@@ -485,7 +541,7 @@ export class ValidationGraph {
 					}
 
 					for (const transition of node.transitions) {
-						incomingTransition.node.createTransition(transition.to, transition.constraint, transition.loopMin, transition.loopMax);
+						incomingTransition.node.createTransition(transition.to, transition.constraint, transition.loopBound);
 					}
 				}
 			}
@@ -536,33 +592,52 @@ export class ValidationGraph {
 	public validateAST(astNode: Abstract_AST_Node): boolean {
 		this.state = [
 			{
-				nodeState: [-1],
+				active: true,
+				failure: undefined,
+				nodeStates: [-1],
 			},
 		];
-
-		const astElTypes = astNode.children.map(x => x.type);
-		astElTypes.push(AST_El_Type.SPECIAL_END);
 
 		for (const astChild of astNode.children) {
 			const newStates: ValidationState[] = [];
 
 			for (const validationState of this.state) {
-				const currentState = validationState.nodeState[validationState.nodeState.length - 1];
+				if (!validationState.active) {
+					continue;
+				}
+
+				const currentState = validationState.nodeStates[validationState.nodeStates.length - 1];
 				const node = this.getNode(currentState);
 				if (!node) {
 					throw new Error('this parser sucks');
 				}
 
-				const nodeCount = validationState.nodeState.filter(x => x === node.index).length;
+				const loopCount = validationState.nodeStates.filter(x => x === node.index).length;
 
+				// TODO: maybe move this to the graph optimization
 				const transitions = this.preprocessTransitions(node.transitions);
 
+				const violatedConstraints: ValidationConstraint[] = [];
+				let allTransitionsFailed = true;
+
 				for (const transition of transitions) {
-					const transitionError = transition.canTransition(astChild, nodeCount);
+					const transitionError = transition.canTransition(astChild, loopCount);
 
 					if (!transitionError) {
 						newStates.push({
-							nodeState: validationState.nodeState.concat([transition.to]),
+							active: true,
+							failure: undefined,
+							nodeStates: validationState.nodeStates.concat([transition.to]),
+						});
+						allTransitionsFailed = false;
+					} else {
+						if (!transition.constraint) {
+							throw new Error('This parser sucks');
+						}
+
+						violatedConstraints.push({
+							transitionConstraint: transition.constraint,
+							loopBound: transition.loopBound,
 						});
 					}
 
@@ -574,13 +649,29 @@ export class ValidationGraph {
 					// 	}
 					// }
 				}
+
+				if (allTransitionsFailed) {
+					// TODO: maybe modify the object instead of creating a new one.
+					newStates.push({
+						active: false,
+						failure: {
+							astEl: astChild,
+							loopCount: loopCount,
+							violatedConstraints: violatedConstraints,
+						},
+						nodeStates: validationState.nodeStates,
+					});
+				}
 			}
 
 			this.state = newStates;
 		}
 
+		console.log('parsing state');
+		console.log(this.state);
+
 		const validResults = this.state.filter(x => {
-			const lastNode = this.getNode(x.nodeState[x.nodeState.length - 1]);
+			const lastNode = this.getNode(x.nodeStates[x.nodeStates.length - 1]);
 			return lastNode ? lastNode.final : false;
 		});
 
