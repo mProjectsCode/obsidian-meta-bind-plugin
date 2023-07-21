@@ -27,7 +27,11 @@ export class OptionInputFieldArgument extends AbstractInputFieldArgument {
 			this.value = parseLiteral(valueParts[0]);
 			this.name = valueParts[1];
 		} else {
-			throw new MetaBindArgumentError(ErrorLevel.WARNING, 'failed to parse option argument value', 'expected there to be either one or two comma seperated values');
+			throw new MetaBindArgumentError(
+				ErrorLevel.WARNING,
+				'failed to parse option argument value',
+				'expected there to be either one or two comma seperated values'
+			);
 		}
 	}
 }

@@ -22,7 +22,10 @@ import { SelectInputField } from './fields/Select/SelectInputField';
 import { MultiSelectInputField } from './fields/Select/MultiSelectInputField';
 
 export class InputFieldFactory {
-	static createInputField(inputFieldType: InputFieldType, args: { renderChildType: RenderChildType; inputFieldMDRC: InputFieldMDRC }): AbstractInputField<any> | undefined {
+	static createInputField(
+		inputFieldType: InputFieldType,
+		args: { renderChildType: RenderChildType; inputFieldMDRC: InputFieldMDRC }
+	): AbstractInputField<any> | undefined {
 		if (inputFieldType !== InputFieldType.INVALID) {
 			InputFieldFactory.checkRenderChildTypeAllowed(inputFieldType, args.renderChildType, args.inputFieldMDRC.plugin);
 		}

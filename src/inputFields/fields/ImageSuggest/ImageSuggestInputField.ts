@@ -55,7 +55,11 @@ export class ImageSuggestInputField extends AbstractInputField<T> {
 
 	getHtmlElement(): HTMLElement {
 		if (!this.container) {
-			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
+			throw new MetaBindInternalError(
+				ErrorLevel.WARNING,
+				'failed to get html element for input field',
+				"container is undefined, field hasn't been rendered yet"
+			);
 		}
 
 		return this.container;
@@ -121,7 +125,11 @@ export class ImageSuggestInputField extends AbstractInputField<T> {
 			const imagePathString = stringifyLiteral(imagePath.value);
 
 			if (!imagePathString) {
-				const error = new MetaBindArgumentError(ErrorLevel.ERROR, 'failed to get suggest options', `expected suggest option ${imagePath.value} to be truthy`);
+				const error = new MetaBindArgumentError(
+					ErrorLevel.ERROR,
+					'failed to get suggest options',
+					`expected suggest option ${imagePath.value} to be truthy`
+				);
 				new Notice(`meta-bind | ${error.message}`);
 				console.warn(error);
 				continue;

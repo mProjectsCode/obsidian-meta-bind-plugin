@@ -53,7 +53,9 @@ export class PublishInputFieldMDRC extends MarkdownRenderChild {
 		}
 
 		if (this.bindTargetDeclaration.filePath !== this.filePath) {
-			this.errorCollection.add(new MetaBindBindTargetError(ErrorLevel.WARNING, 'populated with default data', 'can not load metadata of another file in obsidian publish'));
+			this.errorCollection.add(
+				new MetaBindBindTargetError(ErrorLevel.WARNING, 'populated with default data', 'can not load metadata of another file in obsidian publish')
+			);
 			return this.api.inputFieldParser.getDefaultValue(this.declaration);
 		}
 

@@ -19,10 +19,13 @@ export abstract class AbstractInputField<T extends MBExtendedLiteral> {
 			this.renderChild.readSignal.set(value);
 		};
 
-		this.filteredWriteSignal = new ComputedSignal<MBExtendedLiteral | undefined, T>(this.renderChild.writeSignal, (value: MBExtendedLiteral | undefined) => {
-			const filteredValue = this.filterValue(value);
-			return filteredValue !== undefined ? filteredValue : this.getDefaultValue();
-		});
+		this.filteredWriteSignal = new ComputedSignal<MBExtendedLiteral | undefined, T>(
+			this.renderChild.writeSignal,
+			(value: MBExtendedLiteral | undefined) => {
+				const filteredValue = this.filterValue(value);
+				return filteredValue !== undefined ? filteredValue : this.getDefaultValue();
+			}
+		);
 
 		this.filteredWriteSignal.registerListener({
 			callback: (value: T): void => {

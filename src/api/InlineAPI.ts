@@ -38,7 +38,12 @@ export class InlineAPI {
 		return this.api.createInputFieldFromString(fullDeclaration, renderType, filePath, this.container);
 	}
 
-	public createInputFieldFromStringInContainer(fullDeclaration: string, renderType: RenderChildType, filePath: string, container: HTMLElement): InputFieldMDRC {
+	public createInputFieldFromStringInContainer(
+		fullDeclaration: string,
+		renderType: RenderChildType,
+		filePath: string,
+		container: HTMLElement
+	): InputFieldMDRC {
 		return this.api.createInputFieldFromString(fullDeclaration, renderType, filePath, container);
 	}
 

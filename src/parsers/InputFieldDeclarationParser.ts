@@ -115,11 +115,19 @@ export class InputFieldDeclarationParser {
 			}
 
 			if (declaration.inputFieldType === InputFieldType.INVALID) {
-				throw new MetaBindParsingError(ErrorLevel.CRITICAL, 'failed to parse input field declaration', `unknown input field type "${declaration.inputFieldType}"`);
+				throw new MetaBindParsingError(
+					ErrorLevel.CRITICAL,
+					'failed to parse input field declaration',
+					`unknown input field type "${declaration.inputFieldType}"`
+				);
 			}
 
 			// arguments check
-			const argumentContainer: InputFieldArgumentContainer = this.parseArguments(declaration.inputFieldType, inputFieldArguments, declaration.errorCollection);
+			const argumentContainer: InputFieldArgumentContainer = this.parseArguments(
+				declaration.inputFieldType,
+				inputFieldArguments,
+				declaration.errorCollection
+			);
 			declaration.argumentContainer.mergeByOverride(argumentContainer);
 		} catch (e) {
 			declaration.errorCollection.add(e);
@@ -145,10 +153,15 @@ export class InputFieldDeclarationParser {
 					templateName = temp[0];
 					declaration.declaration = temp[1];
 				} else {
-					throw new MetaBindParsingError(ErrorLevel.CRITICAL, 'failed to parse input field declaration', 'expected number of square bracket pairs to be two', {
-						fullDeclaration: fullDeclaration,
-						contentInSquareBraces: temp,
-					});
+					throw new MetaBindParsingError(
+						ErrorLevel.CRITICAL,
+						'failed to parse input field declaration',
+						'expected number of square bracket pairs to be two',
+						{
+							fullDeclaration: fullDeclaration,
+							contentInSquareBraces: temp,
+						}
+					);
 				}
 			} else {
 				declaration.declaration = temp;
@@ -172,7 +185,11 @@ export class InputFieldDeclarationParser {
 				const inputFieldArgumentsString: string = ParserUtils.getInBetween(inputFieldTypeWithArguments, this.roundBracesPair) as string;
 				// console.log(inputFieldArgumentsString);
 				if (inputFieldArgumentsString) {
-					declaration.argumentContainer = this.parseArgumentString(declaration.inputFieldType, inputFieldArgumentsString, declaration.errorCollection);
+					declaration.argumentContainer = this.parseArgumentString(
+						declaration.inputFieldType,
+						inputFieldArgumentsString,
+						declaration.errorCollection
+					);
 				} else {
 					declaration.argumentContainer = new InputFieldArgumentContainer();
 				}
@@ -186,7 +203,11 @@ export class InputFieldDeclarationParser {
 			}
 
 			if (declaration.inputFieldType === InputFieldType.INVALID) {
-				throw new MetaBindParsingError(ErrorLevel.CRITICAL, 'failed to parse input field declaration', `unknown input field type "${declaration.inputFieldType}"`);
+				throw new MetaBindParsingError(
+					ErrorLevel.CRITICAL,
+					'failed to parse input field declaration',
+					`unknown input field type "${declaration.inputFieldType}"`
+				);
 			}
 		} catch (e) {
 			declaration.errorCollection.add(e);
@@ -231,7 +252,11 @@ export class InputFieldDeclarationParser {
 
 			if (inputFieldArgumentType === InputFieldArgumentType.INVALID) {
 				errorCollection.add(
-					new MetaBindParsingError(ErrorLevel.WARNING, 'failed to parse input field arguments', `unknown input field argument "${inputFieldArgumentTypeString}"`)
+					new MetaBindParsingError(
+						ErrorLevel.WARNING,
+						'failed to parse input field arguments',
+						`unknown input field argument "${inputFieldArgumentTypeString}"`
+					)
 				);
 				continue;
 			}
@@ -266,7 +291,11 @@ export class InputFieldDeclarationParser {
 				if (inputFieldArgument.requiresValue) {
 					if (!argument.value) {
 						errorCollection.add(
-							new MetaBindParsingError(ErrorLevel.WARNING, 'failed to parse input field arguments', `argument "${argument.type}" requires a non empty value`)
+							new MetaBindParsingError(
+								ErrorLevel.WARNING,
+								'failed to parse input field arguments',
+								`argument "${argument.type}" requires a non empty value`
+							)
 						);
 						continue;
 					}
@@ -332,7 +361,8 @@ export class InputFieldDeclarationParser {
 		inputFieldDeclaration.bindTarget = inputFieldDeclaration.bindTarget || template.bindTarget;
 		inputFieldDeclaration.isBound = inputFieldDeclaration.isBound || template.isBound;
 		inputFieldDeclaration.inputFieldType =
-			(inputFieldDeclaration.inputFieldType === InputFieldType.INVALID ? template.inputFieldType : inputFieldDeclaration.inputFieldType) || template.inputFieldType;
+			(inputFieldDeclaration.inputFieldType === InputFieldType.INVALID ? template.inputFieldType : inputFieldDeclaration.inputFieldType) ||
+			template.inputFieldType;
 		inputFieldDeclaration.argumentContainer = template.argumentContainer.mergeByOverride(inputFieldDeclaration.argumentContainer);
 	}
 

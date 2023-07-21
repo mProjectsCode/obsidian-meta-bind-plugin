@@ -88,7 +88,11 @@ export class DateInputField extends AbstractInputField<T> {
 
 	public getHtmlElement(): HTMLElement {
 		if (!this.container) {
-			throw new MetaBindInternalError(ErrorLevel.WARNING, 'failed to get html element for input field', "container is undefined, field hasn't been rendered yet");
+			throw new MetaBindInternalError(
+				ErrorLevel.WARNING,
+				'failed to get html element for input field',
+				"container is undefined, field hasn't been rendered yet"
+			);
 		}
 
 		return this.container;

@@ -60,7 +60,10 @@ export class API {
 		return new JsViewFieldMDRC(container, renderType, declaration, this.plugin, filePath, self.crypto.randomUUID());
 	}
 
-	public createInputFieldDeclaration(inputFieldType: InputFieldType, inputFieldArguments?: { type: InputFieldArgumentType; value: string }[]): InputFieldDeclaration {
+	public createInputFieldDeclaration(
+		inputFieldType: InputFieldType,
+		inputFieldArguments?: { type: InputFieldArgumentType; value: string }[]
+	): InputFieldDeclaration {
 		if (this.inputFieldParser.getInputFieldType(inputFieldType) === InputFieldType.INVALID) {
 			throw new MetaBindParsingError(ErrorLevel.CRITICAL, 'failed to create input field declaration', `input field type '${inputFieldType}' is invalid`);
 		}

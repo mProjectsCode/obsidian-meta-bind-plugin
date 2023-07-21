@@ -12,7 +12,11 @@ export class MaxValueInputFieldArgument extends AbstractInputFieldArgument {
 	parseValue(valueStr: string): void {
 		this.value = Number.parseInt(valueStr);
 		if (Number.isNaN(this.value)) {
-			throw new MetaBindParsingError(ErrorLevel.ERROR, 'failed to set value for input field argument', "value of argument 'maxValue' must be of type number");
+			throw new MetaBindParsingError(
+				ErrorLevel.ERROR,
+				'failed to set value for input field argument',
+				"value of argument 'maxValue' must be of type number"
+			);
 		}
 	}
 }

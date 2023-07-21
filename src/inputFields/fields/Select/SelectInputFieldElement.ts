@@ -15,7 +15,14 @@ export class SelectInputFieldElement {
 	private active: boolean;
 	private highlighted: boolean;
 
-	constructor(value: MBLiteral, name: string, parentElement: HTMLElement, id: number, multiSelectInputField: AbstractSelectInputField<any>, active: boolean = false) {
+	constructor(
+		value: MBLiteral,
+		name: string,
+		parentElement: HTMLElement,
+		id: number,
+		multiSelectInputField: AbstractSelectInputField<any>,
+		active: boolean = false
+	) {
 		this.value = value;
 		this.name = name;
 		this.id = id;
