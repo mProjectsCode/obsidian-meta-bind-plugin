@@ -7,7 +7,6 @@ time: 19:20
 multi-select:
   - option a
   - option b
-  - option c
 ---
 
 ## This is another note
