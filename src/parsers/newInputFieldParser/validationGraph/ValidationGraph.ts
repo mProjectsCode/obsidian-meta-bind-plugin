@@ -17,7 +17,7 @@ export interface ValidationState {
 }
 
 export interface ValidationFailure {
-	ptElement: PT_Element;
+	ptElement: PT_Element | undefined;
 	loopCount: number;
 	violatedConstraints: ValidationConstraint[];
 }
@@ -340,7 +340,7 @@ export class ValidationGraph {
 		return valRes.acceptedState !== undefined;
 	}
 
-	public validateParsingTreeAndExtractContext(astNode: Abstract_PT_Node): { acceptedState: ValidationState | undefined; allStates: ValidationState[] } {
+	public validateParsingTreeAndExtractContext(ptNode: Abstract_PT_Node): { acceptedState: ValidationState | undefined; allStates: ValidationState[] } {
 		this.state = [
 			{
 				active: true,
@@ -353,120 +353,11 @@ export class ValidationGraph {
 		];
 
 		// TODO: make this +1 better
-		for (let astIndex = 0; astIndex < astNode.children.length + 1; astIndex++) {
-			const astChild = astNode.children[astIndex];
+		for (let ptIndex = 0; ptIndex < ptNode.children.length + 1; ptIndex++) {
+			const ptChild = ptNode.children[ptIndex];
 
-			while (this.hasUnfinishedStates(this.state, astIndex)) {
-				const newStates: ValidationState[] = [];
-
-				for (const validationState of this.state) {
-					if (!validationState.active || validationState.currentInputIndex === astIndex) {
-						newStates.push(validationState);
-						continue;
-					}
-
-					const currentState = validationState.nodeStates[validationState.nodeStates.length - 1];
-					const node = this.getNode(currentState);
-					if (!node) {
-						throw new Error('this parser sucks');
-					}
-
-					const loopCount = validationState.nodeStates.filter(x => x === node.index).length;
-
-					const violatedConstraints: ValidationConstraint[] = [];
-					let allTransitionsFailed = true;
-
-					for (const transition of node.transitions) {
-						const canTransition = transition.canTransition(astChild, loopCount);
-						// console.log(transition, canTransition, astChild);
-
-						if (canTransition) {
-							const newContext: ValidationContext = cloneValidationContext(validationState.context);
-							const newContextStack: (string | number)[] = [...validationState.currentContextStack];
-							let currentContext: ValidationContext = traverseObjectByPath(newContextStack as string[], newContext);
-							// console.log(currentContext);
-
-							// do the current key first
-							if (transition.key !== undefined) {
-								currentContext[transition.key] = { element: astChild, inputIndex: astIndex };
-							}
-
-							// do context actions
-							for (const contextAction of transition.contextActions) {
-								if (contextAction.type === ContextActionType.POP) {
-									newContextStack.pop();
-									newContextStack.pop();
-									currentContext = traverseObjectByPath(newContextStack as string[], newContext);
-								} else {
-									if (currentContext[contextAction.key] === undefined) {
-										currentContext[contextAction.key] = [] as ValidationContext[];
-									}
-
-									const subContextArray: ValidationContext[] = currentContext[contextAction.key] as ValidationContext[];
-									const newSubContext: ValidationContext = {};
-
-									subContextArray.push(newSubContext);
-									newContextStack.push(contextAction.key);
-									newContextStack.push(subContextArray.length - 1);
-									currentContext = newSubContext;
-								}
-							}
-
-							newStates.push({
-								active: true,
-								currentInputIndex: transition.constraint !== undefined ? astIndex : validationState.currentInputIndex,
-								context: newContext,
-								currentContextStack: newContextStack,
-								failure: undefined,
-								nodeStates: validationState.nodeStates.concat([transition.to]),
-							});
-
-							allTransitionsFailed = false;
-						} else {
-							violatedConstraints.push({
-								transitionConstraint: transition.constraint,
-								loopBound: transition.loopBound,
-							});
-						}
-					}
-
-					// console.log(currentState, node.transitions, violatedConstraints, newStates);
-
-					if (astChild === undefined && node.transitions.length === 0) {
-						newStates.push({
-							active: true,
-							currentInputIndex: astIndex,
-							context: validationState.context,
-							currentContextStack: validationState.currentContextStack,
-							failure: undefined,
-							nodeStates: validationState.nodeStates,
-						});
-
-						allTransitionsFailed = false;
-					}
-
-					if (allTransitionsFailed) {
-						// console.log('all transitions failed', node.transitions, node, astIndex, validationState);
-
-						// TODO: maybe modify the object instead of creating a new one.
-						newStates.push({
-							active: false,
-							context: validationState.context,
-							currentInputIndex: astIndex,
-							currentContextStack: validationState.currentContextStack,
-							failure: {
-								ptElement: astChild,
-								loopCount: loopCount,
-								violatedConstraints: violatedConstraints,
-							},
-							nodeStates: validationState.nodeStates,
-						});
-					}
-				}
-
-				// console.log(newStates);
-
-				this.state = newStates;
+			while (this.hasUnfinishedStates(this.state, ptIndex)) {
+				this.validateParsingTreeChild(ptChild, ptIndex);
 			}
 		}
 
@@ -497,6 +388,136 @@ export class ValidationGraph {
 		} else {
 			throw new Error('more than one valid paths');
 		}
+	}
+
+	private validateParsingTreeChild(ptChild: PT_Element | undefined, ptIndex: number): void {
+		const newStates: ValidationState[] = [];
+
+		for (const validationState of this.state) {
+			if (!validationState.active || validationState.currentInputIndex === ptIndex) {
+				newStates.push(validationState);
+				continue;
+			}
+
+			const currentState = validationState.nodeStates[validationState.nodeStates.length - 1];
+			const node = this.getNode(currentState);
+			if (!node) {
+				throw new Error('this parser sucks');
+			}
+
+			// count the occurrences of the node in the validation state
+			let loopCount = 0;
+			for (const nodeState of validationState.nodeStates) {
+				if (nodeState === node.index) {
+					loopCount += 1;
+				}
+			}
+
+			const violatedConstraints: ValidationConstraint[] = [];
+			let allTransitionsFailed = true;
+
+			for (const transition of node.transitions) {
+				if (transition.canTransition(ptChild, loopCount)) {
+					let contextEntry = undefined;
+					if (ptChild !== undefined) {
+						contextEntry = {
+							element: ptChild,
+							inputIndex: ptIndex,
+						};
+					}
+
+					const newContext = this.updateContext(validationState, transition, contextEntry);
+
+					newStates.push({
+						active: true,
+						currentInputIndex: transition.constraint !== undefined ? ptIndex : validationState.currentInputIndex,
+						context: newContext.context,
+						currentContextStack: newContext.contextStack,
+						failure: undefined,
+						nodeStates: validationState.nodeStates.concat([transition.to]),
+					});
+
+					allTransitionsFailed = false;
+				} else {
+					violatedConstraints.push({
+						transitionConstraint: transition.constraint,
+						loopBound: transition.loopBound,
+					});
+				}
+			}
+
+			if (ptChild === undefined && node.transitions.length === 0) {
+				newStates.push({
+					active: true,
+					currentInputIndex: ptIndex,
+					context: validationState.context,
+					currentContextStack: validationState.currentContextStack,
+					failure: undefined,
+					nodeStates: validationState.nodeStates,
+				});
+
+				allTransitionsFailed = false;
+			}
+
+			if (allTransitionsFailed) {
+				newStates.push({
+					active: false,
+					context: validationState.context,
+					currentInputIndex: ptIndex,
+					currentContextStack: validationState.currentContextStack,
+					failure: {
+						ptElement: ptChild,
+						loopCount: loopCount,
+						violatedConstraints: violatedConstraints,
+					},
+					nodeStates: validationState.nodeStates,
+				});
+			}
+		}
+
+		this.state = newStates;
+	}
+
+	private updateContext(
+		validationState: ValidationState,
+		transition: VG_Transition,
+		contextEntry: ValidationContextEntry<PT_Element> | undefined
+	): { context: ValidationContext; contextStack: (string | number)[] } {
+		const newContext: ValidationContext = cloneValidationContext(validationState.context);
+		const newContextStack: (string | number)[] = [...validationState.currentContextStack];
+
+		let currentContext: ValidationContext = traverseObjectByPath(newContextStack as string[], newContext);
+
+		// do the current key first
+		if (transition.key !== undefined && contextEntry !== undefined) {
+			currentContext[transition.key] = contextEntry;
+		}
+
+		// do context actions
+		for (const contextAction of transition.contextActions) {
+			if (contextAction.type === ContextActionType.POP) {
+				newContextStack.pop();
+				newContextStack.pop();
+				currentContext = traverseObjectByPath(newContextStack as string[], newContext);
+			} else {
+				if (currentContext[contextAction.key] === undefined) {
+					currentContext[contextAction.key] = [] as ValidationContext[];
+				}
+
+				const subContextArray: ValidationContext[] = currentContext[contextAction.key] as ValidationContext[];
+				const newSubContext: ValidationContext = {};
+
+				subContextArray.push(newSubContext);
+				newContextStack.push(contextAction.key);
+				newContextStack.push(subContextArray.length - 1);
+				currentContext = newSubContext;
+			}
+		}
+
+		return {
+			context: newContext,
+			contextStack: newContextStack,
+		};
 	}
 
 	private hasUnfinishedStates(states: ValidationState[], astIndex: number): boolean {

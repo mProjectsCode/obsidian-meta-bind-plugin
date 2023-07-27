@@ -103,7 +103,10 @@ export class DeclarationParser {
 				new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD, undefined, 'bindTarget'), // first bind target metadata path part
 				new TL_C_Loop(
 					[
-						new TL_C_Or([[new TL_C_Literal(PT_Element_Type.LITERAL)], [new TL_C_Literal(PT_Element_Type.CLOSURE)]]), // either literal or closure or none, in a loop
+						new TL_C_Or([
+							[new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD)],
+							[new TL_C_Literal(PT_Element_Type.CLOSURE, InputFieldTokenType.L_SQUARE)],
+						]), // either literal or closure or none, in a loop
 					],
 					0,
 					-1
