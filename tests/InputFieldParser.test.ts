@@ -124,6 +124,8 @@ describe('tree validation tests', function () {
 			new TL_C_Literal(PT_Element_Type.CLOSURE),
 		]);
 
+		graph.optimizeParsingGraph();
+
 		expect(graph.validateParsingTree(createParsingTree('()a[]'))).toEqual(true);
 		expect(graph.validateParsingTree(createParsingTree('()[]'))).toEqual(true);
 		expect(graph.validateParsingTree(createParsingTree('()()[]'))).toEqual(true);

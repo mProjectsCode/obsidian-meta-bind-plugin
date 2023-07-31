@@ -28,7 +28,7 @@ export const InputFieldClosures: Closure<InputFieldTokenType>[] = [
 
 export interface InputFieldToken extends AbstractToken<InputFieldTokenType> {}
 
-function createToken<TokenType extends string>(type: TokenType, literal: string, from: number, to: number): AbstractToken<TokenType> {
+export function createToken<TokenType extends string>(type: TokenType, literal: string, from: number, to: number): AbstractToken<TokenType> {
 	return {
 		type: type,
 		literal: literal,

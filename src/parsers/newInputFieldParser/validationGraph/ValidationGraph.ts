@@ -3,9 +3,10 @@ import { VG_Transition_Constraint } from './VG_Transition_Constraint';
 import { VG_Transition } from './VG_Transition';
 import { VG_Node } from './VG_Node';
 import { ContextActionType } from './ContextActions';
-import { Abstract_PT_Node, PT_Element } from '../ParsingTree';
+import { Abstract_PT_Node, PT_Element, PT_Element_Type, PT_Literal } from '../ParsingTree';
 import { ComplexTreeLayout } from './treeLayout/ComplexTreeLayout';
 import { TL_Literal, TL_Loop, TL_LoopBound, TL_Or, TreeLayout } from './treeLayout/TreeLayout';
+import { createToken, InputFieldTokenType } from '../InputFieldTokenizer';
 
 export interface ValidationState {
 	active: boolean;
@@ -86,12 +87,13 @@ export class ValidationGraph {
 
 		this.parseTreeLayout(this.layout, this.nodes[0]);
 
-		// const endNode = new VG_Node(this.nodeIndexCounter, AST_El_Type.SPECIAL_END);
-		// this.nodeIndexCounter += 1;
-		// this.nodes[this.nodes.length - 1].createTransition(endNode.index, AST_El_Type.SPECIAL_END);
-		// this.nodes.push(endNode);
+		const endNodeTransitionConstraint = new VG_Transition_Constraint(PT_Element_Type.LITERAL, InputFieldTokenType.EOF);
+		const endNode = new VG_Node(this.nodeIndexCounter, endNodeTransitionConstraint, true);
+		this.nodeIndexCounter += 1;
+		this.nodes[this.nodes.length - 1].createTransition(endNode.index, endNodeTransitionConstraint, undefined, undefined, undefined);
+		this.nodes.push(endNode);
 
-		this.nodes[this.nodes.length - 1].final = true;
+		// this.nodes[this.nodes.length - 1].final = true;
 	}
 
 	private parseTreeLayout(treeLayout: TreeLayout, previousNode: VG_Node): { first: VG_Node; last: VG_Node } {
@@ -203,7 +205,7 @@ export class ValidationGraph {
 				this.nodeIndexCounter += 1;
 				this.nodes.push(currentNode);
 
-				console.log('current layout key', currentLayout.key);
+				// console.log('current layout key', currentLayout.key);
 
 				previousNode.createTransition(currentNode.index, currentLayout.constraint, previousNode.loopBound, currentLayout.key, undefined);
 
@@ -276,7 +278,8 @@ export class ValidationGraph {
 
 			if (hasOnlyEmptyIncomingTransitions) {
 				for (const incomingTransition of incomingTransitions) {
-					incomingTransition.node.transitions.remove(incomingTransition.transition);
+					const transitionIndex = incomingTransition.node.transitions.indexOf(incomingTransition.transition);
+					incomingTransition.node.transitions.splice(transitionIndex, 1);
 
 					if (node.index === incomingTransition.node.index) {
 						continue;
@@ -354,7 +357,15 @@ export class ValidationGraph {
 
 		// TODO: make this +1 better
 		for (let ptIndex = 0; ptIndex < ptNode.children.length + 1; ptIndex++) {
-			const ptChild = ptNode.children[ptIndex];
+			let ptChild: PT_Element;
+
+			if (ptIndex === ptNode.children.length) {
+				const prevChild = ptNode.children[ptIndex - 1];
+				const pos = prevChild !== undefined ? prevChild.getRange().to + 1 : 0;
+				ptChild = new PT_Literal(createToken(InputFieldTokenType.EOF, 'eof', pos, pos), '');
+			} else {
+				ptChild = ptNode.children[ptIndex];
+			}
 
 			while (this.hasUnfinishedStates(this.state, ptIndex)) {
 				this.validateParsingTreeChild(ptChild, ptIndex);
@@ -376,6 +387,61 @@ export class ValidationGraph {
 		// console.log(validResults);
 
 		if (validResults.length === 0) {
+			// TODO: calculate the closest path and generate an error based on it
+
+			// case 1: the path has reached the final input, but not a final state
+
+			const pathsAtEndOfInput = this.state.filter(x => x.currentInputIndex === ptNode.children.length);
+
+			let violatedTransitions: VG_Transition[] = [];
+			let recievedToken: string;
+
+			if (pathsAtEndOfInput.length > 0) {
+				for (const path of pathsAtEndOfInput) {
+					const node = this.getNode(path.nodeStates[path.nodeStates.length - 1]);
+
+					if (node === undefined) {
+						throw new Error('This parser sucks');
+					}
+
+					violatedTransitions = violatedTransitions.concat(node.transitions);
+				}
+
+				recievedToken = 'EOF';
+			} else {
+				// case 2: the path has not reached the end of the input
+
+				// find the paths that got the furthest
+
+				let furthestInputIndex = 0;
+				let furthestPaths: ValidationState[] = [];
+
+				for (const path of this.state) {
+					if (path.currentInputIndex === furthestInputIndex) {
+						furthestPaths.push(path);
+					} else if (path.currentInputIndex > furthestInputIndex) {
+						furthestInputIndex = path.currentInputIndex;
+						furthestPaths = [];
+						furthestPaths.push(path);
+					}
+				}
+
+				for (const path of furthestPaths) {
+					const node = this.getNode(path.nodeStates[path.nodeStates.length - 1]);
+
+					if (node === undefined) {
+						throw new Error('This parser sucks');
+					}
+
+					violatedTransitions = violatedTransitions.concat(node.transitions);
+				}
+
+				recievedToken = ptNode.children[furthestInputIndex].getToken().literal;
+			}
+
+			console.log('violated transitions:', violatedTransitions, ptNode.str);
+			console.log(`received ${recievedToken} expected token to be:`, violatedTransitions.map(x => `"${x.constraint?.toString()}"`).join(', '));
+
 			return {
 				acceptedState: undefined,
 				allStates: this.state,
@@ -390,7 +456,7 @@ export class ValidationGraph {
 		}
 	}
 
-	private validateParsingTreeChild(ptChild: PT_Element | undefined, ptIndex: number): void {
+	private validateParsingTreeChild(ptChild: PT_Element, ptIndex: number): void {
 		const newStates: ValidationState[] = [];
 
 		for (const validationState of this.state) {
@@ -446,18 +512,18 @@ export class ValidationGraph {
 				}
 			}
 
-			if (ptChild === undefined && node.transitions.length === 0) {
-				newStates.push({
-					active: true,
-					currentInputIndex: ptIndex,
-					context: validationState.context,
-					currentContextStack: validationState.currentContextStack,
-					failure: undefined,
-					nodeStates: validationState.nodeStates,
-				});
-
-				allTransitionsFailed = false;
-			}
+			// if (ptChild === undefined && node.transitions.length === 0) {
+			// 	newStates.push({
+			// 		active: true,
+			// 		currentInputIndex: ptIndex,
+			// 		context: validationState.context,
+			// 		currentContextStack: validationState.currentContextStack,
+			// 		failure: undefined,
+			// 		nodeStates: validationState.nodeStates,
+			// 	});
+			//
+			// 	allTransitionsFailed = false;
+			// }
 
 			if (allTransitionsFailed) {
 				newStates.push({

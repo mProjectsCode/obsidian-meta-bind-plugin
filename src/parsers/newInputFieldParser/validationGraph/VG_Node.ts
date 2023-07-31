@@ -9,8 +9,7 @@ export class VG_Node {
 	final: boolean;
 	loopBound: TL_LoopBound;
 	transitions: VG_Transition[];
-
-	// readonly contextKey: string | undefined;
+	// distanceToFinalNode: number;
 
 	constructor(index: number, transitionConstraint: VG_Transition_Constraint | undefined, final: boolean = false, loopBound?: TL_LoopBound | undefined) {
 		this.index = index;
@@ -18,7 +17,7 @@ export class VG_Node {
 		this.final = final;
 		this.loopBound = loopBound ?? new TL_LoopBound(-1, -1);
 		this.transitions = [];
-		// this.contextKey = contextKey;
+		// this.distanceToFinalNode = Number.MAX_VALUE;
 	}
 
 	public createTransition(

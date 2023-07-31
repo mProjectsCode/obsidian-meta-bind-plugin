@@ -90,53 +90,63 @@ export class ParserTestMDRC extends AbstractMDRC {
 		// await this.renderGraph(
 		// 	'loop bound 2 0',
 		// 	[
-		// 		new TL_C_Literal(PT_Element_Type.LITERAL, undefined, undefined, 'pre'),
-		// 		new TL_C_Loop([new TL_C_Literal(PT_Element_Type.CLOSURE, undefined, undefined, 'l1')], 1, 2, 'loop'),
-		// 	],
-		// 	true,
-		// 	'a()'
-		// );
-
-		// await this.renderGraph(
-		// 	'inputField',
-		// 	[
-		// 		new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD, undefined, 'type'), // input field type
-		// 		new TL_C_Optional([new TL_C_Literal(PT_Element_Type.CLOSURE, InputFieldTokenType.L_PAREN, undefined, 'arguments')]), // optional arguments
-		// 		new TL_C_Optional([
-		// 			new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.COLON, undefined, 'bindTargetSeparator'), // bind target separator
-		// 			new TL_C_Optional([
-		// 				new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD, undefined, 'bindTargetFile'), // file
-		// 				new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.HASHTAG), // hashtag
-		// 			]), // optional file and hashtag
-		// 			new TL_C_Literal(PT_Element_Type.LITERAL, undefined, 'bindTarget'), // first bind target metadata path part
-		// 			new TL_C_Loop(
-		// 				[
-		// 					new TL_C_Or([[new TL_C_Literal(PT_Element_Type.LITERAL)], [new TL_C_Literal(PT_Element_Type.CLOSURE)]]), // either literal or closure or none, in a loop
-		// 				],
-		// 				0,
-		// 				-1
-		// 			), // the other bind target metadata path part
+		// 		new TL_C_Literal(PT_Element_Type.CLOSURE),
+		// 		new TL_C_Or([
+		// 			[new TL_C_Or([[], [new TL_C_Literal(PT_Element_Type.LITERAL)]])],
+		// 			[new TL_C_Or([[], [new TL_C_Literal(PT_Element_Type.CLOSURE)]])],
 		// 		]),
+		// 		new TL_C_Literal(PT_Element_Type.CLOSURE),
 		// 	],
 		// 	true,
-		// 	'toggle(a, b, c(d)):e'
+		// 	'[]a()'
 		// );
 
 		await this.renderGraph(
-			'input field arguments',
+			'inputField',
 			[
-				new TL_C_Enumeration(
-					[
-						new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD, undefined, 'name'),
-						new TL_C_Optional([new TL_C_Literal(PT_Element_Type.CLOSURE, InputFieldTokenType.L_PAREN, undefined, 'value')]),
-					],
-					[new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.COMMA)],
-					'arguments'
-				),
+				new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD, undefined, 'type'), // input field type
+				// new TL_C_Optional([new TL_C_Literal(PT_Element_Type.CLOSURE, InputFieldTokenType.L_PAREN, undefined, 'arguments')]), // optional arguments
+				new TL_C_Literal(PT_Element_Type.CLOSURE, InputFieldTokenType.L_PAREN, undefined, 'arguments'), // optional arguments
+				new TL_C_Optional([
+					new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.COLON, undefined, 'bindTargetSeparator'), // bind target separator
+					new TL_C_Optional([
+						new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD, undefined, 'bindTargetFile'), // file
+						new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.HASHTAG), // hashtag
+					]), // optional file and hashtag
+					new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD, undefined, 'bindTarget'), // first bind target metadata path part
+					new TL_C_Loop(
+						[
+							new TL_C_Or([
+								[new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD)],
+								[new TL_C_Literal(PT_Element_Type.CLOSURE, InputFieldTokenType.L_SQUARE)],
+							]), // either literal or closure or none, in a loop
+						],
+						0,
+						-1
+					), // the other bind target metadata path part
+				]),
 			],
 			true,
-			'a, b(), c, d()'
+			'toggle()#'
 		);
+
+		// TODO: ADD EOF TOKEN TO FIX ALL THIS SHIT
+
+		// await this.renderGraph(
+		// 	'input field arguments',
+		// 	[
+		// 		new TL_C_Enumeration(
+		// 			[
+		// 				new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD, undefined, 'name'),
+		// 				new TL_C_Optional([new TL_C_Literal(PT_Element_Type.CLOSURE, InputFieldTokenType.L_PAREN, undefined, 'value')]),
+		// 			],
+		// 			[new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.COMMA)],
+		// 			'arguments'
+		// 		),
+		// 	],
+		// 	true,
+		// 	'a, b(), c, d()'
+		// );
 
 		// const fullDeclaration = 'test(a):b';
 		//

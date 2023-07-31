@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ast parser tests complex closure test 2 1`] = `
-AST_Root {
+ParsingTree {
   "children": [
-    AST_Literal {
+    PT_Literal {
       "str": "hello world[this is a message to all people]test(a)b",
       "token": {
         "literal": "hello world",
@@ -15,9 +15,9 @@ AST_Root {
       },
       "type": "LITERAL",
     },
-    AST_Closure {
+    PT_Closure {
       "children": [
-        AST_Literal {
+        PT_Literal {
           "str": "hello world[this is a message to all people]test(a)b",
           "token": {
             "literal": "this is a message to all people",
@@ -30,7 +30,7 @@ AST_Root {
           "type": "LITERAL",
         },
       ],
-      "endLiteral": AST_Literal {
+      "endLiteral": PT_Literal {
         "str": "hello world[this is a message to all people]test(a)b",
         "token": {
           "literal": "]",
@@ -42,7 +42,7 @@ AST_Root {
         },
         "type": "LITERAL",
       },
-      "startLiteral": AST_Literal {
+      "startLiteral": PT_Literal {
         "str": "hello world[this is a message to all people]test(a)b",
         "token": {
           "literal": "[",
@@ -57,7 +57,7 @@ AST_Root {
       "str": "hello world[this is a message to all people]test(a)b",
       "type": "CLOSURE",
     },
-    AST_Literal {
+    PT_Literal {
       "str": "hello world[this is a message to all people]test(a)b",
       "token": {
         "literal": "test",
@@ -69,9 +69,9 @@ AST_Root {
       },
       "type": "LITERAL",
     },
-    AST_Closure {
+    PT_Closure {
       "children": [
-        AST_Literal {
+        PT_Literal {
           "str": "hello world[this is a message to all people]test(a)b",
           "token": {
             "literal": "a",
@@ -84,7 +84,7 @@ AST_Root {
           "type": "LITERAL",
         },
       ],
-      "endLiteral": AST_Literal {
+      "endLiteral": PT_Literal {
         "str": "hello world[this is a message to all people]test(a)b",
         "token": {
           "literal": ")",
@@ -96,7 +96,7 @@ AST_Root {
         },
         "type": "LITERAL",
       },
-      "startLiteral": AST_Literal {
+      "startLiteral": PT_Literal {
         "str": "hello world[this is a message to all people]test(a)b",
         "token": {
           "literal": "(",
@@ -111,7 +111,7 @@ AST_Root {
       "str": "hello world[this is a message to all people]test(a)b",
       "type": "CLOSURE",
     },
-    AST_Literal {
+    PT_Literal {
       "str": "hello world[this is a message to all people]test(a)b",
       "token": {
         "literal": "b",
@@ -212,9 +212,9 @@ AST_Root {
 `;
 
 exports[`ast parser tests simple closure test 1`] = `
-AST_Root {
+ParsingTree {
   "children": [
-    AST_Literal {
+    PT_Literal {
       "str": "hello world(this is a message to all people)",
       "token": {
         "literal": "hello world",
@@ -226,9 +226,9 @@ AST_Root {
       },
       "type": "LITERAL",
     },
-    AST_Closure {
+    PT_Closure {
       "children": [
-        AST_Literal {
+        PT_Literal {
           "str": "hello world(this is a message to all people)",
           "token": {
             "literal": "this is a message to all people",
@@ -241,7 +241,7 @@ AST_Root {
           "type": "LITERAL",
         },
       ],
-      "endLiteral": AST_Literal {
+      "endLiteral": PT_Literal {
         "str": "hello world(this is a message to all people)",
         "token": {
           "literal": ")",
@@ -253,7 +253,7 @@ AST_Root {
         },
         "type": "LITERAL",
       },
-      "startLiteral": AST_Literal {
+      "startLiteral": PT_Literal {
         "str": "hello world(this is a message to all people)",
         "token": {
           "literal": "(",
@@ -317,10 +317,10 @@ AST_Root {
 `;
 
 exports[`ast parser tests simple input field declaration 1 1`] = `
-AST_Root {
+ParsingTree {
   "children": [
-    AST_Literal {
-      "str": "INPUT[text:nested["object"]]",
+    PT_Literal {
+      "str": "INPUT[text:nested['object']]",
       "token": {
         "literal": "INPUT",
         "range": {
@@ -331,10 +331,10 @@ AST_Root {
       },
       "type": "LITERAL",
     },
-    AST_Closure {
+    PT_Closure {
       "children": [
-        AST_Literal {
-          "str": "INPUT[text:nested["object"]]",
+        PT_Literal {
+          "str": "INPUT[text:nested['object']]",
           "token": {
             "literal": "text",
             "range": {
@@ -345,8 +345,8 @@ AST_Root {
           },
           "type": "LITERAL",
         },
-        AST_Literal {
-          "str": "INPUT[text:nested["object"]]",
+        PT_Literal {
+          "str": "INPUT[text:nested['object']]",
           "token": {
             "literal": ":",
             "range": {
@@ -357,8 +357,8 @@ AST_Root {
           },
           "type": "LITERAL",
         },
-        AST_Literal {
-          "str": "INPUT[text:nested["object"]]",
+        PT_Literal {
+          "str": "INPUT[text:nested['object']]",
           "token": {
             "literal": "nested",
             "range": {
@@ -369,23 +369,23 @@ AST_Root {
           },
           "type": "LITERAL",
         },
-        AST_Closure {
+        PT_Closure {
           "children": [
-            AST_Literal {
-              "str": "INPUT[text:nested["object"]]",
+            PT_Literal {
+              "str": "INPUT[text:nested['object']]",
               "token": {
-                "literal": ""object"",
+                "literal": "object",
                 "range": {
-                  "from": 18,
-                  "to": 25,
+                  "from": 19,
+                  "to": 24,
                 },
                 "type": "WORD",
               },
               "type": "LITERAL",
             },
           ],
-          "endLiteral": AST_Literal {
-            "str": "INPUT[text:nested["object"]]",
+          "endLiteral": PT_Literal {
+            "str": "INPUT[text:nested['object']]",
             "token": {
               "literal": "]",
               "range": {
@@ -396,8 +396,8 @@ AST_Root {
             },
             "type": "LITERAL",
           },
-          "startLiteral": AST_Literal {
-            "str": "INPUT[text:nested["object"]]",
+          "startLiteral": PT_Literal {
+            "str": "INPUT[text:nested['object']]",
             "token": {
               "literal": "[",
               "range": {
@@ -408,12 +408,12 @@ AST_Root {
             },
             "type": "LITERAL",
           },
-          "str": "INPUT[text:nested["object"]]",
+          "str": "INPUT[text:nested['object']]",
           "type": "CLOSURE",
         },
       ],
-      "endLiteral": AST_Literal {
-        "str": "INPUT[text:nested["object"]]",
+      "endLiteral": PT_Literal {
+        "str": "INPUT[text:nested['object']]",
         "token": {
           "literal": "]",
           "range": {
@@ -424,8 +424,8 @@ AST_Root {
         },
         "type": "LITERAL",
       },
-      "startLiteral": AST_Literal {
-        "str": "INPUT[text:nested["object"]]",
+      "startLiteral": PT_Literal {
+        "str": "INPUT[text:nested['object']]",
         "token": {
           "literal": "[",
           "range": {
@@ -436,11 +436,11 @@ AST_Root {
         },
         "type": "LITERAL",
       },
-      "str": "INPUT[text:nested["object"]]",
+      "str": "INPUT[text:nested['object']]",
       "type": "CLOSURE",
     },
   ],
-  "str": "INPUT[text:nested["object"]]",
+  "str": "INPUT[text:nested['object']]",
   "tokens": [
     {
       "literal": "INPUT",
@@ -491,10 +491,10 @@ AST_Root {
       "type": "[",
     },
     {
-      "literal": ""object"",
+      "literal": "object",
       "range": {
-        "from": 18,
-        "to": 25,
+        "from": 19,
+        "to": 24,
       },
       "type": "WORD",
     },
@@ -630,9 +630,17 @@ exports[`tokenizer tests tokenize complex quotes 1`] = `
     "type": "(",
   },
   {
-    "literal": "this is a message to all people [] test ",
+    "literal": "this is a message to all people []",
     "range": {
       "from": 13,
+      "to": 46,
+    },
+    "type": "WORD",
+  },
+  {
+    "literal": " test ",
+    "range": {
+      "from": 48,
       "to": 53,
     },
     "type": "WORD",
@@ -654,9 +662,17 @@ exports[`tokenizer tests tokenize complex quotes 1`] = `
     "type": "]",
   },
   {
-    "literal": " :",
+    "literal": " ",
     "range": {
       "from": 56,
+      "to": 56,
+    },
+    "type": "WORD",
+  },
+  {
+    "literal": ":",
+    "range": {
+      "from": 58,
       "to": 58,
     },
     "type": "WORD",
