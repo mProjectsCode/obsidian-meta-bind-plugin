@@ -7,6 +7,8 @@ export enum PT_Element_Type {
 	LITERAL = 'LITERAL',
 	CLOSURE = 'CLOSURE',
 	ROOT = 'ROOT',
+
+	SPECIAL_END = 'SPECIAL_END',
 }
 
 export abstract class Abstract_PT_El {
@@ -66,6 +68,10 @@ export class PT_Literal extends Abstract_PT_El {
 		super(PT_Element_Type.LITERAL, str);
 
 		this.token = token;
+	}
+
+	public getRange(): Range {
+		return this.token.range;
 	}
 
 	public getToken(): InputFieldToken {

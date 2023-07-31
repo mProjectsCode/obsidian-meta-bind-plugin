@@ -1,5 +1,5 @@
 ---
-slider1: 8
+slider1: 7
 suggest: test
 toggle1: false
 Domestic_tasks:
@@ -23,7 +23,7 @@ nested:
 > ```
 
 ## Nested data
-`INPUT[text:nested["object"]]`
+`   INPUT[text:nested["object"]]`
 
 ---
 
@@ -70,6 +70,7 @@ Lorem ipsum dolor sit amet, `INPUT[date():other note#date]` consectetur adipisci
 ## Error Messages
 - `INPUT[text():meta bind/nonExistantFile#title]`
 - `INPUT[slider(nonExistantArgument)]`
+- `INPUT[slider]`
 
 - `INPUT[inlineSelect(option(option a),option(option b),option(option c),option(option d)):select]`
 
