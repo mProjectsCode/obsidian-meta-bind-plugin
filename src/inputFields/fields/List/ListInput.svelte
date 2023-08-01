@@ -9,6 +9,10 @@
 
 	let addValue: string = '';
 
+	export function updateValue(v: string[]) {
+		value = v;
+	}
+
 	function add() {
 		value.push(addValue);
 		// call with copy of array
