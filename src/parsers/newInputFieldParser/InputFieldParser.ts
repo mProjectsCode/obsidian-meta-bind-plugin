@@ -136,6 +136,8 @@ export class DeclarationParser {
 
 	private parseTemplate(closure: PT_Closure): void {
 		const validationContext = this.validateNodeAndThrow(closure, this.templateValidationGraph);
+
+		// TODO
 	}
 
 	private parsePartialDeclaration(closure: PT_Closure): void {
