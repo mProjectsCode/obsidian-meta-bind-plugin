@@ -172,7 +172,7 @@ export class ParserTestMDRC extends AbstractMDRC {
 			this.containerEl.createEl('h3', { text: optimizedName });
 
 			const graphEl2 = this.containerEl.createEl('div');
-			graph.optimizeParsingGraph();
+			graph.optimize();
 			graphEl2.innerHTML = (await this.mermaid.render(this.slugifyName(optimizedName), this.graphToString(graph))).svg;
 		}
 

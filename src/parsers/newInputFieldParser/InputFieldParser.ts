@@ -8,14 +8,14 @@ import { AbstractInputFieldArgument } from '../../inputFieldArguments/AbstractIn
 import { InputFieldArgumentFactory } from '../../inputFieldArguments/InputFieldArgumentFactory';
 import { isTruthy } from '../../utils/Utils';
 import { getEntryFromContext, getSubContextArrayFromContext, hasContextEntry, ValidationContext, ValidationGraph } from './validationGraph/ValidationGraph';
-import { TL_C_Enumeration, TL_C_Literal, TL_C_Loop, TL_C_Optional, TL_C_Or } from './validationGraph/treeLayout/ComplexTreeLayout';
+import { ComplexTreeLayout, TL_C_Enumeration, TL_C_Literal, TL_C_Loop, TL_C_Optional, TL_C_Or } from './validationGraph/treeLayout/ComplexTreeLayout';
 import { ParsingError } from './ParsingError';
 import { InputFieldParsingTreeParser } from './InputFieldParsingTreeParser';
 import { Abstract_PT_Node, ParsingTree, PT_Closure, PT_Element_Type, PT_Literal } from './ParsingTree';
 import { InputFieldToken, InputFieldTokenizer, InputFieldTokenType } from './InputFieldTokenizer';
 
 export class DeclarationParser {
-	plugin: IPlugin;
+	inputFieldParser: NewInputFieldDeclarationParser;
 	filePath: string;
 
 	fullDeclaration: string;
@@ -28,15 +28,20 @@ export class DeclarationParser {
 	argumentContainer: InputFieldArgumentContainer;
 	errorCollection: ErrorCollection;
 
+	fullDeclarationValidationGraph: ValidationGraph;
+	declarationValidationGraph: ValidationGraph;
+	partialDeclarationValidationGraph: ValidationGraph;
+	templateValidationGraph: ValidationGraph;
+
 	constructor(
-		plugin: IPlugin,
+		inputFieldParser: NewInputFieldDeclarationParser,
 		filePath: string,
 		fullDeclaration: string,
 		tokens: InputFieldToken[],
 		parsingTree: ParsingTree,
 		errorCollection: ErrorCollection
 	) {
-		this.plugin = plugin;
+		this.inputFieldParser = inputFieldParser;
 		this.filePath = filePath;
 		this.fullDeclaration = fullDeclaration;
 		this.tokens = tokens;
@@ -45,34 +50,55 @@ export class DeclarationParser {
 
 		this.type = InputFieldType.INVALID;
 		this.argumentContainer = new InputFieldArgumentContainer();
-	}
 
-	public parse(): InputFieldDeclaration {
-		try {
-			return this.parseDeclaration();
-		} catch (e) {
-			this.errorCollection.add(e);
-			return this.buildDeclaration();
-		}
-	}
+		// Validation Graphs
 
-	private parseDeclaration(): InputFieldDeclaration {
 		// literal.closure or literal.closure.closure
-		const layoutValidationGraph = new ValidationGraph([
+		this.fullDeclarationValidationGraph = new ValidationGraph([
 			new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD, 'INPUT'),
 			new TL_C_Optional([new TL_C_Literal(PT_Element_Type.CLOSURE, InputFieldTokenType.L_SQUARE, undefined, 'template')]),
 			new TL_C_Literal(PT_Element_Type.CLOSURE, InputFieldTokenType.L_SQUARE, undefined, 'declaration'),
 		]);
-		const validationContext = this.validateNodeAndThrow(this.parsingTree, layoutValidationGraph);
+		this.fullDeclarationValidationGraph.optimize();
 
-		console.log(validationContext);
+		const inputFieldType_TL_C_Element: TL_C_Literal = new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD, undefined, 'type');
+		const arguments_TL_C_Element: TL_C_Literal = new TL_C_Literal(PT_Element_Type.CLOSURE, InputFieldTokenType.L_PAREN, undefined, 'arguments');
+		const bindTarget_TL_C_Elements: ComplexTreeLayout = [
+			new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.COLON, undefined, 'bindTargetSeparator'), // bind target separator
+			new TL_C_Optional([
+				new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD, undefined, 'bindTargetFile'), // file
+				new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.HASHTAG), // hashtag
+			]), // optional file and hashtag
+			new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD, undefined, 'bindTarget'), // first bind target metadata path part
+			new TL_C_Loop(
+				[
+					new TL_C_Or([
+						[new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD)],
+						[new TL_C_Literal(PT_Element_Type.CLOSURE, InputFieldTokenType.L_SQUARE)],
+					]), // either literal or closure or none, in a loop
+				],
+				0,
+				-1
+			), // the other bind target metadata path part
+		];
 
-		if (hasContextEntry(validationContext, 'template')) {
-			this.parseTemplate(getEntryFromContext<PT_Closure>(validationContext, 'template').element);
-		}
-		this.parsePureDeclaration(getEntryFromContext<PT_Closure>(validationContext, 'declaration').element);
+		this.declarationValidationGraph = new ValidationGraph([
+			inputFieldType_TL_C_Element,
+			new TL_C_Optional([arguments_TL_C_Element]), // optional arguments
+			new TL_C_Optional(bindTarget_TL_C_Elements),
+		]);
+		this.declarationValidationGraph.optimize();
 
-		return this.buildDeclaration();
+		this.partialDeclarationValidationGraph = new ValidationGraph([
+			new TL_C_Optional([inputFieldType_TL_C_Element]), // input field type
+			new TL_C_Optional([arguments_TL_C_Element]), // optional arguments
+			new TL_C_Optional(bindTarget_TL_C_Elements),
+		]);
+		this.partialDeclarationValidationGraph.optimize();
+
+		this.templateValidationGraph = new ValidationGraph([
+			new TL_C_Optional([new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD, undefined, 'templateName')]),
+		]);
 	}
 
 	private buildDeclaration(): InputFieldDeclaration {
@@ -86,39 +112,50 @@ export class DeclarationParser {
 		};
 	}
 
-	private parseTemplate(closure: PT_Closure): void {
-		// TODO
+	public parse(): InputFieldDeclaration {
+		try {
+			return this.parseFullDeclaration();
+		} catch (e) {
+			this.errorCollection.add(e);
+			return this.buildDeclaration();
+		}
 	}
 
-	private parsePureDeclaration(closure: PT_Closure): void {
-		const layoutValidationGraph = new ValidationGraph([
-			new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD, undefined, 'type'), // input field type
-			new TL_C_Optional([new TL_C_Literal(PT_Element_Type.CLOSURE, InputFieldTokenType.L_PAREN, undefined, 'arguments')]), // optional arguments
-			new TL_C_Optional([
-				new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.COLON, undefined, 'bindTargetSeparator'), // bind target separator
-				new TL_C_Optional([
-					new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD, undefined, 'bindTargetFile'), // file
-					new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.HASHTAG), // hashtag
-				]), // optional file and hashtag
-				new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD, undefined, 'bindTarget'), // first bind target metadata path part
-				new TL_C_Loop(
-					[
-						new TL_C_Or([
-							[new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD)],
-							[new TL_C_Literal(PT_Element_Type.CLOSURE, InputFieldTokenType.L_SQUARE)],
-						]), // either literal or closure or none, in a loop
-					],
-					0,
-					-1
-				), // the other bind target metadata path part
-			]),
-		]);
+	private parseFullDeclaration(): InputFieldDeclaration {
+		const validationContext = this.validateNodeAndThrow(this.parsingTree, this.fullDeclarationValidationGraph);
 
-		layoutValidationGraph.optimizeParsingGraph();
+		if (hasContextEntry(validationContext, 'template')) {
+			this.parseTemplate(getEntryFromContext<PT_Closure>(validationContext, 'template').element);
+			this.parsePartialDeclaration(getEntryFromContext<PT_Closure>(validationContext, 'declaration').element);
+		} else {
+			this.parseDeclaration(getEntryFromContext<PT_Closure>(validationContext, 'declaration').element);
+		}
 
-		const validationContext = this.validateNodeAndThrow(closure, layoutValidationGraph);
+		return this.buildDeclaration();
+	}
 
-		console.log(validationContext);
+	private parseTemplate(closure: PT_Closure): void {
+		const validationContext = this.validateNodeAndThrow(closure, this.templateValidationGraph);
+	}
+
+	private parsePartialDeclaration(closure: PT_Closure): void {
+		const validationContext = this.validateNodeAndThrow(closure, this.partialDeclarationValidationGraph);
+
+		if (hasContextEntry(validationContext, 'type')) {
+			this.type = this.parseInputFieldType(getEntryFromContext<PT_Literal>(validationContext, 'type').element);
+		}
+
+		if (hasContextEntry(validationContext, 'arguments')) {
+			this.parseArguments(getEntryFromContext<PT_Closure>(validationContext, 'arguments').element);
+		}
+
+		if (hasContextEntry(validationContext, 'bindTargetSeparator')) {
+			this.parseBindTarget(closure, getEntryFromContext<PT_Literal>(validationContext, 'bindTargetSeparator').inputIndex);
+		}
+	}
+
+	private parseDeclaration(closure: PT_Closure): void {
+		const validationContext = this.validateNodeAndThrow(closure, this.declarationValidationGraph);
 
 		this.type = this.parseInputFieldType(getEntryFromContext<PT_Literal>(validationContext, 'type').element);
 
@@ -173,16 +210,24 @@ export class DeclarationParser {
 			),
 		]);
 
-		layoutValidationGraph.optimizeParsingGraph();
+		layoutValidationGraph.optimize();
 
 		const validationContext = this.validateNodeAndThrow(closure, layoutValidationGraph);
 
-		const inputFieldArguments: { type: InputFieldArgumentType; value: string }[] = getSubContextArrayFromContext(validationContext, 'arguments').map(x => {
+		const subContextArray = getSubContextArrayFromContext(validationContext, 'arguments');
+
+		const inputFieldArguments: { type: InputFieldArgumentType; value: string }[] = [];
+
+		for (const x of subContextArray) {
 			const typeLiteral: PT_Literal = getEntryFromContext<PT_Literal>(x, 'name').element;
 			const valueClosure: PT_Closure | undefined = getEntryFromContext<PT_Closure>(x, 'value')?.element;
 
-			return this.parseArgument(typeLiteral, valueClosure);
-		});
+			try {
+				inputFieldArguments.push(this.parseArgument(typeLiteral, valueClosure));
+			} catch (e) {
+				this.errorCollection.add(e);
+			}
+		}
 
 		this.parseArgumentsIntoContainer(inputFieldArguments);
 	}
@@ -251,18 +296,7 @@ export class DeclarationParser {
 		const valRes = validationGraph.validateParsingTreeAndExtractContext(astNode);
 
 		if (valRes.acceptedState === undefined) {
-			const layout = validationGraph.layout;
-			console.log(astNode, validationGraph, valRes);
-
-			throw new ParsingError(
-				ErrorLevel.ERROR,
-				'failed to parse',
-				`Encountered invalid token. Expected token types to be of order ${layout} but received ${astNode.children.map(x => x.type)}.`,
-				{},
-				astNode.str,
-				astNode.getToken(),
-				'AST Parser'
-			);
+			throw valRes.validationError;
 		}
 
 		return valRes.acceptedState.context;
@@ -294,7 +328,7 @@ export class DeclarationParser {
 		}
 
 		throw new ParsingError(
-			ErrorLevel.ERROR,
+			ErrorLevel.WARNING,
 			'failed to parse',
 			`Encountered invalid token. Expected token to be an input field argument type but received '${astLiteral.toLiteral()}'.`,
 			{},
@@ -320,7 +354,7 @@ export class NewInputFieldDeclarationParser {
 			const tokens = tokenizer.getTokens();
 			const parsingTreeParser = new InputFieldParsingTreeParser(fullDeclaration, tokens);
 			const parsingTree = parsingTreeParser.parse();
-			const declarationParser = new DeclarationParser(this.plugin, filePath, fullDeclaration, tokens, parsingTree, errorCollection);
+			const declarationParser = new DeclarationParser(this, filePath, fullDeclaration, tokens, parsingTree, errorCollection);
 
 			return declarationParser.parse();
 		} catch (e) {
@@ -336,5 +370,9 @@ export class NewInputFieldDeclarationParser {
 			argumentContainer: new InputFieldArgumentContainer(),
 			errorCollection: errorCollection,
 		};
+	}
+
+	public parseTemplates(templates: string): void {
+		// TODO: rewrite the templates to be multiple input fields (like a table)
 	}
 }
