@@ -59,6 +59,8 @@ export abstract class Abstract_PT_Node extends Abstract_PT_El {
 	public toLiteral(): string {
 		return this.children.map(x => x.toLiteral()).join('');
 	}
+
+	abstract getRange(): Range;
 }
 
 export class PT_Literal extends Abstract_PT_El {
@@ -160,6 +162,13 @@ export class ParsingTree extends Abstract_PT_Node {
 			.split('\n')
 			.map(x => '    ' + x)
 			.join('\n')}`;
+	}
+
+	public getRange(): Range {
+		return {
+			from: this.tokens[0]?.range.from ?? 0,
+			to: this.tokens[this.tokens.length - 1]?.range.to ?? 0,
+		};
 	}
 }
 

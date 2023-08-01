@@ -7,6 +7,9 @@ import { Abstract_PT_Node, PT_Element, PT_Element_Type, PT_Literal } from '../Pa
 import { ComplexTreeLayout } from './treeLayout/ComplexTreeLayout';
 import { TL_Literal, TL_Loop, TL_LoopBound, TL_Or, TreeLayout } from './treeLayout/TreeLayout';
 import { createToken, InputFieldTokenType } from '../InputFieldTokenizer';
+import { ParsingError } from '../ParsingError';
+import { ErrorLevel } from '../../../utils/errors/MetaBindErrors';
+import { AbstractToken } from '../ParsingUtils';
 
 export interface ValidationState {
 	active: boolean;
@@ -16,6 +19,8 @@ export interface ValidationState {
 	failure: ValidationFailure | undefined;
 	nodeStates: number[];
 }
+
+export type ValidationResult = { acceptedState: ValidationState; validationError: undefined } | { acceptedState: undefined; validationError: ParsingError };
 
 export interface ValidationFailure {
 	ptElement: PT_Element | undefined;
@@ -78,7 +83,7 @@ export class ValidationGraph {
 
 	constructor(treeLayout: ComplexTreeLayout) {
 		this.layout = treeLayout.map(x => x.toTL());
-		console.log(this.layout);
+		// console.log(this.layout);
 		this.nodes = [];
 		this.state = [];
 		this.nodeIndexCounter = 0;
@@ -244,7 +249,7 @@ export class ValidationGraph {
 		};
 	}
 
-	public optimizeParsingGraph(): void {
+	public optimize(): void {
 		for (let i = this.nodes.length - 1; i >= 0; i--) {
 			for (const transition of this.nodes[i].transitions) {
 				if (transition.isEmpty()) {
@@ -343,7 +348,7 @@ export class ValidationGraph {
 		return valRes.acceptedState !== undefined;
 	}
 
-	public validateParsingTreeAndExtractContext(ptNode: Abstract_PT_Node): { acceptedState: ValidationState | undefined; allStates: ValidationState[] } {
+	public validateParsingTreeAndExtractContext(ptNode: Abstract_PT_Node): ValidationResult {
 		this.state = [
 			{
 				active: true,
@@ -355,14 +360,18 @@ export class ValidationGraph {
 			},
 		];
 
+		let eofToken: AbstractToken<InputFieldTokenType> | undefined;
+
 		// TODO: make this +1 better
 		for (let ptIndex = 0; ptIndex < ptNode.children.length + 1; ptIndex++) {
 			let ptChild: PT_Element;
 
 			if (ptIndex === ptNode.children.length) {
 				const prevChild = ptNode.children[ptIndex - 1];
-				const pos = prevChild !== undefined ? prevChild.getRange().to + 1 : 0;
-				ptChild = new PT_Literal(createToken(InputFieldTokenType.EOF, 'eof', pos, pos), '');
+				const eofTokenPos = prevChild !== undefined ? prevChild.getRange().to + 1 : ptNode.getRange().to;
+				eofToken = createToken(InputFieldTokenType.EOF, 'eof', eofTokenPos, eofTokenPos);
+
+				ptChild = new PT_Literal(eofToken, '');
 			} else {
 				ptChild = ptNode.children[ptIndex];
 			}
@@ -372,8 +381,8 @@ export class ValidationGraph {
 			}
 		}
 
-		// console.log('parsing state');
-		// console.log(this.state);
+		console.log('parsing state');
+		console.log(this.state);
 
 		const validResults = this.state.filter(x => {
 			if (!x.active) {
@@ -394,7 +403,7 @@ export class ValidationGraph {
 			const pathsAtEndOfInput = this.state.filter(x => x.currentInputIndex === ptNode.children.length);
 
 			let violatedTransitions: VG_Transition[] = [];
-			let recievedToken: string;
+			let receivedToken: AbstractToken<InputFieldTokenType>;
 
 			if (pathsAtEndOfInput.length > 0) {
 				for (const path of pathsAtEndOfInput) {
@@ -407,7 +416,11 @@ export class ValidationGraph {
 					violatedTransitions = violatedTransitions.concat(node.transitions);
 				}
 
-				recievedToken = 'EOF';
+				if (eofToken === undefined) {
+					throw new Error('This parser sucks');
+				}
+
+				receivedToken = eofToken;
 			} else {
 				// case 2: the path has not reached the end of the input
 
@@ -436,20 +449,29 @@ export class ValidationGraph {
 					violatedTransitions = violatedTransitions.concat(node.transitions);
 				}
 
-				recievedToken = ptNode.children[furthestInputIndex].getToken().literal;
+				receivedToken = ptNode.children[furthestInputIndex].getToken();
 			}
 
-			console.log('violated transitions:', violatedTransitions, ptNode.str);
-			console.log(`received ${recievedToken} expected token to be:`, violatedTransitions.map(x => `"${x.constraint?.toString()}"`).join(', '));
+			console.log(ptNode);
 
 			return {
 				acceptedState: undefined,
-				allStates: this.state,
+				validationError: new ParsingError(
+					ErrorLevel.ERROR,
+					'failed to parse',
+					`Encountered invalid token. Received '${receivedToken.literal}' expected token to be one of: ${violatedTransitions
+						.map(x => `'${x.constraint?.toString()}'`)
+						.join(', ')}`,
+					{},
+					ptNode.str,
+					receivedToken,
+					'Validation Graph'
+				),
 			};
 		} else if (validResults.length === 1) {
 			return {
 				acceptedState: validResults[0],
-				allStates: this.state,
+				validationError: undefined,
 			};
 		} else {
 			throw new Error('more than one valid paths');
@@ -511,19 +533,6 @@ export class ValidationGraph {
 					});
 				}
 			}
-
-			// if (ptChild === undefined && node.transitions.length === 0) {
-			// 	newStates.push({
-			// 		active: true,
-			// 		currentInputIndex: ptIndex,
-			// 		context: validationState.context,
-			// 		currentContextStack: validationState.currentContextStack,
-			// 		failure: undefined,
-			// 		nodeStates: validationState.nodeStates,
-			// 	});
-			//
-			// 	allTransitionsFailed = false;
-			// }
 
 			if (allTransitionsFailed) {
 				newStates.push({
