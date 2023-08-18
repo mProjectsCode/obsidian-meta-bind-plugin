@@ -1,55 +1,96 @@
-import { ErrorLevel, MetaBindParsingError } from '../../utils/errors/MetaBindErrors';
+import { ErrorLevel, MetaBindParsingError, MetaBindValidationError } from '../../utils/errors/MetaBindErrors';
 import { InputFieldArgumentType, InputFieldDeclaration, InputFieldType } from '../InputFieldDeclarationParser';
-import { BindTargetDeclaration } from '../BindTargetParser';
 import { InputFieldArgumentContainer } from '../../inputFieldArguments/InputFieldArgumentContainer';
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { IPlugin } from '../../IPlugin';
 import { AbstractInputFieldArgument } from '../../inputFieldArguments/AbstractInputFieldArgument';
 import { InputFieldArgumentFactory } from '../../inputFieldArguments/InputFieldArgumentFactory';
-import { isTruthy } from '../../utils/Utils';
-import { getEntryFromContext, getSubContextArrayFromContext, hasContextEntry, ValidationContext, ValidationGraph } from './validationGraph/ValidationGraph';
+import {
+	getEntryFromContext,
+	getSubContextArrayFromContext,
+	hasContextEntry,
+	ValidationContext,
+	ValidationContextEntry,
+	ValidationGraph,
+} from './validationGraph/ValidationGraph';
 import { ComplexTreeLayout, TL_C_Enumeration, TL_C_Literal, TL_C_Loop, TL_C_Optional, TL_C_Or } from './validationGraph/treeLayout/ComplexTreeLayout';
 import { ParsingError } from './ParsingError';
 import { InputFieldParsingTreeParser } from './InputFieldParsingTreeParser';
-import { Abstract_PT_Node, ParsingTree, PT_Closure, PT_Element_Type, PT_Literal } from './ParsingTree';
+import { Abstract_PT_Node, ParsingTree, PT_Closure, PT_Element, PT_Element_Type, PT_Literal } from './ParsingTree';
 import { InputFieldToken, InputFieldTokenizer, InputFieldTokenType } from './InputFieldTokenizer';
+import { InputFieldTemplate } from '../../settings/Settings';
 
-export class DeclarationParser {
+export interface UnvalidatedInputFieldDeclaration {
+	fullDeclaration: string;
+	inputFieldType?: StructureParserResult;
+	bindTargetFile?: StructureParserResult;
+	bindTargetPath?: StructureParserResult;
+	arguments: {
+		name: StructureParserResult;
+		value?: StructureParserResult;
+	}[];
+
+	errorCollection: ErrorCollection;
+}
+
+export interface StructureParserResult {
+	result: string;
+	ptElement?: PT_Element;
+}
+
+export function getTrimmedStructureParserResult<T extends PT_Element>(validationContextEntry: ValidationContextEntry<T>): StructureParserResult;
+export function getTrimmedStructureParserResult<T extends PT_Element>(validationContextEntry: undefined): undefined;
+export function getTrimmedStructureParserResult<T extends PT_Element>(
+	validationContextEntry: ValidationContextEntry<T> | undefined
+): StructureParserResult | undefined {
+	if (!validationContextEntry) {
+		return undefined;
+	}
+	return {
+		result: validationContextEntry.element.toLiteral().trim(),
+		ptElement: validationContextEntry.element,
+	};
+}
+
+export class StructureParser {
 	inputFieldParser: NewInputFieldDeclarationParser;
-	filePath: string;
 
 	fullDeclaration: string;
 	tokens: InputFieldToken[];
 	parsingTree: ParsingTree;
 
-	type: InputFieldType;
-	bindTarget: BindTargetDeclaration | undefined;
-	bindTargetString: string | undefined;
-	argumentContainer: InputFieldArgumentContainer;
+	inputFieldType?: StructureParserResult;
+	bindTargetFile?: StructureParserResult;
+	bindTargetPath?: StructureParserResult;
+	arguments: {
+		name: StructureParserResult;
+		value?: StructureParserResult;
+	}[];
 	errorCollection: ErrorCollection;
 
 	fullDeclarationValidationGraph: ValidationGraph;
 	declarationValidationGraph: ValidationGraph;
 	partialDeclarationValidationGraph: ValidationGraph;
 	templateValidationGraph: ValidationGraph;
+	fullDeclarationTemplateValidationGraph: ValidationGraph;
 
 	constructor(
 		inputFieldParser: NewInputFieldDeclarationParser,
-		filePath: string,
 		fullDeclaration: string,
 		tokens: InputFieldToken[],
 		parsingTree: ParsingTree,
 		errorCollection: ErrorCollection
 	) {
 		this.inputFieldParser = inputFieldParser;
-		this.filePath = filePath;
 		this.fullDeclaration = fullDeclaration;
 		this.tokens = tokens;
 		this.parsingTree = parsingTree;
 		this.errorCollection = errorCollection;
 
-		this.type = InputFieldType.INVALID;
-		this.argumentContainer = new InputFieldArgumentContainer();
+		this.inputFieldType = {
+			result: InputFieldType.INVALID,
+		};
+		this.arguments = [];
 
 		// Validation Graphs
 
@@ -60,6 +101,12 @@ export class DeclarationParser {
 			new TL_C_Literal(PT_Element_Type.CLOSURE, InputFieldTokenType.L_SQUARE, undefined, 'declaration'),
 		]);
 		this.fullDeclarationValidationGraph.optimize();
+
+		this.fullDeclarationTemplateValidationGraph = new ValidationGraph([
+			new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD, 'INPUT'),
+			new TL_C_Literal(PT_Element_Type.CLOSURE, InputFieldTokenType.L_SQUARE, undefined, 'declaration'),
+		]);
+		this.fullDeclarationTemplateValidationGraph.optimize();
 
 		const inputFieldType_TL_C_Element: TL_C_Literal = new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD, undefined, 'type');
 		const arguments_TL_C_Element: TL_C_Literal = new TL_C_Literal(PT_Element_Type.CLOSURE, InputFieldTokenType.L_PAREN, undefined, 'arguments');
@@ -101,18 +148,35 @@ export class DeclarationParser {
 		]);
 	}
 
-	private buildDeclaration(): InputFieldDeclaration {
+	private buildDeclaration(): UnvalidatedInputFieldDeclaration {
 		return {
 			fullDeclaration: this.fullDeclaration,
-			inputFieldType: this.type,
-			isBound: isTruthy(this.bindTargetString),
-			bindTarget: this.bindTargetString ?? '',
-			argumentContainer: this.argumentContainer,
+			inputFieldType: this.inputFieldType,
+			bindTargetFile: this.bindTargetFile,
+			bindTargetPath: this.bindTargetPath,
+			arguments: this.arguments,
 			errorCollection: this.errorCollection,
 		};
 	}
 
-	public parse(): InputFieldDeclaration {
+	public parseAsTemplate(): UnvalidatedInputFieldDeclaration {
+		try {
+			return this.parseFullDeclarationAsTemplate();
+		} catch (e) {
+			this.errorCollection.add(e);
+			return this.buildDeclaration();
+		}
+	}
+
+	private parseFullDeclarationAsTemplate(): UnvalidatedInputFieldDeclaration {
+		const validationContext = this.validateNodeAndThrow(this.parsingTree, this.fullDeclarationTemplateValidationGraph);
+
+		this.parsePartialDeclaration(getEntryFromContext<PT_Closure>(validationContext, 'declaration').element);
+
+		return this.buildDeclaration();
+	}
+
+	public parse(): UnvalidatedInputFieldDeclaration {
 		try {
 			return this.parseFullDeclaration();
 		} catch (e) {
@@ -121,7 +185,7 @@ export class DeclarationParser {
 		}
 	}
 
-	private parseFullDeclaration(): InputFieldDeclaration {
+	private parseFullDeclaration(): UnvalidatedInputFieldDeclaration {
 		const validationContext = this.validateNodeAndThrow(this.parsingTree, this.fullDeclarationValidationGraph);
 
 		if (hasContextEntry(validationContext, 'template')) {
@@ -137,36 +201,64 @@ export class DeclarationParser {
 	private parseTemplate(closure: PT_Closure): void {
 		const validationContext = this.validateNodeAndThrow(closure, this.templateValidationGraph);
 
-		// TODO
+		if (hasContextEntry(validationContext, 'templateName')) {
+			const templateNameLiteral = getEntryFromContext<PT_Literal>(validationContext, 'templateName').element;
+			const templateName = templateNameLiteral.getToken().literal.trim();
+
+			if (templateName !== '') {
+				const template = this.inputFieldParser.getTemplate(templateName);
+
+				if (template !== undefined) {
+					this.inputFieldType = template.inputFieldType;
+					this.bindTargetFile = template.bindTargetFile;
+					this.bindTargetPath = template.bindTargetPath;
+					this.arguments = template.arguments;
+
+					this.errorCollection.merge(template.errorCollection);
+				} else {
+					this.errorCollection.add(
+						new ParsingError(
+							ErrorLevel.WARNING,
+							'failed to apply template',
+							`template with name ${templateName} not found`,
+							{},
+							closure.str,
+							templateNameLiteral.getToken(),
+							'input field parser'
+						)
+					);
+				}
+			}
+		}
 	}
 
 	private parsePartialDeclaration(closure: PT_Closure): void {
 		const validationContext = this.validateNodeAndThrow(closure, this.partialDeclarationValidationGraph);
 
 		if (hasContextEntry(validationContext, 'type')) {
-			this.type = this.parseInputFieldType(getEntryFromContext<PT_Literal>(validationContext, 'type').element);
+			this.inputFieldType = this.parseInputFieldType(getEntryFromContext<PT_Literal>(validationContext, 'type'));
 		}
 
 		if (hasContextEntry(validationContext, 'arguments')) {
-			this.parseArguments(getEntryFromContext<PT_Closure>(validationContext, 'arguments').element);
+			this.parseArguments(getEntryFromContext<PT_Closure>(validationContext, 'arguments'));
 		}
 
 		if (hasContextEntry(validationContext, 'bindTargetSeparator')) {
-			this.parseBindTarget(closure, getEntryFromContext<PT_Literal>(validationContext, 'bindTargetSeparator').inputIndex);
+			this.parseBindTarget(closure, validationContext, getEntryFromContext<PT_Literal>(validationContext, 'bindTargetSeparator'));
 		}
 	}
 
 	private parseDeclaration(closure: PT_Closure): void {
 		const validationContext = this.validateNodeAndThrow(closure, this.declarationValidationGraph);
 
-		this.type = this.parseInputFieldType(getEntryFromContext<PT_Literal>(validationContext, 'type').element);
+		this.inputFieldType = this.parseInputFieldType(getEntryFromContext<PT_Literal>(validationContext, 'type'));
 
 		if (hasContextEntry(validationContext, 'arguments')) {
-			this.parseArguments(getEntryFromContext<PT_Closure>(validationContext, 'arguments').element);
+			this.parseArguments(getEntryFromContext<PT_Closure>(validationContext, 'arguments'));
 		}
 
 		if (hasContextEntry(validationContext, 'bindTargetSeparator')) {
-			this.parseBindTarget(closure, getEntryFromContext<PT_Literal>(validationContext, 'bindTargetSeparator').inputIndex);
+			this.parseBindTarget(closure, validationContext, getEntryFromContext<PT_Literal>(validationContext, 'bindTargetSeparator'));
 		}
 	}
 
@@ -175,32 +267,44 @@ export class DeclarationParser {
 	 * The index should be the suspected position of the bind target separator.
 	 *
 	 * @param closure
-	 * @param index
+	 * @param validationContext
+	 * @param bindTargetSeparatorContextEntry
 	 * @private
 	 */
-	private parseBindTarget(closure: PT_Closure, index: number): void {
-		if (closure.children[index] === undefined) {
+	private parseBindTarget(
+		closure: PT_Closure,
+		validationContext: ValidationContext,
+		bindTargetSeparatorContextEntry: ValidationContextEntry<PT_Literal>
+	): void {
+		const separatorIndex = bindTargetSeparatorContextEntry.inputIndex;
+		if (closure.children[separatorIndex] === undefined) {
 			// there is no bind target
 			return;
 		}
 
-		// separator
-		closure.getChild(index, InputFieldTokenType.COLON);
+		const bindTargetContextEntry = getEntryFromContext<PT_Literal>(validationContext, 'bindTarget');
+		const bindTargetFileContextEntry = getEntryFromContext<PT_Literal>(validationContext, 'bindTargetFile');
 
 		// parsing the bind target with this parser sucks
 		let bindTargetLiteral = '';
-		for (let i = index + 1; i < closure.children.length; i++) {
+		for (let i = bindTargetContextEntry.inputIndex; i < closure.children.length; i++) {
 			bindTargetLiteral += closure.children[i].toLiteral();
 		}
 
-		this.bindTargetString = bindTargetLiteral;
+		this.bindTargetFile = getTrimmedStructureParserResult(bindTargetFileContextEntry);
+		this.bindTargetPath = {
+			result: bindTargetLiteral,
+			ptElement: bindTargetContextEntry.element,
+		};
 	}
 
-	private parseArguments(closure: PT_Closure): void {
+	private parseArguments(contextEntry: ValidationContextEntry<PT_Closure>): void {
+		const closure = contextEntry.element;
 		if (closure.children.length === 0) {
 			return;
 		}
 
+		// TODO: move this validation graph
 		const layoutValidationGraph = new ValidationGraph([
 			new TL_C_Enumeration(
 				[
@@ -211,86 +315,41 @@ export class DeclarationParser {
 				'arguments'
 			),
 		]);
-
 		layoutValidationGraph.optimize();
 
 		const validationContext = this.validateNodeAndThrow(closure, layoutValidationGraph);
 
 		const subContextArray = getSubContextArrayFromContext(validationContext, 'arguments');
 
-		const inputFieldArguments: { type: InputFieldArgumentType; value: string }[] = [];
-
 		for (const x of subContextArray) {
-			const typeLiteral: PT_Literal = getEntryFromContext<PT_Literal>(x, 'name').element;
-			const valueClosure: PT_Closure | undefined = getEntryFromContext<PT_Closure>(x, 'value')?.element;
+			const typeContextEntry: ValidationContextEntry<PT_Literal> = getEntryFromContext<PT_Literal>(x, 'name');
+			const valueContextEntry: ValidationContextEntry<PT_Closure> | undefined = getEntryFromContext<PT_Closure>(x, 'value');
 
-			try {
-				inputFieldArguments.push(this.parseArgument(typeLiteral, valueClosure));
-			} catch (e) {
-				this.errorCollection.add(e);
-			}
+			this.arguments.push(this.parseArgument(typeContextEntry, valueContextEntry));
 		}
-
-		this.parseArgumentsIntoContainer(inputFieldArguments);
 	}
 
-	private parseArgument(argumentNameLiteral: PT_Literal, argumentValueClosure: PT_Closure | undefined): { type: InputFieldArgumentType; value: string } {
-		let valueString = '';
-		if (argumentValueClosure) {
-			for (const child of argumentValueClosure.children) {
+	private parseArgument(
+		nameContextEntry: ValidationContextEntry<PT_Literal>,
+		valueContextEntry: ValidationContextEntry<PT_Closure> | undefined
+	): { name: StructureParserResult; value?: StructureParserResult } {
+		if (valueContextEntry?.element) {
+			let valueString = '';
+			for (const child of valueContextEntry.element.children) {
 				valueString += child.toLiteral();
 			}
-		}
 
-		return {
-			type: this.parseInputFieldArgumentType(argumentNameLiteral),
-			value: valueString,
-		};
-	}
-
-	private parseArgumentsIntoContainer(inputFieldArguments: { type: InputFieldArgumentType; value: string }[] | undefined): void {
-		if (inputFieldArguments) {
-			for (const argument of inputFieldArguments) {
-				const inputFieldArgument: AbstractInputFieldArgument = InputFieldArgumentFactory.createInputFieldArgument(argument.type);
-
-				if (!inputFieldArgument.isAllowed(this.type)) {
-					this.errorCollection.add(
-						new MetaBindParsingError(
-							ErrorLevel.WARNING,
-							'failed to parse input field arguments',
-							`argument "${argument.type}" is only applicable to "${inputFieldArgument.getAllowedInputFieldsAsString()}" input fields`
-						)
-					);
-					continue;
-				}
-
-				if (inputFieldArgument.requiresValue) {
-					if (!argument.value) {
-						this.errorCollection.add(
-							new MetaBindParsingError(
-								ErrorLevel.WARNING,
-								'failed to parse input field arguments',
-								`argument "${argument.type}" requires a non empty value`
-							)
-						);
-						continue;
-					}
-					try {
-						inputFieldArgument.parseValue(argument.value);
-					} catch (e) {
-						this.errorCollection.add(e);
-						continue;
-					}
-				}
-
-				this.argumentContainer.add(inputFieldArgument);
-			}
-
-			try {
-				this.argumentContainer.validate();
-			} catch (e) {
-				this.errorCollection.add(e);
-			}
+			return {
+				name: getTrimmedStructureParserResult(nameContextEntry),
+				value: {
+					result: valueString,
+					ptElement: valueContextEntry.element,
+				},
+			};
+		} else {
+			return {
+				name: getTrimmedStructureParserResult(nameContextEntry),
+			};
 		}
 	}
 
@@ -304,51 +363,201 @@ export class DeclarationParser {
 		return valRes.acceptedState.context;
 	}
 
-	private parseInputFieldType(astLiteral: PT_Literal): InputFieldType {
+	private parseInputFieldType(contextEntry: ValidationContextEntry<PT_Literal>): StructureParserResult {
+		return getTrimmedStructureParserResult(contextEntry);
+	}
+}
+
+export class InputFieldDeclarationValidator {
+	unvalidatedDeclaration: UnvalidatedInputFieldDeclaration;
+	errorCollection: ErrorCollection;
+
+	constructor(unvalidatedDeclaration: UnvalidatedInputFieldDeclaration) {
+		this.unvalidatedDeclaration = unvalidatedDeclaration;
+
+		this.errorCollection = new ErrorCollection('input field declaration');
+	}
+
+	public validate(): InputFieldDeclaration {
+		const inputFieldType = this.validateInputFieldType();
+		const bindTarget = this.validateBindTarget();
+		// TODO: remove this and pass the object directly into the declaration
+		const bindTargetString = bindTarget.file ? bindTarget.file + '#' + bindTarget.path : bindTarget.path;
+		const argumentContainer = this.validateArguments(inputFieldType);
+
+		console.log('bind target', this.unvalidatedDeclaration.fullDeclaration, bindTarget, bindTargetString);
+
+		return {
+			fullDeclaration: this.unvalidatedDeclaration.fullDeclaration,
+			inputFieldType: inputFieldType,
+			isBound: bindTargetString !== '',
+			bindTarget: bindTargetString,
+			argumentContainer: argumentContainer,
+			errorCollection: this.errorCollection.merge(this.unvalidatedDeclaration.errorCollection),
+		};
+	}
+
+	private validateInputFieldType(): InputFieldType {
+		const inputFieldType = this.unvalidatedDeclaration.inputFieldType;
+
 		for (const entry of Object.entries(InputFieldType)) {
-			if (entry[1] === astLiteral.toLiteral().trim()) {
+			if (entry[1] === inputFieldType?.result) {
 				return entry[1];
 			}
 		}
 
-		throw new ParsingError(
-			ErrorLevel.ERROR,
-			'failed to parse',
-			`Encountered invalid token. Expected token to be an input field type but received '${astLiteral.toLiteral()}'.`,
-			{},
-			astLiteral.str,
-			astLiteral.getToken(),
-			'AST Parser'
-		);
+		if (inputFieldType?.ptElement) {
+			this.errorCollection.add(
+				new ParsingError(
+					ErrorLevel.ERROR,
+					'failed to parse',
+					`Encountered invalid token. Expected token to be an input field type but received '${inputFieldType}'.`,
+					{},
+					inputFieldType.ptElement.str,
+					inputFieldType.ptElement.getToken(),
+					'Declaration Validator'
+				)
+			);
+		} else {
+			this.errorCollection.add(
+				new MetaBindValidationError(
+					ErrorLevel.ERROR,
+					'failed to parse',
+					`Encountered invalid token. Expected token to be an input field type but received '${inputFieldType}'.`,
+					{}
+				)
+			);
+		}
+
+		return InputFieldType.INVALID;
 	}
 
-	private parseInputFieldArgumentType(astLiteral: PT_Literal): InputFieldArgumentType {
+	private validateBindTarget(): { file: string; path: string } {
+		return {
+			file: this.unvalidatedDeclaration.bindTargetFile?.result ?? '',
+			path: this.unvalidatedDeclaration.bindTargetPath?.result ?? '',
+		};
+	}
+
+	private validateArguments(inputFieldType: InputFieldType): InputFieldArgumentContainer {
+		const argumentContainer = new InputFieldArgumentContainer();
+
+		for (const argument of this.unvalidatedDeclaration.arguments) {
+			const argumentType = this.validateArgumentType(argument.name);
+			if (argumentType === InputFieldArgumentType.INVALID) {
+				continue;
+			}
+
+			const inputFieldArgument: AbstractInputFieldArgument = InputFieldArgumentFactory.createInputFieldArgument(argumentType);
+
+			if (!inputFieldArgument.isAllowed(inputFieldType)) {
+				this.errorCollection.add(
+					new MetaBindParsingError(
+						ErrorLevel.WARNING,
+						'failed to parse input field arguments',
+						`argument "${argument.name.result}" is only applicable to "${inputFieldArgument.getAllowedInputFieldsAsString()}" input fields`
+					)
+				);
+				continue;
+			}
+
+			if (inputFieldArgument.requiresValue) {
+				if (!argument.value) {
+					if (argument.name.ptElement) {
+						this.errorCollection.add(
+							new ParsingError(
+								ErrorLevel.WARNING,
+								'failed to parse input field arguments',
+								`argument "${argument.name.result}" requires a non empty value`,
+								{},
+								argument.name.ptElement.str,
+								argument.name.ptElement.getToken(),
+								'Declaration Validator'
+							)
+						);
+					} else {
+						this.errorCollection.add(
+							new MetaBindValidationError(
+								ErrorLevel.WARNING,
+								'failed to parse input field arguments',
+								`argument "${argument.name.result}" requires a non empty value`
+							)
+						);
+					}
+
+					continue;
+				}
+
+				try {
+					inputFieldArgument.parseValue(argument.value.result);
+				} catch (e) {
+					this.errorCollection.add(e);
+					// TODO: better error message/handling
+					continue;
+				}
+			}
+
+			argumentContainer.add(inputFieldArgument);
+		}
+
+		try {
+			argumentContainer.validate();
+		} catch (e) {
+			this.errorCollection.add(e);
+		}
+
+		return argumentContainer;
+	}
+
+	private validateArgumentType(argumentType: StructureParserResult): InputFieldArgumentType {
 		for (const entry of Object.entries(InputFieldArgumentType)) {
-			if (entry[1] === astLiteral.toLiteral().trim()) {
+			if (entry[1] === argumentType.result) {
 				return entry[1];
 			}
 		}
 
-		throw new ParsingError(
-			ErrorLevel.WARNING,
-			'failed to parse',
-			`Encountered invalid token. Expected token to be an input field argument type but received '${astLiteral.toLiteral()}'.`,
-			{},
-			astLiteral.str,
-			astLiteral.getToken(),
-			'AST Parser'
-		);
+		if (argumentType.ptElement) {
+			this.errorCollection.add(
+				new ParsingError(
+					ErrorLevel.WARNING,
+					'failed to parse',
+					`Encountered invalid token. Expected token to be an input field argument type but received '${argumentType.result}'.`,
+					{},
+					argumentType.ptElement.str,
+					argumentType.ptElement.getToken(),
+					'Declaration Validator'
+				)
+			);
+		} else {
+			this.errorCollection.add(
+				new MetaBindValidationError(
+					ErrorLevel.WARNING,
+					'failed to parse',
+					`Encountered invalid token. Expected token to be an input field argument type but received '${argumentType.result}'.`,
+					{}
+				)
+			);
+		}
+
+		return InputFieldArgumentType.INVALID;
 	}
+}
+
+export interface InputFieldDeclarationTemplate {
+	name: string;
+	template: UnvalidatedInputFieldDeclaration;
 }
 
 export class NewInputFieldDeclarationParser {
 	plugin: IPlugin;
+	templates: InputFieldDeclarationTemplate[];
 
 	constructor(plugin: IPlugin) {
 		this.plugin = plugin;
+		this.templates = [];
 	}
 
-	public parseString(fullDeclaration: string, filePath: string): InputFieldDeclaration {
+	public parseString(fullDeclaration: string): InputFieldDeclaration {
 		const errorCollection = new ErrorCollection('InputFieldParser');
 
 		try {
@@ -356,16 +565,17 @@ export class NewInputFieldDeclarationParser {
 			const tokens = tokenizer.getTokens();
 			const parsingTreeParser = new InputFieldParsingTreeParser(fullDeclaration, tokens);
 			const parsingTree = parsingTreeParser.parse();
-			const declarationParser = new DeclarationParser(this, filePath, fullDeclaration, tokens, parsingTree, errorCollection);
+			const structureParser = new StructureParser(this, fullDeclaration, tokens, parsingTree, errorCollection);
+			const unvalidatedDeclaration = structureParser.parse();
+			const declarationValidator = new InputFieldDeclarationValidator(unvalidatedDeclaration);
 
-			return declarationParser.parse();
+			return declarationValidator.validate();
 		} catch (e) {
 			errorCollection.add(e);
 		}
 
 		return {
 			fullDeclaration: fullDeclaration,
-			declaration: undefined,
 			inputFieldType: InputFieldType.INVALID,
 			isBound: false,
 			bindTarget: '',
@@ -374,7 +584,81 @@ export class NewInputFieldDeclarationParser {
 		};
 	}
 
-	public parseTemplates(templates: string): void {
-		// TODO: rewrite the templates to be multiple input fields (like a table)
+	public parseStringWithoutValidation(fullDeclaration: string): UnvalidatedInputFieldDeclaration {
+		const errorCollection = new ErrorCollection('InputFieldParser');
+
+		try {
+			const tokenizer = new InputFieldTokenizer(fullDeclaration);
+			const tokens = tokenizer.getTokens();
+			const parsingTreeParser = new InputFieldParsingTreeParser(fullDeclaration, tokens);
+			const parsingTree = parsingTreeParser.parse();
+			const structureParser = new StructureParser(this, fullDeclaration, tokens, parsingTree, errorCollection);
+
+			return structureParser.parse();
+		} catch (e) {
+			errorCollection.add(e);
+		}
+
+		return {
+			fullDeclaration: fullDeclaration,
+			inputFieldType: { result: InputFieldType.INVALID },
+			bindTargetFile: undefined,
+			bindTargetPath: undefined,
+			arguments: [],
+			errorCollection: errorCollection,
+		};
+	}
+
+	public validateDeclaration(unvalidatedDeclaration: UnvalidatedInputFieldDeclaration): InputFieldDeclaration {
+		const declarationValidator = new InputFieldDeclarationValidator(unvalidatedDeclaration);
+
+		return declarationValidator.validate();
+	}
+
+	private parseTemplateString(template: string): UnvalidatedInputFieldDeclaration {
+		const errorCollection = new ErrorCollection('InputFieldParser');
+
+		try {
+			const tokenizer = new InputFieldTokenizer(template);
+			const tokens = tokenizer.getTokens();
+			const parsingTreeParser = new InputFieldParsingTreeParser(template, tokens);
+			const parsingTree = parsingTreeParser.parse();
+			const structureParser = new StructureParser(this, template, tokens, parsingTree, errorCollection);
+
+			return structureParser.parseAsTemplate();
+		} catch (e) {
+			errorCollection.add(e);
+		}
+
+		return {
+			fullDeclaration: template,
+			inputFieldType: { result: InputFieldType.INVALID },
+			bindTargetFile: undefined,
+			bindTargetPath: undefined,
+			arguments: [],
+			errorCollection: errorCollection,
+		};
+	}
+
+	public parseTemplates(templates: InputFieldTemplate[]): ErrorCollection {
+		this.templates = [];
+		const errorCollection: ErrorCollection = new ErrorCollection('input field template parser');
+
+		for (const template of templates) {
+			const templateDeclaration = this.parseTemplateString(template.declaration);
+
+			errorCollection.merge(templateDeclaration.errorCollection);
+
+			this.templates.push({
+				name: template.name,
+				template: templateDeclaration,
+			});
+		}
+
+		return errorCollection;
+	}
+
+	public getTemplate(templateName: string): UnvalidatedInputFieldDeclaration | undefined {
+		return this.templates.find(x => x.name === templateName)?.template;
 	}
 }

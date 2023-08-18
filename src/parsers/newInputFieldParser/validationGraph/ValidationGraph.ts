@@ -398,14 +398,14 @@ export class ValidationGraph {
 		if (validResults.length === 0) {
 			// TODO: calculate the closest path and generate an error based on it
 
-			// case 1: the path has reached the final input, but not a final state
-
 			const pathsAtEndOfInput = this.state.filter(x => x.currentInputIndex === ptNode.children.length);
 
 			let violatedTransitions: VG_Transition[] = [];
 			let receivedToken: AbstractToken<InputFieldTokenType>;
 
 			if (pathsAtEndOfInput.length > 0) {
+				// case 1: the path has reached the final input, but not a final state
+
 				for (const path of pathsAtEndOfInput) {
 					const node = this.getNode(path.nodeStates[path.nodeStates.length - 1]);
 

@@ -1,4 +1,4 @@
-import { Editor, MarkdownFileInfo, MarkdownView, Plugin } from 'obsidian';
+import { Editor, MarkdownFileInfo, MarkdownPostProcessorContext, MarkdownView, Plugin } from 'obsidian';
 import { MetaBindSettingTab } from './settings/SettingsTab';
 import { RenderChildType } from './renderChildren/InputFieldMDRC';
 import { getFileName, isPath, removeFileEnding } from './utils/Utils';
@@ -10,9 +10,11 @@ import './frontmatterDisplay/custom_overlay';
 import { Mode } from 'codemirror';
 import { createMarkdownRenderChildWidgetEditorPlugin } from './cm6/Cm6_ViewPlugin';
 import { MDRCManager } from './MDRCManager';
-import { DEFAULT_SETTINGS, MetaBindPluginSettings } from './settings/Settings';
+import { DEFAULT_SETTINGS, InputFieldTemplate, MetaBindPluginSettings } from './settings/Settings';
 import { IPlugin } from './IPlugin';
 import { ParserTestMDRC } from './renderChildren/ParserTestMDRC';
+import { EnclosingPair, ParserUtils } from './utils/ParserUtils';
+import { ErrorLevel, MetaBindParsingError } from './utils/errors/MetaBindErrors';
 
 export default class MetaBindPlugin extends Plugin implements IPlugin {
 	// @ts-ignore defined in `onload`
@@ -31,17 +33,19 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		console.log(`meta-bind | Main >> load`);
 
 		await this.loadSettings();
+		await this.saveSettings();
 
 		this.api = new API(this);
 
-		DateParser.dateFormat = this.settings.preferredDateFormat;
-		this.api.inputFieldParser.parseTemplates(this.settings.inputTemplates);
-		setFirstWeekday(this.settings.firstWeekday);
+		const templateParseErrorCollection = this.api.newInputFieldParser.parseTemplates(this.settings.inputFieldTemplates);
+		if (templateParseErrorCollection.hasErrors()) {
+			console.warn('meta-bind | failed to parse templates', templateParseErrorCollection);
+		}
 
 		this.mdrcManager = new MDRCManager();
 		this.metadataManager = new MetadataManager(this);
 
-		this.registerMarkdownPostProcessor((el, ctx) => {
+		this.registerMarkdownPostProcessor((el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
 			const codeBlocks = el.querySelectorAll('code');
 
 			// console.log(el.outerHTML);
@@ -60,11 +64,11 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				const isInputField = content.startsWith('INPUT[') && content.endsWith(']');
 				const isViewField = content.startsWith('VIEW[') && content.endsWith(']');
 				if (isInputField) {
-					const inputField = this.api.createInputFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock);
+					const inputField = this.api.createInputFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock, ctx);
 					ctx.addChild(inputField);
 				}
 				if (isViewField) {
-					const viewField = this.api.createViewFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock);
+					const viewField = this.api.createViewFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock, ctx);
 					ctx.addChild(viewField);
 				}
 			}
@@ -75,13 +79,13 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			const content = source.replaceAll('\n', '').trim();
 			const isInputField = content.startsWith('INPUT[') && content.endsWith(']');
 			if (isInputField) {
-				const inputField = this.api.createInputFieldFromString(content, RenderChildType.BLOCK, ctx.sourcePath, codeBlock);
+				const inputField = this.api.createInputFieldFromString(content, RenderChildType.BLOCK, ctx.sourcePath, codeBlock, ctx);
 				ctx.addChild(inputField);
 			}
 		});
 
 		this.registerMarkdownCodeBlockProcessor('meta-bind-js-view', (source, el, ctx) => {
-			const inputField = this.api.createJsViewFieldFromString(source, RenderChildType.BLOCK, ctx.sourcePath, el);
+			const inputField = this.api.createJsViewFieldFromString(source, RenderChildType.BLOCK, ctx.sourcePath, el, ctx);
 			ctx.addChild(inputField);
 		});
 
@@ -213,15 +217,52 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	async loadSettings(): Promise<void> {
 		console.log(`meta-bind | Main >> settings load`);
 
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		let loadedSettings = await this.loadData();
+
+		loadedSettings = this.applyTemplatesMigration(loadedSettings);
+
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, loadedSettings);
 	}
 
 	async saveSettings(): Promise<void> {
 		console.log(`meta-bind | Main >> settings save`);
 
 		DateParser.dateFormat = this.settings.preferredDateFormat;
-		this.api.inputFieldParser.parseTemplates(this.settings.inputTemplates);
+		// this.api.inputFieldParser.parseTemplates(this.settings.inputTemplates);
 		setFirstWeekday(this.settings.firstWeekday);
 		await this.saveData(this.settings);
+	}
+
+	applyTemplatesMigration(oldSettings: any): any {
+		if (oldSettings.inputTemplates !== undefined) {
+			const templates = oldSettings.inputTemplates;
+			const newTemplates: InputFieldTemplate[] = [];
+
+			try {
+				let templateDeclarations = templates ? ParserUtils.split(templates, '\n', new EnclosingPair('[', ']')) : [];
+				templateDeclarations = templateDeclarations.map(x => x.trim()).filter(x => x.length > 0);
+
+				for (const templateDeclaration of templateDeclarations) {
+					let templateDeclarationParts: string[] = ParserUtils.split(templateDeclaration, '->', new EnclosingPair('[', ']'));
+					templateDeclarationParts = templateDeclarationParts.map(x => x.trim());
+
+					if (templateDeclarationParts.length === 1) {
+						throw new MetaBindParsingError(ErrorLevel.CRITICAL, 'failed to parse template declaration', `template must include one "->"`);
+					} else if (templateDeclarationParts.length === 2) {
+						newTemplates.push({
+							name: templateDeclarationParts[0],
+							declaration: templateDeclarationParts[1],
+						});
+					}
+				}
+			} catch (e) {
+				console.warn('failed to migrate templates', e);
+			}
+
+			delete oldSettings.inputTemplates;
+			oldSettings.inputFieldTemplates = newTemplates;
+		}
+
+		return oldSettings;
 	}
 }

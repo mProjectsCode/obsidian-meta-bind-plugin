@@ -1,5 +1,5 @@
 import { MarkdownRenderChild } from 'obsidian/publish';
-import { InputFieldDeclaration } from '../parsers/InputFieldDeclarationParser';
+import { getPublishDefaultValue, InputFieldDeclaration } from '../parsers/InputFieldDeclarationParser';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
 import { PublishAPI } from './PublishAPI';
 import { BindTargetDeclaration } from '../parsers/BindTargetParser';
@@ -49,21 +49,21 @@ export class PublishInputFieldMDRC extends MarkdownRenderChild {
 	getValue(): any {
 		if (!this.bindTargetDeclaration) {
 			this.errorCollection.add(new MetaBindBindTargetError(ErrorLevel.WARNING, 'populated with default data', 'input field not bound'));
-			return this.api.inputFieldParser.getDefaultValue(this.declaration);
+			return getPublishDefaultValue(this.declaration);
 		}
 
 		if (this.bindTargetDeclaration.filePath !== this.filePath) {
 			this.errorCollection.add(
 				new MetaBindBindTargetError(ErrorLevel.WARNING, 'populated with default data', 'can not load metadata of another file in obsidian publish')
 			);
-			return this.api.inputFieldParser.getDefaultValue(this.declaration);
+			return getPublishDefaultValue(this.declaration);
 		}
 
 		const value = traverseObjectByPath(this.bindTargetDeclaration.metadataPath, this.metadata);
 
 		if (!value) {
 			this.errorCollection.add(new MetaBindBindTargetError(ErrorLevel.WARNING, 'populated with default data', 'value in metadata is undefined'));
-			return this.api.inputFieldParser.getDefaultValue(this.declaration);
+			return getPublishDefaultValue(this.declaration);
 		}
 
 		return value;

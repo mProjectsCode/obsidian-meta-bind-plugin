@@ -1,6 +1,7 @@
-import { App, PluginSettingTab, Setting, TextAreaComponent } from 'obsidian';
+import { App, ButtonComponent, PluginSettingTab, Setting, TextAreaComponent } from 'obsidian';
 import MetaBindPlugin from '../main';
 import { DEFAULT_SETTINGS, Weekday, weekdays } from './Settings';
+import { InputFieldTemplatesSettingModal } from './InputFieldTemplatesSettingModal';
 
 export class MetaBindSettingTab extends PluginSettingTab {
 	plugin: MetaBindPlugin;
@@ -82,14 +83,10 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			.setName('Templates')
 			.setDesc(`You can specify templates here, and access them using \`INPUT[template_name][overrides (optional)]\` in your notes.`);
 
-		const ta = new TextAreaComponent(containerEl);
-		ta.setValue(this.plugin.settings.inputTemplates);
-		ta.setPlaceholder('template_name -> INPUT[input_type(argument(value)):bind_target]');
-		ta.inputEl.style.width = '100%';
-		ta.inputEl.style.height = '200px';
-		ta.onChange(data => {
-			this.plugin.settings.inputTemplates = data;
-			this.plugin.saveSettings();
+		const templatesButton = new ButtonComponent(containerEl);
+		templatesButton.setButtonText('Edit Templates');
+		templatesButton.onClick(() => {
+			new InputFieldTemplatesSettingModal(this.app, this.plugin).open();
 		});
 
 		new Setting(containerEl)

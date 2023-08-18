@@ -29,11 +29,13 @@ export class ErrorCollection {
 	 *
 	 * @param other another error container.
 	 */
-	merge(other: ErrorCollection): void {
+	merge(other: ErrorCollection): ErrorCollection {
 		this.errors = this.errors.concat(other.errors);
 		if (other.otherError) {
 			this.otherError = other.otherError;
 		}
+
+		return this;
 	}
 
 	hasErrors(): boolean {
