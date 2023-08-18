@@ -1,5 +1,3 @@
-import { InputFieldArgumentContainer } from '../src/inputFieldArguments/InputFieldArgumentContainer';
-import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser, InputFieldType } from '../src/parsers/InputFieldDeclarationParser';
 import { MetaBindParsingError } from '../src/utils/errors/MetaBindErrors';
 
 test('placeholder', () => {

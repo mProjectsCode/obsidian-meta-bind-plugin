@@ -1,19 +1,16 @@
-import { InlineAPI } from './InlineAPI';
 import { InputFieldMDRC, RenderChildType } from '../renderChildren/InputFieldMDRC';
-import { InputFieldArgumentType, InputFieldDeclaration, InputFieldDeclarationParser, InputFieldType } from '../parsers/InputFieldDeclarationParser';
-import { ErrorLevel, MetaBindBindTargetError, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
-import { isTruthy } from '../utils/Utils';
+import { InputFieldDeclaration } from '../parsers/InputFieldDeclarationParser';
 import { JsViewFieldDeclaration, ViewFieldDeclaration, ViewFieldDeclarationParser } from '../parsers/ViewFieldDeclarationParser';
 import { BindTargetParser } from '../parsers/BindTargetParser';
 import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
 import { JsViewFieldMDRC } from '../renderChildren/JsViewFieldMDRC';
-import { ErrorCollection } from '../utils/errors/ErrorCollection';
 import MetaBindPlugin from '../main';
-import { DeclarationParser, NewInputFieldDeclarationParser } from '../parsers/newInputFieldParser/InputFieldParser';
+import { NewInputFieldDeclarationParser, UnvalidatedInputFieldDeclaration } from '../parsers/newInputFieldParser/InputFieldParser';
+import { Component, MarkdownPostProcessorContext } from 'obsidian';
 
 export class API {
 	public plugin: MetaBindPlugin;
-	public inputFieldParser: InputFieldDeclarationParser;
+	// public inputFieldParser: InputFieldDeclarationParser;
 	public newInputFieldParser: NewInputFieldDeclarationParser;
 	public viewFieldParser: ViewFieldDeclarationParser;
 	public bindTargetParser: BindTargetParser;
@@ -21,82 +18,69 @@ export class API {
 	constructor(plugin: MetaBindPlugin) {
 		this.plugin = plugin;
 
-		this.inputFieldParser = new InputFieldDeclarationParser();
+		// this.inputFieldParser = new InputFieldDeclarationParser();
 		this.newInputFieldParser = new NewInputFieldDeclarationParser(this.plugin);
 		this.viewFieldParser = new ViewFieldDeclarationParser();
 		this.bindTargetParser = new BindTargetParser(this.plugin);
 	}
 
-	public createInlineAPI(filePath: string, container?: HTMLElement): InlineAPI {
-		return new InlineAPI(this, filePath, container);
-	}
-
 	public createInputField(
-		declaration: InputFieldDeclaration,
-		templateName: string | undefined,
-		renderChildType: RenderChildType,
+		unvalidatedDeclaration: UnvalidatedInputFieldDeclaration,
+		renderType: RenderChildType,
 		filePath: string,
-		container: HTMLElement
+		containerEl: HTMLElement,
+		component: Component | MarkdownPostProcessorContext
 	): InputFieldMDRC {
-		if (!Object.values(RenderChildType).contains(renderChildType)) {
-			throw new MetaBindParsingError(ErrorLevel.CRITICAL, 'failed to create input field', `unknown render child type '${renderChildType}'`);
-		}
-		declaration = this.inputFieldParser.parseDeclaration(declaration, undefined, templateName);
-		return new InputFieldMDRC(container, renderChildType, declaration, this.plugin, filePath, self.crypto.randomUUID());
+		const declaration = this.newInputFieldParser.validateDeclaration(unvalidatedDeclaration);
+
+		const inputField = new InputFieldMDRC(containerEl, renderType, declaration, this.plugin, filePath, self.crypto.randomUUID());
+		component.addChild(inputField);
+
+		return inputField;
 	}
 
-	public createInputFieldFromString(fullDeclaration: string, renderType: RenderChildType, filePath: string, container: HTMLElement): InputFieldMDRC {
-		const declaration: InputFieldDeclaration = this.newInputFieldParser.parseString(fullDeclaration, filePath);
-		return new InputFieldMDRC(container, renderType, declaration, this.plugin, filePath, self.crypto.randomUUID());
+	public createInputFieldFromString(
+		fullDeclaration: string,
+		renderType: RenderChildType,
+		filePath: string,
+		containerEl: HTMLElement,
+		component: Component | MarkdownPostProcessorContext
+	): InputFieldMDRC {
+		const declaration: InputFieldDeclaration = this.newInputFieldParser.parseString(fullDeclaration);
+
+		const inputField = new InputFieldMDRC(containerEl, renderType, declaration, this.plugin, filePath, self.crypto.randomUUID());
+		component.addChild(inputField);
+
+		return inputField;
 	}
 
-	public createViewFieldFromString(fullDeclaration: string, renderType: RenderChildType, filePath: string, container: HTMLElement): ViewFieldMDRC {
+	public createViewFieldFromString(
+		fullDeclaration: string,
+		renderType: RenderChildType,
+		filePath: string,
+		container: HTMLElement,
+		component: Component | MarkdownPostProcessorContext
+	): ViewFieldMDRC {
 		const declaration: ViewFieldDeclaration = this.viewFieldParser.parseString(fullDeclaration);
-		return new ViewFieldMDRC(container, renderType, declaration, this.plugin, filePath, self.crypto.randomUUID());
+
+		const viewField = new ViewFieldMDRC(container, renderType, declaration, this.plugin, filePath, self.crypto.randomUUID());
+		component.addChild(viewField);
+
+		return viewField;
 	}
 
-	public createJsViewFieldFromString(fullDeclaration: string, renderType: RenderChildType, filePath: string, container: HTMLElement): JsViewFieldMDRC {
+	public createJsViewFieldFromString(
+		fullDeclaration: string,
+		renderType: RenderChildType,
+		filePath: string,
+		containerEl: HTMLElement,
+		component: Component | MarkdownPostProcessorContext
+	): JsViewFieldMDRC {
 		const declaration: JsViewFieldDeclaration = this.viewFieldParser.parseJsString(fullDeclaration);
-		return new JsViewFieldMDRC(container, renderType, declaration, this.plugin, filePath, self.crypto.randomUUID());
-	}
 
-	public createInputFieldDeclaration(
-		inputFieldType: InputFieldType,
-		inputFieldArguments?: { type: InputFieldArgumentType; value: string }[]
-	): InputFieldDeclaration {
-		if (this.inputFieldParser.getInputFieldType(inputFieldType) === InputFieldType.INVALID) {
-			throw new MetaBindParsingError(ErrorLevel.CRITICAL, 'failed to create input field declaration', `input field type '${inputFieldType}' is invalid`);
-		}
+		const viewField = new JsViewFieldMDRC(containerEl, renderType, declaration, this.plugin, filePath, self.crypto.randomUUID());
+		component.addChild(viewField);
 
-		const errorCollection = new ErrorCollection('InputFieldDeclaration');
-
-		return {
-			declaration: undefined,
-			fullDeclaration: undefined,
-			inputFieldType: inputFieldType,
-			argumentContainer: this.inputFieldParser.parseArguments(inputFieldType, inputFieldArguments, errorCollection),
-			isBound: false,
-			bindTarget: '',
-			errorCollection: errorCollection,
-		} as InputFieldDeclaration;
-	}
-
-	public createInputFieldDeclarationFromString(fullDeclaration: string): InputFieldDeclaration {
-		return this.inputFieldParser.parseString(fullDeclaration);
-	}
-
-	public bindInputFieldDeclaration(declaration: InputFieldDeclaration, bindTargetField: string, bindTargetFile?: string): InputFieldDeclaration {
-		if (bindTargetFile && !bindTargetField) {
-			throw new MetaBindBindTargetError(
-				ErrorLevel.ERROR,
-				'failed to bind input field declaration',
-				'if a bind target file is specified, a bind target field must also be specified'
-			);
-		}
-
-		declaration.isBound = isTruthy(bindTargetField);
-		declaration.bindTarget = bindTargetFile ? bindTargetFile + '#' + bindTargetField : bindTargetField;
-
-		return declaration;
+		return viewField;
 	}
 }

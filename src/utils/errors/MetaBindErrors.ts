@@ -13,6 +13,7 @@ export enum ErrorType {
 	JS = 'MB_JS_ERROR',
 	EXPRESSION = 'MB_EXPRESSION_ERROR',
 	PUBLISH = 'MB_PUBLISH_ERROR',
+	VALIDATION = 'MB_VALIDATION_ERROR',
 
 	OTHER = 'OTHER',
 }
@@ -58,6 +59,12 @@ export class MetaBindInternalError extends MetaBindError {
 export class MetaBindParsingError extends MetaBindError {
 	public getErrorType(): ErrorType {
 		return ErrorType.PARSING;
+	}
+}
+
+export class MetaBindValidationError extends MetaBindError {
+	public getErrorType(): ErrorType {
+		return ErrorType.VALIDATION;
 	}
 }
 

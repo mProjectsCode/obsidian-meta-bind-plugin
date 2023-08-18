@@ -3,10 +3,12 @@
 	import {ErrorCollection} from './ErrorCollection';
 
 	export let errorCollection: ErrorCollection;
-	export let declaration: string;
+	export let declaration: string | undefined;
 </script>
 
-<p><code class="language-none meta-bind-none">{declaration}</code></p>
+{#if declaration}
+	<p><code class="language-none meta-bind-none">{declaration}</code></p>
+{/if}
 
 {#if errorCollection.hasWarnings()}
 	<h6>Warnings</h6>

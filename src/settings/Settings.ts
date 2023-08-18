@@ -55,7 +55,15 @@ export interface MetaBindPluginSettings {
 	minSyncInterval: number;
 	enableJs: boolean;
 
-	inputTemplates: string;
+	inputFieldTemplates: InputFieldTemplate[];
+
+	// @deprecated
+	inputTemplates: string | undefined;
+}
+
+export interface InputFieldTemplate {
+	name: string;
+	declaration: string;
 }
 
 export const DEFAULT_SETTINGS: MetaBindPluginSettings = {
@@ -69,5 +77,7 @@ export const DEFAULT_SETTINGS: MetaBindPluginSettings = {
 	maxSyncInterval: 1000,
 	enableJs: false,
 
-	inputTemplates: '',
+	inputFieldTemplates: [],
+
+	inputTemplates: undefined,
 };
