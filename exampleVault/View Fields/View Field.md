@@ -1,7 +1,7 @@
 ---
 number1: 11
 number2: 20
-unit: km
+unit: m
 ---
 
 `INPUT[number:number1]`

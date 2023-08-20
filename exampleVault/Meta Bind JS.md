@@ -2,56 +2,19 @@
 select: c
 ---
 
-test
-```meta-bind-js
-const declaration = mb.createDeclaration(
-	'select',
-	[
-		{type: 'option', value: 'a'},
-		{type: 'option', value: 'c'},
-	]
-);
+```js-engine
+const mb = engine.getPlugin('obsidian-meta-bind-plugin').api;
 
-mb.bindDeclaration(declaration, 'select');
+const options = ['a', 'b', 'c'];
 
-const inputField = mb.createInputField(declaration, undefined, 'block');
+let declaration = mb.inputField.createInputFieldDeclaration();
+declaration = mb.inputField.setType(declaration, 'select');
+declaration = mb.inputField.setBindTargetMetadataField(declaration, 'select');
 
-inputField.readSignal.registerListener({callback: (value) => console.log(`test ${value}`)})
+for (const option of options) {
+	declaration = mb.inputField.addArgument(declaration, {name: 'option', value: option});
+}
 
-ctx.addChild(inputField);
+mb.createInputField(declaration, 'block', context.file.path, container, component);
+
 ```
-
-```meta-bind-js
-const declaration = mb.createDeclaration(
-	'select',
-	[
-		{type: 'option', value: 'd'},
-		{type: 'option', value: 'e'},
-	]
-);
-
-mb.bindDeclaration(declaration, 'select');
-
-const inputField = mb.createInputField(declaration, undefined, 'block');
-
-ctx.addChild(inputField);
-```
-
-```js
-const declaration = mb.createDeclaration(
-	'select',
-	[
-		{type: 'option', value: 'a'},
-		{type: 'option', value: 'c'},
-	],
-	'select'
-);
-
-0000
-
-const inputField = mb.createInputField(declaration, undefined, 'block');
-
-ctx.addChild(inputField);
-```
-
-test

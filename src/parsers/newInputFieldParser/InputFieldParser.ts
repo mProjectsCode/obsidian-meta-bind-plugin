@@ -19,6 +19,7 @@ import { InputFieldParsingTreeParser } from './InputFieldParsingTreeParser';
 import { Abstract_PT_Node, ParsingTree, PT_Closure, PT_Element, PT_Element_Type, PT_Literal } from './ParsingTree';
 import { InputFieldToken, InputFieldTokenizer, InputFieldTokenType } from './InputFieldTokenizer';
 import { InputFieldTemplate } from '../../settings/Settings';
+import { deepFreeze } from '../../utils/Utils';
 
 export interface UnvalidatedInputFieldDeclaration {
 	fullDeclaration: string;
@@ -544,8 +545,8 @@ export class InputFieldDeclarationValidator {
 }
 
 export interface InputFieldDeclarationTemplate {
-	name: string;
-	template: UnvalidatedInputFieldDeclaration;
+	readonly name: string;
+	readonly template: Readonly<UnvalidatedInputFieldDeclaration>;
 }
 
 export class NewInputFieldDeclarationParser {
@@ -649,16 +650,18 @@ export class NewInputFieldDeclarationParser {
 
 			errorCollection.merge(templateDeclaration.errorCollection);
 
-			this.templates.push({
+			const temp: InputFieldDeclarationTemplate = {
 				name: template.name,
 				template: templateDeclaration,
-			});
+			};
+
+			this.templates.push(deepFreeze(temp));
 		}
 
 		return errorCollection;
 	}
 
-	public getTemplate(templateName: string): UnvalidatedInputFieldDeclaration | undefined {
+	public getTemplate(templateName: string): Readonly<UnvalidatedInputFieldDeclaration> | undefined {
 		return this.templates.find(x => x.name === templateName)?.template;
 	}
 }
