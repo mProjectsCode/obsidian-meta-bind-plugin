@@ -254,7 +254,7 @@ export function deepEquals(any1: unknown, any2: unknown): boolean {
 	return any1 === any2;
 }
 
-export function deepFreeze<T extends object>(object: T): T {
+export function deepFreeze<T extends object>(object: T): Readonly<T> {
 	// Retrieve the property names defined on object
 	const propNames: (string | symbol)[] = Reflect.ownKeys(object);
 

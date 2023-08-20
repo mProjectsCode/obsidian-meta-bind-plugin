@@ -7,6 +7,7 @@ import { JsViewFieldMDRC } from '../renderChildren/JsViewFieldMDRC';
 import MetaBindPlugin from '../main';
 import { NewInputFieldDeclarationParser, UnvalidatedInputFieldDeclaration } from '../parsers/newInputFieldParser/InputFieldParser';
 import { Component, MarkdownPostProcessorContext } from 'obsidian';
+import { InputFieldAPI } from './InputFieldAPI';
 
 export class API {
 	public plugin: MetaBindPlugin;
@@ -15,6 +16,8 @@ export class API {
 	public viewFieldParser: ViewFieldDeclarationParser;
 	public bindTargetParser: BindTargetParser;
 
+	public readonly inputField: InputFieldAPI;
+
 	constructor(plugin: MetaBindPlugin) {
 		this.plugin = plugin;
 
@@ -22,6 +25,8 @@ export class API {
 		this.newInputFieldParser = new NewInputFieldDeclarationParser(this.plugin);
 		this.viewFieldParser = new ViewFieldDeclarationParser();
 		this.bindTargetParser = new BindTargetParser(this.plugin);
+
+		this.inputField = new InputFieldAPI(this);
 	}
 
 	public createInputField(

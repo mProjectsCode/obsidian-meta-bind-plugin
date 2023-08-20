@@ -1,5 +1,5 @@
 import { InputFieldArgumentType, InputFieldType } from '../parsers/InputFieldDeclarationParser';
-import { UnvalidatedInputFieldDeclaration } from '../parsers/newInputFieldParser/InputFieldParser';
+import { StructureParserResult, UnvalidatedInputFieldDeclaration } from '../parsers/newInputFieldParser/InputFieldParser';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
 import { API } from './API';
 import { useSyncExternalStore } from 'preact/compat';
@@ -88,5 +88,26 @@ export class InputFieldAPI {
 		unvalidatedDeclaration.bindTargetPath = { result: bindTargetMetadataField };
 
 		return unvalidatedDeclaration;
+	}
+
+	public getTemplate(templateName: string): Readonly<UnvalidatedInputFieldDeclaration> | undefined {
+		return this.api.newInputFieldParser.getTemplate(templateName);
+	}
+
+	public merge(unvalidatedDeclaration: UnvalidatedInputFieldDeclaration, override: UnvalidatedInputFieldDeclaration): UnvalidatedInputFieldDeclaration {
+		return {
+			fullDeclaration: '',
+			inputFieldType: override.inputFieldType !== undefined ? override.inputFieldType : unvalidatedDeclaration.inputFieldType,
+			bindTargetFile: override.bindTargetFile !== undefined ? override.bindTargetFile : unvalidatedDeclaration.bindTargetFile,
+			bindTargetPath: override.bindTargetPath !== undefined ? override.bindTargetPath : unvalidatedDeclaration.bindTargetPath,
+			arguments: override.arguments.concat(unvalidatedDeclaration.arguments).reduce((arr, currentValue) => {
+				// filter out duplicates
+				if (arr.find(x => x.name === currentValue.name) === undefined) {
+					arr.push(currentValue);
+				}
+				return arr;
+			}, [] as { name: StructureParserResult; value?: StructureParserResult | undefined }[]),
+			errorCollection: unvalidatedDeclaration.errorCollection.merge(override.errorCollection),
+		};
 	}
 }
