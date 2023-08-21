@@ -12,7 +12,6 @@ import { MBExtendedLiteral, stringifyLiteral } from '../../../utils/Utils';
 type T = string;
 
 export class ImageSuggestInputField extends AbstractInputField<T> {
-	static allowInline: boolean = false;
 	container: HTMLDivElement | undefined;
 	component: ImageSuggestInput | undefined;
 	value: string;
@@ -179,7 +178,7 @@ export class ImageSuggestInputField extends AbstractInputField<T> {
 	async showSuggest(): Promise<void> {
 		await this.getOptions();
 		new ImageSuggestModal(this.renderChild.plugin.app, this.options, item => {
-			this.filterValue(item);
+			this.updateDisplayValue(item);
 			this.onValueChange(item);
 		}).open();
 	}
