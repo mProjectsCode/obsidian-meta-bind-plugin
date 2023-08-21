@@ -118,7 +118,7 @@ export class SuggestInputField extends AbstractInputField<T> {
 	async showSuggest(): Promise<void> {
 		await this.getOptions();
 		new SuggestInputModal(this.renderChild.plugin.app, this.options, item => {
-			this.filterValue(item.value);
+			this.updateDisplayValue(item.value);
 			this.onValueChange(item.value);
 		}).open();
 	}

@@ -6,6 +6,7 @@
 	let image: string;
 
 	export function updateValue(value: string): void {
+		console.log('svelte update');
 		image = value;
 	}
 
