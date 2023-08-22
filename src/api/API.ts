@@ -5,9 +5,10 @@ import { BindTargetParser } from '../parsers/BindTargetParser';
 import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
 import { JsViewFieldMDRC } from '../renderChildren/JsViewFieldMDRC';
 import MetaBindPlugin from '../main';
-import { NewInputFieldDeclarationParser, UnvalidatedInputFieldDeclaration } from '../parsers/newInputFieldParser/InputFieldParser';
+import { NewInputFieldDeclarationParser } from '../parsers/newInputFieldParser/InputFieldParser';
 import { Component, MarkdownPostProcessorContext } from 'obsidian';
 import { InputFieldAPI } from './InputFieldAPI';
+import { UnvalidatedInputFieldDeclaration } from '../parsers/newInputFieldParser/InputFieldDeclarationValidator';
 
 export class API {
 	public plugin: MetaBindPlugin;

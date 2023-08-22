@@ -1,8 +1,8 @@
 ---
 tags: test
 title: test test
-select: option b
-date: Wednesday, August 16th 2023
+select: option d
+date: Friday, August 18th 2023
 time: 19:20
 multi-select:
   - option a

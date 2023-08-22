@@ -1,7 +1,7 @@
 import { ParsingError } from './ParsingError';
 import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
-import { Range } from './ParsingUtils';
-import { InputFieldToken, InputFieldTokenType } from './InputFieldTokenizer';
+import { AbstractToken, Range } from './ParsingUtils';
+import { InputFieldTokenType } from './InputFieldTokenizer';
 
 export enum PT_Element_Type {
 	LITERAL = 'LITERAL',
@@ -11,7 +11,7 @@ export enum PT_Element_Type {
 	SPECIAL_END = 'SPECIAL_END',
 }
 
-export abstract class Abstract_PT_El {
+export abstract class Abstract_PT_El<TokenType extends string, Token extends AbstractToken<TokenType>> {
 	type: PT_Element_Type;
 	str: string;
 
@@ -20,22 +20,22 @@ export abstract class Abstract_PT_El {
 		this.str = str;
 	}
 
-	abstract getToken(): InputFieldToken | undefined;
+	abstract getToken(): Token | undefined;
 
 	abstract toLiteral(): string;
 
 	abstract toDebugString(): string;
 }
 
-export abstract class Abstract_PT_Node extends Abstract_PT_El {
-	children: PT_Element[];
+export abstract class Abstract_PT_Node<TokenType extends string, Token extends AbstractToken<TokenType>> extends Abstract_PT_El<TokenType, Token> {
+	children: PT_Element<TokenType, Token>[];
 
-	protected constructor(type: PT_Element_Type, str: string, children: PT_Element[]) {
+	protected constructor(type: PT_Element_Type, str: string, children: PT_Element<TokenType, Token>[]) {
 		super(type, str);
 		this.children = children;
 	}
 
-	getChild(index: number, expected?: InputFieldTokenType | undefined): PT_Element {
+	getChild(index: number, expected?: InputFieldTokenType | undefined): PT_Element<TokenType, Token> {
 		const el = this.children[index];
 		if (!el) {
 			throw new Error('This parser sucks');
@@ -63,10 +63,10 @@ export abstract class Abstract_PT_Node extends Abstract_PT_El {
 	abstract getRange(): Range;
 }
 
-export class PT_Literal extends Abstract_PT_El {
-	token: InputFieldToken;
+export class PT_Literal<TokenType extends string, Token extends AbstractToken<TokenType>> extends Abstract_PT_El<TokenType, Token> {
+	token: Token;
 
-	constructor(token: InputFieldToken, str: string) {
+	constructor(token: Token, str: string) {
 		super(PT_Element_Type.LITERAL, str);
 
 		this.token = token;
@@ -76,7 +76,7 @@ export class PT_Literal extends Abstract_PT_El {
 		return this.token.range;
 	}
 
-	public getToken(): InputFieldToken {
+	public getToken(): Token {
 		return this.token;
 	}
 
@@ -104,11 +104,11 @@ export class PT_Literal extends Abstract_PT_El {
 	}
 }
 
-export class PT_Closure extends Abstract_PT_Node {
-	startLiteral: PT_Literal;
-	endLiteral: PT_Literal;
+export class PT_Closure<TokenType extends string, Token extends AbstractToken<TokenType>> extends Abstract_PT_Node<TokenType, Token> {
+	startLiteral: PT_Literal<TokenType, Token>;
+	endLiteral: PT_Literal<TokenType, Token>;
 
-	constructor(str: string, startLiteral: PT_Literal, endLiteral: PT_Literal, children: PT_Element[]) {
+	constructor(str: string, startLiteral: PT_Literal<TokenType, Token>, endLiteral: PT_Literal<TokenType, Token>, children: PT_Element<TokenType, Token>[]) {
 		super(PT_Element_Type.CLOSURE, str, children);
 
 		this.startLiteral = startLiteral;
@@ -122,7 +122,7 @@ export class PT_Closure extends Abstract_PT_Node {
 		};
 	}
 
-	public getToken(): InputFieldToken {
+	public getToken(): Token {
 		return this.startLiteral.token;
 	}
 
@@ -140,18 +140,18 @@ export class PT_Closure extends Abstract_PT_Node {
 	}
 }
 
-export type PT_Element = PT_Literal | PT_Closure;
+export type PT_Element<TokenType extends string, Token extends AbstractToken<TokenType>> = PT_Literal<TokenType, Token> | PT_Closure<TokenType, Token>;
 
-export class ParsingTree extends Abstract_PT_Node {
-	tokens: InputFieldToken[];
+export class ParsingTree<TokenType extends string, Token extends AbstractToken<TokenType>> extends Abstract_PT_Node<TokenType, Token> {
+	tokens: Token[];
 
-	constructor(str: string, tokens: InputFieldToken[]) {
+	constructor(str: string, tokens: Token[]) {
 		super(PT_Element_Type.ROOT, str, []);
 
 		this.tokens = tokens;
 	}
 
-	public getToken(): InputFieldToken | undefined {
+	public getToken(): Token | undefined {
 		return undefined;
 	}
 
@@ -172,20 +172,20 @@ export class ParsingTree extends Abstract_PT_Node {
 	}
 }
 
-export function split_PT_Elements(list: PT_Element[], tokenType: InputFieldTokenType): PT_Element[][] {
-	const out: PT_Element[][] = [];
-	let current: PT_Element[] = [];
-
-	for (const listElement of list) {
-		if (listElement.getToken().type === tokenType) {
-			out.push(current);
-			current = [];
-		} else {
-			current.push(listElement);
-		}
-	}
-
-	out.push(current);
-
-	return out;
-}
+// export function split_PT_Elements(list: PT_Element[], tokenType: InputFieldTokenType): PT_Element[][] {
+// 	const out: PT_Element[][] = [];
+// 	let current: PT_Element[] = [];
+//
+// 	for (const listElement of list) {
+// 		if (listElement.getToken().type === tokenType) {
+// 			out.push(current);
+// 			current = [];
+// 		} else {
+// 			current.push(listElement);
+// 		}
+// 	}
+//
+// 	out.push(current);
+//
+// 	return out;
+// }

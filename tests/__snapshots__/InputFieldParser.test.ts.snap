@@ -528,7 +528,7 @@ ParsingTree {
 `;
 
 exports[`ast parser tests unclosed closure test 1`] = `
-"[MB_PARSING_ERROR] "failed to parse" caused by "Encountered invalid token. Active closure is not the closure that this token closes."
+"[MB_PARSING_ERROR] "failed to parse" caused by "Encountered invalid token. Active closure is not the closure that this token closes. You probably forgot a ')' somewhere in font of this token."
 hello world[this is a message to all (people]test)b
                                             ^
 "

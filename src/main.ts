@@ -109,17 +109,17 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			},
 		});
 
-		this.addCommand({
-			id: 'mb-test-command',
-			name: 'test command',
-			editorCallback: (editor: Editor, view: MarkdownView | MarkdownFileInfo) => {
-				if (view.file) {
-					this.app.fileManager.processFrontMatter(view.file, frontmatter => {
-						return frontmatter;
-					});
-				}
-			},
-		});
+		// this.addCommand({
+		// 	id: 'mb-test-command',
+		// 	name: 'test command',
+		// 	editorCallback: (editor: Editor, view: MarkdownView | MarkdownFileInfo) => {
+		// 		if (view.file) {
+		// 			this.app.fileManager.processFrontMatter(view.file, frontmatter => {
+		// 				return frontmatter;
+		// 			});
+		// 		}
+		// 	},
+		// });
 
 		// if (this.settings.devMode) {
 		// 	this.addCommand({
@@ -136,55 +136,6 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		// });
 
 		this.addSettingTab(new MetaBindSettingTab(this.app, this));
-	}
-
-	/**
-	 * Inspired by https://github.com/SilentVoid13/Templater/blob/487805b5ad1fd7fbc145040ed82b4c41fc2c48e2/src/editor/Editor.ts#L67
-	 */
-	async registerCodeMirrorMode(): Promise<void> {
-		const js_mode: Mode<any> = window.CodeMirror.getMode({}, 'javascript');
-		if (js_mode == null || js_mode.name === 'null') {
-			console.log("Couldn't find js mode, can't enable syntax highlighting.");
-			return;
-		}
-
-		// if templater enabled, this only runs on the code blocks, otherwise this runs on the whole document
-
-		window.CodeMirror.defineMode('meta-bind-js', config => {
-			const mbOverlay: any = {
-				startState: () => {
-					const js_state = window.CodeMirror.startState(js_mode);
-					return {
-						...js_state,
-					};
-				},
-				blankLine: (state: any) => {
-					return null;
-				},
-				copyState: (state: any) => {
-					const js_state = window.CodeMirror.startState(js_mode);
-					return {
-						...js_state,
-					};
-				},
-				token: (stream: any, state: any) => {
-					// const globals = ['app', 'mb', 'dv', 'filePath', 'ctx'];
-
-					// console.log(stream);
-
-					// for (const global of globals) {
-					// 	if (stream.match(global)) {
-					// 		return 'variable';
-					// 	}
-					// }
-
-					const js_result = js_mode.token && js_mode.token(stream, state);
-					return `line-HyperMD-codeblock ${js_result}`;
-				},
-			};
-
-			return mbOverlay;
-		});
 	}
 
 	onunload(): void {

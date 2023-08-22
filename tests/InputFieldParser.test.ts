@@ -1,8 +1,13 @@
 import { InputFieldParsingTreeParser } from '../src/parsers/newInputFieldParser/InputFieldParsingTreeParser';
-import { InputFieldTokenizer } from '../src/parsers/newInputFieldParser/InputFieldTokenizer';
+import { InputFieldToken, InputFieldTokenizer, InputFieldTokenType } from '../src/parsers/newInputFieldParser/InputFieldTokenizer';
 import { ValidationGraph } from '../src/parsers/newInputFieldParser/validationGraph/ValidationGraph';
 import { ParsingTree, PT_Element_Type } from '../src/parsers/newInputFieldParser/ParsingTree';
 import { TL_C_Literal, TL_C_Or } from '../src/parsers/newInputFieldParser/validationGraph/treeLayout/ComplexTreeLayout';
+import { UnvalidatedInputFieldDeclaration } from '../src/parsers/newInputFieldParser/InputFieldDeclarationValidator';
+import { InputFieldStructureParser } from '../src/parsers/newInputFieldParser/InputFieldStructureParser';
+import { ErrorCollection } from '../src/utils/errors/ErrorCollection';
+import { InputFieldValidationGraphSupplier } from '../src/parsers/newInputFieldParser/validationGraph/InputFieldValidationGraphSupplier';
+import { EmptyTemplateSupplier } from '../src/parsers/newInputFieldParser/ITemplateSupplier';
 
 describe('tokenizer tests', function () {
 	test('tokenize all simple tokens', () => {
@@ -80,7 +85,7 @@ describe('ast parser tests', function () {
 });
 
 describe('tree validation tests', function () {
-	function createParsingTree(str: string): ParsingTree {
+	function createParsingTree(str: string): ParsingTree<InputFieldTokenType, InputFieldToken> {
 		const tokenizer = new InputFieldTokenizer(str);
 		const tokens = tokenizer.getTokens();
 		const astParser = new InputFieldParsingTreeParser(str, tokens);
@@ -169,49 +174,18 @@ describe('tree validation tests', function () {
 		expect(graph.validateParsingTree(createParsingTree(''))).toEqual(false);
 	});
 });
-// describe('validation tree test', function () {
-// 	// 	test('simple construct validation graph 1', () => {
-// 	// 		const graph = new ValidationGraph([AST_El_Type.CLOSURE, { loop: [AST_El_Type.LITERAL], min: 1, max: 3 }, AST_El_Type.CLOSURE]);
-// 	//
-// 	// 		expect(graph).toMatchSnapshot();
-// 	// 	});
-// 	//
-// 	// 	test('simple construct validation graph 2', () => {
-// 	// 		const graph = new ValidationGraph([
-// 	// 			AST_El_Type.CLOSURE,
-// 	// 			{ loop: [AST_El_Type.LITERAL], min: 0, max: 3 },
-// 	// 			{ loop: [AST_El_Type.CLOSURE], min: 0, max: 3 },
-// 	// 			AST_El_Type.CLOSURE,
-// 	// 		]);
-// 	//
-// 	// 		expect(graph).toMatchSnapshot();
-// 	// 	});
-// 	//
-// 	// 	test('simple construct validation graph 3', () => {
-// 	// 		const graph = new ValidationGraph([AST_El_Type.CLOSURE, { loop: [AST_El_Type.CLOSURE, AST_El_Type.LITERAL], min: 0, max: 3 }, AST_El_Type.CLOSURE]);
-// 	//
-// 	// 		expect(graph).toMatchSnapshot();
-// 	// 	});
-// 	//
-// 	// 	test('simple construct validation graph 4', () => {
-// 	// 		const graph = new ValidationGraph([AST_El_Type.CLOSURE, { loop: [AST_El_Type.CLOSURE, AST_El_Type.LITERAL], min: 0, max: 1 }, AST_El_Type.CLOSURE]);
-// 	//
-// 	// 		expect(graph).toMatchSnapshot();
-// 	// 	});
-//
-// 	test('simple construct validation graph 5', () => {
-// 		const graph = new ValidationGraph([AST_El_Type.CLOSURE, new TL_Or([], [AST_El_Type.LITERAL]), AST_El_Type.CLOSURE]);
-//
-// 		expect(graph).toMatchSnapshot();
-// 	});
-//
-// 	test('simple construct validation graph 6', () => {
-// 		const graph = new ValidationGraph([
-// 			AST_El_Type.CLOSURE,
-// 			new TL_Or([new TL_Or([], [AST_El_Type.LITERAL])], [new TL_Or([], [AST_El_Type.CLOSURE])]),
-// 			AST_El_Type.CLOSURE,
-// 		]);
-//
-// 		expect(graph).toMatchSnapshot();
-// 	});
-// });
+
+describe('structure parser test', () => {
+	const graphSupplier = new InputFieldValidationGraphSupplier();
+	const emptyTemplateSupplier = new EmptyTemplateSupplier();
+
+	function createStructureParser(str: string): InputFieldStructureParser {
+		const tokenizer = new InputFieldTokenizer(str);
+		const tokens = tokenizer.getTokens();
+		const astParser = new InputFieldParsingTreeParser(str, tokens);
+		const parsingTree = astParser.parse();
+		const errorCollection = new ErrorCollection('structure parser test');
+
+		return new InputFieldStructureParser(emptyTemplateSupplier, graphSupplier, str, tokens, parsingTree, errorCollection);
+	}
+});

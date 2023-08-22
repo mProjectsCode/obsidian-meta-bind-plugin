@@ -1,7 +1,6 @@
 import { AbstractToken, Closure } from './ParsingUtils';
 
 export enum InputFieldTokenType {
-	ILLEGAL = 'ILLEGAL',
 	EOF = 'EOF',
 	WORD = 'WORD',
 	L_PAREN = '(',
