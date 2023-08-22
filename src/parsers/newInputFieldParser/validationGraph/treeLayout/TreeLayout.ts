@@ -1,6 +1,7 @@
 import { InputFieldTokenType } from '../../InputFieldTokenizer';
 import { VG_Transition_Constraint } from '../VG_Transition_Constraint';
 import { PT_Element_Type } from '../../ParsingTree';
+import { AbstractToken } from '../../ParsingUtils';
 
 export enum TL_Type {
 	LOOP = 'LOOP',
@@ -38,12 +39,12 @@ export class TL_LoopBound {
 	}
 }
 
-export class TL_Literal {
+export class TL_Literal<TokenType extends string, Token extends AbstractToken<TokenType>, Key extends string> {
 	readonly type: TL_Type;
-	readonly key: string | undefined;
-	readonly constraint: VG_Transition_Constraint;
+	readonly key: Key | undefined;
+	readonly constraint: VG_Transition_Constraint<TokenType, Token>;
 
-	constructor(astType: PT_Element_Type, tokenType?: InputFieldTokenType | undefined, literalContent?: string | undefined, key?: string | undefined) {
+	constructor(astType: PT_Element_Type, tokenType?: TokenType | undefined, literalContent?: string | undefined, key?: Key | undefined) {
 		this.type = TL_Type.LITERAL;
 		this.key = key;
 
@@ -51,13 +52,13 @@ export class TL_Literal {
 	}
 }
 
-export class TL_Loop {
+export class TL_Loop<TokenType extends string, Token extends AbstractToken<TokenType>, Key extends string> {
 	readonly type: TL_Type;
-	readonly key: string | undefined;
-	readonly loop: TreeLayout;
+	readonly key: Key | undefined;
+	readonly loop: TreeLayout<TokenType, Token, Key>;
 	readonly bound: TL_LoopBound;
 
-	constructor(loop: TreeLayout, bound: TL_LoopBound, key?: string | undefined) {
+	constructor(loop: TreeLayout<TokenType, Token, Key>, bound: TL_LoopBound, key?: Key | undefined) {
 		this.type = TL_Type.LOOP;
 		this.key = key;
 
@@ -66,12 +67,12 @@ export class TL_Loop {
 	}
 }
 
-export class TL_Or {
+export class TL_Or<TokenType extends string, Token extends AbstractToken<TokenType>, Key extends string> {
 	readonly type: TL_Type;
-	readonly key: string | undefined;
-	readonly options: TreeLayout[];
+	readonly key: Key | undefined;
+	readonly options: TreeLayout<TokenType, Token, Key>[];
 
-	constructor(options: TreeLayout[], key?: string | undefined) {
+	constructor(options: TreeLayout<TokenType, Token, Key>[], key?: Key | undefined) {
 		this.type = TL_Type.OR;
 		this.key = key;
 
@@ -79,5 +80,8 @@ export class TL_Or {
 	}
 }
 
-export type TL_Element = TL_Literal | TL_Loop | TL_Or;
-export type TreeLayout = TL_Element[];
+export type TL_Element<TokenType extends string, Token extends AbstractToken<TokenType>, Key extends string> =
+	| TL_Literal<TokenType, Token, Key>
+	| TL_Loop<TokenType, Token, Key>
+	| TL_Or<TokenType, Token, Key>;
+export type TreeLayout<TokenType extends string, Token extends AbstractToken<TokenType>, Key extends string> = TL_Element<TokenType, Token, Key>[];

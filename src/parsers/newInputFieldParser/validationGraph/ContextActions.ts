@@ -7,9 +7,9 @@ export interface ContextPopAction {
 	type: ContextActionType.POP;
 }
 
-export interface ContextPushAction {
+export interface ContextPushAction<Key extends string> {
 	type: ContextActionType.PUSH;
-	key: string;
+	key: Key;
 }
 
-export type ContextAction = ContextPopAction | ContextPushAction;
+export type ContextAction<Key extends string> = ContextPopAction | ContextPushAction<Key>;

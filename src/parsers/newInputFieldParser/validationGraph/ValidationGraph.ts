@@ -3,64 +3,138 @@ import { VG_Transition_Constraint } from './VG_Transition_Constraint';
 import { VG_Transition } from './VG_Transition';
 import { VG_Node } from './VG_Node';
 import { ContextActionType } from './ContextActions';
-import { Abstract_PT_Node, PT_Element, PT_Element_Type, PT_Literal } from '../ParsingTree';
+import { Abstract_PT_Node, PT_Closure, PT_Element, PT_Element_Type, PT_Literal } from '../ParsingTree';
 import { ComplexTreeLayout } from './treeLayout/ComplexTreeLayout';
 import { TL_Literal, TL_Loop, TL_LoopBound, TL_Or, TreeLayout } from './treeLayout/TreeLayout';
 import { createToken, InputFieldTokenType } from '../InputFieldTokenizer';
 import { ParsingError } from '../ParsingError';
-import { ErrorLevel } from '../../../utils/errors/MetaBindErrors';
+import { ErrorLevel, MetaBindParsingError } from '../../../utils/errors/MetaBindErrors';
 import { AbstractToken } from '../ParsingUtils';
 
-export interface ValidationState {
+export const EOF_TOKEN = '__EOF__';
+
+export interface ValidationState<TokenType extends string, Token extends AbstractToken<TokenType>, Key extends string> {
 	active: boolean;
 	currentInputIndex: number;
-	context: ValidationContext;
+	context: ValidationContext<TokenType, Token, Key>;
 	currentContextStack: (string | number)[];
-	failure: ValidationFailure | undefined;
+	failure: ValidationFailure<TokenType, Token> | undefined;
 	nodeStates: number[];
 }
 
-export type ValidationResult = { acceptedState: ValidationState; validationError: undefined } | { acceptedState: undefined; validationError: ParsingError };
+export type ValidationResult<TokenType extends string, Token extends AbstractToken<TokenType>, Key extends string> =
+	| { acceptedState: ValidationState<TokenType, Token, Key>; validationError: undefined }
+	| { acceptedState: undefined; validationError: ParsingError };
 
-export interface ValidationFailure {
-	ptElement: PT_Element | undefined;
+export interface ValidationFailure<TokenType extends string, Token extends AbstractToken<TokenType>> {
+	ptElement: PT_Element<TokenType, Token> | undefined;
 	loopCount: number;
-	violatedConstraints: ValidationConstraint[];
+	violatedConstraints: ValidationConstraint<TokenType, Token>[];
 }
 
-export interface ValidationConstraint {
-	transitionConstraint: VG_Transition_Constraint | undefined;
+export interface ValidationConstraint<TokenType extends string, Token extends AbstractToken<TokenType>> {
+	transitionConstraint: VG_Transition_Constraint<TokenType, Token> | undefined;
 	loopBound: TL_LoopBound;
 }
 
-export type ValidationContext = Record<string, ValidationContextEntry<PT_Element> | ValidationContext[]>;
+export type ValidationContext<TokenType extends string, Token extends AbstractToken<TokenType>, Key extends string> = Partial<
+	Record<Key, ValidationContextEntry<TokenType, Token, PT_Element<TokenType, Token>> | ValidationContext<TokenType, Token, Key>[]>
+>;
 
-export interface ValidationContextEntry<T extends PT_Element> {
-	element: T;
+export interface ValidationContextEntry<TokenType extends string, Token extends AbstractToken<TokenType>, Element extends PT_Element<TokenType, Token>> {
+	element: Element;
 	inputIndex: number;
 }
 
-export function hasContextEntry(context: ValidationContext, key: string): boolean {
+export function hasContextEntry<TokenType extends string, Token extends AbstractToken<TokenType>, Key extends string>(
+	context: ValidationContext<TokenType, Token, Key>,
+	key: Key
+): boolean {
 	return context[key] !== undefined && typeof context[key] === 'object' && !Array.isArray(context);
 }
 
-export function hasContextSubContext(context: ValidationContext, key: string): boolean {
+export function hasContextSubContext<TokenType extends string, Token extends AbstractToken<TokenType>, Key extends string>(
+	context: ValidationContext<TokenType, Token, Key>,
+	key: Key
+): boolean {
 	return context[key] !== undefined && typeof context[key] === 'object' && Array.isArray(context);
 }
 
-export function getEntryFromContext<T extends PT_Element>(context: ValidationContext, key: string): ValidationContextEntry<T> {
-	return context[key] as ValidationContextEntry<T>;
+export function getEntryFromContext<TokenType extends string, Token extends AbstractToken<TokenType>, Key extends string>(
+	context: ValidationContext<TokenType, Token, Key>,
+	key: Key
+): ValidationContextEntry<TokenType, Token, PT_Element<TokenType, Token>> {
+	const el = context[key];
+	if (el === undefined) {
+		throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not get key from context', 'key does not exist in context');
+	}
+	if (Array.isArray(el)) {
+		throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not get key from context', 'key points to a sub context');
+	}
+	return el;
 }
 
-export function getSubContextArrayFromContext(context: ValidationContext, key: string): ValidationContext[] {
-	return context[key] as ValidationContext[];
+export function getClosureFromContext<TokenType extends string, Token extends AbstractToken<TokenType>, Key extends string>(
+	context: ValidationContext<TokenType, Token, Key>,
+	key: Key
+): ValidationContextEntry<TokenType, Token, PT_Closure<TokenType, Token>> {
+	const el = context[key];
+	if (el === undefined) {
+		throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not get key from context', 'key does not exist in context');
+	}
+	if (Array.isArray(el)) {
+		throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not get key from context', 'key points to a sub context');
+	}
+	if (!(el.element instanceof PT_Closure<TokenType, Token>)) {
+		throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not get key from context', 'key does not point to a PT_Literal');
+	}
+	// ts somehow cant infer this, so the cast is needed
+	return el as ValidationContextEntry<TokenType, Token, PT_Closure<TokenType, Token>>;
 }
 
-export function cloneValidationContext(context: ValidationContext): ValidationContext {
-	const newContext: ValidationContext = {};
+export function getLiteralFromContext<TokenType extends string, Token extends AbstractToken<TokenType>, Key extends string>(
+	context: ValidationContext<TokenType, Token, Key>,
+	key: Key
+): ValidationContextEntry<TokenType, Token, PT_Literal<TokenType, Token>> {
+	const el = context[key];
+	if (el === undefined) {
+		throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not get key from context', 'key does not exist in context');
+	}
+	if (Array.isArray(el)) {
+		throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not get key from context', 'key points to a sub context');
+	}
+	if (!(el.element instanceof PT_Literal<TokenType, Token>)) {
+		throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not get key from context', 'key does not point to a PT_Literal');
+	}
+	// ts somehow cant infer this, so the cast is needed
+	return el as ValidationContextEntry<TokenType, Token, PT_Literal<TokenType, Token>>;
+}
+
+export function getSubContextArrayFromContext<TokenType extends string, Token extends AbstractToken<TokenType>, Key1 extends string, Key2 extends Key1>(
+	context: ValidationContext<TokenType, Token, Key1>,
+	key: Key2
+): ValidationContext<TokenType, Token, Key1>[] {
+	const el = context[key];
+	if (el === undefined) {
+		throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not get key from context', 'key does not exist in context');
+	}
+	if (!Array.isArray(el)) {
+		throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not get key from context', 'key points to a context entry');
+	}
+	return el;
+}
+
+export function cloneValidationContext<TokenType extends string, Token extends AbstractToken<TokenType>, Key extends string>(
+	context: ValidationContext<TokenType, Token, Key>
+): ValidationContext<TokenType, Token, Key> {
+	const newContext: ValidationContext<TokenType, Token, Key> = {};
 
 	for (const contextKey in context) {
 		const el = context[contextKey];
+
+		if (el === undefined) {
+			continue;
+		}
 
 		if (Array.isArray(el)) {
 			newContext[contextKey] = el.map(x => cloneValidationContext(x));
@@ -75,13 +149,13 @@ export function cloneValidationContext(context: ValidationContext): ValidationCo
 	return newContext;
 }
 
-export class ValidationGraph {
-	layout: TreeLayout;
-	nodes: VG_Node[];
-	state: ValidationState[];
+export class ValidationGraph<TokenType extends string, Token extends AbstractToken<TokenType>, Key extends string> {
+	layout: TreeLayout<TokenType, Token, Key>;
+	nodes: VG_Node<TokenType, Token, Key>[];
+	state: ValidationState<TokenType, Token, Key>[];
 	private nodeIndexCounter: number;
 
-	constructor(treeLayout: ComplexTreeLayout) {
+	constructor(treeLayout: ComplexTreeLayout<TokenType, Token, Key>) {
 		this.layout = treeLayout.map(x => x.toTL());
 		// console.log(this.layout);
 		this.nodes = [];
@@ -92,8 +166,11 @@ export class ValidationGraph {
 
 		this.parseTreeLayout(this.layout, this.nodes[0]);
 
-		const endNodeTransitionConstraint = new VG_Transition_Constraint(PT_Element_Type.LITERAL, InputFieldTokenType.EOF);
-		const endNode = new VG_Node(this.nodeIndexCounter, endNodeTransitionConstraint, true);
+		const endNodeTransitionConstraint: VG_Transition_Constraint<TokenType, Token> = new VG_Transition_Constraint(
+			PT_Element_Type.LITERAL,
+			EOF_TOKEN as TokenType
+		);
+		const endNode: VG_Node<TokenType, Token, Key> = new VG_Node(this.nodeIndexCounter, endNodeTransitionConstraint, true);
 		this.nodeIndexCounter += 1;
 		this.nodes[this.nodes.length - 1].createTransition(endNode.index, endNodeTransitionConstraint, undefined, undefined, undefined);
 		this.nodes.push(endNode);
@@ -101,16 +178,19 @@ export class ValidationGraph {
 		// this.nodes[this.nodes.length - 1].final = true;
 	}
 
-	private parseTreeLayout(treeLayout: TreeLayout, previousNode: VG_Node): { first: VG_Node; last: VG_Node } {
-		let firstNode: VG_Node | undefined;
-		let lastNode: VG_Node | undefined;
+	private parseTreeLayout(
+		treeLayout: TreeLayout<TokenType, Token, Key>,
+		previousNode: VG_Node<TokenType, Token, Key>
+	): { first: VG_Node<TokenType, Token, Key>; last: VG_Node<TokenType, Token, Key> } {
+		let firstNode: VG_Node<TokenType, Token, Key> | undefined;
+		let lastNode: VG_Node<TokenType, Token, Key> | undefined;
 
 		for (let i = 0; i < treeLayout.length; i++) {
 			const currentLayout = treeLayout[i];
 
 			if (currentLayout instanceof TL_Loop) {
 				// create an empty node before the loop
-				const emptyNodePre = new VG_Node(this.nodeIndexCounter, undefined);
+				const emptyNodePre: VG_Node<TokenType, Token, Key> = new VG_Node(this.nodeIndexCounter, undefined);
 				this.nodeIndexCounter += 1;
 				this.nodes.push(emptyNodePre);
 
@@ -126,7 +206,7 @@ export class ValidationGraph {
 				const res = this.parseTreeLayout(currentLayout.loop, emptyNodePre);
 
 				// create an empty node after the loop
-				const emptyNodePost = new VG_Node(this.nodeIndexCounter, undefined);
+				const emptyNodePost: VG_Node<TokenType, Token, Key> = new VG_Node(this.nodeIndexCounter, undefined);
 				this.nodeIndexCounter += 1;
 				this.nodes.push(emptyNodePost);
 
@@ -140,8 +220,6 @@ export class ValidationGraph {
 
 				// set the min loop bound for the last node this is for the exit transition
 				if (currentLayout.bound.min === 0) {
-					// TODO: why are we doing this?
-					// shouldn't loop bound 0 and -1 behave the same? (more or less)
 					res.last.loopBound.min = 1;
 
 					previousNode.createTransition(emptyNodePost.index, undefined, undefined, undefined, undefined);
@@ -173,7 +251,7 @@ export class ValidationGraph {
 				previousNode = emptyNodePost;
 			} else if (currentLayout instanceof TL_Or) {
 				// create an empty node in front of the split
-				const emptyNodePre = new VG_Node(this.nodeIndexCounter, undefined);
+				const emptyNodePre: VG_Node<TokenType, Token, Key> = new VG_Node(this.nodeIndexCounter, undefined);
 				this.nodeIndexCounter += 1;
 				this.nodes.push(emptyNodePre);
 
@@ -187,7 +265,7 @@ export class ValidationGraph {
 				}
 
 				// create an empty node after the split
-				const emptyNodePost = new VG_Node(this.nodeIndexCounter, undefined);
+				const emptyNodePost: VG_Node<TokenType, Token, Key> = new VG_Node(this.nodeIndexCounter, undefined);
 				this.nodeIndexCounter += 1;
 				this.nodes.push(emptyNodePost);
 
@@ -206,7 +284,7 @@ export class ValidationGraph {
 
 				previousNode = emptyNodePost;
 			} else if (currentLayout instanceof TL_Literal) {
-				const currentNode = new VG_Node(this.nodeIndexCounter, currentLayout.constraint);
+				const currentNode: VG_Node<TokenType, Token, Key> = new VG_Node(this.nodeIndexCounter, currentLayout.constraint);
 				this.nodeIndexCounter += 1;
 				this.nodes.push(currentNode);
 
@@ -229,7 +307,7 @@ export class ValidationGraph {
 		if (!firstNode || !lastNode) {
 			// if the tree layout was length 0, create an empty node
 			if (treeLayout.length === 0) {
-				const emptyNode = new VG_Node(this.nodeIndexCounter, undefined);
+				const emptyNode: VG_Node<TokenType, Token, Key> = new VG_Node(this.nodeIndexCounter, undefined);
 				this.nodeIndexCounter += 1;
 				this.nodes.push(emptyNode);
 
@@ -303,7 +381,7 @@ export class ValidationGraph {
 			}
 		}
 
-		const newNodes: VG_Node[] = [];
+		const newNodes: VG_Node<TokenType, Token, Key>[] = [];
 
 		// remove every node that has no incoming transitions
 		for (const node of this.nodes) {
@@ -322,8 +400,10 @@ export class ValidationGraph {
 		this.nodes = newNodes;
 	}
 
-	private getIncomingTransitions(node: VG_Node): { transition: VG_Transition; node: VG_Node }[] {
-		const transitions: { transition: VG_Transition; node: VG_Node }[] = [];
+	private getIncomingTransitions(
+		node: VG_Node<TokenType, Token, Key>
+	): { transition: VG_Transition<TokenType, Token, Key>; node: VG_Node<TokenType, Token, Key> }[] {
+		const transitions: { transition: VG_Transition<TokenType, Token, Key>; node: VG_Node<TokenType, Token, Key> }[] = [];
 
 		for (const otherNode of this.nodes) {
 			for (const transition of otherNode.transitions) {
@@ -339,16 +419,16 @@ export class ValidationGraph {
 		return transitions;
 	}
 
-	public getNode(index: number): VG_Node | undefined {
+	public getNode(index: number): VG_Node<TokenType, Token, Key> | undefined {
 		return this.nodes.find(x => x.index === index);
 	}
 
-	public validateParsingTree(astNode: Abstract_PT_Node): boolean {
+	public validateParsingTree(astNode: Abstract_PT_Node<TokenType, Token>): boolean {
 		const valRes = this.validateParsingTreeAndExtractContext(astNode);
 		return valRes.acceptedState !== undefined;
 	}
 
-	public validateParsingTreeAndExtractContext(ptNode: Abstract_PT_Node): ValidationResult {
+	public validateParsingTreeAndExtractContext(ptNode: Abstract_PT_Node<TokenType, Token>): ValidationResult<TokenType, Token, Key> {
 		this.state = [
 			{
 				active: true,
@@ -360,18 +440,18 @@ export class ValidationGraph {
 			},
 		];
 
-		let eofToken: AbstractToken<InputFieldTokenType> | undefined;
+		let eofToken: AbstractToken<typeof EOF_TOKEN> | undefined;
 
 		// TODO: make this +1 better
 		for (let ptIndex = 0; ptIndex < ptNode.children.length + 1; ptIndex++) {
-			let ptChild: PT_Element;
+			let ptChild: PT_Element<TokenType, Token>;
 
 			if (ptIndex === ptNode.children.length) {
 				const prevChild = ptNode.children[ptIndex - 1];
 				const eofTokenPos = prevChild !== undefined ? prevChild.getRange().to + 1 : ptNode.getRange().to;
-				eofToken = createToken(InputFieldTokenType.EOF, 'eof', eofTokenPos, eofTokenPos);
+				eofToken = createToken(EOF_TOKEN, 'eof', eofTokenPos, eofTokenPos);
 
-				ptChild = new PT_Literal(eofToken, '');
+				ptChild = new PT_Literal(eofToken as Token, '');
 			} else {
 				ptChild = ptNode.children[ptIndex];
 			}
@@ -400,8 +480,8 @@ export class ValidationGraph {
 
 			const pathsAtEndOfInput = this.state.filter(x => x.currentInputIndex === ptNode.children.length);
 
-			let violatedTransitions: VG_Transition[] = [];
-			let receivedToken: AbstractToken<InputFieldTokenType>;
+			let violatedTransitions: VG_Transition<TokenType, Token, Key>[] = [];
+			let receivedToken: AbstractToken<TokenType>;
 
 			if (pathsAtEndOfInput.length > 0) {
 				// case 1: the path has reached the final input, but not a final state
@@ -420,14 +500,14 @@ export class ValidationGraph {
 					throw new Error('This parser sucks');
 				}
 
-				receivedToken = eofToken;
+				receivedToken = eofToken as Token;
 			} else {
 				// case 2: the path has not reached the end of the input
 
 				// find the paths that got the furthest
 
 				let furthestInputIndex = 0;
-				let furthestPaths: ValidationState[] = [];
+				let furthestPaths: ValidationState<TokenType, Token, Key>[] = [];
 
 				for (const path of this.state) {
 					if (path.currentInputIndex === furthestInputIndex) {
@@ -478,8 +558,8 @@ export class ValidationGraph {
 		}
 	}
 
-	private validateParsingTreeChild(ptChild: PT_Element, ptIndex: number): void {
-		const newStates: ValidationState[] = [];
+	private validateParsingTreeChild(ptChild: PT_Element<TokenType, Token>, ptIndex: number): void {
+		const newStates: ValidationState<TokenType, Token, Key>[] = [];
 
 		for (const validationState of this.state) {
 			if (!validationState.active || validationState.currentInputIndex === ptIndex) {
@@ -501,7 +581,7 @@ export class ValidationGraph {
 				}
 			}
 
-			const violatedConstraints: ValidationConstraint[] = [];
+			const violatedConstraints: ValidationConstraint<TokenType, Token>[] = [];
 			let allTransitionsFailed = true;
 
 			for (const transition of node.transitions) {
@@ -554,14 +634,14 @@ export class ValidationGraph {
 	}
 
 	private updateContext(
-		validationState: ValidationState,
-		transition: VG_Transition,
-		contextEntry: ValidationContextEntry<PT_Element> | undefined
-	): { context: ValidationContext; contextStack: (string | number)[] } {
-		const newContext: ValidationContext = cloneValidationContext(validationState.context);
+		validationState: ValidationState<TokenType, Token, Key>,
+		transition: VG_Transition<TokenType, Token, Key>,
+		contextEntry: ValidationContextEntry<TokenType, Token, PT_Element<TokenType, Token>> | undefined
+	): { context: ValidationContext<TokenType, Token, Key>; contextStack: (string | number)[] } {
+		const newContext: ValidationContext<TokenType, Token, Key> = cloneValidationContext(validationState.context);
 		const newContextStack: (string | number)[] = [...validationState.currentContextStack];
 
-		let currentContext: ValidationContext = traverseObjectByPath(newContextStack as string[], newContext);
+		let currentContext: ValidationContext<TokenType, Token, Key> = traverseObjectByPath(newContextStack as string[], newContext);
 
 		// do the current key first
 		if (transition.key !== undefined && contextEntry !== undefined) {
@@ -576,11 +656,15 @@ export class ValidationGraph {
 				currentContext = traverseObjectByPath(newContextStack as string[], newContext);
 			} else {
 				if (currentContext[contextAction.key] === undefined) {
-					currentContext[contextAction.key] = [] as ValidationContext[];
+					currentContext[contextAction.key] = [] as ValidationContext<TokenType, Token, Key>[];
 				}
 
-				const subContextArray: ValidationContext[] = currentContext[contextAction.key] as ValidationContext[];
-				const newSubContext: ValidationContext = {};
+				const subContextArray: ValidationContext<TokenType, Token, Key>[] = currentContext[contextAction.key] as ValidationContext<
+					TokenType,
+					Token,
+					Key
+				>[];
+				const newSubContext: ValidationContext<TokenType, Token, Key> = {};
 
 				subContextArray.push(newSubContext);
 				newContextStack.push(contextAction.key);
@@ -595,7 +679,7 @@ export class ValidationGraph {
 		};
 	}
 
-	private hasUnfinishedStates(states: ValidationState[], astIndex: number): boolean {
+	private hasUnfinishedStates(states: ValidationState<TokenType, Token, Key>[], astIndex: number): boolean {
 		for (const state of states) {
 			if (state.active && state.currentInputIndex !== astIndex) {
 				return true;

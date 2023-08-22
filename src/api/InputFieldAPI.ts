@@ -1,8 +1,9 @@
 import { InputFieldArgumentType, InputFieldType } from '../parsers/InputFieldDeclarationParser';
-import { StructureParserResult, UnvalidatedInputFieldDeclaration } from '../parsers/newInputFieldParser/InputFieldParser';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
 import { API } from './API';
 import { useSyncExternalStore } from 'preact/compat';
+import { UnvalidatedInputFieldDeclaration } from '../parsers/newInputFieldParser/InputFieldDeclarationValidator';
+import { StructureParserResult } from '../parsers/newInputFieldParser/StructureParser';
 
 export class InputFieldAPI {
 	private readonly api: API;
