@@ -1,8 +1,10 @@
 import { Abstract_PT_Node, ParsingTree, PT_Closure, PT_Literal } from './ParsingTree';
 import {
 	getClosureFromContext,
+	getClosureOrUndefinedFromContext,
 	getEntryFromContext,
 	getLiteralFromContext,
+	getLiteralOrUndefinedFromContext,
 	getSubContextArrayFromContext,
 	hasContextEntry,
 	ValidationContext,
@@ -18,6 +20,16 @@ import { UnvalidatedInputFieldDeclaration } from './InputFieldDeclarationValidat
 import { ITemplateSupplier } from './ITemplateSupplier';
 import { InputFieldValidationGraphSupplier } from './validationGraph/InputFieldValidationGraphSupplier';
 import { getTrimmedStructureParserResult, StructureParserResult } from './StructureParser';
+import {
+	InputField_Abstract_PT_Node,
+	InputField_ParsingTree,
+	InputField_PT_Closure,
+	InputField_StructureParserResult,
+	InputField_ValidationContext,
+	InputField_ValidationContextClosureEntry,
+	InputField_ValidationContextLiteralEntry,
+	InputField_ValidationGraph,
+} from './InputFieldParserHelperTypes';
 
 export class InputFieldStructureParser {
 	templateSupplier: ITemplateSupplier<UnvalidatedInputFieldDeclaration>;
@@ -25,14 +37,14 @@ export class InputFieldStructureParser {
 
 	fullDeclaration: string;
 	tokens: InputFieldToken[];
-	parsingTree: ParsingTree<InputFieldTokenType, InputFieldToken>;
+	parsingTree: InputField_ParsingTree;
 
-	inputFieldType?: StructureParserResult<InputFieldTokenType, InputFieldToken>;
-	bindTargetFile?: StructureParserResult<InputFieldTokenType, InputFieldToken>;
-	bindTargetPath?: StructureParserResult<InputFieldTokenType, InputFieldToken>;
+	inputFieldType?: InputField_StructureParserResult;
+	bindTargetFile?: InputField_StructureParserResult;
+	bindTargetPath?: InputField_StructureParserResult;
 	arguments: {
-		name: StructureParserResult<InputFieldTokenType, InputFieldToken>;
-		value?: StructureParserResult<InputFieldTokenType, InputFieldToken>;
+		name: InputField_StructureParserResult;
+		value?: InputField_StructureParserResult;
 	}[];
 	errorCollection: ErrorCollection;
 
@@ -41,7 +53,7 @@ export class InputFieldStructureParser {
 		graphSupplier: InputFieldValidationGraphSupplier,
 		fullDeclaration: string,
 		tokens: InputFieldToken[],
-		parsingTree: ParsingTree<InputFieldTokenType, InputFieldToken>,
+		parsingTree: InputField_ParsingTree,
 		errorCollection: ErrorCollection
 	) {
 		this.templateSupplier = templateSupplier;
@@ -109,7 +121,7 @@ export class InputFieldStructureParser {
 		return this.buildDeclaration();
 	}
 
-	private parseTemplate(closure: PT_Closure<InputFieldTokenType, InputFieldToken>): void {
+	private parseTemplate(closure: InputField_PT_Closure): void {
 		const validationContext = this.validateNodeAndThrow(closure, this.graphSupplier.templateNameValidationGraph);
 
 		if (hasContextEntry(validationContext, 'templateName')) {
@@ -143,7 +155,7 @@ export class InputFieldStructureParser {
 		}
 	}
 
-	private parsePartialDeclaration(closure: PT_Closure<InputFieldTokenType, InputFieldToken>): void {
+	private parsePartialDeclaration(closure: InputField_PT_Closure): void {
 		const validationContext = this.validateNodeAndThrow(closure, this.graphSupplier.partialDeclarationValidationGraph);
 
 		if (hasContextEntry(validationContext, 'type')) {
@@ -159,7 +171,7 @@ export class InputFieldStructureParser {
 		}
 	}
 
-	private parseDeclaration(closure: PT_Closure<InputFieldTokenType, InputFieldToken>): void {
+	private parseDeclaration(closure: InputField_PT_Closure): void {
 		const validationContext = this.validateNodeAndThrow(closure, this.graphSupplier.declarationValidationGraph);
 
 		this.inputFieldType = this.parseInputFieldType(getLiteralFromContext(validationContext, 'type'));
@@ -183,9 +195,9 @@ export class InputFieldStructureParser {
 	 * @private
 	 */
 	private parseBindTarget(
-		closure: PT_Closure<InputFieldTokenType, InputFieldToken>,
-		validationContext: ValidationContext<InputFieldTokenType, InputFieldToken, string>,
-		bindTargetSeparatorContextEntry: ValidationContextEntry<InputFieldTokenType, InputFieldToken, PT_Literal<InputFieldTokenType, InputFieldToken>>
+		closure: InputField_PT_Closure,
+		validationContext: InputField_ValidationContext<string>,
+		bindTargetSeparatorContextEntry: InputField_ValidationContextLiteralEntry
 	): void {
 		const separatorIndex = bindTargetSeparatorContextEntry.inputIndex;
 		if (closure.children[separatorIndex] === undefined) {
@@ -193,8 +205,11 @@ export class InputFieldStructureParser {
 			return;
 		}
 
-		const bindTargetContextEntry = getLiteralFromContext(validationContext, 'bindTarget');
-		const bindTargetFileContextEntry = getLiteralFromContext(validationContext, 'bindTargetFile');
+		const bindTargetContextEntry: InputField_ValidationContextLiteralEntry = getLiteralFromContext(validationContext, 'bindTarget');
+		const bindTargetFileContextEntry: InputField_ValidationContextLiteralEntry | undefined = getLiteralOrUndefinedFromContext(
+			validationContext,
+			'bindTargetFile'
+		);
 
 		// parsing the bind target with this parser sucks
 		let bindTargetLiteral = '';
@@ -209,7 +224,7 @@ export class InputFieldStructureParser {
 		};
 	}
 
-	private parseArguments(contextEntry: ValidationContextEntry<InputFieldTokenType, InputFieldToken, PT_Closure<InputFieldTokenType, InputFieldToken>>): void {
+	private parseArguments(contextEntry: InputField_ValidationContextClosureEntry): void {
 		const closure = contextEntry.element;
 		if (closure.children.length === 0) {
 			return;
@@ -220,23 +235,17 @@ export class InputFieldStructureParser {
 		const subContextArray = getSubContextArrayFromContext(validationContext, 'arguments');
 
 		for (const x of subContextArray) {
-			const typeContextEntry: ValidationContextEntry<
-				InputFieldTokenType,
-				InputFieldToken,
-				PT_Literal<InputFieldTokenType, InputFieldToken>
-			> = getLiteralFromContext(x, 'name');
-			const valueContextEntry:
-				| ValidationContextEntry<InputFieldTokenType, InputFieldToken, PT_Closure<InputFieldTokenType, InputFieldToken>>
-				| undefined = getClosureFromContext(x, 'value');
+			const typeContextEntry: InputField_ValidationContextLiteralEntry = getLiteralFromContext(x, 'name');
+			const valueContextEntry: InputField_ValidationContextClosureEntry | undefined = getClosureOrUndefinedFromContext(x, 'value');
 
 			this.arguments.push(this.parseArgument(typeContextEntry, valueContextEntry));
 		}
 	}
 
 	private parseArgument(
-		nameContextEntry: ValidationContextEntry<InputFieldTokenType, InputFieldToken, PT_Literal<InputFieldTokenType, InputFieldToken>>,
-		valueContextEntry: ValidationContextEntry<InputFieldTokenType, InputFieldToken, PT_Closure<InputFieldTokenType, InputFieldToken>> | undefined
-	): { name: StructureParserResult<InputFieldTokenType, InputFieldToken>; value?: StructureParserResult<InputFieldTokenType, InputFieldToken> } {
+		nameContextEntry: InputField_ValidationContextLiteralEntry,
+		valueContextEntry: InputField_ValidationContextClosureEntry | undefined
+	): { name: InputField_StructureParserResult; value?: InputField_StructureParserResult } {
 		if (valueContextEntry?.element) {
 			let valueString = '';
 			for (const child of valueContextEntry.element.children) {
@@ -258,9 +267,9 @@ export class InputFieldStructureParser {
 	}
 
 	private validateNodeAndThrow<Key extends string>(
-		astNode: Abstract_PT_Node<InputFieldTokenType, InputFieldToken>,
-		validationGraph: ValidationGraph<InputFieldTokenType, InputFieldToken, Key>
-	): ValidationContext<InputFieldTokenType, InputFieldToken, Key> {
+		astNode: InputField_Abstract_PT_Node,
+		validationGraph: InputField_ValidationGraph<Key>
+	): InputField_ValidationContext<Key> {
 		const valRes = validationGraph.validateParsingTreeAndExtractContext(astNode);
 
 		if (valRes.acceptedState === undefined) {
@@ -270,9 +279,7 @@ export class InputFieldStructureParser {
 		return valRes.acceptedState.context;
 	}
 
-	private parseInputFieldType(
-		contextEntry: ValidationContextEntry<InputFieldTokenType, InputFieldToken, PT_Literal<InputFieldTokenType, InputFieldToken>>
-	): StructureParserResult<InputFieldTokenType, InputFieldToken> {
+	private parseInputFieldType(contextEntry: InputField_ValidationContextLiteralEntry): InputField_StructureParserResult {
 		return getTrimmedStructureParserResult(contextEntry);
 	}
 }
