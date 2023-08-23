@@ -1,18 +1,21 @@
 import { AbstractToken, Closure } from './ParsingUtils';
+import { EOF_TOKEN } from './validationGraph/ValidationGraph';
 
-export enum InputFieldTokenType {
-	EOF = 'EOF',
-	WORD = 'WORD',
-	L_PAREN = '(',
-	R_PAREN = ')',
-	L_SQUARE = '[',
-	R_SQUARE = ']',
-	COLON = ':',
-	HASHTAG = '#',
-	DOT = '.',
-	COMMA = ',',
-	QUOTE = "'",
-}
+export const InputFieldTokenType = {
+	EOF: EOF_TOKEN,
+	WORD: 'WORD',
+	L_PAREN: '(',
+	R_PAREN: ')',
+	L_SQUARE: '[',
+	R_SQUARE: ']',
+	COLON: ':',
+	HASHTAG: '#',
+	DOT: '.',
+	COMMA: ',',
+	QUOTE: "'",
+} as const;
+
+export type InputFieldTokenType = typeof InputFieldTokenType[keyof typeof InputFieldTokenType];
 
 export const InputFieldClosures: Closure<InputFieldTokenType>[] = [
 	{

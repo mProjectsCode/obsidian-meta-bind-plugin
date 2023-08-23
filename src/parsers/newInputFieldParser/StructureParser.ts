@@ -13,6 +13,9 @@ export function getTrimmedStructureParserResult<TokenType extends string, Token 
 export function getTrimmedStructureParserResult(validationContextEntry: undefined): undefined;
 export function getTrimmedStructureParserResult<TokenType extends string, Token extends AbstractToken<TokenType>, Element extends PT_Element<TokenType, Token>>(
 	validationContextEntry: ValidationContextEntry<TokenType, Token, Element> | undefined
+): StructureParserResult<TokenType, Token> | undefined;
+export function getTrimmedStructureParserResult<TokenType extends string, Token extends AbstractToken<TokenType>, Element extends PT_Element<TokenType, Token>>(
+	validationContextEntry: ValidationContextEntry<TokenType, Token, Element> | undefined
 ): StructureParserResult<TokenType, Token> | undefined {
 	if (!validationContextEntry) {
 		return undefined;

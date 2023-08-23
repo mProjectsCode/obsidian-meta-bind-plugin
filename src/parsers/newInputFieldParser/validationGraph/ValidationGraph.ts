@@ -11,7 +11,7 @@ import { ParsingError } from '../ParsingError';
 import { ErrorLevel, MetaBindParsingError } from '../../../utils/errors/MetaBindErrors';
 import { AbstractToken } from '../ParsingUtils';
 
-export const EOF_TOKEN = '__EOF__';
+export const EOF_TOKEN = '__EOF__' as const;
 
 export interface ValidationState<TokenType extends string, Token extends AbstractToken<TokenType>, Key extends string> {
 	active: boolean;
@@ -99,6 +99,42 @@ export function getLiteralFromContext<TokenType extends string, Token extends Ab
 	const el = context[key];
 	if (el === undefined) {
 		throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not get key from context', 'key does not exist in context');
+	}
+	if (Array.isArray(el)) {
+		throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not get key from context', 'key points to a sub context');
+	}
+	if (!(el.element instanceof PT_Literal<TokenType, Token>)) {
+		throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not get key from context', 'key does not point to a PT_Literal');
+	}
+	// ts somehow cant infer this, so the cast is needed
+	return el as ValidationContextEntry<TokenType, Token, PT_Literal<TokenType, Token>>;
+}
+
+export function getClosureOrUndefinedFromContext<TokenType extends string, Token extends AbstractToken<TokenType>, Key extends string>(
+	context: ValidationContext<TokenType, Token, Key>,
+	key: Key
+): ValidationContextEntry<TokenType, Token, PT_Closure<TokenType, Token>> | undefined {
+	const el = context[key];
+	if (el === undefined) {
+		return undefined;
+	}
+	if (Array.isArray(el)) {
+		throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not get key from context', 'key points to a sub context');
+	}
+	if (!(el.element instanceof PT_Closure<TokenType, Token>)) {
+		throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not get key from context', 'key does not point to a PT_Literal');
+	}
+	// ts somehow cant infer this, so the cast is needed
+	return el as ValidationContextEntry<TokenType, Token, PT_Closure<TokenType, Token>>;
+}
+
+export function getLiteralOrUndefinedFromContext<TokenType extends string, Token extends AbstractToken<TokenType>, Key extends string>(
+	context: ValidationContext<TokenType, Token, Key>,
+	key: Key
+): ValidationContextEntry<TokenType, Token, PT_Literal<TokenType, Token>> | undefined {
+	const el = context[key];
+	if (el === undefined) {
+		return undefined;
 	}
 	if (Array.isArray(el)) {
 		throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not get key from context', 'key points to a sub context');

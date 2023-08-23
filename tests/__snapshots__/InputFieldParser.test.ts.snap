@@ -204,7 +204,7 @@ ParsingTree {
         "from": 52,
         "to": 52,
       },
-      "type": "EOF",
+      "type": "__EOF__",
     },
   ],
   "type": "ROOT",
@@ -309,7 +309,7 @@ ParsingTree {
         "from": 44,
         "to": 44,
       },
-      "type": "EOF",
+      "type": "__EOF__",
     },
   ],
   "type": "ROOT",
@@ -520,7 +520,7 @@ ParsingTree {
         "from": 28,
         "to": 28,
       },
-      "type": "EOF",
+      "type": "__EOF__",
     },
   ],
   "type": "ROOT",
@@ -606,7 +606,7 @@ exports[`tokenizer tests tokenize all simple tokens 1`] = `
       "from": 8,
       "to": 8,
     },
-    "type": "EOF",
+    "type": "__EOF__",
   },
 ]
 `;
@@ -691,7 +691,7 @@ exports[`tokenizer tests tokenize complex quotes 1`] = `
       "from": 61,
       "to": 61,
     },
-    "type": "EOF",
+    "type": "__EOF__",
   },
 ]
 `;
@@ -736,7 +736,7 @@ exports[`tokenizer tests tokenize simple mix of tokens and words 1`] = `
       "from": 44,
       "to": 44,
     },
-    "type": "EOF",
+    "type": "__EOF__",
   },
 ]
 `;
@@ -757,7 +757,7 @@ exports[`tokenizer tests tokenize simple quotes 1`] = `
       "from": 46,
       "to": 46,
     },
-    "type": "EOF",
+    "type": "__EOF__",
   },
 ]
 `;
@@ -778,7 +778,7 @@ exports[`tokenizer tests tokenize simple word 1`] = `
       "from": 11,
       "to": 11,
     },
-    "type": "EOF",
+    "type": "__EOF__",
   },
 ]
 `;
