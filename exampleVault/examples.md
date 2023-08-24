@@ -1,5 +1,5 @@
 ---
-slider1: 5
+slider1: 6
 suggest: test
 toggle1: false
 Domestic_tasks:
@@ -69,8 +69,9 @@ Lorem ipsum dolor sit amet, `INPUT[date():other note#date]` consectetur adipisci
 - `INPUT[text():meta bind/nonExistantFile#title]`
 - `INPUT[slider(nonExistantArgument)]`
 - `INPUT[slider]`
-
 - `INPUT[inlineSelect(option(option a),option(option b),option(option c),option(option d):select]`
+- `INPUT[inlineSelect(option(option a),option(option b),option(option c),option(option d)):select#]`
+- `INPUT[inlineSelect(option(option a),option(option b),option(option c),option(option d)):select#:]`
 
 
 Lorem ipsum dolor sit amet, `INPUT[text():meta bind/nonExistantFile#title]` consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. `INPUT[slider(nonExistantArgument)]` Curabitur sed rhoncus nisl. Maecenas nisi justo, viverra vel tempus vel, hendrerit at metus. `INPUT[select(option(option a),option(option b),option(option c),option(option d)):select]` asdasd asdasdasd

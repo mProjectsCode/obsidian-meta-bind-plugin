@@ -1,6 +1,5 @@
 import { TL_Element, TL_Literal, TL_Loop, TL_LoopBound, TL_Or } from './TreeLayout';
 import { PT_Element_Type } from '../../ParsingTree';
-import { InputFieldTokenType } from '../../InputFieldTokenizer';
 import { AbstractToken } from '../../ParsingUtils';
 
 export abstract class Abstract_TL_C<TokenType extends string, Token extends AbstractToken<TokenType>, Key extends string> {
@@ -32,7 +31,7 @@ export class TL_C_Loop<TokenType extends string, Token extends AbstractToken<Tok
 	readonly min: number;
 	readonly max: number;
 
-	constructor(loop: ComplexTreeLayout<TokenType, Token, Key>, min: number, max: number, key?: Key | undefined) {
+	constructor(loop: ComplexTreeLayout<TokenType, Token, Key>, min: number = -1, max: number = -1, key?: Key | undefined) {
 		super(key);
 
 		this.loop = loop;
@@ -77,7 +76,7 @@ export class TL_C_Enumeration<TokenType extends string, Token extends AbstractTo
 				),
 			],
 			[
-				new TL_Loop([...this.loop.map(x => x.toTL()), ...this.separator.map(x => x.toTL())], new TL_LoopBound(-1, -1), this.key),
+				new TL_Loop([...this.loop.map(x => x.toTL()), ...this.separator.map(x => x.toTL())], new TL_LoopBound(1, -1), this.key),
 				new TL_Loop(
 					this.loop.map(x => x.toTL()),
 					new TL_LoopBound(1, 1),

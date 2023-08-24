@@ -6,12 +6,9 @@ import { ContextActionType } from './ContextActions';
 import { Abstract_PT_Node, PT_Closure, PT_Element, PT_Element_Type, PT_Literal } from '../ParsingTree';
 import { ComplexTreeLayout } from './treeLayout/ComplexTreeLayout';
 import { TL_Literal, TL_Loop, TL_LoopBound, TL_Or, TreeLayout } from './treeLayout/TreeLayout';
-import { createToken, InputFieldTokenType } from '../InputFieldTokenizer';
 import { ParsingError } from '../ParsingError';
 import { ErrorLevel, MetaBindParsingError } from '../../../utils/errors/MetaBindErrors';
-import { AbstractToken } from '../ParsingUtils';
-
-export const EOF_TOKEN = '__EOF__' as const;
+import { AbstractToken, createToken, EOF_TOKEN } from '../ParsingUtils';
 
 export interface ValidationState<TokenType extends string, Token extends AbstractToken<TokenType>, Key extends string> {
 	active: boolean;
@@ -255,7 +252,7 @@ export class ValidationGraph<TokenType extends string, Token extends AbstractTok
 				}
 
 				// set the min loop bound for the last node this is for the exit transition
-				if (currentLayout.bound.min === 0) {
+				if (currentLayout.bound.min === 0 || currentLayout.bound.min === -1) {
 					res.last.loopBound.min = 1;
 
 					previousNode.createTransition(emptyNodePost.index, undefined, undefined, undefined, undefined);
@@ -576,7 +573,7 @@ export class ValidationGraph<TokenType extends string, Token extends AbstractTok
 					ErrorLevel.ERROR,
 					'failed to parse',
 					`Encountered invalid token. Received '${receivedToken.literal}' expected token to be one of: ${violatedTransitions
-						.map(x => `'${x.constraint?.toString()}'`)
+						.map(x => `[${x.constraint?.toString()}]`)
 						.join(', ')}`,
 					{},
 					ptNode.str,

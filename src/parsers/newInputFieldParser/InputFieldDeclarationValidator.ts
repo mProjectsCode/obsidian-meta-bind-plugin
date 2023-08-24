@@ -1,12 +1,12 @@
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { InputFieldArgumentType, InputFieldDeclaration, InputFieldType } from '../InputFieldDeclarationParser';
-import { ParsingError } from './ParsingError';
+import { ParsingError } from '../generalParser/ParsingError';
 import { ErrorLevel, MetaBindParsingError, MetaBindValidationError } from '../../utils/errors/MetaBindErrors';
 import { InputFieldArgumentContainer } from '../../inputFieldArguments/InputFieldArgumentContainer';
 import { AbstractInputFieldArgument } from '../../inputFieldArguments/AbstractInputFieldArgument';
 import { InputFieldArgumentFactory } from '../../inputFieldArguments/InputFieldArgumentFactory';
 import { InputFieldToken, InputFieldTokenType } from './InputFieldTokenizer';
-import { StructureParserResult } from './StructureParser';
+import { StructureParserResult } from '../generalParser/StructureParser';
 
 export type InputFieldStructureParserResult = StructureParserResult<InputFieldTokenType, InputFieldToken>;
 
