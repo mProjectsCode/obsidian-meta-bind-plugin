@@ -1,4 +1,3 @@
-import { InputFieldTokenType } from '../../InputFieldTokenizer';
 import { VG_Transition_Constraint } from '../VG_Transition_Constraint';
 import { PT_Element_Type } from '../../ParsingTree';
 import { AbstractToken } from '../../ParsingUtils';

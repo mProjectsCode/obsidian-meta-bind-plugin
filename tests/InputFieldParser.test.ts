@@ -1,13 +1,12 @@
 import { InputFieldParsingTreeParser } from '../src/parsers/newInputFieldParser/InputFieldParsingTreeParser';
 import { InputFieldToken, InputFieldTokenizer, InputFieldTokenType } from '../src/parsers/newInputFieldParser/InputFieldTokenizer';
-import { ValidationGraph } from '../src/parsers/newInputFieldParser/validationGraph/ValidationGraph';
-import { ParsingTree, PT_Element_Type } from '../src/parsers/newInputFieldParser/ParsingTree';
-import { TL_C_Literal, TL_C_Or } from '../src/parsers/newInputFieldParser/validationGraph/treeLayout/ComplexTreeLayout';
-import { UnvalidatedInputFieldDeclaration } from '../src/parsers/newInputFieldParser/InputFieldDeclarationValidator';
 import { InputFieldStructureParser } from '../src/parsers/newInputFieldParser/InputFieldStructureParser';
 import { ErrorCollection } from '../src/utils/errors/ErrorCollection';
-import { InputFieldValidationGraphSupplier } from '../src/parsers/newInputFieldParser/validationGraph/InputFieldValidationGraphSupplier';
 import { EmptyTemplateSupplier } from '../src/parsers/newInputFieldParser/ITemplateSupplier';
+import { ParsingTree, PT_Element_Type } from '../src/parsers/generalParser/ParsingTree';
+import { TL_C_Literal, TL_C_Or } from '../src/parsers/generalParser/validationGraph/treeLayout/ComplexTreeLayout';
+import { ValidationGraph } from '../src/parsers/generalParser/validationGraph/ValidationGraph';
+import { InputFieldValidationGraphSupplier } from '../src/parsers/newInputFieldParser/InputFieldValidationGraphSupplier';
 
 describe('tokenizer tests', function () {
 	test('tokenize all simple tokens', () => {

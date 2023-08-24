@@ -1,9 +1,7 @@
 import { ParsingError } from './ParsingError';
 import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
 import { ParsingTree, PT_Closure, PT_Element, PT_Element_Type, PT_Literal } from './ParsingTree';
-import { AbstractToken, Closure } from './ParsingUtils';
-import { InputFieldClosures, InputFieldToken, InputFieldTokenType } from './InputFieldTokenizer';
-import { EOF_TOKEN } from './validationGraph/ValidationGraph';
+import { AbstractToken, Closure, EOF_TOKEN } from './ParsingUtils';
 
 export class ParsingTreeParser<TokenType extends string, Token extends AbstractToken<TokenType>> {
 	private readonly tokens: Token[];
@@ -66,7 +64,7 @@ export class ParsingTreeParser<TokenType extends string, Token extends AbstractT
 		// skip the opening token
 		this.position += 1;
 
-		while (this.getCurrentToken().type !== InputFieldTokenType.EOF) {
+		while (this.getCurrentToken().type !== EOF_TOKEN) {
 			const nestedRes = this.parseCurrentToken();
 
 			if (nestedRes.type === PT_Element_Type.LITERAL && (nestedRes as PT_Literal<TokenType, Token>).token.type === closure.closingTokenType) {
@@ -104,7 +102,7 @@ export class ParsingTreeParser<TokenType extends string, Token extends AbstractT
 		// check for closure closing tokens that do not actually close a closure
 		const currentClosure = this.closureStack.length > 0 ? this.closureStack[this.closureStack.length - 1] : undefined;
 
-		for (const closure of InputFieldClosures) {
+		for (const closure of this.closures) {
 			// if the closure is the current token
 			if (
 				currentClosure !== undefined &&

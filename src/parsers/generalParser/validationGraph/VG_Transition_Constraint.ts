@@ -1,4 +1,3 @@
-import { InputFieldTokenType } from '../InputFieldTokenizer';
 import { PT_Element, PT_Element_Type } from '../ParsingTree';
 import { AbstractToken } from '../ParsingUtils';
 
@@ -39,15 +38,15 @@ export class VG_Transition_Constraint<TokenType extends string, Token extends Ab
 
 	public toString(): string {
 		if (this.tokenType !== undefined && this.literalContent !== undefined) {
-			return `${this.astType}, ${this.tokenType}, ${this.literalContent}`;
+			return `${this.astType}, "${this.tokenType}", "${this.literalContent}"`;
 		}
 
 		if (this.tokenType !== undefined) {
-			return `${this.astType}, ${this.tokenType}`;
+			return `${this.astType}, "${this.tokenType}"`;
 		}
 
 		if (this.literalContent !== undefined) {
-			return `${this.astType}, ${this.literalContent}`;
+			return `${this.astType}, "${this.literalContent}"`;
 		}
 
 		return this.astType;

@@ -1,7 +1,14 @@
-import { ValidationGraph } from './ValidationGraph';
-import { ComplexTreeLayout, TL_C_Enumeration, TL_C_Literal, TL_C_Loop, TL_C_Optional, TL_C_Or } from './treeLayout/ComplexTreeLayout';
-import { PT_Element_Type } from '../ParsingTree';
-import { InputFieldToken, InputFieldTokenType } from '../InputFieldTokenizer';
+import { ValidationGraph } from '../generalParser/validationGraph/ValidationGraph';
+import { InputFieldToken, InputFieldTokenType } from './InputFieldTokenizer';
+import {
+	ComplexTreeLayout,
+	TL_C_Enumeration,
+	TL_C_Literal,
+	TL_C_Loop,
+	TL_C_Optional,
+	TL_C_Or,
+} from '../generalParser/validationGraph/treeLayout/ComplexTreeLayout';
+import { PT_Element_Type } from '../generalParser/ParsingTree';
 
 type FullDeclarationKeys = 'template' | 'declaration';
 type TemplateFullDeclarationKeys = 'declaration';
@@ -41,16 +48,12 @@ export class InputFieldValidationGraphSupplier {
 				new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.HASHTAG), // hashtag
 			] as ComplexTreeLayout<InputFieldTokenType, InputFieldToken, BindTargetKeys>), // optional file and hashtag
 			new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD, undefined, 'bindTarget'), // first bind target metadata path part
-			new TL_C_Loop(
-				[
-					new TL_C_Or([
-						[new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD)],
-						[new TL_C_Literal(PT_Element_Type.CLOSURE, InputFieldTokenType.L_SQUARE)],
-					] as ComplexTreeLayout<InputFieldTokenType, InputFieldToken, BindTargetKeys>[]), // either literal or closure or none, in a loop
-				] as ComplexTreeLayout<InputFieldTokenType, InputFieldToken, BindTargetKeys>,
-				0,
-				-1
-			), // the other bind target metadata path part
+			new TL_C_Loop([
+				new TL_C_Or([
+					[new TL_C_Literal(PT_Element_Type.LITERAL, InputFieldTokenType.WORD)],
+					[new TL_C_Literal(PT_Element_Type.CLOSURE, InputFieldTokenType.L_SQUARE)],
+				] as ComplexTreeLayout<InputFieldTokenType, InputFieldToken, BindTargetKeys>[]), // either literal or closure or none, in a loop
+			] as ComplexTreeLayout<InputFieldTokenType, InputFieldToken, BindTargetKeys>), // the other bind target metadata path part
 		];
 
 		// FULL DECLARATION

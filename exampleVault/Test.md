@@ -49,4 +49,9 @@ await dv.paragraph(`${filter}${backticks}${codeblock}${backticks}`);
 
 
 ```meta-bind-parser-test
+declarationValidationGraph
+```
+
+```meta-bind-parser-test
+argumentsValidationGraph
 ```

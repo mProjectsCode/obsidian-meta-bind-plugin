@@ -1,9 +1,7 @@
 import { InputFieldArgumentType, InputFieldType } from '../parsers/InputFieldDeclarationParser';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
 import { API } from './API';
-import { useSyncExternalStore } from 'preact/compat';
-import { UnvalidatedInputFieldDeclaration } from '../parsers/newInputFieldParser/InputFieldDeclarationValidator';
-import { StructureParserResult } from '../parsers/newInputFieldParser/StructureParser';
+import { InputFieldStructureParserResult, UnvalidatedInputFieldDeclaration } from '../parsers/newInputFieldParser/InputFieldDeclarationValidator';
 
 export class InputFieldAPI {
 	private readonly api: API;
@@ -107,7 +105,7 @@ export class InputFieldAPI {
 					arr.push(currentValue);
 				}
 				return arr;
-			}, [] as { name: StructureParserResult; value?: StructureParserResult | undefined }[]),
+			}, [] as { name: InputFieldStructureParserResult; value?: InputFieldStructureParserResult | undefined }[]),
 			errorCollection: unvalidatedDeclaration.errorCollection.merge(override.errorCollection),
 		};
 	}

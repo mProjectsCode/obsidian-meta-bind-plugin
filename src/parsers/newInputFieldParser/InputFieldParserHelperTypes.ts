@@ -1,7 +1,7 @@
-import { Abstract_PT_Node, ParsingTree, PT_Closure, PT_Literal } from './ParsingTree';
+import { Abstract_PT_Node, ParsingTree, PT_Closure, PT_Literal } from '../generalParser/ParsingTree';
 import { InputFieldToken, InputFieldTokenType } from './InputFieldTokenizer';
-import { ValidationContext, ValidationContextEntry, ValidationGraph } from './validationGraph/ValidationGraph';
-import { StructureParserResult } from './StructureParser';
+import { ValidationContext, ValidationContextEntry, ValidationGraph } from '../generalParser/validationGraph/ValidationGraph';
+import { StructureParserResult } from '../generalParser/StructureParser';
 
 export type InputField_PT_Literal = PT_Literal<InputFieldTokenType, InputFieldToken>;
 export type InputField_PT_Closure = PT_Closure<InputFieldTokenType, InputFieldToken>;

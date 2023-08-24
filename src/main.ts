@@ -90,7 +90,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		});
 
 		this.registerMarkdownCodeBlockProcessor('meta-bind-parser-test', (source, el, ctx) => {
-			ctx.addChild(new ParserTestMDRC(el, RenderChildType.BLOCK, this, ctx.sourcePath, self.crypto.randomUUID(), {}));
+			ctx.addChild(new ParserTestMDRC(el, RenderChildType.BLOCK, source, this, ctx.sourcePath, self.crypto.randomUUID(), {}));
 		});
 
 		// this.registerMarkdownCodeBlockProcessor('meta-bind-js', (source, el, ctx) => {

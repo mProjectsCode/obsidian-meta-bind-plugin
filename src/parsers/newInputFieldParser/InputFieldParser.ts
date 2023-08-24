@@ -9,7 +9,7 @@ import { deepFreeze } from '../../utils/Utils';
 import { InputFieldStructureParser } from './InputFieldStructureParser';
 import { InputFieldDeclarationValidator, UnvalidatedInputFieldDeclaration } from './InputFieldDeclarationValidator';
 import { ITemplateSupplier, TemplateSupplierTemplate } from './ITemplateSupplier';
-import { InputFieldValidationGraphSupplier } from './validationGraph/InputFieldValidationGraphSupplier';
+import { InputFieldValidationGraphSupplier } from './InputFieldValidationGraphSupplier';
 
 export type InputFieldDeclarationTemplate = TemplateSupplierTemplate<UnvalidatedInputFieldDeclaration>;
 

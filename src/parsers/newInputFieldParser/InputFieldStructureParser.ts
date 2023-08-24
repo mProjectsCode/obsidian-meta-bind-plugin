@@ -1,4 +1,3 @@
-import { Abstract_PT_Node, ParsingTree, PT_Closure, PT_Literal } from './ParsingTree';
 import {
 	getClosureFromContext,
 	getClosureOrUndefinedFromContext,
@@ -10,16 +9,16 @@ import {
 	ValidationContext,
 	ValidationContextEntry,
 	ValidationGraph,
-} from './validationGraph/ValidationGraph';
-import { InputFieldToken, InputFieldTokenType } from './InputFieldTokenizer';
+} from '../generalParser/validationGraph/ValidationGraph';
+import { InputFieldToken } from './InputFieldTokenizer';
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { InputFieldType } from '../InputFieldDeclarationParser';
-import { ParsingError } from './ParsingError';
+import { ParsingError } from '../generalParser/ParsingError';
 import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
 import { UnvalidatedInputFieldDeclaration } from './InputFieldDeclarationValidator';
 import { ITemplateSupplier } from './ITemplateSupplier';
-import { InputFieldValidationGraphSupplier } from './validationGraph/InputFieldValidationGraphSupplier';
-import { getTrimmedStructureParserResult, StructureParserResult } from './StructureParser';
+import { InputFieldValidationGraphSupplier } from './InputFieldValidationGraphSupplier';
+import { getTrimmedStructureParserResult } from '../generalParser/StructureParser';
 import {
 	InputField_Abstract_PT_Node,
 	InputField_ParsingTree,

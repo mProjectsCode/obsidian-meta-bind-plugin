@@ -1,7 +1,6 @@
 import { ParsingError } from './ParsingError';
 import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
 import { AbstractToken, Range } from './ParsingUtils';
-import { InputFieldTokenType } from './InputFieldTokenizer';
 
 export enum PT_Element_Type {
 	LITERAL = 'LITERAL',
@@ -35,7 +34,7 @@ export abstract class Abstract_PT_Node<TokenType extends string, Token extends A
 		this.children = children;
 	}
 
-	getChild(index: number, expected?: InputFieldTokenType | undefined): PT_Element<TokenType, Token> {
+	getChild(index: number, expected?: TokenType | undefined): PT_Element<TokenType, Token> {
 		const el = this.children[index];
 		if (!el) {
 			throw new Error('This parser sucks');
