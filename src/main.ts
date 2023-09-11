@@ -7,12 +7,10 @@ import { MetadataManager } from './metadata/MetadataManager';
 import { API } from './api/API';
 import { setFirstWeekday } from './inputFields/fields/DatePicker/DatePickerInputSvelteHelpers';
 import './frontmatterDisplay/custom_overlay';
-import { Mode } from 'codemirror';
 import { createMarkdownRenderChildWidgetEditorPlugin } from './cm6/Cm6_ViewPlugin';
 import { MDRCManager } from './MDRCManager';
 import { DEFAULT_SETTINGS, InputFieldTemplate, MetaBindPluginSettings } from './settings/Settings';
 import { IPlugin } from './IPlugin';
-import { ParserTestMDRC } from './renderChildren/ParserTestMDRC';
 import { EnclosingPair, ParserUtils } from './utils/ParserUtils';
 import { ErrorLevel, MetaBindParsingError } from './utils/errors/MetaBindErrors';
 
@@ -87,10 +85,6 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		this.registerMarkdownCodeBlockProcessor('meta-bind-js-view', (source, el, ctx) => {
 			const inputField = this.api.createJsViewFieldFromString(source, RenderChildType.BLOCK, ctx.sourcePath, el, ctx);
 			ctx.addChild(inputField);
-		});
-
-		this.registerMarkdownCodeBlockProcessor('meta-bind-parser-test', (source, el, ctx) => {
-			ctx.addChild(new ParserTestMDRC(el, RenderChildType.BLOCK, source, this, ctx.sourcePath, self.crypto.randomUUID(), {}));
 		});
 
 		// this.registerMarkdownCodeBlockProcessor('meta-bind-js', (source, el, ctx) => {

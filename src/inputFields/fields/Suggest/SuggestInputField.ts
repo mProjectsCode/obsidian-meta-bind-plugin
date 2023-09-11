@@ -84,7 +84,9 @@ export class SuggestInputField extends AbstractInputField<T> {
 		this.options = [];
 
 		const optionArguments: OptionInputFieldArgument[] = this.renderChild.getArguments(InputFieldArgumentType.OPTION) as OptionInputFieldArgument[];
-		const optionQueryArguments: OptionQueryInputFieldArgument[] = this.renderChild.getArguments(InputFieldArgumentType.OPTION_QUERY);
+		const optionQueryArguments: OptionQueryInputFieldArgument[] = this.renderChild.getArguments(
+			InputFieldArgumentType.OPTION_QUERY
+		) as OptionQueryInputFieldArgument[];
 
 		for (const suggestOptionsArgument of optionArguments) {
 			this.options.push({ value: suggestOptionsArgument.value, displayValue: suggestOptionsArgument.name });

@@ -9,8 +9,9 @@ import { NewInputFieldDeclarationParser } from '../parsers/newInputFieldParser/I
 import { Component, MarkdownPostProcessorContext } from 'obsidian';
 import { InputFieldAPI } from './InputFieldAPI';
 import { UnvalidatedInputFieldDeclaration } from '../parsers/newInputFieldParser/InputFieldDeclarationValidator';
+import { IAPI } from './IAPI';
 
-export class API {
+export class API implements IAPI {
 	public plugin: MetaBindPlugin;
 	// public inputFieldParser: InputFieldDeclarationParser;
 	public newInputFieldParser: NewInputFieldDeclarationParser;
@@ -24,7 +25,7 @@ export class API {
 
 		// this.inputFieldParser = new InputFieldDeclarationParser();
 		this.newInputFieldParser = new NewInputFieldDeclarationParser(this.plugin);
-		this.viewFieldParser = new ViewFieldDeclarationParser();
+		this.viewFieldParser = new ViewFieldDeclarationParser(this.plugin);
 		this.bindTargetParser = new BindTargetParser(this.plugin);
 
 		this.inputField = new InputFieldAPI(this);

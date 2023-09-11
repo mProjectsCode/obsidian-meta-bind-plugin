@@ -5,7 +5,6 @@ import { MinValueInputFieldArgument } from './arguments/MinValueInputFieldArgume
 import { MaxValueInputFieldArgument } from './arguments/MaxValueInputFieldArgument';
 import { OptionInputFieldArgument } from './arguments/OptionInputFieldArgument';
 import { TitleInputFieldArgument } from './arguments/TitleInputFieldArgument';
-import { AlignRightInputFieldArgument } from './arguments/AlignRightInputFieldArgument';
 import { OptionQueryInputFieldArgument } from './arguments/OptionQueryInputFieldArgument';
 import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
 import { AbstractInputFieldArgument } from './AbstractInputFieldArgument';
@@ -28,8 +27,6 @@ export class InputFieldArgumentFactory {
 			return new OptionInputFieldArgument();
 		} else if (argumentIdentifier === InputFieldArgumentType.TITLE) {
 			return new TitleInputFieldArgument();
-		} else if (argumentIdentifier === InputFieldArgumentType.ALIGN_RIGHT) {
-			return new AlignRightInputFieldArgument();
 		} else if (argumentIdentifier === InputFieldArgumentType.OPTION_QUERY) {
 			return new OptionQueryInputFieldArgument();
 		} else if (argumentIdentifier === InputFieldArgumentType.SHOWCASE) {

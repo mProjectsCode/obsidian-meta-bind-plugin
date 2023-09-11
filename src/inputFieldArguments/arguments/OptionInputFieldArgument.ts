@@ -2,6 +2,7 @@ import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
 import { InputFieldArgumentType, InputFieldType } from '../../parsers/InputFieldDeclarationParser';
 import { ErrorLevel, MetaBindArgumentError } from '../../utils/errors/MetaBindErrors';
 import { MBLiteral, parseLiteral } from '../../utils/Utils';
+import { ParsingResultNode } from '../../parsers/newInputFieldParser/InputFieldDeclarationValidator';
 
 export class OptionInputFieldArgument extends AbstractInputFieldArgument {
 	identifier: InputFieldArgumentType = InputFieldArgumentType.OPTION;
@@ -14,24 +15,17 @@ export class OptionInputFieldArgument extends AbstractInputFieldArgument {
 	];
 	value: MBLiteral = '';
 	name: string = '';
-	requiresValue: boolean = true;
+	valueLengthMin: number = 1;
+	valueLengthMax: number = 2;
 	allowMultiple: boolean = true;
 
-	parseValue(valueStr: string): void {
-		const valueParts: string[] = valueStr.split(',').map(x => x.trim());
-
-		if (valueParts.length === 1) {
-			this.value = parseLiteral(valueParts[0]);
-			this.name = valueParts[0];
-		} else if (valueParts.length === 2) {
-			this.value = parseLiteral(valueParts[0]);
-			this.name = valueParts[1];
-		} else {
-			throw new MetaBindArgumentError(
-				ErrorLevel.WARNING,
-				'failed to parse option argument value',
-				'expected there to be either one or two comma seperated values'
-			);
+	_parseValue(value: ParsingResultNode[]): void {
+		if (value.length === 1) {
+			this.value = parseLiteral(value[0].value);
+			this.name = value[0].value;
+		} else if (value.length === 2) {
+			this.value = parseLiteral(value[0].value);
+			this.name = value[1].value;
 		}
 	}
 }

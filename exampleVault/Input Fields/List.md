@@ -7,6 +7,6 @@ list:
 
 
 ```meta-bind
-INPUT[list:list]
+INPUT[list(showcase):list]
 ```
 
