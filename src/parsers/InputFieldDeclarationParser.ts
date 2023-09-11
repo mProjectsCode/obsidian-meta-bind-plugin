@@ -1,5 +1,6 @@
 import { InputFieldArgumentContainer } from '../inputFieldArguments/InputFieldArgumentContainer';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
+import { BindTargetDeclaration } from './BindTargetParser';
 
 export enum InputFieldType {
 	TOGGLE = 'toggle',
@@ -29,7 +30,6 @@ export enum InputFieldArgumentType {
 	MAX_VALUE = 'maxValue',
 	OPTION = 'option',
 	TITLE = 'title',
-	ALIGN_RIGHT = 'alignRight',
 	OPTION_QUERY = 'optionQuery',
 	SHOWCASE = 'showcase',
 	ON_VALUE = 'onValue',
@@ -63,7 +63,7 @@ export interface InputFieldDeclaration {
 	 * e.g.
 	 * `bind_target` or `file#bind.target`
 	 */
-	readonly bindTarget: string;
+	readonly bindTarget?: BindTargetDeclaration;
 	/**
 	 * A collection of the input field arguments.
 	 */

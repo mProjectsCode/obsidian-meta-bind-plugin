@@ -17,7 +17,6 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 	expression?: any;
 	viewFieldDeclaration: JsViewFieldDeclaration;
 	variables: ViewFieldVariable[];
-	private metadataManagerReadSignalListener: Listener<any> | undefined;
 
 	constructor(
 		containerEl: HTMLElement,
@@ -41,7 +40,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 			try {
 				for (const bindTarget of this.viewFieldDeclaration.bindTargets ?? []) {
 					this.variables.push({
-						bindTargetDeclaration: this.plugin.api.bindTargetParser.parseBindTarget(bindTarget.bindTarget, this.filePath),
+						bindTargetDeclaration: this.plugin.api.bindTargetParser.parseAndValidateBindTarget(bindTarget.bindTarget),
 						writeSignal: new Signal<any>(undefined),
 						uuid: self.crypto.randomUUID(),
 						metadataCache: undefined,
@@ -108,7 +107,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 			});
 
 			variable.metadataCache = this.plugin.metadataManager.register(
-				variable.bindTargetDeclaration.filePath,
+				variable.bindTargetDeclaration.filePath ?? this.filePath,
 				this.frontmatter,
 				variable.writeSignal,
 				variable.bindTargetDeclaration.metadataPath,
@@ -122,7 +121,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 			if (variable.writeSignalListener) {
 				variable.writeSignal.unregisterListener(variable.writeSignalListener);
 			}
-			this.plugin.metadataManager.unregister(variable.bindTargetDeclaration.filePath, this.uuid + '/' + variable.uuid);
+			this.plugin.metadataManager.unregister(variable.bindTargetDeclaration.filePath ?? this.filePath, this.uuid + '/' + variable.uuid);
 		}
 	}
 

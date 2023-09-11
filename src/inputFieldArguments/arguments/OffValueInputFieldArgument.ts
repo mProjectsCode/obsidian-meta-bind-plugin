@@ -1,15 +1,17 @@
 import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
 import { InputFieldArgumentType, InputFieldType } from '../../parsers/InputFieldDeclarationParser';
 import { MBLiteral, parseLiteral } from '../../utils/Utils';
+import { ParsingResultNode } from '../../parsers/newInputFieldParser/InputFieldDeclarationValidator';
 
 export class OffValueInputFieldArgument extends AbstractInputFieldArgument {
 	identifier: InputFieldArgumentType = InputFieldArgumentType.OFF_VALUE;
 	allowedInputFields: InputFieldType[] = [InputFieldType.TOGGLE];
 	value: MBLiteral = false;
-	requiresValue: boolean = true;
+	valueLengthMin: number = 1;
+	valueLengthMax: number = 1;
 	allowMultiple: boolean = false;
 
-	parseValue(valueStr: string): void {
-		this.value = parseLiteral(valueStr);
+	_parseValue(value: ParsingResultNode[]): void {
+		this.value = parseLiteral(value[0].value);
 	}
 }

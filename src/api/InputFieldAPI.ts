@@ -1,7 +1,11 @@
 import { InputFieldArgumentType, InputFieldType } from '../parsers/InputFieldDeclarationParser';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
 import { API } from './API';
-import { InputFieldStructureParserResult, UnvalidatedInputFieldDeclaration } from '../parsers/newInputFieldParser/InputFieldDeclarationValidator';
+import {
+	UnvalidatedBindTargetDeclaration,
+	UnvalidatedInputFieldArgument,
+	UnvalidatedInputFieldDeclaration,
+} from '../parsers/newInputFieldParser/InputFieldDeclarationValidator';
 
 export class InputFieldAPI {
 	private readonly api: API;
@@ -12,20 +16,19 @@ export class InputFieldAPI {
 
 	public createInputFieldDeclaration(
 		inputFieldType?: InputFieldType,
-		inputFieldArguments?: { name: InputFieldArgumentType; value?: string }[]
+		inputFieldArguments?: { name: InputFieldArgumentType; value: string[] }[]
 	): UnvalidatedInputFieldDeclaration {
 		const errorCollection = new ErrorCollection('input field declaration');
 
-		const mappedArguments = (inputFieldArguments ?? []).map(x => ({
-			name: { result: x.name },
-			value: x.value !== undefined ? { result: x.value } : undefined,
+		const mappedArguments: UnvalidatedInputFieldArgument[] = (inputFieldArguments ?? []).map(x => ({
+			name: { value: x.name },
+			value: x.value.map(y => ({ value: y })),
 		}));
 
 		return {
 			fullDeclaration: '',
-			inputFieldType: inputFieldType ? { result: inputFieldType } : undefined,
-			bindTargetFile: undefined,
-			bindTargetPath: undefined,
+			inputFieldType: inputFieldType ? { value: inputFieldType } : undefined,
+			bindTarget: undefined,
 			arguments: mappedArguments,
 			errorCollection: errorCollection,
 		} as UnvalidatedInputFieldDeclaration;
@@ -36,18 +39,18 @@ export class InputFieldAPI {
 	}
 
 	public setType(unvalidatedDeclaration: UnvalidatedInputFieldDeclaration, inputFieldType: InputFieldType): UnvalidatedInputFieldDeclaration {
-		unvalidatedDeclaration.inputFieldType = { result: inputFieldType };
+		unvalidatedDeclaration.inputFieldType = { value: inputFieldType };
 
 		return unvalidatedDeclaration;
 	}
 
 	public setArguments(
 		unvalidatedDeclaration: UnvalidatedInputFieldDeclaration,
-		inputFieldArguments: { name: InputFieldArgumentType; value?: string | undefined }[]
+		inputFieldArguments: { name: InputFieldArgumentType; value: string[] }[]
 	): UnvalidatedInputFieldDeclaration {
 		unvalidatedDeclaration.arguments = inputFieldArguments.map(x => ({
-			name: { result: x.name },
-			value: x.value !== undefined ? { result: x.value } : undefined,
+			name: { value: x.name },
+			value: x.value.map(y => ({ value: y })),
 		}));
 
 		return unvalidatedDeclaration;
@@ -55,19 +58,19 @@ export class InputFieldAPI {
 
 	public addArgument(
 		unvalidatedDeclaration: UnvalidatedInputFieldDeclaration,
-		inputFieldArguments: { name: InputFieldArgumentType; value?: string | undefined }[] | { name: InputFieldArgumentType; value?: string | undefined }
+		inputFieldArguments: { name: InputFieldArgumentType; value: string[] }[] | { name: InputFieldArgumentType; value: string[] }
 	): UnvalidatedInputFieldDeclaration {
 		if (Array.isArray(inputFieldArguments)) {
 			unvalidatedDeclaration.arguments = unvalidatedDeclaration.arguments.concat(
 				inputFieldArguments.map(x => ({
-					name: { result: x.name },
-					value: x.value !== undefined ? { result: x.value } : undefined,
+					name: { value: x.name },
+					value: x.value.map(y => ({ value: y })),
 				}))
 			);
 		} else {
 			unvalidatedDeclaration.arguments.push({
-				name: { result: inputFieldArguments.name },
-				value: inputFieldArguments.value !== undefined ? { result: inputFieldArguments.value } : undefined,
+				name: { value: inputFieldArguments.name },
+				value: inputFieldArguments.value.map(y => ({ value: y })),
 			});
 		}
 
@@ -75,16 +78,24 @@ export class InputFieldAPI {
 	}
 
 	public setBindTargetFile(unvalidatedDeclaration: UnvalidatedInputFieldDeclaration, bindTargetFile: string): UnvalidatedInputFieldDeclaration {
-		unvalidatedDeclaration.bindTargetFile = { result: bindTargetFile };
+		if (unvalidatedDeclaration.bindTarget) {
+			unvalidatedDeclaration.bindTarget.file = { value: bindTargetFile };
+		} else {
+			unvalidatedDeclaration.bindTarget = { file: { value: bindTargetFile }, path: [] };
+		}
 
 		return unvalidatedDeclaration;
 	}
 
 	public setBindTargetMetadataField(
 		unvalidatedDeclaration: UnvalidatedInputFieldDeclaration,
-		bindTargetMetadataField: string
+		bindTargetMetadataField: string[]
 	): UnvalidatedInputFieldDeclaration {
-		unvalidatedDeclaration.bindTargetPath = { result: bindTargetMetadataField };
+		if (unvalidatedDeclaration.bindTarget) {
+			unvalidatedDeclaration.bindTarget.path = bindTargetMetadataField.map(x => ({ value: x }));
+		} else {
+			unvalidatedDeclaration.bindTarget = { file: undefined, path: bindTargetMetadataField.map(x => ({ value: x })) };
+		}
 
 		return unvalidatedDeclaration;
 	}
@@ -94,18 +105,31 @@ export class InputFieldAPI {
 	}
 
 	public merge(unvalidatedDeclaration: UnvalidatedInputFieldDeclaration, override: UnvalidatedInputFieldDeclaration): UnvalidatedInputFieldDeclaration {
+		let bindTarget = {} as UnvalidatedBindTargetDeclaration | undefined;
+
+		if (unvalidatedDeclaration.bindTarget === undefined) {
+			bindTarget = override.bindTarget;
+		} else {
+			bindTarget = unvalidatedDeclaration.bindTarget;
+			if (override.bindTarget?.file !== undefined) {
+				bindTarget.file = override.bindTarget.file;
+			}
+			if (override.bindTarget?.path !== undefined) {
+				bindTarget.path = override.bindTarget.path;
+			}
+		}
+
 		return {
 			fullDeclaration: '',
 			inputFieldType: override.inputFieldType !== undefined ? override.inputFieldType : unvalidatedDeclaration.inputFieldType,
-			bindTargetFile: override.bindTargetFile !== undefined ? override.bindTargetFile : unvalidatedDeclaration.bindTargetFile,
-			bindTargetPath: override.bindTargetPath !== undefined ? override.bindTargetPath : unvalidatedDeclaration.bindTargetPath,
-			arguments: override.arguments.concat(unvalidatedDeclaration.arguments).reduce((arr, currentValue) => {
+			bindTarget: bindTarget,
+			arguments: override.arguments.concat(unvalidatedDeclaration.arguments).reduce<UnvalidatedInputFieldArgument[]>((arr, currentValue) => {
 				// filter out duplicates
 				if (arr.find(x => x.name === currentValue.name) === undefined) {
 					arr.push(currentValue);
 				}
 				return arr;
-			}, [] as { name: InputFieldStructureParserResult; value?: InputFieldStructureParserResult | undefined }[]),
+			}, []),
 			errorCollection: unvalidatedDeclaration.errorCollection.merge(override.errorCollection),
 		};
 	}

@@ -1,6 +1,11 @@
 import { EnclosingPair, ParserUtils } from '../utils/ParserUtils';
 import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
+import { UnvalidatedBindTargetDeclaration } from './newInputFieldParser/InputFieldDeclarationValidator';
+import { BindTargetDeclaration } from './BindTargetParser';
+import { VIEW_FIELD_FULL_DECLARATION } from './nomParsers/Parsers';
+import { IPlugin } from '../IPlugin';
+import { e } from 'mathjs';
 
 export enum ViewFieldType {
 	MATH = 'math',
@@ -17,17 +22,9 @@ export interface ViewFieldDeclaration {
 	 */
 	fullDeclaration?: string;
 	/**
-	 * Trimmed declaration of the view field including without the "VIEW[]".
-	 * e.g.
-	 * {x} * 2
+	 * Declaration array.
 	 */
-	declaration?: string;
-	/**
-	 * The bind targets, so all variables used in the view field.
-	 * e.g.
-	 * x
-	 */
-	bindTargets?: string[];
+	declaration?: (string | BindTargetDeclaration)[];
 
 	errorCollection: ErrorCollection;
 }
@@ -45,32 +42,26 @@ export interface JsViewFieldDeclaration {
 }
 
 export class ViewFieldDeclarationParser {
-	roundBracesPair: EnclosingPair = new EnclosingPair('(', ')');
-	squareBracesPair: EnclosingPair = new EnclosingPair('[', ']');
-	curlyBracesPair: EnclosingPair = new EnclosingPair('{', '}');
-	allBracesPairs: EnclosingPair[] = [this.roundBracesPair, this.squareBracesPair, this.curlyBracesPair];
+	plugin: IPlugin;
+
+	constructor(plugin: IPlugin) {
+		this.plugin = plugin;
+	}
 
 	parseString(fullDeclaration: string): ViewFieldDeclaration {
 		const declaration: ViewFieldDeclaration = {} as ViewFieldDeclaration;
+		declaration.fullDeclaration = fullDeclaration;
 		declaration.errorCollection = new ErrorCollection('ViewFieldDeclaration');
 
 		try {
-			// declaration
-			declaration.fullDeclaration = fullDeclaration;
-			const temp = ParserUtils.getInBetween(fullDeclaration, this.squareBracesPair);
-			if (Array.isArray(temp)) {
-				throw new MetaBindParsingError(ErrorLevel.CRITICAL, 'invalid view field declaration', 'expected exactly one square braces pair');
-			} else {
-				declaration.declaration = temp;
-			}
-
-			// variables
-			const variables = ParserUtils.getInBetween(declaration.declaration, this.curlyBracesPair);
-			if (Array.isArray(variables)) {
-				declaration.bindTargets = variables;
-			} else {
-				declaration.bindTargets = [variables];
-			}
+			const parserResult = VIEW_FIELD_FULL_DECLARATION.parse(fullDeclaration) as (string | UnvalidatedBindTargetDeclaration)[];
+			declaration.declaration = parserResult.map(x => {
+				if (typeof x === 'string') {
+					return x;
+				} else {
+					return this.plugin.api.bindTargetParser.validateBindTarget(x);
+				}
+			});
 		} catch (e) {
 			declaration.errorCollection.add(e);
 		}

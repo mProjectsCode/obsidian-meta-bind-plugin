@@ -2,39 +2,32 @@ import { InputFieldDeclaration, InputFieldType } from '../InputFieldDeclarationP
 import { InputFieldArgumentContainer } from '../../inputFieldArguments/InputFieldArgumentContainer';
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { IPlugin } from '../../IPlugin';
-import { InputFieldParsingTreeParser } from './InputFieldParsingTreeParser';
-import { InputFieldTokenizer } from './InputFieldTokenizer';
 import { InputFieldTemplate } from '../../settings/Settings';
 import { deepFreeze } from '../../utils/Utils';
-import { InputFieldStructureParser } from './InputFieldStructureParser';
 import { InputFieldDeclarationValidator, UnvalidatedInputFieldDeclaration } from './InputFieldDeclarationValidator';
 import { ITemplateSupplier, TemplateSupplierTemplate } from './ITemplateSupplier';
-import { InputFieldValidationGraphSupplier } from './InputFieldValidationGraphSupplier';
+import { INPUT_FIELD_FULL_DECLARATION, TEMPLATE_INPUT_FIELD_FULL_DECLARATION } from '../nomParsers/Parsers';
 
 export type InputFieldDeclarationTemplate = TemplateSupplierTemplate<UnvalidatedInputFieldDeclaration>;
 
 export class NewInputFieldDeclarationParser implements ITemplateSupplier<UnvalidatedInputFieldDeclaration> {
 	plugin: IPlugin;
 	templates: InputFieldDeclarationTemplate[];
-	graphSupplier: InputFieldValidationGraphSupplier;
 
 	constructor(plugin: IPlugin) {
 		this.plugin = plugin;
 		this.templates = [];
-		this.graphSupplier = new InputFieldValidationGraphSupplier();
 	}
 
 	public parseString(fullDeclaration: string): InputFieldDeclaration {
 		const errorCollection = new ErrorCollection('InputFieldParser');
 
 		try {
-			const tokenizer = new InputFieldTokenizer(fullDeclaration);
-			const tokens = tokenizer.getTokens();
-			const parsingTreeParser = new InputFieldParsingTreeParser(fullDeclaration, tokens);
-			const parsingTree = parsingTreeParser.parse();
-			const structureParser = new InputFieldStructureParser(this, this.graphSupplier, fullDeclaration, tokens, parsingTree, errorCollection);
-			const unvalidatedDeclaration = structureParser.parse();
-			const declarationValidator = new InputFieldDeclarationValidator(unvalidatedDeclaration);
+			const parserResult = INPUT_FIELD_FULL_DECLARATION.parse(fullDeclaration) as UnvalidatedInputFieldDeclaration;
+			parserResult.fullDeclaration = fullDeclaration;
+			parserResult.errorCollection = errorCollection;
+
+			const declarationValidator = new InputFieldDeclarationValidator(this.plugin, parserResult);
 
 			return declarationValidator.validate();
 		} catch (e) {
@@ -45,7 +38,7 @@ export class NewInputFieldDeclarationParser implements ITemplateSupplier<Unvalid
 			fullDeclaration: fullDeclaration,
 			inputFieldType: InputFieldType.INVALID,
 			isBound: false,
-			bindTarget: '',
+			bindTarget: undefined,
 			argumentContainer: new InputFieldArgumentContainer(),
 			errorCollection: errorCollection,
 		};
@@ -55,29 +48,26 @@ export class NewInputFieldDeclarationParser implements ITemplateSupplier<Unvalid
 		const errorCollection = new ErrorCollection('InputFieldParser');
 
 		try {
-			const tokenizer = new InputFieldTokenizer(fullDeclaration);
-			const tokens = tokenizer.getTokens();
-			const parsingTreeParser = new InputFieldParsingTreeParser(fullDeclaration, tokens);
-			const parsingTree = parsingTreeParser.parse();
-			const structureParser = new InputFieldStructureParser(this, this.graphSupplier, fullDeclaration, tokens, parsingTree, errorCollection);
+			const parserResult = INPUT_FIELD_FULL_DECLARATION.parse(fullDeclaration) as UnvalidatedInputFieldDeclaration;
+			parserResult.fullDeclaration = fullDeclaration;
+			parserResult.errorCollection = errorCollection;
 
-			return structureParser.parse();
+			return parserResult;
 		} catch (e) {
 			errorCollection.add(e);
 		}
 
 		return {
 			fullDeclaration: fullDeclaration,
-			inputFieldType: { result: InputFieldType.INVALID },
-			bindTargetFile: undefined,
-			bindTargetPath: undefined,
+			inputFieldType: { value: InputFieldType.INVALID },
+			bindTarget: undefined,
 			arguments: [],
 			errorCollection: errorCollection,
 		};
 	}
 
 	public validateDeclaration(unvalidatedDeclaration: UnvalidatedInputFieldDeclaration): InputFieldDeclaration {
-		const declarationValidator = new InputFieldDeclarationValidator(unvalidatedDeclaration);
+		const declarationValidator = new InputFieldDeclarationValidator(this.plugin, unvalidatedDeclaration);
 
 		return declarationValidator.validate();
 	}
@@ -86,22 +76,19 @@ export class NewInputFieldDeclarationParser implements ITemplateSupplier<Unvalid
 		const errorCollection = new ErrorCollection('InputFieldParser');
 
 		try {
-			const tokenizer = new InputFieldTokenizer(template);
-			const tokens = tokenizer.getTokens();
-			const parsingTreeParser = new InputFieldParsingTreeParser(template, tokens);
-			const parsingTree = parsingTreeParser.parse();
-			const structureParser = new InputFieldStructureParser(this, this.graphSupplier, template, tokens, parsingTree, errorCollection);
+			const parserResult = TEMPLATE_INPUT_FIELD_FULL_DECLARATION.parse(template) as UnvalidatedInputFieldDeclaration;
+			parserResult.fullDeclaration = template;
+			parserResult.errorCollection = errorCollection;
 
-			return structureParser.parseAsTemplate();
+			return parserResult;
 		} catch (e) {
 			errorCollection.add(e);
 		}
 
 		return {
 			fullDeclaration: template,
-			inputFieldType: { result: InputFieldType.INVALID },
-			bindTargetFile: undefined,
-			bindTargetPath: undefined,
+			inputFieldType: { value: InputFieldType.INVALID },
+			bindTarget: undefined,
 			arguments: [],
 			errorCollection: errorCollection,
 		};

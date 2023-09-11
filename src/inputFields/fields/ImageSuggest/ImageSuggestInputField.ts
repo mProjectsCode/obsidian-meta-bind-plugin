@@ -70,7 +70,9 @@ export class ImageSuggestInputField extends AbstractInputField<T> {
 	}
 
 	async getOptions(): Promise<void> {
-		const folderPaths: OptionQueryInputFieldArgument[] = this.renderChild.getArguments(InputFieldArgumentType.OPTION_QUERY);
+		const folderPaths: OptionQueryInputFieldArgument[] = this.renderChild.getArguments(
+			InputFieldArgumentType.OPTION_QUERY
+		) as OptionQueryInputFieldArgument[];
 		const images: string[] = [];
 
 		for (const folderPath of folderPaths) {

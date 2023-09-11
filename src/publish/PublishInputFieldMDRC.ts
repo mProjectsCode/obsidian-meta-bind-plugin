@@ -11,7 +11,6 @@ export class PublishInputFieldMDRC extends MarkdownRenderChild {
 	api: PublishAPI;
 
 	declaration: InputFieldDeclaration;
-	bindTargetDeclaration?: BindTargetDeclaration;
 	filePath: string;
 	metadata: any | undefined;
 	uuid: string;
@@ -32,34 +31,23 @@ export class PublishInputFieldMDRC extends MarkdownRenderChild {
 		this.errorCollection = new ErrorCollection(`input field ${uuid}`);
 		this.errorCollection.merge(declaration.errorCollection);
 
-		if (!this.errorCollection.hasErrors()) {
-			try {
-				if (this.declaration.isBound) {
-					// TODO: fix bind target if file is pointing to it's own file name (not path and not empty)
-					this.bindTargetDeclaration = this.api.bindTargetParser.parseBindTarget(this.declaration.bindTarget, this.filePath);
-				}
-			} catch (e: any) {
-				this.errorCollection.add(e);
-			}
-		}
-
 		this.load();
 	}
 
 	getValue(): any {
-		if (!this.bindTargetDeclaration) {
+		if (!this.declaration.bindTarget) {
 			this.errorCollection.add(new MetaBindBindTargetError(ErrorLevel.WARNING, 'populated with default data', 'input field not bound'));
 			return getPublishDefaultValue(this.declaration);
 		}
 
-		if (this.bindTargetDeclaration.filePath !== this.filePath) {
+		if (this.declaration.bindTarget.filePath !== this.filePath) {
 			this.errorCollection.add(
 				new MetaBindBindTargetError(ErrorLevel.WARNING, 'populated with default data', 'can not load metadata of another file in obsidian publish')
 			);
 			return getPublishDefaultValue(this.declaration);
 		}
 
-		const value = traverseObjectByPath(this.bindTargetDeclaration.metadataPath, this.metadata);
+		const value = traverseObjectByPath(this.declaration.bindTarget.metadataPath, this.metadata);
 
 		if (!value) {
 			this.errorCollection.add(new MetaBindBindTargetError(ErrorLevel.WARNING, 'populated with default data', 'value in metadata is undefined'));

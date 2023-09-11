@@ -1,33 +1,62 @@
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { InputFieldArgumentType, InputFieldDeclaration, InputFieldType } from '../InputFieldDeclarationParser';
-import { ParsingError } from '../generalParser/ParsingError';
-import { ErrorLevel, MetaBindParsingError, MetaBindValidationError } from '../../utils/errors/MetaBindErrors';
+import { ParsingValidationError } from '../ParsingError';
+import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
 import { InputFieldArgumentContainer } from '../../inputFieldArguments/InputFieldArgumentContainer';
 import { AbstractInputFieldArgument } from '../../inputFieldArguments/AbstractInputFieldArgument';
 import { InputFieldArgumentFactory } from '../../inputFieldArguments/InputFieldArgumentFactory';
-import { InputFieldToken, InputFieldTokenType } from './InputFieldTokenizer';
-import { StructureParserResult } from '../generalParser/StructureParser';
+import { ParsingMarker, ParsingPosition } from '@lemons_dev/parsinom/lib/HelperTypes';
+import { IPlugin } from '../../IPlugin';
+import { BindTargetDeclaration } from '../BindTargetParser';
 
-export type InputFieldStructureParserResult = StructureParserResult<InputFieldTokenType, InputFieldToken>;
+export interface ParsingRange {
+	start: ParsingPosition;
+	end: ParsingPosition;
+}
 
-export interface UnvalidatedInputFieldDeclaration {
+export interface ParsingResultNode {
+	value: string;
+	position?: ParsingRange;
+}
+
+export function markerToResultNode(marker: ParsingMarker<string>): ParsingResultNode {
+	return {
+		value: marker.value,
+		position: {
+			start: marker.start,
+			end: marker.end,
+		},
+	};
+}
+
+export interface UnvalidatedBindTargetDeclaration {
+	file?: ParsingResultNode;
+	path: ParsingResultNode[];
+}
+
+export interface UnvalidatedInputFieldArgument {
+	name: ParsingResultNode;
+	value: ParsingResultNode[];
+}
+
+export interface PartialUnvalidatedInputFieldDeclaration {
+	inputFieldType?: ParsingResultNode;
+	bindTarget?: UnvalidatedBindTargetDeclaration;
+	arguments: UnvalidatedInputFieldArgument[];
+}
+
+export interface UnvalidatedInputFieldDeclaration extends PartialUnvalidatedInputFieldDeclaration {
 	fullDeclaration: string;
-	inputFieldType?: InputFieldStructureParserResult;
-	bindTargetFile?: InputFieldStructureParserResult;
-	bindTargetPath?: InputFieldStructureParserResult;
-	arguments: {
-		name: InputFieldStructureParserResult;
-		value?: InputFieldStructureParserResult;
-	}[];
-
 	errorCollection: ErrorCollection;
 }
 
 export class InputFieldDeclarationValidator {
 	unvalidatedDeclaration: UnvalidatedInputFieldDeclaration;
 	errorCollection: ErrorCollection;
+	plugin: IPlugin;
 
-	constructor(unvalidatedDeclaration: UnvalidatedInputFieldDeclaration) {
+	constructor(plugin: IPlugin, unvalidatedDeclaration: UnvalidatedInputFieldDeclaration) {
+		this.plugin = plugin;
 		this.unvalidatedDeclaration = unvalidatedDeclaration;
 
 		this.errorCollection = new ErrorCollection('input field declaration');
@@ -36,17 +65,13 @@ export class InputFieldDeclarationValidator {
 	public validate(): InputFieldDeclaration {
 		const inputFieldType = this.validateInputFieldType();
 		const bindTarget = this.validateBindTarget();
-		// TODO: remove this and pass the object directly into the declaration
-		const bindTargetString = bindTarget.file ? bindTarget.file + '#' + bindTarget.path : bindTarget.path;
 		const argumentContainer = this.validateArguments(inputFieldType);
-
-		console.log('bind target', this.unvalidatedDeclaration.fullDeclaration, bindTarget, bindTargetString);
 
 		return {
 			fullDeclaration: this.unvalidatedDeclaration.fullDeclaration,
 			inputFieldType: inputFieldType,
-			isBound: bindTargetString !== '',
-			bindTarget: bindTargetString,
+			isBound: bindTarget !== undefined,
+			bindTarget: bindTarget,
 			argumentContainer: argumentContainer,
 			errorCollection: this.errorCollection.merge(this.unvalidatedDeclaration.errorCollection),
 		};
@@ -56,30 +81,27 @@ export class InputFieldDeclarationValidator {
 		const inputFieldType = this.unvalidatedDeclaration.inputFieldType;
 
 		for (const entry of Object.entries(InputFieldType)) {
-			if (entry[1] === inputFieldType?.result) {
+			if (entry[1] === inputFieldType?.value) {
 				return entry[1];
 			}
 		}
 
-		if (inputFieldType?.ptElement) {
+		if (inputFieldType?.position) {
 			this.errorCollection.add(
-				new ParsingError(
+				new ParsingValidationError(
 					ErrorLevel.ERROR,
-					'failed to parse',
-					`Encountered invalid token. Expected token to be an input field type but received '${inputFieldType}'.`,
-					{},
-					inputFieldType.ptElement.str,
-					inputFieldType.ptElement.getToken(),
-					'Declaration Validator'
+					'Declaration Validator',
+					`Encountered invalid identifier. Expected token to be an input field type but received '${inputFieldType}'.`,
+					this.unvalidatedDeclaration.fullDeclaration,
+					inputFieldType.position
 				)
 			);
 		} else {
 			this.errorCollection.add(
-				new MetaBindValidationError(
+				new ParsingValidationError(
 					ErrorLevel.ERROR,
-					'failed to parse',
-					`Encountered invalid token. Expected token to be an input field type but received '${inputFieldType}'.`,
-					{}
+					'Declaration Validator',
+					`Encountered invalid identifier. Expected token to be an input field type but received '${inputFieldType}'.`
 				)
 			);
 		}
@@ -87,11 +109,8 @@ export class InputFieldDeclarationValidator {
 		return InputFieldType.INVALID;
 	}
 
-	private validateBindTarget(): { file: string; path: string } {
-		return {
-			file: this.unvalidatedDeclaration.bindTargetFile?.result ?? '',
-			path: this.unvalidatedDeclaration.bindTargetPath?.result ?? '',
-		};
+	private validateBindTarget(): BindTargetDeclaration | undefined {
+		return this.unvalidatedDeclaration.bindTarget ? this.plugin.api.bindTargetParser.validateBindTarget(this.unvalidatedDeclaration.bindTarget) : undefined;
 	}
 
 	private validateArguments(inputFieldType: InputFieldType): InputFieldArgumentContainer {
@@ -106,50 +125,39 @@ export class InputFieldDeclarationValidator {
 			const inputFieldArgument: AbstractInputFieldArgument = InputFieldArgumentFactory.createInputFieldArgument(argumentType);
 
 			if (!inputFieldArgument.isAllowed(inputFieldType)) {
-				this.errorCollection.add(
-					new MetaBindParsingError(
-						ErrorLevel.WARNING,
-						'failed to parse input field arguments',
-						`argument "${argument.name.result}" is only applicable to "${inputFieldArgument.getAllowedInputFieldsAsString()}" input fields`
-					)
-				);
+				if (argument.name.position) {
+					this.errorCollection.add(
+						new ParsingValidationError(
+							ErrorLevel.WARNING,
+							'Declaration Validator',
+							`Failed to parse input field arguments. Argument "${
+								argument.name.value
+							}" is only applicable to "${inputFieldArgument.getAllowedInputFieldsAsString()}" input fields.`,
+							this.unvalidatedDeclaration.fullDeclaration,
+							argument.name.position
+						)
+					);
+				} else {
+					this.errorCollection.add(
+						new ParsingValidationError(
+							ErrorLevel.WARNING,
+							'Declaration Validator',
+							`Failed to parse input field arguments. Argument "${
+								argument.name.value
+							}" is only applicable to "${inputFieldArgument.getAllowedInputFieldsAsString()}" input fields.`
+						)
+					);
+				}
+
 				continue;
 			}
 
-			if (inputFieldArgument.requiresValue) {
-				if (!argument.value) {
-					if (argument.name.ptElement) {
-						this.errorCollection.add(
-							new ParsingError(
-								ErrorLevel.WARNING,
-								'failed to parse input field arguments',
-								`argument "${argument.name.result}" requires a non empty value`,
-								{},
-								argument.name.ptElement.str,
-								argument.name.ptElement.getToken(),
-								'Declaration Validator'
-							)
-						);
-					} else {
-						this.errorCollection.add(
-							new MetaBindValidationError(
-								ErrorLevel.WARNING,
-								'failed to parse input field arguments',
-								`argument "${argument.name.result}" requires a non empty value`
-							)
-						);
-					}
-
-					continue;
-				}
-
-				try {
-					inputFieldArgument.parseValue(argument.value.result);
-				} catch (e) {
-					this.errorCollection.add(e);
-					// TODO: better error message/handling
-					continue;
-				}
+			try {
+				inputFieldArgument.parseValue(argument.value);
+			} catch (e) {
+				this.errorCollection.add(e);
+				// TODO: better error message/handling
+				continue;
 			}
 
 			argumentContainer.add(inputFieldArgument);
@@ -164,32 +172,29 @@ export class InputFieldDeclarationValidator {
 		return argumentContainer;
 	}
 
-	private validateArgumentType(argumentType: InputFieldStructureParserResult): InputFieldArgumentType {
+	private validateArgumentType(argumentType: ParsingResultNode): InputFieldArgumentType {
 		for (const entry of Object.entries(InputFieldArgumentType)) {
-			if (entry[1] === argumentType.result) {
+			if (entry[1] === argumentType.value) {
 				return entry[1];
 			}
 		}
 
-		if (argumentType.ptElement) {
+		if (argumentType.position) {
 			this.errorCollection.add(
-				new ParsingError(
+				new ParsingValidationError(
 					ErrorLevel.WARNING,
-					'failed to parse',
-					`Encountered invalid token. Expected token to be an input field argument type but received '${argumentType.result}'.`,
-					{},
-					argumentType.ptElement.str,
-					argumentType.ptElement.getToken(),
-					'Declaration Validator'
+					'Declaration Validator',
+					`Encountered invalid identifier. Expected identifier to be an input field argument type but received '${argumentType.value}'.`,
+					this.unvalidatedDeclaration.fullDeclaration,
+					argumentType.position
 				)
 			);
 		} else {
 			this.errorCollection.add(
-				new MetaBindValidationError(
+				new ParsingValidationError(
 					ErrorLevel.WARNING,
-					'failed to parse',
-					`Encountered invalid token. Expected token to be an input field argument type but received '${argumentType.result}'.`,
-					{}
+					'Declaration Validator',
+					`Encountered invalid identifier. Expected identifier to be an input field argument type but received '${argumentType.value}'.`
 				)
 			);
 		}

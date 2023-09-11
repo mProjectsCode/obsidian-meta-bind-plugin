@@ -1,6 +1,6 @@
 ---
 time: 14:12
-date2: null
+date2: Tuesday, September 12th 2023
 date1: 2023-06-08
 ---
 

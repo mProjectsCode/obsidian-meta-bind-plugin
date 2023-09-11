@@ -9,7 +9,6 @@ import { ShowcaseInputFieldArgument } from '../inputFieldArguments/arguments/Sho
 import { TitleInputFieldArgument } from '../inputFieldArguments/arguments/TitleInputFieldArgument';
 import { isTruthy, MBExtendedLiteral } from '../utils/Utils';
 import { Listener, Signal } from '../utils/Signal';
-import { BindTargetDeclaration } from '../parsers/BindTargetParser';
 import { AbstractMDRC } from './AbstractMDRC';
 import { MetadataFileCache } from '../metadata/MetadataFileCache';
 import MetaBindPlugin from '../main';
@@ -26,10 +25,9 @@ export class InputFieldMDRC extends AbstractMDRC {
 
 	fullDeclaration?: string;
 	inputFieldDeclaration: InputFieldDeclaration;
-	bindTargetDeclaration?: BindTargetDeclaration;
+
 	private metadataManagerReadSignalListener: Listener<MBExtendedLiteral | undefined> | undefined;
 
-	// maybe 2: in/out
 	/**
 	 * Signal to write to the input field
 	 */
@@ -60,10 +58,6 @@ export class InputFieldMDRC extends AbstractMDRC {
 
 		if (!this.errorCollection.hasErrors()) {
 			try {
-				if (this.inputFieldDeclaration.isBound) {
-					this.bindTargetDeclaration = this.plugin.api.bindTargetParser.parseBindTarget(this.inputFieldDeclaration.bindTarget, this.filePath);
-				}
-
 				this.inputField = InputFieldFactory.createInputField(this.inputFieldDeclaration.inputFieldType, {
 					renderChildType: renderChildType,
 					inputFieldMDRC: this,
@@ -76,24 +70,24 @@ export class InputFieldMDRC extends AbstractMDRC {
 
 	registerSelfToMetadataManager(): MetadataFileCache | undefined {
 		// if bind target is invalid, return
-		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetDeclaration) {
+		if (!this.inputFieldDeclaration?.isBound || !this.inputFieldDeclaration.bindTarget) {
 			return;
 		}
 
 		this.metadataManagerReadSignalListener = this.readSignal.registerListener({ callback: this.updateMetadataManager.bind(this) });
 
 		return this.plugin.metadataManager.register(
-			this.bindTargetDeclaration.filePath,
+			this.inputFieldDeclaration.bindTarget.filePath ?? this.filePath,
 			undefined,
 			this.writeSignal,
-			this.bindTargetDeclaration.metadataPath,
+			this.inputFieldDeclaration.bindTarget.metadataPath,
 			this.uuid
 		);
 	}
 
 	unregisterSelfFromMetadataManager(): void {
 		// if bind target is invalid, return
-		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetDeclaration) {
+		if (!this.inputFieldDeclaration?.isBound || !this.inputFieldDeclaration.bindTarget) {
 			return;
 		}
 
@@ -101,16 +95,21 @@ export class InputFieldMDRC extends AbstractMDRC {
 			this.readSignal.unregisterListener(this.metadataManagerReadSignalListener);
 		}
 
-		this.plugin.metadataManager.unregister(this.bindTargetDeclaration.filePath, this.uuid);
+		this.plugin.metadataManager.unregister(this.inputFieldDeclaration.bindTarget.filePath ?? this.filePath, this.uuid);
 	}
 
 	updateMetadataManager(value: unknown): void {
 		// if bind target is invalid, return
-		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetDeclaration) {
+		if (!this.inputFieldDeclaration?.isBound || !this.inputFieldDeclaration.bindTarget) {
 			return;
 		}
 
-		this.plugin.metadataManager.updatePropertyInCache(value, this.bindTargetDeclaration.metadataPath, this.bindTargetDeclaration.filePath, this.uuid);
+		this.plugin.metadataManager.updatePropertyInCache(
+			value,
+			this.inputFieldDeclaration.bindTarget.metadataPath,
+			this.inputFieldDeclaration.bindTarget.filePath ?? this.filePath,
+			this.uuid
+		);
 	}
 
 	getInitialValue(): MBExtendedLiteral {
@@ -118,8 +117,8 @@ export class InputFieldMDRC extends AbstractMDRC {
 			throw new MetaBindInternalError(ErrorLevel.CRITICAL, 'can not get initial value for input field', 'input field is undefined');
 		}
 
-		if (this.inputFieldDeclaration?.isBound && this.bindTargetDeclaration) {
-			let value: MBExtendedLiteral | undefined = traverseObjectByPath(this.bindTargetDeclaration.metadataPath, this.metadataCache?.metadata);
+		if (this.inputFieldDeclaration?.isBound && this.inputFieldDeclaration.bindTarget) {
+			let value: MBExtendedLiteral | undefined = traverseObjectByPath(this.inputFieldDeclaration.bindTarget.metadataPath, this.metadataCache?.metadata);
 			value = value === undefined ? this.inputField.getFallbackDefaultValue() : value;
 			console.debug(
 				`meta-bind | InputFieldMarkdownRenderChild >> setting initial value to ${value} (typeof ${typeof value}) for input field ${this.uuid}`
@@ -154,7 +153,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 	}
 
 	hasValidBindTarget(): boolean {
-		return isTruthy(this.inputFieldDeclaration?.isBound) && isTruthy(this.bindTargetDeclaration);
+		return isTruthy(this.inputFieldDeclaration?.isBound) && isTruthy(this.inputFieldDeclaration.bindTarget);
 	}
 
 	async onload(): Promise<void> {
@@ -183,8 +182,10 @@ export class InputFieldMDRC extends AbstractMDRC {
 		// if card container this points to the container.
 		let wrapperContainer: HTMLElement;
 
-		const showcaseArgument: ShowcaseInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.SHOWCASE);
-		const titleArgument: TitleInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.TITLE);
+		const showcaseArgument: ShowcaseInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.SHOWCASE) as
+			| ShowcaseInputFieldArgument
+			| undefined;
+		const titleArgument: TitleInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.TITLE) as TitleInputFieldArgument | undefined;
 
 		if (this.addCardContainer()) {
 			const cardContainer: HTMLDivElement = this.containerEl.createDiv({ cls: 'meta-bind-plugin-card' });
@@ -218,7 +219,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 		this.inputField?.filterValue(this.getInitialValue());
 		this.inputField?.render(container);
 
-		const classArguments: ClassInputFieldArgument[] = this.getArguments(InputFieldArgumentType.CLASS);
+		const classArguments: ClassInputFieldArgument[] = this.getArguments(InputFieldArgumentType.CLASS) as ClassInputFieldArgument[];
 		if (classArguments) {
 			this.inputField?.getHtmlElement().addClasses(classArguments.map(x => x.value).flat());
 		}
