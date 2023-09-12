@@ -215,3 +215,7 @@ code.meta-bind-plugin-error {
 .meta-bind-pre > code {
 	white-space: pre;
 }
+
+.meta-bind-error-collection-modal {
+	width: 80%;
+}

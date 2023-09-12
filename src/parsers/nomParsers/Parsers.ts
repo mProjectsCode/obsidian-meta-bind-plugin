@@ -54,30 +54,19 @@ const filePath = P.noneOf('[]#^|:?')
 	.map(x => x.join(''))
 	.describe('file path');
 
-const bracketMetadataPath: Parser<ParsingResultNode[]> = P.or(P_UTILS.digits(), createStr('"'))
-	.wrap(P.string('['), P.string(']'))
-	.mark()
-	.map(x => markerToResultNode(x))
-	.many();
+const bracketMetadataPathPart: Parser<ParsingResultNode> = P.or(P_UTILS.digits(), createStr('"')).wrap(P.string('['), P.string(']')).node(markerToResultNode);
 
-const firstMetadataPathPart: Parser<ParsingResultNode[]> = P.sequenceMap(
-	(ident, brackets) => {
-		if (ident === undefined) {
-			return brackets;
-		} else {
-			return [markerToResultNode(ident), ...brackets];
-		}
-	},
-	ident.mark().optional(),
-	bracketMetadataPath
+const firstMetadataPathPart: Parser<ParsingResultNode[]> = P.or(
+	bracketMetadataPathPart.atLeast(1),
+	P.sequenceMap((ident, brackets) => [ident, ...brackets], ident.node(markerToResultNode), bracketMetadataPathPart.many())
 );
 
 const metadataPathPart: Parser<ParsingResultNode[]> = P.sequenceMap(
 	(ident, brackets) => {
-		return [markerToResultNode(ident), ...brackets];
+		return [ident, ...brackets];
 	},
-	ident.mark(),
-	bracketMetadataPath
+	ident.node(markerToResultNode),
+	bracketMetadataPathPart.many()
 );
 
 const metadataPath: Parser<ParsingResultNode[]> = P.sequenceMap(
@@ -97,28 +86,25 @@ export const BIND_TARGET: Parser<UnvalidatedBindTargetDeclaration> = P.sequenceM
 			};
 		} else {
 			return {
-				file: markerToResultNode(a[0]),
+				file: a[0],
 				path: b,
 			};
 		}
 	},
-	P.sequence(filePath.mark(), P.string('#')).optional(),
+	P.sequence(filePath.node(markerToResultNode), P.string('#')).optional(),
 	metadataPath
 );
 
-const inputFieldArgumentValue: Parser<ParsingResultNode[]> = P.separateBy(
-	value.mark().map(x => markerToResultNode(x)),
-	P.string(',').trim(P_UTILS.optionalWhitespace())
-);
+const inputFieldArgumentValue: Parser<ParsingResultNode[]> = P.separateBy(value.node(markerToResultNode), P.string(',').trim(P_UTILS.optionalWhitespace()));
 
 const inputFieldArgument: Parser<UnvalidatedInputFieldArgument> = P.sequenceMap(
 	(name, value): UnvalidatedInputFieldArgument => {
 		return {
-			name: markerToResultNode(name),
+			name: name,
 			value: value,
 		};
 	},
-	ident.mark(),
+	ident.node(markerToResultNode),
 	inputFieldArgumentValue
 		.trim(P_UTILS.optionalWhitespace())
 		.wrap(P.string('('), P.string(')'))
@@ -130,13 +116,14 @@ const inputFieldArguments: Parser<UnvalidatedInputFieldArgument[]> = P.separateB
 export const INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclaration> = P.sequenceMap(
 	(type, args, b) => {
 		const bindTarget = b === undefined ? undefined : b[1];
+		console.warn(type, args, b);
 		return {
-			inputFieldType: markerToResultNode(type),
+			inputFieldType: type,
 			arguments: args,
 			bindTarget: bindTarget,
 		};
 	},
-	ident.mark().describe('input field type'),
+	ident.node(markerToResultNode).describe('input field type'),
 	inputFieldArguments
 		.trim(P_UTILS.optionalWhitespace())
 		.wrap(P.string('('), P.string(')'))
@@ -147,22 +134,26 @@ export const INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclara
 export const INPUT_FIELD_FULL_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclaration> = P.or(
 	P.sequenceMap(
 		(_1, templateName, _2, declaration, _3) => {
+			console.warn('first');
 			return declaration;
 		},
 		P.string('INPUT'),
-		P.sequenceMap((_1, templateName, _2) => templateName, P.string('['), spaceIdent, P.string(']')),
+		P.sequenceMap((_1, templateName, _2) => templateName, P.string('['), spaceIdent.describe('template name'), P.string(']')),
 		P.string('['),
 		INPUT_FIELD_DECLARATION,
-		P.string(']')
+		P.string(']'),
+		P_UTILS.eof()
 	),
 	P.sequenceMap(
 		(_1, _2, declaration, _3) => {
+			console.warn('second');
 			return declaration;
 		},
 		P.string('INPUT'),
 		P.string('['),
 		INPUT_FIELD_DECLARATION,
-		P.string(']')
+		P.string(']'),
+		P_UTILS.eof()
 	)
 );
 
@@ -170,12 +161,12 @@ export const PARTIAL_INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFiel
 	(type, args, b) => {
 		const bindTarget = b === undefined ? undefined : b[1];
 		return {
-			inputFieldType: markerToResultNode(type),
+			inputFieldType: type,
 			arguments: args,
 			bindTarget: bindTarget,
 		};
 	},
-	ident.mark().describe('input field type'),
+	ident.node(markerToResultNode).describe('input field type'),
 	inputFieldArguments
 		.trim(P_UTILS.optionalWhitespace())
 		.wrap(P.string('('), P.string(')'))
@@ -190,7 +181,8 @@ export const TEMPLATE_INPUT_FIELD_FULL_DECLARATION: Parser<PartialUnvalidatedInp
 	P.string('INPUT'),
 	P.string('['),
 	PARTIAL_INPUT_FIELD_DECLARATION,
-	P.string(']')
+	P.string(']'),
+	P_UTILS.eof()
 );
 
 const viewFieldMathJS = P.noneOf('{}[]')
@@ -213,5 +205,6 @@ export const VIEW_FIELD_FULL_DECLARATION: Parser<(string | UnvalidatedBindTarget
 	P.string('VIEW'),
 	P.string('['),
 	VIEW_FIELD_DECLARATION,
-	P.string(']')
+	P.string(']'),
+	P_UTILS.eof()
 );

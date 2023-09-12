@@ -14,6 +14,7 @@ export class ErrorCollectionViewModal extends Modal {
 	}
 
 	public onOpen(): void {
+		this.modalEl.addClass('meta-bind-error-collection-modal');
 		this.titleEl.innerText = 'Meta Bind Field';
 
 		this.component = new ErrorCollectionComponent({

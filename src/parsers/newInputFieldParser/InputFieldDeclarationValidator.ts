@@ -5,27 +5,19 @@ import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
 import { InputFieldArgumentContainer } from '../../inputFieldArguments/InputFieldArgumentContainer';
 import { AbstractInputFieldArgument } from '../../inputFieldArguments/AbstractInputFieldArgument';
 import { InputFieldArgumentFactory } from '../../inputFieldArguments/InputFieldArgumentFactory';
-import { ParsingMarker, ParsingPosition } from '@lemons_dev/parsinom/lib/HelperTypes';
+import { ParsingMarker, ParsingPosition, ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
 import { IPlugin } from '../../IPlugin';
 import { BindTargetDeclaration } from '../BindTargetParser';
-
-export interface ParsingRange {
-	start: ParsingPosition;
-	end: ParsingPosition;
-}
 
 export interface ParsingResultNode {
 	value: string;
 	position?: ParsingRange;
 }
 
-export function markerToResultNode(marker: ParsingMarker<string>): ParsingResultNode {
+export function markerToResultNode(value: string, range: ParsingRange): ParsingResultNode {
 	return {
-		value: marker.value,
-		position: {
-			start: marker.start,
-			end: marker.end,
-		},
+		value: value,
+		position: range,
 	};
 }
 
@@ -91,7 +83,7 @@ export class InputFieldDeclarationValidator {
 				new ParsingValidationError(
 					ErrorLevel.ERROR,
 					'Declaration Validator',
-					`Encountered invalid identifier. Expected token to be an input field type but received '${inputFieldType}'.`,
+					`Encountered invalid identifier. Expected token to be an input field type but received '${inputFieldType.value}'.`,
 					this.unvalidatedDeclaration.fullDeclaration,
 					inputFieldType.position
 				)
@@ -101,7 +93,7 @@ export class InputFieldDeclarationValidator {
 				new ParsingValidationError(
 					ErrorLevel.ERROR,
 					'Declaration Validator',
-					`Encountered invalid identifier. Expected token to be an input field type but received '${inputFieldType}'.`
+					`Encountered invalid identifier. Expected token to be an input field type but received '${inputFieldType?.value}'.`
 				)
 			);
 		}
@@ -110,7 +102,11 @@ export class InputFieldDeclarationValidator {
 	}
 
 	private validateBindTarget(): BindTargetDeclaration | undefined {
-		return this.unvalidatedDeclaration.bindTarget ? this.plugin.api.bindTargetParser.validateBindTarget(this.unvalidatedDeclaration.bindTarget) : undefined;
+		if (this.unvalidatedDeclaration.bindTarget !== undefined) {
+			return this.plugin.api.bindTargetParser.validateBindTarget(this.unvalidatedDeclaration.fullDeclaration, this.unvalidatedDeclaration.bindTarget);
+		} else {
+			return undefined;
+		}
 	}
 
 	private validateArguments(inputFieldType: InputFieldType): InputFieldArgumentContainer {

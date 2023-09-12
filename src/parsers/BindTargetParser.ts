@@ -3,6 +3,7 @@ import { parsePath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { IPlugin } from '../IPlugin';
 import { UnvalidatedBindTargetDeclaration } from './newInputFieldParser/InputFieldDeclarationValidator';
 import { BIND_TARGET } from './nomParsers/Parsers';
+import { ParsingValidationError } from './ParsingError';
 
 export interface BindTargetDeclaration {
 	filePath: string | undefined;
@@ -17,29 +18,54 @@ export class BindTargetParser {
 	}
 
 	parseAndValidateBindTarget(bindTargetString: string): BindTargetDeclaration {
-		return this.validateBindTarget(this.parseBindTarget(bindTargetString));
+		return this.validateBindTarget(bindTargetString, this.parseBindTarget(bindTargetString));
 	}
 
 	parseBindTarget(bindTargetString: string): UnvalidatedBindTargetDeclaration {
 		return BIND_TARGET.parse(bindTargetString) as UnvalidatedBindTargetDeclaration;
 	}
 
-	validateBindTarget(unvalidatedBindTargetDeclaration: UnvalidatedBindTargetDeclaration): BindTargetDeclaration {
+	validateBindTarget(fullDeclaration: string, unvalidatedBindTargetDeclaration: UnvalidatedBindTargetDeclaration): BindTargetDeclaration {
 		const bindTargetDeclaration: BindTargetDeclaration = {} as BindTargetDeclaration;
 
 		const filePath = unvalidatedBindTargetDeclaration.file?.value;
-		if (filePath) {
+		if (filePath !== undefined) {
 			const filePaths: string[] = this.plugin.getFilePathsByName(filePath);
+
 			if (filePaths.length === 0) {
-				throw new MetaBindBindTargetError(ErrorLevel.CRITICAL, 'failed to parse bind target', 'bind target file not found');
+				if (unvalidatedBindTargetDeclaration.file?.position) {
+					throw new ParsingValidationError(
+						ErrorLevel.CRITICAL,
+						'Bind Target Validator',
+						`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file.value}' not found.`,
+						fullDeclaration,
+						unvalidatedBindTargetDeclaration.file.position
+					);
+				} else {
+					throw new ParsingValidationError(
+						ErrorLevel.CRITICAL,
+						'Bind Target Validator',
+						`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file?.value}' not found.`
+					);
+				}
 			} else if (filePaths.length === 1) {
 				bindTargetDeclaration.filePath = filePaths[0];
 			} else {
-				throw new MetaBindBindTargetError(
-					ErrorLevel.CRITICAL,
-					'failed to parse bind target',
-					'bind target resolves to multiple files, please also specify the file path'
-				);
+				if (unvalidatedBindTargetDeclaration.file?.position) {
+					throw new ParsingValidationError(
+						ErrorLevel.CRITICAL,
+						'Bind Target Validator',
+						`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file.value}' resolves to multiple files, please also specify the file path.`,
+						fullDeclaration,
+						unvalidatedBindTargetDeclaration.file.position
+					);
+				} else {
+					throw new ParsingValidationError(
+						ErrorLevel.CRITICAL,
+						'Bind Target Validator',
+						`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file?.value}' resolves to multiple files, please also specify the file path.`
+					);
+				}
 			}
 		}
 

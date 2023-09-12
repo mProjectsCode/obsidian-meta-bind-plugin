@@ -59,7 +59,7 @@ export class ViewFieldDeclarationParser {
 				if (typeof x === 'string') {
 					return x;
 				} else {
-					return this.plugin.api.bindTargetParser.validateBindTarget(x);
+					return this.plugin.api.bindTargetParser.validateBindTarget(fullDeclaration, x);
 				}
 			});
 		} catch (e) {

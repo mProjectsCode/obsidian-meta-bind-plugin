@@ -1,6 +1,5 @@
 import { ErrorLevel, ErrorType, MetaBindError } from '../utils/errors/MetaBindErrors';
-import { ParseFailure } from '@lemons_dev/parsinom/lib/HelperTypes';
-import { ParsingRange } from './newInputFieldParser/InputFieldDeclarationValidator';
+import { ParseFailure, ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
 
 export class ParsingError extends MetaBindError {
 	str: string;
@@ -61,7 +60,7 @@ export class ParsingValidationError extends MetaBindError {
 
 		if (this.str && this.position) {
 			this.message += this.str + '\n';
-			this.message += ' '.repeat(this.position.start.index) + '^'.repeat(this.position.end.index - this.position.start.index) + '\n';
+			this.message += ' '.repeat(this.position.from.index) + '^'.repeat(this.position.to.index - this.position.from.index) + '\n';
 		}
 	}
 }
