@@ -7,6 +7,8 @@ import { deepFreeze } from '../../utils/Utils';
 import { InputFieldDeclarationValidator, UnvalidatedInputFieldDeclaration } from './InputFieldDeclarationValidator';
 import { ITemplateSupplier, TemplateSupplierTemplate } from './ITemplateSupplier';
 import { INPUT_FIELD_FULL_DECLARATION, TEMPLATE_INPUT_FIELD_FULL_DECLARATION } from '../nomParsers/Parsers';
+import { ParsingValidationError } from '../ParsingError';
+import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
 
 export type InputFieldDeclarationTemplate = TemplateSupplierTemplate<UnvalidatedInputFieldDeclaration>;
 
@@ -23,9 +25,11 @@ export class NewInputFieldDeclarationParser implements ITemplateSupplier<Unvalid
 		const errorCollection = new ErrorCollection('InputFieldParser');
 
 		try {
-			const parserResult = INPUT_FIELD_FULL_DECLARATION.parse(fullDeclaration) as UnvalidatedInputFieldDeclaration;
+			let parserResult = INPUT_FIELD_FULL_DECLARATION.parse(fullDeclaration) as UnvalidatedInputFieldDeclaration;
 			parserResult.fullDeclaration = fullDeclaration;
 			parserResult.errorCollection = errorCollection;
+
+			parserResult = this.applyTemplate(parserResult);
 
 			const declarationValidator = new InputFieldDeclarationValidator(this.plugin, parserResult);
 
@@ -116,5 +120,39 @@ export class NewInputFieldDeclarationParser implements ITemplateSupplier<Unvalid
 
 	public getTemplate(templateName: string): Readonly<UnvalidatedInputFieldDeclaration> | undefined {
 		return this.templates.find(x => x.name === templateName)?.template;
+	}
+
+	public applyTemplate(declaration: UnvalidatedInputFieldDeclaration): UnvalidatedInputFieldDeclaration {
+		if (declaration.templateName === undefined) {
+			return declaration;
+		}
+
+		const template = this.getTemplate(declaration.templateName.value);
+
+		if (template === undefined) {
+			if (declaration.templateName.position) {
+				declaration.errorCollection.add(
+					new ParsingValidationError(
+						ErrorLevel.WARNING,
+						'Input Field Parser',
+						`Invalid template name. Could not find template with name '${declaration.templateName.value}'`,
+						declaration.fullDeclaration,
+						declaration.templateName.position
+					)
+				);
+			} else {
+				declaration.errorCollection.add(
+					new ParsingValidationError(
+						ErrorLevel.WARNING,
+						'Input Field Parser',
+						`Invalid template name. Could not find template with name '${declaration.templateName.value}'`
+					)
+				);
+			}
+
+			return declaration;
+		}
+
+		return this.plugin.api.inputField.merge(template, declaration);
 	}
 }

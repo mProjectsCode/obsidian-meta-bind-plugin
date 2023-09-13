@@ -7,12 +7,14 @@ import { PublishViewFieldMDRC } from './PublishViewFieldMDRC';
 import { NewInputFieldDeclarationParser } from '../parsers/newInputFieldParser/InputFieldParser';
 import { MarkdownPostProcessorContext } from 'obsidian/publish';
 import { IAPI } from '../api/IAPI';
+import { InputFieldAPI } from '../api/InputFieldAPI';
 
 export class PublishAPI implements IAPI {
-	public plugin: IPlugin;
-	public newInputFieldParser: NewInputFieldDeclarationParser;
-	public viewFieldParser: ViewFieldDeclarationParser;
-	public bindTargetParser: BindTargetParser;
+	public readonly plugin: IPlugin;
+	public readonly newInputFieldParser: NewInputFieldDeclarationParser;
+	public readonly viewFieldParser: ViewFieldDeclarationParser;
+	public readonly bindTargetParser: BindTargetParser;
+	public readonly inputField: InputFieldAPI;
 
 	constructor(plugin: IPlugin) {
 		this.plugin = plugin;
@@ -20,6 +22,8 @@ export class PublishAPI implements IAPI {
 		this.newInputFieldParser = new NewInputFieldDeclarationParser(this.plugin);
 		this.viewFieldParser = new ViewFieldDeclarationParser(this.plugin);
 		this.bindTargetParser = new BindTargetParser(this.plugin);
+
+		this.inputField = new InputFieldAPI(this);
 	}
 
 	public createInputFieldFromString(
