@@ -2,10 +2,12 @@ import { NewInputFieldDeclarationParser } from '../parsers/newInputFieldParser/I
 import { ViewFieldDeclarationParser } from '../parsers/ViewFieldDeclarationParser';
 import { BindTargetParser } from '../parsers/BindTargetParser';
 import { IPlugin } from '../IPlugin';
+import { InputFieldAPI } from './InputFieldAPI';
 
 export interface IAPI {
-	plugin: IPlugin;
-	newInputFieldParser: NewInputFieldDeclarationParser;
-	viewFieldParser: ViewFieldDeclarationParser;
-	bindTargetParser: BindTargetParser;
+	readonly plugin: IPlugin;
+	readonly newInputFieldParser: NewInputFieldDeclarationParser;
+	readonly viewFieldParser: ViewFieldDeclarationParser;
+	readonly bindTargetParser: BindTargetParser;
+	readonly inputField: InputFieldAPI;
 }

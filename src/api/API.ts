@@ -14,9 +14,9 @@ import { IAPI } from './IAPI';
 export class API implements IAPI {
 	public plugin: MetaBindPlugin;
 	// public inputFieldParser: InputFieldDeclarationParser;
-	public newInputFieldParser: NewInputFieldDeclarationParser;
-	public viewFieldParser: ViewFieldDeclarationParser;
-	public bindTargetParser: BindTargetParser;
+	public readonly newInputFieldParser: NewInputFieldDeclarationParser;
+	public readonly viewFieldParser: ViewFieldDeclarationParser;
+	public readonly bindTargetParser: BindTargetParser;
 
 	public readonly inputField: InputFieldAPI;
 

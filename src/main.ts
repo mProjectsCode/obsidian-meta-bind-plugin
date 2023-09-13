@@ -74,7 +74,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		this.registerMarkdownCodeBlockProcessor('meta-bind', (source, el, ctx) => {
 			const codeBlock = el;
-			const content = source.replaceAll('\n', '').trim();
+			const content = source.trim();
 			const isInputField = content.startsWith('INPUT[') && content.endsWith(']');
 			if (isInputField) {
 				const inputField = this.api.createInputFieldFromString(content, RenderChildType.BLOCK, ctx.sourcePath, codeBlock, ctx);

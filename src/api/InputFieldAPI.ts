@@ -1,16 +1,17 @@
 import { InputFieldArgumentType, InputFieldType } from '../parsers/InputFieldDeclarationParser';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
-import { API } from './API';
+
 import {
 	UnvalidatedBindTargetDeclaration,
 	UnvalidatedInputFieldArgument,
 	UnvalidatedInputFieldDeclaration,
 } from '../parsers/newInputFieldParser/InputFieldDeclarationValidator';
+import { IAPI } from './IAPI';
 
 export class InputFieldAPI {
-	private readonly api: API;
+	private readonly api: IAPI;
 
-	constructor(api: API) {
+	constructor(api: IAPI) {
 		this.api = api;
 	}
 
@@ -100,6 +101,15 @@ export class InputFieldAPI {
 		return unvalidatedDeclaration;
 	}
 
+	public setTemplateName(unvalidatedDeclaration: UnvalidatedInputFieldDeclaration, templateName: string): UnvalidatedInputFieldDeclaration {
+		unvalidatedDeclaration.templateName = { value: templateName };
+		return unvalidatedDeclaration;
+	}
+
+	public applyTemplate(unvalidatedDeclaration: UnvalidatedInputFieldDeclaration): UnvalidatedInputFieldDeclaration {
+		return this.api.newInputFieldParser.applyTemplate(unvalidatedDeclaration);
+	}
+
 	public getTemplate(templateName: string): Readonly<UnvalidatedInputFieldDeclaration> | undefined {
 		return this.api.newInputFieldParser.getTemplate(templateName);
 	}
@@ -120,7 +130,7 @@ export class InputFieldAPI {
 		}
 
 		return {
-			fullDeclaration: '',
+			fullDeclaration: override.fullDeclaration,
 			inputFieldType: override.inputFieldType !== undefined ? override.inputFieldType : unvalidatedDeclaration.inputFieldType,
 			bindTarget: bindTarget,
 			arguments: override.arguments.concat(unvalidatedDeclaration.arguments).reduce<UnvalidatedInputFieldArgument[]>((arr, currentValue) => {
@@ -130,7 +140,7 @@ export class InputFieldAPI {
 				}
 				return arr;
 			}, []),
-			errorCollection: unvalidatedDeclaration.errorCollection.merge(override.errorCollection),
+			errorCollection: new ErrorCollection('input field declaration').merge(unvalidatedDeclaration.errorCollection).merge(override.errorCollection),
 		};
 	}
 }

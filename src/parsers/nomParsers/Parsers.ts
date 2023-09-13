@@ -2,7 +2,7 @@ import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { Parser } from '@lemons_dev/parsinom/lib/Parser';
 import {
-	markerToResultNode,
+	createResultNode,
 	ParsingResultNode,
 	PartialUnvalidatedInputFieldDeclaration,
 	UnvalidatedBindTargetDeclaration,
@@ -54,18 +54,18 @@ const filePath = P.noneOf('[]#^|:?')
 	.map(x => x.join(''))
 	.describe('file path');
 
-const bracketMetadataPathPart: Parser<ParsingResultNode> = P.or(P_UTILS.digits(), createStr('"')).wrap(P.string('['), P.string(']')).node(markerToResultNode);
+const bracketMetadataPathPart: Parser<ParsingResultNode> = P.or(P_UTILS.digits(), createStr('"')).wrap(P.string('['), P.string(']')).node(createResultNode);
 
 const firstMetadataPathPart: Parser<ParsingResultNode[]> = P.or(
 	bracketMetadataPathPart.atLeast(1),
-	P.sequenceMap((ident, brackets) => [ident, ...brackets], ident.node(markerToResultNode), bracketMetadataPathPart.many())
+	P.sequenceMap((ident, brackets) => [ident, ...brackets], ident.node(createResultNode), bracketMetadataPathPart.many())
 );
 
 const metadataPathPart: Parser<ParsingResultNode[]> = P.sequenceMap(
 	(ident, brackets) => {
 		return [ident, ...brackets];
 	},
-	ident.node(markerToResultNode),
+	ident.node(createResultNode),
 	bracketMetadataPathPart.many()
 );
 
@@ -91,11 +91,11 @@ export const BIND_TARGET: Parser<UnvalidatedBindTargetDeclaration> = P.sequenceM
 			};
 		}
 	},
-	P.sequence(filePath.node(markerToResultNode), P.string('#')).optional(),
+	P.sequence(filePath.node(createResultNode), P.string('#')).optional(),
 	metadataPath
 );
 
-const inputFieldArgumentValue: Parser<ParsingResultNode[]> = P.separateBy(value.node(markerToResultNode), P.string(',').trim(P_UTILS.optionalWhitespace()));
+const inputFieldArgumentValue: Parser<ParsingResultNode[]> = P.separateBy(value.node(createResultNode), P.string(',').trim(P_UTILS.optionalWhitespace()));
 
 const inputFieldArgument: Parser<UnvalidatedInputFieldArgument> = P.sequenceMap(
 	(name, value): UnvalidatedInputFieldArgument => {
@@ -104,7 +104,7 @@ const inputFieldArgument: Parser<UnvalidatedInputFieldArgument> = P.sequenceMap(
 			value: value,
 		};
 	},
-	ident.node(markerToResultNode),
+	ident.node(createResultNode),
 	inputFieldArgumentValue
 		.trim(P_UTILS.optionalWhitespace())
 		.wrap(P.string('('), P.string(')'))
@@ -116,14 +116,30 @@ const inputFieldArguments: Parser<UnvalidatedInputFieldArgument[]> = P.separateB
 export const INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclaration> = P.sequenceMap(
 	(type, args, b) => {
 		const bindTarget = b === undefined ? undefined : b[1];
-		console.warn(type, args, b);
 		return {
 			inputFieldType: type,
 			arguments: args,
 			bindTarget: bindTarget,
 		};
 	},
-	ident.node(markerToResultNode).describe('input field type'),
+	ident.node(createResultNode).describe('input field type'),
+	inputFieldArguments
+		.trim(P_UTILS.optionalWhitespace())
+		.wrap(P.string('('), P.string(')'))
+		.optional([] as UnvalidatedInputFieldArgument[]),
+	P.sequence(P.string(':'), BIND_TARGET).optional()
+);
+
+export const PARTIAL_INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclaration> = P.sequenceMap(
+	(type, args, b) => {
+		const bindTarget = b === undefined ? undefined : b[1];
+		return {
+			inputFieldType: type,
+			arguments: args,
+			bindTarget: bindTarget,
+		};
+	},
+	ident.node(createResultNode).optional().describe('input field type'),
 	inputFieldArguments
 		.trim(P_UTILS.optionalWhitespace())
 		.wrap(P.string('('), P.string(')'))
@@ -134,13 +150,13 @@ export const INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclara
 export const INPUT_FIELD_FULL_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclaration> = P.or(
 	P.sequenceMap(
 		(_1, templateName, _2, declaration, _3) => {
-			console.warn('first');
+			declaration.templateName = templateName;
 			return declaration;
 		},
 		P.string('INPUT'),
-		P.sequenceMap((_1, templateName, _2) => templateName, P.string('['), spaceIdent.describe('template name'), P.string(']')),
+		P.sequenceMap((_1, templateName, _2) => templateName, P.string('['), spaceIdent.node(createResultNode).describe('template name'), P.string(']')),
 		P.string('['),
-		INPUT_FIELD_DECLARATION,
+		PARTIAL_INPUT_FIELD_DECLARATION,
 		P.string(']'),
 		P_UTILS.eof()
 	),
@@ -155,23 +171,6 @@ export const INPUT_FIELD_FULL_DECLARATION: Parser<PartialUnvalidatedInputFieldDe
 		P.string(']'),
 		P_UTILS.eof()
 	)
-);
-
-export const PARTIAL_INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclaration> = P.sequenceMap(
-	(type, args, b) => {
-		const bindTarget = b === undefined ? undefined : b[1];
-		return {
-			inputFieldType: type,
-			arguments: args,
-			bindTarget: bindTarget,
-		};
-	},
-	ident.node(markerToResultNode).describe('input field type'),
-	inputFieldArguments
-		.trim(P_UTILS.optionalWhitespace())
-		.wrap(P.string('('), P.string(')'))
-		.optional([] as UnvalidatedInputFieldArgument[]),
-	P.sequence(P.string(':'), BIND_TARGET).optional()
 );
 
 export const TEMPLATE_INPUT_FIELD_FULL_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclaration> = P.sequenceMap(

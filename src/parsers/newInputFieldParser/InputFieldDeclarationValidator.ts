@@ -14,7 +14,7 @@ export interface ParsingResultNode {
 	position?: ParsingRange;
 }
 
-export function markerToResultNode(value: string, range: ParsingRange): ParsingResultNode {
+export function createResultNode(value: string, range: ParsingRange): ParsingResultNode {
 	return {
 		value: value,
 		position: range,
@@ -33,6 +33,7 @@ export interface UnvalidatedInputFieldArgument {
 
 export interface PartialUnvalidatedInputFieldDeclaration {
 	inputFieldType?: ParsingResultNode;
+	templateName?: ParsingResultNode;
 	bindTarget?: UnvalidatedBindTargetDeclaration;
 	arguments: UnvalidatedInputFieldArgument[];
 }

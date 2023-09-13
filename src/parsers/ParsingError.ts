@@ -27,8 +27,12 @@ export class ParsingError extends MetaBindError {
 			this.message = `[${this.getErrorType()}] "${this.effect}" caused by "${this.cause}"\n`;
 		}
 
-		this.message += this.str + '\n';
-		this.message += ' '.repeat(this.parseFailure.furthest.index) + '^' + '\n';
+		const lines = this.str.split('\n');
+		const failedLine = lines[this.parseFailure.furthest.line - 1]; // line is a one based index
+
+		const linePrefix = `${this.parseFailure.furthest.line} |   `;
+		this.message += `\n\n${linePrefix}${failedLine}`;
+		this.message += `\n${' '.repeat(this.parseFailure.furthest.column - 1 + linePrefix.length)}^ (${this.cause})`;
 	}
 }
 
@@ -59,8 +63,14 @@ export class ParsingValidationError extends MetaBindError {
 		}
 
 		if (this.str && this.position) {
-			this.message += this.str + '\n';
-			this.message += ' '.repeat(this.position.from.index) + '^'.repeat(this.position.to.index - this.position.from.index) + '\n';
+			const lines = this.str.split('\n');
+			const failedLine = lines[this.position.from.line - 1]; // line is a one based index
+
+			const linePrefix = `${this.position.from.line} |   `;
+			this.message += `\n\n${linePrefix}${failedLine}`;
+			this.message += `\n${' '.repeat(this.position.from.column - 1 + linePrefix.length)}${'^'.repeat(
+				(this.position.to.line === this.position.from.line ? this.position.to.index : failedLine.length) - this.position.from.index
+			)} (${this.cause})`;
 		}
 	}
 }
