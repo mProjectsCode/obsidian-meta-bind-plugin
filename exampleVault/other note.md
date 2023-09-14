@@ -1,8 +1,8 @@
 ---
 tags: test
 title: test test
-select: option b
-date: Friday, August 18th 2023
+select: option a
+date: 2023-09-16
 time: 19:20
 multi-select:
   - option a

@@ -1,5 +1,4 @@
-import { ErrorLevel, MetaBindBindTargetError } from '../utils/errors/MetaBindErrors';
-import { parsePath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
+import { ErrorLevel } from '../utils/errors/MetaBindErrors';
 import { IPlugin } from '../IPlugin';
 import { UnvalidatedBindTargetDeclaration } from './newInputFieldParser/InputFieldDeclarationValidator';
 import { BIND_TARGET } from './nomParsers/Parsers';

@@ -78,7 +78,6 @@ export class InputFieldMDRC extends AbstractMDRC {
 
 		return this.plugin.metadataManager.register(
 			this.inputFieldDeclaration.bindTarget.filePath ?? this.filePath,
-			undefined,
 			this.writeSignal,
 			this.inputFieldDeclaration.bindTarget.metadataPath,
 			this.uuid
