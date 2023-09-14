@@ -1,11 +1,9 @@
 import { CachedMetadata, TFile } from 'obsidian';
 import MetaBindPlugin from '../main';
-import { Internal } from '@opd-libs/opd-metadata-lib/lib/Internal';
 import { arrayEquals, traverseObjectToParentByPath } from '../utils/Utils';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { Signal } from '../utils/Signal';
 import { MetadataFileCache } from './MetadataFileCache';
-import getMetadataFromFileCache = Internal.getMetadataFromFileCache;
 
 export const metadataCacheUpdateCycleThreshold = 5; // {syncInterval (200)} * 5 = 1s
 export const metadataCacheInactiveCycleThreshold = 5 * 60; // {syncInterval (200)} * 5 * 60 = 1 minute
@@ -27,7 +25,7 @@ export class MetadataManager {
 		this.interval = window.setInterval(() => this.update(), this.plugin.settings.syncInterval);
 	}
 
-	register(filePath: string, frontmatter: any | null | undefined, signal: Signal<any | undefined>, metadataPath: string[], uuid: string): MetadataFileCache {
+	register(filePath: string, signal: Signal<any | undefined>, metadataPath: string[], uuid: string): MetadataFileCache {
 		const fileCache: MetadataFileCache | undefined = this.getCacheForFile(filePath);
 		if (fileCache) {
 			console.debug(`meta-bind | MetadataManager >> registered ${uuid} to existing file cache ${filePath} -> ${metadataPath}`);
@@ -46,9 +44,11 @@ export class MetadataManager {
 			console.debug(`meta-bind | MetadataManager >> registered ${uuid} to newly created file cache ${filePath} -> ${metadataPath}`);
 
 			const file = this.plugin.app.vault.getAbstractFileByPath(filePath) as TFile;
+			const frontmatter = this.plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+
 			const c: MetadataFileCache = {
 				file: file,
-				metadata: getMetadataFromFileCache(file, this.plugin),
+				metadata: frontmatter ?? {},
 				listeners: [
 					{
 						callback: (value: any) => signal.set(value),
@@ -115,10 +115,15 @@ export class MetadataManager {
 
 	async updateFrontmatter(fileCache: MetadataFileCache): Promise<void> {
 		console.debug(`meta-bind | MetadataManager >> updating frontmatter of "${fileCache.file.path}" to`, fileCache.metadata);
-		await this.plugin.app.fileManager.processFrontMatter(fileCache.file, frontMatter => {
+		try {
+			await this.plugin.app.fileManager.processFrontMatter(fileCache.file, frontMatter => {
+				fileCache.changed = false;
+				Object.assign(frontMatter, fileCache.metadata);
+			});
+		} catch (e) {
 			fileCache.changed = false;
-			Object.assign(frontMatter, fileCache.metadata);
-		});
+			console.warn('failed to update frontmatter', e);
+		}
 	}
 
 	updateCache(metadata: Record<string, any>, filePath: string, uuid?: string | undefined): void {
@@ -145,6 +150,7 @@ export class MetadataManager {
 			return;
 		}
 
+		console.warn(pathParts, fileCache.metadata, filePath);
 		const { parent, child } = traverseObjectToParentByPath(pathParts, fileCache.metadata);
 
 		if (parent.value === undefined) {

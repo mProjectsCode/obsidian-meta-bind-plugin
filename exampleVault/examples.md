@@ -1,5 +1,5 @@
 ---
-slider1: 4
+slider1: 6
 suggest: test
 toggle1: false
 Domestic_tasks:
@@ -8,6 +8,8 @@ Meditate: 100
 Slept: 00:00
 select: option c
 toggle: false
+nested:
+  object: asdasdasd
 ---
 
 ## In callouts
@@ -23,7 +25,7 @@ toggle: false
 > ```
 
 ## Nested data
-`   INPUT[text:nested["object"]]`
+`INPUT[text:nested["object"]]`
 
 ---
 

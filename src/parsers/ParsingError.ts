@@ -31,8 +31,8 @@ export class ParsingError extends MetaBindError {
 		const failedLine = lines[this.parseFailure.furthest.line - 1]; // line is a one based index
 
 		const linePrefix = `${this.parseFailure.furthest.line} |   `;
-		this.message += `\n\n${linePrefix}${failedLine}`;
-		this.message += `\n${' '.repeat(this.parseFailure.furthest.column - 1 + linePrefix.length)}^ (${this.cause})`;
+		this.message += `\n${linePrefix}${failedLine}`;
+		this.message += `\n${' '.repeat(this.parseFailure.furthest.column - 1 + linePrefix.length)}^ (${this.cause})\n`;
 	}
 }
 
@@ -67,10 +67,10 @@ export class ParsingValidationError extends MetaBindError {
 			const failedLine = lines[this.position.from.line - 1]; // line is a one based index
 
 			const linePrefix = `${this.position.from.line} |   `;
-			this.message += `\n\n${linePrefix}${failedLine}`;
+			this.message += `\n${linePrefix}${failedLine}`;
 			this.message += `\n${' '.repeat(this.position.from.column - 1 + linePrefix.length)}${'^'.repeat(
 				(this.position.to.line === this.position.from.line ? this.position.to.index : failedLine.length) - this.position.from.index
-			)} (${this.cause})`;
+			)} (${this.cause})\n`;
 		}
 	}
 }

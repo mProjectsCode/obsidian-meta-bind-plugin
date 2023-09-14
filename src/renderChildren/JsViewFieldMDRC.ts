@@ -108,7 +108,6 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 
 			variable.metadataCache = this.plugin.metadataManager.register(
 				variable.bindTargetDeclaration.filePath ?? this.filePath,
-				this.frontmatter,
 				variable.writeSignal,
 				variable.bindTargetDeclaration.metadataPath,
 				this.uuid + '/' + variable.uuid
