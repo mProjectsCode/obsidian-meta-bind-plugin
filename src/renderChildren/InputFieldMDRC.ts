@@ -146,7 +146,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 			(isTruthy(this.getArgument(InputFieldArgumentType.SHOWCASE)) ||
 				isTruthy(this.getArgument(InputFieldArgumentType.TITLE)) ||
 				this.inputFieldDeclaration.inputFieldType === InputFieldType.SELECT ||
-				this.inputFieldDeclaration.inputFieldType === InputFieldType.MULTI_SELECT ||
+				this.inputFieldDeclaration.inputFieldType === InputFieldType.MULTI_SELECT_DEPRECATED ||
 				this.inputFieldDeclaration.inputFieldType === InputFieldType.LIST)
 		);
 	}

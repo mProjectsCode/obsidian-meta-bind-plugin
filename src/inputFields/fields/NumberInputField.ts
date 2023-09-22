@@ -2,6 +2,7 @@ import { AbstractInputField } from '../AbstractInputField';
 import { TextComponent } from 'obsidian';
 import { MBExtendedLiteral, numberToString } from '../../utils/Utils';
 import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
+import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
 
 type T = number;
 
@@ -53,6 +54,8 @@ export class NumberInputField extends AbstractInputField<T> {
 	render(container: HTMLDivElement): void {
 		console.debug(`meta-bind | NumberInputField >> render ${this.renderChild.uuid}`);
 
+		const placeholder = this.renderChild.getArgument(InputFieldArgumentType.PLACEHOLDER);
+
 		const component = new TextComponent(container);
 		component.inputEl.type = 'number';
 		component.setValue(numberToString(this.getInitialValue()));
@@ -60,6 +63,9 @@ export class NumberInputField extends AbstractInputField<T> {
 			const n = parseFloat(value);
 			this.onValueChange(isNaN(n) ? 0 : n);
 		});
+		if (placeholder !== undefined) {
+			component.setPlaceholder(placeholder.value);
+		}
 		this.numberComponent = component;
 	}
 

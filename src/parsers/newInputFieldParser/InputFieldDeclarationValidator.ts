@@ -60,7 +60,7 @@ export class InputFieldDeclarationValidator {
 		const bindTarget = this.validateBindTarget();
 		const argumentContainer = this.validateArguments(inputFieldType);
 
-		return {
+		const declaration: InputFieldDeclaration = {
 			fullDeclaration: this.unvalidatedDeclaration.fullDeclaration,
 			inputFieldType: inputFieldType,
 			isBound: bindTarget !== undefined,
@@ -68,6 +68,10 @@ export class InputFieldDeclarationValidator {
 			argumentContainer: argumentContainer,
 			errorCollection: this.errorCollection.merge(this.unvalidatedDeclaration.errorCollection),
 		};
+
+		this.checkForDepracation(declaration);
+
+		return declaration;
 	}
 
 	private validateInputFieldType(): InputFieldType {
@@ -100,6 +104,34 @@ export class InputFieldDeclarationValidator {
 		}
 
 		return InputFieldType.INVALID;
+	}
+
+	private checkForDepracation(declaration: InputFieldDeclaration): void {
+		if (
+			declaration.inputFieldType === InputFieldType.DATE_PICKER_DEPRECATED ||
+			declaration.inputFieldType === InputFieldType.TEXT_AREA_DEPRECATED ||
+			declaration.inputFieldType === InputFieldType.MULTI_SELECT_DEPRECATED
+		) {
+			if (this.unvalidatedDeclaration.inputFieldType?.position) {
+				this.errorCollection.add(
+					new ParsingValidationError(
+						ErrorLevel.WARNING,
+						'Declaration Validator',
+						`'${declaration.inputFieldType}' is deprecated, as it has been renamed to be in camel case ('input_field_type' => 'inputFieldType').`,
+						this.unvalidatedDeclaration.fullDeclaration,
+						this.unvalidatedDeclaration.inputFieldType.position
+					)
+				);
+			} else {
+				this.errorCollection.add(
+					new ParsingValidationError(
+						ErrorLevel.WARNING,
+						'Declaration Validator',
+						`'${declaration.inputFieldType}' is deprecated, as it has been renamed to be in camel case ('input_field_type' => 'inputFieldType').`
+					)
+				);
+			}
+		}
 	}
 
 	private validateBindTarget(): BindTargetDeclaration | undefined {

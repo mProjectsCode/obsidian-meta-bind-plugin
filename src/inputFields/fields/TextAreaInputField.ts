@@ -2,6 +2,7 @@ import { AbstractInputField } from '../AbstractInputField';
 import { TextAreaComponent } from 'obsidian';
 import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
 import { MBExtendedLiteral, stringifyLiteral } from '../../utils/Utils';
+import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
 
 type T = string;
 
@@ -47,9 +48,14 @@ export class TextAreaInputField extends AbstractInputField<T> {
 	render(container: HTMLDivElement): void {
 		console.debug(`meta-bind | TextAreaInputField >> render ${this.renderChild.uuid}`);
 
+		const placeholder = this.renderChild.getArgument(InputFieldArgumentType.PLACEHOLDER);
+
 		const component = new TextAreaComponent(container);
 		component.setValue(this.getInitialValue());
 		component.onChange(this.onValueChange);
+		if (placeholder !== undefined) {
+			component.setPlaceholder(placeholder.value);
+		}
 		this.textAreaComponent = component;
 	}
 
