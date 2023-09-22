@@ -101,7 +101,7 @@ export class SuggestInputField extends AbstractInputField<T> {
 			}
 
 			for (const suggestOptionsQueryArgument of optionQueryArguments) {
-				const result: DataArray<Record<string, Literal>> = await dv.pages(suggestOptionsQueryArgument.value, this.renderChild.filePath);
+				const result: DataArray<Record<string, Literal>> = dv.pages(suggestOptionsQueryArgument.value, this.renderChild.filePath);
 				result.forEach((file: Record<string, Literal>) => {
 					try {
 						const tFile: TFile = file.file as TFile;

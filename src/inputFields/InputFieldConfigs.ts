@@ -22,6 +22,11 @@ export const InputFieldConfigs: Record<InputFieldType, InputFieldConfig> = {
 		allowInBlock: true,
 		allowInline: true,
 	},
+	[InputFieldType.TEXT_AREA_DEPRECATED]: {
+		type: InputFieldType.TEXT_AREA_DEPRECATED,
+		allowInBlock: true,
+		allowInline: true,
+	},
 	[InputFieldType.TEXT_AREA]: {
 		type: InputFieldType.TEXT_AREA,
 		allowInBlock: true,
@@ -29,6 +34,11 @@ export const InputFieldConfigs: Record<InputFieldType, InputFieldConfig> = {
 	},
 	[InputFieldType.SELECT]: {
 		type: InputFieldType.SELECT,
+		allowInBlock: true,
+		allowInline: false,
+	},
+	[InputFieldType.MULTI_SELECT_DEPRECATED]: {
+		type: InputFieldType.MULTI_SELECT_DEPRECATED,
 		allowInBlock: true,
 		allowInline: false,
 	},
@@ -44,6 +54,11 @@ export const InputFieldConfigs: Record<InputFieldType, InputFieldConfig> = {
 	},
 	[InputFieldType.TIME]: {
 		type: InputFieldType.TIME,
+		allowInBlock: true,
+		allowInline: true,
+	},
+	[InputFieldType.DATE_PICKER_DEPRECATED]: {
+		type: InputFieldType.DATE_PICKER_DEPRECATED,
 		allowInBlock: true,
 		allowInline: true,
 	},

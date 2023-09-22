@@ -36,16 +36,22 @@ export class InputFieldFactory {
 			return new SliderInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.TEXT) {
 			return new TextInputField(args.inputFieldMDRC);
+		} else if (inputFieldType === InputFieldType.TEXT_AREA_DEPRECATED) {
+			return new TextAreaInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.TEXT_AREA) {
 			return new TextAreaInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.SELECT) {
 			return new SelectInputField(args.inputFieldMDRC);
+		} else if (inputFieldType === InputFieldType.MULTI_SELECT_DEPRECATED) {
+			return new MultiSelectInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.MULTI_SELECT) {
 			return new MultiSelectInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.DATE) {
 			return new DateInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.TIME) {
 			return new TimeInputField(args.inputFieldMDRC);
+		} else if (inputFieldType === InputFieldType.DATE_PICKER_DEPRECATED) {
+			return new DatePickerInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.DATE_PICKER) {
 			return new DatePickerInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.NUMBER) {

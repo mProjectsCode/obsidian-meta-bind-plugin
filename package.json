@@ -35,7 +35,7 @@
 		"jest": "^29.6.1",
 		"jest-environment-jsdom": "^28.1.1",
 		"obsidian": "latest",
-		"obsidian-dataview": "latest",
+		"obsidian-dataview": "0.5.56",
 		"prettier": "2.7.1",
 		"svelte": "^4.2.0",
 		"svelte-preprocess": "^5.0.4",
@@ -45,7 +45,7 @@
 	},
 	"dependencies": {
 		"@codemirror/language": "https://github.com/lishid/cm-language",
-		"@lemons_dev/parsinom": "^0.0.6",
+		"@lemons_dev/parsinom": "^0.0.8",
 		"@opd-libs/opd-metadata-lib": "0.0.4",
 		"@opd-libs/opd-utils-lib": "0.0.2",
 		"@popperjs/core": "^2.11.8",

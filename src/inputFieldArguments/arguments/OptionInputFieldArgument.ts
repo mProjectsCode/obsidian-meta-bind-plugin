@@ -1,6 +1,5 @@
 import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
 import { InputFieldArgumentType, InputFieldType } from '../../parsers/InputFieldDeclarationParser';
-import { ErrorLevel, MetaBindArgumentError } from '../../utils/errors/MetaBindErrors';
 import { MBLiteral, parseLiteral } from '../../utils/Utils';
 import { ParsingResultNode } from '../../parsers/newInputFieldParser/InputFieldDeclarationValidator';
 
@@ -8,6 +7,7 @@ export class OptionInputFieldArgument extends AbstractInputFieldArgument {
 	identifier: InputFieldArgumentType = InputFieldArgumentType.OPTION;
 	allowedInputFields: InputFieldType[] = [
 		InputFieldType.SELECT,
+		InputFieldType.MULTI_SELECT_DEPRECATED,
 		InputFieldType.MULTI_SELECT,
 		InputFieldType.SUGGESTER,
 		InputFieldType.IMAGE_SUGGESTER,

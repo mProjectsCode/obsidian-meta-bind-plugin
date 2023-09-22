@@ -2,12 +2,15 @@
 	import {ListInputField} from './ListInputField';
 	import Icon from '../../../utils/Icon.svelte';
 	import {Button, TextInput} from 'obsidian-svelte';
+	import {InputFieldArgumentType} from '../../../parsers/InputFieldDeclarationParser';
 
 	export let value: string[] = [];
 	export let onValueChange: (value: any) => void;
 	export let listInput: ListInputField;
 
 	let addValue: string = '';
+
+	let placeholder = listInput.renderChild.getArgument(InputFieldArgumentType.PLACEHOLDER);
 
 	export function updateValue(v: string[]) {
 		value = v;
@@ -44,7 +47,7 @@
 	{/each}
 </div>
 <div class="mb-list-input">
-	<TextInput bind:value={addValue} placeholder="add entry..." width="100%"></TextInput>
+	<TextInput bind:value={addValue} placeholder="{placeholder?.value ?? 'add entry...'}" width="100%"></TextInput>
 	<Button on:click={() => add()} disabled="{!addValue}">
 		<Icon iconName="plus"/>
 	</Button>

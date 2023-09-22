@@ -58,7 +58,9 @@
 <div
 	class="suggest-input"
 	on:click={suggest}
-	on:keydown={suggestKey}>
+	on:keydown={suggestKey}
+	role="button"
+	tabindex=0>
 	<div class="suggest-text">
 		{#if isLink}
 			<LinkComponent bind:mdLink={mdLink}></LinkComponent>

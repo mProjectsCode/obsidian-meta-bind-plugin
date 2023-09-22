@@ -6,12 +6,15 @@ export enum InputFieldType {
 	TOGGLE = 'toggle',
 	SLIDER = 'slider',
 	TEXT = 'text',
-	TEXT_AREA = 'text_area',
+	TEXT_AREA_DEPRECATED = 'text_area',
+	TEXT_AREA = 'textArea',
 	SELECT = 'select',
-	MULTI_SELECT = 'multi_select',
+	MULTI_SELECT_DEPRECATED = 'multi_select',
+	MULTI_SELECT = 'multiSelect',
 	DATE = 'date',
 	TIME = 'time',
-	DATE_PICKER = 'date_picker',
+	DATE_PICKER_DEPRECATED = 'date_picker',
+	DATE_PICKER = 'datePicker',
 	NUMBER = 'number',
 	SUGGESTER = 'suggester',
 	EDITOR = 'editor',
@@ -35,6 +38,7 @@ export enum InputFieldArgumentType {
 	ON_VALUE = 'onValue',
 	OFF_VALUE = 'offValue',
 	DEFAULT_VALUE = 'defaultValue',
+	PLACEHOLDER = 'placeholder',
 
 	INVALID = 'invalid',
 }
@@ -79,7 +83,7 @@ export interface InputFieldDeclaration {
  * @param declaration
  */
 export function getPublishDefaultValue(declaration: InputFieldDeclaration): unknown {
-	const placeholderString = 'placeholder';
+	const placeholderString: string = declaration.argumentContainer.get(InputFieldArgumentType.PLACEHOLDER)?.value ?? 'placeholder';
 
 	if (declaration.inputFieldType === InputFieldType.TOGGLE) {
 		const offArgument = declaration.argumentContainer.get(InputFieldArgumentType.OFF_VALUE);
@@ -89,19 +93,19 @@ export function getPublishDefaultValue(declaration: InputFieldDeclaration): unkn
 		return minArgument ? minArgument.value : 0;
 	} else if (declaration.inputFieldType === InputFieldType.TEXT) {
 		return placeholderString;
-	} else if (declaration.inputFieldType === InputFieldType.TEXT_AREA) {
+	} else if (declaration.inputFieldType === InputFieldType.TEXT_AREA_DEPRECATED || declaration.inputFieldType === InputFieldType.TEXT_AREA) {
 		return placeholderString;
 	} else if (declaration.inputFieldType === InputFieldType.SELECT) {
 		const firstOptionArgument = declaration.argumentContainer.get(InputFieldArgumentType.OPTION);
 		return firstOptionArgument ? firstOptionArgument.value : placeholderString;
-	} else if (declaration.inputFieldType === InputFieldType.MULTI_SELECT) {
+	} else if (declaration.inputFieldType === InputFieldType.MULTI_SELECT_DEPRECATED || declaration.inputFieldType === InputFieldType.MULTI_SELECT) {
 		const firstOptionArgument = declaration.argumentContainer.get(InputFieldArgumentType.OPTION);
 		return firstOptionArgument ? firstOptionArgument.value : placeholderString;
 	} else if (declaration.inputFieldType === InputFieldType.DATE) {
 		return '1970-01-01';
 	} else if (declaration.inputFieldType === InputFieldType.TIME) {
 		return '00:00';
-	} else if (declaration.inputFieldType === InputFieldType.DATE_PICKER) {
+	} else if (declaration.inputFieldType === InputFieldType.DATE_PICKER_DEPRECATED || declaration.inputFieldType === InputFieldType.DATE_PICKER) {
 		return '1970-01-01';
 	} else if (declaration.inputFieldType === InputFieldType.NUMBER) {
 		return 0;
