@@ -56,6 +56,7 @@ export interface MetaBindPluginSettings {
 	enableJs: boolean;
 
 	inputFieldTemplates: InputFieldTemplate[];
+	excludedFolders: string[];
 
 	// @deprecated
 	inputTemplates: string | undefined;
@@ -78,6 +79,8 @@ export const DEFAULT_SETTINGS: MetaBindPluginSettings = {
 	enableJs: false,
 
 	inputFieldTemplates: [],
+	excludedFolders: ['templates'],
 
+	// @deprecated
 	inputTemplates: undefined,
 };

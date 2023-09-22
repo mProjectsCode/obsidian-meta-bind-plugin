@@ -150,7 +150,6 @@ export class MetadataManager {
 			return;
 		}
 
-		console.warn(pathParts, fileCache.metadata, filePath);
 		const { parent, child } = traverseObjectToParentByPath(pathParts, fileCache.metadata);
 
 		if (parent.value === undefined) {

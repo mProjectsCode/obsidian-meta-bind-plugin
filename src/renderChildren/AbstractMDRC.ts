@@ -17,7 +17,7 @@ export class AbstractMDRC extends MarkdownRenderChild {
 		plugin: MetaBindPlugin,
 		filePath: string,
 		uuid: string,
-		frontmatter: any | null | undefined
+		frontmatter?: any | null | undefined
 	) {
 		super(containerEl);
 

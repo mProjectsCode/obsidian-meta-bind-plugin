@@ -10,6 +10,7 @@ import { Component, MarkdownPostProcessorContext } from 'obsidian';
 import { InputFieldAPI } from './InputFieldAPI';
 import { UnvalidatedInputFieldDeclaration } from '../parsers/newInputFieldParser/InputFieldDeclarationValidator';
 import { IAPI } from './IAPI';
+import { ExcludedMDRC } from '../renderChildren/ExcludedMDRC';
 
 export class API implements IAPI {
 	public plugin: MetaBindPlugin;
@@ -37,7 +38,11 @@ export class API implements IAPI {
 		filePath: string,
 		containerEl: HTMLElement,
 		component: Component | MarkdownPostProcessorContext
-	): InputFieldMDRC {
+	): InputFieldMDRC | ExcludedMDRC {
+		if (this.plugin.isFilePathExcluded(filePath)) {
+			return this.createExcludedField(containerEl, filePath, component);
+		}
+
 		const declaration = this.newInputFieldParser.validateDeclaration(unvalidatedDeclaration);
 
 		const inputField = new InputFieldMDRC(containerEl, renderType, declaration, this.plugin, filePath, self.crypto.randomUUID());
@@ -52,7 +57,11 @@ export class API implements IAPI {
 		filePath: string,
 		containerEl: HTMLElement,
 		component: Component | MarkdownPostProcessorContext
-	): InputFieldMDRC {
+	): InputFieldMDRC | ExcludedMDRC {
+		if (this.plugin.isFilePathExcluded(filePath)) {
+			return this.createExcludedField(containerEl, filePath, component);
+		}
+
 		const declaration: InputFieldDeclaration = this.newInputFieldParser.parseString(fullDeclaration);
 
 		const inputField = new InputFieldMDRC(containerEl, renderType, declaration, this.plugin, filePath, self.crypto.randomUUID());
@@ -65,12 +74,16 @@ export class API implements IAPI {
 		fullDeclaration: string,
 		renderType: RenderChildType,
 		filePath: string,
-		container: HTMLElement,
+		containerEl: HTMLElement,
 		component: Component | MarkdownPostProcessorContext
-	): ViewFieldMDRC {
+	): ViewFieldMDRC | ExcludedMDRC {
+		if (this.plugin.isFilePathExcluded(filePath)) {
+			return this.createExcludedField(containerEl, filePath, component);
+		}
+
 		const declaration: ViewFieldDeclaration = this.viewFieldParser.parseString(fullDeclaration);
 
-		const viewField = new ViewFieldMDRC(container, renderType, declaration, this.plugin, filePath, self.crypto.randomUUID());
+		const viewField = new ViewFieldMDRC(containerEl, renderType, declaration, this.plugin, filePath, self.crypto.randomUUID());
 		component.addChild(viewField);
 
 		return viewField;
@@ -82,12 +95,23 @@ export class API implements IAPI {
 		filePath: string,
 		containerEl: HTMLElement,
 		component: Component | MarkdownPostProcessorContext
-	): JsViewFieldMDRC {
+	): JsViewFieldMDRC | ExcludedMDRC {
+		if (this.plugin.isFilePathExcluded(filePath)) {
+			return this.createExcludedField(containerEl, filePath, component);
+		}
+
 		const declaration: JsViewFieldDeclaration = this.viewFieldParser.parseJsString(fullDeclaration);
 
 		const viewField = new JsViewFieldMDRC(containerEl, renderType, declaration, this.plugin, filePath, self.crypto.randomUUID());
 		component.addChild(viewField);
 
 		return viewField;
+	}
+
+	public createExcludedField(containerEl: HTMLElement, filePath: string, component: Component | MarkdownPostProcessorContext): ExcludedMDRC {
+		const excludedField = new ExcludedMDRC(containerEl, RenderChildType.INLINE, this.plugin, filePath, self.crypto.randomUUID());
+		component.addChild(excludedField);
+
+		return excludedField;
 	}
 }

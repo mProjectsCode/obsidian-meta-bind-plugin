@@ -11,12 +11,17 @@ New Features
 -   `placeholder` input field argument
     -   lets you define a placeholder value to be displayed in the input field, if no value is set
     -   works on the following input fields `text`, `textArea`, `number` and `list`
+-   specific folders can now be excluded in the setting, excluding means that the plugin will not show input or view fields in these folders
+-   the `option` argument now allows for a name and a value, e.g. `option(value, displayName)`
+-   numbers and booleans will now be recognized and treated as such
+    -   e.g. `option(5, 5 Stars)` will set the metadata to the number 5 instead of the string '5'
+    -   e.g. `offValue(0)` will set the metadata to the number 0 instead of the string '0'
 
 Changes
 
 -   new parser for input fields, view fields and bind targets
     -   input fields now display way better error messages
-    -   i tried not to introduce breaking changes, but some might have slipped through
+    -   I tried not to introduce breaking changes, but some might have slipped through
     -   this is also why the update took so long
 -   new API to create input field using code (e.g. using dataviewJS or [JS Engine](https://github.com/mProjectsCode/obsidian-js-engine-plugin))
     -   this is a breaking change
@@ -25,6 +30,7 @@ Bug Fixes
 
 -   fixed a bug with the metadata cache when the frontmatter was invalid
 -   fixed a bug with view fields that caused an error when referencing metadata from another file
+-   fixed`toggle` with `offValue` sometimes showing the wrong toggle state
 
 # 0.5.1
 
