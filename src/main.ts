@@ -63,11 +63,11 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				const isViewField = content.startsWith('VIEW[') && content.endsWith(']');
 				if (isInputField) {
 					const inputField = this.api.createInputFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock, ctx);
-					ctx.addChild(inputField);
+					// ctx.addChild(inputField);
 				}
 				if (isViewField) {
 					const viewField = this.api.createViewFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock, ctx);
-					ctx.addChild(viewField);
+					// ctx.addChild(viewField);
 				}
 			}
 		}, 100);
@@ -78,22 +78,16 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			const isInputField = content.startsWith('INPUT[') && content.endsWith(']');
 			if (isInputField) {
 				const inputField = this.api.createInputFieldFromString(content, RenderChildType.BLOCK, ctx.sourcePath, codeBlock, ctx);
-				ctx.addChild(inputField);
+				// ctx.addChild(inputField);
 			}
 		});
 
 		this.registerMarkdownCodeBlockProcessor('meta-bind-js-view', (source, el, ctx) => {
 			const inputField = this.api.createJsViewFieldFromString(source, RenderChildType.BLOCK, ctx.sourcePath, el, ctx);
-			ctx.addChild(inputField);
+			// ctx.addChild(inputField);
 		});
 
-		// this.registerMarkdownCodeBlockProcessor('meta-bind-js', (source, el, ctx) => {
-		// 	ctx.addChild(new ScriptMarkdownRenderChild(el, source, ctx, this));
-		// });
-
 		this.registerEditorExtension(createMarkdownRenderChildWidgetEditorPlugin(this));
-		// const languageCompartment = new Compartment();
-		// this.registerEditorExtension(languageCompartment.of(javascript()));
 
 		this.addCommand({
 			id: 'mb-debugger-command',
@@ -102,32 +96,6 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				debugger;
 			},
 		});
-
-		// this.addCommand({
-		// 	id: 'mb-test-command',
-		// 	name: 'test command',
-		// 	editorCallback: (editor: Editor, view: MarkdownView | MarkdownFileInfo) => {
-		// 		if (view.file) {
-		// 			this.app.fileManager.processFrontMatter(view.file, frontmatter => {
-		// 				return frontmatter;
-		// 			});
-		// 		}
-		// 	},
-		// });
-
-		// if (this.settings.devMode) {
-		// 	this.addCommand({
-		// 		id: 'meta-bind-debug',
-		// 		name: 'Trip Debugger',
-		// 		callback: () => {
-		// 			debugger;
-		// 		},
-		// 	});
-		// }
-		//
-		// this.app.workspace.onLayoutReady(async () => {
-		// 	await this.registerCodeMirrorMode();
-		// });
 
 		this.addSettingTab(new MetaBindSettingTab(this.app, this));
 	}
@@ -157,6 +125,16 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		}
 
 		return filePaths;
+	}
+
+	isFilePathExcluded(path: string): boolean {
+		for (const excludedFolder of this.settings.excludedFolders) {
+			if (path.startsWith(excludedFolder)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	async loadSettings(): Promise<void> {

@@ -1,7 +1,8 @@
-import { App, ButtonComponent, PluginSettingTab, Setting, TextAreaComponent } from 'obsidian';
+import { App, PluginSettingTab, Setting } from 'obsidian';
 import MetaBindPlugin from '../main';
 import { DEFAULT_SETTINGS, Weekday, weekdays } from './Settings';
-import { InputFieldTemplatesSettingModal } from './InputFieldTemplatesSettingModal';
+import { ExcludedFoldersSettingModal } from './excludedFoldersSetting/ExcludedFoldersSettingModal';
+import { InputFieldTemplatesSettingModal } from './inputFieldTemplateSetting/InputFieldTemplatesSettingModal';
 
 export class MetaBindSettingTab extends PluginSettingTab {
 	plugin: MetaBindPlugin;
@@ -81,22 +82,21 @@ export class MetaBindSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Templates')
-			.setDesc(`You can specify templates here, and access them using \`INPUT[template_name][overrides (optional)]\` in your notes.`);
-
-		const templatesButton = new ButtonComponent(containerEl);
-		templatesButton.setButtonText('Edit Templates');
-		templatesButton.onClick(() => {
-			new InputFieldTemplatesSettingModal(this.app, this.plugin).open();
-		});
+			.setDesc(`You can specify templates here, and access them using \`INPUT[template_name][overrides (optional)]\` in your notes.`)
+			.addButton(cb => {
+				cb.setButtonText('Edit Templates');
+				cb.onClick(() => {
+					new InputFieldTemplatesSettingModal(this.app, this.plugin).open();
+				});
+			});
 
 		new Setting(containerEl)
-			.setName('Dev Mode')
-			.setDesc('Enable dev mode. Not recommended unless you want to debug this plugin.')
-			.addToggle(cb => {
-				cb.setValue(this.plugin.settings.devMode);
-				cb.onChange(data => {
-					this.plugin.settings.devMode = data;
-					this.plugin.saveSettings();
+			.setName('Excluded Folders')
+			.setDesc(`You can specify excluded folders here. The plugin will not work within excluded folders.`)
+			.addButton(cb => {
+				cb.setButtonText('Edit Excluded Folders');
+				cb.onClick(() => {
+					new ExcludedFoldersSettingModal(this.app, this.plugin).open();
 				});
 			});
 
@@ -107,6 +107,19 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				cb.setValue(this.plugin.settings.enableJs);
 				cb.onChange(data => {
 					this.plugin.settings.enableJs = data;
+					this.plugin.saveSettings();
+				});
+			});
+
+		containerEl.createEl('h3', { text: 'Advanced Settings' });
+
+		new Setting(containerEl)
+			.setName('Dev Mode')
+			.setDesc('Enable dev mode. Not recommended unless you want to debug this plugin.')
+			.addToggle(cb => {
+				cb.setValue(this.plugin.settings.devMode);
+				cb.onChange(data => {
+					this.plugin.settings.devMode = data;
 					this.plugin.saveSettings();
 				});
 			});
