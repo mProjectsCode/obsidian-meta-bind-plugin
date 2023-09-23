@@ -1,5 +1,11 @@
 # Obsidian Meta Bind Changelog
 
+# 0.6.1
+
+Bug Fixes
+
+-   fixed a bug with the settings migration causing the settings to be deleted
+
 # 0.6.0
 
 New Features
