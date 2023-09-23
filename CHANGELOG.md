@@ -31,6 +31,7 @@ Changes
     -   this is also why the update took so long
 -   new API to create input field using code (e.g. using dataviewJS or [JS Engine](https://github.com/mProjectsCode/obsidian-js-engine-plugin))
     -   this is a breaking change
+-   deprecated some input fields that had names in snake_case for camelCase names
 
 Bug Fixes
 
