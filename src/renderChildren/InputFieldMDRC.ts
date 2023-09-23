@@ -141,14 +141,15 @@ export class InputFieldMDRC extends AbstractMDRC {
 	}
 
 	addCardContainer(): boolean {
-		return (
-			this.renderChildType === RenderChildType.BLOCK &&
-			(isTruthy(this.getArgument(InputFieldArgumentType.SHOWCASE)) ||
-				isTruthy(this.getArgument(InputFieldArgumentType.TITLE)) ||
-				this.inputFieldDeclaration.inputFieldType === InputFieldType.SELECT ||
-				this.inputFieldDeclaration.inputFieldType === InputFieldType.MULTI_SELECT_DEPRECATED ||
-				this.inputFieldDeclaration.inputFieldType === InputFieldType.LIST)
-		);
+		const containerInputFieldType =
+			this.inputFieldDeclaration.inputFieldType === InputFieldType.SELECT ||
+			this.inputFieldDeclaration.inputFieldType === InputFieldType.MULTI_SELECT_DEPRECATED ||
+			this.inputFieldDeclaration.inputFieldType === InputFieldType.MULTI_SELECT ||
+			this.inputFieldDeclaration.inputFieldType === InputFieldType.LIST;
+
+		const hasContainerArgument = isTruthy(this.getArgument(InputFieldArgumentType.SHOWCASE)) || isTruthy(this.getArgument(InputFieldArgumentType.TITLE));
+
+		return this.renderChildType === RenderChildType.BLOCK && (containerInputFieldType || hasContainerArgument);
 	}
 
 	hasValidBindTarget(): boolean {

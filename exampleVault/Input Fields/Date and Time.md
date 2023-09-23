@@ -1,6 +1,6 @@
 ---
 time: 14:12
-date2: Tuesday, September 12th 2023
+date2: 
 date1: 2023-06-08
 ---
 
@@ -12,6 +12,10 @@ INPUT[date(showcase):date1]
 ### Date Picker
 ```meta-bind
 INPUT[date_picker(showcase):date2]
+```
+
+```meta-bind
+INPUT[datePicker(showcase):date2]
 ```
 
 ### Time

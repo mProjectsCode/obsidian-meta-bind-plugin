@@ -90,8 +90,12 @@ export class InputFieldAPI {
 
 	public setBindTargetMetadataField(
 		unvalidatedDeclaration: UnvalidatedInputFieldDeclaration,
-		bindTargetMetadataField: string[]
+		bindTargetMetadataField: string | string[]
 	): UnvalidatedInputFieldDeclaration {
+		if (typeof bindTargetMetadataField === 'string') {
+			bindTargetMetadataField = [bindTargetMetadataField];
+		}
+
 		if (unvalidatedDeclaration.bindTarget) {
 			unvalidatedDeclaration.bindTarget.path = bindTargetMetadataField.map(x => ({ value: x }));
 		} else {
