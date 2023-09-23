@@ -94,7 +94,7 @@ export const InputFieldConfigs: Record<InputFieldType, InputFieldConfig> = {
 	},
 	[InputFieldType.INLINE_SELECT]: {
 		type: InputFieldType.INLINE_SELECT,
-		allowInBlock: false,
+		allowInBlock: true,
 		allowInline: true,
 	},
 	[InputFieldType.LIST]: {
