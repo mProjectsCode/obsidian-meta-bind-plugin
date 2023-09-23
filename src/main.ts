@@ -142,9 +142,11 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		let loadedSettings = await this.loadData();
 
-		loadedSettings = this.applyTemplatesMigration(loadedSettings);
+		loadedSettings = this.applyTemplatesMigration(Object.assign({}, DEFAULT_SETTINGS, loadedSettings));
 
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, loadedSettings);
+		this.settings = loadedSettings;
+
+		await this.saveSettings();
 	}
 
 	async saveSettings(): Promise<void> {
