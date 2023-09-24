@@ -7,9 +7,8 @@ import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindError
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { ShowcaseInputFieldArgument } from '../inputFieldArguments/arguments/ShowcaseInputFieldArgument';
 import { TitleInputFieldArgument } from '../inputFieldArguments/arguments/TitleInputFieldArgument';
-import { isTruthy } from '../utils/Utils';
+import { isTruthy, MBExtendedLiteral } from '../utils/Utils';
 import { Listener, Signal } from '../utils/Signal';
-import { BindTargetDeclaration } from '../parsers/BindTargetParser';
 import { AbstractMDRC } from './AbstractMDRC';
 import { MetadataFileCache } from '../metadata/MetadataFileCache';
 import MetaBindPlugin from '../main';
@@ -22,22 +21,21 @@ export enum RenderChildType {
 
 export class InputFieldMDRC extends AbstractMDRC {
 	metadataCache: MetadataFileCache | undefined;
-	inputField: AbstractInputField | undefined;
+	inputField: AbstractInputField<MBExtendedLiteral> | undefined;
 
 	fullDeclaration?: string;
 	inputFieldDeclaration: InputFieldDeclaration;
-	bindTargetDeclaration?: BindTargetDeclaration;
-	private metadataManagerReadSignalListener: Listener<any> | undefined;
 
-	// maybe 2: in/out
+	private metadataManagerReadSignalListener: Listener<MBExtendedLiteral | undefined> | undefined;
+
 	/**
 	 * Signal to write to the input field
 	 */
-	public writeSignal: Signal<any>;
+	public writeSignal: Signal<MBExtendedLiteral | undefined>;
 	/**
 	 * Signal to read from the input field
 	 */
-	public readSignal: Signal<any>;
+	public readSignal: Signal<MBExtendedLiteral | undefined>;
 
 	constructor(
 		containerEl: HTMLElement,
@@ -55,15 +53,11 @@ export class InputFieldMDRC extends AbstractMDRC {
 		this.fullDeclaration = declaration.fullDeclaration;
 		this.inputFieldDeclaration = declaration;
 
-		this.writeSignal = new Signal<any>(undefined);
-		this.readSignal = new Signal<any>(undefined);
+		this.writeSignal = new Signal<MBExtendedLiteral | undefined>(undefined);
+		this.readSignal = new Signal<MBExtendedLiteral | undefined>(undefined);
 
 		if (!this.errorCollection.hasErrors()) {
 			try {
-				if (this.inputFieldDeclaration.isBound) {
-					this.bindTargetDeclaration = this.plugin.api.bindTargetParser.parseBindTarget(this.inputFieldDeclaration.bindTarget, this.filePath);
-				}
-
 				this.inputField = InputFieldFactory.createInputField(this.inputFieldDeclaration.inputFieldType, {
 					renderChildType: renderChildType,
 					inputFieldMDRC: this,
@@ -76,18 +70,23 @@ export class InputFieldMDRC extends AbstractMDRC {
 
 	registerSelfToMetadataManager(): MetadataFileCache | undefined {
 		// if bind target is invalid, return
-		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetDeclaration) {
+		if (!this.inputFieldDeclaration?.isBound || !this.inputFieldDeclaration.bindTarget) {
 			return;
 		}
 
 		this.metadataManagerReadSignalListener = this.readSignal.registerListener({ callback: this.updateMetadataManager.bind(this) });
 
-		return this.plugin.metadataManager.register(this.bindTargetDeclaration.filePath, undefined, this.writeSignal, this.bindTargetDeclaration.metadataPath, this.uuid);
+		return this.plugin.metadataManager.register(
+			this.inputFieldDeclaration.bindTarget.filePath ?? this.filePath,
+			this.writeSignal,
+			this.inputFieldDeclaration.bindTarget.metadataPath,
+			this.uuid
+		);
 	}
 
 	unregisterSelfFromMetadataManager(): void {
 		// if bind target is invalid, return
-		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetDeclaration) {
+		if (!this.inputFieldDeclaration?.isBound || !this.inputFieldDeclaration.bindTarget) {
 			return;
 		}
 
@@ -95,25 +94,37 @@ export class InputFieldMDRC extends AbstractMDRC {
 			this.readSignal.unregisterListener(this.metadataManagerReadSignalListener);
 		}
 
-		this.plugin.metadataManager.unregister(this.bindTargetDeclaration.filePath, this.uuid);
+		this.plugin.metadataManager.unregister(this.inputFieldDeclaration.bindTarget.filePath ?? this.filePath, this.uuid);
 	}
 
-	updateMetadataManager(value: any): void {
+	updateMetadataManager(value: unknown): void {
 		// if bind target is invalid, return
-		if (!this.inputFieldDeclaration?.isBound || !this.bindTargetDeclaration) {
+		if (!this.inputFieldDeclaration?.isBound || !this.inputFieldDeclaration.bindTarget) {
 			return;
 		}
 
-		this.plugin.metadataManager.updatePropertyInCache(value, this.bindTargetDeclaration.metadataPath, this.bindTargetDeclaration.filePath, this.uuid);
+		this.plugin.metadataManager.updatePropertyInCache(
+			value,
+			this.inputFieldDeclaration.bindTarget.metadataPath,
+			this.inputFieldDeclaration.bindTarget.filePath ?? this.filePath,
+			this.uuid
+		);
 	}
 
-	getInitialValue(): any | undefined {
-		if (this.inputFieldDeclaration?.isBound && this.bindTargetDeclaration) {
-			const value = traverseObjectByPath(this.bindTargetDeclaration.metadataPath, this.metadataCache?.metadata);
-			console.debug(`meta-bind | InputFieldMarkdownRenderChild >> setting initial value to ${value} (typeof ${typeof value}) for input field ${this.uuid}`);
-			return value ?? this.inputField?.getDefaultValue();
+	getInitialValue(): MBExtendedLiteral {
+		if (!this.inputField) {
+			throw new MetaBindInternalError(ErrorLevel.CRITICAL, 'can not get initial value for input field', 'input field is undefined');
+		}
+
+		if (this.inputFieldDeclaration?.isBound && this.inputFieldDeclaration.bindTarget) {
+			let value: MBExtendedLiteral | undefined = traverseObjectByPath(this.inputFieldDeclaration.bindTarget.metadataPath, this.metadataCache?.metadata);
+			value = value === undefined ? this.inputField.getFallbackDefaultValue() : value;
+			console.debug(
+				`meta-bind | InputFieldMarkdownRenderChild >> setting initial value to ${value} (typeof ${typeof value}) for input field ${this.uuid}`
+			);
+			return value;
 		} else {
-			return this.inputField?.getDefaultValue();
+			return this.inputField.getFallbackDefaultValue();
 		}
 	}
 
@@ -130,17 +141,19 @@ export class InputFieldMDRC extends AbstractMDRC {
 	}
 
 	addCardContainer(): boolean {
-		return (
-			this.renderChildType === RenderChildType.BLOCK &&
-			(isTruthy(this.getArgument(InputFieldArgumentType.SHOWCASE)) ||
-				isTruthy(this.getArgument(InputFieldArgumentType.TITLE)) ||
-				this.inputFieldDeclaration.inputFieldType === InputFieldType.SELECT ||
-				this.inputFieldDeclaration.inputFieldType === InputFieldType.MULTI_SELECT)
-		);
+		const containerInputFieldType =
+			this.inputFieldDeclaration.inputFieldType === InputFieldType.SELECT ||
+			this.inputFieldDeclaration.inputFieldType === InputFieldType.MULTI_SELECT_DEPRECATED ||
+			this.inputFieldDeclaration.inputFieldType === InputFieldType.MULTI_SELECT ||
+			this.inputFieldDeclaration.inputFieldType === InputFieldType.LIST;
+
+		const hasContainerArgument = isTruthy(this.getArgument(InputFieldArgumentType.SHOWCASE)) || isTruthy(this.getArgument(InputFieldArgumentType.TITLE));
+
+		return this.renderChildType === RenderChildType.BLOCK && (containerInputFieldType || hasContainerArgument);
 	}
 
 	hasValidBindTarget(): boolean {
-		return isTruthy(this.inputFieldDeclaration?.isBound) && isTruthy(this.bindTargetDeclaration);
+		return isTruthy(this.inputFieldDeclaration?.isBound) && isTruthy(this.inputFieldDeclaration.bindTarget);
 	}
 
 	async onload(): Promise<void> {
@@ -169,8 +182,10 @@ export class InputFieldMDRC extends AbstractMDRC {
 		// if card container this points to the container.
 		let wrapperContainer: HTMLElement;
 
-		const showcaseArgument: ShowcaseInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.SHOWCASE);
-		const titleArgument: TitleInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.TITLE);
+		const showcaseArgument: ShowcaseInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.SHOWCASE) as
+			| ShowcaseInputFieldArgument
+			| undefined;
+		const titleArgument: TitleInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.TITLE) as TitleInputFieldArgument | undefined;
 
 		if (this.addCardContainer()) {
 			const cardContainer: HTMLDivElement = this.containerEl.createDiv({ cls: 'meta-bind-plugin-card' });
@@ -201,9 +216,10 @@ export class InputFieldMDRC extends AbstractMDRC {
 		const container: HTMLDivElement = createDiv();
 		container.addClass('meta-bind-plugin-input-wrapper');
 
+		this.inputField?.filterValue(this.getInitialValue());
 		this.inputField?.render(container);
 
-		const classArguments: ClassInputFieldArgument[] = this.getArguments(InputFieldArgumentType.CLASS);
+		const classArguments: ClassInputFieldArgument[] = this.getArguments(InputFieldArgumentType.CLASS) as ClassInputFieldArgument[];
 		if (classArguments) {
 			this.inputField?.getHtmlElement().addClasses(classArguments.map(x => x.value).flat());
 		}

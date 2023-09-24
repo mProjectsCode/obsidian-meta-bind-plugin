@@ -1,11 +1,11 @@
-import { ErrorLevel, MetaBindBindTargetError } from '../utils/errors/MetaBindErrors';
-import { parsePath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
+import { ErrorLevel } from '../utils/errors/MetaBindErrors';
 import { IPlugin } from '../IPlugin';
+import { UnvalidatedBindTargetDeclaration } from './newInputFieldParser/InputFieldDeclarationValidator';
+import { BIND_TARGET } from './nomParsers/Parsers';
+import { ParsingValidationError } from './ParsingError';
 
 export interface BindTargetDeclaration {
-	filePath: string;
-	fileName: string;
-	metadataFieldName: string;
+	filePath: string | undefined;
 	metadataPath: string[];
 }
 
@@ -16,43 +16,59 @@ export class BindTargetParser {
 		this.plugin = plugin;
 	}
 
-	parseBindTarget(bindTargetString: string, fallbackFilePath: string): BindTargetDeclaration {
-		if (!bindTargetString) {
-			throw new MetaBindBindTargetError(ErrorLevel.CRITICAL, 'failed to parse bind target', 'bind target is empty');
-		}
+	parseAndValidateBindTarget(bindTargetString: string): BindTargetDeclaration {
+		return this.validateBindTarget(bindTargetString, this.parseBindTarget(bindTargetString));
+	}
 
+	parseBindTarget(bindTargetString: string): UnvalidatedBindTargetDeclaration {
+		return BIND_TARGET.parse(bindTargetString) as UnvalidatedBindTargetDeclaration;
+	}
+
+	validateBindTarget(fullDeclaration: string, unvalidatedBindTargetDeclaration: UnvalidatedBindTargetDeclaration): BindTargetDeclaration {
 		const bindTargetDeclaration: BindTargetDeclaration = {} as BindTargetDeclaration;
 
-		const bindTargetParts: string[] = bindTargetString.split('#');
+		const filePath = unvalidatedBindTargetDeclaration.file?.value;
+		if (filePath !== undefined) {
+			const filePaths: string[] = this.plugin.getFilePathsByName(filePath);
 
-		if (bindTargetParts.length === 1) {
-			// the bind target is in the same file
-			bindTargetDeclaration.fileName = fallbackFilePath;
-			bindTargetDeclaration.metadataFieldName = bindTargetString;
-		} else if (bindTargetParts.length === 2) {
-			// the bind target is in another file
-			bindTargetDeclaration.fileName = bindTargetParts[0];
-			bindTargetDeclaration.metadataFieldName = bindTargetParts[1];
-		} else {
-			throw new MetaBindBindTargetError(ErrorLevel.CRITICAL, 'failed to parse bind target', "bind target may only contain one '#' to specify the metadata field");
-		}
-
-		try {
-			bindTargetDeclaration.metadataPath = parsePath(bindTargetDeclaration.metadataFieldName);
-		} catch (e) {
-			if (e instanceof Error) {
-				throw new MetaBindBindTargetError(ErrorLevel.CRITICAL, 'failed to parse bind target', `bind target path parsing error: ${e?.message}`);
+			if (filePaths.length === 0) {
+				if (unvalidatedBindTargetDeclaration.file?.position) {
+					throw new ParsingValidationError(
+						ErrorLevel.CRITICAL,
+						'Bind Target Validator',
+						`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file.value}' not found.`,
+						fullDeclaration,
+						unvalidatedBindTargetDeclaration.file.position
+					);
+				} else {
+					throw new ParsingValidationError(
+						ErrorLevel.CRITICAL,
+						'Bind Target Validator',
+						`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file?.value}' not found.`
+					);
+				}
+			} else if (filePaths.length === 1) {
+				bindTargetDeclaration.filePath = filePaths[0];
+			} else {
+				if (unvalidatedBindTargetDeclaration.file?.position) {
+					throw new ParsingValidationError(
+						ErrorLevel.CRITICAL,
+						'Bind Target Validator',
+						`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file.value}' resolves to multiple files, please also specify the file path.`,
+						fullDeclaration,
+						unvalidatedBindTargetDeclaration.file.position
+					);
+				} else {
+					throw new ParsingValidationError(
+						ErrorLevel.CRITICAL,
+						'Bind Target Validator',
+						`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file?.value}' resolves to multiple files, please also specify the file path.`
+					);
+				}
 			}
 		}
 
-		const filePaths: string[] = this.plugin.getFilePathsByName(bindTargetDeclaration.fileName);
-		if (filePaths.length === 0) {
-			throw new MetaBindBindTargetError(ErrorLevel.CRITICAL, 'failed to parse bind target', 'bind target file not found');
-		} else if (filePaths.length === 1) {
-			bindTargetDeclaration.filePath = filePaths[0];
-		} else {
-			throw new MetaBindBindTargetError(ErrorLevel.CRITICAL, 'failed to parse bind target', 'bind target resolves to multiple files, please also specify the file path');
-		}
+		bindTargetDeclaration.metadataPath = unvalidatedBindTargetDeclaration.path.map(x => x.value);
 
 		return bindTargetDeclaration;
 	}

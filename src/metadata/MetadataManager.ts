@@ -1,10 +1,8 @@
 import { CachedMetadata, TFile } from 'obsidian';
 import MetaBindPlugin from '../main';
-import { Internal } from '@opd-libs/opd-metadata-lib/lib/Internal';
 import { arrayEquals, traverseObjectToParentByPath } from '../utils/Utils';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { Signal } from '../utils/Signal';
-import getMetadataFromFileCache = Internal.getMetadataFromFileCache;
 import { MetadataFileCache } from './MetadataFileCache';
 
 export const metadataCacheUpdateCycleThreshold = 5; // {syncInterval (200)} * 5 = 1s
@@ -20,12 +18,14 @@ export class MetadataManager {
 
 		this.cache = new Map<string, MetadataFileCache>();
 
-		this.plugin.registerEvent(this.plugin.app.metadataCache.on('changed', (file, data, cache) => this.updateCacheOnFrontmatterUpdate(file.path, data, cache)));
+		this.plugin.registerEvent(
+			this.plugin.app.metadataCache.on('changed', (file, data, cache) => this.updateCacheOnFrontmatterUpdate(file.path, data, cache))
+		);
 
 		this.interval = window.setInterval(() => this.update(), this.plugin.settings.syncInterval);
 	}
 
-	register(filePath: string, frontmatter: any | null | undefined, signal: Signal<any | undefined>, metadataPath: string[], uuid: string): MetadataFileCache {
+	register(filePath: string, signal: Signal<any | undefined>, metadataPath: string[], uuid: string): MetadataFileCache {
 		const fileCache: MetadataFileCache | undefined = this.getCacheForFile(filePath);
 		if (fileCache) {
 			console.debug(`meta-bind | MetadataManager >> registered ${uuid} to existing file cache ${filePath} -> ${metadataPath}`);
@@ -44,9 +44,11 @@ export class MetadataManager {
 			console.debug(`meta-bind | MetadataManager >> registered ${uuid} to newly created file cache ${filePath} -> ${metadataPath}`);
 
 			const file = this.plugin.app.vault.getAbstractFileByPath(filePath) as TFile;
+			const frontmatter = this.plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+
 			const c: MetadataFileCache = {
 				file: file,
-				metadata: getMetadataFromFileCache(file, this.plugin),
+				metadata: frontmatter ?? {},
 				listeners: [
 					{
 						callback: (value: any) => signal.set(value),
@@ -113,10 +115,15 @@ export class MetadataManager {
 
 	async updateFrontmatter(fileCache: MetadataFileCache): Promise<void> {
 		console.debug(`meta-bind | MetadataManager >> updating frontmatter of "${fileCache.file.path}" to`, fileCache.metadata);
-		await this.plugin.app.fileManager.processFrontMatter(fileCache.file, frontMatter => {
+		try {
+			await this.plugin.app.fileManager.processFrontMatter(fileCache.file, frontMatter => {
+				fileCache.changed = false;
+				Object.assign(frontMatter, fileCache.metadata);
+			});
+		} catch (e) {
 			fileCache.changed = false;
-			Object.assign(frontMatter, fileCache.metadata);
-		});
+			console.warn('failed to update frontmatter', e);
+		}
 	}
 
 	updateCache(metadata: Record<string, any>, filePath: string, uuid?: string | undefined): void {
@@ -134,7 +141,7 @@ export class MetadataManager {
 		this.notifyListeners(fileCache, undefined, uuid);
 	}
 
-	updatePropertyInCache(value: any, pathParts: string[], filePath: string, uuid?: string | undefined): void {
+	updatePropertyInCache(value: unknown, pathParts: string[], filePath: string, uuid?: string | undefined): void {
 		console.debug(`meta-bind | MetadataManager >> updating "${JSON.stringify(pathParts)}" in "${filePath}" metadata cache to`, value);
 		// console.trace();
 
@@ -149,10 +156,11 @@ export class MetadataManager {
 			throw Error(`The parent of "${JSON.stringify(pathParts)}" does not exist in Object, please create the parent first`);
 		}
 
-		if (child.value === value) {
-			console.debug(`meta-bind | MetadataManager >> skipping redundant update of "${JSON.stringify(pathParts)}" in "${filePath}" metadata cache`, value);
-			return;
-		}
+		// disabled because of mutated data in the cache
+		// if (deepEquals(child.value, value)) {
+		// 	console.debug(`meta-bind | MetadataManager >> skipping redundant update of "${JSON.stringify(pathParts)}" in "${filePath}" metadata cache`, value);
+		// 	return;
+		// }
 
 		parent.value[child.key] = value;
 		fileCache.cyclesSinceLastChange = 0;
@@ -202,7 +210,12 @@ export class MetadataManager {
 				}
 			} else {
 				const v = traverseObjectByPath(listener.metadataPath, fileCache.metadata);
-				console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata`, listener.metadataPath, fileCache.metadata, v);
+				console.debug(
+					`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata`,
+					listener.metadataPath,
+					fileCache.metadata,
+					v
+				);
 				listener.callback(v);
 			}
 		}

@@ -1,13 +1,15 @@
 ---
-slider1: 4
-nested:
-  object: test
+slider1: 6
 suggest: test
 toggle1: false
 Domestic_tasks:
   - Lunch 🍲
 Meditate: 100
 Slept: 00:00
+select: option c
+toggle: false
+nested:
+  object: asdasdasd
 ---
 
 ## In callouts
@@ -62,15 +64,17 @@ option(option d)
 Lorem ipsum dolor sit amet, `INPUT[date():other note#date]` consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. `INPUT[date():other note#date]` Curabitur sed rhoncus nisl. Maecenas nisi justo, viverra vel tempus vel, hendrerit at metus. `INPUT[date_picker():other note#date]`  asdasd asdasdasd
 
 ## Templates
-- unknown tempalate
-	- `INPUT[][toggle:toggle1]`
-	- `INPUT[nonExistantTemplate][toggle:toggle1]`
-- `INPUT[toggleTemplate][]`
+- `INPUT[][toggle:toggle1]` empty template
+- `INPUT[nonExistantTemplate][toggle:toggle1]` unknown template
+- `INPUT[toggleTemplate][]` 
 
 ## Error Messages
 - `INPUT[text():meta bind/nonExistantFile#title]`
 - `INPUT[slider(nonExistantArgument)]`
-- `INPUT[select(option(option a),option(option b),option(option c),option(option d)):select]`
+- `INPUT[slider]`
+- `INPUT[inlineSelect(option(option a),option(option b),option(option c),option(option d):select]`
+- `INPUT[inlineSelect(option(option a),option(option b),option(option c),option(option d)):select#]`
+- `INPUT[inlineSelect(option(option a),option(option b),option(option c),option(option d)):select#:]`
 
 
 Lorem ipsum dolor sit amet, `INPUT[text():meta bind/nonExistantFile#title]` consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. `INPUT[slider(nonExistantArgument)]` Curabitur sed rhoncus nisl. Maecenas nisi justo, viverra vel tempus vel, hendrerit at metus. `INPUT[select(option(option a),option(option b),option(option c),option(option d)):select]` asdasd asdasdasd
@@ -79,3 +83,5 @@ Code block error
 ```meta-bind
 INPUT[slider(nonExistantArgument)]
 ```
+
+`INPUT[inlineSelect(option(a), option(b), option(c)]`

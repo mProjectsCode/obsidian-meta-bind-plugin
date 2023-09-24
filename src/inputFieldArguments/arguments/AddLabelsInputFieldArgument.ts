@@ -1,18 +1,16 @@
 import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
 import { InputFieldArgumentType, InputFieldType } from '../../parsers/InputFieldDeclarationParser';
+import { ParsingResultNode } from '../../parsers/newInputFieldParser/InputFieldDeclarationValidator';
 
 export class AddLabelsInputFieldArgument extends AbstractInputFieldArgument {
 	identifier: InputFieldArgumentType = InputFieldArgumentType.ADD_LABELS;
 	allowedInputFields: InputFieldType[] = [InputFieldType.SLIDER, InputFieldType.PROGRESS_BAR];
 	value: boolean = true;
-	requiresValue: boolean = false;
+	valueLengthMin: number = 0;
+	valueLengthMax: number = 1;
 	allowMultiple: boolean = false;
 
-	override parseValue(value: any): void {
-		if (typeof value === 'boolean') {
-			this.value = value;
-		} else if (typeof value === 'string') {
-			this.value = value.toLowerCase() === 'true';
-		}
+	override _parseValue(value: ParsingResultNode[]): void {
+		this.value = value[0] === undefined || value[0]?.value.toLowerCase() === 'true';
 	}
 }

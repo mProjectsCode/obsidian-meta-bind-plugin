@@ -1,5 +1,4 @@
 import { ErrorLevel, MetaBindError } from './MetaBindErrors';
-import ErrorCollectionComponent from '../../publish/PublishFieldComponent.svelte';
 
 export class ErrorCollection {
 	errors: MetaBindError[];
@@ -18,6 +17,8 @@ export class ErrorCollection {
 			} else {
 				this.otherError = error;
 			}
+
+			console.warn(error);
 		} else {
 			console.warn(`[MB_ERROR_CONTAINER] received invalid error type`, error);
 		}
@@ -28,11 +29,13 @@ export class ErrorCollection {
 	 *
 	 * @param other another error container.
 	 */
-	merge(other: ErrorCollection): void {
+	merge(other: ErrorCollection): ErrorCollection {
 		this.errors = this.errors.concat(other.errors);
 		if (other.otherError) {
 			this.otherError = other.otherError;
 		}
+
+		return this;
 	}
 
 	hasErrors(): boolean {

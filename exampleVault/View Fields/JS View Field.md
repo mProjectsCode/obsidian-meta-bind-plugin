@@ -1,6 +1,6 @@
 ---
-number1: 22
-number2: 1
+number1: 23
+number2: 5
 ---
 `INPUT[number:number1]`
 `INPUT[number:number2]`

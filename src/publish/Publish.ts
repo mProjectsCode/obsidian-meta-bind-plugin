@@ -28,12 +28,10 @@ export class MetaBindPublishPlugin implements IPlugin {
 				const isViewField = fullDeclaration.startsWith('VIEW[') && fullDeclaration.endsWith(']');
 
 				if (isInputField) {
-					const inputField = this.api.createInputFieldFromString(fullDeclaration, ctx.sourcePath, ctx.frontmatter, codeBlock);
-					ctx.addChild(inputField);
+					this.api.createInputFieldFromString(fullDeclaration, ctx.sourcePath, ctx.frontmatter, codeBlock, ctx);
 				}
 				if (isViewField) {
-					const viewField = this.api.createViewFieldFromString(fullDeclaration, ctx.sourcePath, ctx.frontmatter, codeBlock);
-					ctx.addChild(viewField);
+					this.api.createViewFieldFromString(fullDeclaration, ctx.sourcePath, ctx.frontmatter, codeBlock, ctx);
 				}
 			}
 		}, 100);

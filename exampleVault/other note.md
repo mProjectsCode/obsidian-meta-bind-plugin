@@ -1,12 +1,12 @@
 ---
 tags: test
-title: test
-select: option b
-date: Tuesday, January 10th 2023
+title: test test
+select: option a
+date: 2023-09-16
 time: 19:20
 multi-select:
   - option a
-  - option c
+  - option b
 ---
 
 ## This is another note
