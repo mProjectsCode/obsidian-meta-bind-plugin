@@ -1,6 +1,6 @@
 ---
 select: a
-select2: "2"
+select2: 2
 ---
 
 ```meta-bind
