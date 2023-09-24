@@ -1,8 +1,8 @@
 import { InputFieldMDRC } from '../renderChildren/InputFieldMDRC';
 import { MBExtendedLiteral } from '../utils/Utils';
 import { ComputedSignal } from '../utils/Signal';
-import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
 import { DefaultValueInputFieldArgument } from '../inputFieldArguments/arguments/DefaultValueInputFieldArgument';
+import { InputFieldArgumentType } from './InputFieldConfigs';
 
 export type GetInputFieldType<T extends AbstractInputField<any>> = T extends AbstractInputField<infer R> ? R : unknown;
 

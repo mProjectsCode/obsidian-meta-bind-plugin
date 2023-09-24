@@ -2,7 +2,8 @@ import { AbstractInputField } from '../AbstractInputField';
 import { TextComponent } from 'obsidian';
 import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
 import { MBExtendedLiteral, stringifyLiteral } from '../../utils/Utils';
-import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
+
+import { InputFieldArgumentType } from '../InputFieldConfigs';
 
 type T = string;
 

@@ -1,12 +1,12 @@
-import { InputFieldArgumentType, InputFieldType } from '../parsers/InputFieldDeclarationParser';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
 
+import { IAPI } from './IAPI';
 import {
 	UnvalidatedBindTargetDeclaration,
 	UnvalidatedInputFieldArgument,
 	UnvalidatedInputFieldDeclaration,
-} from '../parsers/newInputFieldParser/InputFieldDeclarationValidator';
-import { IAPI } from './IAPI';
+} from '../parsers/newInputFieldParser/InputFieldDeclaration';
+import { InputFieldArgumentType, InputFieldType } from '../inputFields/InputFieldConfigs';
 
 export class InputFieldAPI {
 	private readonly api: IAPI;

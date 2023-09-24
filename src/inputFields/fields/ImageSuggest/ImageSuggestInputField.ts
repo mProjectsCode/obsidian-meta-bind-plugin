@@ -1,13 +1,13 @@
 import { AbstractInputField } from '../../AbstractInputField';
 import ImageSuggestInput from './ImageSuggestInput.svelte';
 import { ErrorLevel, MetaBindArgumentError, MetaBindInternalError } from '../../../utils/errors/MetaBindErrors';
-import { InputFieldArgumentType } from '../../../parsers/InputFieldDeclarationParser';
 import { Notice, TFile, TFolder } from 'obsidian';
 import { ImageSuggestModal } from './ImageSuggestModal';
 import { OptionQueryInputFieldArgument } from '../../../inputFieldArguments/arguments/OptionQueryInputFieldArgument';
 import { OptionInputFieldArgument } from '../../../inputFieldArguments/arguments/OptionInputFieldArgument';
 import { InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
 import { MBExtendedLiteral, stringifyLiteral } from '../../../utils/Utils';
+import { InputFieldArgumentType } from '../../InputFieldConfigs';
 
 type T = string;
 

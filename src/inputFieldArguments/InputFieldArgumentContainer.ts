@@ -1,6 +1,6 @@
 import { AbstractInputFieldArgument } from './AbstractInputFieldArgument';
-import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
 import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
+import { InputFieldArgumentType } from '../inputFields/InputFieldConfigs';
 
 export class InputFieldArgumentContainer {
 	arguments: AbstractInputFieldArgument[] = [];
@@ -16,12 +16,14 @@ export class InputFieldArgumentContainer {
 		}
 
 		for (const argument of this.arguments) {
-			map[argument.identifier] += 1;
-			if (map[argument.identifier] > 1 && !argument.allowMultiple) {
+			const argumentConfig = argument.getConfig();
+
+			map[argumentConfig.type] += 1;
+			if (map[argumentConfig.type] > 1 && !argumentConfig.allowMultiple) {
 				throw new MetaBindParsingError(
 					ErrorLevel.CRITICAL,
 					'failed to validate argument container',
-					`argument '${argument.identifier}' does not allow duplicates`
+					`argument '${argumentConfig.type}' does not allow duplicates`
 				);
 			}
 		}
@@ -35,8 +37,9 @@ export class InputFieldArgumentContainer {
 	 */
 	mergeByOverride(other: InputFieldArgumentContainer): InputFieldArgumentContainer {
 		for (const argument of other.arguments) {
-			if (!argument.allowMultiple) {
-				this.arguments = this.arguments.filter(x => x.identifier !== argument.identifier);
+			const argumentConfig = argument.getConfig();
+			if (!argumentConfig.allowMultiple) {
+				this.arguments = this.arguments.filter(x => x.getConfig().type !== argumentConfig.type);
 			}
 			this.arguments.push(argument);
 		}
@@ -55,8 +58,9 @@ export class InputFieldArgumentContainer {
 	 */
 	mergeByThrow(other: InputFieldArgumentContainer): InputFieldArgumentContainer {
 		for (const argument of other.arguments) {
-			if (!argument.allowMultiple) {
-				if (this.arguments.filter(x => x.identifier === argument.identifier).length > 0) {
+			const argumentConfig = argument.getConfig();
+			if (!argumentConfig.allowMultiple) {
+				if (this.arguments.filter(x => x.getConfig().type === argumentConfig.type).length > 0) {
 					throw new MetaBindParsingError(
 						ErrorLevel.ERROR,
 						'failed to merge argument container',
@@ -74,7 +78,7 @@ export class InputFieldArgumentContainer {
 	}
 
 	getAll(name: InputFieldArgumentType): AbstractInputFieldArgument[] {
-		return this.arguments.filter(x => x.identifier === name);
+		return this.arguments.filter(x => x.getConfig().type === name);
 	}
 
 	get(name: InputFieldArgumentType): AbstractInputFieldArgument | undefined {

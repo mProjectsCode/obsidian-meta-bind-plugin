@@ -1,5 +1,4 @@
 import { InputFieldMDRC, RenderChildType } from '../renderChildren/InputFieldMDRC';
-import { InputFieldDeclaration } from '../parsers/InputFieldDeclarationParser';
 import { JsViewFieldDeclaration, ViewFieldDeclaration, ViewFieldDeclarationParser } from '../parsers/ViewFieldDeclarationParser';
 import { BindTargetParser } from '../parsers/BindTargetParser';
 import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
@@ -8,9 +7,9 @@ import MetaBindPlugin from '../main';
 import { NewInputFieldDeclarationParser } from '../parsers/newInputFieldParser/InputFieldParser';
 import { Component, MarkdownPostProcessorContext } from 'obsidian';
 import { InputFieldAPI } from './InputFieldAPI';
-import { UnvalidatedInputFieldDeclaration } from '../parsers/newInputFieldParser/InputFieldDeclarationValidator';
 import { IAPI } from './IAPI';
 import { ExcludedMDRC } from '../renderChildren/ExcludedMDRC';
+import { InputFieldDeclaration, UnvalidatedInputFieldDeclaration } from '../parsers/newInputFieldParser/InputFieldDeclaration';
 
 export class API implements IAPI {
 	public plugin: MetaBindPlugin;

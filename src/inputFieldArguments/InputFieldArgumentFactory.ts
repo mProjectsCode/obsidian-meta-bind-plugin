@@ -1,4 +1,3 @@
-import { InputFieldArgumentType } from '../parsers/InputFieldDeclarationParser';
 import { ClassInputFieldArgument } from './arguments/ClassInputFieldArgument';
 import { AddLabelsInputFieldArgument } from './arguments/AddLabelsInputFieldArgument';
 import { MinValueInputFieldArgument } from './arguments/MinValueInputFieldArgument';
@@ -13,6 +12,7 @@ import { OffValueInputFieldArgument } from './arguments/OffValueInputFieldArgume
 import { OnValueInputFieldArgument } from './arguments/OnValueInputFieldArgument';
 import { DefaultValueInputFieldArgument } from './arguments/DefaultValueInputFieldArgument';
 import { PlaceholderInputFieldArgument } from './arguments/PlaceholderInputFieldArgument';
+import { InputFieldArgumentType } from '../inputFields/InputFieldConfigs';
 
 export class InputFieldArgumentFactory {
 	static createInputFieldArgument(argumentIdentifier: string): AbstractInputFieldArgument {

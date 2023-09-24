@@ -4,7 +4,8 @@ import { SelectInputFieldElement } from './SelectInputFieldElement';
 import { InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
 import { ErrorLevel, MetaBindInternalError } from '../../../utils/errors/MetaBindErrors';
 import { OptionInputFieldArgument } from '../../../inputFieldArguments/arguments/OptionInputFieldArgument';
-import { InputFieldArgumentType } from '../../../parsers/InputFieldDeclarationParser';
+
+import { InputFieldArgumentType } from '../../InputFieldConfigs';
 
 export abstract class AbstractSelectInputField<T extends MBExtendedLiteral> extends AbstractInputField<T> {
 	elements: SelectInputFieldElement[];

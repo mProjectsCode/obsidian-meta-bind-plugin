@@ -2,8 +2,8 @@ import { AbstractInputField } from '../../AbstractInputField';
 import ProgressBarInput from './ProgressBarInput.svelte';
 import { InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
 import { ErrorLevel, MetaBindInternalError } from '../../../utils/errors/MetaBindErrors';
-import { InputFieldArgumentType } from '../../../parsers/InputFieldDeclarationParser';
 import { clamp, MBExtendedLiteral } from '../../../utils/Utils';
+import { InputFieldArgumentType } from '../../InputFieldConfigs';
 
 type T = number;
 

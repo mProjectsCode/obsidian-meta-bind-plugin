@@ -1,47 +1,13 @@
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
-import { InputFieldArgumentType, InputFieldDeclaration, InputFieldType } from '../InputFieldDeclarationParser';
 import { ParsingValidationError } from '../ParsingError';
 import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
 import { InputFieldArgumentContainer } from '../../inputFieldArguments/InputFieldArgumentContainer';
 import { AbstractInputFieldArgument } from '../../inputFieldArguments/AbstractInputFieldArgument';
 import { InputFieldArgumentFactory } from '../../inputFieldArguments/InputFieldArgumentFactory';
-import { ParsingMarker, ParsingPosition, ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
 import { IPlugin } from '../../IPlugin';
-import { BindTargetDeclaration } from '../BindTargetParser';
-
-export interface ParsingResultNode {
-	value: string;
-	position?: ParsingRange;
-}
-
-export function createResultNode(value: string, range: ParsingRange): ParsingResultNode {
-	return {
-		value: value,
-		position: range,
-	};
-}
-
-export interface UnvalidatedBindTargetDeclaration {
-	file?: ParsingResultNode;
-	path: ParsingResultNode[];
-}
-
-export interface UnvalidatedInputFieldArgument {
-	name: ParsingResultNode;
-	value: ParsingResultNode[];
-}
-
-export interface PartialUnvalidatedInputFieldDeclaration {
-	inputFieldType?: ParsingResultNode;
-	templateName?: ParsingResultNode;
-	bindTarget?: UnvalidatedBindTargetDeclaration;
-	arguments: UnvalidatedInputFieldArgument[];
-}
-
-export interface UnvalidatedInputFieldDeclaration extends PartialUnvalidatedInputFieldDeclaration {
-	fullDeclaration: string;
-	errorCollection: ErrorCollection;
-}
+import { BindTargetDeclaration, InputFieldDeclaration, UnvalidatedInputFieldDeclaration } from './InputFieldDeclaration';
+import { ParsingResultNode } from './InputFieldParser';
+import { InputFieldArgumentType, InputFieldType } from '../../inputFields/InputFieldConfigs';
 
 export class InputFieldDeclarationValidator {
 	unvalidatedDeclaration: UnvalidatedInputFieldDeclaration;

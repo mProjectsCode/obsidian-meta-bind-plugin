@@ -1,11 +1,9 @@
-import { EnclosingPair, ParserUtils } from '../utils/ParserUtils';
+import { ParserUtils } from '../utils/ParserUtils';
 import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
-import { UnvalidatedBindTargetDeclaration } from './newInputFieldParser/InputFieldDeclarationValidator';
-import { BindTargetDeclaration } from './BindTargetParser';
 import { VIEW_FIELD_FULL_DECLARATION } from './nomParsers/Parsers';
 import { IPlugin } from '../IPlugin';
-import { e } from 'mathjs';
+import { BindTargetDeclaration, UnvalidatedBindTargetDeclaration } from './newInputFieldParser/InputFieldDeclaration';
 
 export enum ViewFieldType {
 	MATH = 'math',

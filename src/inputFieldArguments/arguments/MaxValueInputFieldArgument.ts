@@ -1,15 +1,11 @@
 import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
-import { InputFieldArgumentType, InputFieldType } from '../../parsers/InputFieldDeclarationParser';
 import { ErrorLevel, MetaBindParsingError } from '../../utils/errors/MetaBindErrors';
-import { ParsingResultNode } from '../../parsers/newInputFieldParser/InputFieldDeclarationValidator';
+
+import { ParsingResultNode } from '../../parsers/newInputFieldParser/InputFieldParser';
+import { InputFieldArgumentConfig, InputFieldArgumentConfigs, InputFieldArgumentType, InputFieldType } from '../../inputFields/InputFieldConfigs';
 
 export class MaxValueInputFieldArgument extends AbstractInputFieldArgument {
-	identifier: InputFieldArgumentType = InputFieldArgumentType.MAX_VALUE;
-	allowedInputFields: InputFieldType[] = [InputFieldType.SLIDER, InputFieldType.PROGRESS_BAR];
 	value: number = 100;
-	valueLengthMin: number = 1;
-	valueLengthMax: number = 1;
-	allowMultiple: boolean = false;
 
 	_parseValue(value: ParsingResultNode[]): void {
 		this.value = Number.parseInt(value[0].value);
@@ -20,5 +16,9 @@ export class MaxValueInputFieldArgument extends AbstractInputFieldArgument {
 				"value of argument 'maxValue' must be of type number"
 			);
 		}
+	}
+
+	public getConfig(): InputFieldArgumentConfig {
+		return InputFieldArgumentConfigs.maxValue;
 	}
 }

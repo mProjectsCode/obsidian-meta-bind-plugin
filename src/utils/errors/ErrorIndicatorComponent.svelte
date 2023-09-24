@@ -15,7 +15,8 @@
 </script>
 
 {#if !errorCollection.isEmpty()}
-	<div class="meta-bind-error-collection" on:click={() => openModal()} on:keydown={(e) => { if (e.key === ' ') { openModal() } }} role="button" tabindex=0>
+	<div class="meta-bind-error-collection" on:click={() => openModal()}
+		 on:keydown={(e) => { if (e.key === ' ') { openModal() } }} role="button" tabindex=0>
 		{#if errorCollection.hasErrors()}
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
 				 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"

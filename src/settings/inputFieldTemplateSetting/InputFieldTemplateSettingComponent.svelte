@@ -16,13 +16,13 @@
 </script>
 
 <tr>
-    <td>
-        <TextInput bind:value={template.name} placeholder="template-name"></TextInput>
-    </td>
-    <td style="width: 100%">
-        <TextInput bind:value={template.declaration} placeholder="INPUT[slider(addLabels)]" width="100%"></TextInput>
-    </td>
-    <td>
-        <IconButton icon="x" onClick={() => dispatchDeleteEvent()} tooltip="Delete Template"></IconButton>
-    </td>
+	<td>
+		<TextInput bind:value={template.name} placeholder="template-name"></TextInput>
+	</td>
+	<td style="width: 100%">
+		<TextInput bind:value={template.declaration} placeholder="INPUT[slider(addLabels)]" width="100%"></TextInput>
+	</td>
+	<td>
+		<IconButton icon="x" onClick={() => dispatchDeleteEvent()} tooltip="Delete Template"></IconButton>
+	</td>
 </tr>

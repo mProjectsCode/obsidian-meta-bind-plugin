@@ -6,7 +6,6 @@ import { TextAreaInputField } from './fields/TextAreaInputField';
 import { DateInputField } from './fields/DateInputField';
 import { TimeInputField } from './fields/TimeInputField';
 import { AbstractInputField } from './AbstractInputField';
-import { InputFieldType } from '../parsers/InputFieldDeclarationParser';
 import { DatePickerInputField } from './fields/DatePicker/DatePickerInputField';
 import { NumberInputField } from './fields/NumberInputField';
 import { SuggestInputField } from './fields/Suggest/SuggestInputField';
@@ -17,7 +16,7 @@ import MetaBindPlugin from '../main';
 import { ProgressBarInputField } from './fields/ProgressBar/ProgressBarInputField';
 import { InlineSelectInputField } from './fields/InlineSelectInputField';
 import { ListInputField } from './fields/List/ListInputField';
-import { InputFieldConfig, InputFieldConfigs } from './InputFieldConfigs';
+import { InputFieldConfig, InputFieldConfigs, InputFieldType } from './InputFieldConfigs';
 import { SelectInputField } from './fields/Select/SelectInputField';
 import { MultiSelectInputField } from './fields/Select/MultiSelectInputField';
 

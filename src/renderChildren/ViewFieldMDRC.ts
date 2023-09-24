@@ -2,13 +2,13 @@ import { ErrorLevel, MetaBindExpressionError } from '../utils/errors/MetaBindErr
 import { Listener, Signal } from '../utils/Signal';
 import { RenderChildType } from './InputFieldMDRC';
 import { ViewFieldDeclaration } from '../parsers/ViewFieldDeclarationParser';
-import { BindTargetDeclaration } from '../parsers/BindTargetParser';
 import { ViewField } from '../viewFields/ViewField';
 import * as MathJs from 'mathjs';
 import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
 import MetaBindPlugin from '../main';
 import { MetadataFileCache } from '../metadata/MetadataFileCache';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
+import { BindTargetDeclaration } from '../parsers/newInputFieldParser/InputFieldDeclaration';
 
 export interface ViewFieldVariable {
 	bindTargetDeclaration: BindTargetDeclaration;

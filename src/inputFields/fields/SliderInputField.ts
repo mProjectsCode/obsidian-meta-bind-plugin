@@ -1,9 +1,9 @@
 import { AbstractInputField } from '../AbstractInputField';
 import { SliderComponent } from 'obsidian';
-import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
 import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
 import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 import { clamp, MBExtendedLiteral } from '../../utils/Utils';
+import { InputFieldArgumentType } from '../InputFieldConfigs';
 
 type T = number;
 

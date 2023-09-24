@@ -2,12 +2,12 @@ import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { Parser } from '@lemons_dev/parsinom/lib/Parser';
 import {
-	createResultNode,
-	ParsingResultNode,
 	PartialUnvalidatedInputFieldDeclaration,
 	UnvalidatedBindTargetDeclaration,
 	UnvalidatedInputFieldArgument,
-} from '../newInputFieldParser/InputFieldDeclarationValidator';
+} from '../newInputFieldParser/InputFieldDeclaration';
+import { createResultNode, ParsingResultNode } from '../newInputFieldParser/InputFieldParser';
+
 const quote = `'`;
 
 const ident = P.regexp(/^[a-z][a-z0-9_-]*/i)

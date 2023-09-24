@@ -1,6 +1,6 @@
 import MetaBindPlugin from '../main';
 import { ErrorLevel, MetaBindExpressionError, MetaBindJsError } from '../utils/errors/MetaBindErrors';
-import { Listener, Signal } from '../utils/Signal';
+import { Signal } from '../utils/Signal';
 import { RenderChildType } from './InputFieldMDRC';
 import { JsViewFieldDeclaration } from '../parsers/ViewFieldDeclarationParser';
 import { ViewField } from '../viewFields/ViewField';

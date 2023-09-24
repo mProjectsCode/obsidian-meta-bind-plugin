@@ -6,6 +6,7 @@ if (!('structuredClone' in globalThis)) {
 	// @ts-ignore
 	globalThis.structuredClone = structuredClone;
 }
+
 /**
  * Gets the file name from a path
  *

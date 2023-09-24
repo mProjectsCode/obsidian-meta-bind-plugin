@@ -1,4 +1,4 @@
-import { UnvalidatedInputFieldDeclaration } from './InputFieldDeclarationValidator';
+import { UnvalidatedInputFieldDeclaration } from './InputFieldDeclaration';
 
 export interface TemplateSupplierTemplate<T> {
 	readonly name: string;
