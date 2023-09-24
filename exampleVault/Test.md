@@ -1,11 +1,10 @@
 ---
-frequency: "[[high]]"
-toggle: false
-needs: Meta Bind JS
-date: Saturday, July 8th 2023
-text: asdasddas
 Bible Reading: false
+test: 0
 ---
 
 `INPUT[toggle:Bible Reading]`
 `INPUT[toggle:["Bible Reading"]]`
+
+
+`INPUT[inlineSelect(option(0, 'don\'t do this'), option(1, 'do this \\')):test]`

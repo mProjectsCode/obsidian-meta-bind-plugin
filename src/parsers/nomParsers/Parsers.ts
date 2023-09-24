@@ -19,16 +19,28 @@ const ident = P.regexp(/^[a-z][a-z0-9_-]*/i)
 
 const spaceIdent = P.sequenceMap(
 	(a, b) => {
-		return a + b.map(x => x[0] + x[1]).join();
+		return a + b.map(x => x[0] + x[1]).join('');
 	},
 	ident,
 	P.sequence(P_UTILS.optionalWhitespace(), ident).many()
 ).describe('identifier with spaces');
 
+const escapeCharacter = P.string('\\')
+	.then(P_UTILS.any())
+	.map(escaped => {
+		if (escaped === "'") {
+			return "'";
+		} else if (escaped === '\\') {
+			return '\\';
+		} else {
+			return '\\' + escaped;
+		}
+	});
+
 function createStr(quotes: string): Parser<string> {
 	return P.string(quotes)
 		.then(
-			P.noneOf(quotes)
+			P.or(escapeCharacter, P.noneOf(quotes + '\\'))
 				.many()
 				.map(x => x.join(''))
 		)
@@ -41,11 +53,11 @@ const specialIdent = P.regexp(/^[^ \t\n\r()',]+/).describe('any character except
 
 const specialSpaceIdent = P.sequenceMap(
 	(a, b) => {
-		return a + b.map(x => x[0] + x[1]).join();
+		return a + b.map(x => x[0] + x[1]).join('');
 	},
 	specialIdent,
 	P.sequence(P_UTILS.optionalWhitespace(), specialIdent).many()
-).describe('any character except parentheses');
+).describe('any character except parentheses, single quotation marks and commas');
 
 const value = P.or(specialSpaceIdent, str);
 
