@@ -63,7 +63,7 @@ export class InlineSelectInputField extends AbstractInputField<T> {
 			component.addOption(stringifyLiteral(option.value), option.name);
 		}
 		component.setValue(stringifyLiteral(this.getInitialValue()));
-		component.onChange(this.onValueChange);
+		component.onChange(value => this.onValueChange(parseLiteral(value)));
 		this.selectComponent = component;
 	}
 
