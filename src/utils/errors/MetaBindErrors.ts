@@ -13,12 +13,14 @@ export enum ErrorType {
 	JS = 'MB_JS_ERROR',
 	EXPRESSION = 'MB_EXPRESSION_ERROR',
 	PUBLISH = 'MB_PUBLISH_ERROR',
+	VALIDATION = 'MB_VALIDATION_ERROR',
 
 	OTHER = 'OTHER',
 }
 
 export abstract class MetaBindError extends Error {
 	abstract getErrorType(): ErrorType;
+
 	errorLevel: ErrorLevel;
 	effect: string;
 	cause: string | Error;
@@ -35,7 +37,7 @@ export abstract class MetaBindError extends Error {
 		this.updateMessage();
 	}
 
-	private updateMessage(): void {
+	protected updateMessage(): void {
 		if (this.cause instanceof Error) {
 			this.message = `[${this.getErrorType()}] "${this.effect}" caused by error "${this.cause.message}"`;
 		} else {
@@ -57,6 +59,12 @@ export class MetaBindInternalError extends MetaBindError {
 export class MetaBindParsingError extends MetaBindError {
 	public getErrorType(): ErrorType {
 		return ErrorType.PARSING;
+	}
+}
+
+export class MetaBindValidationError extends MetaBindError {
+	public getErrorType(): ErrorType {
+		return ErrorType.VALIDATION;
 	}
 }
 

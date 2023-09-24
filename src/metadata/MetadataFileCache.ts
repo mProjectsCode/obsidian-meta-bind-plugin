@@ -1,5 +1,5 @@
 import { Listener } from '../utils/Signal';
-import { TFile } from 'obsidian';
+import { FrontMatterCache, TFile } from 'obsidian';
 
 export interface MetadataFileCacheListener extends Listener<any | undefined> {
 	metadataPath: string[];
@@ -7,7 +7,7 @@ export interface MetadataFileCacheListener extends Listener<any | undefined> {
 
 export interface MetadataFileCache {
 	file: TFile;
-	metadata: Record<string, any>;
+	metadata: FrontMatterCache;
 	listeners: MetadataFileCacheListener[];
 	/**
 	 * The cycles since the last change to the cache by the plugin.

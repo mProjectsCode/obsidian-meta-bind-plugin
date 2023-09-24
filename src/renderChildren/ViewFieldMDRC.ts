@@ -6,7 +6,6 @@ import { BindTargetDeclaration } from '../parsers/BindTargetParser';
 import { ViewField } from '../viewFields/ViewField';
 import * as MathJs from 'mathjs';
 import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
-import { IPlugin } from '../IPlugin';
 import MetaBindPlugin from '../main';
 import { MetadataFileCache } from '../metadata/MetadataFileCache';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
@@ -28,7 +27,6 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 	expression?: MathJs.EvalFunction;
 	viewFieldDeclaration: ViewFieldDeclaration;
 	variables: ViewFieldVariable[];
-	private metadataManagerReadSignalListener: Listener<any> | undefined;
 
 	constructor(
 		containerEl: HTMLElement,
@@ -50,46 +48,33 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 
 		if (this.errorCollection.isEmpty()) {
 			try {
-				for (const bindTarget of this.viewFieldDeclaration.bindTargets ?? []) {
-					this.variables.push({
-						bindTargetDeclaration: this.plugin.api.bindTargetParser.parseBindTarget(bindTarget, this.filePath),
-						writeSignal: new Signal<any>(undefined),
-						uuid: self.crypto.randomUUID(),
-						metadataCache: undefined,
-						writeSignalListener: undefined,
-						contextName: undefined,
-					});
+				let varCounter = 0;
+				this.expressionStr = '';
+
+				for (const entry of this.viewFieldDeclaration.declaration ?? []) {
+					if (typeof entry !== 'string') {
+						const variable = {
+							bindTargetDeclaration: entry,
+							writeSignal: new Signal<any>(undefined),
+							uuid: self.crypto.randomUUID(),
+							metadataCache: undefined,
+							writeSignalListener: undefined,
+							contextName: `MB_VAR_${varCounter}`,
+						};
+
+						this.variables.push(variable);
+						this.expressionStr += variable.contextName;
+						varCounter += 1;
+					} else {
+						this.expressionStr += entry;
+					}
 				}
 
-				this.parseExpression();
+				this.expression = MathJs.compile(this.expressionStr);
 			} catch (e) {
 				this.errorCollection.add(e);
 			}
 		}
-	}
-
-	parseExpression() {
-		const declaration = this.viewFieldDeclaration.declaration ?? '';
-		let varCounter = 0;
-
-		this.expressionStr = declaration.replace(/{.*?}/g, (substring: string): string => {
-			// remove braces and leading and trailing spaces
-			substring = substring.substring(1, substring.length - 1).trim();
-			// replace by variable name;
-			for (const variable of this.variables) {
-				if (variable.bindTargetDeclaration.metadataFieldName === substring) {
-					let varName = `MB_VAR_${varCounter}`;
-					variable.contextName = varName;
-					varCounter += 1;
-					return varName;
-				}
-			}
-
-			// this should be unreachable
-			return 'MB_VAR_NOT_FOUND';
-		});
-
-		this.expression = MathJs.compile(this.expressionStr);
 	}
 
 	buildContext(): Record<string, any> {
@@ -131,8 +116,7 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 			});
 
 			variable.metadataCache = this.plugin.metadataManager.register(
-				variable.bindTargetDeclaration.filePath,
-				this.frontmatter,
+				variable.bindTargetDeclaration.filePath ?? this.filePath,
 				variable.writeSignal,
 				variable.bindTargetDeclaration.metadataPath,
 				this.uuid + '/' + variable.uuid
@@ -145,7 +129,7 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 			if (variable.writeSignalListener) {
 				variable.writeSignal.unregisterListener(variable.writeSignalListener);
 			}
-			this.plugin.metadataManager.unregister(variable.bindTargetDeclaration.filePath, this.uuid + '/' + variable.uuid);
+			this.plugin.metadataManager.unregister(variable.bindTargetDeclaration.filePath ?? this.filePath, this.uuid + '/' + variable.uuid);
 		}
 	}
 

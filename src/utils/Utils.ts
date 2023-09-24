@@ -1,6 +1,11 @@
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { KeyValuePair } from '@opd-libs/opd-utils-lib/lib/Utils';
+import structuredClone from '@ungap/structured-clone';
 
+if (!('structuredClone' in globalThis)) {
+	// @ts-ignore
+	globalThis.structuredClone = structuredClone;
+}
 /**
  * Gets the file name from a path
  *
@@ -63,12 +68,12 @@ export function mod(n: number, m: number): number {
 }
 
 /**
- * Checks if 2 arrays contain equal values, the arrays should have the same datatype
+ * Checks if 2 arrays contain equal values, the arrays should have the same datatype. Order of the elements matters.
  *
  * @param arr1
  * @param arr2
  */
-export function doArraysContainEqualValues<T>(arr1: T[], arr2: T[]): boolean {
+export function doArraysContainEqualValues<T>(arr1: T[] | undefined, arr2: T[] | undefined): boolean {
 	if (arr1 == null && arr2 == null) {
 		return true;
 	}
@@ -80,8 +85,8 @@ export function doArraysContainEqualValues<T>(arr1: T[], arr2: T[]): boolean {
 		return false;
 	}
 
-	for (const arr1Element of arr1) {
-		if (!arr2.contains(arr1Element)) {
+	for (let i = 0; i < arr1.length; i++) {
+		if (arr1[i] !== arr2[i]) {
 			return false;
 		}
 	}
@@ -180,4 +185,131 @@ export function pathJoin(path1: string, path2: string): string {
 export function imagePathToUri(imagePath: string): string {
 	// return `app://local/${pathJoin(getVaultBasePath() ?? '', imagePath)}`;
 	return app.vault.adapter.getResourcePath(imagePath);
+}
+
+export function isObject(object: unknown): boolean {
+	return object != null && typeof object === 'object';
+}
+
+export function deepEquals(any1: unknown, any2: unknown): boolean {
+	// undefined check
+	if (any1 === undefined && any2 === undefined) {
+		return true;
+	} else if (any1 === undefined) {
+		return false;
+	} else if (any2 === undefined) {
+		return false;
+	}
+
+	// null check
+	if (any1 === null && any2 === null) {
+		return true;
+	} else if (any1 === null) {
+		return false;
+	} else if (any2 === null) {
+		return false;
+	}
+
+	if (typeof any1 === 'object' && typeof any2 === 'object') {
+		// array check
+		if (Array.isArray(any1) && Array.isArray(any2)) {
+			if (any1.length !== any2.length) {
+				return false;
+			}
+
+			for (let i = 0; i < any1.length; i++) {
+				if (!deepEquals(any1[i], any2[i])) {
+					return false;
+				}
+			}
+
+			return true;
+		} else if (Array.isArray(any1)) {
+			return false;
+		} else if (Array.isArray(any2)) {
+			return false;
+		}
+
+		const objKeys1 = Object.keys(any1);
+		const objKeys2 = Object.keys(any2);
+
+		if (objKeys1.length !== objKeys2.length) {
+			return false;
+		}
+
+		for (const key of objKeys1) {
+			// @ts-ignore
+			if (!deepEquals(any1[key], any2[key])) {
+				return false;
+			}
+		}
+
+		return true;
+	} else if (typeof any1 === 'object') {
+		return false;
+	} else if (typeof any2 === 'object') {
+		return false;
+	}
+
+	return any1 === any2;
+}
+
+export function deepFreeze<T extends object>(object: T): Readonly<T> {
+	// Retrieve the property names defined on object
+	const propNames: (string | symbol)[] = Reflect.ownKeys(object);
+
+	// Freeze properties before freezing self
+	for (const name of propNames) {
+		// @ts-ignores
+		const value: any = object[name];
+
+		if ((value && typeof value === 'object') || typeof value === 'function') {
+			deepFreeze(value);
+		}
+	}
+
+	return Object.freeze(object);
+}
+
+export function deepCopy<T extends object>(object: T): T {
+	return structuredClone(object);
+}
+
+export type MBLiteral = string | number | boolean | null;
+export type MBExtendedLiteral = MBLiteral | MBLiteral[];
+
+export function parseLiteral(literalString: string): MBLiteral {
+	if (literalString.toLowerCase() === 'null') {
+		return null;
+	} else if (literalString === 'true') {
+		return true;
+	} else if (literalString === 'false') {
+		return false;
+	} else {
+		const parsedNumber = Number.parseFloat(literalString);
+		return !Number.isNaN(parsedNumber) ? parsedNumber : literalString;
+	}
+}
+
+export function stringifyLiteral(literal: MBExtendedLiteral | undefined): string {
+	if (literal === undefined) {
+		return '';
+	}
+
+	if (literal === null) {
+		return 'null';
+	}
+
+	if (typeof literal === 'string') {
+		return literal;
+	} else if (typeof literal === 'boolean') {
+		return literal ? 'true' : 'false';
+	} else {
+		// typeof number
+		return literal.toString();
+	}
+}
+
+export function isLiteral(literal: unknown): literal is MBLiteral {
+	return literal === null || typeof literal === 'string' || typeof literal === 'boolean' || typeof literal === 'number';
 }

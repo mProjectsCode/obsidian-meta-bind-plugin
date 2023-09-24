@@ -51,7 +51,11 @@ export class Time {
 }
 
 export class TimeParser {
-	public static parse(timeString: string): Time | undefined {
+	public static parse(timeString: string | null | undefined): Time | undefined {
+		if (!timeString) {
+			return undefined;
+		}
+
 		const time: Time = TimeParser.getDefaultTime();
 
 		const timeParts = timeString.split(':');

@@ -1,21 +1,17 @@
 import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
 import { InputFieldArgumentType, InputFieldType } from '../../parsers/InputFieldDeclarationParser';
+import { MBLiteral, parseLiteral } from '../../utils/Utils';
+import { ParsingResultNode } from '../../parsers/newInputFieldParser/InputFieldDeclarationValidator';
 
 export class OnValueInputFieldArgument extends AbstractInputFieldArgument {
 	identifier: InputFieldArgumentType = InputFieldArgumentType.ON_VALUE;
 	allowedInputFields: InputFieldType[] = [InputFieldType.TOGGLE];
-	value: string | boolean | number = true;
-	requiresValue: boolean = true;
+	value: MBLiteral = true;
+	valueLengthMin: number = 1;
+	valueLengthMax: number = 1;
 	allowMultiple: boolean = false;
 
-	parseValue(valueStr: string): void {
-		if (valueStr === 'true') {
-			this.value = true;
-		} else if (valueStr === 'false') {
-			this.value = false;
-		} else {
-			const parsedNumber = Number.parseFloat(valueStr);
-			this.value = !Number.isNaN(parsedNumber) ? parsedNumber : valueStr;
-		}
+	_parseValue(value: ParsingResultNode[]): void {
+		this.value = parseLiteral(value[0].value);
 	}
 }

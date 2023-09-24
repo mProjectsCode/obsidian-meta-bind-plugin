@@ -1,5 +1,5 @@
 ---
-fileSuggest: "[[Other/Example Notes/Example Note with Image.md|Example Note with Image]]"
+fileSuggest: "[[Other/Example Notes/Example Note with Callouts.md|Example Note with Callouts]]"
 suggest: option 2
 ---
 

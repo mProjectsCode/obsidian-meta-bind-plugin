@@ -3,30 +3,28 @@
 
 	export let mdLink: MarkdownLink;
 
-	function getHref() {
-		return mdLink.block ? `${mdLink.target}#${mdLink.block}` : mdLink.target;
-	}
+	$: linkHref = mdLink.block ? `${mdLink.target}#${mdLink.block}` : mdLink.target;
 </script>
 
 {#if mdLink.alias}
 	<!-- svelte-ignore a11y-unknown-aria-attribute -->
 	<a
-		data-href={getHref()}
-		href={getHref()}
+		data-href={linkHref}
+		href={linkHref}
 		class="internal-link"
 		target="_blank"
 		rel="noopener"
-		aria-label={getHref()}
+		aria-label={linkHref}
 		aria-label-position="top">
 		{mdLink.alias}
 	</a>
 {:else}
 	<a
-		data-href={getHref()}
-		href={getHref()}
+		data-href={linkHref}
+		href={linkHref}
 		class="internal-link"
 		target="_blank"
 		rel="noopener">
-		{getHref()}
+		{linkHref}
 	</a>
 {/if}

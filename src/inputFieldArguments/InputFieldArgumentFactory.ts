@@ -5,13 +5,14 @@ import { MinValueInputFieldArgument } from './arguments/MinValueInputFieldArgume
 import { MaxValueInputFieldArgument } from './arguments/MaxValueInputFieldArgument';
 import { OptionInputFieldArgument } from './arguments/OptionInputFieldArgument';
 import { TitleInputFieldArgument } from './arguments/TitleInputFieldArgument';
-import { AlignRightInputFieldArgument } from './arguments/AlignRightInputFieldArgument';
 import { OptionQueryInputFieldArgument } from './arguments/OptionQueryInputFieldArgument';
 import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
 import { AbstractInputFieldArgument } from './AbstractInputFieldArgument';
 import { ShowcaseInputFieldArgument } from './arguments/ShowcaseInputFieldArgument';
 import { OffValueInputFieldArgument } from './arguments/OffValueInputFieldArgument';
 import { OnValueInputFieldArgument } from './arguments/OnValueInputFieldArgument';
+import { DefaultValueInputFieldArgument } from './arguments/DefaultValueInputFieldArgument';
+import { PlaceholderInputFieldArgument } from './arguments/PlaceholderInputFieldArgument';
 
 export class InputFieldArgumentFactory {
 	static createInputFieldArgument(argumentIdentifier: string): AbstractInputFieldArgument {
@@ -27,8 +28,6 @@ export class InputFieldArgumentFactory {
 			return new OptionInputFieldArgument();
 		} else if (argumentIdentifier === InputFieldArgumentType.TITLE) {
 			return new TitleInputFieldArgument();
-		} else if (argumentIdentifier === InputFieldArgumentType.ALIGN_RIGHT) {
-			return new AlignRightInputFieldArgument();
 		} else if (argumentIdentifier === InputFieldArgumentType.OPTION_QUERY) {
 			return new OptionQueryInputFieldArgument();
 		} else if (argumentIdentifier === InputFieldArgumentType.SHOWCASE) {
@@ -37,6 +36,10 @@ export class InputFieldArgumentFactory {
 			return new OffValueInputFieldArgument();
 		} else if (argumentIdentifier === InputFieldArgumentType.ON_VALUE) {
 			return new OnValueInputFieldArgument();
+		} else if (argumentIdentifier === InputFieldArgumentType.DEFAULT_VALUE) {
+			return new DefaultValueInputFieldArgument();
+		} else if (argumentIdentifier === InputFieldArgumentType.PLACEHOLDER) {
+			return new PlaceholderInputFieldArgument();
 		} else {
 			throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not crate input field argument', `unknown argument '${argumentIdentifier}'`);
 		}

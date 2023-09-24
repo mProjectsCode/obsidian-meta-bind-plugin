@@ -1,5 +1,5 @@
 ---
-number: 100
+number: 1234
 ---
 
 ```meta-bind
