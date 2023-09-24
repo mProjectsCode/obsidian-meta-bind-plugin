@@ -1,5 +1,11 @@
 # Obsidian Meta Bind Changelog
 
+# 0.6.3
+
+Bug Fixes
+
+-   fixed inline select not treating numbers and booleans as numbers and booleans, but as strings
+
 # 0.6.1
 
 Bug Fixes
