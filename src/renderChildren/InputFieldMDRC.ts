@@ -1,6 +1,5 @@
 import { AbstractInputField } from '../inputFields/AbstractInputField';
 import { InputFieldFactory } from '../inputFields/InputFieldFactory';
-import { InputFieldArgumentType, InputFieldDeclaration, InputFieldType } from '../parsers/InputFieldDeclarationParser';
 import { AbstractInputFieldArgument } from '../inputFieldArguments/AbstractInputFieldArgument';
 import { ClassInputFieldArgument } from '../inputFieldArguments/arguments/ClassInputFieldArgument';
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
@@ -13,6 +12,8 @@ import { AbstractMDRC } from './AbstractMDRC';
 import { MetadataFileCache } from '../metadata/MetadataFileCache';
 import MetaBindPlugin from '../main';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
+import { InputFieldDeclaration } from '../parsers/newInputFieldParser/InputFieldDeclaration';
+import { InputFieldArgumentType, InputFieldType } from '../inputFields/InputFieldConfigs';
 
 export enum RenderChildType {
 	INLINE = 'inline',

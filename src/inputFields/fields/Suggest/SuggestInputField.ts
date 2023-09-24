@@ -1,6 +1,5 @@
 import { AbstractInputField } from '../../AbstractInputField';
 import SuggestInput from './SuggestInput.svelte';
-import { InputFieldArgumentType } from '../../../parsers/InputFieldDeclarationParser';
 import { DataArray, getAPI, Literal } from 'obsidian-dataview';
 import { SuggestInputModal } from './SuggestInputModal';
 import { Notice, TFile } from 'obsidian';
@@ -9,6 +8,7 @@ import { OptionInputFieldArgument } from '../../../inputFieldArguments/arguments
 import { OptionQueryInputFieldArgument } from '../../../inputFieldArguments/arguments/OptionQueryInputFieldArgument';
 import { InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
 import { MBExtendedLiteral, MBLiteral, parseLiteral, stringifyLiteral } from '../../../utils/Utils';
+import { InputFieldArgumentType } from '../../InputFieldConfigs';
 
 export interface SuggestOption {
 	value: MBLiteral;

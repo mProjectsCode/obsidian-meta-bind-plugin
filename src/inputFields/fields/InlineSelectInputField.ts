@@ -2,9 +2,9 @@ import { AbstractInputField } from '../AbstractInputField';
 import { DropdownComponent } from 'obsidian';
 import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
 import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
-import { InputFieldArgumentType } from '../../parsers/InputFieldDeclarationParser';
 import { OptionInputFieldArgument } from '../../inputFieldArguments/arguments/OptionInputFieldArgument';
 import { MBExtendedLiteral, MBLiteral, parseLiteral, stringifyLiteral } from '../../utils/Utils';
+import { InputFieldArgumentType } from '../InputFieldConfigs';
 
 type T = MBLiteral;
 

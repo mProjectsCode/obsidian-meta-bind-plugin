@@ -1,23 +1,12 @@
 import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
-import { InputFieldArgumentType, InputFieldType } from '../../parsers/InputFieldDeclarationParser';
 import { MBLiteral, parseLiteral } from '../../utils/Utils';
-import { ParsingResultNode } from '../../parsers/newInputFieldParser/InputFieldDeclarationValidator';
+
+import { ParsingResultNode } from '../../parsers/newInputFieldParser/InputFieldParser';
+import { InputFieldArgumentConfig, InputFieldArgumentConfigs, InputFieldArgumentType, InputFieldType } from '../../inputFields/InputFieldConfigs';
 
 export class OptionInputFieldArgument extends AbstractInputFieldArgument {
-	identifier: InputFieldArgumentType = InputFieldArgumentType.OPTION;
-	allowedInputFields: InputFieldType[] = [
-		InputFieldType.SELECT,
-		InputFieldType.MULTI_SELECT_DEPRECATED,
-		InputFieldType.MULTI_SELECT,
-		InputFieldType.SUGGESTER,
-		InputFieldType.IMAGE_SUGGESTER,
-		InputFieldType.INLINE_SELECT,
-	];
 	value: MBLiteral = '';
 	name: string = '';
-	valueLengthMin: number = 1;
-	valueLengthMax: number = 2;
-	allowMultiple: boolean = true;
 
 	_parseValue(value: ParsingResultNode[]): void {
 		if (value.length === 1) {
@@ -27,5 +16,9 @@ export class OptionInputFieldArgument extends AbstractInputFieldArgument {
 			this.value = parseLiteral(value[0].value);
 			this.name = value[1].value;
 		}
+	}
+
+	public getConfig(): InputFieldArgumentConfig {
+		return InputFieldArgumentConfigs.option;
 	}
 }

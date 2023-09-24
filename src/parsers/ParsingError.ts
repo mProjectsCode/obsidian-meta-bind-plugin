@@ -1,6 +1,5 @@
 import { ErrorLevel, ErrorType, MetaBindError } from '../utils/errors/MetaBindErrors';
 import { ParseFailure, ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
-import { innerMode } from 'codemirror';
 
 export class ParsingError extends MetaBindError {
 	str: string;

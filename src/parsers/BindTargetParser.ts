@@ -1,13 +1,8 @@
 import { ErrorLevel } from '../utils/errors/MetaBindErrors';
 import { IPlugin } from '../IPlugin';
-import { UnvalidatedBindTargetDeclaration } from './newInputFieldParser/InputFieldDeclarationValidator';
 import { BIND_TARGET } from './nomParsers/Parsers';
 import { ParsingValidationError } from './ParsingError';
-
-export interface BindTargetDeclaration {
-	filePath: string | undefined;
-	metadataPath: string[];
-}
+import { BindTargetDeclaration, UnvalidatedBindTargetDeclaration } from './newInputFieldParser/InputFieldDeclaration';
 
 export class BindTargetParser {
 	plugin: IPlugin;

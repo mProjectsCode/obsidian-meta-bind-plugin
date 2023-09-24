@@ -1,4 +1,3 @@
-import { InputFieldDeclaration } from '../parsers/InputFieldDeclarationParser';
 import { ViewFieldDeclaration, ViewFieldDeclarationParser } from '../parsers/ViewFieldDeclarationParser';
 import { BindTargetParser } from '../parsers/BindTargetParser';
 import { IPlugin } from '../IPlugin';
@@ -8,6 +7,7 @@ import { NewInputFieldDeclarationParser } from '../parsers/newInputFieldParser/I
 import { MarkdownPostProcessorContext } from 'obsidian/publish';
 import { IAPI } from '../api/IAPI';
 import { InputFieldAPI } from '../api/InputFieldAPI';
+import { InputFieldDeclaration } from '../parsers/newInputFieldParser/InputFieldDeclaration';
 
 export class PublishAPI implements IAPI {
 	public readonly plugin: IPlugin;

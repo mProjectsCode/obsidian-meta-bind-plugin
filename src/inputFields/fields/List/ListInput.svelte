@@ -2,7 +2,8 @@
 	import {ListInputField} from './ListInputField';
 	import Icon from '../../../utils/Icon.svelte';
 	import {Button, TextInput} from 'obsidian-svelte';
-	import {InputFieldArgumentType} from '../../../parsers/InputFieldDeclarationParser';
+
+	import {InputFieldArgumentType} from '../../InputFieldConfigs';
 
 	export let value: string[] = [];
 	export let onValueChange: (value: any) => void;

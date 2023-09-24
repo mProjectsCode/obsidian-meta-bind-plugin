@@ -1,4 +1,4 @@
-import { Editor, MarkdownFileInfo, MarkdownPostProcessorContext, MarkdownView, Plugin } from 'obsidian';
+import { MarkdownPostProcessorContext, Plugin } from 'obsidian';
 import { MetaBindSettingTab } from './settings/SettingsTab';
 import { RenderChildType } from './renderChildren/InputFieldMDRC';
 import { getFileName, isPath, removeFileEnding } from './utils/Utils';

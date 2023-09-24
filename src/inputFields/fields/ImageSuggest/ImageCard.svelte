@@ -27,7 +27,8 @@
 	}
 </style>
 
-<div class="image-card" on:click={() => onSelect(image)} on:keydown={(event) => keySelect(event, image)} role="button" tabindex=0>
+<div class="image-card" on:click={() => onSelect(image)} on:keydown={(event) => keySelect(event, image)} role="button"
+	 tabindex=0>
 	<img class="image-card-image" src={imagePathToUri(image)} alt={image}/>
 	<span class="image-card-text">{image}</span>
 </div>
