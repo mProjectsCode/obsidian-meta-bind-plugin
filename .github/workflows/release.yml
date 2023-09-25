@@ -22,8 +22,8 @@ jobs:
             - name: Build
               id: build
               run: |
-                  yarn
-                  yarn run build --if-present
+                  npm run ci
+                  npm run build
                   mkdir ${{ env.PLUGIN_NAME }}
                   cp main.js manifest.json styles.css ${{ env.PLUGIN_NAME }}
                   zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
