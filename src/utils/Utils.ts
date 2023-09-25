@@ -1,6 +1,9 @@
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { KeyValuePair } from '@opd-libs/opd-utils-lib/lib/Utils';
 import structuredClone from '@ungap/structured-clone';
+import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
+import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
+import { Parser } from '@lemons_dev/parsinom/lib/Parser';
 
 if (!('structuredClone' in globalThis)) {
 	// @ts-ignore
@@ -279,6 +282,11 @@ export function deepCopy<T extends object>(object: T): T {
 export type MBLiteral = string | number | boolean | null;
 export type MBExtendedLiteral = MBLiteral | MBLiteral[];
 
+const numberParser: Parser<number> = P.or(
+	P.sequenceMap((a, b, c) => Number(a + b + c), P_UTILS.digits(), P.string('.'), P_UTILS.digits()),
+	P_UTILS.digits().map(x => Number(x))
+).thenEof();
+
 export function parseLiteral(literalString: string): MBLiteral {
 	if (literalString.toLowerCase() === 'null') {
 		return null;
@@ -287,8 +295,13 @@ export function parseLiteral(literalString: string): MBLiteral {
 	} else if (literalString === 'false') {
 		return false;
 	} else {
-		const parsedNumber = Number.parseFloat(literalString);
-		return !Number.isNaN(parsedNumber) ? parsedNumber : literalString;
+		const parseResult = numberParser.tryParse(literalString);
+
+		if (parseResult.success) {
+			return parseResult.value;
+		} else {
+			return literalString;
+		}
 	}
 }
 
