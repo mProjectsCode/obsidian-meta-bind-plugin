@@ -7351,7 +7351,7 @@ ${this.getUnderline(linePrefix.length, failedLine.length)} (${this.cause})
         this.errorCollection.add(new MetaBindBindTargetError("WARNING" /* WARNING */, "populated with default data", "input field not bound"));
         return getPublishDefaultValue(this.declaration);
       }
-      if (this.declaration.bindTarget.filePath !== this.filePath) {
+      if (this.declaration.bindTarget.filePath !== void 0 && this.declaration.bindTarget.filePath !== this.filePath) {
         this.errorCollection.add(
           new MetaBindBindTargetError("WARNING" /* WARNING */, "populated with default data", "can not load metadata of another file in obsidian publish")
         );
