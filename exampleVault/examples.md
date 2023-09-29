@@ -1,5 +1,5 @@
 ---
-slider1: 6
+slider1: 8
 suggest: test
 toggle1: false
 Domestic_tasks:
@@ -9,7 +9,7 @@ Slept: 00:00
 select: option c
 toggle: false
 nested:
-  object: asdasdasd
+  object: asdasddfs
 inlineSelect: 0
 ---
 

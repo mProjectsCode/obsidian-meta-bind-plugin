@@ -220,7 +220,6 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 		valueLengthMax: 2,
 		allowMultiple: true,
 	},
-
 	[InputFieldArgumentType.OPTION_QUERY]: {
 		type: InputFieldArgumentType.OPTION_QUERY,
 		allowedInputFieldTypes: [InputFieldType.SUGGESTER, InputFieldType.IMAGE_SUGGESTER],

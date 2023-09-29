@@ -1,6 +1,6 @@
 import { CachedMetadata, TFile } from 'obsidian';
 import MetaBindPlugin from '../main';
-import { arrayEquals, traverseObjectToParentByPath } from '../utils/Utils';
+import { arrayEquals, arrayStartsWith, traverseObjectToParentByPath } from '../utils/Utils';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { Signal } from '../utils/Signal';
 import { MetadataFileCache } from './MetadataFileCache';
@@ -204,9 +204,14 @@ export class MetadataManager {
 			}
 
 			if (metadataPath) {
-				if (arrayEquals(metadataPath, listener.metadataPath)) {
+				if (arrayEquals(listener.metadataPath, metadataPath)) {
 					console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata value`, value);
 					listener.callback(value);
+				}
+				if (arrayStartsWith(metadataPath, listener.metadataPath)) {
+					const actualValue = traverseObjectByPath(listener.metadataPath, fileCache.metadata);
+					console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata value`, actualValue);
+					listener.callback(actualValue);
 				}
 			} else {
 				const v = traverseObjectByPath(listener.metadataPath, fileCache.metadata);

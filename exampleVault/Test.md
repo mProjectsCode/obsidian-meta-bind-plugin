@@ -1,5 +1,8 @@
 ---
 Bible Reading: false
-test: 0
+test: false
 ---
 
+`INPUT[toggle:test]`
+
+# `VIEW[{test} ? "String 1" : "String 2"]`
