@@ -7358,7 +7358,7 @@ ${this.getUnderline(linePrefix.length, failedLine.length)} (${this.cause})
         return getPublishDefaultValue(this.declaration);
       }
       const value2 = (0, import_ObjectTraversalUtils2.traverseObjectByPath)(this.declaration.bindTarget.metadataPath, this.metadata);
-      if (!value2) {
+      if (value2 === void 0) {
         this.errorCollection.add(new MetaBindBindTargetError("WARNING" /* WARNING */, "populated with default data", "value in metadata is undefined"));
         return getPublishDefaultValue(this.declaration);
       }
