@@ -49,7 +49,7 @@ export class PublishInputFieldMDRC extends MarkdownRenderChild {
 
 		const value = traverseObjectByPath(this.declaration.bindTarget.metadataPath, this.metadata);
 
-		if (!value) {
+		if (value === undefined) {
 			this.errorCollection.add(new MetaBindBindTargetError(ErrorLevel.WARNING, 'populated with default data', 'value in metadata is undefined'));
 			return getPublishDefaultValue(this.declaration);
 		}
