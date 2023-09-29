@@ -120,6 +120,16 @@ export function arrayEquals<T>(arr1: T[], arr2: T[]): boolean {
 	return true;
 }
 
+export function arrayStartsWith<T>(arr: T[], base: T[]): boolean {
+	for (let i = 0; i < base.length; i++) {
+		if (arr[i] !== base[i]) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
 export function isTruthy(value: any): boolean {
 	return !!value;
 }

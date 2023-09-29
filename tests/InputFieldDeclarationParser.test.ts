@@ -1,7 +1,9 @@
 import { MetaBindParsingError } from '../src/utils/errors/MetaBindErrors';
+import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 
 test('placeholder', () => {
-	expect(true).toEqual(true);
+	const parser = P.string('foo');
+	expect(parser.parse('foo')).toEqual('foo');
 });
 
 // describe('apply template', () => {

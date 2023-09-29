@@ -7,10 +7,27 @@ if you want to view the source, please visit the github repository of this plugi
 var meta_bind_publish = (() => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
+  var __defProps = Object.defineProperties;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
   var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __getOwnPropSymbols = Object.getOwnPropertySymbols;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __propIsEnum = Object.prototype.propertyIsEnumerable;
+  var __defNormalProp = (obj, key, value2) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value: value2 }) : obj[key] = value2;
+  var __spreadValues = (a, b) => {
+    for (var prop in b || (b = {}))
+      if (__hasOwnProp.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    if (__getOwnPropSymbols)
+      for (var prop of __getOwnPropSymbols(b)) {
+        if (__propIsEnum.call(b, prop))
+          __defNormalProp(a, prop, b[prop]);
+      }
+    return a;
+  };
+  var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
   var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
     get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
   }) : x)(function(x) {
@@ -22,8 +39,8 @@ var meta_bind_publish = (() => {
     return mod3 || (0, cb[__getOwnPropNames(cb)[0]])((mod3 = { exports: {} }).exports, mod3), mod3.exports;
   };
   var __export = (target, all) => {
-    for (var name302 in all)
-      __defProp(target, name302, { get: all[name302], enumerable: true });
+    for (var name309 in all)
+      __defProp(target, name309, { get: all[name309], enumerable: true });
   };
   var __copyProps = (to2, from, except, desc) => {
     if (from && typeof from === "object" || typeof from === "function") {
@@ -38,18 +55,22 @@ var meta_bind_publish = (() => {
     mod3
   ));
   var __toCommonJS = (mod3) => __copyProps(__defProp({}, "__esModule", { value: true }), mod3);
+  var __publicField = (obj, key, value2) => {
+    __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value2);
+    return value2;
+  };
   var __async = (__this, __arguments, generator) => {
     return new Promise((resolve2, reject) => {
-      var fulfilled = (value) => {
+      var fulfilled = (value2) => {
         try {
-          step(generator.next(value));
+          step(generator.next(value2));
         } catch (e3) {
           reject(e3);
         }
       };
-      var rejected = (value) => {
+      var rejected = (value2) => {
         try {
-          step(generator.throw(value));
+          step(generator.throw(value2));
         } catch (e3) {
           reject(e3);
         }
@@ -88,13 +109,13 @@ var meta_bind_publish = (() => {
       exports.validatePath = exports.parsePath = exports.traverseObjectByPath = exports.traverseObjectToParent = exports.traverseObject = void 0;
       var Errors_1 = require_Errors();
       function traverseObject(path, o) {
-        let pathParts = parsePath2(path);
+        let pathParts = parsePath(path);
         return traverseObjectByPath4(pathParts, o);
       }
       exports.traverseObject = traverseObject;
       function traverseObjectToParent(path, o) {
         var _a;
-        let pathParts = parsePath2(path);
+        let pathParts = parsePath(path);
         if (pathParts[0] === "") {
           throw new Errors_1.OPDUtilsObjectTraversalError("can not traverse to parent on self reference");
         }
@@ -120,7 +141,7 @@ var meta_bind_publish = (() => {
         return o;
       }
       exports.traverseObjectByPath = traverseObjectByPath4;
-      function parsePath2(path) {
+      function parsePath(path) {
         path = path.replace(/'/g, '"');
         validatePath(path);
         return path.split(".").map((x) => x.split("[").map((y) => {
@@ -133,7 +154,7 @@ var meta_bind_publish = (() => {
           return y;
         })).flat();
       }
-      exports.parsePath = parsePath2;
+      exports.parsePath = parsePath;
       function validatePath(path) {
         const numbers = "0123456789";
         const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -199,77 +220,9 @@ var meta_bind_publish = (() => {
   var require_typed_function = __commonJS({
     "node_modules/typed-function/lib/umd/typed-function.js"(exports, module) {
       (function(global2, factory2) {
-        typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory2() : typeof define === "function" && define.amd ? define(factory2) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, global2.typed = factory2());
+        typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory2() : typeof define === "function" && define.amd ? define(factory2) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, global2["'typed'"] = factory2());
       })(exports, function() {
         "use strict";
-        function _createForOfIteratorHelper(o, allowArrayLike) {
-          var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];
-          if (!it) {
-            if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
-              if (it)
-                o = it;
-              var i2 = 0;
-              var F = function F2() {
-              };
-              return { s: F, n: function n() {
-                if (i2 >= o.length)
-                  return { done: true };
-                return { done: false, value: o[i2++] };
-              }, e: function e3(_e) {
-                throw _e;
-              }, f: F };
-            }
-            throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-          }
-          var normalCompletion = true, didErr = false, err;
-          return { s: function s() {
-            it = it.call(o);
-          }, n: function n() {
-            var step = it.next();
-            normalCompletion = step.done;
-            return step;
-          }, e: function e3(_e2) {
-            didErr = true;
-            err = _e2;
-          }, f: function f() {
-            try {
-              if (!normalCompletion && it.return != null)
-                it.return();
-            } finally {
-              if (didErr)
-                throw err;
-            }
-          } };
-        }
-        function _unsupportedIterableToArray(o, minLen) {
-          if (!o)
-            return;
-          if (typeof o === "string")
-            return _arrayLikeToArray(o, minLen);
-          var n = Object.prototype.toString.call(o).slice(8, -1);
-          if (n === "Object" && o.constructor)
-            n = o.constructor.name;
-          if (n === "Map" || n === "Set")
-            return Array.from(o);
-          if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n))
-            return _arrayLikeToArray(o, minLen);
-        }
-        function _arrayLikeToArray(arr, len) {
-          if (len == null || len > arr.length)
-            len = arr.length;
-          for (var i2 = 0, arr2 = new Array(len); i2 < len; i2++) {
-            arr2[i2] = arr[i2];
-          }
-          return arr2;
-        }
-        function _typeof2(obj) {
-          "@babel/helpers - typeof";
-          return _typeof2 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(obj2) {
-            return typeof obj2;
-          } : function(obj2) {
-            return obj2 && "function" == typeof Symbol && obj2.constructor === Symbol && obj2 !== Symbol.prototype ? "symbol" : typeof obj2;
-          }, _typeof2(obj);
-        }
         function ok() {
           return true;
         }
@@ -279,29 +232,29 @@ var meta_bind_publish = (() => {
         function undef() {
           return void 0;
         }
-        var NOT_TYPED_FUNCTION = "Argument is not a typed-function.";
+        const NOT_TYPED_FUNCTION = "Argument is not a typed-function.";
         function create() {
           function isPlainObject2(x) {
-            return _typeof2(x) === "object" && x !== null && x.constructor === Object;
+            return typeof x === "object" && x !== null && x.constructor === Object;
           }
-          var _types = [{
+          const _types = [{
             name: "number",
-            test: function test(x) {
+            test: function(x) {
               return typeof x === "number";
             }
           }, {
             name: "string",
-            test: function test(x) {
+            test: function(x) {
               return typeof x === "string";
             }
           }, {
             name: "boolean",
-            test: function test(x) {
+            test: function(x) {
               return typeof x === "boolean";
             }
           }, {
             name: "Function",
-            test: function test(x) {
+            test: function(x) {
               return typeof x === "function";
             }
           }, {
@@ -309,12 +262,12 @@ var meta_bind_publish = (() => {
             test: Array.isArray
           }, {
             name: "Date",
-            test: function test(x) {
+            test: function(x) {
               return x instanceof Date;
             }
           }, {
             name: "RegExp",
-            test: function test(x) {
+            test: function(x) {
               return x instanceof RegExp;
             }
           }, {
@@ -322,59 +275,51 @@ var meta_bind_publish = (() => {
             test: isPlainObject2
           }, {
             name: "null",
-            test: function test(x) {
+            test: function(x) {
               return x === null;
             }
           }, {
             name: "undefined",
-            test: function test(x) {
+            test: function(x) {
               return x === void 0;
             }
           }];
-          var anyType = {
+          const anyType = {
             name: "any",
             test: ok,
             isAny: true
           };
-          var typeMap;
-          var typeList;
-          var nConversions = 0;
-          var typed2 = {
+          let typeMap;
+          let typeList;
+          let nConversions = 0;
+          let typed3 = {
             createCount: 0
           };
           function findType(typeName) {
-            var type = typeMap.get(typeName);
+            const type = typeMap.get(typeName);
             if (type) {
               return type;
             }
-            var message = 'Unknown type "' + typeName + '"';
-            var name302 = typeName.toLowerCase();
-            var otherName;
-            var _iterator = _createForOfIteratorHelper(typeList), _step;
-            try {
-              for (_iterator.s(); !(_step = _iterator.n()).done; ) {
-                otherName = _step.value;
-                if (otherName.toLowerCase() === name302) {
-                  message += '. Did you mean "' + otherName + '" ?';
-                  break;
-                }
+            let message = 'Unknown type "' + typeName + '"';
+            const name309 = typeName.toLowerCase();
+            let otherName;
+            for (otherName of typeList) {
+              if (otherName.toLowerCase() === name309) {
+                message += '. Did you mean "' + otherName + '" ?';
+                break;
               }
-            } catch (err) {
-              _iterator.e(err);
-            } finally {
-              _iterator.f();
             }
             throw new TypeError(message);
           }
           function addTypes(types) {
-            var beforeSpec = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : "any";
-            var beforeIndex = beforeSpec ? findType(beforeSpec).index : typeList.length;
-            var newTypes = [];
-            for (var i2 = 0; i2 < types.length; ++i2) {
+            let beforeSpec = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : "any";
+            const beforeIndex = beforeSpec ? findType(beforeSpec).index : typeList.length;
+            const newTypes = [];
+            for (let i2 = 0; i2 < types.length; ++i2) {
               if (!types[i2] || typeof types[i2].name !== "string" || typeof types[i2].test !== "function") {
                 throw new TypeError("Object with properties {name: string, test: function} expected");
               }
-              var typeName = types[i2].name;
+              const typeName = types[i2].name;
               if (typeMap.has(typeName)) {
                 throw new TypeError('Duplicate type name "' + typeName + '"');
               }
@@ -387,10 +332,10 @@ var meta_bind_publish = (() => {
                 conversionsTo: []
               });
             }
-            var affectedTypes = typeList.slice(beforeIndex);
+            const affectedTypes = typeList.slice(beforeIndex);
             typeList = typeList.slice(0, beforeIndex).concat(newTypes).concat(affectedTypes);
-            for (var _i = beforeIndex + newTypes.length; _i < typeList.length; ++_i) {
-              typeMap.get(typeList[_i]).index = _i;
+            for (let i2 = beforeIndex + newTypes.length; i2 < typeList.length; ++i2) {
+              typeMap.get(typeList[i2]).index = i2;
             }
           }
           function clear() {
@@ -402,24 +347,16 @@ var meta_bind_publish = (() => {
           clear();
           addTypes(_types);
           function clearConversions() {
-            var typeName;
-            var _iterator2 = _createForOfIteratorHelper(typeList), _step2;
-            try {
-              for (_iterator2.s(); !(_step2 = _iterator2.n()).done; ) {
-                typeName = _step2.value;
-                typeMap.get(typeName).conversionsTo = [];
-              }
-            } catch (err) {
-              _iterator2.e(err);
-            } finally {
-              _iterator2.f();
+            let typeName;
+            for (typeName of typeList) {
+              typeMap.get(typeName).conversionsTo = [];
             }
             nConversions = 0;
           }
-          function findTypeNames(value) {
-            var matches = typeList.filter(function(name302) {
-              var type = typeMap.get(name302);
-              return !type.isAny && type.test(value);
+          function findTypeNames(value2) {
+            const matches = typeList.filter((name309) => {
+              const type = typeMap.get(name309);
+              return !type.isAny && type.test(value2);
             });
             if (matches.length) {
               return matches;
@@ -433,113 +370,87 @@ var meta_bind_publish = (() => {
             if (!isTypedFunction(fn)) {
               throw new TypeError(NOT_TYPED_FUNCTION);
             }
-            var exact = options && options.exact;
-            var stringSignature = Array.isArray(signature) ? signature.join(",") : signature;
-            var params = parseSignature(stringSignature);
-            var canonicalSignature = stringifyParams(params);
+            const exact = options && options.exact;
+            const stringSignature = Array.isArray(signature) ? signature.join(",") : signature;
+            const params = parseSignature(stringSignature);
+            const canonicalSignature = stringifyParams(params);
             if (!exact || canonicalSignature in fn.signatures) {
-              var match = fn._typedFunctionData.signatureMap.get(canonicalSignature);
+              const match = fn._typedFunctionData.signatureMap.get(canonicalSignature);
               if (match) {
                 return match;
               }
             }
-            var nParams = params.length;
-            var remainingSignatures;
+            const nParams = params.length;
+            let remainingSignatures;
             if (exact) {
               remainingSignatures = [];
-              var name302;
-              for (name302 in fn.signatures) {
-                remainingSignatures.push(fn._typedFunctionData.signatureMap.get(name302));
+              let name309;
+              for (name309 in fn.signatures) {
+                remainingSignatures.push(fn._typedFunctionData.signatureMap.get(name309));
               }
             } else {
               remainingSignatures = fn._typedFunctionData.signatures;
             }
-            for (var i2 = 0; i2 < nParams; ++i2) {
-              var want = params[i2];
-              var filteredSignatures = [];
-              var possibility = void 0;
-              var _iterator3 = _createForOfIteratorHelper(remainingSignatures), _step3;
-              try {
-                for (_iterator3.s(); !(_step3 = _iterator3.n()).done; ) {
-                  possibility = _step3.value;
-                  var have = getParamAtIndex(possibility.params, i2);
-                  if (!have || want.restParam && !have.restParam) {
+            for (let i2 = 0; i2 < nParams; ++i2) {
+              const want = params[i2];
+              const filteredSignatures = [];
+              let possibility;
+              for (possibility of remainingSignatures) {
+                const have = getParamAtIndex(possibility.params, i2);
+                if (!have || want.restParam && !have.restParam) {
+                  continue;
+                }
+                if (!have.hasAny) {
+                  const haveTypes = paramTypeSet(have);
+                  if (want.types.some((wtype) => !haveTypes.has(wtype.name))) {
                     continue;
                   }
-                  if (!have.hasAny) {
-                    var _ret = function() {
-                      var haveTypes = paramTypeSet(have);
-                      if (want.types.some(function(wtype) {
-                        return !haveTypes.has(wtype.name);
-                      })) {
-                        return "continue";
-                      }
-                    }();
-                    if (_ret === "continue")
-                      continue;
-                  }
-                  filteredSignatures.push(possibility);
                 }
-              } catch (err) {
-                _iterator3.e(err);
-              } finally {
-                _iterator3.f();
+                filteredSignatures.push(possibility);
               }
               remainingSignatures = filteredSignatures;
               if (remainingSignatures.length === 0)
                 break;
             }
-            var candidate;
-            var _iterator4 = _createForOfIteratorHelper(remainingSignatures), _step4;
-            try {
-              for (_iterator4.s(); !(_step4 = _iterator4.n()).done; ) {
-                candidate = _step4.value;
-                if (candidate.params.length <= nParams) {
-                  return candidate;
-                }
+            let candidate;
+            for (candidate of remainingSignatures) {
+              if (candidate.params.length <= nParams) {
+                return candidate;
               }
-            } catch (err) {
-              _iterator4.e(err);
-            } finally {
-              _iterator4.f();
             }
             throw new TypeError("Signature not found (signature: " + (fn.name || "unnamed") + "(" + stringifyParams(params, ", ") + "))");
           }
           function find(fn, signature, options) {
             return findSignature(fn, signature, options).implementation;
           }
-          function convert(value, typeName) {
-            var type = findType(typeName);
-            if (type.test(value)) {
-              return value;
+          function convert(value2, typeName) {
+            const type = findType(typeName);
+            if (type.test(value2)) {
+              return value2;
             }
-            var conversions = type.conversionsTo;
+            const conversions = type.conversionsTo;
             if (conversions.length === 0) {
               throw new Error("There are no conversions to " + typeName + " defined.");
             }
-            for (var i2 = 0; i2 < conversions.length; i2++) {
-              var fromType = findType(conversions[i2].from);
-              if (fromType.test(value)) {
-                return conversions[i2].convert(value);
+            for (let i2 = 0; i2 < conversions.length; i2++) {
+              const fromType = findType(conversions[i2].from);
+              if (fromType.test(value2)) {
+                return conversions[i2].convert(value2);
               }
             }
-            throw new Error("Cannot convert " + value + " to " + typeName);
+            throw new Error("Cannot convert " + value2 + " to " + typeName);
           }
           function stringifyParams(params) {
-            var separator = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : ",";
-            return params.map(function(p) {
-              return p.name;
-            }).join(separator);
+            let separator = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : ",";
+            return params.map((p) => p.name).join(separator);
           }
           function parseParam(param) {
-            var restParam = param.indexOf("...") === 0;
-            var types = !restParam ? param : param.length > 3 ? param.slice(3) : "any";
-            var typeDefs = types.split("|").map(function(s) {
-              return findType(s.trim());
-            });
-            var hasAny = false;
-            var paramName = restParam ? "..." : "";
-            var exactTypes = typeDefs.map(function(type) {
+            const restParam = param.indexOf("...") === 0;
+            const types = !restParam ? param : param.length > 3 ? param.slice(3) : "any";
+            const typeDefs = types.split("|").map((s) => findType(s.trim()));
+            let hasAny = false;
+            let paramName = restParam ? "..." : "";
+            const exactTypes = typeDefs.map(function(type) {
               hasAny = type.isAny || hasAny;
               paramName += type.name + "|";
               return {
@@ -560,14 +471,12 @@ var meta_bind_publish = (() => {
             };
           }
           function expandParam(param) {
-            var typeNames = param.types.map(function(t) {
-              return t.name;
-            });
-            var matchingConversions = availableConversions(typeNames);
-            var hasAny = param.hasAny;
-            var newName = param.name;
-            var convertibleTypes = matchingConversions.map(function(conversion) {
-              var type = findType(conversion.from);
+            const typeNames = param.types.map((t) => t.name);
+            const matchingConversions = availableConversions(typeNames);
+            let hasAny = param.hasAny;
+            let newName = param.name;
+            const convertibleTypes = matchingConversions.map(function(conversion) {
+              const type = findType(conversion.from);
               hasAny = type.isAny || hasAny;
               newName += "|" + conversion.from;
               return {
@@ -590,24 +499,22 @@ var meta_bind_publish = (() => {
           function paramTypeSet(param) {
             if (!param.typeSet) {
               param.typeSet = /* @__PURE__ */ new Set();
-              param.types.forEach(function(type) {
-                return param.typeSet.add(type.name);
-              });
+              param.types.forEach((type) => param.typeSet.add(type.name));
             }
             return param.typeSet;
           }
           function parseSignature(rawSignature) {
-            var params = [];
+            const params = [];
             if (typeof rawSignature !== "string") {
               throw new TypeError("Signatures must be strings");
             }
-            var signature = rawSignature.trim();
+            const signature = rawSignature.trim();
             if (signature === "") {
               return params;
             }
-            var rawParams = signature.split(",");
-            for (var i2 = 0; i2 < rawParams.length; ++i2) {
-              var parsedParam = parseParam(rawParams[i2].trim());
+            const rawParams = signature.split(",");
+            for (let i2 = 0; i2 < rawParams.length; ++i2) {
+              const parsedParam = parseParam(rawParams[i2].trim());
               if (parsedParam.restParam && i2 !== rawParams.length - 1) {
                 throw new SyntaxError('Unexpected rest parameter "' + rawParams[i2] + '": only allowed for the last parameter');
               }
@@ -619,7 +526,7 @@ var meta_bind_publish = (() => {
             return params;
           }
           function hasRestParam(params) {
-            var param = last(params);
+            const param = last(params);
             return param ? param.restParam : false;
           }
           function compileTest(param) {
@@ -628,17 +535,17 @@ var meta_bind_publish = (() => {
             } else if (param.types.length === 1) {
               return findType(param.types[0].name).test;
             } else if (param.types.length === 2) {
-              var test0 = findType(param.types[0].name).test;
-              var test1 = findType(param.types[1].name).test;
+              const test0 = findType(param.types[0].name).test;
+              const test1 = findType(param.types[1].name).test;
               return function or2(x) {
                 return test0(x) || test1(x);
               };
             } else {
-              var tests = param.types.map(function(type) {
+              const tests = param.types.map(function(type) {
                 return findType(type.name).test;
               });
               return function or2(x) {
-                for (var i2 = 0; i2 < tests.length; i2++) {
+                for (let i2 = 0; i2 < tests.length; i2++) {
                   if (tests[i2](x)) {
                     return true;
                   }
@@ -648,13 +555,13 @@ var meta_bind_publish = (() => {
             }
           }
           function compileTests(params) {
-            var tests, test0, test1;
+            let tests, test0, test1;
             if (hasRestParam(params)) {
               tests = initial(params).map(compileTest);
-              var varIndex = tests.length;
-              var lastTest = compileTest(last(params));
-              var testRestParam = function testRestParam2(args) {
-                for (var i2 = varIndex; i2 < args.length; i2++) {
+              const varIndex = tests.length;
+              const lastTest = compileTest(last(params));
+              const testRestParam = function(args) {
+                for (let i2 = varIndex; i2 < args.length; i2++) {
                   if (!lastTest(args[i2])) {
                     return false;
                   }
@@ -662,7 +569,7 @@ var meta_bind_publish = (() => {
                 return true;
               };
               return function testArgs(args) {
-                for (var i2 = 0; i2 < tests.length; i2++) {
+                for (let i2 = 0; i2 < tests.length; i2++) {
                   if (!tests[i2](args[i2])) {
                     return false;
                   }
@@ -688,7 +595,7 @@ var meta_bind_publish = (() => {
               } else {
                 tests = params.map(compileTest);
                 return function testArgs(args) {
-                  for (var i2 = 0; i2 < tests.length; i2++) {
+                  for (let i2 = 0; i2 < tests.length; i2++) {
                     if (!tests[i2](args[i2])) {
                       return false;
                     }
@@ -702,7 +609,7 @@ var meta_bind_publish = (() => {
             return index2 < params.length ? params[index2] : hasRestParam(params) ? last(params) : null;
           }
           function getTypeSetAtIndex(params, index2) {
-            var param = getParamAtIndex(params, index2);
+            const param = getParamAtIndex(params, index2);
             if (!param) {
               return /* @__PURE__ */ new Set();
             }
@@ -712,34 +619,26 @@ var meta_bind_publish = (() => {
             return type.conversion === null || type.conversion === void 0;
           }
           function mergeExpectedParams(signatures, index2) {
-            var typeSet = /* @__PURE__ */ new Set();
-            signatures.forEach(function(signature) {
-              var paramSet = getTypeSetAtIndex(signature.params, index2);
-              var name302;
-              var _iterator5 = _createForOfIteratorHelper(paramSet), _step5;
-              try {
-                for (_iterator5.s(); !(_step5 = _iterator5.n()).done; ) {
-                  name302 = _step5.value;
-                  typeSet.add(name302);
-                }
-              } catch (err) {
-                _iterator5.e(err);
-              } finally {
-                _iterator5.f();
+            const typeSet = /* @__PURE__ */ new Set();
+            signatures.forEach((signature) => {
+              const paramSet = getTypeSetAtIndex(signature.params, index2);
+              let name309;
+              for (name309 of paramSet) {
+                typeSet.add(name309);
               }
             });
             return typeSet.has("any") ? ["any"] : Array.from(typeSet);
           }
-          function createError(name302, args, signatures) {
-            var err, expected;
-            var _name = name302 || "unnamed";
-            var matchingSignatures = signatures;
-            var index2;
-            var _loop = function _loop2() {
-              var nextMatchingDefs = [];
-              matchingSignatures.forEach(function(signature) {
-                var param = getParamAtIndex(signature.params, index2);
-                var test = compileTest(param);
+          function createError(name309, args, signatures) {
+            let err, expected;
+            const _name = name309 || "unnamed";
+            let matchingSignatures = signatures;
+            let index2;
+            for (index2 = 0; index2 < args.length; index2++) {
+              const nextMatchingDefs = [];
+              matchingSignatures.forEach((signature) => {
+                const param = getParamAtIndex(signature.params, index2);
+                const test = compileTest(param);
                 if ((index2 < signature.params.length || hasRestParam(signature.params)) && test(args[index2])) {
                   nextMatchingDefs.push(signature);
                 }
@@ -747,7 +646,7 @@ var meta_bind_publish = (() => {
               if (nextMatchingDefs.length === 0) {
                 expected = mergeExpectedParams(matchingSignatures, index2);
                 if (expected.length > 0) {
-                  var actualTypes = findTypeNames(args[index2]);
+                  const actualTypes = findTypeNames(args[index2]);
                   err = new TypeError("Unexpected type of argument in function " + _name + " (expected: " + expected.join(" or ") + ", actual: " + actualTypes.join(" | ") + ", index: " + index2 + ")");
                   err.data = {
                     category: "wrongType",
@@ -756,20 +655,13 @@ var meta_bind_publish = (() => {
                     actual: actualTypes,
                     expected
                   };
-                  return {
-                    v: err
-                  };
+                  return err;
                 }
               } else {
                 matchingSignatures = nextMatchingDefs;
               }
-            };
-            for (index2 = 0; index2 < args.length; index2++) {
-              var _ret2 = _loop();
-              if (_typeof2(_ret2) === "object")
-                return _ret2.v;
             }
-            var lengths = matchingSignatures.map(function(signature) {
+            const lengths = matchingSignatures.map(function(signature) {
               return hasRestParam(signature.params) ? Infinity : signature.params.length;
             });
             if (args.length < Math.min.apply(null, lengths)) {
@@ -783,7 +675,7 @@ var meta_bind_publish = (() => {
               };
               return err;
             }
-            var maxLength = Math.max.apply(null, lengths);
+            const maxLength = Math.max.apply(null, lengths);
             if (args.length > maxLength) {
               err = new TypeError("Too many arguments in function " + _name + " (expected: " + maxLength + ", actual: " + args.length + ")");
               err.data = {
@@ -794,8 +686,8 @@ var meta_bind_publish = (() => {
               };
               return err;
             }
-            var argTypes = [];
-            for (var i2 = 0; i2 < args.length; ++i2) {
+            const argTypes = [];
+            for (let i2 = 0; i2 < args.length; ++i2) {
               argTypes.push(findTypeNames(args[i2]).join("|"));
             }
             err = new TypeError('Arguments of type "' + argTypes.join(", ") + '" do not match any of the defined signatures of function ' + _name + ".");
@@ -806,8 +698,8 @@ var meta_bind_publish = (() => {
             return err;
           }
           function getLowestTypeIndex(param) {
-            var min3 = typeList.length + 1;
-            for (var i2 = 0; i2 < param.types.length; i2++) {
+            let min3 = typeList.length + 1;
+            for (let i2 = 0; i2 < param.types.length; i2++) {
               if (isExactType(param.types[i2])) {
                 min3 = Math.min(min3, param.types[i2].typeIndex);
               }
@@ -815,8 +707,8 @@ var meta_bind_publish = (() => {
             return min3;
           }
           function getLowestConversionIndex(param) {
-            var min3 = nConversions + 1;
-            for (var i2 = 0; i2 < param.types.length; i2++) {
+            let min3 = nConversions + 1;
+            for (let i2 = 0; i2 < param.types.length; i2++) {
               if (!isExactType(param.types[i2])) {
                 min3 = Math.min(min3, param.types[i2].conversionIndex);
               }
@@ -845,14 +737,14 @@ var meta_bind_publish = (() => {
             } else if (param2.hasConversion) {
               return -1;
             }
-            var typeDiff = getLowestTypeIndex(param1) - getLowestTypeIndex(param2);
+            const typeDiff = getLowestTypeIndex(param1) - getLowestTypeIndex(param2);
             if (typeDiff < 0) {
               return -1;
             }
             if (typeDiff > 0) {
               return 1;
             }
-            var convDiff = getLowestConversionIndex(param1) - getLowestConversionIndex(param2);
+            const convDiff = getLowestConversionIndex(param1) - getLowestConversionIndex(param2);
             if (convDiff < 0) {
               return -1;
             }
@@ -862,12 +754,12 @@ var meta_bind_publish = (() => {
             return 0;
           }
           function compareSignatures(signature1, signature2) {
-            var pars1 = signature1.params;
-            var pars2 = signature2.params;
-            var last1 = last(pars1);
-            var last2 = last(pars2);
-            var hasRest1 = hasRestParam(pars1);
-            var hasRest2 = hasRestParam(pars2);
+            const pars1 = signature1.params;
+            const pars2 = signature2.params;
+            const last1 = last(pars1);
+            const last2 = last(pars2);
+            const hasRest1 = hasRestParam(pars1);
+            const hasRest2 = hasRestParam(pars2);
             if (hasRest1 && last1.hasAny) {
               if (!hasRest2 || !last2.hasAny) {
                 return 1;
@@ -875,38 +767,22 @@ var meta_bind_publish = (() => {
             } else if (hasRest2 && last2.hasAny) {
               return -1;
             }
-            var any1 = 0;
-            var conv1 = 0;
-            var par;
-            var _iterator6 = _createForOfIteratorHelper(pars1), _step6;
-            try {
-              for (_iterator6.s(); !(_step6 = _iterator6.n()).done; ) {
-                par = _step6.value;
-                if (par.hasAny)
-                  ++any1;
-                if (par.hasConversion)
-                  ++conv1;
-              }
-            } catch (err) {
-              _iterator6.e(err);
-            } finally {
-              _iterator6.f();
+            let any1 = 0;
+            let conv1 = 0;
+            let par;
+            for (par of pars1) {
+              if (par.hasAny)
+                ++any1;
+              if (par.hasConversion)
+                ++conv1;
             }
-            var any2 = 0;
-            var conv2 = 0;
-            var _iterator7 = _createForOfIteratorHelper(pars2), _step7;
-            try {
-              for (_iterator7.s(); !(_step7 = _iterator7.n()).done; ) {
-                par = _step7.value;
-                if (par.hasAny)
-                  ++any2;
-                if (par.hasConversion)
-                  ++conv2;
-              }
-            } catch (err) {
-              _iterator7.e(err);
-            } finally {
-              _iterator7.f();
+            let any2 = 0;
+            let conv2 = 0;
+            for (par of pars2) {
+              if (par.hasAny)
+                ++any2;
+              if (par.hasConversion)
+                ++conv2;
             }
             if (any1 !== any2) {
               return any1 - any2;
@@ -928,23 +804,22 @@ var meta_bind_publish = (() => {
             } else if (hasRest2) {
               return -1;
             }
-            var lengthCriterion = (pars1.length - pars2.length) * (hasRest1 ? -1 : 1);
+            const lengthCriterion = (pars1.length - pars2.length) * (hasRest1 ? -1 : 1);
             if (lengthCriterion !== 0) {
               return lengthCriterion;
             }
-            var comparisons = [];
-            var tc = 0;
-            for (var i2 = 0; i2 < pars1.length; ++i2) {
-              var thisComparison = compareParams(pars1[i2], pars2[i2]);
+            const comparisons = [];
+            let tc = 0;
+            for (let i2 = 0; i2 < pars1.length; ++i2) {
+              const thisComparison = compareParams(pars1[i2], pars2[i2]);
               comparisons.push(thisComparison);
               tc += thisComparison;
             }
             if (tc !== 0) {
               return tc;
             }
-            var c;
-            for (var _i2 = 0, _comparisons = comparisons; _i2 < _comparisons.length; _i2++) {
-              c = _comparisons[_i2];
+            let c;
+            for (c of comparisons) {
               if (c !== 0) {
                 return c;
               }
@@ -955,48 +830,36 @@ var meta_bind_publish = (() => {
             if (typeNames.length === 0) {
               return [];
             }
-            var types = typeNames.map(findType);
+            const types = typeNames.map(findType);
             if (typeNames.length > 1) {
-              types.sort(function(t1, t2) {
-                return t1.index - t2.index;
-              });
+              types.sort((t1, t2) => t1.index - t2.index);
             }
-            var matches = types[0].conversionsTo;
+            let matches = types[0].conversionsTo;
             if (typeNames.length === 1) {
               return matches;
             }
             matches = matches.concat([]);
-            var knownTypes = new Set(typeNames);
-            for (var i2 = 1; i2 < types.length; ++i2) {
-              var newMatch = void 0;
-              var _iterator8 = _createForOfIteratorHelper(types[i2].conversionsTo), _step8;
-              try {
-                for (_iterator8.s(); !(_step8 = _iterator8.n()).done; ) {
-                  newMatch = _step8.value;
-                  if (!knownTypes.has(newMatch.from)) {
-                    matches.push(newMatch);
-                    knownTypes.add(newMatch.from);
-                  }
+            const knownTypes = new Set(typeNames);
+            for (let i2 = 1; i2 < types.length; ++i2) {
+              let newMatch;
+              for (newMatch of types[i2].conversionsTo) {
+                if (!knownTypes.has(newMatch.from)) {
+                  matches.push(newMatch);
+                  knownTypes.add(newMatch.from);
                 }
-              } catch (err) {
-                _iterator8.e(err);
-              } finally {
-                _iterator8.f();
               }
             }
             return matches;
           }
           function compileArgsPreprocessing(params, fn) {
-            var fnConvert = fn;
-            if (params.some(function(p) {
-              return p.hasConversion;
-            })) {
-              var restParam = hasRestParam(params);
-              var compiledConversions = params.map(compileArgConversion);
+            let fnConvert = fn;
+            if (params.some((p) => p.hasConversion)) {
+              const restParam = hasRestParam(params);
+              const compiledConversions = params.map(compileArgConversion);
               fnConvert = function convertArgs() {
-                var args = [];
-                var last2 = restParam ? arguments.length - 1 : arguments.length;
-                for (var i2 = 0; i2 < last2; i2++) {
+                const args = [];
+                const last2 = restParam ? arguments.length - 1 : arguments.length;
+                for (let i2 = 0; i2 < last2; i2++) {
                   args[i2] = compiledConversions[i2](arguments[i2]);
                 }
                 if (restParam) {
@@ -1005,9 +868,9 @@ var meta_bind_publish = (() => {
                 return fn.apply(this, args);
               };
             }
-            var fnPreprocess = fnConvert;
+            let fnPreprocess = fnConvert;
             if (hasRestParam(params)) {
-              var offset = params.length - 1;
+              const offset = params.length - 1;
               fnPreprocess = function preprocessRestParams() {
                 return fnConvert.apply(this, slice(arguments, 0, offset).concat([slice(arguments, offset)]));
               };
@@ -1015,9 +878,9 @@ var meta_bind_publish = (() => {
             return fnPreprocess;
           }
           function compileArgConversion(param) {
-            var test0, test1, conversion0, conversion1;
-            var tests = [];
-            var conversions = [];
+            let test0, test1, conversion0, conversion1;
+            const tests = [];
+            const conversions = [];
             param.types.forEach(function(type) {
               if (type.conversion) {
                 tests.push(findType(type.conversion.from).test);
@@ -1054,7 +917,7 @@ var meta_bind_publish = (() => {
                 };
               default:
                 return function convertArg(arg2) {
-                  for (var i2 = 0; i2 < conversions.length; i2++) {
+                  for (let i2 = 0; i2 < conversions.length; i2++) {
                     if (tests[i2](arg2)) {
                       return conversions[i2](arg2);
                     }
@@ -1066,19 +929,15 @@ var meta_bind_publish = (() => {
           function splitParams(params) {
             function _splitParams(params2, index2, paramsSoFar) {
               if (index2 < params2.length) {
-                var param = params2[index2];
-                var resultingParams = [];
+                const param = params2[index2];
+                let resultingParams = [];
                 if (param.restParam) {
-                  var exactTypes = param.types.filter(isExactType);
+                  const exactTypes = param.types.filter(isExactType);
                   if (exactTypes.length < param.types.length) {
                     resultingParams.push({
                       types: exactTypes,
-                      name: "..." + exactTypes.map(function(t) {
-                        return t.name;
-                      }).join("|"),
-                      hasAny: exactTypes.some(function(t) {
-                        return t.isAny;
-                      }),
+                      name: "..." + exactTypes.map((t) => t.name).join("|"),
+                      hasAny: exactTypes.some((t) => t.isAny),
                       hasConversion: false,
                       restParam: true
                     });
@@ -1105,38 +964,30 @@ var meta_bind_publish = (() => {
             return _splitParams(params, 0, []);
           }
           function conflicting(params1, params2) {
-            var ii = Math.max(params1.length, params2.length);
-            for (var i2 = 0; i2 < ii; i2++) {
-              var typeSet1 = getTypeSetAtIndex(params1, i2);
-              var typeSet2 = getTypeSetAtIndex(params2, i2);
-              var overlap = false;
-              var name302 = void 0;
-              var _iterator9 = _createForOfIteratorHelper(typeSet2), _step9;
-              try {
-                for (_iterator9.s(); !(_step9 = _iterator9.n()).done; ) {
-                  name302 = _step9.value;
-                  if (typeSet1.has(name302)) {
-                    overlap = true;
-                    break;
-                  }
+            const ii = Math.max(params1.length, params2.length);
+            for (let i2 = 0; i2 < ii; i2++) {
+              const typeSet1 = getTypeSetAtIndex(params1, i2);
+              const typeSet2 = getTypeSetAtIndex(params2, i2);
+              let overlap = false;
+              let name309;
+              for (name309 of typeSet2) {
+                if (typeSet1.has(name309)) {
+                  overlap = true;
+                  break;
                 }
-              } catch (err) {
-                _iterator9.e(err);
-              } finally {
-                _iterator9.f();
               }
               if (!overlap) {
                 return false;
               }
             }
-            var len1 = params1.length;
-            var len2 = params2.length;
-            var restParam1 = hasRestParam(params1);
-            var restParam2 = hasRestParam(params2);
+            const len1 = params1.length;
+            const len2 = params2.length;
+            const restParam1 = hasRestParam(params1);
+            const restParam2 = hasRestParam(params2);
             return restParam1 ? restParam2 ? len1 === len2 : len2 >= len1 : restParam2 ? len1 >= len2 : len1 === len2;
           }
           function clearResolutions(functionList) {
-            return functionList.map(function(fn) {
+            return functionList.map((fn) => {
               if (isReferToSelf(fn)) {
                 return referToSelf(fn.referToSelf.callback);
               }
@@ -1147,47 +998,39 @@ var meta_bind_publish = (() => {
             });
           }
           function collectResolutions(references, functionList, signatureMap) {
-            var resolvedReferences = [];
-            var reference;
-            var _iterator10 = _createForOfIteratorHelper(references), _step10;
-            try {
-              for (_iterator10.s(); !(_step10 = _iterator10.n()).done; ) {
-                reference = _step10.value;
-                var resolution = signatureMap[reference];
-                if (typeof resolution !== "number") {
-                  throw new TypeError('No definition for referenced signature "' + reference + '"');
-                }
-                resolution = functionList[resolution];
-                if (typeof resolution !== "function") {
-                  return false;
-                }
-                resolvedReferences.push(resolution);
+            const resolvedReferences = [];
+            let reference;
+            for (reference of references) {
+              let resolution = signatureMap[reference];
+              if (typeof resolution !== "number") {
+                throw new TypeError('No definition for referenced signature "' + reference + '"');
               }
-            } catch (err) {
-              _iterator10.e(err);
-            } finally {
-              _iterator10.f();
+              resolution = functionList[resolution];
+              if (typeof resolution !== "function") {
+                return false;
+              }
+              resolvedReferences.push(resolution);
             }
             return resolvedReferences;
           }
           function resolveReferences(functionList, signatureMap, self2) {
-            var resolvedFunctions = clearResolutions(functionList);
-            var isResolved = new Array(resolvedFunctions.length).fill(false);
-            var leftUnresolved = true;
+            const resolvedFunctions = clearResolutions(functionList);
+            const isResolved = new Array(resolvedFunctions.length).fill(false);
+            let leftUnresolved = true;
             while (leftUnresolved) {
               leftUnresolved = false;
-              var nothingResolved = true;
-              for (var i2 = 0; i2 < resolvedFunctions.length; ++i2) {
+              let nothingResolved = true;
+              for (let i2 = 0; i2 < resolvedFunctions.length; ++i2) {
                 if (isResolved[i2])
                   continue;
-                var fn = resolvedFunctions[i2];
+                const fn = resolvedFunctions[i2];
                 if (isReferToSelf(fn)) {
                   resolvedFunctions[i2] = fn.referToSelf.callback(self2);
                   resolvedFunctions[i2].referToSelf = fn.referToSelf;
                   isResolved[i2] = true;
                   nothingResolved = false;
                 } else if (isReferTo(fn)) {
-                  var resolvedReferences = collectResolutions(fn.referTo.references, resolvedFunctions, signatureMap);
+                  const resolvedReferences = collectResolutions(fn.referTo.references, resolvedFunctions, signatureMap);
                   if (resolvedReferences) {
                     resolvedFunctions[i2] = fn.referTo.callback.apply(this, resolvedReferences);
                     resolvedFunctions[i2].referTo = fn.referTo;
@@ -1205,141 +1048,121 @@ var meta_bind_publish = (() => {
             return resolvedFunctions;
           }
           function validateDeprecatedThis(signaturesMap) {
-            var deprecatedThisRegex = /\bthis(\(|\.signatures\b)/;
-            Object.keys(signaturesMap).forEach(function(signature) {
-              var fn = signaturesMap[signature];
+            const deprecatedThisRegex = /\bthis(\(|\.signatures\b)/;
+            Object.keys(signaturesMap).forEach((signature) => {
+              const fn = signaturesMap[signature];
               if (deprecatedThisRegex.test(fn.toString())) {
                 throw new SyntaxError("Using `this` to self-reference a function is deprecated since typed-function@3. Use typed.referTo and typed.referToSelf instead.");
               }
             });
           }
-          function createTypedFunction(name302, rawSignaturesMap) {
-            typed2.createCount++;
+          function createTypedFunction(name309, rawSignaturesMap) {
+            typed3.createCount++;
             if (Object.keys(rawSignaturesMap).length === 0) {
               throw new SyntaxError("No signatures provided");
             }
-            if (typed2.warnAgainstDeprecatedThis) {
+            if (typed3.warnAgainstDeprecatedThis) {
               validateDeprecatedThis(rawSignaturesMap);
             }
-            var parsedParams = [];
-            var originalFunctions = [];
-            var signaturesMap = {};
-            var preliminarySignatures = [];
-            var signature;
-            var _loop2 = function _loop22() {
+            const parsedParams = [];
+            const originalFunctions = [];
+            const signaturesMap = {};
+            const preliminarySignatures = [];
+            let signature;
+            for (signature in rawSignaturesMap) {
               if (!Object.prototype.hasOwnProperty.call(rawSignaturesMap, signature)) {
-                return "continue";
+                continue;
               }
-              var params = parseSignature(signature);
+              const params = parseSignature(signature);
               if (!params)
-                return "continue";
+                continue;
               parsedParams.forEach(function(pp) {
                 if (conflicting(pp, params)) {
                   throw new TypeError('Conflicting signatures "' + stringifyParams(pp) + '" and "' + stringifyParams(params) + '".');
                 }
               });
               parsedParams.push(params);
-              var functionIndex = originalFunctions.length;
+              const functionIndex = originalFunctions.length;
               originalFunctions.push(rawSignaturesMap[signature]);
-              var conversionParams = params.map(expandParam);
-              var sp = void 0;
-              var _iterator11 = _createForOfIteratorHelper(splitParams(conversionParams)), _step11;
-              try {
-                for (_iterator11.s(); !(_step11 = _iterator11.n()).done; ) {
-                  sp = _step11.value;
-                  var spName = stringifyParams(sp);
-                  preliminarySignatures.push({
-                    params: sp,
-                    name: spName,
-                    fn: functionIndex
-                  });
-                  if (sp.every(function(p) {
-                    return !p.hasConversion;
-                  })) {
-                    signaturesMap[spName] = functionIndex;
-                  }
+              const conversionParams = params.map(expandParam);
+              let sp;
+              for (sp of splitParams(conversionParams)) {
+                const spName = stringifyParams(sp);
+                preliminarySignatures.push({
+                  params: sp,
+                  name: spName,
+                  fn: functionIndex
+                });
+                if (sp.every((p) => !p.hasConversion)) {
+                  signaturesMap[spName] = functionIndex;
                 }
-              } catch (err) {
-                _iterator11.e(err);
-              } finally {
-                _iterator11.f();
               }
-            };
-            for (signature in rawSignaturesMap) {
-              var _ret3 = _loop2();
-              if (_ret3 === "continue")
-                continue;
             }
             preliminarySignatures.sort(compareSignatures);
-            var resolvedFunctions = resolveReferences(originalFunctions, signaturesMap, theTypedFn);
-            var s;
+            const resolvedFunctions = resolveReferences(originalFunctions, signaturesMap, theTypedFn);
+            let s;
             for (s in signaturesMap) {
               if (Object.prototype.hasOwnProperty.call(signaturesMap, s)) {
                 signaturesMap[s] = resolvedFunctions[signaturesMap[s]];
               }
             }
-            var signatures = [];
-            var internalSignatureMap = /* @__PURE__ */ new Map();
-            for (var _i3 = 0, _preliminarySignature = preliminarySignatures; _i3 < _preliminarySignature.length; _i3++) {
-              s = _preliminarySignature[_i3];
+            const signatures = [];
+            const internalSignatureMap = /* @__PURE__ */ new Map();
+            for (s of preliminarySignatures) {
               if (!internalSignatureMap.has(s.name)) {
                 s.fn = resolvedFunctions[s.fn];
                 signatures.push(s);
                 internalSignatureMap.set(s.name, s);
               }
             }
-            var ok0 = signatures[0] && signatures[0].params.length <= 2 && !hasRestParam(signatures[0].params);
-            var ok1 = signatures[1] && signatures[1].params.length <= 2 && !hasRestParam(signatures[1].params);
-            var ok2 = signatures[2] && signatures[2].params.length <= 2 && !hasRestParam(signatures[2].params);
-            var ok3 = signatures[3] && signatures[3].params.length <= 2 && !hasRestParam(signatures[3].params);
-            var ok4 = signatures[4] && signatures[4].params.length <= 2 && !hasRestParam(signatures[4].params);
-            var ok5 = signatures[5] && signatures[5].params.length <= 2 && !hasRestParam(signatures[5].params);
-            var allOk = ok0 && ok1 && ok2 && ok3 && ok4 && ok5;
-            for (var i2 = 0; i2 < signatures.length; ++i2) {
+            const ok0 = signatures[0] && signatures[0].params.length <= 2 && !hasRestParam(signatures[0].params);
+            const ok1 = signatures[1] && signatures[1].params.length <= 2 && !hasRestParam(signatures[1].params);
+            const ok2 = signatures[2] && signatures[2].params.length <= 2 && !hasRestParam(signatures[2].params);
+            const ok3 = signatures[3] && signatures[3].params.length <= 2 && !hasRestParam(signatures[3].params);
+            const ok4 = signatures[4] && signatures[4].params.length <= 2 && !hasRestParam(signatures[4].params);
+            const ok5 = signatures[5] && signatures[5].params.length <= 2 && !hasRestParam(signatures[5].params);
+            const allOk = ok0 && ok1 && ok2 && ok3 && ok4 && ok5;
+            for (let i2 = 0; i2 < signatures.length; ++i2) {
               signatures[i2].test = compileTests(signatures[i2].params);
             }
-            var test00 = ok0 ? compileTest(signatures[0].params[0]) : notOk;
-            var test10 = ok1 ? compileTest(signatures[1].params[0]) : notOk;
-            var test20 = ok2 ? compileTest(signatures[2].params[0]) : notOk;
-            var test30 = ok3 ? compileTest(signatures[3].params[0]) : notOk;
-            var test40 = ok4 ? compileTest(signatures[4].params[0]) : notOk;
-            var test50 = ok5 ? compileTest(signatures[5].params[0]) : notOk;
-            var test01 = ok0 ? compileTest(signatures[0].params[1]) : notOk;
-            var test11 = ok1 ? compileTest(signatures[1].params[1]) : notOk;
-            var test21 = ok2 ? compileTest(signatures[2].params[1]) : notOk;
-            var test31 = ok3 ? compileTest(signatures[3].params[1]) : notOk;
-            var test41 = ok4 ? compileTest(signatures[4].params[1]) : notOk;
-            var test51 = ok5 ? compileTest(signatures[5].params[1]) : notOk;
-            for (var _i4 = 0; _i4 < signatures.length; ++_i4) {
-              signatures[_i4].implementation = compileArgsPreprocessing(signatures[_i4].params, signatures[_i4].fn);
+            const test00 = ok0 ? compileTest(signatures[0].params[0]) : notOk;
+            const test10 = ok1 ? compileTest(signatures[1].params[0]) : notOk;
+            const test20 = ok2 ? compileTest(signatures[2].params[0]) : notOk;
+            const test30 = ok3 ? compileTest(signatures[3].params[0]) : notOk;
+            const test40 = ok4 ? compileTest(signatures[4].params[0]) : notOk;
+            const test50 = ok5 ? compileTest(signatures[5].params[0]) : notOk;
+            const test01 = ok0 ? compileTest(signatures[0].params[1]) : notOk;
+            const test11 = ok1 ? compileTest(signatures[1].params[1]) : notOk;
+            const test21 = ok2 ? compileTest(signatures[2].params[1]) : notOk;
+            const test31 = ok3 ? compileTest(signatures[3].params[1]) : notOk;
+            const test41 = ok4 ? compileTest(signatures[4].params[1]) : notOk;
+            const test51 = ok5 ? compileTest(signatures[5].params[1]) : notOk;
+            for (let i2 = 0; i2 < signatures.length; ++i2) {
+              signatures[i2].implementation = compileArgsPreprocessing(signatures[i2].params, signatures[i2].fn);
             }
-            var fn0 = ok0 ? signatures[0].implementation : undef;
-            var fn1 = ok1 ? signatures[1].implementation : undef;
-            var fn2 = ok2 ? signatures[2].implementation : undef;
-            var fn3 = ok3 ? signatures[3].implementation : undef;
-            var fn4 = ok4 ? signatures[4].implementation : undef;
-            var fn5 = ok5 ? signatures[5].implementation : undef;
-            var len0 = ok0 ? signatures[0].params.length : -1;
-            var len1 = ok1 ? signatures[1].params.length : -1;
-            var len2 = ok2 ? signatures[2].params.length : -1;
-            var len3 = ok3 ? signatures[3].params.length : -1;
-            var len4 = ok4 ? signatures[4].params.length : -1;
-            var len5 = ok5 ? signatures[5].params.length : -1;
-            var iStart = allOk ? 6 : 0;
-            var iEnd = signatures.length;
-            var tests = signatures.map(function(s2) {
-              return s2.test;
-            });
-            var fns = signatures.map(function(s2) {
-              return s2.implementation;
-            });
-            var generic = function generic2() {
-              for (var _i5 = iStart; _i5 < iEnd; _i5++) {
-                if (tests[_i5](arguments)) {
-                  return fns[_i5].apply(this, arguments);
+            const fn0 = ok0 ? signatures[0].implementation : undef;
+            const fn1 = ok1 ? signatures[1].implementation : undef;
+            const fn2 = ok2 ? signatures[2].implementation : undef;
+            const fn3 = ok3 ? signatures[3].implementation : undef;
+            const fn4 = ok4 ? signatures[4].implementation : undef;
+            const fn5 = ok5 ? signatures[5].implementation : undef;
+            const len0 = ok0 ? signatures[0].params.length : -1;
+            const len1 = ok1 ? signatures[1].params.length : -1;
+            const len2 = ok2 ? signatures[2].params.length : -1;
+            const len3 = ok3 ? signatures[3].params.length : -1;
+            const len4 = ok4 ? signatures[4].params.length : -1;
+            const len5 = ok5 ? signatures[5].params.length : -1;
+            const iStart = allOk ? 6 : 0;
+            const iEnd = signatures.length;
+            const tests = signatures.map((s2) => s2.test);
+            const fns = signatures.map((s2) => s2.implementation);
+            const generic = function generic2() {
+              for (let i2 = iStart; i2 < iEnd; i2++) {
+                if (tests[i2](arguments)) {
+                  return fns[i2].apply(this, arguments);
                 }
               }
-              return typed2.onMismatch(name302, arguments, signatures);
+              return typed3.onMismatch(name309, arguments, signatures);
             };
             function theTypedFn(arg0, arg1) {
               if (arguments.length === len0 && test00(arg0) && test01(arg1)) {
@@ -1364,7 +1187,7 @@ var meta_bind_publish = (() => {
             }
             try {
               Object.defineProperty(theTypedFn, "name", {
-                value: name302
+                value: name309
               });
             } catch (err) {
             }
@@ -1375,8 +1198,8 @@ var meta_bind_publish = (() => {
             };
             return theTypedFn;
           }
-          function _onMismatch(name302, args, signatures) {
-            throw createError(name302, args, signatures);
+          function _onMismatch(name309, args, signatures) {
+            throw createError(name309, args, signatures);
           }
           function initial(arr) {
             return slice(arr, 0, arr.length - 1);
@@ -1388,7 +1211,7 @@ var meta_bind_publish = (() => {
             return Array.prototype.slice.call(arr, start, end);
           }
           function findInArray(arr, test) {
-            for (var i2 = 0; i2 < arr.length; i2++) {
+            for (let i2 = 0; i2 < arr.length; i2++) {
               if (test(arr[i2])) {
                 return arr[i2];
               }
@@ -1399,10 +1222,8 @@ var meta_bind_publish = (() => {
             return Array.prototype.concat.apply([], arr.map(callback));
           }
           function referTo() {
-            var references = initial(arguments).map(function(s) {
-              return stringifyParams(parseSignature(s));
-            });
-            var callback = last(arguments);
+            const references = initial(arguments).map((s) => stringifyParams(parseSignature(s)));
+            const callback = last(arguments);
             if (typeof callback !== "function") {
               throw new TypeError("Callback function expected as last argument");
             }
@@ -1427,17 +1248,17 @@ var meta_bind_publish = (() => {
             };
           }
           function isReferTo(objectOrFn) {
-            return objectOrFn && _typeof2(objectOrFn.referTo) === "object" && Array.isArray(objectOrFn.referTo.references) && typeof objectOrFn.referTo.callback === "function";
+            return objectOrFn && typeof objectOrFn.referTo === "object" && Array.isArray(objectOrFn.referTo.references) && typeof objectOrFn.referTo.callback === "function";
           }
           function isReferToSelf(objectOrFn) {
-            return objectOrFn && _typeof2(objectOrFn.referToSelf) === "object" && typeof objectOrFn.referToSelf.callback === "function";
+            return objectOrFn && typeof objectOrFn.referToSelf === "object" && typeof objectOrFn.referToSelf.callback === "function";
           }
           function checkName(nameSoFar, newName) {
             if (!nameSoFar) {
               return newName;
             }
             if (newName && newName !== nameSoFar) {
-              var err = new Error("Function names do not match (expected: " + nameSoFar + ", actual: " + newName + ")");
+              const err = new Error("Function names do not match (expected: " + nameSoFar + ", actual: " + newName + ")");
               err.data = {
                 actual: newName,
                 expected: nameSoFar
@@ -1447,21 +1268,21 @@ var meta_bind_publish = (() => {
             return nameSoFar;
           }
           function getObjectName(obj) {
-            var name302;
-            for (var key in obj) {
+            let name309;
+            for (const key in obj) {
               if (Object.prototype.hasOwnProperty.call(obj, key) && (isTypedFunction(obj[key]) || typeof obj[key].signature === "string")) {
-                name302 = checkName(name302, obj[key].name);
+                name309 = checkName(name309, obj[key].name);
               }
             }
-            return name302;
+            return name309;
           }
           function mergeSignatures(dest, source) {
-            var key;
+            let key;
             for (key in source) {
               if (Object.prototype.hasOwnProperty.call(source, key)) {
                 if (key in dest) {
                   if (source[key] !== dest[key]) {
-                    var err = new Error('Signature "' + key + '" is defined twice');
+                    const err = new Error('Signature "' + key + '" is defined twice');
                     err.data = {
                       signature: key,
                       sourceFunction: source[key],
@@ -1474,16 +1295,16 @@ var meta_bind_publish = (() => {
               }
             }
           }
-          var saveTyped = typed2;
-          typed2 = function typed3(maybeName) {
-            var named = typeof maybeName === "string";
-            var start = named ? 1 : 0;
-            var name302 = named ? maybeName : "";
-            var allSignatures = {};
-            for (var i2 = start; i2 < arguments.length; ++i2) {
-              var item = arguments[i2];
-              var theseSignatures = {};
-              var thisName = void 0;
+          const saveTyped = typed3;
+          typed3 = function(maybeName) {
+            const named = typeof maybeName === "string";
+            const start = named ? 1 : 0;
+            let name309 = named ? maybeName : "";
+            const allSignatures = {};
+            for (let i2 = start; i2 < arguments.length; ++i2) {
+              const item = arguments[i2];
+              let theseSignatures = {};
+              let thisName;
               if (typeof item === "function") {
                 thisName = item.name;
                 if (typeof item.signature === "string") {
@@ -1498,7 +1319,7 @@ var meta_bind_publish = (() => {
                 }
               }
               if (Object.keys(theseSignatures).length === 0) {
-                var err = new TypeError("Argument to 'typed' at index " + i2 + " is not a (typed) function, nor an object with signatures as keys and functions as values.");
+                const err = new TypeError("Argument to 'typed' at index " + i2 + " is not a (typed) function, nor an object with signatures as keys and functions as values.");
                 err.data = {
                   index: i2,
                   argument: item
@@ -1506,34 +1327,34 @@ var meta_bind_publish = (() => {
                 throw err;
               }
               if (!named) {
-                name302 = checkName(name302, thisName);
+                name309 = checkName(name309, thisName);
               }
               mergeSignatures(allSignatures, theseSignatures);
             }
-            return createTypedFunction(name302 || "", allSignatures);
+            return createTypedFunction(name309 || "", allSignatures);
           };
-          typed2.create = create;
-          typed2.createCount = saveTyped.createCount;
-          typed2.onMismatch = _onMismatch;
-          typed2.throwMismatchError = _onMismatch;
-          typed2.createError = createError;
-          typed2.clear = clear;
-          typed2.clearConversions = clearConversions;
-          typed2.addTypes = addTypes;
-          typed2._findType = findType;
-          typed2.referTo = referTo;
-          typed2.referToSelf = referToSelf;
-          typed2.convert = convert;
-          typed2.findSignature = findSignature;
-          typed2.find = find;
-          typed2.isTypedFunction = isTypedFunction;
-          typed2.warnAgainstDeprecatedThis = true;
-          typed2.addType = function(type, beforeObjectTest) {
-            var before = "any";
+          typed3.create = create;
+          typed3.createCount = saveTyped.createCount;
+          typed3.onMismatch = _onMismatch;
+          typed3.throwMismatchError = _onMismatch;
+          typed3.createError = createError;
+          typed3.clear = clear;
+          typed3.clearConversions = clearConversions;
+          typed3.addTypes = addTypes;
+          typed3._findType = findType;
+          typed3.referTo = referTo;
+          typed3.referToSelf = referToSelf;
+          typed3.convert = convert;
+          typed3.findSignature = findSignature;
+          typed3.find = find;
+          typed3.isTypedFunction = isTypedFunction;
+          typed3.warnAgainstDeprecatedThis = true;
+          typed3.addType = function(type, beforeObjectTest) {
+            let before = "any";
             if (beforeObjectTest !== false && typeMap.has("Object")) {
               before = "Object";
             }
-            typed2.addTypes([type], before);
+            typed3.addTypes([type], before);
           };
           function _validateConversion(conversion) {
             if (!conversion || typeof conversion.from !== "string" || typeof conversion.to !== "string" || typeof conversion.convert !== "function") {
@@ -1543,9 +1364,9 @@ var meta_bind_publish = (() => {
               throw new SyntaxError('Illegal to define conversion from "' + conversion.from + '" to itself.');
             }
           }
-          typed2.addConversion = function(conversion) {
+          typed3.addConversion = function(conversion) {
             _validateConversion(conversion);
-            var to2 = findType(conversion.to);
+            const to2 = findType(conversion.to);
             if (to2.conversionsTo.every(function(other) {
               return other.from !== conversion.from;
             })) {
@@ -1558,37 +1379,35 @@ var meta_bind_publish = (() => {
               throw new Error('There is already a conversion from "' + conversion.from + '" to "' + to2.name + '"');
             }
           };
-          typed2.addConversions = function(conversions) {
-            conversions.forEach(typed2.addConversion);
+          typed3.addConversions = function(conversions) {
+            conversions.forEach(typed3.addConversion);
           };
-          typed2.removeConversion = function(conversion) {
+          typed3.removeConversion = function(conversion) {
             _validateConversion(conversion);
-            var to2 = findType(conversion.to);
-            var existingConversion = findInArray(to2.conversionsTo, function(c) {
-              return c.from === conversion.from;
-            });
+            const to2 = findType(conversion.to);
+            const existingConversion = findInArray(to2.conversionsTo, (c) => c.from === conversion.from);
             if (!existingConversion) {
               throw new Error("Attempt to remove nonexistent conversion from " + conversion.from + " to " + conversion.to);
             }
             if (existingConversion.convert !== conversion.convert) {
               throw new Error("Conversion to remove does not match existing conversion");
             }
-            var index2 = to2.conversionsTo.indexOf(existingConversion);
+            const index2 = to2.conversionsTo.indexOf(existingConversion);
             to2.conversionsTo.splice(index2, 1);
           };
-          typed2.resolve = function(tf, argList) {
+          typed3.resolve = function(tf, argList) {
             if (!isTypedFunction(tf)) {
               throw new TypeError(NOT_TYPED_FUNCTION);
             }
-            var sigs = tf._typedFunctionData.signatures;
-            for (var i2 = 0; i2 < sigs.length; ++i2) {
+            const sigs = tf._typedFunctionData.signatures;
+            for (let i2 = 0; i2 < sigs.length; ++i2) {
               if (sigs[i2].test(argList)) {
                 return sigs[i2];
               }
             }
             return null;
           };
-          return typed2;
+          return typed3;
         }
         var typedFunction2 = create();
         return typedFunction2;
@@ -2341,20 +2160,20 @@ var meta_bind_publish = (() => {
       (function(root) {
         "use strict";
         var MAX_CYCLE_LEN = 2e3;
-        var P3 = {
+        var P4 = {
           "s": 1,
           "n": 0,
           "d": 1
         };
         function assign2(n, s) {
           if (isNaN(n = parseInt(n, 10))) {
-            throw Fraction3["InvalidParameter"];
+            throw InvalidParameter();
           }
           return n * s;
         }
         function newFraction(n, d) {
           if (d === 0) {
-            throw Fraction3["DivisionByZero"];
+            throw DivisionByZero();
           }
           var f = Object.create(Fraction3.prototype);
           f["s"] = n < 0 ? -1 : 1;
@@ -2397,7 +2216,7 @@ var meta_bind_publish = (() => {
             d = p2;
             s = n * d;
             if (n % 1 !== 0 || d % 1 !== 0) {
-              throw Fraction3["NonIntegerParameter"];
+              throw NonIntegerParameter();
             }
           } else
             switch (typeof p1) {
@@ -2412,7 +2231,7 @@ var meta_bind_publish = (() => {
                   if (1 in p1)
                     d = p1[1];
                 } else {
-                  throw Fraction3["InvalidParameter"];
+                  throw InvalidParameter();
                 }
                 s = n * d;
                 break;
@@ -2469,7 +2288,7 @@ var meta_bind_publish = (() => {
               case "string": {
                 B = p1.match(/\d+|./g);
                 if (B === null)
-                  throw Fraction3["InvalidParameter"];
+                  throw InvalidParameter();
                 if (B[A] === "-") {
                   s = -1;
                   A++;
@@ -2510,14 +2329,14 @@ var meta_bind_publish = (() => {
                 }
               }
               default:
-                throw Fraction3["InvalidParameter"];
+                throw InvalidParameter();
             }
           if (d === 0) {
-            throw Fraction3["DivisionByZero"];
+            throw DivisionByZero();
           }
-          P3["s"] = s < 0 ? -1 : 1;
-          P3["n"] = Math.abs(n);
-          P3["d"] = Math.abs(d);
+          P4["s"] = s < 0 ? -1 : 1;
+          P4["n"] = Math.abs(n);
+          P4["d"] = Math.abs(d);
         };
         function modpow(b, e3, m) {
           var r = 1;
@@ -2573,17 +2392,23 @@ var meta_bind_publish = (() => {
         function Fraction3(a, b) {
           parse2(a, b);
           if (this instanceof Fraction3) {
-            a = gcd2(P3["d"], P3["n"]);
-            this["s"] = P3["s"];
-            this["n"] = P3["n"] / a;
-            this["d"] = P3["d"] / a;
+            a = gcd2(P4["d"], P4["n"]);
+            this["s"] = P4["s"];
+            this["n"] = P4["n"] / a;
+            this["d"] = P4["d"] / a;
           } else {
-            return newFraction(P3["s"] * P3["n"], P3["d"]);
+            return newFraction(P4["s"] * P4["n"], P4["d"]);
           }
         }
-        Fraction3["DivisionByZero"] = new Error("Division by Zero");
-        Fraction3["InvalidParameter"] = new Error("Invalid argument");
-        Fraction3["NonIntegerParameter"] = new Error("Parameters must be integer");
+        var DivisionByZero = function() {
+          return new Error("Division by Zero");
+        };
+        var InvalidParameter = function() {
+          return new Error("Invalid argument");
+        };
+        var NonIntegerParameter = function() {
+          return new Error("Parameters must be integer");
+        };
         Fraction3.prototype = {
           "s": 1,
           "n": 0,
@@ -2597,29 +2422,29 @@ var meta_bind_publish = (() => {
           "add": function(a, b) {
             parse2(a, b);
             return newFraction(
-              this["s"] * this["n"] * P3["d"] + P3["s"] * this["d"] * P3["n"],
-              this["d"] * P3["d"]
+              this["s"] * this["n"] * P4["d"] + P4["s"] * this["d"] * P4["n"],
+              this["d"] * P4["d"]
             );
           },
           "sub": function(a, b) {
             parse2(a, b);
             return newFraction(
-              this["s"] * this["n"] * P3["d"] - P3["s"] * this["d"] * P3["n"],
-              this["d"] * P3["d"]
+              this["s"] * this["n"] * P4["d"] - P4["s"] * this["d"] * P4["n"],
+              this["d"] * P4["d"]
             );
           },
           "mul": function(a, b) {
             parse2(a, b);
             return newFraction(
-              this["s"] * P3["s"] * this["n"] * P3["n"],
-              this["d"] * P3["d"]
+              this["s"] * P4["s"] * this["n"] * P4["n"],
+              this["d"] * P4["d"]
             );
           },
           "div": function(a, b) {
             parse2(a, b);
             return newFraction(
-              this["s"] * P3["s"] * this["n"] * P3["d"],
-              this["d"] * P3["n"]
+              this["s"] * P4["s"] * this["n"] * P4["d"],
+              this["d"] * P4["n"]
             );
           },
           "clone": function() {
@@ -2633,24 +2458,24 @@ var meta_bind_publish = (() => {
               return newFraction(this["s"] * this["n"] % this["d"], 1);
             }
             parse2(a, b);
-            if (0 === P3["n"] && 0 === this["d"]) {
-              throw Fraction3["DivisionByZero"];
+            if (0 === P4["n"] && 0 === this["d"]) {
+              throw DivisionByZero();
             }
             return newFraction(
-              this["s"] * (P3["d"] * this["n"]) % (P3["n"] * this["d"]),
-              P3["d"] * this["d"]
+              this["s"] * (P4["d"] * this["n"]) % (P4["n"] * this["d"]),
+              P4["d"] * this["d"]
             );
           },
           "gcd": function(a, b) {
             parse2(a, b);
-            return newFraction(gcd2(P3["n"], this["n"]) * gcd2(P3["d"], this["d"]), P3["d"] * this["d"]);
+            return newFraction(gcd2(P4["n"], this["n"]) * gcd2(P4["d"], this["d"]), P4["d"] * this["d"]);
           },
           "lcm": function(a, b) {
             parse2(a, b);
-            if (P3["n"] === 0 && this["n"] === 0) {
+            if (P4["n"] === 0 && this["n"] === 0) {
               return newFraction(0, 1);
             }
-            return newFraction(P3["n"] * this["n"], gcd2(P3["n"], this["n"]) * gcd2(P3["d"], this["d"]));
+            return newFraction(P4["n"] * this["n"], gcd2(P4["n"], this["n"]) * gcd2(P4["d"], this["d"]));
           },
           "ceil": function(places) {
             places = Math.pow(10, places || 0);
@@ -2678,11 +2503,11 @@ var meta_bind_publish = (() => {
           },
           "pow": function(a, b) {
             parse2(a, b);
-            if (P3["d"] === 1) {
-              if (P3["s"] < 0) {
-                return newFraction(Math.pow(this["s"] * this["d"], P3["n"]), Math.pow(this["n"], P3["n"]));
+            if (P4["d"] === 1) {
+              if (P4["s"] < 0) {
+                return newFraction(Math.pow(this["s"] * this["d"], P4["n"]), Math.pow(this["n"], P4["n"]));
               } else {
-                return newFraction(Math.pow(this["s"] * this["n"], P3["n"]), Math.pow(this["d"], P3["n"]));
+                return newFraction(Math.pow(this["s"] * this["n"], P4["n"]), Math.pow(this["d"], P4["n"]));
               }
             }
             if (this["s"] < 0)
@@ -2698,9 +2523,9 @@ var meta_bind_publish = (() => {
                 n = 0;
                 break;
               }
-              N[k] *= P3["n"];
-              if (N[k] % P3["d"] === 0) {
-                N[k] /= P3["d"];
+              N[k] *= P4["n"];
+              if (N[k] % P4["d"] === 0) {
+                N[k] /= P4["d"];
               } else
                 return null;
               n *= Math.pow(k, N[k]);
@@ -2708,25 +2533,25 @@ var meta_bind_publish = (() => {
             for (var k in D) {
               if (k === "1")
                 continue;
-              D[k] *= P3["n"];
-              if (D[k] % P3["d"] === 0) {
-                D[k] /= P3["d"];
+              D[k] *= P4["n"];
+              if (D[k] % P4["d"] === 0) {
+                D[k] /= P4["d"];
               } else
                 return null;
               d *= Math.pow(k, D[k]);
             }
-            if (P3["s"] < 0) {
+            if (P4["s"] < 0) {
               return newFraction(d, n);
             }
             return newFraction(n, d);
           },
           "equals": function(a, b) {
             parse2(a, b);
-            return this["s"] * this["n"] * P3["d"] === P3["s"] * P3["n"] * this["d"];
+            return this["s"] * this["n"] * P4["d"] === P4["s"] * P4["n"] * this["d"];
           },
           "compare": function(a, b) {
             parse2(a, b);
-            var t = this["s"] * this["n"] * P3["d"] - P3["s"] * P3["n"] * this["d"];
+            var t = this["s"] * this["n"] * P4["d"] - P4["s"] * P4["n"] * this["d"];
             return (0 < t) - (t < 0);
           },
           "simplify": function(eps) {
@@ -2741,7 +2566,7 @@ var meta_bind_publish = (() => {
               for (var k = i2 - 2; k >= 0; k--) {
                 s = s["inverse"]()["add"](cont[k]);
               }
-              if (s["sub"](thisABS)["abs"]().valueOf() < eps) {
+              if (Math.abs(s["sub"](thisABS).valueOf()) < eps) {
                 return s["mul"](this["s"]);
               }
             }
@@ -2749,53 +2574,53 @@ var meta_bind_publish = (() => {
           },
           "divisible": function(a, b) {
             parse2(a, b);
-            return !(!(P3["n"] * this["d"]) || this["n"] * P3["d"] % (P3["n"] * this["d"]));
+            return !(!(P4["n"] * this["d"]) || this["n"] * P4["d"] % (P4["n"] * this["d"]));
           },
           "valueOf": function() {
             return this["s"] * this["n"] / this["d"];
           },
           "toFraction": function(excludeWhole) {
-            var whole, str = "";
+            var whole, str2 = "";
             var n = this["n"];
             var d = this["d"];
             if (this["s"] < 0) {
-              str += "-";
+              str2 += "-";
             }
             if (d === 1) {
-              str += n;
+              str2 += n;
             } else {
               if (excludeWhole && (whole = Math.floor(n / d)) > 0) {
-                str += whole;
-                str += " ";
+                str2 += whole;
+                str2 += " ";
                 n %= d;
               }
-              str += n;
-              str += "/";
-              str += d;
+              str2 += n;
+              str2 += "/";
+              str2 += d;
             }
-            return str;
+            return str2;
           },
           "toLatex": function(excludeWhole) {
-            var whole, str = "";
+            var whole, str2 = "";
             var n = this["n"];
             var d = this["d"];
             if (this["s"] < 0) {
-              str += "-";
+              str2 += "-";
             }
             if (d === 1) {
-              str += n;
+              str2 += n;
             } else {
               if (excludeWhole && (whole = Math.floor(n / d)) > 0) {
-                str += whole;
+                str2 += whole;
                 n %= d;
               }
-              str += "\\frac{";
-              str += n;
-              str += "}{";
-              str += d;
-              str += "}";
+              str2 += "\\frac{";
+              str2 += n;
+              str2 += "}{";
+              str2 += d;
+              str2 += "}";
             }
-            return str;
+            return str2;
           },
           "toContinued": function() {
             var t;
@@ -2822,40 +2647,36 @@ var meta_bind_publish = (() => {
             dec = dec || 15;
             var cycLen = cycleLen(N, D);
             var cycOff = cycleStart(N, D, cycLen);
-            var str = this["s"] < 0 ? "-" : "";
-            str += N / D | 0;
+            var str2 = this["s"] < 0 ? "-" : "";
+            str2 += N / D | 0;
             N %= D;
             N *= 10;
             if (N)
-              str += ".";
+              str2 += ".";
             if (cycLen) {
               for (var i2 = cycOff; i2--; ) {
-                str += N / D | 0;
+                str2 += N / D | 0;
                 N %= D;
                 N *= 10;
               }
-              str += "(";
+              str2 += "(";
               for (var i2 = cycLen; i2--; ) {
-                str += N / D | 0;
+                str2 += N / D | 0;
                 N %= D;
                 N *= 10;
               }
-              str += ")";
+              str2 += ")";
             } else {
               for (var i2 = dec; N && i2--; ) {
-                str += N / D | 0;
+                str2 += N / D | 0;
                 N %= D;
                 N *= 10;
               }
             }
-            return str;
+            return str2;
           }
         };
-        if (typeof define === "function" && define["amd"]) {
-          define([], function() {
-            return Fraction3;
-          });
-        } else if (typeof exports === "object") {
+        if (typeof exports === "object") {
           Object.defineProperty(Fraction3, "__esModule", { "value": true });
           Fraction3["default"] = Fraction3;
           Fraction3["Fraction"] = Fraction3;
@@ -2941,9 +2762,9 @@ var meta_bind_publish = (() => {
       var defaultEscapeMapFn = function defaultEscapeMapFn2(defaultEscapes2, formatEscapes2) {
         return _extends2({}, defaultEscapes2, formatEscapes2);
       };
-      module.exports = function(str) {
+      module.exports = function(str2) {
         var _ref = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {}, _ref$preserveFormatti = _ref.preserveFormatting, preserveFormatting = _ref$preserveFormatti === void 0 ? false : _ref$preserveFormatti, _ref$escapeMapFn = _ref.escapeMapFn, escapeMapFn = _ref$escapeMapFn === void 0 ? defaultEscapeMapFn : _ref$escapeMapFn;
-        var runningStr = String(str);
+        var runningStr = String(str2);
         var result = "";
         var escapes = escapeMapFn(_extends2({}, defaultEscapes), preserveFormatting ? _extends2({}, formatEscapes) : {});
         var escapeKeys = Object.keys(escapes);
@@ -3669,14 +3490,959 @@ var meta_bind_publish = (() => {
 
   // src/utils/Utils.ts
   var import_ObjectTraversalUtils = __toESM(require_ObjectTraversalUtils());
-  function isTruthy(value) {
-    return !!value;
+
+  // node_modules/@ungap/structured-clone/esm/types.js
+  var VOID = -1;
+  var PRIMITIVE = 0;
+  var ARRAY = 1;
+  var OBJECT = 2;
+  var DATE = 3;
+  var REGEXP = 4;
+  var MAP = 5;
+  var SET = 6;
+  var ERROR = 7;
+  var BIGINT = 8;
+
+  // node_modules/@ungap/structured-clone/esm/deserialize.js
+  var env = typeof self === "object" ? self : globalThis;
+  var deserializer = ($, _) => {
+    const as = (out, index2) => {
+      $.set(index2, out);
+      return out;
+    };
+    const unpair = (index2) => {
+      if ($.has(index2))
+        return $.get(index2);
+      const [type, value2] = _[index2];
+      switch (type) {
+        case PRIMITIVE:
+        case VOID:
+          return as(value2, index2);
+        case ARRAY: {
+          const arr = as([], index2);
+          for (const index3 of value2)
+            arr.push(unpair(index3));
+          return arr;
+        }
+        case OBJECT: {
+          const object = as({}, index2);
+          for (const [key, index3] of value2)
+            object[unpair(key)] = unpair(index3);
+          return object;
+        }
+        case DATE:
+          return as(new Date(value2), index2);
+        case REGEXP: {
+          const { source, flags } = value2;
+          return as(new RegExp(source, flags), index2);
+        }
+        case MAP: {
+          const map3 = as(/* @__PURE__ */ new Map(), index2);
+          for (const [key, index3] of value2)
+            map3.set(unpair(key), unpair(index3));
+          return map3;
+        }
+        case SET: {
+          const set = as(/* @__PURE__ */ new Set(), index2);
+          for (const index3 of value2)
+            set.add(unpair(index3));
+          return set;
+        }
+        case ERROR: {
+          const { name: name309, message } = value2;
+          return as(new env[name309](message), index2);
+        }
+        case BIGINT:
+          return as(BigInt(value2), index2);
+        case "BigInt":
+          return as(Object(BigInt(value2)), index2);
+      }
+      return as(new env[type](value2), index2);
+    };
+    return unpair;
+  };
+  var deserialize = (serialized) => deserializer(/* @__PURE__ */ new Map(), serialized)(0);
+
+  // node_modules/@ungap/structured-clone/esm/serialize.js
+  var EMPTY = "";
+  var { toString } = {};
+  var { keys } = Object;
+  var typeOf = (value2) => {
+    const type = typeof value2;
+    if (type !== "object" || !value2)
+      return [PRIMITIVE, type];
+    const asString = toString.call(value2).slice(8, -1);
+    switch (asString) {
+      case "Array":
+        return [ARRAY, EMPTY];
+      case "Object":
+        return [OBJECT, EMPTY];
+      case "Date":
+        return [DATE, EMPTY];
+      case "RegExp":
+        return [REGEXP, EMPTY];
+      case "Map":
+        return [MAP, EMPTY];
+      case "Set":
+        return [SET, EMPTY];
+    }
+    if (asString.includes("Array"))
+      return [ARRAY, asString];
+    if (asString.includes("Error"))
+      return [ERROR, asString];
+    return [OBJECT, asString];
+  };
+  var shouldSkip = ([TYPE, type]) => TYPE === PRIMITIVE && (type === "function" || type === "symbol");
+  var serializer = (strict, json, $, _) => {
+    const as = (out, value2) => {
+      const index2 = _.push(out) - 1;
+      $.set(value2, index2);
+      return index2;
+    };
+    const pair = (value2) => {
+      if ($.has(value2))
+        return $.get(value2);
+      let [TYPE, type] = typeOf(value2);
+      switch (TYPE) {
+        case PRIMITIVE: {
+          let entry = value2;
+          switch (type) {
+            case "bigint":
+              TYPE = BIGINT;
+              entry = value2.toString();
+              break;
+            case "function":
+            case "symbol":
+              if (strict)
+                throw new TypeError("unable to serialize " + type);
+              entry = null;
+              break;
+            case "undefined":
+              return as([VOID], value2);
+          }
+          return as([TYPE, entry], value2);
+        }
+        case ARRAY: {
+          if (type)
+            return as([type, [...value2]], value2);
+          const arr = [];
+          const index2 = as([TYPE, arr], value2);
+          for (const entry of value2)
+            arr.push(pair(entry));
+          return index2;
+        }
+        case OBJECT: {
+          if (type) {
+            switch (type) {
+              case "BigInt":
+                return as([type, value2.toString()], value2);
+              case "Boolean":
+              case "Number":
+              case "String":
+                return as([type, value2.valueOf()], value2);
+            }
+          }
+          if (json && "toJSON" in value2)
+            return pair(value2.toJSON());
+          const entries = [];
+          const index2 = as([TYPE, entries], value2);
+          for (const key of keys(value2)) {
+            if (strict || !shouldSkip(typeOf(value2[key])))
+              entries.push([pair(key), pair(value2[key])]);
+          }
+          return index2;
+        }
+        case DATE:
+          return as([TYPE, value2.toISOString()], value2);
+        case REGEXP: {
+          const { source, flags } = value2;
+          return as([TYPE, { source, flags }], value2);
+        }
+        case MAP: {
+          const entries = [];
+          const index2 = as([TYPE, entries], value2);
+          for (const [key, entry] of value2) {
+            if (strict || !(shouldSkip(typeOf(key)) || shouldSkip(typeOf(entry))))
+              entries.push([pair(key), pair(entry)]);
+          }
+          return index2;
+        }
+        case SET: {
+          const entries = [];
+          const index2 = as([TYPE, entries], value2);
+          for (const entry of value2) {
+            if (strict || !shouldSkip(typeOf(entry)))
+              entries.push(pair(entry));
+          }
+          return index2;
+        }
+      }
+      const { message } = value2;
+      return as([TYPE, { name: type, message }], value2);
+    };
+    return pair;
+  };
+  var serialize = (value2, { json, lossy } = {}) => {
+    const _ = [];
+    return serializer(!(json || lossy), !!json, /* @__PURE__ */ new Map(), _)(value2), _;
+  };
+
+  // node_modules/@ungap/structured-clone/esm/index.js
+  var esm_default = typeof structuredClone === "function" ? (any, options) => options && ("json" in options || "lossy" in options) ? deserialize(serialize(any, options)) : structuredClone(any) : (any, options) => deserialize(serialize(any, options));
+
+  // node_modules/@lemons_dev/parsinom/lib/Helpers.js
+  function arrayUnion(a, b) {
+    if (a === void 0 && b === void 0) {
+      return [];
+    }
+    if (a === void 0) {
+      return b.sort();
+    }
+    if (b === void 0) {
+      return a.sort();
+    }
+    const ret = [...a];
+    for (const bElement of b) {
+      let alreadyIncluded = false;
+      for (const retElement of ret) {
+        if (bElement === retElement) {
+          alreadyIncluded = true;
+        }
+      }
+      if (!alreadyIncluded) {
+        ret.push(bElement);
+      }
+    }
+    ret.sort();
+    return ret;
   }
-  function isFalsy(value) {
-    return !value;
+  function validateRange(min3, max3) {
+    if (max3 < min3) {
+      throw new Error(`Invalid Range: max might not be smaller than min. Received [${min3}, ${max3}].`);
+    }
+    if (min3 < 0 || max3 < 0) {
+      throw new Error(`Invalid Range: max and min might not be smaller than 0. Received [${min3}, ${max3}].`);
+    }
+    if (min3 === Infinity || max3 === Infinity) {
+      throw new Error(`Invalid Range: max and min might not be infinity. Received [${min3}, ${max3}].`);
+    }
+    if (!Number.isInteger(min3) || !Number.isInteger(max3)) {
+      throw new Error(`Invalid Range: max and min must be integers. Received [${min3}, ${max3}].`);
+    }
   }
-  function equalOrIncludes(str1, str2) {
-    return str1 === str2 || str1.includes(str2) || str2.includes(str1);
+  function validateRegexFlags(flags) {
+    for (const flag of flags) {
+      if (flag !== "i" && flag !== "m" && flag !== "s" && flag !== "u") {
+        throw new Error(`RegExp flag '${flag}' is not allowed. The only allowed flags are 'i', 'm', 's' and 'u'.`);
+      }
+    }
+  }
+  var ParserHelpers = class {
+    followedBy(x) {
+      return new Parser(function _followedBy(context) {
+        const result = x.p(context.copy());
+        return result;
+      });
+    }
+    notFollowedBy(parser2) {
+      return new Parser(function _notFollowedBy(context) {
+        const contextCopy = context.copy();
+        const result = parser2.p(contextCopy);
+        const text2 = context.sliceTo(contextCopy.position.index);
+        return result.success ? context.fail(`not '` + text2 + `'`) : context.succeed(void 0);
+      });
+    }
+    test(fn) {
+      return new Parser(function _test(context) {
+        const char = context.input[context.position.index];
+        if (!context.atEOF() && fn(char)) {
+          return context.succeedOffset(1, char);
+        } else {
+          return context.fail(`a character matching ${fn}`);
+        }
+      });
+    }
+  };
+  var P_HELPERS = new ParserHelpers();
+
+  // node_modules/@lemons_dev/parsinom/lib/ParserContext.js
+  var ParserContext = class {
+    constructor(input, position) {
+      this.input = input;
+      this.position = position;
+    }
+    moveToPosition(position) {
+      this.position = position;
+      return this;
+    }
+    copy() {
+      return new ParserContext(this.input, {
+        index: this.position.index,
+        column: this.position.column,
+        line: this.position.line
+      });
+    }
+    getPosition() {
+      return {
+        index: this.position.index,
+        column: this.position.column,
+        line: this.position.line
+      };
+    }
+    atEOF() {
+      return this.position.index >= this.input.length;
+    }
+    advanceTo(index2) {
+      if (index2 < this.position.index) {
+        throw new Error(`Can not advance backwards. Current pos ${this.position.index}. Advance target index ${index2}.`);
+      }
+      if (index2 === this.position.index) {
+        return;
+      }
+      for (let i2 = this.position.index; i2 < index2; i2++) {
+        if (this.input[i2] === "\n") {
+          this.position.line += 1;
+          this.position.column = 1;
+        } else {
+          this.position.column += 1;
+        }
+      }
+      this.position.index = index2;
+    }
+    sliceTo(endIndex) {
+      return this.input.slice(this.position.index, endIndex);
+    }
+    succeedOffset(offset, value2) {
+      return this.succeedAt(this.position.index + offset, value2);
+    }
+    failOffset(offset, expected) {
+      return this.failAt(this.position.index + offset, expected);
+    }
+    succeed(value2) {
+      return this.succeedAt(this.position.index, value2);
+    }
+    fail(expected) {
+      return this.failAt(this.position.index, expected);
+    }
+    succeedAt(index2, value2) {
+      this.advanceTo(index2);
+      return {
+        success: true,
+        value: value2,
+        furthest: void 0,
+        expected: void 0
+      };
+    }
+    failAt(index2, expected) {
+      this.advanceTo(index2);
+      return {
+        success: false,
+        value: null,
+        furthest: this.position,
+        expected: Array.isArray(expected) ? expected : [expected]
+      };
+    }
+    merge(a, b) {
+      if (a === void 0) {
+        return b;
+      }
+      if (this.getIndex(b.furthest) > this.getIndex(a.furthest)) {
+        return b;
+      }
+      const expected = this.getIndex(b.furthest) === this.getIndex(a.furthest) ? arrayUnion(a.expected, b.expected) : a.expected;
+      b.furthest = a.furthest;
+      b.expected = expected;
+      return b;
+    }
+    getIndex(position) {
+      return position === void 0 ? -1 : position.index;
+    }
+  };
+
+  // node_modules/@lemons_dev/parsinom/lib/ParserError.js
+  function generateMessage(str2, parseFailure, verbose) {
+    const expectedMessage = `Expected ${parseFailure.expected.join(" or ")}`;
+    let message = `Parse Failure: ${expectedMessage} at index ${parseFailure.furthest.index}, line ${parseFailure.furthest.line}, column ${parseFailure.furthest.column}.`;
+    if (verbose) {
+      const lines = str2.split("\n");
+      const failedLine = lines[parseFailure.furthest.line - 1];
+      const linePrefix = `${parseFailure.furthest.line} |   `;
+      message += `
+
+${linePrefix}${failedLine}`;
+      message += `
+${" ".repeat(parseFailure.furthest.column - 1 + linePrefix.length)}^ (${expectedMessage})`;
+    }
+    return message;
+  }
+  var ParsingError = class extends Error {
+    constructor(str2, parseFailure) {
+      super(generateMessage(str2, parseFailure, true));
+    }
+  };
+
+  // node_modules/@lemons_dev/parsinom/lib/ParsiNOM.js
+  var P = class {
+    static createError(str2, parseFailure) {
+      return new ParsingError(str2, parseFailure);
+    }
+    static sequence(...parsers) {
+      return new Parser(function _sequence(context) {
+        let result = void 0;
+        const value2 = new Array(parsers.length);
+        for (let i2 = 0; i2 < parsers.length; i2++) {
+          const p = parsers[i2];
+          const newResult = p.p(context);
+          result = context.merge(result, newResult);
+          if (!result.success) {
+            return result;
+          }
+          value2[i2] = result.value;
+        }
+        return context.merge(result, context.succeed(value2));
+      });
+    }
+    static sequenceMap(fn, ...parsers) {
+      return new Parser(function _sequenceMap(context) {
+        let result = void 0;
+        const value2 = new Array(parsers.length);
+        for (let i2 = 0; i2 < parsers.length; i2++) {
+          const p = parsers[i2];
+          const newResult = p.p(context);
+          result = context.merge(result, newResult);
+          if (!result.success) {
+            return result;
+          }
+          value2[i2] = result.value;
+        }
+        const retValue = fn(...value2);
+        return context.merge(result, context.succeed(retValue));
+      });
+    }
+    static createLanguage(parsers) {
+      const language = {};
+      const languageProxy = {};
+      const languageRef = {};
+      for (const key in parsers) {
+        languageRef[key] = P.reference(() => parsers[key](language, languageRef));
+        Object.defineProperty(languageProxy, key, {
+          get: () => {
+            if (language[key] !== void 0) {
+              return language[key];
+            } else {
+              throw new Error(`Can not access rule '${key}' in language. Rule is not yet defined. Try to access it via 'ref'.`);
+            }
+          }
+        });
+      }
+      for (const key in parsers) {
+        language[key] = parsers[key](languageProxy, languageRef);
+      }
+      return language;
+    }
+    static or(...parsers) {
+      if (parsers.length === 0) {
+        throw new Error("or must have at least one alternative");
+      }
+      return new Parser(function _or(context) {
+        let result = void 0;
+        for (let i2 = 0; i2 < parsers.length; i2++) {
+          const p = parsers[i2];
+          const contextCopy = context.copy();
+          const newResult = p.p(contextCopy);
+          result = context.merge(result, newResult);
+          if (result.success) {
+            context.moveToPosition(contextCopy.position);
+            return result;
+          }
+        }
+        return result;
+      });
+    }
+    static separateBy(parser2, separator) {
+      return this.separateByNotEmpty(parser2, separator).or(P.succeed([]));
+    }
+    static separateByNotEmpty(parser2, separator) {
+      return this.sequenceMap(function _separateBy(part1, part2) {
+        return [part1, ...part2];
+      }, parser2, separator.then(parser2).many());
+    }
+    static string(str2) {
+      const expected = "'" + str2 + "'";
+      return new Parser(function _string(context) {
+        const endIndex = context.position.index + str2.length;
+        const subInput = context.sliceTo(endIndex);
+        if (subInput === str2) {
+          return context.succeedAt(endIndex, subInput);
+        } else {
+          return context.fail(expected);
+        }
+      });
+    }
+    static regexp(regexp, group) {
+      validateRegexFlags(regexp.flags);
+      const expected = regexp.source;
+      return new Parser(function _regexp(context) {
+        const subInput = context.input.slice(context.position.index);
+        const match = regexp.exec(subInput);
+        if (match) {
+          const captureGroup = group !== null && group !== void 0 ? group : 0;
+          if (captureGroup >= 0 && captureGroup <= match.length) {
+            const fullMatch = match[0];
+            const groupMatch = match[captureGroup];
+            return context.succeedOffset(fullMatch.length, groupMatch);
+          }
+          const message = "expected valid match group (0 to " + match.length + ") in " + expected;
+          return context.fail(message);
+        } else {
+          return context.fail(expected);
+        }
+      });
+    }
+    static succeed(value2) {
+      return new Parser(function _succeed(context) {
+        return context.succeed(value2);
+      });
+    }
+    static fail(expected) {
+      return new Parser(function _fail(context) {
+        return context.fail(expected);
+      });
+    }
+    static oneOf(str2) {
+      return P_HELPERS.test(function _oneOf(char) {
+        return str2.includes(char);
+      }).describe(`one character of '${str2}'`);
+    }
+    static noneOf(str2) {
+      return P_HELPERS.test(function _noneOf(char) {
+        return !str2.includes(char);
+      }).describe(`no character of '${str2}'`);
+    }
+    static oneStringOf(strings) {
+      return this.or(...strings.map((x) => this.string(x))).describe(strings.map((x) => `'${x}'`).join(" or "));
+    }
+    static manyOf(str2) {
+      return new Parser(function _manyOf(context) {
+        let i2 = context.position.index;
+        for (; i2 < context.input.length; i2++) {
+          if (!str2.includes(context.input[i2])) {
+            break;
+          }
+        }
+        return context.succeedAt(i2, context.sliceTo(i2));
+      });
+    }
+    static manyNotOf(str2) {
+      return new Parser(function _manyOf(context) {
+        let i2 = context.position.index;
+        for (; i2 < context.input.length; i2++) {
+          if (str2.includes(context.input[i2])) {
+            break;
+          }
+        }
+        return context.succeedAt(i2, context.sliceTo(i2));
+      });
+    }
+    static custom(parsingFunction) {
+      return new Parser(parsingFunction);
+    }
+    static range(begin, end) {
+      const beginCharCode = begin.charCodeAt(0);
+      const endCharCode = end.charCodeAt(0);
+      return P_HELPERS.test(function _range(char) {
+        const charCode = char.charCodeAt(0);
+        return beginCharCode <= charCode && charCode <= endCharCode;
+      }).describe(`${begin}-${end}`);
+    }
+    static takeWhile(fn) {
+      return new Parser(function _takeWhile(context) {
+        let endIndex = context.position.index;
+        while (endIndex < context.input.length && fn(context.input[endIndex])) {
+          endIndex++;
+        }
+        return context.succeedAt(endIndex, context.input.slice(context.position.index, endIndex));
+      });
+    }
+    static reference(fn) {
+      return new Parser(function _reference(context) {
+        return fn().p(context);
+      });
+    }
+  };
+
+  // node_modules/@lemons_dev/parsinom/lib/Parser.js
+  var Parser = class {
+    constructor(p) {
+      this.p = p;
+    }
+    tryParse(str2) {
+      return this.p(new ParserContext(str2, { index: 0, line: 1, column: 1 }));
+    }
+    parse(str2) {
+      const result = this.tryParse(str2);
+      if (result.success) {
+        return result.value;
+      } else {
+        throw P.createError(str2, result);
+      }
+    }
+    or(other) {
+      return P.or(this, other);
+    }
+    trim(parser2) {
+      return this.wrap(parser2, parser2);
+    }
+    wrap(leftParser, rightParser) {
+      const _this = this;
+      return new Parser(function _wrap(context) {
+        const leftResult = leftParser.p(context);
+        if (!leftResult.success) {
+          return leftResult;
+        }
+        const thisResult = context.merge(leftResult, _this.p(context));
+        if (!thisResult.success) {
+          return thisResult;
+        }
+        const rightResult = context.merge(thisResult, rightParser.p(context));
+        if (!rightResult.success) {
+          return rightResult;
+        }
+        return context.merge(rightResult, context.succeed(thisResult.value));
+      });
+    }
+    then(next) {
+      const _this = this;
+      return new Parser(function _then(context) {
+        const firstResult = _this.p(context);
+        if (!firstResult.success) {
+          return firstResult;
+        }
+        const secondResult = context.merge(firstResult, next.p(context));
+        if (!secondResult.success) {
+          return secondResult;
+        }
+        return secondResult;
+      });
+    }
+    skip(next) {
+      const _this = this;
+      return new Parser(function _skip(context) {
+        const firstResult = _this.p(context);
+        if (!firstResult.success) {
+          return firstResult;
+        }
+        const secondResult = context.merge(firstResult, next.p(context));
+        if (!secondResult.success) {
+          return secondResult;
+        }
+        return context.merge(secondResult, context.succeed(firstResult.value));
+      });
+    }
+    and(next) {
+      return P.sequence(this, next);
+    }
+    many() {
+      const _this = this;
+      return new Parser(function _many(context) {
+        let result = void 0;
+        const startIndex = context.position.index;
+        const value2 = [];
+        while (true) {
+          const contextCopy = context.copy();
+          const newResult = _this.p(contextCopy);
+          result = context.merge(result, newResult);
+          if (result.success) {
+            if (contextCopy.position.index === startIndex) {
+              throw new Error("infinite loop in many() parser detected");
+            }
+            context.moveToPosition(contextCopy.position);
+            value2.push(result.value);
+          } else {
+            return context.merge(result, context.succeed(value2));
+          }
+        }
+      });
+    }
+    repeat(min3, max3) {
+      validateRange(min3, max3);
+      const _this = this;
+      return new Parser(function _repeat(context) {
+        let newResult = void 0;
+        let result = void 0;
+        const value2 = [];
+        let iteration = 0;
+        for (; iteration < min3; iteration++) {
+          newResult = _this.p(context);
+          result = context.merge(result, newResult);
+          if (newResult.success) {
+            value2.push(newResult.value);
+          } else {
+            return result;
+          }
+        }
+        for (; iteration < max3; iteration++) {
+          const contextCopy = context.copy();
+          newResult = _this.p(contextCopy);
+          result = context.merge(result, newResult);
+          if (newResult.success) {
+            context.moveToPosition(contextCopy.position);
+            value2.push(newResult.value);
+          } else {
+            break;
+          }
+        }
+        return context.merge(result, context.succeed(value2));
+      });
+    }
+    atMost(max3) {
+      return this.repeat(0, max3);
+    }
+    atLeast(min3) {
+      return P.sequenceMap((part1, part2) => {
+        return part1.concat(part2);
+      }, this.repeat(min3, min3), this.many());
+    }
+    separateBy(separator) {
+      return P.separateBy(this, separator);
+    }
+    separateByNotEmpty(separator) {
+      return P.separateByNotEmpty(this, separator);
+    }
+    result(value2) {
+      return this.map(() => value2);
+    }
+    map(fn) {
+      const _this = this;
+      return new Parser(function _map3(context) {
+        const result = _this.p(context);
+        if (!result.success) {
+          return result;
+        }
+        return context.merge(result, context.succeed(fn(result.value)));
+      });
+    }
+    marker() {
+      return P.sequenceMap(function _marker(from, value2, to2) {
+        return {
+          value: value2,
+          range: { from, to: to2 }
+        };
+      }, P_UTILS.position(), this, P_UTILS.position());
+    }
+    namedMarker(name309) {
+      return P.sequenceMap(function _namedMarker(from, value2, to2) {
+        return {
+          value: value2,
+          name: name309,
+          range: { from, to: to2 }
+        };
+      }, P_UTILS.position(), this, P_UTILS.position());
+    }
+    node(fn) {
+      return P.sequenceMap(function _node(from, value2, to2) {
+        return fn(value2, { from, to: to2 });
+      }, P_UTILS.position(), this, P_UTILS.position());
+    }
+    followedBy(next) {
+      return this.skip(P_HELPERS.followedBy(next));
+    }
+    notFollowedBy(next) {
+      return this.skip(P_HELPERS.notFollowedBy(next));
+    }
+    describe(expected = []) {
+      if (!Array.isArray(expected)) {
+        expected = [expected];
+      }
+      const _this = this;
+      return new Parser(function _describe(context) {
+        const result = _this.p(context);
+        if (!result.success) {
+          result.expected = expected;
+        }
+        return result;
+      });
+    }
+    optional(value2) {
+      return this.or(P.succeed(value2));
+    }
+    chain(fn) {
+      const _this = this;
+      return new Parser(function _chain(context) {
+        const result = _this.p(context);
+        if (!result.success) {
+          return result;
+        }
+        const nextParser = fn(result.value);
+        const nextResult = nextParser.p(context);
+        return context.merge(result, nextResult);
+      });
+    }
+    thenEof() {
+      const _this = this;
+      return new Parser(function _thenEof(context) {
+        const result = _this.p(context);
+        if (!result.success) {
+          return result;
+        }
+        if (!context.atEOF()) {
+          return context.merge(result, context.fail("eof"));
+        }
+        return result;
+      });
+    }
+    memorize() {
+      const _this = this;
+      let memoInput = "";
+      const memoTable = /* @__PURE__ */ new Map();
+      const positionTable = /* @__PURE__ */ new Map();
+      return new Parser(function _thenEof(context) {
+        const index2 = context.position.index;
+        if (context.input !== memoInput) {
+          memoInput = context.input;
+          memoTable.clear();
+          positionTable.clear();
+        } else {
+          const memoResult = memoTable.get(index2);
+          const posResult = positionTable.get(index2);
+          if (memoResult !== void 0 && posResult !== void 0) {
+            context.moveToPosition(Object.assign({}, posResult));
+            return Object.assign({}, memoResult);
+          }
+        }
+        const result = _this.p(context);
+        memoTable.set(index2, Object.assign({}, result));
+        positionTable.set(index2, context.getPosition());
+        return result;
+      });
+    }
+  };
+
+  // node_modules/@lemons_dev/parsinom/lib/ParserUtils.js
+  var P_UTILS = class {
+    static position() {
+      return new Parser((context) => {
+        return context.succeed(context.getPosition());
+      });
+    }
+    static any() {
+      return new Parser((context) => {
+        if (context.atEOF()) {
+          return context.fail("any character");
+        }
+        return context.succeedOffset(1, context.input[context.position.index]);
+      });
+    }
+    static remaining() {
+      return new Parser((context) => {
+        return context.succeedAt(context.input.length, context.input.slice(context.position.index));
+      });
+    }
+    static eof() {
+      return new Parser((context) => {
+        if (!context.atEOF()) {
+          return context.fail("eof");
+        }
+        return context.succeed(void 0);
+      });
+    }
+    static digit() {
+      return P.regexp(/^[0-9]/).describe("a digit");
+    }
+    static digits() {
+      return P.regexp(/^[0-9]+/).describe("optional digits");
+    }
+    static letter() {
+      return P.regexp(/^[a-z]/i).describe("a letter");
+    }
+    static letters() {
+      return P.regexp(/^[a-z]+/i).describe("optional letters");
+    }
+    static optionalWhitespace() {
+      return P.regexp(/^\s*/).describe("optional whitespace");
+    }
+    static whitespace() {
+      return P.regexp(/^\s+/).describe("whitespace");
+    }
+    static cr() {
+      return P.string("\r");
+    }
+    static lf() {
+      return P.string("\n");
+    }
+    static crlf() {
+      return P.string("\r\n");
+    }
+    static newline() {
+      return P.or(this.crlf(), this.lf(), this.cr()).describe("newline");
+    }
+    static prefix(operatorsParser, nextParser, combine) {
+      return P.sequenceMap((prefixes, x) => {
+        return prefixes.reduce((acc, y) => combine(y, acc), x);
+      }, operatorsParser.many(), nextParser);
+    }
+    static postfix(operatorsParser, nextParser, combine) {
+      return P.sequenceMap((x, postfixes) => {
+        return postfixes.reduce((acc, y) => combine(y, acc), x);
+      }, nextParser, operatorsParser.many());
+    }
+    static binaryRight(operatorsParser, operandParser, combine) {
+      return P.sequenceMap((others, last) => {
+        return others.reverse().reduce((acc, y) => {
+          const [operand, operator] = y;
+          return combine(operand, operator, acc);
+        }, last);
+      }, P.sequence(operandParser, operatorsParser.trim(this.optionalWhitespace())).many(), operandParser);
+    }
+    static binaryLeft(operatorsParser, operandParser, combine) {
+      return P.sequenceMap((first, others) => {
+        return others.reduce((acc, y) => {
+          const [operator, operand] = y;
+          return combine(acc, operator, operand);
+        }, first);
+      }, operandParser, P.sequence(operatorsParser.trim(this.optionalWhitespace()), operandParser).many());
+    }
+    static func(name309, args, combine) {
+      const nameParser = typeof name309 === "string" ? P.string(name309) : name309;
+      return P.sequenceMap((name310, _lBracket, _1, args2, _2, _rBracket) => {
+        return combine(name310, args2);
+      }, nameParser, P.string("("), this.optionalWhitespace(), args, this.optionalWhitespace(), P.string(")"));
+    }
+  };
+
+  // src/utils/Utils.ts
+  if (!("structuredClone" in globalThis)) {
+    globalThis.structuredClone = esm_default;
+  }
+  function deepFreeze(object) {
+    const propNames = Reflect.ownKeys(object);
+    for (const name309 of propNames) {
+      const value2 = object[name309];
+      if (value2 && typeof value2 === "object" || typeof value2 === "function") {
+        deepFreeze(value2);
+      }
+    }
+    return Object.freeze(object);
+  }
+  var numberParser = P.or(
+    P.sequenceMap((a, b, c) => Number(a + b + c), P_UTILS.digits(), P.string("."), P_UTILS.digits()),
+    P_UTILS.digits().map((x) => Number(x))
+  ).thenEof();
+  function parseLiteral(literalString) {
+    if (literalString.toLowerCase() === "null") {
+      return null;
+    } else if (literalString === "true") {
+      return true;
+    } else if (literalString === "false") {
+      return false;
+    } else {
+      const parseResult = numberParser.tryParse(literalString);
+      if (parseResult.success) {
+        return parseResult.value;
+      } else {
+        return literalString;
+      }
+    }
   }
 
   // src/utils/errors/MetaBindErrors.ts
@@ -3715,6 +4481,11 @@ var meta_bind_publish = (() => {
       return "MB_BIND_TARGET_ERROR" /* BIND_TARGET */;
     }
   };
+  var MetaBindArgumentError = class extends MetaBindError {
+    getErrorType() {
+      return "MB_ARGUMENT_ERROR" /* ARGUMENT */;
+    }
+  };
   var MetaBindExpressionError = class extends MetaBindError {
     getErrorType() {
       return "MB_EXPRESSION_ERROR" /* EXPRESSION */;
@@ -3722,42 +4493,9 @@ var meta_bind_publish = (() => {
   };
 
   // src/utils/ParserUtils.ts
-  var EnclosingPair = class {
-    constructor(openingString, closingString) {
-      if (isFalsy(openingString)) {
-        throw new MetaBindInternalError("ERROR" /* ERROR */, "failed to create enclosing pair", "opening string must not be empty");
-      }
-      this.openingEqualsClosing = isFalsy(closingString) || openingString === closingString;
-      if (this.openingEqualsClosing) {
-        this._openingString = openingString;
-        this._closingString = openingString;
-      } else {
-        this._openingString = openingString;
-        this._closingString = closingString;
-      }
-    }
-    get openingString() {
-      return this._openingString;
-    }
-    get closingString() {
-      return this.openingEqualsClosing ? this._openingString : this._closingString;
-    }
-    overlaps(other) {
-      return equalOrIncludes(this.openingString, other.openingString) || equalOrIncludes(this.openingString, other.closingString) || equalOrIncludes(this.closingString, other.openingString) || equalOrIncludes(this.closingString, other.closingString);
-    }
-    equals(other) {
-      if (isFalsy(other)) {
-        return false;
-      }
-      return this.openingString === other.openingString && this.closingString === other.closingString;
-    }
-    toString() {
-      return JSON.stringify(this);
-    }
-  };
   var ParserUtils = class {
-    static split(str, separator, ignore) {
-      if (!str) {
+    static split(str2, separator, ignore) {
+      if (!str2) {
         throw new MetaBindInternalError("ERROR" /* ERROR */, "failed to split string", "string must not be empty");
       }
       if (!separator) {
@@ -3766,27 +4504,27 @@ var meta_bind_publish = (() => {
       let subStr = "";
       const subStrings = [];
       if (ignore) {
-        let remainingOpeningStringCount = ParserUtils.numberOfOccurrences(str, ignore.openingString);
-        let remainingClosingStringCount = ParserUtils.numberOfOccurrences(str, ignore.closingString);
+        let remainingOpeningStringCount = ParserUtils.numberOfOccurrences(str2, ignore.openingString);
+        let remainingClosingStringCount = ParserUtils.numberOfOccurrences(str2, ignore.closingString);
         let enclosingLevel = 0;
         strLoop:
-          for (let i2 = 0; i2 < str.length; i2++) {
-            if (enclosingLevel === 0 && ParserUtils.isStringAt(str, separator, i2)) {
+          for (let i2 = 0; i2 < str2.length; i2++) {
+            if (enclosingLevel === 0 && ParserUtils.isStringAt(str2, separator, i2)) {
               subStrings.push(subStr);
               subStr = "";
               i2 += separator.length - 1;
             } else {
-              subStr += str[i2];
+              subStr += str2[i2];
             }
             if (ignore.openingEqualsClosing) {
-              if (ParserUtils.isStringAt(str, ignore.openingString, i2)) {
+              if (ParserUtils.isStringAt(str2, ignore.openingString, i2)) {
                 if (enclosingLevel % 2 === 0 && remainingOpeningStringCount === 1) {
                 } else if (enclosingLevel % 2 === 0) {
                   enclosingLevel += 1;
                   for (let j = 1; j < ignore.openingString.length; j++) {
                     i2 += 1;
-                    subStr += str[i2];
-                    if (i2 >= str.length) {
+                    subStr += str2[i2];
+                    if (i2 >= str2.length) {
                       break strLoop;
                     }
                   }
@@ -3794,8 +4532,8 @@ var meta_bind_publish = (() => {
                   enclosingLevel -= 1;
                   for (let j = 1; j < ignore.closingString.length; j++) {
                     i2 += 1;
-                    subStr += str[i2];
-                    if (i2 >= str.length) {
+                    subStr += str2[i2];
+                    if (i2 >= str2.length) {
                       break strLoop;
                     }
                   }
@@ -3803,25 +4541,25 @@ var meta_bind_publish = (() => {
                 remainingOpeningStringCount -= 1;
               }
             } else {
-              if (ParserUtils.isStringAt(str, ignore.openingString, i2)) {
+              if (ParserUtils.isStringAt(str2, ignore.openingString, i2)) {
                 if (remainingOpeningStringCount <= remainingClosingStringCount) {
                   enclosingLevel += 1;
                   for (let j = 1; j < ignore.openingString.length; j++) {
                     i2 += 1;
-                    subStr += str[i2];
-                    if (i2 >= str.length) {
+                    subStr += str2[i2];
+                    if (i2 >= str2.length) {
                       break strLoop;
                     }
                   }
                 }
                 remainingOpeningStringCount -= 1;
-              } else if (ParserUtils.isStringAt(str, ignore.closingString, i2)) {
+              } else if (ParserUtils.isStringAt(str2, ignore.closingString, i2)) {
                 if (enclosingLevel > 0) {
                   enclosingLevel -= 1;
                   for (let j = 1; j < ignore.closingString.length; j++) {
                     i2 += 1;
-                    subStr += str[i2];
-                    if (i2 >= str.length) {
+                    subStr += str2[i2];
+                    if (i2 >= str2.length) {
                       break strLoop;
                     }
                   }
@@ -3831,61 +4569,61 @@ var meta_bind_publish = (() => {
             }
           }
       } else {
-        for (let i2 = 0; i2 < str.length; i2++) {
-          if (ParserUtils.isStringAt(str, separator, i2)) {
+        for (let i2 = 0; i2 < str2.length; i2++) {
+          if (ParserUtils.isStringAt(str2, separator, i2)) {
             subStrings.push(subStr);
             subStr = "";
             i2 += separator.length - 1;
           } else {
-            subStr += str[i2];
+            subStr += str2[i2];
           }
         }
       }
       subStrings.push(subStr);
       return subStrings;
     }
-    static removeInBetween(str, enclosingPair) {
-      if (!str) {
+    static removeInBetween(str2, enclosingPair) {
+      if (!str2) {
         throw new MetaBindInternalError("ERROR" /* ERROR */, "failed remove in between in string", "string must not be empty");
       }
-      let remainingOpeningStringCount = ParserUtils.numberOfOccurrences(str, enclosingPair.openingString);
-      let remainingClosingStringCount = ParserUtils.numberOfOccurrences(str, enclosingPair.closingString);
+      let remainingOpeningStringCount = ParserUtils.numberOfOccurrences(str2, enclosingPair.openingString);
+      let remainingClosingStringCount = ParserUtils.numberOfOccurrences(str2, enclosingPair.closingString);
       let enclosingLevel = 0;
       let subStr = "";
-      for (let i2 = 0; i2 < str.length; i2++) {
+      for (let i2 = 0; i2 < str2.length; i2++) {
         if (enclosingPair.openingEqualsClosing) {
-          if (ParserUtils.isStringAt(str, enclosingPair.openingString, i2)) {
+          if (ParserUtils.isStringAt(str2, enclosingPair.openingString, i2)) {
             if (enclosingLevel % 2 === 0 && remainingOpeningStringCount === 1) {
             } else if (enclosingLevel % 2 === 0) {
               enclosingLevel += 1;
               i2 += enclosingPair.openingString.length;
-              if (i2 >= str.length) {
+              if (i2 >= str2.length) {
                 break;
               }
             } else {
               enclosingLevel -= 1;
               i2 += enclosingPair.closingString.length;
-              if (i2 >= str.length) {
+              if (i2 >= str2.length) {
                 break;
               }
             }
             remainingOpeningStringCount -= 1;
           }
         } else {
-          if (ParserUtils.isStringAt(str, enclosingPair.openingString, i2)) {
+          if (ParserUtils.isStringAt(str2, enclosingPair.openingString, i2)) {
             if (remainingOpeningStringCount <= remainingClosingStringCount) {
               enclosingLevel += 1;
               i2 += enclosingPair.openingString.length;
-              if (i2 >= str.length) {
+              if (i2 >= str2.length) {
                 break;
               }
             }
             remainingOpeningStringCount -= 1;
-          } else if (ParserUtils.isStringAt(str, enclosingPair.closingString, i2)) {
+          } else if (ParserUtils.isStringAt(str2, enclosingPair.closingString, i2)) {
             if (enclosingLevel > 0) {
               enclosingLevel -= 1;
               i2 += enclosingPair.closingString.length;
-              if (i2 >= str.length) {
+              if (i2 >= str2.length) {
                 break;
               }
             }
@@ -3893,42 +4631,42 @@ var meta_bind_publish = (() => {
           }
         }
         if (enclosingLevel === 0) {
-          subStr += str[i2];
+          subStr += str2[i2];
         }
       }
       return subStr;
     }
-    static getInBetween(str, enclosingPair) {
-      if (!str) {
+    static getInBetween(str2, enclosingPair) {
+      if (!str2) {
         throw new MetaBindInternalError("ERROR" /* ERROR */, "failed to get in between in string", "string must not be empty");
       }
-      let remainingOpeningStringCount = ParserUtils.numberOfOccurrences(str, enclosingPair.openingString);
-      let remainingClosingStringCount = ParserUtils.numberOfOccurrences(str, enclosingPair.closingString);
+      let remainingOpeningStringCount = ParserUtils.numberOfOccurrences(str2, enclosingPair.openingString);
+      let remainingClosingStringCount = ParserUtils.numberOfOccurrences(str2, enclosingPair.closingString);
       let enclosingLevel = 0;
       let subStr = "";
       const subStrings = [];
       strLoop:
-        for (let i2 = 0; i2 < str.length; i2++) {
+        for (let i2 = 0; i2 < str2.length; i2++) {
           if (enclosingPair.openingEqualsClosing) {
-            if (ParserUtils.isStringAt(str, enclosingPair.openingString, i2)) {
+            if (ParserUtils.isStringAt(str2, enclosingPair.openingString, i2)) {
               if (enclosingLevel % 2 === 0 && remainingOpeningStringCount === 1) {
               } else if (enclosingLevel % 2 === 0) {
                 enclosingLevel += 1;
-                subStr += str[i2];
+                subStr += str2[i2];
                 for (let j = 1; j < enclosingPair.openingString.length; j++) {
                   i2 += 1;
-                  subStr += str[i2];
-                  if (i2 >= str.length) {
+                  subStr += str2[i2];
+                  if (i2 >= str2.length) {
                     break strLoop;
                   }
                 }
               } else {
                 enclosingLevel -= 1;
-                subStr += str[i2];
+                subStr += str2[i2];
                 for (let j = 1; j < enclosingPair.closingString.length; j++) {
                   i2 += 1;
-                  subStr += str[i2];
-                  if (i2 > str.length) {
+                  subStr += str2[i2];
+                  if (i2 > str2.length) {
                     break strLoop;
                   }
                 }
@@ -3938,31 +4676,31 @@ var meta_bind_publish = (() => {
               remainingOpeningStringCount -= 1;
             } else {
               if (enclosingLevel >= 1) {
-                subStr += str[i2];
+                subStr += str2[i2];
               }
             }
           } else {
-            if (ParserUtils.isStringAt(str, enclosingPair.openingString, i2)) {
+            if (ParserUtils.isStringAt(str2, enclosingPair.openingString, i2)) {
               if (remainingOpeningStringCount <= remainingClosingStringCount) {
                 enclosingLevel += 1;
-                subStr += str[i2];
+                subStr += str2[i2];
                 for (let j = 1; j < enclosingPair.openingString.length; j++) {
                   i2 += 1;
-                  subStr += str[i2];
-                  if (i2 >= str.length) {
+                  subStr += str2[i2];
+                  if (i2 >= str2.length) {
                     break strLoop;
                   }
                 }
               }
               remainingOpeningStringCount -= 1;
-            } else if (ParserUtils.isStringAt(str, enclosingPair.closingString, i2)) {
+            } else if (ParserUtils.isStringAt(str2, enclosingPair.closingString, i2)) {
               if (enclosingLevel > 0) {
                 enclosingLevel -= 1;
-                subStr += str[i2];
+                subStr += str2[i2];
                 for (let j = 1; j < enclosingPair.closingString.length; j++) {
                   i2 += 1;
-                  subStr += str[i2];
-                  if (i2 > str.length) {
+                  subStr += str2[i2];
+                  if (i2 > str2.length) {
                     break strLoop;
                   }
                 }
@@ -3974,7 +4712,7 @@ var meta_bind_publish = (() => {
               remainingClosingStringCount -= 1;
             } else {
               if (enclosingLevel >= 1) {
-                subStr += str[i2];
+                subStr += str2[i2];
               }
             }
           }
@@ -3987,338 +4725,43 @@ var meta_bind_publish = (() => {
         return subStrings.map((x) => x.substring(enclosingPair.openingString.length, x.length - enclosingPair.closingString.length));
       }
     }
-    static isStringAt(str, subStr, index2) {
+    static isStringAt(str2, subStr, index2) {
       if (index2 < 0) {
         throw new MetaBindInternalError("ERROR" /* ERROR */, "failed to check is string is at index", "index must be greater than 0");
       }
-      if (index2 >= str.length) {
+      if (index2 >= str2.length) {
         throw new MetaBindInternalError("ERROR" /* ERROR */, "failed to check is string is at index", "index out of bounds of string");
       }
-      if (!str) {
+      if (!str2) {
         throw new MetaBindInternalError("ERROR" /* ERROR */, "failed to check is string is at index", "string must not be empty");
       }
       if (!subStr) {
         throw new MetaBindInternalError("ERROR" /* ERROR */, "failed to check is string is at index", "sub string must not be empty");
       }
       for (let i2 = 0; i2 < subStr.length; i2++) {
-        if (str[i2 + index2] !== subStr[i2]) {
+        if (str2[i2 + index2] !== subStr[i2]) {
           return false;
         }
       }
       return true;
     }
-    static contains(str, subStr) {
-      return ParserUtils.numberOfOccurrences(str, subStr) > 0;
+    static contains(str2, subStr) {
+      return ParserUtils.numberOfOccurrences(str2, subStr) > 0;
     }
-    static numberOfOccurrences(str, subStr) {
-      if (!str) {
+    static numberOfOccurrences(str2, subStr) {
+      if (!str2) {
         throw new MetaBindInternalError("ERROR" /* ERROR */, "failed count number of occurrences", "string must not be empty");
       }
       if (!subStr) {
         throw new MetaBindInternalError("ERROR" /* ERROR */, "failed count number of occurrences", "sub string must not be empty");
       }
       let occurrences = 0;
-      for (let i2 = 0; i2 < str.length; i2++) {
-        if (ParserUtils.isStringAt(str, subStr, i2)) {
+      for (let i2 = 0; i2 < str2.length; i2++) {
+        if (ParserUtils.isStringAt(str2, subStr, i2)) {
           occurrences += 1;
         }
       }
       return occurrences;
-    }
-  };
-
-  // src/inputFieldArguments/AbstractInputFieldArgument.ts
-  var AbstractInputFieldArgument = class {
-    constructor() {
-      this.identifier = "invalid" /* INVALID */;
-      this.allowedInputFields = [];
-      this.requiresValue = false;
-      this.allowMultiple = false;
-    }
-    isAllowed(inputFieldType) {
-      if (this.allowedInputFields.length === 0) {
-        return true;
-      }
-      return this.allowedInputFields.contains(inputFieldType);
-    }
-    getAllowedInputFieldsAsString() {
-      return this.allowedInputFields.length === 0 ? "all" : this.allowedInputFields.join(", ");
-    }
-  };
-
-  // src/inputFieldArguments/arguments/ClassInputFieldArgument.ts
-  var ClassInputFieldArgument = class extends AbstractInputFieldArgument {
-    constructor() {
-      super(...arguments);
-      this.identifier = "class" /* CLASS */;
-      this.allowedInputFields = [];
-      this.value = [];
-      this.requiresValue = true;
-      this.allowMultiple = true;
-    }
-    parseValue(valueStr) {
-      this.value = valueStr.split(" ");
-    }
-  };
-
-  // src/inputFieldArguments/arguments/AddLabelsInputFieldArgument.ts
-  var AddLabelsInputFieldArgument = class extends AbstractInputFieldArgument {
-    constructor() {
-      super(...arguments);
-      this.identifier = "addLabels" /* ADD_LABELS */;
-      this.allowedInputFields = ["slider" /* SLIDER */, "progressBar" /* PROGRESS_BAR */];
-      this.value = true;
-      this.requiresValue = false;
-      this.allowMultiple = false;
-    }
-    parseValue(value) {
-      if (typeof value === "boolean") {
-        this.value = value;
-      } else if (typeof value === "string") {
-        this.value = value.toLowerCase() === "true";
-      }
-    }
-  };
-
-  // src/inputFieldArguments/arguments/MinValueInputFieldArgument.ts
-  var MinValueInputFieldArgument = class extends AbstractInputFieldArgument {
-    constructor() {
-      super(...arguments);
-      this.identifier = "minValue" /* MIN_VALUE */;
-      this.allowedInputFields = ["slider" /* SLIDER */, "progressBar" /* PROGRESS_BAR */];
-      this.value = 0;
-      this.requiresValue = true;
-      this.allowMultiple = false;
-    }
-    parseValue(valueStr) {
-      this.value = Number.parseInt(valueStr);
-      if (Number.isNaN(this.value)) {
-        throw new MetaBindParsingError("ERROR" /* ERROR */, "failed to set value for input field argument", "value of argument 'minValue' must be of type number");
-      }
-    }
-  };
-
-  // src/inputFieldArguments/arguments/MaxValueInputFieldArgument.ts
-  var MaxValueInputFieldArgument = class extends AbstractInputFieldArgument {
-    constructor() {
-      super(...arguments);
-      this.identifier = "maxValue" /* MAX_VALUE */;
-      this.allowedInputFields = ["slider" /* SLIDER */, "progressBar" /* PROGRESS_BAR */];
-      this.value = 100;
-      this.requiresValue = true;
-      this.allowMultiple = false;
-    }
-    parseValue(valueStr) {
-      this.value = Number.parseInt(valueStr);
-      if (Number.isNaN(this.value)) {
-        throw new MetaBindParsingError("ERROR" /* ERROR */, "failed to set value for input field argument", "value of argument 'maxValue' must be of type number");
-      }
-    }
-  };
-
-  // src/inputFieldArguments/arguments/OptionInputFieldArgument.ts
-  var OptionInputFieldArgument = class extends AbstractInputFieldArgument {
-    constructor() {
-      super(...arguments);
-      this.identifier = "option" /* OPTION */;
-      this.allowedInputFields = [
-        "select" /* SELECT */,
-        "multi_select" /* MULTI_SELECT */,
-        "suggester" /* SUGGESTER */,
-        "imageSuggester" /* IMAGE_SUGGESTER */,
-        "inlineSelect" /* INLINE_SELECT */
-      ];
-      this.value = "";
-      this.requiresValue = true;
-      this.allowMultiple = true;
-    }
-    parseValue(valueStr) {
-      this.value = valueStr;
-    }
-  };
-
-  // src/inputFieldArguments/arguments/TitleInputFieldArgument.ts
-  var TitleInputFieldArgument = class extends AbstractInputFieldArgument {
-    constructor() {
-      super(...arguments);
-      this.identifier = "title" /* TITLE */;
-      this.allowedInputFields = [];
-      this.value = "";
-      this.requiresValue = true;
-      this.allowMultiple = false;
-    }
-    parseValue(valueStr) {
-      this.value = valueStr;
-    }
-  };
-
-  // src/inputFieldArguments/arguments/AlignRightInputFieldArgument.ts
-  var AlignRightInputFieldArgument = class extends AbstractInputFieldArgument {
-    constructor() {
-      super(...arguments);
-      this.identifier = "alignRight" /* ALIGN_RIGHT */;
-      this.allowedInputFields = ["date_picker" /* DATE_PICKER */];
-      this.value = true;
-      this.requiresValue = false;
-      this.allowMultiple = false;
-    }
-    parseValue(valueStr) {
-      this.value = valueStr.toLowerCase() === "true";
-    }
-  };
-
-  // src/inputFieldArguments/arguments/OptionQueryInputFieldArgument.ts
-  var OptionQueryInputFieldArgument = class extends AbstractInputFieldArgument {
-    constructor() {
-      super(...arguments);
-      this.identifier = "optionQuery" /* OPTION_QUERY */;
-      this.allowedInputFields = ["suggester" /* SUGGESTER */, "imageSuggester" /* IMAGE_SUGGESTER */];
-      this.value = "";
-      this.requiresValue = true;
-      this.allowMultiple = true;
-    }
-    parseValue(valueStr) {
-      this.value = valueStr;
-    }
-  };
-
-  // src/inputFieldArguments/arguments/ShowcaseInputFieldArgument.ts
-  var ShowcaseInputFieldArgument = class extends AbstractInputFieldArgument {
-    constructor() {
-      super(...arguments);
-      this.identifier = "showcase" /* SHOWCASE */;
-      this.allowedInputFields = [];
-      this.value = true;
-      this.requiresValue = false;
-      this.allowMultiple = false;
-    }
-    parseValue(valueStr) {
-      this.value = valueStr.toLowerCase() === "true";
-    }
-  };
-
-  // src/inputFieldArguments/arguments/OffValueInputFieldArgument.ts
-  var OffValueInputFieldArgument = class extends AbstractInputFieldArgument {
-    constructor() {
-      super(...arguments);
-      this.identifier = "offValue" /* OFF_VALUE */;
-      this.allowedInputFields = ["toggle" /* TOGGLE */];
-      this.value = false;
-      this.requiresValue = true;
-      this.allowMultiple = false;
-    }
-    parseValue(valueStr) {
-      if (valueStr === "true") {
-        this.value = true;
-      } else if (valueStr === "false") {
-        this.value = false;
-      } else {
-        const parsedNumber = Number.parseFloat(valueStr);
-        this.value = !Number.isNaN(parsedNumber) ? parsedNumber : valueStr;
-      }
-    }
-  };
-
-  // src/inputFieldArguments/arguments/OnValueInputFieldArgument.ts
-  var OnValueInputFieldArgument = class extends AbstractInputFieldArgument {
-    constructor() {
-      super(...arguments);
-      this.identifier = "onValue" /* ON_VALUE */;
-      this.allowedInputFields = ["toggle" /* TOGGLE */];
-      this.value = true;
-      this.requiresValue = true;
-      this.allowMultiple = false;
-    }
-    parseValue(valueStr) {
-      if (valueStr === "true") {
-        this.value = true;
-      } else if (valueStr === "false") {
-        this.value = false;
-      } else {
-        const parsedNumber = Number.parseFloat(valueStr);
-        this.value = !Number.isNaN(parsedNumber) ? parsedNumber : valueStr;
-      }
-    }
-  };
-
-  // src/inputFieldArguments/InputFieldArgumentFactory.ts
-  var InputFieldArgumentFactory = class {
-    static createInputFieldArgument(argumentIdentifier) {
-      if (argumentIdentifier === "class" /* CLASS */) {
-        return new ClassInputFieldArgument();
-      } else if (argumentIdentifier === "addLabels" /* ADD_LABELS */) {
-        return new AddLabelsInputFieldArgument();
-      } else if (argumentIdentifier === "minValue" /* MIN_VALUE */) {
-        return new MinValueInputFieldArgument();
-      } else if (argumentIdentifier === "maxValue" /* MAX_VALUE */) {
-        return new MaxValueInputFieldArgument();
-      } else if (argumentIdentifier === "option" /* OPTION */) {
-        return new OptionInputFieldArgument();
-      } else if (argumentIdentifier === "title" /* TITLE */) {
-        return new TitleInputFieldArgument();
-      } else if (argumentIdentifier === "alignRight" /* ALIGN_RIGHT */) {
-        return new AlignRightInputFieldArgument();
-      } else if (argumentIdentifier === "optionQuery" /* OPTION_QUERY */) {
-        return new OptionQueryInputFieldArgument();
-      } else if (argumentIdentifier === "showcase" /* SHOWCASE */) {
-        return new ShowcaseInputFieldArgument();
-      } else if (argumentIdentifier === "offValue" /* OFF_VALUE */) {
-        return new OffValueInputFieldArgument();
-      } else if (argumentIdentifier === "onValue" /* ON_VALUE */) {
-        return new OnValueInputFieldArgument();
-      } else {
-        throw new MetaBindParsingError("ERROR" /* ERROR */, "can not crate input field argument", `unknown argument '${argumentIdentifier}'`);
-      }
-    }
-  };
-
-  // src/inputFieldArguments/InputFieldArgumentContainer.ts
-  var InputFieldArgumentContainer = class {
-    constructor() {
-      this.arguments = [];
-    }
-    add(argument) {
-      this.arguments.push(argument);
-    }
-    validate() {
-      const map3 = {};
-      for (const inputFieldArgumentType of Object.values(InputFieldArgumentType)) {
-        map3[inputFieldArgumentType] = 0;
-      }
-      for (const argument of this.arguments) {
-        map3[argument.identifier] += 1;
-        if (map3[argument.identifier] > 1 && !argument.allowMultiple) {
-          throw new MetaBindParsingError("CRITICAL" /* CRITICAL */, "failed to validate argument container", `argument '${argument.identifier}' does not allow duplicates`);
-        }
-      }
-    }
-    mergeByOverride(other) {
-      for (const argument of other.arguments) {
-        if (!argument.allowMultiple) {
-          this.arguments = this.arguments.filter((x) => x.identifier !== argument.identifier);
-        }
-        this.arguments.push(argument);
-      }
-      this.validate();
-      return this;
-    }
-    mergeByThrow(other) {
-      for (const argument of other.arguments) {
-        if (!argument.allowMultiple) {
-          if (this.arguments.filter((x) => x.identifier === argument.identifier).length > 0) {
-            throw new MetaBindParsingError("ERROR" /* ERROR */, "failed to merge argument container", "can not merge InputFieldArgumentContainers, since arguments overlap");
-          }
-        }
-        this.arguments.push(argument);
-      }
-      this.validate();
-      return this;
-    }
-    getAll(name302) {
-      return this.arguments.filter((x) => x.identifier === name302);
-    }
-    get(name302) {
-      return this.getAll(name302).at(0);
     }
   };
 
@@ -4335,6 +4778,7 @@ var meta_bind_publish = (() => {
         } else {
           this.otherError = error;
         }
+        console.warn(error);
       } else {
         console.warn(`[MB_ERROR_CONTAINER] received invalid error type`, error);
       }
@@ -4344,6 +4788,7 @@ var meta_bind_publish = (() => {
       if (other.otherError) {
         this.otherError = other.otherError;
       }
+      return this;
     }
     hasErrors() {
       if (this.otherError) {
@@ -4387,295 +4832,973 @@ var meta_bind_publish = (() => {
     }
   };
 
-  // src/parsers/InputFieldDeclarationParser.ts
-  var InputFieldType3 = /* @__PURE__ */ ((InputFieldType6) => {
-    InputFieldType6["TOGGLE"] = "toggle";
-    InputFieldType6["SLIDER"] = "slider";
-    InputFieldType6["TEXT"] = "text";
-    InputFieldType6["TEXT_AREA"] = "text_area";
-    InputFieldType6["SELECT"] = "select";
-    InputFieldType6["MULTI_SELECT"] = "multi_select";
-    InputFieldType6["DATE"] = "date";
-    InputFieldType6["TIME"] = "time";
-    InputFieldType6["DATE_PICKER"] = "date_picker";
-    InputFieldType6["NUMBER"] = "number";
-    InputFieldType6["SUGGESTER"] = "suggester";
-    InputFieldType6["EDITOR"] = "editor";
-    InputFieldType6["IMAGE_SUGGESTER"] = "imageSuggester";
-    InputFieldType6["PROGRESS_BAR"] = "progressBar";
-    InputFieldType6["INLINE_SELECT"] = "inlineSelect";
-    InputFieldType6["INVALID"] = "invalid";
-    return InputFieldType6;
-  })(InputFieldType3 || {});
-  var InputFieldArgumentType = /* @__PURE__ */ ((InputFieldArgumentType2) => {
-    InputFieldArgumentType2["CLASS"] = "class";
-    InputFieldArgumentType2["ADD_LABELS"] = "addLabels";
-    InputFieldArgumentType2["MIN_VALUE"] = "minValue";
-    InputFieldArgumentType2["MAX_VALUE"] = "maxValue";
-    InputFieldArgumentType2["OPTION"] = "option";
-    InputFieldArgumentType2["TITLE"] = "title";
-    InputFieldArgumentType2["ALIGN_RIGHT"] = "alignRight";
-    InputFieldArgumentType2["OPTION_QUERY"] = "optionQuery";
-    InputFieldArgumentType2["SHOWCASE"] = "showcase";
-    InputFieldArgumentType2["ON_VALUE"] = "onValue";
-    InputFieldArgumentType2["OFF_VALUE"] = "offValue";
-    InputFieldArgumentType2["INVALID"] = "invalid";
-    return InputFieldArgumentType2;
+  // src/inputFields/InputFieldConfigs.ts
+  var InputFieldType = /* @__PURE__ */ ((InputFieldType14) => {
+    InputFieldType14["TOGGLE"] = "toggle";
+    InputFieldType14["SLIDER"] = "slider";
+    InputFieldType14["TEXT"] = "text";
+    InputFieldType14["TEXT_AREA_DEPRECATED"] = "text_area";
+    InputFieldType14["TEXT_AREA"] = "textArea";
+    InputFieldType14["SELECT"] = "select";
+    InputFieldType14["MULTI_SELECT_DEPRECATED"] = "multi_select";
+    InputFieldType14["MULTI_SELECT"] = "multiSelect";
+    InputFieldType14["DATE"] = "date";
+    InputFieldType14["TIME"] = "time";
+    InputFieldType14["DATE_PICKER_DEPRECATED"] = "date_picker";
+    InputFieldType14["DATE_PICKER"] = "datePicker";
+    InputFieldType14["NUMBER"] = "number";
+    InputFieldType14["SUGGESTER"] = "suggester";
+    InputFieldType14["EDITOR"] = "editor";
+    InputFieldType14["IMAGE_SUGGESTER"] = "imageSuggester";
+    InputFieldType14["PROGRESS_BAR"] = "progressBar";
+    InputFieldType14["INLINE_SELECT"] = "inlineSelect";
+    InputFieldType14["LIST"] = "list";
+    InputFieldType14["INVALID"] = "invalid";
+    return InputFieldType14;
+  })(InputFieldType || {});
+  var InputFieldArgumentType = /* @__PURE__ */ ((InputFieldArgumentType14) => {
+    InputFieldArgumentType14["CLASS"] = "class";
+    InputFieldArgumentType14["ADD_LABELS"] = "addLabels";
+    InputFieldArgumentType14["MIN_VALUE"] = "minValue";
+    InputFieldArgumentType14["MAX_VALUE"] = "maxValue";
+    InputFieldArgumentType14["OPTION"] = "option";
+    InputFieldArgumentType14["TITLE"] = "title";
+    InputFieldArgumentType14["OPTION_QUERY"] = "optionQuery";
+    InputFieldArgumentType14["SHOWCASE"] = "showcase";
+    InputFieldArgumentType14["ON_VALUE"] = "onValue";
+    InputFieldArgumentType14["OFF_VALUE"] = "offValue";
+    InputFieldArgumentType14["DEFAULT_VALUE"] = "defaultValue";
+    InputFieldArgumentType14["PLACEHOLDER"] = "placeholder";
+    InputFieldArgumentType14["INVALID"] = "invalid";
+    return InputFieldArgumentType14;
   })(InputFieldArgumentType || {});
-  var InputFieldDeclarationParser = class {
-    constructor() {
-      this.roundBracesPair = new EnclosingPair("(", ")");
-      this.squareBracesPair = new EnclosingPair("[", "]");
-      this.curlyBracesPair = new EnclosingPair("{", "}");
-      this.allBracesPairs = [this.roundBracesPair, this.squareBracesPair, this.curlyBracesPair];
-      this.templates = [];
-    }
-    parseDeclaration(declaration, inputFieldArguments, templateName) {
-      declaration.inputFieldType = this.getInputFieldType(declaration.inputFieldType);
-      if (!declaration.errorCollection) {
-        declaration.errorCollection = new ErrorCollection("InputFieldDeclaration");
-      }
-      try {
-        const useTemplate = isTruthy(templateName);
-        if (useTemplate) {
-          this.applyTemplate(declaration, templateName);
-        }
-        if (declaration.inputFieldType === "invalid" /* INVALID */) {
-          throw new MetaBindParsingError("CRITICAL" /* CRITICAL */, "failed to parse input field declaration", `unknown input field type "${declaration.inputFieldType}"`);
-        }
-        const argumentContainer = this.parseArguments(declaration.inputFieldType, inputFieldArguments, declaration.errorCollection);
-        declaration.argumentContainer.mergeByOverride(argumentContainer);
-      } catch (e3) {
-        declaration.errorCollection.add(e3);
-      }
-      return declaration;
-    }
-    parseString(fullDeclaration) {
-      var _a;
-      const declaration = {};
-      declaration.errorCollection = new ErrorCollection("InputFieldDeclaration");
-      try {
-        let useTemplate = false;
-        let templateName = "";
-        declaration.fullDeclaration = fullDeclaration;
-        const temp = ParserUtils.getInBetween(fullDeclaration, this.squareBracesPair);
-        if (Array.isArray(temp)) {
-          if (temp.length === 2) {
-            useTemplate = true;
-            templateName = temp[0];
-            declaration.declaration = temp[1];
-          } else {
-            throw new MetaBindParsingError("CRITICAL" /* CRITICAL */, "failed to parse input field declaration", "expected number of square bracket pairs to be two", {
-              fullDeclaration,
-              contentInSquareBraces: temp
-            });
-          }
-        } else {
-          declaration.declaration = temp;
-        }
-        const declarationParts = declaration.declaration ? ParserUtils.split(declaration.declaration, ":", this.squareBracesPair) : [""];
-        declaration.bindTarget = (_a = declarationParts[1]) != null ? _a : "";
-        declaration.isBound = isTruthy(declaration.bindTarget);
-        const inputFieldTypeWithArguments = declarationParts[0];
-        if (inputFieldTypeWithArguments) {
-          const inputFieldTypeString = ParserUtils.removeInBetween(inputFieldTypeWithArguments, this.roundBracesPair);
-          declaration.inputFieldType = this.getInputFieldType(inputFieldTypeString);
-          const inputFieldArgumentsString = ParserUtils.getInBetween(inputFieldTypeWithArguments, this.roundBracesPair);
-          if (inputFieldArgumentsString) {
-            declaration.argumentContainer = this.parseArgumentString(declaration.inputFieldType, inputFieldArgumentsString, declaration.errorCollection);
-          } else {
-            declaration.argumentContainer = new InputFieldArgumentContainer();
-          }
-        } else {
-          declaration.inputFieldType = "invalid" /* INVALID */;
-          declaration.argumentContainer = new InputFieldArgumentContainer();
-        }
-        if (useTemplate) {
-          this.applyTemplate(declaration, templateName);
-        }
-        if (declaration.inputFieldType === "invalid" /* INVALID */) {
-          throw new MetaBindParsingError("CRITICAL" /* CRITICAL */, "failed to parse input field declaration", `unknown input field type "${declaration.inputFieldType}"`);
-        }
-      } catch (e3) {
-        declaration.errorCollection.add(e3);
-      }
-      return declaration;
-    }
-    parseTemplates(templates) {
-      this.templates = [];
-      let templateDeclarations = templates ? ParserUtils.split(templates, "\n", this.squareBracesPair) : [];
-      templateDeclarations = templateDeclarations.map((x) => x.trim()).filter((x) => x.length > 0);
-      for (const templateDeclaration of templateDeclarations) {
-        let templateDeclarationParts = ParserUtils.split(templateDeclaration, "->", this.squareBracesPair);
-        templateDeclarationParts = templateDeclarationParts.map((x) => x.trim());
-        if (templateDeclarationParts.length === 1) {
-          throw new MetaBindParsingError("CRITICAL" /* CRITICAL */, "failed to parse template declaration", `template must include one "->"`);
-        } else if (templateDeclarationParts.length === 2) {
-          this.templates.push({
-            identifier: templateDeclarationParts[0],
-            template: this.parseString(templateDeclarationParts[1])
-          });
-        }
-      }
-      console.log(`meta-bind | InputFieldDeclarationParser >> parsed templates`, this.templates);
-    }
-    parseArgumentString(inputFieldType, inputFieldArgumentsString, errorCollection) {
-      let inputFieldArgumentStrings = ParserUtils.split(inputFieldArgumentsString, ",", this.roundBracesPair);
-      inputFieldArgumentStrings = inputFieldArgumentStrings.map((x) => x.trim());
-      const inputFieldArguments = [];
-      for (const inputFieldArgumentString of inputFieldArgumentStrings) {
-        const inputFieldArgumentTypeString = this.extractInputFieldArgumentIdentifier(inputFieldArgumentString);
-        const inputFieldArgumentType = this.getInputFieldArgumentType(inputFieldArgumentTypeString);
-        const inputFieldArgumentValue = this.extractInputFieldArgumentValue(inputFieldArgumentString);
-        if (inputFieldArgumentType === "invalid" /* INVALID */) {
-          errorCollection.add(
-            new MetaBindParsingError("WARNING" /* WARNING */, "failed to parse input field arguments", `unknown input field argument "${inputFieldArgumentTypeString}"`)
-          );
-          continue;
-        }
-        inputFieldArguments.push({ type: inputFieldArgumentType, value: inputFieldArgumentValue });
-      }
-      return this.parseArguments(inputFieldType, inputFieldArguments, errorCollection);
-    }
-    parseArguments(inputFieldType, inputFieldArguments, errorCollection) {
-      const argumentContainer = new InputFieldArgumentContainer();
-      if (inputFieldArguments) {
-        for (const argument of inputFieldArguments) {
-          const inputFieldArgument = InputFieldArgumentFactory.createInputFieldArgument(argument.type);
-          if (!inputFieldArgument.isAllowed(inputFieldType)) {
-            errorCollection.add(
-              new MetaBindParsingError(
-                "WARNING" /* WARNING */,
-                "failed to parse input field arguments",
-                `argument "${argument.type}" is only applicable to "${inputFieldArgument.getAllowedInputFieldsAsString()}" input fields`
-              )
-            );
-            continue;
-          }
-          if (inputFieldArgument.requiresValue) {
-            if (!argument.value) {
-              errorCollection.add(
-                new MetaBindParsingError("WARNING" /* WARNING */, "failed to parse input field arguments", `argument "${argument.type}" requires a non empty value`)
-              );
-              continue;
-            }
-            inputFieldArgument.parseValue(argument.value);
-          }
-          argumentContainer.add(inputFieldArgument);
-        }
-        try {
-          argumentContainer.validate();
-        } catch (e3) {
-          errorCollection.add(e3);
-        }
-      }
-      return argumentContainer;
-    }
-    extractInputFieldArgumentIdentifier(argumentString) {
-      return ParserUtils.removeInBetween(argumentString, this.roundBracesPair);
-    }
-    extractInputFieldArgumentValue(argumentString) {
-      return ParserUtils.getInBetween(argumentString, this.roundBracesPair);
-    }
-    getInputFieldArgumentType(str) {
-      for (const entry of Object.entries(InputFieldArgumentType)) {
-        if (entry[1] === str) {
-          return entry[1];
-        }
-      }
-      return "invalid" /* INVALID */;
-    }
-    getInputFieldType(str) {
-      for (const entry of Object.entries(InputFieldType3)) {
-        if (entry[1] === str) {
-          return entry[1];
-        }
-      }
-      return "invalid" /* INVALID */;
-    }
-    applyTemplate(inputFieldDeclaration, templateName) {
-      var _a;
-      if (!templateName) {
-        return;
-      }
-      const template = (_a = this.templates.find((x) => x.identifier === templateName)) == null ? void 0 : _a.template;
-      if (!template) {
-        throw new MetaBindParsingError("CRITICAL" /* CRITICAL */, "failed to apply template", `unknown template name "${templateName}"`);
-      }
-      inputFieldDeclaration.bindTarget = inputFieldDeclaration.bindTarget || template.bindTarget;
-      inputFieldDeclaration.isBound = inputFieldDeclaration.isBound || template.isBound;
-      inputFieldDeclaration.inputFieldType = (inputFieldDeclaration.inputFieldType === "invalid" /* INVALID */ ? template.inputFieldType : inputFieldDeclaration.inputFieldType) || template.inputFieldType;
-      inputFieldDeclaration.argumentContainer = template.argumentContainer.mergeByOverride(inputFieldDeclaration.argumentContainer);
-    }
-    getDefaultValue(declaration) {
-      const placeholderString = "placeholder";
-      if (declaration.inputFieldType === "toggle" /* TOGGLE */) {
-        const offArgument = declaration.argumentContainer.get("offValue" /* OFF_VALUE */);
-        return offArgument ? offArgument.value : false;
-      } else if (declaration.inputFieldType === "slider" /* SLIDER */) {
-        const minArgument = declaration.argumentContainer.get("minValue" /* MIN_VALUE */);
-        return minArgument ? minArgument.value : 0;
-      } else if (declaration.inputFieldType === "text" /* TEXT */) {
-        return placeholderString;
-      } else if (declaration.inputFieldType === "text_area" /* TEXT_AREA */) {
-        return placeholderString;
-      } else if (declaration.inputFieldType === "select" /* SELECT */) {
-        const firstOptionArgument = declaration.argumentContainer.get("option" /* OPTION */);
-        return firstOptionArgument ? firstOptionArgument.value : placeholderString;
-      } else if (declaration.inputFieldType === "multi_select" /* MULTI_SELECT */) {
-        const firstOptionArgument = declaration.argumentContainer.get("option" /* OPTION */);
-        return firstOptionArgument ? firstOptionArgument.value : placeholderString;
-      } else if (declaration.inputFieldType === "date" /* DATE */) {
-        return "1970-01-01";
-      } else if (declaration.inputFieldType === "time" /* TIME */) {
-        return "00:00";
-      } else if (declaration.inputFieldType === "date_picker" /* DATE_PICKER */) {
-        return "1970-01-01";
-      } else if (declaration.inputFieldType === "number" /* NUMBER */) {
-        return 0;
-      } else if (declaration.inputFieldType === "suggester" /* SUGGESTER */) {
-        const firstOptionArgument = declaration.argumentContainer.get("option" /* OPTION */);
-        return firstOptionArgument ? firstOptionArgument.value : placeholderString;
-      } else if (declaration.inputFieldType === "editor" /* EDITOR */) {
-        return placeholderString;
-      } else if (declaration.inputFieldType === "imageSuggester" /* IMAGE_SUGGESTER */) {
-        return placeholderString;
-      } else if (declaration.inputFieldType === "progressBar" /* PROGRESS_BAR */) {
-        const minArgument = declaration.argumentContainer.get("minValue" /* MIN_VALUE */);
-        return minArgument ? minArgument.value : 0;
-      } else if (declaration.inputFieldType === "inlineSelect" /* INLINE_SELECT */) {
-        const firstOptionArgument = declaration.argumentContainer.get("option" /* OPTION */);
-        return firstOptionArgument ? firstOptionArgument.value : placeholderString;
-      }
-      return placeholderString;
+  var InputFieldArgumentConfigs = {
+    ["addLabels" /* ADD_LABELS */]: {
+      type: "addLabels" /* ADD_LABELS */,
+      allowedInputFieldTypes: ["slider" /* SLIDER */, "progressBar" /* PROGRESS_BAR */],
+      valueLengthMin: 0,
+      valueLengthMax: 1,
+      allowMultiple: false
+    },
+    ["class" /* CLASS */]: {
+      type: "class" /* CLASS */,
+      allowedInputFieldTypes: [],
+      valueLengthMin: 1,
+      valueLengthMax: 1,
+      allowMultiple: true
+    },
+    ["defaultValue" /* DEFAULT_VALUE */]: {
+      type: "defaultValue" /* DEFAULT_VALUE */,
+      allowedInputFieldTypes: [],
+      valueLengthMin: 1,
+      valueLengthMax: 1,
+      allowMultiple: false
+    },
+    ["maxValue" /* MAX_VALUE */]: {
+      type: "maxValue" /* MAX_VALUE */,
+      allowedInputFieldTypes: ["slider" /* SLIDER */, "progressBar" /* PROGRESS_BAR */],
+      valueLengthMin: 1,
+      valueLengthMax: 1,
+      allowMultiple: false
+    },
+    ["minValue" /* MIN_VALUE */]: {
+      type: "minValue" /* MIN_VALUE */,
+      allowedInputFieldTypes: ["slider" /* SLIDER */, "progressBar" /* PROGRESS_BAR */],
+      valueLengthMin: 1,
+      valueLengthMax: 1,
+      allowMultiple: false
+    },
+    ["offValue" /* OFF_VALUE */]: {
+      type: "offValue" /* OFF_VALUE */,
+      allowedInputFieldTypes: ["toggle" /* TOGGLE */],
+      valueLengthMin: 1,
+      valueLengthMax: 1,
+      allowMultiple: false
+    },
+    ["onValue" /* ON_VALUE */]: {
+      type: "onValue" /* ON_VALUE */,
+      allowedInputFieldTypes: ["toggle" /* TOGGLE */],
+      valueLengthMin: 1,
+      valueLengthMax: 1,
+      allowMultiple: false
+    },
+    ["option" /* OPTION */]: {
+      type: "option" /* OPTION */,
+      allowedInputFieldTypes: [
+        "select" /* SELECT */,
+        "multi_select" /* MULTI_SELECT_DEPRECATED */,
+        "multiSelect" /* MULTI_SELECT */,
+        "suggester" /* SUGGESTER */,
+        "imageSuggester" /* IMAGE_SUGGESTER */,
+        "inlineSelect" /* INLINE_SELECT */
+      ],
+      valueLengthMin: 1,
+      valueLengthMax: 2,
+      allowMultiple: true
+    },
+    ["optionQuery" /* OPTION_QUERY */]: {
+      type: "optionQuery" /* OPTION_QUERY */,
+      allowedInputFieldTypes: ["suggester" /* SUGGESTER */, "imageSuggester" /* IMAGE_SUGGESTER */],
+      valueLengthMin: 1,
+      valueLengthMax: 1,
+      allowMultiple: true
+    },
+    ["placeholder" /* PLACEHOLDER */]: {
+      type: "placeholder" /* PLACEHOLDER */,
+      allowedInputFieldTypes: [
+        "text" /* TEXT */,
+        "textArea" /* TEXT_AREA */,
+        "text_area" /* TEXT_AREA_DEPRECATED */,
+        "number" /* NUMBER */,
+        "list" /* LIST */
+      ],
+      valueLengthMin: 1,
+      valueLengthMax: 1,
+      allowMultiple: false
+    },
+    ["showcase" /* SHOWCASE */]: {
+      type: "showcase" /* SHOWCASE */,
+      allowedInputFieldTypes: [],
+      valueLengthMin: 0,
+      valueLengthMax: 1,
+      allowMultiple: false
+    },
+    ["title" /* TITLE */]: {
+      type: "title" /* TITLE */,
+      allowedInputFieldTypes: [],
+      valueLengthMin: 0,
+      valueLengthMax: 1,
+      allowMultiple: false
+    },
+    ["invalid" /* INVALID */]: {
+      type: "invalid" /* INVALID */,
+      allowedInputFieldTypes: [],
+      valueLengthMin: 0,
+      valueLengthMax: 0,
+      allowMultiple: true
     }
   };
 
+  // src/inputFieldArguments/InputFieldArgumentContainer.ts
+  var InputFieldArgumentContainer = class {
+    constructor() {
+      this.arguments = [];
+    }
+    add(argument) {
+      this.arguments.push(argument);
+    }
+    validate() {
+      const map3 = {};
+      for (const inputFieldArgumentType of Object.values(InputFieldArgumentType)) {
+        map3[inputFieldArgumentType] = 0;
+      }
+      for (const argument of this.arguments) {
+        const argumentConfig = argument.getConfig();
+        map3[argumentConfig.type] += 1;
+        if (map3[argumentConfig.type] > 1 && !argumentConfig.allowMultiple) {
+          throw new MetaBindParsingError(
+            "CRITICAL" /* CRITICAL */,
+            "failed to validate argument container",
+            `argument '${argumentConfig.type}' does not allow duplicates`
+          );
+        }
+      }
+    }
+    mergeByOverride(other) {
+      for (const argument of other.arguments) {
+        const argumentConfig = argument.getConfig();
+        if (!argumentConfig.allowMultiple) {
+          this.arguments = this.arguments.filter((x) => x.getConfig().type !== argumentConfig.type);
+        }
+        this.arguments.push(argument);
+      }
+      this.validate();
+      return this;
+    }
+    mergeByThrow(other) {
+      for (const argument of other.arguments) {
+        const argumentConfig = argument.getConfig();
+        if (!argumentConfig.allowMultiple) {
+          if (this.arguments.filter((x) => x.getConfig().type === argumentConfig.type).length > 0) {
+            throw new MetaBindParsingError(
+              "ERROR" /* ERROR */,
+              "failed to merge argument container",
+              "can not merge InputFieldArgumentContainers, since arguments overlap"
+            );
+          }
+        }
+        this.arguments.push(argument);
+      }
+      this.validate();
+      return this;
+    }
+    getAll(name309) {
+      return this.arguments.filter((x) => x.getConfig().type === name309);
+    }
+    get(name309) {
+      return this.getAll(name309).at(0);
+    }
+  };
+
+  // src/parsers/ParsingError.ts
+  var ParsingValidationError = class extends MetaBindError {
+    constructor(errorLevel, source, cause, str2, position) {
+      super(errorLevel, "failed to parse", cause, {});
+      this.str = str2;
+      this.position = position;
+      this.source = source;
+      this.updateMessage2();
+    }
+    getErrorType() {
+      return "MB_PARSING_ERROR" /* PARSING */;
+    }
+    updateMessage2() {
+      if (this.cause instanceof Error) {
+        this.message = `[${this.getErrorType()}] "${this.effect}" caused by error "${this.cause.message}"
+`;
+      } else {
+        this.message = `[${this.getErrorType()}] "${this.effect}" caused by "${this.cause}"
+`;
+      }
+      if (this.str && this.position) {
+        const lines = this.str.split("\n");
+        const failedLine = lines[this.position.from.line - 1];
+        const linePrefix = `${this.position.from.line} |   `;
+        this.message += `
+${linePrefix}${failedLine}`;
+        this.message += `
+${this.getUnderline(linePrefix.length, failedLine.length)} (${this.cause})
+`;
+      }
+    }
+    getUnderline(offset, lineLength) {
+      if (this.position === void 0) {
+        return "";
+      }
+      const spacing = " ".repeat(this.position.from.index - 1 + offset);
+      const toIndex = this.position.to.line === this.position.from.line ? this.position.to.index : lineLength;
+      const underline = "^".repeat(toIndex - this.position.from.index);
+      return spacing + underline;
+    }
+  };
+
+  // src/inputFieldArguments/AbstractInputFieldArgument.ts
+  var AbstractInputFieldArgument = class {
+    parseValue(value2) {
+      this.validateValueLength(value2, this.getConfig().valueLengthMin, this.getConfig().valueLengthMax);
+      this._parseValue(value2);
+    }
+    validateValueLength(value2, min3, max3) {
+      if (value2.length < min3) {
+        throw new MetaBindArgumentError(
+          "WARNING" /* WARNING */,
+          `Failed to parse argument value for argument '${this.getConfig().type}'.`,
+          `Expected length of argument value to be between ${min3} and ${max3}. Received ${value2.length}.`
+        );
+      }
+      if (value2.length > max3) {
+        throw new MetaBindArgumentError(
+          "WARNING" /* WARNING */,
+          `Failed to parse argument value for argument '${this.getConfig().type}'.`,
+          `Expected length of argument value to be between ${min3} and ${max3}. Received ${value2.length}.`
+        );
+      }
+    }
+    isAllowed(inputFieldType) {
+      if (this.getConfig().allowedInputFieldTypes.length === 0) {
+        return true;
+      }
+      return this.getConfig().allowedInputFieldTypes.contains(inputFieldType);
+    }
+    getAllowedInputFieldsAsString() {
+      return this.getConfig().allowedInputFieldTypes.length === 0 ? "all" : this.getConfig().allowedInputFieldTypes.join(", ");
+    }
+  };
+
+  // src/inputFieldArguments/arguments/ClassInputFieldArgument.ts
+  var ClassInputFieldArgument = class extends AbstractInputFieldArgument {
+    constructor() {
+      super(...arguments);
+      this.value = [];
+    }
+    _parseValue(value2) {
+      this.value = value2[0].value.split(" ");
+    }
+    getConfig() {
+      return InputFieldArgumentConfigs.class;
+    }
+  };
+
+  // src/inputFieldArguments/arguments/AddLabelsInputFieldArgument.ts
+  var AddLabelsInputFieldArgument = class extends AbstractInputFieldArgument {
+    constructor() {
+      super(...arguments);
+      this.value = true;
+    }
+    _parseValue(value2) {
+      var _a;
+      this.value = value2[0] === void 0 || ((_a = value2[0]) == null ? void 0 : _a.value.toLowerCase()) === "true";
+    }
+    getConfig() {
+      return InputFieldArgumentConfigs.addLabels;
+    }
+  };
+
+  // src/inputFieldArguments/arguments/MinValueInputFieldArgument.ts
+  var MinValueInputFieldArgument = class extends AbstractInputFieldArgument {
+    constructor() {
+      super(...arguments);
+      this.value = 0;
+    }
+    _parseValue(value2) {
+      this.value = Number.parseInt(value2[0].value);
+      if (Number.isNaN(this.value)) {
+        throw new MetaBindParsingError(
+          "ERROR" /* ERROR */,
+          "failed to set value for input field argument",
+          "value of argument 'minValue' must be of type number"
+        );
+      }
+    }
+    getConfig() {
+      return InputFieldArgumentConfigs.minValue;
+    }
+  };
+
+  // src/inputFieldArguments/arguments/MaxValueInputFieldArgument.ts
+  var MaxValueInputFieldArgument = class extends AbstractInputFieldArgument {
+    constructor() {
+      super(...arguments);
+      this.value = 100;
+    }
+    _parseValue(value2) {
+      this.value = Number.parseInt(value2[0].value);
+      if (Number.isNaN(this.value)) {
+        throw new MetaBindParsingError(
+          "ERROR" /* ERROR */,
+          "failed to set value for input field argument",
+          "value of argument 'maxValue' must be of type number"
+        );
+      }
+    }
+    getConfig() {
+      return InputFieldArgumentConfigs.maxValue;
+    }
+  };
+
+  // src/inputFieldArguments/arguments/OptionInputFieldArgument.ts
+  var OptionInputFieldArgument = class extends AbstractInputFieldArgument {
+    constructor() {
+      super(...arguments);
+      this.value = "";
+      this.name = "";
+    }
+    _parseValue(value2) {
+      if (value2.length === 1) {
+        this.value = parseLiteral(value2[0].value);
+        this.name = value2[0].value;
+      } else if (value2.length === 2) {
+        this.value = parseLiteral(value2[0].value);
+        this.name = value2[1].value;
+      }
+    }
+    getConfig() {
+      return InputFieldArgumentConfigs.option;
+    }
+  };
+
+  // src/inputFieldArguments/arguments/TitleInputFieldArgument.ts
+  var TitleInputFieldArgument = class extends AbstractInputFieldArgument {
+    constructor() {
+      super(...arguments);
+      this.value = "";
+    }
+    _parseValue(value2) {
+      this.value = value2[0].value;
+    }
+    getConfig() {
+      return InputFieldArgumentConfigs.title;
+    }
+  };
+
+  // src/inputFieldArguments/arguments/OptionQueryInputFieldArgument.ts
+  var OptionQueryInputFieldArgument = class extends AbstractInputFieldArgument {
+    constructor() {
+      super(...arguments);
+      this.value = "";
+    }
+    _parseValue(value2) {
+      this.value = value2[0].value;
+    }
+    getConfig() {
+      return InputFieldArgumentConfigs.optionQuery;
+    }
+  };
+
+  // src/inputFieldArguments/arguments/ShowcaseInputFieldArgument.ts
+  var ShowcaseInputFieldArgument = class extends AbstractInputFieldArgument {
+    constructor() {
+      super(...arguments);
+      this.value = true;
+    }
+    _parseValue(value2) {
+      var _a;
+      this.value = value2[0] === void 0 || ((_a = value2[0]) == null ? void 0 : _a.value.toLowerCase()) === "true";
+    }
+    getConfig() {
+      return InputFieldArgumentConfigs.showcase;
+    }
+  };
+
+  // src/inputFieldArguments/arguments/OffValueInputFieldArgument.ts
+  var OffValueInputFieldArgument = class extends AbstractInputFieldArgument {
+    constructor() {
+      super(...arguments);
+      this.value = false;
+    }
+    _parseValue(value2) {
+      this.value = parseLiteral(value2[0].value);
+    }
+    getConfig() {
+      return InputFieldArgumentConfigs.offValue;
+    }
+  };
+
+  // src/inputFieldArguments/arguments/OnValueInputFieldArgument.ts
+  var OnValueInputFieldArgument = class extends AbstractInputFieldArgument {
+    constructor() {
+      super(...arguments);
+      this.value = true;
+    }
+    _parseValue(value2) {
+      this.value = parseLiteral(value2[0].value);
+    }
+    getConfig() {
+      return InputFieldArgumentConfigs.onValue;
+    }
+  };
+
+  // src/inputFieldArguments/arguments/DefaultValueInputFieldArgument.ts
+  var DefaultValueInputFieldArgument = class extends AbstractInputFieldArgument {
+    constructor() {
+      super(...arguments);
+      this.value = "";
+    }
+    _parseValue(value2) {
+      this.value = parseLiteral(value2[0].value);
+    }
+    getConfig() {
+      return InputFieldArgumentConfigs.defaultValue;
+    }
+  };
+
+  // src/inputFieldArguments/arguments/PlaceholderInputFieldArgument.ts
+  var PlaceholderInputFieldArgument = class extends AbstractInputFieldArgument {
+    constructor() {
+      super(...arguments);
+      this.value = "";
+    }
+    _parseValue(value2) {
+      this.value = value2[0].value;
+    }
+    getConfig() {
+      return InputFieldArgumentConfigs.placeholder;
+    }
+  };
+
+  // src/inputFieldArguments/InputFieldArgumentFactory.ts
+  var InputFieldArgumentFactory = class {
+    static createInputFieldArgument(argumentIdentifier) {
+      if (argumentIdentifier === "class" /* CLASS */) {
+        return new ClassInputFieldArgument();
+      } else if (argumentIdentifier === "addLabels" /* ADD_LABELS */) {
+        return new AddLabelsInputFieldArgument();
+      } else if (argumentIdentifier === "minValue" /* MIN_VALUE */) {
+        return new MinValueInputFieldArgument();
+      } else if (argumentIdentifier === "maxValue" /* MAX_VALUE */) {
+        return new MaxValueInputFieldArgument();
+      } else if (argumentIdentifier === "option" /* OPTION */) {
+        return new OptionInputFieldArgument();
+      } else if (argumentIdentifier === "title" /* TITLE */) {
+        return new TitleInputFieldArgument();
+      } else if (argumentIdentifier === "optionQuery" /* OPTION_QUERY */) {
+        return new OptionQueryInputFieldArgument();
+      } else if (argumentIdentifier === "showcase" /* SHOWCASE */) {
+        return new ShowcaseInputFieldArgument();
+      } else if (argumentIdentifier === "offValue" /* OFF_VALUE */) {
+        return new OffValueInputFieldArgument();
+      } else if (argumentIdentifier === "onValue" /* ON_VALUE */) {
+        return new OnValueInputFieldArgument();
+      } else if (argumentIdentifier === "defaultValue" /* DEFAULT_VALUE */) {
+        return new DefaultValueInputFieldArgument();
+      } else if (argumentIdentifier === "placeholder" /* PLACEHOLDER */) {
+        return new PlaceholderInputFieldArgument();
+      } else {
+        throw new MetaBindParsingError("ERROR" /* ERROR */, "can not crate input field argument", `unknown argument '${argumentIdentifier}'`);
+      }
+    }
+  };
+
+  // src/parsers/newInputFieldParser/InputFieldDeclarationValidator.ts
+  var InputFieldDeclarationValidator = class {
+    constructor(plugin, unvalidatedDeclaration) {
+      this.plugin = plugin;
+      this.unvalidatedDeclaration = unvalidatedDeclaration;
+      this.errorCollection = new ErrorCollection("input field declaration");
+    }
+    validate() {
+      const inputFieldType = this.validateInputFieldType();
+      const bindTarget = this.validateBindTarget();
+      const argumentContainer = this.validateArguments(inputFieldType);
+      const declaration = {
+        fullDeclaration: this.unvalidatedDeclaration.fullDeclaration,
+        inputFieldType,
+        isBound: bindTarget !== void 0,
+        bindTarget,
+        argumentContainer,
+        errorCollection: this.errorCollection.merge(this.unvalidatedDeclaration.errorCollection)
+      };
+      this.checkForDepracation(declaration);
+      return declaration;
+    }
+    validateInputFieldType() {
+      const inputFieldType = this.unvalidatedDeclaration.inputFieldType;
+      for (const entry of Object.entries(InputFieldType)) {
+        if (entry[1] === (inputFieldType == null ? void 0 : inputFieldType.value)) {
+          return entry[1];
+        }
+      }
+      if (inputFieldType == null ? void 0 : inputFieldType.position) {
+        this.errorCollection.add(
+          new ParsingValidationError(
+            "ERROR" /* ERROR */,
+            "Declaration Validator",
+            `Encountered invalid identifier. Expected token to be an input field type but received '${inputFieldType.value}'.`,
+            this.unvalidatedDeclaration.fullDeclaration,
+            inputFieldType.position
+          )
+        );
+      } else {
+        this.errorCollection.add(
+          new ParsingValidationError(
+            "ERROR" /* ERROR */,
+            "Declaration Validator",
+            `Encountered invalid identifier. Expected token to be an input field type but received '${inputFieldType == null ? void 0 : inputFieldType.value}'.`
+          )
+        );
+      }
+      return "invalid" /* INVALID */;
+    }
+    checkForDepracation(declaration) {
+      var _a;
+      if (declaration.inputFieldType === "date_picker" /* DATE_PICKER_DEPRECATED */ || declaration.inputFieldType === "text_area" /* TEXT_AREA_DEPRECATED */ || declaration.inputFieldType === "multi_select" /* MULTI_SELECT_DEPRECATED */) {
+        if ((_a = this.unvalidatedDeclaration.inputFieldType) == null ? void 0 : _a.position) {
+          this.errorCollection.add(
+            new ParsingValidationError(
+              "WARNING" /* WARNING */,
+              "Declaration Validator",
+              `'${declaration.inputFieldType}' is deprecated, as it has been renamed to be in camel case ('input_field_type' => 'inputFieldType').`,
+              this.unvalidatedDeclaration.fullDeclaration,
+              this.unvalidatedDeclaration.inputFieldType.position
+            )
+          );
+        } else {
+          this.errorCollection.add(
+            new ParsingValidationError(
+              "WARNING" /* WARNING */,
+              "Declaration Validator",
+              `'${declaration.inputFieldType}' is deprecated, as it has been renamed to be in camel case ('input_field_type' => 'inputFieldType').`
+            )
+          );
+        }
+      }
+    }
+    validateBindTarget() {
+      if (this.unvalidatedDeclaration.bindTarget !== void 0) {
+        return this.plugin.api.bindTargetParser.validateBindTarget(this.unvalidatedDeclaration.fullDeclaration, this.unvalidatedDeclaration.bindTarget);
+      } else {
+        return void 0;
+      }
+    }
+    validateArguments(inputFieldType) {
+      const argumentContainer = new InputFieldArgumentContainer();
+      for (const argument of this.unvalidatedDeclaration.arguments) {
+        const argumentType = this.validateArgumentType(argument.name);
+        if (argumentType === "invalid" /* INVALID */) {
+          continue;
+        }
+        const inputFieldArgument2 = InputFieldArgumentFactory.createInputFieldArgument(argumentType);
+        if (!inputFieldArgument2.isAllowed(inputFieldType)) {
+          if (argument.name.position) {
+            this.errorCollection.add(
+              new ParsingValidationError(
+                "WARNING" /* WARNING */,
+                "Declaration Validator",
+                `Failed to parse input field arguments. Argument "${argument.name.value}" is only applicable to "${inputFieldArgument2.getAllowedInputFieldsAsString()}" input fields.`,
+                this.unvalidatedDeclaration.fullDeclaration,
+                argument.name.position
+              )
+            );
+          } else {
+            this.errorCollection.add(
+              new ParsingValidationError(
+                "WARNING" /* WARNING */,
+                "Declaration Validator",
+                `Failed to parse input field arguments. Argument "${argument.name.value}" is only applicable to "${inputFieldArgument2.getAllowedInputFieldsAsString()}" input fields.`
+              )
+            );
+          }
+          continue;
+        }
+        try {
+          inputFieldArgument2.parseValue(argument.value);
+        } catch (e3) {
+          this.errorCollection.add(e3);
+          continue;
+        }
+        argumentContainer.add(inputFieldArgument2);
+      }
+      try {
+        argumentContainer.validate();
+      } catch (e3) {
+        this.errorCollection.add(e3);
+      }
+      return argumentContainer;
+    }
+    validateArgumentType(argumentType) {
+      for (const entry of Object.entries(InputFieldArgumentType)) {
+        if (entry[1] === argumentType.value) {
+          return entry[1];
+        }
+      }
+      if (argumentType.position) {
+        this.errorCollection.add(
+          new ParsingValidationError(
+            "WARNING" /* WARNING */,
+            "Declaration Validator",
+            `Encountered invalid identifier. Expected identifier to be an input field argument type but received '${argumentType.value}'.`,
+            this.unvalidatedDeclaration.fullDeclaration,
+            argumentType.position
+          )
+        );
+      } else {
+        this.errorCollection.add(
+          new ParsingValidationError(
+            "WARNING" /* WARNING */,
+            "Declaration Validator",
+            `Encountered invalid identifier. Expected identifier to be an input field argument type but received '${argumentType.value}'.`
+          )
+        );
+      }
+      return "invalid" /* INVALID */;
+    }
+  };
+
+  // src/parsers/newInputFieldParser/InputFieldParser.ts
+  function createResultNode(value2, range2) {
+    return {
+      value: value2,
+      position: range2
+    };
+  }
+  var NewInputFieldDeclarationParser = class {
+    constructor(plugin) {
+      this.plugin = plugin;
+      this.templates = [];
+    }
+    parseString(fullDeclaration) {
+      const errorCollection = new ErrorCollection("InputFieldParser");
+      try {
+        let parserResult = INPUT_FIELD_FULL_DECLARATION.parse(fullDeclaration);
+        parserResult.fullDeclaration = fullDeclaration;
+        parserResult.errorCollection = errorCollection;
+        parserResult = this.applyTemplate(parserResult);
+        const declarationValidator = new InputFieldDeclarationValidator(this.plugin, parserResult);
+        return declarationValidator.validate();
+      } catch (e3) {
+        errorCollection.add(e3);
+      }
+      return {
+        fullDeclaration,
+        inputFieldType: "invalid" /* INVALID */,
+        isBound: false,
+        bindTarget: void 0,
+        argumentContainer: new InputFieldArgumentContainer(),
+        errorCollection
+      };
+    }
+    parseStringWithoutValidation(fullDeclaration) {
+      const errorCollection = new ErrorCollection("InputFieldParser");
+      try {
+        const parserResult = INPUT_FIELD_FULL_DECLARATION.parse(fullDeclaration);
+        parserResult.fullDeclaration = fullDeclaration;
+        parserResult.errorCollection = errorCollection;
+        return parserResult;
+      } catch (e3) {
+        errorCollection.add(e3);
+      }
+      return {
+        fullDeclaration,
+        inputFieldType: { value: "invalid" /* INVALID */ },
+        bindTarget: void 0,
+        arguments: [],
+        errorCollection
+      };
+    }
+    validateDeclaration(unvalidatedDeclaration) {
+      const declarationValidator = new InputFieldDeclarationValidator(this.plugin, unvalidatedDeclaration);
+      return declarationValidator.validate();
+    }
+    parseTemplateString(template) {
+      const errorCollection = new ErrorCollection("InputFieldParser");
+      try {
+        const parserResult = TEMPLATE_INPUT_FIELD_FULL_DECLARATION.parse(template);
+        parserResult.fullDeclaration = template;
+        parserResult.errorCollection = errorCollection;
+        return parserResult;
+      } catch (e3) {
+        errorCollection.add(e3);
+      }
+      return {
+        fullDeclaration: template,
+        inputFieldType: { value: "invalid" /* INVALID */ },
+        bindTarget: void 0,
+        arguments: [],
+        errorCollection
+      };
+    }
+    parseTemplates(templates) {
+      this.templates = [];
+      const errorCollection = new ErrorCollection("input field template parser");
+      for (const template of templates) {
+        const templateDeclaration = this.parseTemplateString(template.declaration);
+        errorCollection.merge(templateDeclaration.errorCollection);
+        const temp = {
+          name: template.name,
+          template: templateDeclaration
+        };
+        this.templates.push(deepFreeze(temp));
+      }
+      return errorCollection;
+    }
+    getTemplate(templateName) {
+      var _a;
+      return (_a = this.templates.find((x) => x.name === templateName)) == null ? void 0 : _a.template;
+    }
+    applyTemplate(declaration) {
+      if (declaration.templateName === void 0) {
+        return declaration;
+      }
+      const template = this.getTemplate(declaration.templateName.value);
+      if (template === void 0) {
+        if (declaration.templateName.position) {
+          declaration.errorCollection.add(
+            new ParsingValidationError(
+              "WARNING" /* WARNING */,
+              "Input Field Parser",
+              `Invalid template name. Could not find template with name '${declaration.templateName.value}'`,
+              declaration.fullDeclaration,
+              declaration.templateName.position
+            )
+          );
+        } else {
+          declaration.errorCollection.add(
+            new ParsingValidationError(
+              "WARNING" /* WARNING */,
+              "Input Field Parser",
+              `Invalid template name. Could not find template with name '${declaration.templateName.value}'`
+            )
+          );
+        }
+        return declaration;
+      }
+      return this.plugin.api.inputField.merge(template, declaration);
+    }
+  };
+
+  // src/parsers/nomParsers/Parsers.ts
+  var quote = `'`;
+  var ident = P.regexp(/^[a-z][a-z0-9_-]*/i).map((x) => {
+    return x;
+  }).describe("identifier");
+  var spaceIdent = P.sequenceMap(
+    (a, b) => {
+      return a + b.map((x) => x[0] + x[1]).join("");
+    },
+    ident,
+    P.sequence(P_UTILS.optionalWhitespace(), ident).many()
+  ).describe("identifier with spaces");
+  var escapeCharacter = P.string("\\").then(P_UTILS.any()).map((escaped) => {
+    if (escaped === "'") {
+      return "'";
+    } else if (escaped === "\\") {
+      return "\\";
+    } else {
+      return "\\" + escaped;
+    }
+  });
+  function createStr(quotes) {
+    return P.string(quotes).then(
+      P.or(escapeCharacter, P.noneOf(quotes + "\\")).many().map((x) => x.join(""))
+    ).skip(P.string(quotes));
+  }
+  var str = createStr(quote);
+  var specialIdent = P.regexp(/^[^ \t\n\r()',]+/).describe("any character except whitespace, parentheses, single quotation marks and commas");
+  var specialSpaceIdent = P.sequenceMap(
+    (a, b) => {
+      return a + b.map((x) => x[0] + x[1]).join("");
+    },
+    specialIdent,
+    P.sequence(P_UTILS.optionalWhitespace(), specialIdent).many()
+  ).describe("any character except parentheses, single quotation marks and commas");
+  var value = P.or(specialSpaceIdent, str);
+  var filePath = P.noneOf("[]#^|:?").many().map((x) => x.join("")).describe("file path");
+  var bracketMetadataPathPart = P.or(P_UTILS.digits(), createStr('"')).wrap(P.string("["), P.string("]")).node(createResultNode);
+  var firstMetadataPathPart = P.or(
+    bracketMetadataPathPart.atLeast(1),
+    P.sequenceMap((ident2, brackets) => [ident2, ...brackets], ident.node(createResultNode), bracketMetadataPathPart.many())
+  );
+  var metadataPathPart = P.sequenceMap(
+    (ident2, brackets) => {
+      return [ident2, ...brackets];
+    },
+    ident.node(createResultNode),
+    bracketMetadataPathPart.many()
+  );
+  var metadataPath = P.sequenceMap(
+    (fist, others) => {
+      return fist.concat(others.map((x) => x[1]).reduce((x, acc) => acc.concat(x), []));
+    },
+    firstMetadataPathPart,
+    P.sequence(P.string("."), metadataPathPart).many()
+  );
+  var BIND_TARGET = P.sequenceMap(
+    (a, b) => {
+      if (a === void 0) {
+        return {
+          file: void 0,
+          path: b
+        };
+      } else {
+        return {
+          file: a[0],
+          path: b
+        };
+      }
+    },
+    P.sequence(filePath.node(createResultNode), P.string("#")).optional(),
+    metadataPath
+  );
+  var inputFieldArgumentValue = P.separateBy(value.node(createResultNode), P.string(",").trim(P_UTILS.optionalWhitespace()));
+  var inputFieldArgument = P.sequenceMap(
+    (name309, value2) => {
+      return {
+        name: name309,
+        value: value2
+      };
+    },
+    ident.node(createResultNode),
+    inputFieldArgumentValue.trim(P_UTILS.optionalWhitespace()).wrap(P.string("("), P.string(")")).optional([])
+  );
+  var inputFieldArguments = P.separateBy(inputFieldArgument, P.string(",").trim(P_UTILS.optionalWhitespace()));
+  var INPUT_FIELD_DECLARATION = P.sequenceMap(
+    (type, args, b) => {
+      const bindTarget = b === void 0 ? void 0 : b[1];
+      return {
+        inputFieldType: type,
+        arguments: args,
+        bindTarget
+      };
+    },
+    ident.node(createResultNode).describe("input field type"),
+    inputFieldArguments.trim(P_UTILS.optionalWhitespace()).wrap(P.string("("), P.string(")")).optional([]),
+    P.sequence(P.string(":"), BIND_TARGET).optional()
+  );
+  var PARTIAL_INPUT_FIELD_DECLARATION = P.sequenceMap(
+    (type, args, b) => {
+      const bindTarget = b === void 0 ? void 0 : b[1];
+      return {
+        inputFieldType: type,
+        arguments: args,
+        bindTarget
+      };
+    },
+    ident.node(createResultNode).optional().describe("input field type"),
+    inputFieldArguments.trim(P_UTILS.optionalWhitespace()).wrap(P.string("("), P.string(")")).optional([]),
+    P.sequence(P.string(":"), BIND_TARGET).optional()
+  );
+  var INPUT_FIELD_FULL_DECLARATION = P.or(
+    P.sequenceMap(
+      (_1, templateName, _2, declaration, _3) => {
+        declaration.templateName = templateName;
+        return declaration;
+      },
+      P.string("INPUT"),
+      P.sequenceMap((_1, templateName, _2) => templateName, P.string("["), spaceIdent.node(createResultNode).describe("template name"), P.string("]")),
+      P.string("["),
+      PARTIAL_INPUT_FIELD_DECLARATION,
+      P.string("]"),
+      P_UTILS.eof()
+    ),
+    P.sequenceMap(
+      (_1, _2, declaration, _3) => {
+        console.warn("second");
+        return declaration;
+      },
+      P.string("INPUT"),
+      P.string("["),
+      INPUT_FIELD_DECLARATION,
+      P.string("]"),
+      P_UTILS.eof()
+    )
+  );
+  var TEMPLATE_INPUT_FIELD_FULL_DECLARATION = P.sequenceMap(
+    (_1, _2, declaration, _3) => {
+      return declaration;
+    },
+    P.string("INPUT"),
+    P.string("["),
+    PARTIAL_INPUT_FIELD_DECLARATION,
+    P.string("]"),
+    P_UTILS.eof()
+  );
+  var viewFieldMathJS = P.noneOf("{}[]").many().map((x) => x.join("")).describe("MathJS");
+  var VIEW_FIELD_DECLARATION = P.sequenceMap(
+    (first, other) => {
+      return [first, ...other.reduce((acc, x) => acc.concat(x), [])];
+    },
+    viewFieldMathJS,
+    P.sequence(BIND_TARGET.wrap(P.string("{"), P.string("}")), viewFieldMathJS).many()
+  );
+  var VIEW_FIELD_FULL_DECLARATION = P.sequenceMap(
+    (_1, _2, declaration, _3) => {
+      return declaration;
+    },
+    P.string("VIEW"),
+    P.string("["),
+    VIEW_FIELD_DECLARATION,
+    P.string("]"),
+    P_UTILS.eof()
+  );
+
   // src/parsers/ViewFieldDeclarationParser.ts
   var ViewFieldDeclarationParser = class {
-    constructor() {
-      this.roundBracesPair = new EnclosingPair("(", ")");
-      this.squareBracesPair = new EnclosingPair("[", "]");
-      this.curlyBracesPair = new EnclosingPair("{", "}");
-      this.allBracesPairs = [this.roundBracesPair, this.squareBracesPair, this.curlyBracesPair];
+    constructor(plugin) {
+      this.plugin = plugin;
     }
     parseString(fullDeclaration) {
       const declaration = {};
+      declaration.fullDeclaration = fullDeclaration;
       declaration.errorCollection = new ErrorCollection("ViewFieldDeclaration");
       try {
-        declaration.fullDeclaration = fullDeclaration;
-        const temp = ParserUtils.getInBetween(fullDeclaration, this.squareBracesPair);
-        if (Array.isArray(temp)) {
-          throw new MetaBindParsingError("CRITICAL" /* CRITICAL */, "invalid view field declaration", "expected exactly one square braces pair");
-        } else {
-          declaration.declaration = temp;
-        }
-        const variables = ParserUtils.getInBetween(declaration.declaration, this.curlyBracesPair);
-        if (Array.isArray(variables)) {
-          declaration.bindTargets = variables;
-        } else {
-          declaration.bindTargets = [variables];
-        }
+        const parserResult = VIEW_FIELD_FULL_DECLARATION.parse(fullDeclaration);
+        declaration.declaration = parserResult.map((x) => {
+          if (typeof x === "string") {
+            return x;
+          } else {
+            return this.plugin.api.bindTargetParser.validateBindTarget(fullDeclaration, x);
+          }
+        });
       } catch (e3) {
         declaration.errorCollection.add(e3);
       }
@@ -4731,50 +5854,68 @@ var meta_bind_publish = (() => {
   };
 
   // src/parsers/BindTargetParser.ts
-  var import_ObjectTraversalUtils2 = __toESM(require_ObjectTraversalUtils());
   var BindTargetParser = class {
     constructor(plugin) {
       this.plugin = plugin;
     }
-    parseBindTarget(bindTargetString, fallbackFilePath) {
-      if (!bindTargetString) {
-        throw new MetaBindBindTargetError("CRITICAL" /* CRITICAL */, "failed to parse bind target", "bind target is empty");
-      }
+    parseAndValidateBindTarget(bindTargetString) {
+      return this.validateBindTarget(bindTargetString, this.parseBindTarget(bindTargetString));
+    }
+    parseBindTarget(bindTargetString) {
+      return BIND_TARGET.parse(bindTargetString);
+    }
+    validateBindTarget(fullDeclaration, unvalidatedBindTargetDeclaration) {
+      var _a, _b, _c, _d, _e;
       const bindTargetDeclaration = {};
-      const bindTargetParts = bindTargetString.split("#");
-      if (bindTargetParts.length === 1) {
-        bindTargetDeclaration.fileName = fallbackFilePath;
-        bindTargetDeclaration.metadataFieldName = bindTargetString;
-      } else if (bindTargetParts.length === 2) {
-        bindTargetDeclaration.fileName = bindTargetParts[0];
-        bindTargetDeclaration.metadataFieldName = bindTargetParts[1];
-      } else {
-        throw new MetaBindBindTargetError("CRITICAL" /* CRITICAL */, "failed to parse bind target", "bind target may only contain one '#' to specify the metadata field");
-      }
-      try {
-        bindTargetDeclaration.metadataPath = (0, import_ObjectTraversalUtils2.parsePath)(bindTargetDeclaration.metadataFieldName);
-      } catch (e3) {
-        if (e3 instanceof Error) {
-          throw new MetaBindBindTargetError("CRITICAL" /* CRITICAL */, "failed to parse bind target", `bind target path parsing error: ${e3 == null ? void 0 : e3.message}`);
+      const filePath2 = (_a = unvalidatedBindTargetDeclaration.file) == null ? void 0 : _a.value;
+      if (filePath2 !== void 0) {
+        const filePaths = this.plugin.getFilePathsByName(filePath2);
+        if (filePaths.length === 0) {
+          if ((_b = unvalidatedBindTargetDeclaration.file) == null ? void 0 : _b.position) {
+            throw new ParsingValidationError(
+              "CRITICAL" /* CRITICAL */,
+              "Bind Target Validator",
+              `Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file.value}' not found.`,
+              fullDeclaration,
+              unvalidatedBindTargetDeclaration.file.position
+            );
+          } else {
+            throw new ParsingValidationError(
+              "CRITICAL" /* CRITICAL */,
+              "Bind Target Validator",
+              `Failed to parse bind target. Bind target file path '${(_c = unvalidatedBindTargetDeclaration.file) == null ? void 0 : _c.value}' not found.`
+            );
+          }
+        } else if (filePaths.length === 1) {
+          bindTargetDeclaration.filePath = filePaths[0];
+        } else {
+          if ((_d = unvalidatedBindTargetDeclaration.file) == null ? void 0 : _d.position) {
+            throw new ParsingValidationError(
+              "CRITICAL" /* CRITICAL */,
+              "Bind Target Validator",
+              `Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file.value}' resolves to multiple files, please also specify the file path.`,
+              fullDeclaration,
+              unvalidatedBindTargetDeclaration.file.position
+            );
+          } else {
+            throw new ParsingValidationError(
+              "CRITICAL" /* CRITICAL */,
+              "Bind Target Validator",
+              `Failed to parse bind target. Bind target file path '${(_e = unvalidatedBindTargetDeclaration.file) == null ? void 0 : _e.value}' resolves to multiple files, please also specify the file path.`
+            );
+          }
         }
       }
-      const filePaths = this.plugin.getFilePathsByName(bindTargetDeclaration.fileName);
-      if (filePaths.length === 0) {
-        throw new MetaBindBindTargetError("CRITICAL" /* CRITICAL */, "failed to parse bind target", "bind target file not found");
-      } else if (filePaths.length === 1) {
-        bindTargetDeclaration.filePath = filePaths[0];
-      } else {
-        throw new MetaBindBindTargetError("CRITICAL" /* CRITICAL */, "failed to parse bind target", "bind target resolves to multiple files, please also specify the file path");
-      }
+      bindTargetDeclaration.metadataPath = unvalidatedBindTargetDeclaration.path.map((x) => x.value);
       return bindTargetDeclaration;
     }
   };
 
   // src/publish/PublishInputFieldMDRC.ts
   var import_publish = __require("obsidian/publish");
-  var import_ObjectTraversalUtils3 = __toESM(require_ObjectTraversalUtils());
+  var import_ObjectTraversalUtils2 = __toESM(require_ObjectTraversalUtils());
 
-  // node_modules/svelte/internal/index.mjs
+  // node_modules/svelte/src/runtime/internal/utils.js
   function noop() {
   }
   function run(fn) {
@@ -4790,16 +5931,22 @@ var meta_bind_publish = (() => {
     return typeof thing === "function";
   }
   function safe_not_equal(a, b) {
-    return a != a ? b == b : a !== b || (a && typeof a === "object" || typeof a === "function");
+    return a != a ? b == b : a !== b || a && typeof a === "object" || typeof a === "function";
   }
   function is_empty(obj) {
     return Object.keys(obj).length === 0;
   }
+
+  // node_modules/svelte/src/runtime/internal/globals.js
   var globals = typeof window !== "undefined" ? window : typeof globalThis !== "undefined" ? globalThis : global;
+
+  // node_modules/svelte/src/runtime/internal/ResizeObserverSingleton.js
   var ResizeObserverSingleton = class {
     constructor(options) {
+      __publicField(this, "_listeners", "WeakMap" in globals ? /* @__PURE__ */ new WeakMap() : void 0);
+      __publicField(this, "_observer");
+      __publicField(this, "options");
       this.options = options;
-      this._listeners = "WeakMap" in globals ? /* @__PURE__ */ new WeakMap() : void 0;
     }
     observe(element2, listener) {
       this._listeners.set(element2, listener);
@@ -4811,16 +5958,18 @@ var meta_bind_publish = (() => {
     }
     _getObserver() {
       var _a;
-      return (_a = this._observer) !== null && _a !== void 0 ? _a : this._observer = new ResizeObserver((entries) => {
+      return (_a = this._observer) != null ? _a : this._observer = new ResizeObserver((entries) => {
         var _a2;
         for (const entry of entries) {
           ResizeObserverSingleton.entries.set(entry.target, entry);
-          (_a2 = this._listeners.get(entry.target)) === null || _a2 === void 0 ? void 0 : _a2(entry);
+          (_a2 = this._listeners.get(entry.target)) == null ? void 0 : _a2(entry);
         }
       });
     }
   };
   ResizeObserverSingleton.entries = "WeakMap" in globals ? /* @__PURE__ */ new WeakMap() : void 0;
+
+  // node_modules/svelte/src/runtime/internal/dom.js
   var is_hydrating = false;
   function start_hydrating() {
     is_hydrating = true;
@@ -4845,11 +5994,11 @@ var meta_bind_publish = (() => {
         iterations[i2].d(detaching);
     }
   }
-  function element(name302) {
-    return document.createElement(name302);
+  function element(name309) {
+    return document.createElement(name309);
   }
-  function svg_element(name302) {
-    return document.createElementNS("http://www.w3.org/2000/svg", name302);
+  function svg_element(name309) {
+    return document.createElementNS("http://www.w3.org/2000/svg", name309);
   }
   function text(data) {
     return document.createTextNode(data);
@@ -4864,11 +6013,11 @@ var meta_bind_publish = (() => {
     node.addEventListener(event, handler, options);
     return () => node.removeEventListener(event, handler, options);
   }
-  function attr(node, attribute, value) {
-    if (value == null)
+  function attr(node, attribute, value2) {
+    if (value2 == null)
       node.removeAttribute(attribute);
-    else if (node.getAttribute(attribute) !== value)
-      node.setAttribute(attribute, value);
+    else if (node.getAttribute(attribute) !== value2)
+      node.setAttribute(attribute, value2);
   }
   function children(element2) {
     return Array.from(element2.childNodes);
@@ -4879,10 +6028,23 @@ var meta_bind_publish = (() => {
       return;
     text2.data = data;
   }
+  function get_custom_elements_slots(element2) {
+    const result = {};
+    element2.childNodes.forEach(
+      (node) => {
+        result[node.slot || "default"] = true;
+      }
+    );
+    return result;
+  }
+
+  // node_modules/svelte/src/runtime/internal/lifecycle.js
   var current_component;
   function set_current_component(component) {
     current_component = component;
   }
+
+  // node_modules/svelte/src/runtime/internal/scheduler.js
   var dirty_components = [];
   var binding_callbacks = [];
   var render_callbacks = [];
@@ -4956,6 +6118,8 @@ var meta_bind_publish = (() => {
     targets.forEach((c) => c());
     render_callbacks = filtered;
   }
+
+  // node_modules/svelte/src/runtime/internal/transitions.js
   var outroing = /* @__PURE__ */ new Set();
   var outros;
   function group_outros() {
@@ -4995,6 +6159,13 @@ var meta_bind_publish = (() => {
       callback();
     }
   }
+
+  // node_modules/svelte/src/runtime/internal/each.js
+  function ensure_array_like(array_like_or_iterator) {
+    return (array_like_or_iterator == null ? void 0 : array_like_or_iterator.length) !== void 0 ? array_like_or_iterator : Array.from(array_like_or_iterator);
+  }
+
+  // node_modules/svelte/src/shared/boolean_attributes.js
   var _boolean_attributes = [
     "allowfullscreen",
     "allowpaymentrequest",
@@ -5023,23 +6194,23 @@ var meta_bind_publish = (() => {
     "selected"
   ];
   var boolean_attributes = /* @__PURE__ */ new Set([..._boolean_attributes]);
+
+  // node_modules/svelte/src/runtime/internal/Component.js
   function create_component(block) {
     block && block.c();
   }
-  function mount_component(component, target, anchor, customElement) {
+  function mount_component(component, target, anchor) {
     const { fragment, after_update } = component.$$;
     fragment && fragment.m(target, anchor);
-    if (!customElement) {
-      add_render_callback(() => {
-        const new_on_destroy = component.$$.on_mount.map(run).filter(is_function);
-        if (component.$$.on_destroy) {
-          component.$$.on_destroy.push(...new_on_destroy);
-        } else {
-          run_all(new_on_destroy);
-        }
-        component.$$.on_mount = [];
-      });
-    }
+    add_render_callback(() => {
+      const new_on_destroy = component.$$.on_mount.map(run).filter(is_function);
+      if (component.$$.on_destroy) {
+        component.$$.on_destroy.push(...new_on_destroy);
+      } else {
+        run_all(new_on_destroy);
+      }
+      component.$$.on_mount = [];
+    });
     after_update.forEach(add_render_callback);
   }
   function destroy_component(component, detaching) {
@@ -5060,7 +6231,7 @@ var meta_bind_publish = (() => {
     }
     component.$$.dirty[i2 / 31 | 0] |= 1 << i2 % 31;
   }
-  function init(component, options, instance3, create_fragment3, not_equal, props, append_styles, dirty = [-1]) {
+  function init(component, options, instance3, create_fragment3, not_equal, props, append_styles = null, dirty = [-1]) {
     const parent_component = current_component;
     set_current_component(component);
     const $$ = component.$$ = {
@@ -5084,10 +6255,10 @@ var meta_bind_publish = (() => {
     append_styles && append_styles($$.root);
     let ready = false;
     $$.ctx = instance3 ? instance3(component, options.props || {}, (i2, ret, ...rest) => {
-      const value = rest.length ? rest[0] : ret;
-      if ($$.ctx && not_equal($$.ctx[i2], $$.ctx[i2] = value)) {
+      const value2 = rest.length ? rest[0] : ret;
+      if ($$.ctx && not_equal($$.ctx[i2], $$.ctx[i2] = value2)) {
         if (!$$.skip_bound && $$.bound[i2])
-          $$.bound[i2](value);
+          $$.bound[i2](value2);
         if (ready)
           make_dirty(component, i2);
       }
@@ -5108,7 +6279,7 @@ var meta_bind_publish = (() => {
       }
       if (options.intro)
         transition_in(component.$$.fragment);
-      mount_component(component, options.target, options.anchor, options.customElement);
+      mount_component(component, options.target, options.anchor);
       end_hydrating();
       flush();
     }
@@ -5117,49 +6288,187 @@ var meta_bind_publish = (() => {
   var SvelteElement;
   if (typeof HTMLElement === "function") {
     SvelteElement = class extends HTMLElement {
-      constructor() {
+      constructor($$componentCtor, $$slots, use_shadow_dom) {
         super();
-        this.attachShadow({ mode: "open" });
+        __publicField(this, "$$ctor");
+        __publicField(this, "$$s");
+        __publicField(this, "$$c");
+        __publicField(this, "$$cn", false);
+        __publicField(this, "$$d", {});
+        __publicField(this, "$$r", false);
+        __publicField(this, "$$p_d", {});
+        __publicField(this, "$$l", {});
+        __publicField(this, "$$l_u", /* @__PURE__ */ new Map());
+        this.$$ctor = $$componentCtor;
+        this.$$s = $$slots;
+        if (use_shadow_dom) {
+          this.attachShadow({ mode: "open" });
+        }
+      }
+      addEventListener(type, listener, options) {
+        this.$$l[type] = this.$$l[type] || [];
+        this.$$l[type].push(listener);
+        if (this.$$c) {
+          const unsub = this.$$c.$on(type, listener);
+          this.$$l_u.set(listener, unsub);
+        }
+        super.addEventListener(type, listener, options);
+      }
+      removeEventListener(type, listener, options) {
+        super.removeEventListener(type, listener, options);
+        if (this.$$c) {
+          const unsub = this.$$l_u.get(listener);
+          if (unsub) {
+            unsub();
+            this.$$l_u.delete(listener);
+          }
+        }
       }
       connectedCallback() {
-        const { on_mount } = this.$$;
-        this.$$.on_disconnect = on_mount.map(run).filter(is_function);
-        for (const key in this.$$.slotted) {
-          this.appendChild(this.$$.slotted[key]);
-        }
+        return __async(this, null, function* () {
+          this.$$cn = true;
+          if (!this.$$c) {
+            let create_slot = function(name309) {
+              return () => {
+                let node;
+                const obj = {
+                  c: function create() {
+                    node = element("slot");
+                    if (name309 !== "default") {
+                      attr(node, "name", name309);
+                    }
+                  },
+                  m: function mount(target, anchor) {
+                    insert(target, node, anchor);
+                  },
+                  d: function destroy(detaching) {
+                    if (detaching) {
+                      detach(node);
+                    }
+                  }
+                };
+                return obj;
+              };
+            };
+            yield Promise.resolve();
+            if (!this.$$cn) {
+              return;
+            }
+            const $$slots = {};
+            const existing_slots = get_custom_elements_slots(this);
+            for (const name309 of this.$$s) {
+              if (name309 in existing_slots) {
+                $$slots[name309] = [create_slot(name309)];
+              }
+            }
+            for (const attribute of this.attributes) {
+              const name309 = this.$$g_p(attribute.name);
+              if (!(name309 in this.$$d)) {
+                this.$$d[name309] = get_custom_element_value(name309, attribute.value, this.$$p_d, "toProp");
+              }
+            }
+            this.$$c = new this.$$ctor({
+              target: this.shadowRoot || this,
+              props: __spreadProps(__spreadValues({}, this.$$d), {
+                $$slots,
+                $$scope: {
+                  ctx: []
+                }
+              })
+            });
+            const reflect_attributes = () => {
+              this.$$r = true;
+              for (const key in this.$$p_d) {
+                this.$$d[key] = this.$$c.$$.ctx[this.$$c.$$.props[key]];
+                if (this.$$p_d[key].reflect) {
+                  const attribute_value = get_custom_element_value(
+                    key,
+                    this.$$d[key],
+                    this.$$p_d,
+                    "toAttribute"
+                  );
+                  if (attribute_value == null) {
+                    this.removeAttribute(this.$$p_d[key].attribute || key);
+                  } else {
+                    this.setAttribute(this.$$p_d[key].attribute || key, attribute_value);
+                  }
+                }
+              }
+              this.$$r = false;
+            };
+            this.$$c.$$.after_update.push(reflect_attributes);
+            reflect_attributes();
+            for (const type in this.$$l) {
+              for (const listener of this.$$l[type]) {
+                const unsub = this.$$c.$on(type, listener);
+                this.$$l_u.set(listener, unsub);
+              }
+            }
+            this.$$l = {};
+          }
+        });
       }
       attributeChangedCallback(attr2, _oldValue, newValue) {
-        this[attr2] = newValue;
+        var _a;
+        if (this.$$r)
+          return;
+        attr2 = this.$$g_p(attr2);
+        this.$$d[attr2] = get_custom_element_value(attr2, newValue, this.$$p_d, "toProp");
+        (_a = this.$$c) == null ? void 0 : _a.$set({ [attr2]: this.$$d[attr2] });
       }
       disconnectedCallback() {
-        run_all(this.$$.on_disconnect);
+        this.$$cn = false;
+        Promise.resolve().then(() => {
+          if (!this.$$cn) {
+            this.$$c.$destroy();
+            this.$$c = void 0;
+          }
+        });
       }
-      $destroy() {
-        destroy_component(this, 1);
-        this.$destroy = noop;
-      }
-      $on(type, callback) {
-        if (!is_function(callback)) {
-          return noop;
-        }
-        const callbacks = this.$$.callbacks[type] || (this.$$.callbacks[type] = []);
-        callbacks.push(callback);
-        return () => {
-          const index2 = callbacks.indexOf(callback);
-          if (index2 !== -1)
-            callbacks.splice(index2, 1);
-        };
-      }
-      $set($$props) {
-        if (this.$$set && !is_empty($$props)) {
-          this.$$.skip_bound = true;
-          this.$$set($$props);
-          this.$$.skip_bound = false;
-        }
+      $$g_p(attribute_name) {
+        return Object.keys(this.$$p_d).find(
+          (key) => this.$$p_d[key].attribute === attribute_name || !this.$$p_d[key].attribute && key.toLowerCase() === attribute_name
+        ) || attribute_name;
       }
     };
   }
+  function get_custom_element_value(prop, value2, props_definition, transform) {
+    var _a;
+    const type = (_a = props_definition[prop]) == null ? void 0 : _a.type;
+    value2 = type === "Boolean" && typeof value2 !== "boolean" ? value2 != null : value2;
+    if (!transform || !props_definition[prop]) {
+      return value2;
+    } else if (transform === "toAttribute") {
+      switch (type) {
+        case "Object":
+        case "Array":
+          return value2 == null ? null : JSON.stringify(value2);
+        case "Boolean":
+          return value2 ? "" : null;
+        case "Number":
+          return value2 == null ? null : value2;
+        default:
+          return value2;
+      }
+    } else {
+      switch (type) {
+        case "Object":
+        case "Array":
+          return value2 && JSON.parse(value2);
+        case "Boolean":
+          return value2;
+        case "Number":
+          return value2 != null ? +value2 : value2;
+        default:
+          return value2;
+      }
+    }
+  }
   var SvelteComponent = class {
+    constructor() {
+      __publicField(this, "$$");
+      __publicField(this, "$$set");
+    }
     $destroy() {
       destroy_component(this, 1);
       this.$destroy = noop;
@@ -5176,14 +6485,21 @@ var meta_bind_publish = (() => {
           callbacks.splice(index2, 1);
       };
     }
-    $set($$props) {
-      if (this.$$set && !is_empty($$props)) {
+    $set(props) {
+      if (this.$$set && !is_empty(props)) {
         this.$$.skip_bound = true;
-        this.$$set($$props);
+        this.$$set(props);
         this.$$.skip_bound = false;
       }
     }
   };
+
+  // node_modules/svelte/src/shared/version.js
+  var PUBLIC_VERSION = "4";
+
+  // node_modules/svelte/src/runtime/internal/disclose-version/index.js
+  if (typeof window !== "undefined")
+    (window.__svelte || (window.__svelte = { v: /* @__PURE__ */ new Set() })).v.add(PUBLIC_VERSION);
 
   // src/utils/errors/ErrorCollectionComponent.svelte
   function get_each_context(ctx, list, i2) {
@@ -5196,11 +6512,38 @@ var meta_bind_publish = (() => {
     child_ctx[5] = list[i2];
     return child_ctx;
   }
+  function create_if_block_2(ctx) {
+    let p;
+    let code;
+    let t;
+    return {
+      c() {
+        p = element("p");
+        code = element("code");
+        t = text(ctx[1]);
+        attr(code, "class", "language-none meta-bind-none");
+      },
+      m(target, anchor) {
+        insert(target, p, anchor);
+        append(p, code);
+        append(code, t);
+      },
+      p(ctx2, dirty) {
+        if (dirty & 2)
+          set_data(t, ctx2[1]);
+      },
+      d(detaching) {
+        if (detaching) {
+          detach(p);
+        }
+      }
+    };
+  }
   function create_if_block_1(ctx) {
     let h6;
     let t1;
     let each_1_anchor;
-    let each_value_1 = ctx[0].getWarnings();
+    let each_value_1 = ensure_array_like(ctx[0].getWarnings());
     let each_blocks = [];
     for (let i2 = 0; i2 < each_value_1.length; i2 += 1) {
       each_blocks[i2] = create_each_block_1(get_each_context_1(ctx, each_value_1, i2));
@@ -5227,7 +6570,7 @@ var meta_bind_publish = (() => {
       },
       p(ctx2, dirty) {
         if (dirty & 1) {
-          each_value_1 = ctx2[0].getWarnings();
+          each_value_1 = ensure_array_like(ctx2[0].getWarnings());
           let i2;
           for (i2 = 0; i2 < each_value_1.length; i2 += 1) {
             const child_ctx = get_each_context_1(ctx2, each_value_1, i2);
@@ -5246,40 +6589,60 @@ var meta_bind_publish = (() => {
         }
       },
       d(detaching) {
-        if (detaching)
+        if (detaching) {
           detach(h6);
-        if (detaching)
           detach(t1);
-        destroy_each(each_blocks, detaching);
-        if (detaching)
           detach(each_1_anchor);
+        }
+        destroy_each(each_blocks, detaching);
       }
     };
   }
   function create_each_block_1(ctx) {
-    let p;
-    let code;
-    let t_value = ctx[5].message + "";
-    let t;
+    let pre0;
+    let code0;
+    let t0_value = ctx[5].message + "";
+    let t0;
+    let t1;
+    let pre1;
+    let code1;
+    let t2_value = ctx[5].stack + "";
+    let t2;
     return {
       c() {
-        p = element("p");
-        code = element("code");
-        t = text(t_value);
-        attr(code, "class", "language-none meta-bind-none");
+        pre0 = element("pre");
+        code0 = element("code");
+        t0 = text(t0_value);
+        t1 = space();
+        pre1 = element("pre");
+        code1 = element("code");
+        t2 = text(t2_value);
+        attr(code0, "class", "language-none meta-bind-none");
+        attr(pre0, "class", "meta-bind-pre");
+        attr(code1, "class", "language-none meta-bind-none");
+        attr(pre1, "class", "meta-bind-pre");
       },
       m(target, anchor) {
-        insert(target, p, anchor);
-        append(p, code);
-        append(code, t);
+        insert(target, pre0, anchor);
+        append(pre0, code0);
+        append(code0, t0);
+        insert(target, t1, anchor);
+        insert(target, pre1, anchor);
+        append(pre1, code1);
+        append(code1, t2);
       },
       p(ctx2, dirty) {
-        if (dirty & 1 && t_value !== (t_value = ctx2[5].message + ""))
-          set_data(t, t_value);
+        if (dirty & 1 && t0_value !== (t0_value = ctx2[5].message + ""))
+          set_data(t0, t0_value);
+        if (dirty & 1 && t2_value !== (t2_value = ctx2[5].stack + ""))
+          set_data(t2, t2_value);
       },
       d(detaching) {
-        if (detaching)
-          detach(p);
+        if (detaching) {
+          detach(pre0);
+          detach(t1);
+          detach(pre1);
+        }
       }
     };
   }
@@ -5287,7 +6650,7 @@ var meta_bind_publish = (() => {
     let h6;
     let t1;
     let each_1_anchor;
-    let each_value = ctx[0].getErrors();
+    let each_value = ensure_array_like(ctx[0].getErrors());
     let each_blocks = [];
     for (let i2 = 0; i2 < each_value.length; i2 += 1) {
       each_blocks[i2] = create_each_block(get_each_context(ctx, each_value, i2));
@@ -5314,7 +6677,7 @@ var meta_bind_publish = (() => {
       },
       p(ctx2, dirty) {
         if (dirty & 1) {
-          each_value = ctx2[0].getErrors();
+          each_value = ensure_array_like(ctx2[0].getErrors());
           let i2;
           for (i2 = 0; i2 < each_value.length; i2 += 1) {
             const child_ctx = get_each_context(ctx2, each_value, i2);
@@ -5333,127 +6696,151 @@ var meta_bind_publish = (() => {
         }
       },
       d(detaching) {
-        if (detaching)
+        if (detaching) {
           detach(h6);
-        if (detaching)
           detach(t1);
-        destroy_each(each_blocks, detaching);
-        if (detaching)
           detach(each_1_anchor);
+        }
+        destroy_each(each_blocks, detaching);
       }
     };
   }
   function create_each_block(ctx) {
-    let p;
-    let code;
-    let t_value = ctx[2].message + "";
-    let t;
+    let pre0;
+    let code0;
+    let t0_value = ctx[2].message + "";
+    let t0;
+    let t1;
+    let pre1;
+    let code1;
+    let t2_value = ctx[2].stack + "";
+    let t2;
     return {
       c() {
-        p = element("p");
-        code = element("code");
-        t = text(t_value);
-        attr(code, "class", "language-none meta-bind-none");
+        pre0 = element("pre");
+        code0 = element("code");
+        t0 = text(t0_value);
+        t1 = space();
+        pre1 = element("pre");
+        code1 = element("code");
+        t2 = text(t2_value);
+        attr(code0, "class", "language-none meta-bind-none");
+        attr(pre0, "class", "meta-bind-pre");
+        attr(code1, "class", "language-none meta-bind-none");
+        attr(pre1, "class", "meta-bind-pre");
       },
       m(target, anchor) {
-        insert(target, p, anchor);
-        append(p, code);
-        append(code, t);
+        insert(target, pre0, anchor);
+        append(pre0, code0);
+        append(code0, t0);
+        insert(target, t1, anchor);
+        insert(target, pre1, anchor);
+        append(pre1, code1);
+        append(code1, t2);
       },
       p(ctx2, dirty) {
-        if (dirty & 1 && t_value !== (t_value = ctx2[2].message + ""))
-          set_data(t, t_value);
+        if (dirty & 1 && t0_value !== (t0_value = ctx2[2].message + ""))
+          set_data(t0, t0_value);
+        if (dirty & 1 && t2_value !== (t2_value = ctx2[2].stack + ""))
+          set_data(t2, t2_value);
       },
       d(detaching) {
-        if (detaching)
-          detach(p);
+        if (detaching) {
+          detach(pre0);
+          detach(t1);
+          detach(pre1);
+        }
       }
     };
   }
   function create_fragment(ctx) {
-    let p;
-    let code;
     let t0;
-    let t1;
     let show_if_1 = ctx[0].hasWarnings();
-    let t2;
+    let t1;
     let show_if = ctx[0].hasErrors();
-    let if_block1_anchor;
-    let if_block0 = show_if_1 && create_if_block_1(ctx);
-    let if_block1 = show_if && create_if_block(ctx);
+    let if_block2_anchor;
+    let if_block0 = ctx[1] && create_if_block_2(ctx);
+    let if_block1 = show_if_1 && create_if_block_1(ctx);
+    let if_block2 = show_if && create_if_block(ctx);
     return {
       c() {
-        p = element("p");
-        code = element("code");
-        t0 = text(ctx[1]);
-        t1 = space();
         if (if_block0)
           if_block0.c();
-        t2 = space();
+        t0 = space();
         if (if_block1)
           if_block1.c();
-        if_block1_anchor = empty();
-        attr(code, "class", "language-none meta-bind-none");
+        t1 = space();
+        if (if_block2)
+          if_block2.c();
+        if_block2_anchor = empty();
       },
       m(target, anchor) {
-        insert(target, p, anchor);
-        append(p, code);
-        append(code, t0);
-        insert(target, t1, anchor);
         if (if_block0)
           if_block0.m(target, anchor);
-        insert(target, t2, anchor);
+        insert(target, t0, anchor);
         if (if_block1)
           if_block1.m(target, anchor);
-        insert(target, if_block1_anchor, anchor);
+        insert(target, t1, anchor);
+        if (if_block2)
+          if_block2.m(target, anchor);
+        insert(target, if_block2_anchor, anchor);
       },
       p(ctx2, [dirty]) {
-        if (dirty & 2)
-          set_data(t0, ctx2[1]);
-        if (dirty & 1)
-          show_if_1 = ctx2[0].hasWarnings();
-        if (show_if_1) {
+        if (ctx2[1]) {
           if (if_block0) {
             if_block0.p(ctx2, dirty);
           } else {
-            if_block0 = create_if_block_1(ctx2);
+            if_block0 = create_if_block_2(ctx2);
             if_block0.c();
-            if_block0.m(t2.parentNode, t2);
+            if_block0.m(t0.parentNode, t0);
           }
         } else if (if_block0) {
           if_block0.d(1);
           if_block0 = null;
         }
         if (dirty & 1)
-          show_if = ctx2[0].hasErrors();
-        if (show_if) {
+          show_if_1 = ctx2[0].hasWarnings();
+        if (show_if_1) {
           if (if_block1) {
             if_block1.p(ctx2, dirty);
           } else {
-            if_block1 = create_if_block(ctx2);
+            if_block1 = create_if_block_1(ctx2);
             if_block1.c();
-            if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
+            if_block1.m(t1.parentNode, t1);
           }
         } else if (if_block1) {
           if_block1.d(1);
           if_block1 = null;
         }
+        if (dirty & 1)
+          show_if = ctx2[0].hasErrors();
+        if (show_if) {
+          if (if_block2) {
+            if_block2.p(ctx2, dirty);
+          } else {
+            if_block2 = create_if_block(ctx2);
+            if_block2.c();
+            if_block2.m(if_block2_anchor.parentNode, if_block2_anchor);
+          }
+        } else if (if_block2) {
+          if_block2.d(1);
+          if_block2 = null;
+        }
       },
       i: noop,
       o: noop,
       d(detaching) {
-        if (detaching)
-          detach(p);
-        if (detaching)
+        if (detaching) {
+          detach(t0);
           detach(t1);
+          detach(if_block2_anchor);
+        }
         if (if_block0)
           if_block0.d(detaching);
-        if (detaching)
-          detach(t2);
         if (if_block1)
           if_block1.d(detaching);
-        if (detaching)
-          detach(if_block1_anchor);
+        if (if_block2)
+          if_block2.d(detaching);
       }
     };
   }
@@ -5511,8 +6898,9 @@ var meta_bind_publish = (() => {
         append(svg, path1);
       },
       d(detaching) {
-        if (detaching)
+        if (detaching) {
           detach(svg);
+        }
       }
     };
   }
@@ -5554,8 +6942,9 @@ var meta_bind_publish = (() => {
         append(svg, line1);
       },
       d(detaching) {
-        if (detaching)
+        if (detaching) {
           detach(svg);
+        }
       }
     };
   }
@@ -5599,8 +6988,9 @@ var meta_bind_publish = (() => {
         append(svg, line1);
       },
       d(detaching) {
-        if (detaching)
+        if (detaching) {
           detach(svg);
+        }
       }
     };
   }
@@ -5621,12 +7011,13 @@ var meta_bind_publish = (() => {
           set_data(t, ctx2[2]);
       },
       d(detaching) {
-        if (detaching)
+        if (detaching) {
           detach(span);
+        }
       }
     };
   }
-  function create_if_block_2(ctx) {
+  function create_if_block_22(ctx) {
     let div2;
     let span;
     let t;
@@ -5647,8 +7038,9 @@ var meta_bind_publish = (() => {
           set_data(t, ctx2[2]);
       },
       d(detaching) {
-        if (detaching)
+        if (detaching) {
           detach(div2);
+        }
       }
     };
   }
@@ -5673,8 +7065,9 @@ var meta_bind_publish = (() => {
           set_data(t, ctx2[2]);
       },
       d(detaching) {
-        if (detaching)
+        if (detaching) {
           detach(div2);
+        }
       }
     };
   }
@@ -5725,8 +7118,9 @@ var meta_bind_publish = (() => {
         current = false;
       },
       d(detaching) {
-        if (detaching)
+        if (detaching) {
           detach(div2);
+        }
         destroy_component(errorcollectioncomponent);
       }
     };
@@ -5762,7 +7156,7 @@ var meta_bind_publish = (() => {
       if (ctx2[3] === "INPUT")
         return create_if_block_12;
       if (ctx2[3] === "VIEW")
-        return create_if_block_2;
+        return create_if_block_22;
       return create_else_block;
     }
     let current_block_type_1 = select_block_type_1(ctx, -1);
@@ -5845,18 +7239,16 @@ var meta_bind_publish = (() => {
         current = false;
       },
       d(detaching) {
-        if (detaching)
+        if (detaching) {
           detach(div2);
-        if_block0.d();
-        if (detaching)
           detach(t0);
-        if_block1.d(detaching);
-        if (detaching)
           detach(t1);
+          detach(if_block2_anchor);
+        }
+        if_block0.d();
+        if_block1.d(detaching);
         if (if_block2)
           if_block2.d(detaching);
-        if (detaching)
-          detach(if_block2_anchor);
         mounted = false;
         dispose();
       }
@@ -5865,7 +7257,7 @@ var meta_bind_publish = (() => {
   function instance2($$self, $$props, $$invalidate) {
     let { errorCollection } = $$props;
     let { declaration } = $$props;
-    let { value } = $$props;
+    let { value: value2 } = $$props;
     let { fieldType } = $$props;
     let open = false;
     const click_handler = () => $$invalidate(4, open = !open);
@@ -5875,11 +7267,11 @@ var meta_bind_publish = (() => {
       if ("declaration" in $$props2)
         $$invalidate(1, declaration = $$props2.declaration);
       if ("value" in $$props2)
-        $$invalidate(2, value = $$props2.value);
+        $$invalidate(2, value2 = $$props2.value);
       if ("fieldType" in $$props2)
         $$invalidate(3, fieldType = $$props2.fieldType);
     };
-    return [errorCollection, declaration, value, fieldType, open, click_handler];
+    return [errorCollection, declaration, value2, fieldType, open, click_handler];
   }
   var PublishFieldComponent = class extends SvelteComponent {
     constructor(options) {
@@ -5894,55 +7286,95 @@ var meta_bind_publish = (() => {
   };
   var PublishFieldComponent_default = PublishFieldComponent;
 
+  // src/publish/PublishUtils.ts
+  function getPublishDefaultValue(declaration) {
+    var _a, _b;
+    const placeholderString = (_b = (_a = declaration.argumentContainer.get("placeholder" /* PLACEHOLDER */)) == null ? void 0 : _a.value) != null ? _b : "placeholder";
+    if (declaration.inputFieldType === "toggle" /* TOGGLE */) {
+      const offArgument = declaration.argumentContainer.get("offValue" /* OFF_VALUE */);
+      return offArgument ? offArgument.value : false;
+    } else if (declaration.inputFieldType === "slider" /* SLIDER */) {
+      const minArgument = declaration.argumentContainer.get("minValue" /* MIN_VALUE */);
+      return minArgument ? minArgument.value : 0;
+    } else if (declaration.inputFieldType === "text" /* TEXT */) {
+      return placeholderString;
+    } else if (declaration.inputFieldType === "text_area" /* TEXT_AREA_DEPRECATED */ || declaration.inputFieldType === "textArea" /* TEXT_AREA */) {
+      return placeholderString;
+    } else if (declaration.inputFieldType === "select" /* SELECT */) {
+      const firstOptionArgument = declaration.argumentContainer.get("option" /* OPTION */);
+      return firstOptionArgument ? firstOptionArgument.value : placeholderString;
+    } else if (declaration.inputFieldType === "multi_select" /* MULTI_SELECT_DEPRECATED */ || declaration.inputFieldType === "multiSelect" /* MULTI_SELECT */) {
+      const firstOptionArgument = declaration.argumentContainer.get("option" /* OPTION */);
+      return firstOptionArgument ? firstOptionArgument.value : placeholderString;
+    } else if (declaration.inputFieldType === "date" /* DATE */) {
+      return "1970-01-01";
+    } else if (declaration.inputFieldType === "time" /* TIME */) {
+      return "00:00";
+    } else if (declaration.inputFieldType === "date_picker" /* DATE_PICKER_DEPRECATED */ || declaration.inputFieldType === "datePicker" /* DATE_PICKER */) {
+      return "1970-01-01";
+    } else if (declaration.inputFieldType === "number" /* NUMBER */) {
+      return 0;
+    } else if (declaration.inputFieldType === "suggester" /* SUGGESTER */) {
+      const firstOptionArgument = declaration.argumentContainer.get("option" /* OPTION */);
+      return firstOptionArgument ? firstOptionArgument.value : placeholderString;
+    } else if (declaration.inputFieldType === "editor" /* EDITOR */) {
+      return placeholderString;
+    } else if (declaration.inputFieldType === "imageSuggester" /* IMAGE_SUGGESTER */) {
+      return placeholderString;
+    } else if (declaration.inputFieldType === "progressBar" /* PROGRESS_BAR */) {
+      const minArgument = declaration.argumentContainer.get("minValue" /* MIN_VALUE */);
+      return minArgument ? minArgument.value : 0;
+    } else if (declaration.inputFieldType === "inlineSelect" /* INLINE_SELECT */) {
+      const firstOptionArgument = declaration.argumentContainer.get("option" /* OPTION */);
+      return firstOptionArgument ? firstOptionArgument.value : placeholderString;
+    } else if (declaration.inputFieldType === "list" /* LIST */) {
+      return placeholderString;
+    }
+    return placeholderString;
+  }
+
   // src/publish/PublishInputFieldMDRC.ts
   var PublishInputFieldMDRC = class extends import_publish.MarkdownRenderChild {
-    constructor(containerEl, api, declaration, filePath, metadata, uuid) {
+    constructor(containerEl, api, declaration, filePath2, metadata, uuid) {
       super(containerEl);
       this.api = api;
       this.declaration = declaration;
-      this.filePath = filePath;
+      this.filePath = filePath2;
       this.uuid = uuid;
       this.metadata = metadata;
       this.errorCollection = new ErrorCollection(`input field ${uuid}`);
       this.errorCollection.merge(declaration.errorCollection);
-      if (!this.errorCollection.hasErrors()) {
-        try {
-          if (this.declaration.isBound) {
-            this.bindTargetDeclaration = this.api.bindTargetParser.parseBindTarget(this.declaration.bindTarget, this.filePath);
-          }
-        } catch (e3) {
-          this.errorCollection.add(e3);
-        }
-      }
       this.load();
     }
     getValue() {
-      if (!this.bindTargetDeclaration) {
+      if (!this.declaration.bindTarget) {
         this.errorCollection.add(new MetaBindBindTargetError("WARNING" /* WARNING */, "populated with default data", "input field not bound"));
-        return this.api.inputFieldParser.getDefaultValue(this.declaration);
+        return getPublishDefaultValue(this.declaration);
       }
-      if (this.bindTargetDeclaration.filePath !== this.filePath) {
-        this.errorCollection.add(new MetaBindBindTargetError("WARNING" /* WARNING */, "populated with default data", "can not load metadata of another file in obsidian publish"));
-        return this.api.inputFieldParser.getDefaultValue(this.declaration);
+      if (this.declaration.bindTarget.filePath !== this.filePath) {
+        this.errorCollection.add(
+          new MetaBindBindTargetError("WARNING" /* WARNING */, "populated with default data", "can not load metadata of another file in obsidian publish")
+        );
+        return getPublishDefaultValue(this.declaration);
       }
-      const value = (0, import_ObjectTraversalUtils3.traverseObjectByPath)(this.bindTargetDeclaration.metadataPath, this.metadata);
-      if (!value) {
+      const value2 = (0, import_ObjectTraversalUtils2.traverseObjectByPath)(this.declaration.bindTarget.metadataPath, this.metadata);
+      if (!value2) {
         this.errorCollection.add(new MetaBindBindTargetError("WARNING" /* WARNING */, "populated with default data", "value in metadata is undefined"));
-        return this.api.inputFieldParser.getDefaultValue(this.declaration);
+        return getPublishDefaultValue(this.declaration);
       }
-      return value;
+      return value2;
     }
     onload() {
       console.log("meta-bind | InputFieldMarkdownRenderChild >> load", this);
       this.containerEl.addClass("meta-bind-plugin-input");
       this.containerEl.empty();
-      const value = this.getValue().toString();
+      const value2 = this.getValue().toString();
       new PublishFieldComponent_default({
         target: this.containerEl,
         props: {
           errorCollection: this.errorCollection,
           declaration: this.declaration.fullDeclaration,
-          value,
+          value: value2,
           fieldType: "INPUT"
         }
       });
@@ -6106,7 +7538,7 @@ var meta_bind_publish = (() => {
   function isChain(x) {
     return x && x.constructor.prototype.isChain === true || false;
   }
-  function typeOf(x) {
+  function typeOf2(x) {
     var t = typeof x;
     if (t === "object") {
       if (x === null)
@@ -6130,8 +7562,8 @@ var meta_bind_publish = (() => {
       return x.clone();
     }
     if (Array.isArray(x)) {
-      return x.map(function(value) {
-        return clone(value);
+      return x.map(function(value2) {
+        return clone(value2);
       });
     }
     if (x instanceof Date)
@@ -6143,17 +7575,17 @@ var meta_bind_publish = (() => {
     return mapObject(x, clone);
   }
   function mapObject(object, callback) {
-    var clone4 = {};
+    var clone5 = {};
     for (var key in object) {
-      if (hasOwnProperty2(object, key)) {
-        clone4[key] = callback(object[key]);
+      if (hasOwnProperty(object, key)) {
+        clone5[key] = callback(object[key]);
       }
     }
-    return clone4;
+    return clone5;
   }
   function extend(a, b) {
     for (var prop in b) {
-      if (hasOwnProperty2(b, prop)) {
+      if (hasOwnProperty(b, prop)) {
         a[prop] = b[prop];
       }
     }
@@ -6206,24 +7638,24 @@ var meta_bind_publish = (() => {
         }
         return _value;
       },
-      set: function set(value) {
-        _value = value;
+      set: function set(value2) {
+        _value = value2;
         _uninitialized = false;
       },
       configurable: true,
       enumerable: true
     });
   }
-  function hasOwnProperty2(object, property) {
+  function hasOwnProperty(object, property) {
     return object && Object.hasOwnProperty.call(object, property);
   }
   function pickShallow(object, properties2) {
     var copy = {};
     for (var i2 = 0; i2 < properties2.length; i2++) {
       var key = properties2[i2];
-      var value = object[key];
-      if (value !== void 0) {
-        copy[key] = value;
+      var value2 = object[key];
+      if (value2 !== void 0) {
+        copy[key] = value2;
       }
     }
     return copy;
@@ -6249,11 +7681,11 @@ var meta_bind_publish = (() => {
   var import_typed_function = __toESM(require_typed_function(), 1);
 
   // node_modules/mathjs/lib/esm/utils/number.js
-  function isInteger(value) {
-    if (typeof value === "boolean") {
+  function isInteger(value2) {
+    if (typeof value2 === "boolean") {
       return true;
     }
-    return isFinite(value) ? value === Math.round(value) : false;
+    return isFinite(value2) ? value2 === Math.round(value2) : false;
   }
   var sign = Math.sign || function(x) {
     if (x > 0) {
@@ -6326,15 +7758,15 @@ var meta_bind_publish = (() => {
     }
     return "".concat(sign4).concat(prefix).concat(n.toString(base)).concat(suffix);
   }
-  function format(value, options) {
+  function format(value2, options) {
     if (typeof options === "function") {
-      return options(value);
+      return options(value2);
     }
-    if (value === Infinity) {
+    if (value2 === Infinity) {
       return "Infinity";
-    } else if (value === -Infinity) {
+    } else if (value2 === -Infinity) {
       return "-Infinity";
-    } else if (isNaN(value)) {
+    } else if (isNaN(value2)) {
       return "NaN";
     }
     var notation = "auto";
@@ -6358,19 +7790,19 @@ var meta_bind_publish = (() => {
     }
     switch (notation) {
       case "fixed":
-        return toFixed(value, precision);
+        return toFixed(value2, precision);
       case "exponential":
-        return toExponential(value, precision);
+        return toExponential(value2, precision);
       case "engineering":
-        return toEngineering(value, precision);
+        return toEngineering(value2, precision);
       case "bin":
-        return formatNumberToBase(value, 2, wordSize);
+        return formatNumberToBase(value2, 2, wordSize);
       case "oct":
-        return formatNumberToBase(value, 8, wordSize);
+        return formatNumberToBase(value2, 8, wordSize);
       case "hex":
-        return formatNumberToBase(value, 16, wordSize);
+        return formatNumberToBase(value2, 16, wordSize);
       case "auto":
-        return toPrecision(value, precision, options && options).replace(/((\.\d*?)(0+))($|e)/, function() {
+        return toPrecision(value2, precision, options && options).replace(/((\.\d*?)(0+))($|e)/, function() {
           var digits2 = arguments[2];
           var e3 = arguments[4];
           return digits2 !== "." ? digits2 + e3 : e3;
@@ -6379,10 +7811,10 @@ var meta_bind_publish = (() => {
         throw new Error('Unknown notation "' + notation + '". Choose "auto", "exponential", "fixed", "bin", "oct", or "hex.');
     }
   }
-  function splitNumber(value) {
-    var match = String(value).toLowerCase().match(/^(-?)(\d+\.?\d*)(e([+-]?\d+))?$/);
+  function splitNumber(value2) {
+    var match = String(value2).toLowerCase().match(/^(-?)(\d+\.?\d*)(e([+-]?\d+))?$/);
     if (!match) {
-      throw new SyntaxError("Invalid number " + value);
+      throw new SyntaxError("Invalid number " + value2);
     }
     var sign4 = match[1];
     var digits2 = match[2];
@@ -6405,11 +7837,11 @@ var meta_bind_publish = (() => {
       exponent
     };
   }
-  function toEngineering(value, precision) {
-    if (isNaN(value) || !isFinite(value)) {
-      return String(value);
+  function toEngineering(value2, precision) {
+    if (isNaN(value2) || !isFinite(value2)) {
+      return String(value2);
     }
-    var split = splitNumber(value);
+    var split = splitNumber(value2);
     var rounded = roundDigits(split, precision);
     var e3 = rounded.exponent;
     var c = rounded.coefficients;
@@ -6432,14 +7864,14 @@ var meta_bind_publish = (() => {
     }
     var decimals = c.slice(decimalIdx).join("");
     var decimalVal = isNumber(precision) && decimals.length || decimals.match(/[1-9]/) ? "." + decimals : "";
-    var str = c.slice(0, decimalIdx).join("") + decimalVal + "e" + (e3 >= 0 ? "+" : "") + newExp.toString();
-    return rounded.sign + str;
+    var str2 = c.slice(0, decimalIdx).join("") + decimalVal + "e" + (e3 >= 0 ? "+" : "") + newExp.toString();
+    return rounded.sign + str2;
   }
-  function toFixed(value, precision) {
-    if (isNaN(value) || !isFinite(value)) {
-      return String(value);
+  function toFixed(value2, precision) {
+    if (isNaN(value2) || !isFinite(value2)) {
+      return String(value2);
     }
-    var splitValue = splitNumber(value);
+    var splitValue = splitNumber(value2);
     var rounded = typeof precision === "number" ? roundDigits(splitValue, splitValue.exponent + 1 + precision) : splitValue;
     var c = rounded.coefficients;
     var p = rounded.exponent + 1;
@@ -6456,11 +7888,11 @@ var meta_bind_publish = (() => {
     }
     return rounded.sign + c.join("");
   }
-  function toExponential(value, precision) {
-    if (isNaN(value) || !isFinite(value)) {
-      return String(value);
+  function toExponential(value2, precision) {
+    if (isNaN(value2) || !isFinite(value2)) {
+      return String(value2);
     }
-    var split = splitNumber(value);
+    var split = splitNumber(value2);
     var rounded = precision ? roundDigits(split, precision) : split;
     var c = rounded.coefficients;
     var e3 = rounded.exponent;
@@ -6470,16 +7902,16 @@ var meta_bind_publish = (() => {
     var first = c.shift();
     return rounded.sign + first + (c.length > 0 ? "." + c.join("") : "") + "e" + (e3 >= 0 ? "+" : "") + e3;
   }
-  function toPrecision(value, precision, options) {
-    if (isNaN(value) || !isFinite(value)) {
-      return String(value);
+  function toPrecision(value2, precision, options) {
+    if (isNaN(value2) || !isFinite(value2)) {
+      return String(value2);
     }
     var lowerExp = options && options.lowerExp !== void 0 ? options.lowerExp : -3;
     var upperExp = options && options.upperExp !== void 0 ? options.upperExp : 5;
-    var split = splitNumber(value);
+    var split = splitNumber(value2);
     var rounded = precision ? roundDigits(split, precision) : split;
     if (rounded.exponent < lowerExp || rounded.exponent >= upperExp) {
-      return toExponential(value, precision);
+      return toExponential(value2, precision);
     } else {
       var c = rounded.coefficients;
       var e3 = rounded.exponent;
@@ -6533,8 +7965,8 @@ var meta_bind_publish = (() => {
     }
     return arr;
   }
-  function digits(value) {
-    return value.toExponential().replace(/e.*$/, "").replace(/^0\.?0*|\./, "").length;
+  function digits(value2) {
+    return value2.toExponential().replace(/e.*$/, "").replace(/^0\.?0*|\./, "").length;
   }
   var DBL_EPSILON = Number.EPSILON || 2220446049250313e-31;
   function nearlyEqual(x, y, epsilon) {
@@ -6616,12 +8048,12 @@ var meta_bind_publish = (() => {
         throw new Error("Base ".concat(base, " not supported "));
     }
   }
-  function format2(value, options) {
+  function format2(value2, options) {
     if (typeof options === "function") {
-      return options(value);
+      return options(value2);
     }
-    if (!value.isFinite()) {
-      return value.isNaN() ? "NaN" : value.gt(0) ? "Infinity" : "-Infinity";
+    if (!value2.isFinite()) {
+      return value2.isNaN() ? "NaN" : value2.gt(0) ? "Infinity" : "-Infinity";
     }
     var notation = "auto";
     var precision;
@@ -6632,7 +8064,7 @@ var meta_bind_publish = (() => {
       }
       if (typeof options === "number") {
         precision = options;
-      } else if (options.precision) {
+      } else if (options.precision !== void 0) {
         precision = options.precision;
       }
       if (options.wordSize) {
@@ -6644,31 +8076,31 @@ var meta_bind_publish = (() => {
     }
     switch (notation) {
       case "fixed":
-        return toFixed2(value, precision);
+        return toFixed2(value2, precision);
       case "exponential":
-        return toExponential2(value, precision);
+        return toExponential2(value2, precision);
       case "engineering":
-        return toEngineering2(value, precision);
+        return toEngineering2(value2, precision);
       case "bin":
-        return formatBigNumberToBase(value, 2, wordSize);
+        return formatBigNumberToBase(value2, 2, wordSize);
       case "oct":
-        return formatBigNumberToBase(value, 8, wordSize);
+        return formatBigNumberToBase(value2, 8, wordSize);
       case "hex":
-        return formatBigNumberToBase(value, 16, wordSize);
+        return formatBigNumberToBase(value2, 16, wordSize);
       case "auto": {
         var lowerExp = options && options.lowerExp !== void 0 ? options.lowerExp : -3;
         var upperExp = options && options.upperExp !== void 0 ? options.upperExp : 5;
-        if (value.isZero())
+        if (value2.isZero())
           return "0";
-        var str;
-        var rounded = value.toSignificantDigits(precision);
+        var str2;
+        var rounded = value2.toSignificantDigits(precision);
         var exp3 = rounded.e;
         if (exp3 >= lowerExp && exp3 < upperExp) {
-          str = rounded.toFixed();
+          str2 = rounded.toFixed();
         } else {
-          str = toExponential2(value, precision);
+          str2 = toExponential2(value2, precision);
         }
-        return str.replace(/((\.\d*?)(0+))($|e)/, function() {
+        return str2.replace(/((\.\d*?)(0+))($|e)/, function() {
           var digits2 = arguments[2];
           var e3 = arguments[4];
           return digits2 !== "." ? digits2 + e3 : e3;
@@ -6678,25 +8110,26 @@ var meta_bind_publish = (() => {
         throw new Error('Unknown notation "' + notation + '". Choose "auto", "exponential", "fixed", "bin", "oct", or "hex.');
     }
   }
-  function toEngineering2(value, precision) {
-    var e3 = value.e;
+  function toEngineering2(value2, precision) {
+    var e3 = value2.e;
     var newExp = e3 % 3 === 0 ? e3 : e3 < 0 ? e3 - 3 - e3 % 3 : e3 - e3 % 3;
-    var valueWithoutExp = value.mul(Math.pow(10, -newExp));
+    var valueWithoutExp = value2.mul(Math.pow(10, -newExp));
     var valueStr = valueWithoutExp.toPrecision(precision);
     if (valueStr.indexOf("e") !== -1) {
-      valueStr = valueWithoutExp.toString();
+      var BigNumber2 = value2.constructor;
+      valueStr = new BigNumber2(valueStr).toFixed();
     }
     return valueStr + "e" + (e3 >= 0 ? "+" : "") + newExp.toString();
   }
-  function toExponential2(value, precision) {
+  function toExponential2(value2, precision) {
     if (precision !== void 0) {
-      return value.toExponential(precision - 1);
+      return value2.toExponential(precision - 1);
     } else {
-      return value.toExponential();
+      return value2.toExponential();
     }
   }
-  function toFixed2(value, precision) {
-    return value.toFixed(precision);
+  function toFixed2(value2, precision) {
+    return value2.toFixed(precision);
   }
 
   // node_modules/mathjs/lib/esm/utils/string.js
@@ -6705,52 +8138,52 @@ var meta_bind_publish = (() => {
     var end = text2.length;
     return text2.substring(start, end) === search;
   }
-  function format3(value, options) {
-    var result = _format(value, options);
+  function format3(value2, options) {
+    var result = _format(value2, options);
     if (options && typeof options === "object" && "truncate" in options && result.length > options.truncate) {
       return result.substring(0, options.truncate - 3) + "...";
     }
     return result;
   }
-  function _format(value, options) {
-    if (typeof value === "number") {
-      return format(value, options);
+  function _format(value2, options) {
+    if (typeof value2 === "number") {
+      return format(value2, options);
     }
-    if (isBigNumber(value)) {
-      return format2(value, options);
+    if (isBigNumber(value2)) {
+      return format2(value2, options);
     }
-    if (looksLikeFraction(value)) {
+    if (looksLikeFraction(value2)) {
       if (!options || options.fraction !== "decimal") {
-        return value.s * value.n + "/" + value.d;
+        return value2.s * value2.n + "/" + value2.d;
       } else {
-        return value.toString();
+        return value2.toString();
       }
     }
-    if (Array.isArray(value)) {
-      return formatArray(value, options);
+    if (Array.isArray(value2)) {
+      return formatArray(value2, options);
     }
-    if (isString(value)) {
-      return '"' + value + '"';
+    if (isString(value2)) {
+      return '"' + value2 + '"';
     }
-    if (typeof value === "function") {
-      return value.syntax ? String(value.syntax) : "function";
+    if (typeof value2 === "function") {
+      return value2.syntax ? String(value2.syntax) : "function";
     }
-    if (value && typeof value === "object") {
-      if (typeof value.format === "function") {
-        return value.format(options);
-      } else if (value && value.toString(options) !== {}.toString()) {
-        return value.toString(options);
+    if (value2 && typeof value2 === "object") {
+      if (typeof value2.format === "function") {
+        return value2.format(options);
+      } else if (value2 && value2.toString(options) !== {}.toString()) {
+        return value2.toString(options);
       } else {
-        var entries = Object.keys(value).map((key) => {
-          return '"' + key + '": ' + format3(value[key], options);
+        var entries = Object.keys(value2).map((key) => {
+          return '"' + key + '": ' + format3(value2[key], options);
         });
         return "{" + entries.join(", ") + "}";
       }
     }
-    return String(value);
+    return String(value2);
   }
-  function stringify(value) {
-    var text2 = String(value);
+  function stringify(value2) {
+    var text2 = String(value2);
     var escaped = "";
     var i2 = 0;
     while (i2 < text2.length) {
@@ -6772,36 +8205,36 @@ var meta_bind_publish = (() => {
     }
     return '"' + escaped + '"';
   }
-  function escape(value) {
-    var text2 = String(value);
+  function escape(value2) {
+    var text2 = String(value2);
     text2 = text2.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     return text2;
   }
   function formatArray(array, options) {
     if (Array.isArray(array)) {
-      var str = "[";
+      var str2 = "[";
       var len = array.length;
       for (var i2 = 0; i2 < len; i2++) {
         if (i2 !== 0) {
-          str += ", ";
+          str2 += ", ";
         }
-        str += formatArray(array[i2], options);
+        str2 += formatArray(array[i2], options);
       }
-      str += "]";
-      return str;
+      str2 += "]";
+      return str2;
     } else {
       return format3(array, options);
     }
   }
-  function looksLikeFraction(value) {
-    return value && typeof value === "object" && typeof value.s === "number" && typeof value.n === "number" && typeof value.d === "number" || false;
+  function looksLikeFraction(value2) {
+    return value2 && typeof value2 === "object" && typeof value2.s === "number" && typeof value2.n === "number" && typeof value2.d === "number" || false;
   }
   function compareText(x, y) {
     if (!isString(x)) {
-      throw new TypeError("Unexpected type of argument in function compareText (expected: string or Array or Matrix, actual: " + typeOf(x) + ", index: 0)");
+      throw new TypeError("Unexpected type of argument in function compareText (expected: string or Array or Matrix, actual: " + typeOf2(x) + ", index: 0)");
     }
     if (!isString(y)) {
-      throw new TypeError("Unexpected type of argument in function compareText (expected: string or Array or Matrix, actual: " + typeOf(y) + ", index: 1)");
+      throw new TypeError("Unexpected type of argument in function compareText (expected: string or Array or Matrix, actual: " + typeOf2(y) + ", index: 1)");
     }
     return x === y ? 0 : x > y ? 1 : -1;
   }
@@ -6891,26 +8324,59 @@ var meta_bind_publish = (() => {
       _validate(array, size2, 0);
     }
   }
+  function validateIndexSourceSize(value2, index2) {
+    var valueSize = value2.isMatrix ? value2._size : arraySize(value2);
+    var sourceSize = index2._sourceSize;
+    sourceSize.forEach((sourceDim, i2) => {
+      if (sourceDim !== null && sourceDim !== valueSize[i2]) {
+        throw new DimensionError(sourceDim, valueSize[i2]);
+      }
+    });
+  }
   function validateIndex(index2, length) {
-    if (!isNumber(index2) || !isInteger(index2)) {
-      throw new TypeError("Index must be an integer (value: " + index2 + ")");
-    }
-    if (index2 < 0 || typeof length === "number" && index2 >= length) {
-      throw new IndexError(index2, length);
+    if (index2 !== void 0) {
+      if (!isNumber(index2) || !isInteger(index2)) {
+        throw new TypeError("Index must be an integer (value: " + index2 + ")");
+      }
+      if (index2 < 0 || typeof length === "number" && index2 >= length) {
+        throw new IndexError(index2, length);
+      }
     }
   }
+  function isEmptyIndex(index2) {
+    for (var i2 = 0; i2 < index2._dimensions.length; ++i2) {
+      var dimension = index2._dimensions[i2];
+      if (dimension._data && isArray(dimension._data)) {
+        if (dimension._size[0] === 0) {
+          return true;
+        }
+      } else if (dimension.isRange) {
+        if (dimension.start === dimension.end) {
+          return true;
+        }
+      } else if (isString(dimension)) {
+        if (dimension.length === 0) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
   function resize(array, size2, defaultValue) {
-    if (!Array.isArray(array) || !Array.isArray(size2)) {
+    if (!Array.isArray(size2)) {
       throw new TypeError("Array expected");
     }
     if (size2.length === 0) {
       throw new Error("Resizing to scalar is not supported");
     }
-    size2.forEach(function(value) {
-      if (!isNumber(value) || !isInteger(value) || value < 0) {
+    size2.forEach(function(value2) {
+      if (!isNumber(value2) || !isInteger(value2) || value2 < 0) {
         throw new TypeError("Invalid size, must contain positive integers (size: " + format3(size2) + ")");
       }
     });
+    if (isNumber(array) || isBigNumber(array)) {
+      array = [array];
+    }
     var _defaultValue = defaultValue !== void 0 ? defaultValue : 0;
     _resize(array, size2, 0, _defaultValue);
     return array;
@@ -7071,11 +8537,11 @@ var meta_bind_publish = (() => {
       return array;
     }
     var flat = [];
-    array.forEach(function callback(value) {
-      if (Array.isArray(value)) {
-        value.forEach(callback);
+    array.forEach(function callback(value2) {
+      if (Array.isArray(value2)) {
+        value2.forEach(callback);
       } else {
-        flat.push(value);
+        flat.push(value2);
       }
     });
     return flat;
@@ -7140,19 +8606,19 @@ var meta_bind_publish = (() => {
     }
     return b;
   }
-  function getArrayDataType(array, typeOf3) {
+  function getArrayDataType(array, typeOf4) {
     var type;
     var length = 0;
     for (var i2 = 0; i2 < array.length; i2++) {
       var item = array[i2];
-      var isArray2 = Array.isArray(item);
-      if (i2 === 0 && isArray2) {
+      var _isArray = Array.isArray(item);
+      if (i2 === 0 && _isArray) {
         length = item.length;
       }
-      if (isArray2 && item.length !== length) {
+      if (_isArray && item.length !== length) {
         return void 0;
       }
-      var itemType = isArray2 ? getArrayDataType(item, typeOf3) : typeOf3(item);
+      var itemType = _isArray ? getArrayDataType(item, typeOf4) : typeOf4(item);
       if (type === void 0) {
         type = itemType;
       } else if (type !== itemType) {
@@ -7162,27 +8628,115 @@ var meta_bind_publish = (() => {
     }
     return type;
   }
+  function concatRecursive(a, b, concatDim, dim) {
+    if (dim < concatDim) {
+      if (a.length !== b.length) {
+        throw new DimensionError(a.length, b.length);
+      }
+      var c = [];
+      for (var i2 = 0; i2 < a.length; i2++) {
+        c[i2] = concatRecursive(a[i2], b[i2], concatDim, dim + 1);
+      }
+      return c;
+    } else {
+      return a.concat(b);
+    }
+  }
+  function concat() {
+    var arrays = Array.prototype.slice.call(arguments, 0, -1);
+    var concatDim = Array.prototype.slice.call(arguments, -1);
+    if (arrays.length === 1) {
+      return arrays[0];
+    }
+    if (arrays.length > 1) {
+      return arrays.slice(1).reduce(function(A, B) {
+        return concatRecursive(A, B, concatDim, 0);
+      }, arrays[0]);
+    } else {
+      throw new Error("Wrong number of arguments in function concat");
+    }
+  }
+  function broadcastSizes() {
+    for (var _len = arguments.length, sizes = new Array(_len), _key = 0; _key < _len; _key++) {
+      sizes[_key] = arguments[_key];
+    }
+    var dimensions = sizes.map((s) => s.length);
+    var N = Math.max(...dimensions);
+    var sizeMax = new Array(N).fill(null);
+    for (var i2 = 0; i2 < sizes.length; i2++) {
+      var size2 = sizes[i2];
+      var dim = dimensions[i2];
+      for (var j = 0; j < dim; j++) {
+        var n = N - dim + j;
+        if (size2[j] > sizeMax[n]) {
+          sizeMax[n] = size2[j];
+        }
+      }
+    }
+    for (var _i = 0; _i < sizes.length; _i++) {
+      checkBroadcastingRules(sizes[_i], sizeMax);
+    }
+    return sizeMax;
+  }
+  function checkBroadcastingRules(size2, toSize) {
+    var N = toSize.length;
+    var dim = size2.length;
+    for (var j = 0; j < dim; j++) {
+      var n = N - dim + j;
+      if (size2[j] < toSize[n] && size2[j] > 1 || size2[j] > toSize[n]) {
+        throw new Error("shape missmatch: missmatch is found in arg with shape (".concat(size2, ") not possible to broadcast dimension ").concat(dim, " with size ").concat(size2[j], " to size ").concat(toSize[n]));
+      }
+    }
+  }
+  function broadcastTo(array, toSize) {
+    var Asize = arraySize(array);
+    if (deepStrictEqual(Asize, toSize)) {
+      return array;
+    }
+    checkBroadcastingRules(Asize, toSize);
+    var broadcastedSize = broadcastSizes(Asize, toSize);
+    var N = broadcastedSize.length;
+    var paddedSize = [...Array(N - Asize.length).fill(1), ...Asize];
+    var A = clone2(array);
+    if (Asize.length < N) {
+      A = reshape(A, paddedSize);
+      Asize = arraySize(A);
+    }
+    for (var dim = 0; dim < N; dim++) {
+      if (Asize[dim] < broadcastedSize[dim]) {
+        A = stretch(A, broadcastedSize[dim], dim);
+        Asize = arraySize(A);
+      }
+    }
+    return A;
+  }
+  function stretch(arrayToStretch, sizeToStretch, dimToStretch) {
+    return concat(...Array(sizeToStretch).fill(arrayToStretch), dimToStretch);
+  }
+  function clone2(array) {
+    return _extends([], array);
+  }
 
   // node_modules/mathjs/lib/esm/utils/factory.js
-  function factory(name302, dependencies302, create, meta) {
+  function factory(name309, dependencies309, create, meta) {
     function assertAndCreate(scope) {
-      var deps = pickShallow(scope, dependencies302.map(stripOptionalNotation));
-      assertDependencies(name302, dependencies302, scope);
+      var deps = pickShallow(scope, dependencies309.map(stripOptionalNotation));
+      assertDependencies(name309, dependencies309, scope);
       return create(deps);
     }
     assertAndCreate.isFactory = true;
-    assertAndCreate.fn = name302;
-    assertAndCreate.dependencies = dependencies302.slice().sort();
+    assertAndCreate.fn = name309;
+    assertAndCreate.dependencies = dependencies309.slice().sort();
     if (meta) {
       assertAndCreate.meta = meta;
     }
     return assertAndCreate;
   }
-  function assertDependencies(name302, dependencies302, scope) {
-    var allDefined = dependencies302.filter((dependency) => !isOptionalDependency(dependency)).every((dependency) => scope[dependency] !== void 0);
+  function assertDependencies(name309, dependencies309, scope) {
+    var allDefined = dependencies309.filter((dependency) => !isOptionalDependency(dependency)).every((dependency) => scope[dependency] !== void 0);
     if (!allDefined) {
-      var missingDependencies = dependencies302.filter((dependency) => scope[dependency] === void 0);
-      throw new Error('Cannot create function "'.concat(name302, '", ') + "some dependencies are missing: ".concat(missingDependencies.map((d) => '"'.concat(d, '"')).join(", "), "."));
+      var missingDependencies = dependencies309.filter((dependency) => scope[dependency] === void 0);
+      throw new Error('Cannot create function "'.concat(name309, '", ') + "some dependencies are missing: ".concat(missingDependencies.map((d) => '"'.concat(d, '"')).join(", "), "."));
     }
   }
   function isOptionalDependency(dependency) {
@@ -7202,10 +8756,10 @@ var meta_bind_publish = (() => {
     }
     throw new Error('No access to property "' + prop + '"');
   }
-  function setSafeProperty(object, prop, value) {
+  function setSafeProperty(object, prop, value2) {
     if (isPlainObject(object) && isSafeProperty(object, prop)) {
-      object[prop] = value;
-      return value;
+      object[prop] = value2;
+      return value2;
     }
     throw new Error('No access to property "' + prop + '"');
   }
@@ -7216,7 +8770,7 @@ var meta_bind_publish = (() => {
     if (!object || typeof object !== "object") {
       return false;
     }
-    if (hasOwnProperty2(safeNativeProperties, prop)) {
+    if (hasOwnProperty(safeNativeProperties, prop)) {
       return true;
     }
     if (prop in Object.prototype) {
@@ -7227,19 +8781,20 @@ var meta_bind_publish = (() => {
     }
     return true;
   }
-  function validateSafeMethod(object, method) {
+  function getSafeMethod(object, method) {
     if (!isSafeMethod(object, method)) {
       throw new Error('No access to method "' + method + '"');
     }
+    return object[method];
   }
   function isSafeMethod(object, method) {
     if (object === null || object === void 0 || typeof object[method] !== "function") {
       return false;
     }
-    if (hasOwnProperty2(object, method) && Object.getPrototypeOf && method in Object.getPrototypeOf(object)) {
+    if (hasOwnProperty(object, method) && Object.getPrototypeOf && method in Object.getPrototypeOf(object)) {
       return false;
     }
-    if (hasOwnProperty2(safeNativeMethods, method)) {
+    if (hasOwnProperty(safeNativeMethods, method)) {
       return true;
     }
     if (method in Object.prototype) {
@@ -7274,8 +8829,8 @@ var meta_bind_publish = (() => {
     get(key) {
       return getSafeProperty(this.wrappedObject, key);
     }
-    set(key, value) {
-      setSafeProperty(this.wrappedObject, key, value);
+    set(key, value2) {
+      setSafeProperty(this.wrappedObject, key, value2);
       return this;
     }
     has(key) {
@@ -7303,8 +8858,8 @@ var meta_bind_publish = (() => {
     }
     var object = {};
     for (var key of map3.keys()) {
-      var value = map3.get(key);
-      setSafeProperty(object, key, value);
+      var value2 = map3.get(key);
+      setSafeProperty(object, key, value2);
     }
     return object;
   }
@@ -7348,9 +8903,9 @@ var meta_bind_publish = (() => {
       DenseMatrix: DenseMatrix2,
       Fraction: Fraction3
     } = _ref;
-    var typed2 = _createTyped2();
-    typed2.clear();
-    typed2.addTypes([
+    var typed3 = _createTyped2();
+    typed3.clear();
+    typed3.addTypes([
       {
         name: "number",
         test: isNumber
@@ -7512,7 +9067,7 @@ var meta_bind_publish = (() => {
         test: isObject
       }
     ]);
-    typed2.addConversions([{
+    typed3.addConversions([{
       from: "number",
       to: "BigNumber",
       convert: function convert(x) {
@@ -7665,25 +9220,25 @@ var meta_bind_publish = (() => {
         return matrix2.valueOf();
       }
     }]);
-    typed2.onMismatch = (name302, args, signatures) => {
-      var usualError = typed2.createError(name302, args, signatures);
+    typed3.onMismatch = (name309, args, signatures) => {
+      var usualError = typed3.createError(name309, args, signatures);
       if (["wrongType", "mismatch"].includes(usualError.data.category) && args.length === 1 && isCollection(args[0]) && signatures.some((sig) => !sig.params.includes(","))) {
-        var err = new TypeError("Function '".concat(name302, "' doesn't apply to matrices. To call it ") + "elementwise on a matrix 'M', try 'map(M, ".concat(name302, ")'."));
+        var err = new TypeError("Function '".concat(name309, "' doesn't apply to matrices. To call it ") + "elementwise on a matrix 'M', try 'map(M, ".concat(name309, ")'."));
         err.data = usualError.data;
         throw err;
       }
       throw usualError;
     };
-    typed2.onMismatch = (name302, args, signatures) => {
-      var usualError = typed2.createError(name302, args, signatures);
+    typed3.onMismatch = (name309, args, signatures) => {
+      var usualError = typed3.createError(name309, args, signatures);
       if (["wrongType", "mismatch"].includes(usualError.data.category) && args.length === 1 && isCollection(args[0]) && signatures.some((sig) => !sig.params.includes(","))) {
-        var err = new TypeError("Function '".concat(name302, "' doesn't apply to matrices. To call it ") + "elementwise on a matrix 'M', try 'map(M, ".concat(name302, ")'."));
+        var err = new TypeError("Function '".concat(name309, "' doesn't apply to matrices. To call it ") + "elementwise on a matrix 'M', try 'map(M, ".concat(name309, ")'."));
         err.data = usualError.data;
         throw err;
       }
       throw usualError;
     };
-    return typed2;
+    return typed3;
   });
   function throwNoBignumber(x) {
     throw new Error("Cannot convert value ".concat(x, " into a BigNumber: no class 'BigNumber' provided"));
@@ -7765,17 +9320,17 @@ var meta_bind_publish = (() => {
   var MAX_SAFE_INTEGER = 9007199254740991;
   var LN10_PRECISION = LN10.length - 1;
   var PI_PRECISION = PI.length - 1;
-  var P = { toStringTag: tag };
-  P.absoluteValue = P.abs = function() {
+  var P2 = { toStringTag: tag };
+  P2.absoluteValue = P2.abs = function() {
     var x = new this.constructor(this);
     if (x.s < 0)
       x.s = 1;
     return finalise(x);
   };
-  P.ceil = function() {
+  P2.ceil = function() {
     return finalise(new this.constructor(this), this.e + 1, 2);
   };
-  P.clampedTo = P.clamp = function(min3, max3) {
+  P2.clampedTo = P2.clamp = function(min3, max3) {
     var k, x = this, Ctor = x.constructor;
     min3 = new Ctor(min3);
     max3 = new Ctor(max3);
@@ -7786,7 +9341,7 @@ var meta_bind_publish = (() => {
     k = x.cmp(min3);
     return k < 0 ? min3 : x.cmp(max3) > 0 ? max3 : new Ctor(x);
   };
-  P.comparedTo = P.cmp = function(y) {
+  P2.comparedTo = P2.cmp = function(y) {
     var i2, j, xdL, ydL, x = this, xd = x.d, yd = (y = new x.constructor(y)).d, xs = x.s, ys = y.s;
     if (!xd || !yd) {
       return !xs || !ys ? NaN : xs !== ys ? xs : xd === yd ? 0 : !xd ^ xs < 0 ? 1 : -1;
@@ -7805,7 +9360,7 @@ var meta_bind_publish = (() => {
     }
     return xdL === ydL ? 0 : xdL > ydL ^ xs < 0 ? 1 : -1;
   };
-  P.cosine = P.cos = function() {
+  P2.cosine = P2.cos = function() {
     var pr, rm, x = this, Ctor = x.constructor;
     if (!x.d)
       return new Ctor(NaN);
@@ -7820,7 +9375,7 @@ var meta_bind_publish = (() => {
     Ctor.rounding = rm;
     return finalise(quadrant == 2 || quadrant == 3 ? x.neg() : x, pr, rm, true);
   };
-  P.cubeRoot = P.cbrt = function() {
+  P2.cubeRoot = P2.cbrt = function() {
     var e3, m, n, r, rep, s, sd, t, t3, t3plusx, x = this, Ctor = x.constructor;
     if (!x.isFinite() || x.isZero())
       return new Ctor(x);
@@ -7874,7 +9429,7 @@ var meta_bind_publish = (() => {
     external = true;
     return finalise(r, e3, Ctor.rounding, m);
   };
-  P.decimalPlaces = P.dp = function() {
+  P2.decimalPlaces = P2.dp = function() {
     var w, d = this.d, n = NaN;
     if (d) {
       w = d.length - 1;
@@ -7888,27 +9443,27 @@ var meta_bind_publish = (() => {
     }
     return n;
   };
-  P.dividedBy = P.div = function(y) {
+  P2.dividedBy = P2.div = function(y) {
     return divide(this, new this.constructor(y));
   };
-  P.dividedToIntegerBy = P.divToInt = function(y) {
+  P2.dividedToIntegerBy = P2.divToInt = function(y) {
     var x = this, Ctor = x.constructor;
     return finalise(divide(x, new Ctor(y), 0, 1, 1), Ctor.precision, Ctor.rounding);
   };
-  P.equals = P.eq = function(y) {
+  P2.equals = P2.eq = function(y) {
     return this.cmp(y) === 0;
   };
-  P.floor = function() {
+  P2.floor = function() {
     return finalise(new this.constructor(this), this.e + 1, 3);
   };
-  P.greaterThan = P.gt = function(y) {
+  P2.greaterThan = P2.gt = function(y) {
     return this.cmp(y) > 0;
   };
-  P.greaterThanOrEqualTo = P.gte = function(y) {
+  P2.greaterThanOrEqualTo = P2.gte = function(y) {
     var k = this.cmp(y);
     return k == 1 || k === 0;
   };
-  P.hyperbolicCosine = P.cosh = function() {
+  P2.hyperbolicCosine = P2.cosh = function() {
     var k, n, pr, rm, len, x = this, Ctor = x.constructor, one = new Ctor(1);
     if (!x.isFinite())
       return new Ctor(x.s ? 1 / 0 : NaN);
@@ -7934,7 +9489,7 @@ var meta_bind_publish = (() => {
     }
     return finalise(x, Ctor.precision = pr, Ctor.rounding = rm, true);
   };
-  P.hyperbolicSine = P.sinh = function() {
+  P2.hyperbolicSine = P2.sinh = function() {
     var k, pr, rm, len, x = this, Ctor = x.constructor;
     if (!x.isFinite() || x.isZero())
       return new Ctor(x);
@@ -7960,7 +9515,7 @@ var meta_bind_publish = (() => {
     Ctor.rounding = rm;
     return finalise(x, pr, rm, true);
   };
-  P.hyperbolicTangent = P.tanh = function() {
+  P2.hyperbolicTangent = P2.tanh = function() {
     var pr, rm, x = this, Ctor = x.constructor;
     if (!x.isFinite())
       return new Ctor(x.s);
@@ -7972,7 +9527,7 @@ var meta_bind_publish = (() => {
     Ctor.rounding = 1;
     return divide(x.sinh(), x.cosh(), Ctor.precision = pr, Ctor.rounding = rm);
   };
-  P.inverseCosine = P.acos = function() {
+  P2.inverseCosine = P2.acos = function() {
     var halfPi, x = this, Ctor = x.constructor, k = x.abs().cmp(1), pr = Ctor.precision, rm = Ctor.rounding;
     if (k !== -1) {
       return k === 0 ? x.isNeg() ? getPi(Ctor, pr, rm) : new Ctor(0) : new Ctor(NaN);
@@ -7987,7 +9542,7 @@ var meta_bind_publish = (() => {
     Ctor.rounding = rm;
     return halfPi.minus(x);
   };
-  P.inverseHyperbolicCosine = P.acosh = function() {
+  P2.inverseHyperbolicCosine = P2.acosh = function() {
     var pr, rm, x = this, Ctor = x.constructor;
     if (x.lte(1))
       return new Ctor(x.eq(1) ? 0 : NaN);
@@ -8004,7 +9559,7 @@ var meta_bind_publish = (() => {
     Ctor.rounding = rm;
     return x.ln();
   };
-  P.inverseHyperbolicSine = P.asinh = function() {
+  P2.inverseHyperbolicSine = P2.asinh = function() {
     var pr, rm, x = this, Ctor = x.constructor;
     if (!x.isFinite() || x.isZero())
       return new Ctor(x);
@@ -8019,7 +9574,7 @@ var meta_bind_publish = (() => {
     Ctor.rounding = rm;
     return x.ln();
   };
-  P.inverseHyperbolicTangent = P.atanh = function() {
+  P2.inverseHyperbolicTangent = P2.atanh = function() {
     var pr, rm, wpr, xsd, x = this, Ctor = x.constructor;
     if (!x.isFinite())
       return new Ctor(NaN);
@@ -8039,7 +9594,7 @@ var meta_bind_publish = (() => {
     Ctor.rounding = rm;
     return x.times(0.5);
   };
-  P.inverseSine = P.asin = function() {
+  P2.inverseSine = P2.asin = function() {
     var halfPi, k, pr, rm, x = this, Ctor = x.constructor;
     if (x.isZero())
       return new Ctor(x);
@@ -8061,7 +9616,7 @@ var meta_bind_publish = (() => {
     Ctor.rounding = rm;
     return x.times(2);
   };
-  P.inverseTangent = P.atan = function() {
+  P2.inverseTangent = P2.atan = function() {
     var i2, j, k, n, px, t, r, wpr, x2, x = this, Ctor = x.constructor, pr = Ctor.precision, rm = Ctor.rounding;
     if (!x.isFinite()) {
       if (!x.s)
@@ -8103,31 +9658,31 @@ var meta_bind_publish = (() => {
     external = true;
     return finalise(r, Ctor.precision = pr, Ctor.rounding = rm, true);
   };
-  P.isFinite = function() {
+  P2.isFinite = function() {
     return !!this.d;
   };
-  P.isInteger = P.isInt = function() {
+  P2.isInteger = P2.isInt = function() {
     return !!this.d && mathfloor(this.e / LOG_BASE) > this.d.length - 2;
   };
-  P.isNaN = function() {
+  P2.isNaN = function() {
     return !this.s;
   };
-  P.isNegative = P.isNeg = function() {
+  P2.isNegative = P2.isNeg = function() {
     return this.s < 0;
   };
-  P.isPositive = P.isPos = function() {
+  P2.isPositive = P2.isPos = function() {
     return this.s > 0;
   };
-  P.isZero = function() {
+  P2.isZero = function() {
     return !!this.d && this.d[0] === 0;
   };
-  P.lessThan = P.lt = function(y) {
+  P2.lessThan = P2.lt = function(y) {
     return this.cmp(y) < 0;
   };
-  P.lessThanOrEqualTo = P.lte = function(y) {
+  P2.lessThanOrEqualTo = P2.lte = function(y) {
     return this.cmp(y) < 1;
   };
-  P.logarithm = P.log = function(base) {
+  P2.logarithm = P2.log = function(base) {
     var isBase10, d, denominator, k, inf, num, sd, r, arg2 = this, Ctor = arg2.constructor, pr = Ctor.precision, rm = Ctor.rounding, guard = 5;
     if (base == null) {
       base = new Ctor(10);
@@ -8174,7 +9729,7 @@ var meta_bind_publish = (() => {
     external = true;
     return finalise(r, pr, rm);
   };
-  P.minus = P.sub = function(y) {
+  P2.minus = P2.sub = function(y) {
     var d, e3, i2, j, k, len, pr, rm, xd, xe, xLTy, yd, x = this, Ctor = x.constructor;
     y = new Ctor(y);
     if (!x.d || !y.d) {
@@ -8269,7 +9824,7 @@ var meta_bind_publish = (() => {
     y.e = getBase10Exponent(xd, e3);
     return external ? finalise(y, pr, rm) : y;
   };
-  P.modulo = P.mod = function(y) {
+  P2.modulo = P2.mod = function(y) {
     var q, x = this, Ctor = x.constructor;
     y = new Ctor(y);
     if (!x.d || !y.s || y.d && !y.d[0])
@@ -8288,18 +9843,18 @@ var meta_bind_publish = (() => {
     external = true;
     return x.minus(q);
   };
-  P.naturalExponential = P.exp = function() {
+  P2.naturalExponential = P2.exp = function() {
     return naturalExponential(this);
   };
-  P.naturalLogarithm = P.ln = function() {
+  P2.naturalLogarithm = P2.ln = function() {
     return naturalLogarithm(this);
   };
-  P.negated = P.neg = function() {
+  P2.negated = P2.neg = function() {
     var x = new this.constructor(this);
     x.s = -x.s;
     return finalise(x);
   };
-  P.plus = P.add = function(y) {
+  P2.plus = P2.add = function(y) {
     var carry, d, e3, i2, k, len, pr, rm, xd, yd, x = this, Ctor = x.constructor;
     y = new Ctor(y);
     if (!x.d || !y.d) {
@@ -8369,7 +9924,7 @@ var meta_bind_publish = (() => {
     y.e = getBase10Exponent(xd, e3);
     return external ? finalise(y, pr, rm) : y;
   };
-  P.precision = P.sd = function(z) {
+  P2.precision = P2.sd = function(z) {
     var k, x = this;
     if (z !== void 0 && z !== !!z && z !== 1 && z !== 0)
       throw Error(invalidArgument + z);
@@ -8382,11 +9937,11 @@ var meta_bind_publish = (() => {
     }
     return k;
   };
-  P.round = function() {
+  P2.round = function() {
     var x = this, Ctor = x.constructor;
     return finalise(new Ctor(x), x.e + 1, Ctor.rounding);
   };
-  P.sine = P.sin = function() {
+  P2.sine = P2.sin = function() {
     var pr, rm, x = this, Ctor = x.constructor;
     if (!x.isFinite())
       return new Ctor(NaN);
@@ -8401,7 +9956,7 @@ var meta_bind_publish = (() => {
     Ctor.rounding = rm;
     return finalise(quadrant > 2 ? x.neg() : x, pr, rm, true);
   };
-  P.squareRoot = P.sqrt = function() {
+  P2.squareRoot = P2.sqrt = function() {
     var m, n, sd, r, rep, t, x = this, d = x.d, e3 = x.e, s = x.s, Ctor = x.constructor;
     if (s !== 1 || !d || !d[0]) {
       return new Ctor(!s || s < 0 && (!d || d[0]) ? NaN : d ? x : 1 / 0);
@@ -8452,7 +10007,7 @@ var meta_bind_publish = (() => {
     external = true;
     return finalise(r, e3, Ctor.rounding, m);
   };
-  P.tangent = P.tan = function() {
+  P2.tangent = P2.tan = function() {
     var pr, rm, x = this, Ctor = x.constructor;
     if (!x.isFinite())
       return new Ctor(NaN);
@@ -8469,7 +10024,7 @@ var meta_bind_publish = (() => {
     Ctor.rounding = rm;
     return finalise(quadrant == 2 || quadrant == 4 ? x.neg() : x, pr, rm, true);
   };
-  P.times = P.mul = function(y) {
+  P2.times = P2.mul = function(y) {
     var carry, e3, i2, k, r, rL, t, xdL, ydL, x = this, Ctor = x.constructor, xd = x.d, yd = (y = new Ctor(y)).d;
     y.s *= x.s;
     if (!xd || !xd[0] || !yd || !yd[0]) {
@@ -8509,10 +10064,10 @@ var meta_bind_publish = (() => {
     y.e = getBase10Exponent(r, e3);
     return external ? finalise(y, Ctor.precision, Ctor.rounding) : y;
   };
-  P.toBinary = function(sd, rm) {
+  P2.toBinary = function(sd, rm) {
     return toStringBinary(this, 2, sd, rm);
   };
-  P.toDecimalPlaces = P.toDP = function(dp, rm) {
+  P2.toDecimalPlaces = P2.toDP = function(dp, rm) {
     var x = this, Ctor = x.constructor;
     x = new Ctor(x);
     if (dp === void 0)
@@ -8524,10 +10079,10 @@ var meta_bind_publish = (() => {
       checkInt32(rm, 0, 8);
     return finalise(x, dp + x.e + 1, rm);
   };
-  P.toExponential = function(dp, rm) {
-    var str, x = this, Ctor = x.constructor;
+  P2.toExponential = function(dp, rm) {
+    var str2, x = this, Ctor = x.constructor;
     if (dp === void 0) {
-      str = finiteToString(x, true);
+      str2 = finiteToString(x, true);
     } else {
       checkInt32(dp, 0, MAX_DIGITS);
       if (rm === void 0)
@@ -8535,14 +10090,14 @@ var meta_bind_publish = (() => {
       else
         checkInt32(rm, 0, 8);
       x = finalise(new Ctor(x), dp + 1, rm);
-      str = finiteToString(x, true, dp + 1);
+      str2 = finiteToString(x, true, dp + 1);
     }
-    return x.isNeg() && !x.isZero() ? "-" + str : str;
+    return x.isNeg() && !x.isZero() ? "-" + str2 : str2;
   };
-  P.toFixed = function(dp, rm) {
-    var str, y, x = this, Ctor = x.constructor;
+  P2.toFixed = function(dp, rm) {
+    var str2, y, x = this, Ctor = x.constructor;
     if (dp === void 0) {
-      str = finiteToString(x);
+      str2 = finiteToString(x);
     } else {
       checkInt32(dp, 0, MAX_DIGITS);
       if (rm === void 0)
@@ -8550,11 +10105,11 @@ var meta_bind_publish = (() => {
       else
         checkInt32(rm, 0, 8);
       y = finalise(new Ctor(x), dp + x.e + 1, rm);
-      str = finiteToString(y, false, dp + y.e + 1);
+      str2 = finiteToString(y, false, dp + y.e + 1);
     }
-    return x.isNeg() && !x.isZero() ? "-" + str : str;
+    return x.isNeg() && !x.isZero() ? "-" + str2 : str2;
   };
-  P.toFraction = function(maxD) {
+  P2.toFraction = function(maxD) {
     var d, d0, d1, d2, e3, k, n, n0, n16, pr, q, r, x = this, xd = x.d, Ctor = x.constructor;
     if (!xd)
       return new Ctor(x);
@@ -8599,10 +10154,10 @@ var meta_bind_publish = (() => {
     external = true;
     return r;
   };
-  P.toHexadecimal = P.toHex = function(sd, rm) {
+  P2.toHexadecimal = P2.toHex = function(sd, rm) {
     return toStringBinary(this, 16, sd, rm);
   };
-  P.toNearest = function(y, rm) {
+  P2.toNearest = function(y, rm) {
     var x = this, Ctor = x.constructor;
     x = new Ctor(x);
     if (y == null) {
@@ -8636,13 +10191,13 @@ var meta_bind_publish = (() => {
     }
     return x;
   };
-  P.toNumber = function() {
+  P2.toNumber = function() {
     return +this;
   };
-  P.toOctal = function(sd, rm) {
+  P2.toOctal = function(sd, rm) {
     return toStringBinary(this, 8, sd, rm);
   };
-  P.toPower = P.pow = function(y) {
+  P2.toPower = P2.pow = function(y) {
     var e3, k, pr, r, rm, s, x = this, Ctor = x.constructor, yn = +(y = new Ctor(y));
     if (!x.d || !y.d || !x.d[0] || !y.d[0])
       return new Ctor(mathpow(+x, yn));
@@ -8692,10 +10247,10 @@ var meta_bind_publish = (() => {
     Ctor.rounding = rm;
     return finalise(r, pr, rm);
   };
-  P.toPrecision = function(sd, rm) {
-    var str, x = this, Ctor = x.constructor;
+  P2.toPrecision = function(sd, rm) {
+    var str2, x = this, Ctor = x.constructor;
     if (sd === void 0) {
-      str = finiteToString(x, x.e <= Ctor.toExpNeg || x.e >= Ctor.toExpPos);
+      str2 = finiteToString(x, x.e <= Ctor.toExpNeg || x.e >= Ctor.toExpPos);
     } else {
       checkInt32(sd, 1, MAX_DIGITS);
       if (rm === void 0)
@@ -8703,11 +10258,11 @@ var meta_bind_publish = (() => {
       else
         checkInt32(rm, 0, 8);
       x = finalise(new Ctor(x), sd, rm);
-      str = finiteToString(x, sd <= x.e || x.e <= Ctor.toExpNeg, sd);
+      str2 = finiteToString(x, sd <= x.e || x.e <= Ctor.toExpNeg, sd);
     }
-    return x.isNeg() && !x.isZero() ? "-" + str : str;
+    return x.isNeg() && !x.isZero() ? "-" + str2 : str2;
   };
-  P.toSignificantDigits = P.toSD = function(sd, rm) {
+  P2.toSignificantDigits = P2.toSD = function(sd, rm) {
     var x = this, Ctor = x.constructor;
     if (sd === void 0) {
       sd = Ctor.precision;
@@ -8721,39 +10276,39 @@ var meta_bind_publish = (() => {
     }
     return finalise(new Ctor(x), sd, rm);
   };
-  P.toString = function() {
-    var x = this, Ctor = x.constructor, str = finiteToString(x, x.e <= Ctor.toExpNeg || x.e >= Ctor.toExpPos);
-    return x.isNeg() && !x.isZero() ? "-" + str : str;
+  P2.toString = function() {
+    var x = this, Ctor = x.constructor, str2 = finiteToString(x, x.e <= Ctor.toExpNeg || x.e >= Ctor.toExpPos);
+    return x.isNeg() && !x.isZero() ? "-" + str2 : str2;
   };
-  P.truncated = P.trunc = function() {
+  P2.truncated = P2.trunc = function() {
     return finalise(new this.constructor(this), this.e + 1, 1);
   };
-  P.valueOf = P.toJSON = function() {
-    var x = this, Ctor = x.constructor, str = finiteToString(x, x.e <= Ctor.toExpNeg || x.e >= Ctor.toExpPos);
-    return x.isNeg() ? "-" + str : str;
+  P2.valueOf = P2.toJSON = function() {
+    var x = this, Ctor = x.constructor, str2 = finiteToString(x, x.e <= Ctor.toExpNeg || x.e >= Ctor.toExpPos);
+    return x.isNeg() ? "-" + str2 : str2;
   };
   function digitsToString(d) {
-    var i2, k, ws, indexOfLastWord = d.length - 1, str = "", w = d[0];
+    var i2, k, ws, indexOfLastWord = d.length - 1, str2 = "", w = d[0];
     if (indexOfLastWord > 0) {
-      str += w;
+      str2 += w;
       for (i2 = 1; i2 < indexOfLastWord; i2++) {
         ws = d[i2] + "";
         k = LOG_BASE - ws.length;
         if (k)
-          str += getZeroString(k);
-        str += ws;
+          str2 += getZeroString(k);
+        str2 += ws;
       }
       w = d[i2];
       ws = w + "";
       k = LOG_BASE - ws.length;
       if (k)
-        str += getZeroString(k);
+        str2 += getZeroString(k);
     } else if (w === 0) {
       return "0";
     }
     for (; w % 10 === 0; )
       w /= 10;
-    return str + w;
+    return str2 + w;
   }
   function checkInt32(i2, min3, max3) {
     if (i2 !== ~~i2 || i2 < min3 || i2 > max3) {
@@ -8798,12 +10353,12 @@ var meta_bind_publish = (() => {
     }
     return r;
   }
-  function convertBase(str, baseIn, baseOut) {
-    var j, arr = [0], arrL, i2 = 0, strL = str.length;
+  function convertBase(str2, baseIn, baseOut) {
+    var j, arr = [0], arrL, i2 = 0, strL = str2.length;
     for (; i2 < strL; ) {
       for (arrL = arr.length; arrL--; )
         arr[arrL] *= baseIn;
-      arr[0] += NUMERALS.indexOf(str.charAt(i2++));
+      arr[0] += NUMERALS.indexOf(str2.charAt(i2++));
       for (j = 0; j < arr.length; j++) {
         if (arr[j] > baseOut - 1) {
           if (arr[j + 1] === void 0)
@@ -9103,32 +10658,32 @@ var meta_bind_publish = (() => {
   function finiteToString(x, isExp, sd) {
     if (!x.isFinite())
       return nonFiniteToString(x);
-    var k, e3 = x.e, str = digitsToString(x.d), len = str.length;
+    var k, e3 = x.e, str2 = digitsToString(x.d), len = str2.length;
     if (isExp) {
       if (sd && (k = sd - len) > 0) {
-        str = str.charAt(0) + "." + str.slice(1) + getZeroString(k);
+        str2 = str2.charAt(0) + "." + str2.slice(1) + getZeroString(k);
       } else if (len > 1) {
-        str = str.charAt(0) + "." + str.slice(1);
+        str2 = str2.charAt(0) + "." + str2.slice(1);
       }
-      str = str + (x.e < 0 ? "e" : "e+") + x.e;
+      str2 = str2 + (x.e < 0 ? "e" : "e+") + x.e;
     } else if (e3 < 0) {
-      str = "0." + getZeroString(-e3 - 1) + str;
+      str2 = "0." + getZeroString(-e3 - 1) + str2;
       if (sd && (k = sd - len) > 0)
-        str += getZeroString(k);
+        str2 += getZeroString(k);
     } else if (e3 >= len) {
-      str += getZeroString(e3 + 1 - len);
+      str2 += getZeroString(e3 + 1 - len);
       if (sd && (k = sd - e3 - 1) > 0)
-        str = str + "." + getZeroString(k);
+        str2 = str2 + "." + getZeroString(k);
     } else {
       if ((k = e3 + 1) < len)
-        str = str.slice(0, k) + "." + str.slice(k);
+        str2 = str2.slice(0, k) + "." + str2.slice(k);
       if (sd && (k = sd - len) > 0) {
         if (e3 + 1 === len)
-          str += ".";
-        str += getZeroString(k);
+          str2 += ".";
+        str2 += getZeroString(k);
       }
     }
-    return str;
+    return str2;
   }
   function getBase10Exponent(digits2, e3) {
     var w = digits2[0];
@@ -9317,24 +10872,24 @@ var meta_bind_publish = (() => {
   function nonFiniteToString(x) {
     return String(x.s * x.s / 0);
   }
-  function parseDecimal(x, str) {
+  function parseDecimal(x, str2) {
     var e3, i2, len;
-    if ((e3 = str.indexOf(".")) > -1)
-      str = str.replace(".", "");
-    if ((i2 = str.search(/e/i)) > 0) {
+    if ((e3 = str2.indexOf(".")) > -1)
+      str2 = str2.replace(".", "");
+    if ((i2 = str2.search(/e/i)) > 0) {
       if (e3 < 0)
         e3 = i2;
-      e3 += +str.slice(i2 + 1);
-      str = str.substring(0, i2);
+      e3 += +str2.slice(i2 + 1);
+      str2 = str2.substring(0, i2);
     } else if (e3 < 0) {
-      e3 = str.length;
+      e3 = str2.length;
     }
-    for (i2 = 0; str.charCodeAt(i2) === 48; i2++)
+    for (i2 = 0; str2.charCodeAt(i2) === 48; i2++)
       ;
-    for (len = str.length; str.charCodeAt(len - 1) === 48; --len)
+    for (len = str2.length; str2.charCodeAt(len - 1) === 48; --len)
       ;
-    str = str.slice(i2, len);
-    if (str) {
+    str2 = str2.slice(i2, len);
+    if (str2) {
       len -= i2;
       x.e = e3 = e3 - i2 - 1;
       x.d = [];
@@ -9343,17 +10898,17 @@ var meta_bind_publish = (() => {
         i2 += LOG_BASE;
       if (i2 < len) {
         if (i2)
-          x.d.push(+str.slice(0, i2));
+          x.d.push(+str2.slice(0, i2));
         for (len -= LOG_BASE; i2 < len; )
-          x.d.push(+str.slice(i2, i2 += LOG_BASE));
-        str = str.slice(i2);
-        i2 = LOG_BASE - str.length;
+          x.d.push(+str2.slice(i2, i2 += LOG_BASE));
+        str2 = str2.slice(i2);
+        i2 = LOG_BASE - str2.length;
       } else {
         i2 -= len;
       }
       for (; i2--; )
-        str += "0";
-      x.d.push(+str);
+        str2 += "0";
+      x.d.push(+str2);
       if (external) {
         if (x.e > x.constructor.maxE) {
           x.d = null;
@@ -9369,46 +10924,46 @@ var meta_bind_publish = (() => {
     }
     return x;
   }
-  function parseOther(x, str) {
+  function parseOther(x, str2) {
     var base, Ctor, divisor, i2, isFloat, len, p, xd, xe;
-    if (str.indexOf("_") > -1) {
-      str = str.replace(/(\d)_(?=\d)/g, "$1");
-      if (isDecimal.test(str))
-        return parseDecimal(x, str);
-    } else if (str === "Infinity" || str === "NaN") {
-      if (!+str)
+    if (str2.indexOf("_") > -1) {
+      str2 = str2.replace(/(\d)_(?=\d)/g, "$1");
+      if (isDecimal.test(str2))
+        return parseDecimal(x, str2);
+    } else if (str2 === "Infinity" || str2 === "NaN") {
+      if (!+str2)
         x.s = NaN;
       x.e = NaN;
       x.d = null;
       return x;
     }
-    if (isHex.test(str)) {
+    if (isHex.test(str2)) {
       base = 16;
-      str = str.toLowerCase();
-    } else if (isBinary.test(str)) {
+      str2 = str2.toLowerCase();
+    } else if (isBinary.test(str2)) {
       base = 2;
-    } else if (isOctal.test(str)) {
+    } else if (isOctal.test(str2)) {
       base = 8;
     } else {
-      throw Error(invalidArgument + str);
+      throw Error(invalidArgument + str2);
     }
-    i2 = str.search(/p/i);
+    i2 = str2.search(/p/i);
     if (i2 > 0) {
-      p = +str.slice(i2 + 1);
-      str = str.substring(2, i2);
+      p = +str2.slice(i2 + 1);
+      str2 = str2.substring(2, i2);
     } else {
-      str = str.slice(2);
+      str2 = str2.slice(2);
     }
-    i2 = str.indexOf(".");
+    i2 = str2.indexOf(".");
     isFloat = i2 >= 0;
     Ctor = x.constructor;
     if (isFloat) {
-      str = str.replace(".", "");
-      len = str.length;
+      str2 = str2.replace(".", "");
+      len = str2.length;
       i2 = len - i2;
       divisor = intPow(Ctor, new Ctor(base), i2, i2 * 2);
     }
-    xd = convertBase(str, base, BASE);
+    xd = convertBase(str2, base, BASE);
     xe = xd.length - 1;
     for (i2 = xe; xd[i2] === 0; --i2)
       xd.pop();
@@ -9493,7 +11048,7 @@ var meta_bind_publish = (() => {
     return x.minus(pi3).abs();
   }
   function toStringBinary(x, baseOut, sd, rm) {
-    var base, e3, i2, k, len, roundUp, str, xd, y, Ctor = x.constructor, isExp = sd !== void 0;
+    var base, e3, i2, k, len, roundUp, str2, xd, y, Ctor = x.constructor, isExp = sd !== void 0;
     if (isExp) {
       checkInt32(sd, 1, MAX_DIGITS);
       if (rm === void 0)
@@ -9505,10 +11060,10 @@ var meta_bind_publish = (() => {
       rm = Ctor.rounding;
     }
     if (!x.isFinite()) {
-      str = nonFiniteToString(x);
+      str2 = nonFiniteToString(x);
     } else {
-      str = finiteToString(x);
-      i2 = str.indexOf(".");
+      str2 = finiteToString(x);
+      i2 = str2.indexOf(".");
       if (isExp) {
         base = 2;
         if (baseOut == 16) {
@@ -9520,18 +11075,18 @@ var meta_bind_publish = (() => {
         base = baseOut;
       }
       if (i2 >= 0) {
-        str = str.replace(".", "");
+        str2 = str2.replace(".", "");
         y = new Ctor(1);
-        y.e = str.length - i2;
+        y.e = str2.length - i2;
         y.d = convertBase(finiteToString(y), 10, base);
         y.e = y.d.length;
       }
-      xd = convertBase(str, 10, base);
+      xd = convertBase(str2, 10, base);
       e3 = len = xd.length;
       for (; xd[--len] == 0; )
         xd.pop();
       if (!xd[0]) {
-        str = isExp ? "0p+0" : "0";
+        str2 = isExp ? "0p+0" : "0";
       } else {
         if (i2 < 0) {
           e3--;
@@ -9560,39 +11115,39 @@ var meta_bind_publish = (() => {
         }
         for (len = xd.length; !xd[len - 1]; --len)
           ;
-        for (i2 = 0, str = ""; i2 < len; i2++)
-          str += NUMERALS.charAt(xd[i2]);
+        for (i2 = 0, str2 = ""; i2 < len; i2++)
+          str2 += NUMERALS.charAt(xd[i2]);
         if (isExp) {
           if (len > 1) {
             if (baseOut == 16 || baseOut == 8) {
               i2 = baseOut == 16 ? 4 : 3;
               for (--len; len % i2; len++)
-                str += "0";
-              xd = convertBase(str, base, baseOut);
+                str2 += "0";
+              xd = convertBase(str2, base, baseOut);
               for (len = xd.length; !xd[len - 1]; --len)
                 ;
-              for (i2 = 1, str = "1."; i2 < len; i2++)
-                str += NUMERALS.charAt(xd[i2]);
+              for (i2 = 1, str2 = "1."; i2 < len; i2++)
+                str2 += NUMERALS.charAt(xd[i2]);
             } else {
-              str = str.charAt(0) + "." + str.slice(1);
+              str2 = str2.charAt(0) + "." + str2.slice(1);
             }
           }
-          str = str + (e3 < 0 ? "p" : "p+") + e3;
+          str2 = str2 + (e3 < 0 ? "p" : "p+") + e3;
         } else if (e3 < 0) {
           for (; ++e3; )
-            str = "0" + str;
-          str = "0." + str;
+            str2 = "0" + str2;
+          str2 = "0." + str2;
         } else {
           if (++e3 > len)
             for (e3 -= len; e3--; )
-              str += "0";
+              str2 += "0";
           else if (e3 < len)
-            str = str.slice(0, e3) + "." + str.slice(e3);
+            str2 = str2.slice(0, e3) + "." + str2.slice(e3);
         }
       }
-      str = (baseOut == 16 ? "0x" : baseOut == 2 ? "0b" : baseOut == 8 ? "0o" : "") + str;
+      str2 = (baseOut == 16 ? "0x" : baseOut == 2 ? "0b" : baseOut == 8 ? "0o" : "") + str2;
     }
-    return x.s < 0 ? "-" + str : str;
+    return x.s < 0 ? "-" + str2 : str2;
   }
   function truncate(arr, len) {
     if (arr.length > len) {
@@ -9722,7 +11277,7 @@ var meta_bind_publish = (() => {
   function cosh2(x) {
     return new this(x).cosh();
   }
-  function clone2(obj) {
+  function clone3(obj) {
     var i2, p, ps;
     function Decimal2(v) {
       var e3, i3, t, x = this;
@@ -9802,7 +11357,7 @@ var meta_bind_publish = (() => {
       }
       return isDecimal.test(v) ? parseDecimal(x, v) : parseOther(x, v);
     }
-    Decimal2.prototype = P;
+    Decimal2.prototype = P2;
     Decimal2.ROUND_UP = 0;
     Decimal2.ROUND_DOWN = 1;
     Decimal2.ROUND_CEIL = 2;
@@ -9814,7 +11369,7 @@ var meta_bind_publish = (() => {
     Decimal2.ROUND_HALF_FLOOR = 8;
     Decimal2.EUCLID = 9;
     Decimal2.config = Decimal2.set = config3;
-    Decimal2.clone = clone2;
+    Decimal2.clone = clone3;
     Decimal2.isDecimal = isDecimalInstance;
     Decimal2.abs = abs;
     Decimal2.acos = acos;
@@ -10019,9 +11574,9 @@ var meta_bind_publish = (() => {
   function trunc(x) {
     return finalise(x = new this(x), x.e + 1, 1);
   }
-  P[Symbol.for("nodejs.util.inspect.custom")] = P.toString;
-  P[Symbol.toStringTag] = "Decimal";
-  var Decimal = P.constructor = clone2(DEFAULTS);
+  P2[Symbol.for("nodejs.util.inspect.custom")] = P2.toString;
+  P2[Symbol.toStringTag] = "Decimal";
+  var Decimal = P2.constructor = clone3(DEFAULTS);
   LN10 = new Decimal(LN10);
   PI = new Decimal(PI);
   var decimal_default = Decimal;
@@ -10089,7 +11644,7 @@ var meta_bind_publish = (() => {
       };
     };
     import_complex.default.prototype.format = function(options) {
-      var str = "";
+      var str2 = "";
       var im2 = this.im;
       var re2 = this.re;
       var strRe = format(this.re, options);
@@ -10105,31 +11660,31 @@ var meta_bind_publish = (() => {
         }
       }
       if (im2 === 0) {
-        str = strRe;
+        str2 = strRe;
       } else if (re2 === 0) {
         if (im2 === 1) {
-          str = "i";
+          str2 = "i";
         } else if (im2 === -1) {
-          str = "-i";
+          str2 = "-i";
         } else {
-          str = strIm + "i";
+          str2 = strIm + "i";
         }
       } else {
         if (im2 < 0) {
           if (im2 === -1) {
-            str = strRe + " - i";
+            str2 = strRe + " - i";
           } else {
-            str = strRe + " - " + strIm.substring(1) + "i";
+            str2 = strRe + " - " + strIm.substring(1) + "i";
           }
         } else {
           if (im2 === 1) {
-            str = strRe + " + i";
+            str2 = strRe + " + i";
           } else {
-            str = strRe + " + " + strIm + "i";
+            str2 = strRe + " + " + strIm + "i";
           }
         }
       }
-      return str;
+      return str2;
     };
     import_complex.default.fromPolar = function(args) {
       switch (arguments.length) {
@@ -10251,11 +11806,11 @@ var meta_bind_publish = (() => {
     }
     Range2.prototype.type = "Range";
     Range2.prototype.isRange = true;
-    Range2.parse = function(str) {
-      if (typeof str !== "string") {
+    Range2.parse = function(str2) {
+      if (typeof str2 !== "string") {
         return null;
       }
-      var args = str.split(":");
+      var args = str2.split(":");
       var nums = args.map(function(arg2) {
         return parseFloat(arg2);
       });
@@ -10338,15 +11893,15 @@ var meta_bind_publish = (() => {
     };
     Range2.prototype.map = function(callback) {
       var array = [];
-      this.forEach(function(value, index2, obj) {
-        array[index2[0]] = callback(value, index2, obj);
+      this.forEach(function(value2, index2, obj) {
+        array[index2[0]] = callback(value2, index2, obj);
       });
       return array;
     };
     Range2.prototype.toArray = function() {
       var array = [];
-      this.forEach(function(value, index2) {
-        array[index2[0]] = value;
+      this.forEach(function(value2, index2) {
+        array[index2[0]] = value2;
       });
       return array;
     };
@@ -10354,12 +11909,12 @@ var meta_bind_publish = (() => {
       return this.toArray();
     };
     Range2.prototype.format = function(options) {
-      var str = format(this.start, options);
+      var str2 = format(this.start, options);
       if (this.step !== 1) {
-        str += ":" + format(this.step, options);
+        str2 += ":" + format(this.step, options);
       }
-      str += ":" + format(this.end, options);
-      return str;
+      str2 += ":" + format(this.end, options);
+      return str2;
     };
     Range2.prototype.toString = function() {
       return this.format();
@@ -10406,7 +11961,7 @@ var meta_bind_publish = (() => {
     Matrix2.prototype.get = function(index2) {
       throw new Error("Cannot invoke get on a Matrix interface");
     };
-    Matrix2.prototype.set = function(index2, value, defaultValue) {
+    Matrix2.prototype.set = function(index2, value2, defaultValue) {
       throw new Error("Cannot invoke set on a Matrix interface");
     };
     Matrix2.prototype.resize = function(size2, defaultValue) {
@@ -10468,8 +12023,8 @@ var meta_bind_publish = (() => {
         base = 1;
         return;
       }
-      while (!hasOwnProperty.call(queue, ++base))
-        continue;
+      while (!Object.prototype.hasOwnProperty.call(queue, ++base)) {
+      }
     };
     limit = Math.abs(limit);
     return {
@@ -10489,8 +12044,8 @@ var meta_bind_publish = (() => {
         delete queue[oldIndex];
         if (base !== oldIndex)
           return void 0;
-        while (!hasOwnProperty.call(queue, ++base))
-          continue;
+        while (!Object.prototype.hasOwnProperty.call(queue, ++base)) {
+        }
         return void 0;
       },
       delete: del,
@@ -10575,7 +12130,7 @@ var meta_bind_publish = (() => {
         validate(this._data, this._size);
         this._datatype = datatype;
       } else if (data) {
-        throw new TypeError("Unsupported type of data (" + typeOf(data) + ")");
+        throw new TypeError("Unsupported type of data (" + typeOf2(data) + ")");
       } else {
         this._data = [];
         this._size = [0];
@@ -10593,7 +12148,7 @@ var meta_bind_publish = (() => {
     DenseMatrix2.prototype.type = "DenseMatrix";
     DenseMatrix2.prototype.isDenseMatrix = true;
     DenseMatrix2.prototype.getDataType = function() {
-      return getArrayDataType(this._data, typeOf);
+      return getArrayDataType(this._data, typeOf2);
     };
     DenseMatrix2.prototype.storage = function() {
       return "dense";
@@ -10633,7 +12188,7 @@ var meta_bind_publish = (() => {
       }
       return data;
     };
-    DenseMatrix2.prototype.set = function(index2, value, defaultValue) {
+    DenseMatrix2.prototype.set = function(index2, value2, defaultValue) {
       if (!isArray(index2)) {
         throw new TypeError("Array expected");
       }
@@ -10653,7 +12208,7 @@ var meta_bind_publish = (() => {
       }
       indexI = index2[index2.length - 1];
       validateIndex(indexI, data.length);
-      data[indexI] = value;
+      data[indexI] = value2;
       return this;
     };
     function _get(matrix2, index2) {
@@ -10712,6 +12267,17 @@ var meta_bind_publish = (() => {
         }
         matrix2.set(index2.min(), submatrix, defaultValue);
       } else {
+        if (!deepStrictEqual(sSize, iSize)) {
+          try {
+            if (sSize.length === 0) {
+              submatrix = broadcastTo([submatrix], iSize);
+            } else {
+              submatrix = broadcastTo(submatrix, iSize);
+            }
+            sSize = arraySize(submatrix);
+          } catch (_unused) {
+          }
+        }
         if (iSize.length < matrix2._size.length) {
           throw new DimensionError(iSize.length, matrix2._size.length, "<");
         }
@@ -10759,8 +12325,8 @@ var meta_bind_publish = (() => {
       if (!isCollection(size2)) {
         throw new TypeError("Array or Matrix expected");
       }
-      var sizeArray = size2.valueOf().map((value) => {
-        return Array.isArray(value) && value.length === 1 ? value[0] : value;
+      var sizeArray = size2.valueOf().map((value2) => {
+        return Array.isArray(value2) && value2.length === 1 ? value2[0] : value2;
       });
       var m = copy ? this.clone() : this;
       return _resize2(m, sizeArray, defaultValue);
@@ -10815,47 +12381,47 @@ var meta_bind_publish = (() => {
     DenseMatrix2.prototype.map = function(callback) {
       var me = this;
       var args = maxArgumentCount(callback);
-      var recurse = function recurse2(value, index2) {
-        if (isArray(value)) {
-          return value.map(function(child, i2) {
+      var recurse = function recurse2(value2, index2) {
+        if (isArray(value2)) {
+          return value2.map(function(child, i2) {
             return recurse2(child, index2.concat(i2));
           });
         } else {
           if (args === 1) {
-            return callback(value);
+            return callback(value2);
           } else if (args === 2) {
-            return callback(value, index2);
+            return callback(value2, index2);
           } else {
-            return callback(value, index2, me);
+            return callback(value2, index2, me);
           }
         }
       };
       var data = recurse(this._data, []);
-      var datatype = this._datatype !== void 0 ? getArrayDataType(data, typeOf) : void 0;
+      var datatype = this._datatype !== void 0 ? getArrayDataType(data, typeOf2) : void 0;
       return new DenseMatrix2(data, datatype);
     };
     DenseMatrix2.prototype.forEach = function(callback) {
       var me = this;
-      var recurse = function recurse2(value, index2) {
-        if (isArray(value)) {
-          value.forEach(function(child, i2) {
+      var recurse = function recurse2(value2, index2) {
+        if (isArray(value2)) {
+          value2.forEach(function(child, i2) {
             recurse2(child, index2.concat(i2));
           });
         } else {
-          callback(value, index2, me);
+          callback(value2, index2, me);
         }
       };
       recurse(this._data, []);
     };
     DenseMatrix2.prototype[Symbol.iterator] = function* () {
-      var recurse = function* recurse2(value, index2) {
-        if (isArray(value)) {
-          for (var i2 = 0; i2 < value.length; i2++) {
-            yield* recurse2(value[i2], index2.concat(i2));
+      var recurse = function* recurse2(value2, index2) {
+        if (isArray(value2)) {
+          for (var i2 = 0; i2 < value2.length; i2++) {
+            yield* recurse2(value2[i2], index2.concat(i2));
           }
         } else {
           yield {
-            value,
+            value: value2,
             index: index2
           };
         }
@@ -10937,7 +12503,7 @@ var meta_bind_publish = (() => {
         datatype: this._datatype
       });
     };
-    DenseMatrix2.diagonal = function(size2, value, k, defaultValue) {
+    DenseMatrix2.diagonal = function(size2, value2, k, defaultValue) {
       if (!isArray(size2)) {
         throw new TypeError("Array expected, size parameter");
       }
@@ -10969,24 +12535,24 @@ var meta_bind_publish = (() => {
       var columns = size2[1];
       var n = Math.min(rows - kSub, columns - kSuper);
       var _value;
-      if (isArray(value)) {
-        if (value.length !== n) {
+      if (isArray(value2)) {
+        if (value2.length !== n) {
           throw new Error("Invalid value array length");
         }
         _value = function _value2(i2) {
-          return value[i2];
+          return value2[i2];
         };
-      } else if (isMatrix(value)) {
-        var ms = value.size();
+      } else if (isMatrix(value2)) {
+        var ms = value2.size();
         if (ms.length !== 1 || ms[0] !== n) {
           throw new Error("Invalid matrix length");
         }
         _value = function _value2(i2) {
-          return value.get([i2]);
+          return value2.get([i2]);
         };
       } else {
         _value = function _value2() {
-          return value;
+          return value2;
         };
       }
       if (!defaultValue) {
@@ -11025,13 +12591,11 @@ var meta_bind_publish = (() => {
       data[j] = vi;
     };
     function preprocess(data) {
-      for (var i2 = 0, ii = data.length; i2 < ii; i2++) {
-        var elem = data[i2];
-        if (isArray(elem)) {
-          data[i2] = preprocess(elem);
-        } else if (elem && elem.isMatrix === true) {
-          data[i2] = preprocess(elem.valueOf());
-        }
+      if (isMatrix(data)) {
+        return preprocess(data.valueOf());
+      }
+      if (isArray(data)) {
+        return data.map(preprocess);
       }
       return data;
     }
@@ -11045,9 +12609,9 @@ var meta_bind_publish = (() => {
   var dependencies9 = ["typed"];
   var createClone = /* @__PURE__ */ factory(name8, dependencies9, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name8, {
+    return typed3(name8, {
       any: clone
     });
   });
@@ -11082,11 +12646,11 @@ var meta_bind_publish = (() => {
       array = array.valueOf();
     }
     for (var i2 = 0, ii = array.length; i2 < ii; i2++) {
-      var value = array[i2];
-      if (Array.isArray(value)) {
-        deepForEach(value, callback);
+      var value2 = array[i2];
+      if (Array.isArray(value2)) {
+        deepForEach(value2, callback);
       } else {
-        callback(value);
+        callback(value2);
       }
     }
   }
@@ -11135,7 +12699,7 @@ var meta_bind_publish = (() => {
       return ret;
     }
   }
-  function scatter(a, j, w, x, u, mark, cindex, f, inverse, update2, value) {
+  function scatter(a, j, w, x, u, mark, cindex, f, inverse, update2, value2) {
     var avalues = a._values;
     var aindex = a._index;
     var aptr = a._ptr;
@@ -11147,7 +12711,7 @@ var meta_bind_publish = (() => {
           w[i2] = mark;
           cindex.push(i2);
           if (update2) {
-            x[i2] = inverse ? f(avalues[k], value) : f(value, avalues[k]);
+            x[i2] = inverse ? f(avalues[k], value2) : f(value2, avalues[k]);
             u[i2] = mark;
           } else {
             x[i2] = avalues[k];
@@ -11175,9 +12739,9 @@ var meta_bind_publish = (() => {
   var dependencies10 = ["typed"];
   var createIsInteger = /* @__PURE__ */ factory(name9, dependencies10, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name9, {
+    return typed3(name9, {
       number: isInteger,
       BigNumber: function BigNumber2(x) {
         return x.isInt();
@@ -11185,7 +12749,7 @@ var meta_bind_publish = (() => {
       Fraction: function Fraction3(x) {
         return x.d === 1 && isFinite(x.n);
       },
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2))
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2))
     });
   });
 
@@ -11285,13 +12849,7 @@ var meta_bind_publish = (() => {
   }
   log1pNumber.signature = n1;
   function modNumber(x, y) {
-    if (y > 0) {
-      return x - y * Math.floor(x / y);
-    } else if (y === 0) {
-      return x;
-    } else {
-      throw new Error("Cannot calculate mod for a negative divisor");
-    }
+    return y === 0 ? x : x - y * Math.floor(x / y);
   }
   modNumber.signature = n2;
   function nthRootNumber(a) {
@@ -11367,12 +12925,12 @@ var meta_bind_publish = (() => {
     return Math.pow(x, y);
   }
   powNumber.signature = n2;
-  function roundNumber(value) {
+  function roundNumber(value2) {
     var decimals = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 0;
     if (!isInteger(decimals) || decimals < 0 || decimals > 15) {
       throw new Error("Number of decimals in function round must be an integer from 0 to 15 inclusive");
     }
-    return parseFloat(toFixed(value, decimals));
+    return parseFloat(toFixed(value2, decimals));
   }
   function normNumber(x) {
     return Math.abs(x);
@@ -11700,9 +13258,9 @@ var meta_bind_publish = (() => {
   var dependencies11 = ["typed"];
   var createIsNegative = /* @__PURE__ */ factory(name10, dependencies11, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name10, {
+    return typed3(name10, {
       number: isNegativeNumber,
       BigNumber: function BigNumber2(x) {
         return x.isNeg() && !x.isZero() && !x.isNaN();
@@ -11710,8 +13268,8 @@ var meta_bind_publish = (() => {
       Fraction: function Fraction3(x) {
         return x.s < 0;
       },
-      Unit: typed2.referToSelf((self2) => (x) => typed2.find(self2, x.valueType())(x.value)),
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2))
+      Unit: typed3.referToSelf((self2) => (x) => typed3.find(self2, x.valueType())(x.value)),
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2))
     });
   });
 
@@ -11720,12 +13278,12 @@ var meta_bind_publish = (() => {
   var dependencies12 = ["typed"];
   var createIsNumeric = /* @__PURE__ */ factory(name11, dependencies12, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name11, {
+    return typed3(name11, {
       "number | BigNumber | Fraction | boolean": () => true,
       "Complex | Unit | string | null | undefined | Node": () => false,
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2))
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2))
     });
   });
 
@@ -11734,10 +13292,10 @@ var meta_bind_publish = (() => {
   var dependencies13 = ["typed", "isNumeric"];
   var createHasNumericValue = /* @__PURE__ */ factory(name12, dependencies13, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       isNumeric: isNumeric2
     } = _ref;
-    return typed2(name12, {
+    return typed3(name12, {
       boolean: () => true,
       string: function string2(x) {
         return x.trim().length > 0 && !isNaN(Number(x));
@@ -11753,9 +13311,9 @@ var meta_bind_publish = (() => {
   var dependencies14 = ["typed"];
   var createIsPositive = /* @__PURE__ */ factory(name13, dependencies14, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name13, {
+    return typed3(name13, {
       number: isPositiveNumber,
       BigNumber: function BigNumber2(x) {
         return !x.isNeg() && !x.isZero() && !x.isNaN();
@@ -11763,8 +13321,8 @@ var meta_bind_publish = (() => {
       Fraction: function Fraction3(x) {
         return x.s > 0 && x.n > 0;
       },
-      Unit: typed2.referToSelf((self2) => (x) => typed2.find(self2, x.valueType())(x.value)),
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2))
+      Unit: typed3.referToSelf((self2) => (x) => typed3.find(self2, x.valueType())(x.value)),
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2))
     });
   });
 
@@ -11773,9 +13331,9 @@ var meta_bind_publish = (() => {
   var dependencies15 = ["typed"];
   var createIsZero = /* @__PURE__ */ factory(name14, dependencies15, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name14, {
+    return typed3(name14, {
       number: isZeroNumber,
       BigNumber: function BigNumber2(x) {
         return x.isZero();
@@ -11786,8 +13344,8 @@ var meta_bind_publish = (() => {
       Fraction: function Fraction3(x) {
         return x.d === 1 && x.n === 0;
       },
-      Unit: typed2.referToSelf((self2) => (x) => typed2.find(self2, x.valueType())(x.value)),
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2))
+      Unit: typed3.referToSelf((self2) => (x) => typed3.find(self2, x.valueType())(x.value)),
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2))
     });
   });
 
@@ -11796,9 +13354,9 @@ var meta_bind_publish = (() => {
   var dependencies16 = ["typed"];
   var createIsNaN = /* @__PURE__ */ factory(name15, dependencies16, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name15, {
+    return typed3(name15, {
       number: isNaNNumber,
       BigNumber: function BigNumber2(x) {
         return x.isNaN();
@@ -11823,10 +13381,10 @@ var meta_bind_publish = (() => {
   var dependencies17 = ["typed"];
   var createTypeOf = /* @__PURE__ */ factory(name16, dependencies17, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name16, {
-      any: typeOf
+    return typed3(name16, {
+      any: typeOf2
     });
   });
 
@@ -11861,14 +13419,14 @@ var meta_bind_publish = (() => {
   // node_modules/mathjs/lib/esm/function/relational/compareUnits.js
   var createCompareUnits = /* @__PURE__ */ factory("compareUnits", ["typed"], (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
     return {
-      "Unit, Unit": typed2.referToSelf((self2) => (x, y) => {
+      "Unit, Unit": typed3.referToSelf((self2) => (x, y) => {
         if (!x.equalBase(y)) {
           throw new Error("Cannot compare units with different base");
         }
-        return typed2.find(self2, [x.valueType(), y.valueType()])(x.value, y.value);
+        return typed3.find(self2, [x.valueType(), y.valueType()])(x.value, y.value);
       })
     };
   });
@@ -11878,13 +13436,13 @@ var meta_bind_publish = (() => {
   var dependencies18 = ["typed", "config"];
   var createEqualScalar = /* @__PURE__ */ factory(name17, dependencies18, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4
     } = _ref;
     var compareUnits = createCompareUnits({
-      typed: typed2
+      typed: typed3
     });
-    return typed2(name17, {
+    return typed3(name17, {
       "boolean, boolean": function booleanBoolean(x, y) {
         return x === y;
       },
@@ -11904,10 +13462,10 @@ var meta_bind_publish = (() => {
   });
   var createEqualScalarNumber = factory(name17, ["typed", "config"], (_ref2) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4
     } = _ref2;
-    return typed2(name17, {
+    return typed3(name17, {
       "number, number": function numberNumber(x, y) {
         return nearlyEqual(x, y, config4.epsilon);
       }
@@ -11919,7 +13477,7 @@ var meta_bind_publish = (() => {
   var dependencies19 = ["typed", "equalScalar", "Matrix"];
   var createSparseMatrixClass = /* @__PURE__ */ factory(name18, dependencies19, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2,
       Matrix: Matrix2
     } = _ref;
@@ -11941,7 +13499,7 @@ var meta_bind_publish = (() => {
       } else if (isArray(data)) {
         _createFromArray(this, data, datatype);
       } else if (data) {
-        throw new TypeError("Unsupported type of data (" + typeOf(data) + ")");
+        throw new TypeError("Unsupported type of data (" + typeOf2(data) + ")");
       } else {
         this._values = [];
         this._index = [];
@@ -11971,8 +13529,8 @@ var meta_bind_publish = (() => {
       var eq = equalScalar2;
       var zero = 0;
       if (isString(datatype)) {
-        eq = typed2.find(equalScalar2, [datatype, datatype]) || equalScalar2;
-        zero = typed2.convert(0, datatype);
+        eq = typed3.find(equalScalar2, [datatype, datatype]) || equalScalar2;
+        zero = typed3.convert(0, datatype);
       }
       if (rows > 0) {
         var j = 0;
@@ -12018,7 +13576,7 @@ var meta_bind_publish = (() => {
     SparseMatrix2.prototype.type = "SparseMatrix";
     SparseMatrix2.prototype.isSparseMatrix = true;
     SparseMatrix2.prototype.getDataType = function() {
-      return getArrayDataType(this._values, typeOf);
+      return getArrayDataType(this._values, typeOf2);
     };
     SparseMatrix2.prototype.storage = function() {
       return "sparse";
@@ -12196,8 +13754,8 @@ var meta_bind_publish = (() => {
       var eq = equalScalar2;
       var zero = 0;
       if (isString(this._datatype)) {
-        eq = typed2.find(equalScalar2, [this._datatype, this._datatype]) || equalScalar2;
-        zero = typed2.convert(0, this._datatype);
+        eq = typed3.find(equalScalar2, [this._datatype, this._datatype]) || equalScalar2;
+        zero = typed3.convert(0, this._datatype);
       }
       if (i2 > rows - 1 || j > columns - 1) {
         _resize2(this, Math.max(i2 + 1, rows), Math.max(j + 1, columns), defaultValue);
@@ -12249,14 +13807,14 @@ var meta_bind_publish = (() => {
       if (!isCollection(size2)) {
         throw new TypeError("Array or Matrix expected");
       }
-      var sizeArray = size2.valueOf().map((value) => {
-        return Array.isArray(value) && value.length === 1 ? value[0] : value;
+      var sizeArray = size2.valueOf().map((value2) => {
+        return Array.isArray(value2) && value2.length === 1 ? value2[0] : value2;
       });
       if (sizeArray.length !== 2) {
         throw new Error("Only two dimensions matrix are supported");
       }
-      sizeArray.forEach(function(value) {
-        if (!isNumber(value) || !isInteger(value) || value < 0) {
+      sizeArray.forEach(function(value2) {
+        if (!isNumber(value2) || !isInteger(value2) || value2 < 0) {
           throw new TypeError("Invalid size, must contain positive integers (size: " + format3(sizeArray) + ")");
         }
       });
@@ -12264,15 +13822,15 @@ var meta_bind_publish = (() => {
       return _resize2(m, sizeArray[0], sizeArray[1], defaultValue);
     };
     function _resize2(matrix2, rows, columns, defaultValue) {
-      var value = defaultValue || 0;
+      var value2 = defaultValue || 0;
       var eq = equalScalar2;
       var zero = 0;
       if (isString(matrix2._datatype)) {
-        eq = typed2.find(equalScalar2, [matrix2._datatype, matrix2._datatype]) || equalScalar2;
-        zero = typed2.convert(0, matrix2._datatype);
-        value = typed2.convert(value, matrix2._datatype);
+        eq = typed3.find(equalScalar2, [matrix2._datatype, matrix2._datatype]) || equalScalar2;
+        zero = typed3.convert(0, matrix2._datatype);
+        value2 = typed3.convert(value2, matrix2._datatype);
       }
-      var ins = !eq(value, zero);
+      var ins = !eq(value2, zero);
       var r = matrix2._size[0];
       var c = matrix2._size[1];
       var i2, j, k;
@@ -12281,7 +13839,7 @@ var meta_bind_publish = (() => {
           matrix2._ptr[j] = matrix2._values.length;
           if (ins) {
             for (i2 = 0; i2 < r; i2++) {
-              matrix2._values.push(value);
+              matrix2._values.push(value2);
               matrix2._index.push(i2);
             }
           }
@@ -12301,7 +13859,7 @@ var meta_bind_publish = (() => {
             k = matrix2._ptr[j + 1] + n;
             var p = 0;
             for (i2 = r; i2 < rows; i2++, p++) {
-              matrix2._values.splice(k + p, 0, value);
+              matrix2._values.splice(k + p, 0, value2);
               matrix2._index.splice(k + p, 0, i2);
               n++;
             }
@@ -12336,8 +13894,8 @@ var meta_bind_publish = (() => {
       if (sizes.length !== 2) {
         throw new Error("Sparse matrices can only be reshaped in two dimensions");
       }
-      sizes.forEach(function(value) {
-        if (!isNumber(value) || !isInteger(value) || value <= -2 || value === 0) {
+      sizes.forEach(function(value2) {
+        if (!isNumber(value2) || !isInteger(value2) || value2 <= -2 || value2 === 0) {
           throw new TypeError("Invalid size, must contain positive integers or -1 (size: " + format3(sizes) + ")");
         }
       });
@@ -12419,8 +13977,8 @@ var meta_bind_publish = (() => {
       var eq = equalScalar2;
       var zero = 0;
       if (isString(matrix2._datatype)) {
-        eq = typed2.find(equalScalar2, [matrix2._datatype, matrix2._datatype]) || equalScalar2;
-        zero = typed2.convert(0, matrix2._datatype);
+        eq = typed3.find(equalScalar2, [matrix2._datatype, matrix2._datatype]) || equalScalar2;
+        zero = typed3.convert(0, matrix2._datatype);
       }
       var invoke = function invoke2(v, x, y) {
         v = callback(v, x, y);
@@ -12447,8 +14005,8 @@ var meta_bind_publish = (() => {
             _values[_i4] = matrix2._values[_k];
           }
           for (var _i5 = minRow; _i5 <= maxRow; _i5++) {
-            var value = _i5 in _values ? _values[_i5] : 0;
-            invoke(value, _i5 - minRow, j - minColumn);
+            var value2 = _i5 in _values ? _values[_i5] : 0;
+            invoke(value2, _i5 - minRow, j - minColumn);
           }
         }
       }
@@ -12482,8 +14040,8 @@ var meta_bind_publish = (() => {
             values[_i6] = this._values[_k2];
           }
           for (var _i7 = 0; _i7 < rows; _i7++) {
-            var value = _i7 in values ? values[_i7] : 0;
-            callback(value, [_i7, j], me);
+            var value2 = _i7 in values ? values[_i7] : 0;
+            callback(value2, [_i7, j], me);
           }
         }
       }
@@ -12536,16 +14094,16 @@ var meta_bind_publish = (() => {
       var rows = this._size[0];
       var columns = this._size[1];
       var density = this.density();
-      var str = "Sparse Matrix [" + format3(rows, options) + " x " + format3(columns, options) + "] density: " + format3(density, options) + "\n";
+      var str2 = "Sparse Matrix [" + format3(rows, options) + " x " + format3(columns, options) + "] density: " + format3(density, options) + "\n";
       for (var j = 0; j < columns; j++) {
         var k0 = this._ptr[j];
         var k1 = this._ptr[j + 1];
         for (var k = k0; k < k1; k++) {
           var i2 = this._index[k];
-          str += "\n    (" + format3(i2, options) + ", " + format3(j, options) + ") ==> " + (this._values ? format3(this._values[k], options) : "X");
+          str2 += "\n    (" + format3(i2, options) + ", " + format3(j, options) + ") ==> " + (this._values ? format3(this._values[k], options) : "X");
         }
       }
-      return str;
+      return str2;
     };
     SparseMatrix2.prototype.toString = function() {
       return format3(this.toArray());
@@ -12603,7 +14161,7 @@ var meta_bind_publish = (() => {
     SparseMatrix2.fromJSON = function(json) {
       return new SparseMatrix2(json);
     };
-    SparseMatrix2.diagonal = function(size2, value, k, defaultValue, datatype) {
+    SparseMatrix2.diagonal = function(size2, value2, k, defaultValue, datatype) {
       if (!isArray(size2)) {
         throw new TypeError("Array expected, size parameter");
       }
@@ -12632,8 +14190,8 @@ var meta_bind_publish = (() => {
       var eq = equalScalar2;
       var zero = 0;
       if (isString(datatype)) {
-        eq = typed2.find(equalScalar2, [datatype, datatype]) || equalScalar2;
-        zero = typed2.convert(0, datatype);
+        eq = typed3.find(equalScalar2, [datatype, datatype]) || equalScalar2;
+        zero = typed3.convert(0, datatype);
       }
       var kSuper = k > 0 ? k : 0;
       var kSub = k < 0 ? -k : 0;
@@ -12641,24 +14199,24 @@ var meta_bind_publish = (() => {
       var columns = size2[1];
       var n = Math.min(rows - kSub, columns - kSuper);
       var _value;
-      if (isArray(value)) {
-        if (value.length !== n) {
+      if (isArray(value2)) {
+        if (value2.length !== n) {
           throw new Error("Invalid value array length");
         }
         _value = function _value2(i3) {
-          return value[i3];
+          return value2[i3];
         };
-      } else if (isMatrix(value)) {
-        var ms = value.size();
+      } else if (isMatrix(value2)) {
+        var ms = value2.size();
         if (ms.length !== 1 || ms[0] !== n) {
           throw new Error("Invalid matrix length");
         }
         _value = function _value2(i3) {
-          return value.get([i3]);
+          return value2.get([i3]);
         };
       } else {
         _value = function _value2() {
-          return value;
+          return value2;
         };
       }
       var values = [];
@@ -12784,9 +14342,9 @@ var meta_bind_publish = (() => {
   }
   var createNumber = /* @__PURE__ */ factory(name19, dependencies20, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    var number2 = typed2("number", {
+    var number2 = typed3("number", {
       "": function _() {
         return 0;
       },
@@ -12826,16 +14384,18 @@ var meta_bind_publish = (() => {
       Fraction: function Fraction3(x) {
         return x.valueOf();
       },
-      Unit: function Unit2(x) {
-        throw new Error("Second argument with valueless unit expected");
-      },
+      Unit: typed3.referToSelf((self2) => (x) => {
+        var clone5 = x.clone();
+        clone5.value = self2(x.value);
+        return clone5;
+      }),
       null: function _null2(x) {
         return 0;
       },
       "Unit, string | Unit": function UnitStringUnit(unit2, valuelessUnit) {
         return unit2.toNumber(valuelessUnit);
       },
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2))
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2))
     });
     number2.fromJSON = function(json) {
       return parseFloat(json.value);
@@ -12848,9 +14408,9 @@ var meta_bind_publish = (() => {
   var dependencies21 = ["typed"];
   var createString = /* @__PURE__ */ factory(name20, dependencies21, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name20, {
+    return typed3(name20, {
       "": function _() {
         return "";
       },
@@ -12864,7 +14424,7 @@ var meta_bind_publish = (() => {
       string: function string2(x) {
         return x;
       },
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2)),
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2)),
       any: function any(x) {
         return String(x);
       }
@@ -12876,9 +14436,9 @@ var meta_bind_publish = (() => {
   var dependencies22 = ["typed"];
   var createBoolean = /* @__PURE__ */ factory(name21, dependencies22, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name21, {
+    return typed3(name21, {
       "": function _() {
         return false;
       },
@@ -12907,7 +14467,7 @@ var meta_bind_publish = (() => {
         }
         throw new Error('Cannot convert "' + x + '" to a boolean');
       },
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2))
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2))
     });
   });
 
@@ -12916,10 +14476,10 @@ var meta_bind_publish = (() => {
   var dependencies23 = ["typed", "BigNumber"];
   var createBignumber = /* @__PURE__ */ factory(name22, dependencies23, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       BigNumber: BigNumber2
     } = _ref;
-    return typed2("bignumber", {
+    return typed3("bignumber", {
       "": function _() {
         return new BigNumber2(0);
       },
@@ -12947,13 +14507,18 @@ var meta_bind_publish = (() => {
       BigNumber: function BigNumber3(x) {
         return x;
       },
+      Unit: typed3.referToSelf((self2) => (x) => {
+        var clone5 = x.clone();
+        clone5.value = self2(x.value);
+        return clone5;
+      }),
       Fraction: function Fraction3(x) {
         return new BigNumber2(x.n).div(x.d).times(x.s);
       },
       null: function _null2(x) {
         return new BigNumber2(0);
       },
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2))
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2))
     });
   });
 
@@ -12962,10 +14527,10 @@ var meta_bind_publish = (() => {
   var dependencies24 = ["typed", "Complex"];
   var createComplex = /* @__PURE__ */ factory(name23, dependencies24, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       Complex: Complex3
     } = _ref;
-    return typed2("complex", {
+    return typed3("complex", {
       "": function _() {
         return Complex3.ZERO;
       },
@@ -12999,7 +14564,7 @@ var meta_bind_publish = (() => {
         }
         throw new Error("Expected object with properties (re and im) or (r and phi) or (abs and arg)");
       },
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2))
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2))
     });
   });
 
@@ -13008,10 +14573,10 @@ var meta_bind_publish = (() => {
   var dependencies25 = ["typed", "Fraction"];
   var createFraction = /* @__PURE__ */ factory(name24, dependencies25, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       Fraction: Fraction3
     } = _ref;
-    return typed2("fraction", {
+    return typed3("fraction", {
       number: function number2(x) {
         if (!isFinite(x) || isNaN(x)) {
           throw new Error(x + " cannot be represented as a fraction");
@@ -13033,10 +14598,15 @@ var meta_bind_publish = (() => {
       Fraction: function Fraction4(x) {
         return x;
       },
+      Unit: typed3.referToSelf((self2) => (x) => {
+        var clone5 = x.clone();
+        clone5.value = self2(x.value);
+        return clone5;
+      }),
       Object: function Object2(x) {
         return new Fraction3(x);
       },
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2))
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2))
     });
   });
 
@@ -13045,12 +14615,12 @@ var meta_bind_publish = (() => {
   var dependencies26 = ["typed", "Matrix", "DenseMatrix", "SparseMatrix"];
   var createMatrix = /* @__PURE__ */ factory(name25, dependencies26, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       Matrix: Matrix2,
       DenseMatrix: DenseMatrix2,
       SparseMatrix: SparseMatrix2
     } = _ref;
-    return typed2(name25, {
+    return typed3(name25, {
       "": function _() {
         return _create([]);
       },
@@ -13085,11 +14655,11 @@ var meta_bind_publish = (() => {
   var dependencies27 = ["typed", "matrix", "isZero"];
   var createMatrixFromFunction = /* @__PURE__ */ factory(name26, dependencies27, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       isZero: isZero2
     } = _ref;
-    return typed2(name26, {
+    return typed3(name26, {
       "Array | Matrix, function, string, string": function ArrayMatrixFunctionStringString(size2, fn, format5, datatype) {
         return _create(size2, fn, format5, datatype);
       },
@@ -13132,12 +14702,12 @@ var meta_bind_publish = (() => {
   var dependencies28 = ["typed", "matrix", "flatten", "size"];
   var createMatrixFromRows = /* @__PURE__ */ factory(name27, dependencies28, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       flatten: flatten3,
       size: size2
     } = _ref;
-    return typed2(name27, {
+    return typed3(name27, {
       "...Array": function Array2(arr) {
         return _createArray(arr);
       },
@@ -13182,12 +14752,12 @@ var meta_bind_publish = (() => {
   var dependencies29 = ["typed", "matrix", "flatten", "size"];
   var createMatrixFromColumns = /* @__PURE__ */ factory(name28, dependencies29, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       flatten: flatten3,
       size: size2
     } = _ref;
-    return typed2(name28, {
+    return typed3(name28, {
       "...Array": function Array2(arr) {
         return _createArray(arr);
       },
@@ -13238,9 +14808,9 @@ var meta_bind_publish = (() => {
   var dependencies30 = ["typed"];
   var createSplitUnit = /* @__PURE__ */ factory(name29, dependencies30, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name29, {
+    return typed3(name29, {
       "Unit, Array": function UnitArray(unit2, parts) {
         return unit2.splitUnit(parts);
       }
@@ -13252,17 +14822,17 @@ var meta_bind_publish = (() => {
   var dependencies31 = ["typed"];
   var createUnaryMinus = /* @__PURE__ */ factory(name30, dependencies31, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name30, {
+    return typed3(name30, {
       number: unaryMinusNumber,
       "Complex | BigNumber | Fraction": (x) => x.neg(),
-      Unit: typed2.referToSelf((self2) => (x) => {
+      Unit: typed3.referToSelf((self2) => (x) => {
         var res = x.clone();
-        res.value = typed2.find(self2, res.valueType())(x.value);
+        res.value = typed3.find(self2, res.valueType())(x.value);
         return res;
       }),
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2, true))
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2, true))
     });
   });
 
@@ -13271,11 +14841,11 @@ var meta_bind_publish = (() => {
   var dependencies32 = ["typed", "config", "BigNumber"];
   var createUnaryPlus = /* @__PURE__ */ factory(name31, dependencies32, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       BigNumber: BigNumber2
     } = _ref;
-    return typed2(name31, {
+    return typed3(name31, {
       number: unaryPlusNumber,
       Complex: function Complex3(x) {
         return x;
@@ -13289,7 +14859,7 @@ var meta_bind_publish = (() => {
       Unit: function Unit2(x) {
         return x.clone();
       },
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2, true)),
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2, true)),
       "boolean | string": function booleanString(x) {
         return config4.number === "BigNumber" ? new BigNumber2(+x) : +x;
       }
@@ -13301,12 +14871,12 @@ var meta_bind_publish = (() => {
   var dependencies33 = ["typed"];
   var createAbs = /* @__PURE__ */ factory(name32, dependencies33, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name32, {
+    return typed3(name32, {
       number: absNumber,
       "Complex | BigNumber | Fraction | Unit": (x) => x.abs(),
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2, true))
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2, true))
     });
   });
 
@@ -13315,10 +14885,10 @@ var meta_bind_publish = (() => {
   var dependencies34 = ["typed", "isInteger"];
   var createApply = /* @__PURE__ */ factory(name33, dependencies34, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       isInteger: isInteger3
     } = _ref;
-    return typed2(name33, {
+    return typed3(name33, {
       "Array | Matrix, number | BigNumber, function": function ArrayMatrixNumberBigNumberFunction(mat, dim, callback) {
         if (!isInteger3(dim)) {
           throw new TypeError("Integer number expected for dimension");
@@ -13376,9 +14946,9 @@ var meta_bind_publish = (() => {
   var dependencies35 = ["typed"];
   var createAddScalar = /* @__PURE__ */ factory(name34, dependencies35, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name34, {
+    return typed3(name34, {
       "number, number": addNumber,
       "Complex, Complex": function ComplexComplex(x, y) {
         return x.add(y);
@@ -13389,7 +14959,7 @@ var meta_bind_publish = (() => {
       "Fraction, Fraction": function FractionFraction(x, y) {
         return x.add(y);
       },
-      "Unit, Unit": typed2.referToSelf((self2) => (x, y) => {
+      "Unit, Unit": typed3.referToSelf((self2) => (x, y) => {
         if (x.value === null || x.value === void 0) {
           throw new Error("Parameter x contains a unit with undefined value");
         }
@@ -13399,7 +14969,7 @@ var meta_bind_publish = (() => {
         if (!x.equalBase(y))
           throw new Error("Units do not match");
         var res = x.clone();
-        res.value = typed2.find(self2, [res.valueType(), y.valueType()])(res.value, y.value);
+        res.value = typed3.find(self2, [res.valueType(), y.valueType()])(res.value, y.value);
         res.fixPrefix = false;
         return res;
       })
@@ -13412,7 +14982,7 @@ var meta_bind_publish = (() => {
   var createCbrt = /* @__PURE__ */ factory(name35, dependencies36, (_ref) => {
     var {
       config: config4,
-      typed: typed2,
+      typed: typed3,
       isNegative: isNegative2,
       unaryMinus: unaryMinus2,
       matrix: matrix2,
@@ -13420,7 +14990,7 @@ var meta_bind_publish = (() => {
       BigNumber: BigNumber2,
       Fraction: Fraction3
     } = _ref;
-    return typed2(name35, {
+    return typed3(name35, {
       number: cbrtNumber,
       Complex: _cbrtComplex,
       "Complex, boolean": _cbrtComplex,
@@ -13474,7 +15044,7 @@ var meta_bind_publish = (() => {
   var dependencies37 = ["typed", "equalScalar"];
   var createMatAlgo11xS0s = /* @__PURE__ */ factory(name36, dependencies37, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     } = _ref;
     return function matAlgo11xS0s(s, b, callback, inverse) {
@@ -13494,10 +15064,10 @@ var meta_bind_publish = (() => {
       var cf = callback;
       if (typeof adt === "string") {
         dt = adt;
-        eq = typed2.find(equalScalar2, [dt, dt]);
-        zero = typed2.convert(0, dt);
-        b = typed2.convert(b, dt);
-        cf = typed2.find(callback, [dt, dt]);
+        eq = typed3.find(equalScalar2, [dt, dt]);
+        zero = typed3.convert(0, dt);
+        b = typed3.convert(b, dt);
+        cf = typed3.find(callback, [dt, dt]);
       }
       var cvalues = [];
       var cindex = [];
@@ -13529,7 +15099,7 @@ var meta_bind_publish = (() => {
   var dependencies38 = ["typed", "DenseMatrix"];
   var createMatAlgo12xSfs = /* @__PURE__ */ factory(name37, dependencies38, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     } = _ref;
     return function matAlgo12xSfs(s, b, callback, inverse) {
@@ -13547,8 +15117,8 @@ var meta_bind_publish = (() => {
       var cf = callback;
       if (typeof adt === "string") {
         dt = adt;
-        b = typed2.convert(b, dt);
-        cf = typed2.find(callback, [dt, dt]);
+        b = typed3.convert(b, dt);
+        cf = typed3.find(callback, [dt, dt]);
       }
       var cdata = [];
       var x = [];
@@ -13584,7 +15154,7 @@ var meta_bind_publish = (() => {
   var dependencies39 = ["typed"];
   var createMatAlgo14xDs = /* @__PURE__ */ factory(name38, dependencies39, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
     return function matAlgo14xDs(a, b, callback, inverse) {
       var adata = a._data;
@@ -13594,8 +15164,8 @@ var meta_bind_publish = (() => {
       var cf = callback;
       if (typeof adt === "string") {
         dt = adt;
-        b = typed2.convert(b, dt);
-        cf = typed2.find(callback, [dt, dt]);
+        b = typed3.convert(b, dt);
+        cf = typed3.find(callback, [dt, dt]);
       }
       var cdata = asize.length > 0 ? _iterate(cf, 0, asize, asize[0], adata, b, inverse) : [];
       return a.createDenseMatrix({
@@ -13624,11 +15194,11 @@ var meta_bind_publish = (() => {
   var dependencies40 = ["typed", "config", "round", "matrix", "equalScalar", "zeros", "DenseMatrix"];
   var createCeilNumber = /* @__PURE__ */ factory(name39, ["typed", "config", "round"], (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       round: round3
     } = _ref;
-    return typed2(name39, {
+    return typed3(name39, {
       number: function number2(x) {
         if (nearlyEqual(x, round3(x), config4.epsilon)) {
           return round3(x);
@@ -13650,7 +15220,7 @@ var meta_bind_publish = (() => {
   });
   var createCeil = /* @__PURE__ */ factory(name39, dependencies40, (_ref2) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       round: round3,
       matrix: matrix2,
@@ -13659,22 +15229,22 @@ var meta_bind_publish = (() => {
       DenseMatrix: DenseMatrix2
     } = _ref2;
     var matAlgo11xS0s = createMatAlgo11xS0s({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo12xSfs = createMatAlgo12xSfs({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matAlgo14xDs = createMatAlgo14xDs({
-      typed: typed2
+      typed: typed3
     });
     var ceilNumber = createCeilNumber({
-      typed: typed2,
+      typed: typed3,
       config: config4,
       round: round3
     });
-    return typed2("ceil", {
+    return typed3("ceil", {
       number: ceilNumber.signatures.number,
       "number,number": ceilNumber.signatures["number,number"],
       Complex: function Complex3(x) {
@@ -13709,22 +15279,22 @@ var meta_bind_publish = (() => {
       "Fraction, BigNumber": function FractionBigNumber(x, n) {
         return x.ceil(n.toNumber());
       },
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => {
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => {
         return deepMap(x, self2, true);
       }),
-      "Array, number | BigNumber": typed2.referToSelf((self2) => (x, n) => {
+      "Array, number | BigNumber": typed3.referToSelf((self2) => (x, n) => {
         return deepMap(x, (i2) => self2(i2, n), true);
       }),
-      "SparseMatrix, number | BigNumber": typed2.referToSelf((self2) => (x, y) => {
+      "SparseMatrix, number | BigNumber": typed3.referToSelf((self2) => (x, y) => {
         return matAlgo11xS0s(x, y, self2, false);
       }),
-      "DenseMatrix, number | BigNumber": typed2.referToSelf((self2) => (x, y) => {
+      "DenseMatrix, number | BigNumber": typed3.referToSelf((self2) => (x, y) => {
         return matAlgo14xDs(x, y, self2, false);
       }),
-      "number | Complex | Fraction | BigNumber, Array": typed2.referToSelf((self2) => (x, y) => {
+      "number | Complex | Fraction | BigNumber, Array": typed3.referToSelf((self2) => (x, y) => {
         return matAlgo14xDs(matrix2(y), x, self2, true).valueOf();
       }),
-      "number | Complex | Fraction | BigNumber, Matrix": typed2.referToSelf((self2) => (x, y) => {
+      "number | Complex | Fraction | BigNumber, Matrix": typed3.referToSelf((self2) => (x, y) => {
         if (equalScalar2(x, 0))
           return zeros3(y.size(), y.storage());
         if (y.storage() === "dense") {
@@ -13740,9 +15310,9 @@ var meta_bind_publish = (() => {
   var dependencies41 = ["typed"];
   var createCube = /* @__PURE__ */ factory(name40, dependencies41, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name40, {
+    return typed3(name40, {
       number: cubeNumber,
       Complex: function Complex3(x) {
         return x.mul(x).mul(x);
@@ -13764,9 +15334,9 @@ var meta_bind_publish = (() => {
   var dependencies42 = ["typed"];
   var createExp = /* @__PURE__ */ factory(name41, dependencies42, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name41, {
+    return typed3(name41, {
       number: expNumber,
       Complex: function Complex3(x) {
         return x.exp();
@@ -13782,10 +15352,10 @@ var meta_bind_publish = (() => {
   var dependencies43 = ["typed", "Complex"];
   var createExpm1 = /* @__PURE__ */ factory(name42, dependencies43, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       Complex: _Complex
     } = _ref;
-    return typed2(name42, {
+    return typed3(name42, {
       number: expm1Number,
       Complex: function Complex3(x) {
         var r = Math.exp(x.re);
@@ -13802,11 +15372,11 @@ var meta_bind_publish = (() => {
   var dependencies44 = ["typed", "Complex", "matrix", "ceil", "floor", "equalScalar", "zeros", "DenseMatrix"];
   var createFixNumber = /* @__PURE__ */ factory(name43, ["typed", "ceil", "floor"], (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       ceil: ceil3,
       floor: floor3
     } = _ref;
-    return typed2(name43, {
+    return typed3(name43, {
       number: function number2(x) {
         return x > 0 ? floor3(x) : ceil3(x);
       },
@@ -13817,7 +15387,7 @@ var meta_bind_publish = (() => {
   });
   var createFix = /* @__PURE__ */ factory(name43, dependencies44, (_ref2) => {
     var {
-      typed: typed2,
+      typed: typed3,
       Complex: _Complex,
       matrix: matrix2,
       ceil: ceil3,
@@ -13827,18 +15397,18 @@ var meta_bind_publish = (() => {
       DenseMatrix: DenseMatrix2
     } = _ref2;
     var matAlgo12xSfs = createMatAlgo12xSfs({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matAlgo14xDs = createMatAlgo14xDs({
-      typed: typed2
+      typed: typed3
     });
     var fixNumber = createFixNumber({
-      typed: typed2,
+      typed: typed3,
       ceil: ceil3,
       floor: floor3
     });
-    return typed2("fix", {
+    return typed3("fix", {
       number: fixNumber.signatures.number,
       "number, number | BigNumber": fixNumber.signatures["number,number"],
       Complex: function Complex3(x) {
@@ -13863,16 +15433,16 @@ var meta_bind_publish = (() => {
       "Fraction, number | BigNumber": function FractionNumberBigNumber(x, n) {
         return x.s < 0 ? ceil3(x, n) : floor3(x, n);
       },
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => {
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => {
         return deepMap(x, self2, true);
       }),
-      "Array | Matrix, number | BigNumber": typed2.referToSelf((self2) => (x, n) => {
+      "Array | Matrix, number | BigNumber": typed3.referToSelf((self2) => (x, n) => {
         return deepMap(x, (i2) => self2(i2, n), true);
       }),
-      "number | Complex | Fraction | BigNumber, Array": typed2.referToSelf((self2) => (x, y) => {
+      "number | Complex | Fraction | BigNumber, Array": typed3.referToSelf((self2) => (x, y) => {
         return matAlgo14xDs(matrix2(y), x, self2, true).valueOf();
       }),
-      "number | Complex | Fraction | BigNumber, Matrix": typed2.referToSelf((self2) => (x, y) => {
+      "number | Complex | Fraction | BigNumber, Matrix": typed3.referToSelf((self2) => (x, y) => {
         if (equalScalar2(x, 0))
           return zeros3(y.size(), y.storage());
         if (y.storage() === "dense") {
@@ -13888,11 +15458,11 @@ var meta_bind_publish = (() => {
   var dependencies45 = ["typed", "config", "round", "matrix", "equalScalar", "zeros", "DenseMatrix"];
   var createFloorNumber = /* @__PURE__ */ factory(name44, ["typed", "config", "round"], (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       round: round3
     } = _ref;
-    return typed2(name44, {
+    return typed3(name44, {
       number: function number2(x) {
         if (nearlyEqual(x, round3(x), config4.epsilon)) {
           return round3(x);
@@ -13914,7 +15484,7 @@ var meta_bind_publish = (() => {
   });
   var createFloor = /* @__PURE__ */ factory(name44, dependencies45, (_ref2) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       round: round3,
       matrix: matrix2,
@@ -13923,22 +15493,22 @@ var meta_bind_publish = (() => {
       DenseMatrix: DenseMatrix2
     } = _ref2;
     var matAlgo11xS0s = createMatAlgo11xS0s({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo12xSfs = createMatAlgo12xSfs({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matAlgo14xDs = createMatAlgo14xDs({
-      typed: typed2
+      typed: typed3
     });
     var floorNumber = createFloorNumber({
-      typed: typed2,
+      typed: typed3,
       config: config4,
       round: round3
     });
-    return typed2("floor", {
+    return typed3("floor", {
       number: floorNumber.signatures.number,
       "number,number": floorNumber.signatures["number,number"],
       Complex: function Complex3(x) {
@@ -13973,22 +15543,22 @@ var meta_bind_publish = (() => {
       "Fraction, BigNumber": function FractionBigNumber(x, n) {
         return x.floor(n.toNumber());
       },
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => {
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => {
         return deepMap(x, self2, true);
       }),
-      "Array, number | BigNumber": typed2.referToSelf((self2) => (x, n) => {
+      "Array, number | BigNumber": typed3.referToSelf((self2) => (x, n) => {
         return deepMap(x, (i2) => self2(i2, n), true);
       }),
-      "SparseMatrix, number | BigNumber": typed2.referToSelf((self2) => (x, y) => {
+      "SparseMatrix, number | BigNumber": typed3.referToSelf((self2) => (x, y) => {
         return matAlgo11xS0s(x, y, self2, false);
       }),
-      "DenseMatrix, number | BigNumber": typed2.referToSelf((self2) => (x, y) => {
+      "DenseMatrix, number | BigNumber": typed3.referToSelf((self2) => (x, y) => {
         return matAlgo14xDs(x, y, self2, false);
       }),
-      "number | Complex | Fraction | BigNumber, Array": typed2.referToSelf((self2) => (x, y) => {
+      "number | Complex | Fraction | BigNumber, Array": typed3.referToSelf((self2) => (x, y) => {
         return matAlgo14xDs(matrix2(y), x, self2, true).valueOf();
       }),
-      "number | Complex | Fraction | BigNumber, Matrix": typed2.referToSelf((self2) => (x, y) => {
+      "number | Complex | Fraction | BigNumber, Matrix": typed3.referToSelf((self2) => (x, y) => {
         if (equalScalar2(x, 0))
           return zeros3(y.size(), y.storage());
         if (y.storage() === "dense") {
@@ -13999,12 +15569,535 @@ var meta_bind_publish = (() => {
     });
   });
 
-  // node_modules/mathjs/lib/esm/type/matrix/utils/matAlgo01xDSid.js
-  var name45 = "matAlgo01xDSid";
-  var dependencies46 = ["typed"];
-  var createMatAlgo01xDSid = /* @__PURE__ */ factory(name45, dependencies46, (_ref) => {
+  // node_modules/mathjs/lib/esm/type/matrix/utils/matAlgo02xDS0.js
+  var name45 = "matAlgo02xDS0";
+  var dependencies46 = ["typed", "equalScalar"];
+  var createMatAlgo02xDS0 = /* @__PURE__ */ factory(name45, dependencies46, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3,
+      equalScalar: equalScalar2
+    } = _ref;
+    return function matAlgo02xDS0(denseMatrix, sparseMatrix, callback, inverse) {
+      var adata = denseMatrix._data;
+      var asize = denseMatrix._size;
+      var adt = denseMatrix._datatype;
+      var bvalues = sparseMatrix._values;
+      var bindex = sparseMatrix._index;
+      var bptr = sparseMatrix._ptr;
+      var bsize = sparseMatrix._size;
+      var bdt = sparseMatrix._datatype;
+      if (asize.length !== bsize.length) {
+        throw new DimensionError(asize.length, bsize.length);
+      }
+      if (asize[0] !== bsize[0] || asize[1] !== bsize[1]) {
+        throw new RangeError("Dimension mismatch. Matrix A (" + asize + ") must match Matrix B (" + bsize + ")");
+      }
+      if (!bvalues) {
+        throw new Error("Cannot perform operation on Dense Matrix and Pattern Sparse Matrix");
+      }
+      var rows = asize[0];
+      var columns = asize[1];
+      var dt;
+      var eq = equalScalar2;
+      var zero = 0;
+      var cf = callback;
+      if (typeof adt === "string" && adt === bdt) {
+        dt = adt;
+        eq = typed3.find(equalScalar2, [dt, dt]);
+        zero = typed3.convert(0, dt);
+        cf = typed3.find(callback, [dt, dt]);
+      }
+      var cvalues = [];
+      var cindex = [];
+      var cptr = [];
+      for (var j = 0; j < columns; j++) {
+        cptr[j] = cindex.length;
+        for (var k0 = bptr[j], k1 = bptr[j + 1], k = k0; k < k1; k++) {
+          var i2 = bindex[k];
+          var cij = inverse ? cf(bvalues[k], adata[i2][j]) : cf(adata[i2][j], bvalues[k]);
+          if (!eq(cij, zero)) {
+            cindex.push(i2);
+            cvalues.push(cij);
+          }
+        }
+      }
+      cptr[columns] = cindex.length;
+      return sparseMatrix.createSparseMatrix({
+        values: cvalues,
+        index: cindex,
+        ptr: cptr,
+        size: [rows, columns],
+        datatype: dt
+      });
+    };
+  });
+
+  // node_modules/mathjs/lib/esm/type/matrix/utils/matAlgo03xDSf.js
+  var name46 = "matAlgo03xDSf";
+  var dependencies47 = ["typed"];
+  var createMatAlgo03xDSf = /* @__PURE__ */ factory(name46, dependencies47, (_ref) => {
+    var {
+      typed: typed3
+    } = _ref;
+    return function matAlgo03xDSf(denseMatrix, sparseMatrix, callback, inverse) {
+      var adata = denseMatrix._data;
+      var asize = denseMatrix._size;
+      var adt = denseMatrix._datatype;
+      var bvalues = sparseMatrix._values;
+      var bindex = sparseMatrix._index;
+      var bptr = sparseMatrix._ptr;
+      var bsize = sparseMatrix._size;
+      var bdt = sparseMatrix._datatype;
+      if (asize.length !== bsize.length) {
+        throw new DimensionError(asize.length, bsize.length);
+      }
+      if (asize[0] !== bsize[0] || asize[1] !== bsize[1]) {
+        throw new RangeError("Dimension mismatch. Matrix A (" + asize + ") must match Matrix B (" + bsize + ")");
+      }
+      if (!bvalues) {
+        throw new Error("Cannot perform operation on Dense Matrix and Pattern Sparse Matrix");
+      }
+      var rows = asize[0];
+      var columns = asize[1];
+      var dt;
+      var zero = 0;
+      var cf = callback;
+      if (typeof adt === "string" && adt === bdt) {
+        dt = adt;
+        zero = typed3.convert(0, dt);
+        cf = typed3.find(callback, [dt, dt]);
+      }
+      var cdata = [];
+      for (var z = 0; z < rows; z++) {
+        cdata[z] = [];
+      }
+      var x = [];
+      var w = [];
+      for (var j = 0; j < columns; j++) {
+        var mark = j + 1;
+        for (var k0 = bptr[j], k1 = bptr[j + 1], k = k0; k < k1; k++) {
+          var i2 = bindex[k];
+          x[i2] = inverse ? cf(bvalues[k], adata[i2][j]) : cf(adata[i2][j], bvalues[k]);
+          w[i2] = mark;
+        }
+        for (var y = 0; y < rows; y++) {
+          if (w[y] === mark) {
+            cdata[y][j] = x[y];
+          } else {
+            cdata[y][j] = inverse ? cf(zero, adata[y][j]) : cf(adata[y][j], zero);
+          }
+        }
+      }
+      return denseMatrix.createDenseMatrix({
+        data: cdata,
+        size: [rows, columns],
+        datatype: dt
+      });
+    };
+  });
+
+  // node_modules/mathjs/lib/esm/type/matrix/utils/matAlgo05xSfSf.js
+  var name47 = "matAlgo05xSfSf";
+  var dependencies48 = ["typed", "equalScalar"];
+  var createMatAlgo05xSfSf = /* @__PURE__ */ factory(name47, dependencies48, (_ref) => {
+    var {
+      typed: typed3,
+      equalScalar: equalScalar2
+    } = _ref;
+    return function matAlgo05xSfSf(a, b, callback) {
+      var avalues = a._values;
+      var aindex = a._index;
+      var aptr = a._ptr;
+      var asize = a._size;
+      var adt = a._datatype;
+      var bvalues = b._values;
+      var bindex = b._index;
+      var bptr = b._ptr;
+      var bsize = b._size;
+      var bdt = b._datatype;
+      if (asize.length !== bsize.length) {
+        throw new DimensionError(asize.length, bsize.length);
+      }
+      if (asize[0] !== bsize[0] || asize[1] !== bsize[1]) {
+        throw new RangeError("Dimension mismatch. Matrix A (" + asize + ") must match Matrix B (" + bsize + ")");
+      }
+      var rows = asize[0];
+      var columns = asize[1];
+      var dt;
+      var eq = equalScalar2;
+      var zero = 0;
+      var cf = callback;
+      if (typeof adt === "string" && adt === bdt) {
+        dt = adt;
+        eq = typed3.find(equalScalar2, [dt, dt]);
+        zero = typed3.convert(0, dt);
+        cf = typed3.find(callback, [dt, dt]);
+      }
+      var cvalues = avalues && bvalues ? [] : void 0;
+      var cindex = [];
+      var cptr = [];
+      var xa = cvalues ? [] : void 0;
+      var xb = cvalues ? [] : void 0;
+      var wa = [];
+      var wb = [];
+      var i2, j, k, k1;
+      for (j = 0; j < columns; j++) {
+        cptr[j] = cindex.length;
+        var mark = j + 1;
+        for (k = aptr[j], k1 = aptr[j + 1]; k < k1; k++) {
+          i2 = aindex[k];
+          cindex.push(i2);
+          wa[i2] = mark;
+          if (xa) {
+            xa[i2] = avalues[k];
+          }
+        }
+        for (k = bptr[j], k1 = bptr[j + 1]; k < k1; k++) {
+          i2 = bindex[k];
+          if (wa[i2] !== mark) {
+            cindex.push(i2);
+          }
+          wb[i2] = mark;
+          if (xb) {
+            xb[i2] = bvalues[k];
+          }
+        }
+        if (cvalues) {
+          k = cptr[j];
+          while (k < cindex.length) {
+            i2 = cindex[k];
+            var wai = wa[i2];
+            var wbi = wb[i2];
+            if (wai === mark || wbi === mark) {
+              var va = wai === mark ? xa[i2] : zero;
+              var vb = wbi === mark ? xb[i2] : zero;
+              var vc = cf(va, vb);
+              if (!eq(vc, zero)) {
+                cvalues.push(vc);
+                k++;
+              } else {
+                cindex.splice(k, 1);
+              }
+            }
+          }
+        }
+      }
+      cptr[columns] = cindex.length;
+      return a.createSparseMatrix({
+        values: cvalues,
+        index: cindex,
+        ptr: cptr,
+        size: [rows, columns],
+        datatype: dt
+      });
+    };
+  });
+
+  // node_modules/mathjs/lib/esm/type/matrix/utils/matAlgo13xDD.js
+  var name48 = "matAlgo13xDD";
+  var dependencies49 = ["typed"];
+  var createMatAlgo13xDD = /* @__PURE__ */ factory(name48, dependencies49, (_ref) => {
+    var {
+      typed: typed3
+    } = _ref;
+    return function matAlgo13xDD(a, b, callback) {
+      var adata = a._data;
+      var asize = a._size;
+      var adt = a._datatype;
+      var bdata = b._data;
+      var bsize = b._size;
+      var bdt = b._datatype;
+      var csize = [];
+      if (asize.length !== bsize.length) {
+        throw new DimensionError(asize.length, bsize.length);
+      }
+      for (var s = 0; s < asize.length; s++) {
+        if (asize[s] !== bsize[s]) {
+          throw new RangeError("Dimension mismatch. Matrix A (" + asize + ") must match Matrix B (" + bsize + ")");
+        }
+        csize[s] = asize[s];
+      }
+      var dt;
+      var cf = callback;
+      if (typeof adt === "string" && adt === bdt) {
+        dt = adt;
+        cf = typed3.find(callback, [dt, dt]);
+      }
+      var cdata = csize.length > 0 ? _iterate(cf, 0, csize, csize[0], adata, bdata) : [];
+      return a.createDenseMatrix({
+        data: cdata,
+        size: csize,
+        datatype: dt
+      });
+    };
+    function _iterate(f, level, s, n, av, bv) {
+      var cv = [];
+      if (level === s.length - 1) {
+        for (var i2 = 0; i2 < n; i2++) {
+          cv[i2] = f(av[i2], bv[i2]);
+        }
+      } else {
+        for (var j = 0; j < n; j++) {
+          cv[j] = _iterate(f, level + 1, s, s[level + 1], av[j], bv[j]);
+        }
+      }
+      return cv;
+    }
+  });
+
+  // node_modules/mathjs/lib/esm/type/matrix/utils/broadcast.js
+  var name49 = "broadcast";
+  var dependancies = ["concat"];
+  var createBroadcast = /* @__PURE__ */ factory(name49, dependancies, (_ref) => {
+    var {
+      concat: concat3
+    } = _ref;
+    return function(A, B) {
+      var N = Math.max(A._size.length, B._size.length);
+      if (A._size.length === B._size.length) {
+        if (A._size.every((dim2, i2) => dim2 === B._size[i2])) {
+          return [A, B];
+        }
+      }
+      var sizeA = _padLeft(A._size, N, 0);
+      var sizeB = _padLeft(B._size, N, 0);
+      var sizeMax = [];
+      for (var dim = 0; dim < N; dim++) {
+        sizeMax[dim] = Math.max(sizeA[dim], sizeB[dim]);
+      }
+      checkBroadcastingRules(sizeA, sizeMax);
+      checkBroadcastingRules(sizeB, sizeMax);
+      var AA = A.clone();
+      var BB = B.clone();
+      if (AA._size.length < N) {
+        AA.reshape(_padLeft(AA._size, N, 1));
+      } else if (BB._size.length < N) {
+        BB.reshape(_padLeft(BB._size, N, 1));
+      }
+      for (var _dim = 0; _dim < N; _dim++) {
+        if (AA._size[_dim] < sizeMax[_dim]) {
+          AA = _stretch(AA, sizeMax[_dim], _dim);
+        }
+        if (BB._size[_dim] < sizeMax[_dim]) {
+          BB = _stretch(BB, sizeMax[_dim], _dim);
+        }
+      }
+      return [AA, BB];
+    };
+    function _padLeft(shape, N, filler) {
+      return [...Array(N - shape.length).fill(filler), ...shape];
+    }
+    function _stretch(arrayToStretch, sizeToStretch, dimToStretch) {
+      return concat3(...Array(sizeToStretch).fill(arrayToStretch), dimToStretch);
+    }
+  });
+
+  // node_modules/mathjs/lib/esm/type/matrix/utils/matrixAlgorithmSuite.js
+  var name50 = "matrixAlgorithmSuite";
+  var dependencies50 = ["typed", "matrix", "concat"];
+  var createMatrixAlgorithmSuite = /* @__PURE__ */ factory(name50, dependencies50, (_ref) => {
+    var {
+      typed: typed3,
+      matrix: matrix2,
+      concat: concat3
+    } = _ref;
+    var matAlgo13xDD = createMatAlgo13xDD({
+      typed: typed3
+    });
+    var matAlgo14xDs = createMatAlgo14xDs({
+      typed: typed3
+    });
+    var broadcast = createBroadcast({
+      concat: concat3
+    });
+    return function matrixAlgorithmSuite(options) {
+      var elop = options.elop;
+      var SD = options.SD || options.DS;
+      var matrixSignatures;
+      if (elop) {
+        matrixSignatures = {
+          "DenseMatrix, DenseMatrix": (x, y) => matAlgo13xDD(...broadcast(x, y), elop),
+          "Array, Array": (x, y) => matAlgo13xDD(...broadcast(matrix2(x), matrix2(y)), elop).valueOf(),
+          "Array, DenseMatrix": (x, y) => matAlgo13xDD(...broadcast(matrix2(x), y), elop),
+          "DenseMatrix, Array": (x, y) => matAlgo13xDD(...broadcast(x, matrix2(y)), elop)
+        };
+        if (options.SS) {
+          matrixSignatures["SparseMatrix, SparseMatrix"] = (x, y) => options.SS(...broadcast(x, y), elop, false);
+        }
+        if (options.DS) {
+          matrixSignatures["DenseMatrix, SparseMatrix"] = (x, y) => options.DS(...broadcast(x, y), elop, false);
+          matrixSignatures["Array, SparseMatrix"] = (x, y) => options.DS(...broadcast(matrix2(x), y), elop, false);
+        }
+        if (SD) {
+          matrixSignatures["SparseMatrix, DenseMatrix"] = (x, y) => SD(...broadcast(y, x), elop, true);
+          matrixSignatures["SparseMatrix, Array"] = (x, y) => SD(...broadcast(matrix2(y), x), elop, true);
+        }
+      } else {
+        matrixSignatures = {
+          "DenseMatrix, DenseMatrix": typed3.referToSelf((self2) => (x, y) => {
+            return matAlgo13xDD(...broadcast(x, y), self2);
+          }),
+          "Array, Array": typed3.referToSelf((self2) => (x, y) => {
+            return matAlgo13xDD(...broadcast(matrix2(x), matrix2(y)), self2).valueOf();
+          }),
+          "Array, DenseMatrix": typed3.referToSelf((self2) => (x, y) => {
+            return matAlgo13xDD(...broadcast(matrix2(x), y), self2);
+          }),
+          "DenseMatrix, Array": typed3.referToSelf((self2) => (x, y) => {
+            return matAlgo13xDD(...broadcast(x, matrix2(y)), self2);
+          })
+        };
+        if (options.SS) {
+          matrixSignatures["SparseMatrix, SparseMatrix"] = typed3.referToSelf((self2) => (x, y) => {
+            return options.SS(...broadcast(x, y), self2, false);
+          });
+        }
+        if (options.DS) {
+          matrixSignatures["DenseMatrix, SparseMatrix"] = typed3.referToSelf((self2) => (x, y) => {
+            return options.DS(...broadcast(x, y), self2, false);
+          });
+          matrixSignatures["Array, SparseMatrix"] = typed3.referToSelf((self2) => (x, y) => {
+            return options.DS(...broadcast(matrix2(x), y), self2, false);
+          });
+        }
+        if (SD) {
+          matrixSignatures["SparseMatrix, DenseMatrix"] = typed3.referToSelf((self2) => (x, y) => {
+            return SD(...broadcast(y, x), self2, true);
+          });
+          matrixSignatures["SparseMatrix, Array"] = typed3.referToSelf((self2) => (x, y) => {
+            return SD(...broadcast(matrix2(y), x), self2, true);
+          });
+        }
+      }
+      var scalar = options.scalar || "any";
+      var Ds = options.Ds || options.Ss;
+      if (Ds) {
+        if (elop) {
+          matrixSignatures["DenseMatrix," + scalar] = (x, y) => matAlgo14xDs(x, y, elop, false);
+          matrixSignatures[scalar + ", DenseMatrix"] = (x, y) => matAlgo14xDs(y, x, elop, true);
+          matrixSignatures["Array," + scalar] = (x, y) => matAlgo14xDs(matrix2(x), y, elop, false).valueOf();
+          matrixSignatures[scalar + ", Array"] = (x, y) => matAlgo14xDs(matrix2(y), x, elop, true).valueOf();
+        } else {
+          matrixSignatures["DenseMatrix," + scalar] = typed3.referToSelf((self2) => (x, y) => {
+            return matAlgo14xDs(x, y, self2, false);
+          });
+          matrixSignatures[scalar + ", DenseMatrix"] = typed3.referToSelf((self2) => (x, y) => {
+            return matAlgo14xDs(y, x, self2, true);
+          });
+          matrixSignatures["Array," + scalar] = typed3.referToSelf((self2) => (x, y) => {
+            return matAlgo14xDs(matrix2(x), y, self2, false).valueOf();
+          });
+          matrixSignatures[scalar + ", Array"] = typed3.referToSelf((self2) => (x, y) => {
+            return matAlgo14xDs(matrix2(y), x, self2, true).valueOf();
+          });
+        }
+      }
+      var sS = options.sS !== void 0 ? options.sS : options.Ss;
+      if (elop) {
+        if (options.Ss) {
+          matrixSignatures["SparseMatrix," + scalar] = (x, y) => options.Ss(x, y, elop, false);
+        }
+        if (sS) {
+          matrixSignatures[scalar + ", SparseMatrix"] = (x, y) => sS(y, x, elop, true);
+        }
+      } else {
+        if (options.Ss) {
+          matrixSignatures["SparseMatrix," + scalar] = typed3.referToSelf((self2) => (x, y) => {
+            return options.Ss(x, y, self2, false);
+          });
+        }
+        if (sS) {
+          matrixSignatures[scalar + ", SparseMatrix"] = typed3.referToSelf((self2) => (x, y) => {
+            return sS(y, x, self2, true);
+          });
+        }
+      }
+      if (elop && elop.signatures) {
+        extend(matrixSignatures, elop.signatures);
+      }
+      return matrixSignatures;
+    };
+  });
+
+  // node_modules/mathjs/lib/esm/function/arithmetic/mod.js
+  var name51 = "mod";
+  var dependencies51 = ["typed", "config", "round", "matrix", "equalScalar", "zeros", "DenseMatrix", "concat"];
+  var createMod = /* @__PURE__ */ factory(name51, dependencies51, (_ref) => {
+    var {
+      typed: typed3,
+      config: config4,
+      round: round3,
+      matrix: matrix2,
+      equalScalar: equalScalar2,
+      zeros: zeros3,
+      DenseMatrix: DenseMatrix2,
+      concat: concat3
+    } = _ref;
+    var floor3 = createFloor({
+      typed: typed3,
+      config: config4,
+      round: round3,
+      matrix: matrix2,
+      equalScalar: equalScalar2,
+      zeros: zeros3,
+      DenseMatrix: DenseMatrix2
+    });
+    var matAlgo02xDS0 = createMatAlgo02xDS0({
+      typed: typed3,
+      equalScalar: equalScalar2
+    });
+    var matAlgo03xDSf = createMatAlgo03xDSf({
+      typed: typed3
+    });
+    var matAlgo05xSfSf = createMatAlgo05xSfSf({
+      typed: typed3,
+      equalScalar: equalScalar2
+    });
+    var matAlgo11xS0s = createMatAlgo11xS0s({
+      typed: typed3,
+      equalScalar: equalScalar2
+    });
+    var matAlgo12xSfs = createMatAlgo12xSfs({
+      typed: typed3,
+      DenseMatrix: DenseMatrix2
+    });
+    var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
+      typed: typed3,
+      matrix: matrix2,
+      concat: concat3
+    });
+    return typed3(name51, {
+      "number, number": _modNumber,
+      "BigNumber, BigNumber": function BigNumberBigNumber(x, y) {
+        if (y.isNeg()) {
+          throw new Error("Cannot calculate mod for a negative divisor");
+        }
+        return y.isZero() ? x : x.mod(y);
+      },
+      "Fraction, Fraction": function FractionFraction(x, y) {
+        if (y.compare(0) < 0) {
+          throw new Error("Cannot calculate mod for a negative divisor");
+        }
+        return x.compare(0) >= 0 ? x.mod(y) : x.mod(y).add(y).mod(y);
+      }
+    }, matrixAlgorithmSuite({
+      SS: matAlgo05xSfSf,
+      DS: matAlgo03xDSf,
+      SD: matAlgo02xDS0,
+      Ss: matAlgo11xS0s,
+      sS: matAlgo12xSfs
+    }));
+    function _modNumber(x, y) {
+      return y === 0 ? x : x - y * floor3(x / y);
+    }
+  });
+
+  // node_modules/mathjs/lib/esm/type/matrix/utils/matAlgo01xDSid.js
+  var name52 = "matAlgo01xDSid";
+  var dependencies52 = ["typed"];
+  var createMatAlgo01xDSid = /* @__PURE__ */ factory(name52, dependencies52, (_ref) => {
+    var {
+      typed: typed3
     } = _ref;
     return function algorithm1(denseMatrix, sparseMatrix, callback, inverse) {
       var adata = denseMatrix._data;
@@ -14027,7 +16120,7 @@ var meta_bind_publish = (() => {
       var rows = asize[0];
       var columns = asize[1];
       var dt = typeof adt === "string" && adt === bdt ? adt : void 0;
-      var cf = dt ? typed2.find(callback, [dt, dt]) : callback;
+      var cf = dt ? typed3.find(callback, [dt, dt]) : callback;
       var i2, j;
       var cdata = [];
       for (i2 = 0; i2 < rows; i2++) {
@@ -14059,11 +16152,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/type/matrix/utils/matAlgo04xSidSid.js
-  var name46 = "matAlgo04xSidSid";
-  var dependencies47 = ["typed", "equalScalar"];
-  var createMatAlgo04xSidSid = /* @__PURE__ */ factory(name46, dependencies47, (_ref) => {
+  var name53 = "matAlgo04xSidSid";
+  var dependencies53 = ["typed", "equalScalar"];
+  var createMatAlgo04xSidSid = /* @__PURE__ */ factory(name53, dependencies53, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     } = _ref;
     return function matAlgo04xSidSid(a, b, callback) {
@@ -14091,9 +16184,9 @@ var meta_bind_publish = (() => {
       var cf = callback;
       if (typeof adt === "string" && adt === bdt) {
         dt = adt;
-        eq = typed2.find(equalScalar2, [dt, dt]);
-        zero = typed2.convert(0, dt);
-        cf = typed2.find(callback, [dt, dt]);
+        eq = typed3.find(equalScalar2, [dt, dt]);
+        zero = typed3.convert(0, dt);
+        cf = typed3.find(callback, [dt, dt]);
       }
       var cvalues = avalues && bvalues ? [] : void 0;
       var cindex = [];
@@ -14161,11 +16254,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/type/matrix/utils/matAlgo10xSids.js
-  var name47 = "matAlgo10xSids";
-  var dependencies48 = ["typed", "DenseMatrix"];
-  var createMatAlgo10xSids = /* @__PURE__ */ factory(name47, dependencies48, (_ref) => {
+  var name54 = "matAlgo10xSids";
+  var dependencies54 = ["typed", "DenseMatrix"];
+  var createMatAlgo10xSids = /* @__PURE__ */ factory(name54, dependencies54, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     } = _ref;
     return function matAlgo10xSids(s, b, callback, inverse) {
@@ -14183,8 +16276,8 @@ var meta_bind_publish = (() => {
       var cf = callback;
       if (typeof adt === "string") {
         dt = adt;
-        b = typed2.convert(b, dt);
-        cf = typed2.find(callback, [dt, dt]);
+        b = typed3.convert(b, dt);
+        cf = typed3.find(callback, [dt, dt]);
       }
       var cdata = [];
       var x = [];
@@ -14215,239 +16308,6 @@ var meta_bind_publish = (() => {
     };
   });
 
-  // node_modules/mathjs/lib/esm/type/matrix/utils/matAlgo13xDD.js
-  var name48 = "matAlgo13xDD";
-  var dependencies49 = ["typed"];
-  var createMatAlgo13xDD = /* @__PURE__ */ factory(name48, dependencies49, (_ref) => {
-    var {
-      typed: typed2
-    } = _ref;
-    return function matAlgo13xDD(a, b, callback) {
-      var adata = a._data;
-      var asize = a._size;
-      var adt = a._datatype;
-      var bdata = b._data;
-      var bsize = b._size;
-      var bdt = b._datatype;
-      var csize = [];
-      if (asize.length !== bsize.length) {
-        throw new DimensionError(asize.length, bsize.length);
-      }
-      for (var s = 0; s < asize.length; s++) {
-        if (asize[s] !== bsize[s]) {
-          throw new RangeError("Dimension mismatch. Matrix A (" + asize + ") must match Matrix B (" + bsize + ")");
-        }
-        csize[s] = asize[s];
-      }
-      var dt;
-      var cf = callback;
-      if (typeof adt === "string" && adt === bdt) {
-        dt = adt;
-        cf = typed2.find(callback, [dt, dt]);
-      }
-      var cdata = csize.length > 0 ? _iterate(cf, 0, csize, csize[0], adata, bdata) : [];
-      return a.createDenseMatrix({
-        data: cdata,
-        size: csize,
-        datatype: dt
-      });
-    };
-    function _iterate(f, level, s, n, av, bv) {
-      var cv = [];
-      if (level === s.length - 1) {
-        for (var i2 = 0; i2 < n; i2++) {
-          cv[i2] = f(av[i2], bv[i2]);
-        }
-      } else {
-        for (var j = 0; j < n; j++) {
-          cv[j] = _iterate(f, level + 1, s, s[level + 1], av[j], bv[j]);
-        }
-      }
-      return cv;
-    }
-  });
-
-  // node_modules/mathjs/lib/esm/type/matrix/utils/broadcast.js
-  var name49 = "broadcast";
-  var dependancies = ["concat"];
-  var createBroadcast = /* @__PURE__ */ factory(name49, dependancies, (_ref) => {
-    var {
-      concat: concat2
-    } = _ref;
-    return function(A, B) {
-      var N = Math.max(A._size.length, B._size.length);
-      if (A._size.length === B._size.length) {
-        if (A._size.every((dim2, i2) => dim2 === B._size[i2])) {
-          return [A, B];
-        }
-      }
-      var sizeA = _padLeft(A._size, N, 0);
-      var sizeB = _padLeft(B._size, N, 0);
-      var sizeMax = [];
-      for (var dim = 0; dim < N; dim++) {
-        sizeMax[dim] = Math.max(sizeA[dim], sizeB[dim]);
-      }
-      for (var _dim = 0; _dim < N; _dim++) {
-        _checkRules(sizeA, sizeMax, _dim);
-        _checkRules(sizeB, sizeMax, _dim);
-      }
-      var AA = A.clone();
-      var BB = B.clone();
-      if (AA._size.length < N) {
-        AA.reshape(_padLeft(AA._size, N, 1));
-      } else if (BB._size.length < N) {
-        BB.reshape(_padLeft(BB._size, N, 1));
-      }
-      for (var _dim2 = 0; _dim2 < N; _dim2++) {
-        if (AA._size[_dim2] < sizeMax[_dim2]) {
-          AA = _stretch(AA, sizeMax[_dim2], _dim2);
-        }
-        if (BB._size[_dim2] < sizeMax[_dim2]) {
-          BB = _stretch(BB, sizeMax[_dim2], _dim2);
-        }
-      }
-      return [AA, BB];
-    };
-    function _padLeft(shape, N, filler) {
-      return [...Array(N - shape.length).fill(filler), ...shape];
-    }
-    function _stretch(arrayToStretch, sizeToStretch, dimToStretch) {
-      return concat2(...Array(sizeToStretch).fill(arrayToStretch), dimToStretch);
-    }
-    function _checkRules(shape, sizeMax, dim) {
-      if (shape[dim] < sizeMax[dim] & shape[dim] > 1) {
-        throw new Error("shape missmatch: missmatch is found in arg with shape (".concat(shape, ") not possible to broadcast dimension ").concat(dim, " with size ").concat(shape[dim], " to size ").concat(sizeMax[dim]));
-      }
-    }
-  });
-
-  // node_modules/mathjs/lib/esm/type/matrix/utils/matrixAlgorithmSuite.js
-  var name50 = "matrixAlgorithmSuite";
-  var dependencies50 = ["typed", "matrix", "concat"];
-  var createMatrixAlgorithmSuite = /* @__PURE__ */ factory(name50, dependencies50, (_ref) => {
-    var {
-      typed: typed2,
-      matrix: matrix2,
-      concat: concat2
-    } = _ref;
-    var matAlgo13xDD = createMatAlgo13xDD({
-      typed: typed2
-    });
-    var matAlgo14xDs = createMatAlgo14xDs({
-      typed: typed2
-    });
-    var broadcast = createBroadcast({
-      concat: concat2
-    });
-    return function matrixAlgorithmSuite(options) {
-      var elop = options.elop;
-      var SD = options.SD || options.DS;
-      var matrixSignatures;
-      if (elop) {
-        matrixSignatures = {
-          "DenseMatrix, DenseMatrix": (x, y) => matAlgo13xDD(...broadcast(x, y), elop),
-          "Array, Array": (x, y) => matAlgo13xDD(...broadcast(matrix2(x), matrix2(y)), elop).valueOf(),
-          "Array, DenseMatrix": (x, y) => matAlgo13xDD(...broadcast(matrix2(x), y), elop),
-          "DenseMatrix, Array": (x, y) => matAlgo13xDD(...broadcast(x, matrix2(y)), elop)
-        };
-        if (options.SS) {
-          matrixSignatures["SparseMatrix, SparseMatrix"] = (x, y) => options.SS(...broadcast(x, y), elop, false);
-        }
-        if (options.DS) {
-          matrixSignatures["DenseMatrix, SparseMatrix"] = (x, y) => options.DS(...broadcast(x, y), elop, false);
-          matrixSignatures["Array, SparseMatrix"] = (x, y) => options.DS(...broadcast(matrix2(x), y), elop, false);
-        }
-        if (SD) {
-          matrixSignatures["SparseMatrix, DenseMatrix"] = (x, y) => SD(...broadcast(y, x), elop, true);
-          matrixSignatures["SparseMatrix, Array"] = (x, y) => SD(...broadcast(matrix2(y), x), elop, true);
-        }
-      } else {
-        matrixSignatures = {
-          "DenseMatrix, DenseMatrix": typed2.referToSelf((self2) => (x, y) => {
-            return matAlgo13xDD(...broadcast(x, y), self2);
-          }),
-          "Array, Array": typed2.referToSelf((self2) => (x, y) => {
-            return matAlgo13xDD(...broadcast(matrix2(x), matrix2(y)), self2).valueOf();
-          }),
-          "Array, DenseMatrix": typed2.referToSelf((self2) => (x, y) => {
-            return matAlgo13xDD(...broadcast(matrix2(x), y), self2);
-          }),
-          "DenseMatrix, Array": typed2.referToSelf((self2) => (x, y) => {
-            return matAlgo13xDD(...broadcast(x, matrix2(y)), self2);
-          })
-        };
-        if (options.SS) {
-          matrixSignatures["SparseMatrix, SparseMatrix"] = typed2.referToSelf((self2) => (x, y) => {
-            return options.SS(...broadcast(x, y), self2, false);
-          });
-        }
-        if (options.DS) {
-          matrixSignatures["DenseMatrix, SparseMatrix"] = typed2.referToSelf((self2) => (x, y) => {
-            return options.DS(...broadcast(x, y), self2, false);
-          });
-          matrixSignatures["Array, SparseMatrix"] = typed2.referToSelf((self2) => (x, y) => {
-            return options.DS(...broadcast(matrix2(x), y), self2, false);
-          });
-        }
-        if (SD) {
-          matrixSignatures["SparseMatrix, DenseMatrix"] = typed2.referToSelf((self2) => (x, y) => {
-            return SD(...broadcast(y, x), self2, true);
-          });
-          matrixSignatures["SparseMatrix, Array"] = typed2.referToSelf((self2) => (x, y) => {
-            return SD(...broadcast(matrix2(y), x), self2, true);
-          });
-        }
-      }
-      var scalar = options.scalar || "any";
-      var Ds = options.Ds || options.Ss;
-      if (Ds) {
-        if (elop) {
-          matrixSignatures["DenseMatrix," + scalar] = (x, y) => matAlgo14xDs(x, y, elop, false);
-          matrixSignatures[scalar + ", DenseMatrix"] = (x, y) => matAlgo14xDs(y, x, elop, true);
-          matrixSignatures["Array," + scalar] = (x, y) => matAlgo14xDs(matrix2(x), y, elop, false).valueOf();
-          matrixSignatures[scalar + ", Array"] = (x, y) => matAlgo14xDs(matrix2(y), x, elop, true).valueOf();
-        } else {
-          matrixSignatures["DenseMatrix," + scalar] = typed2.referToSelf((self2) => (x, y) => {
-            return matAlgo14xDs(x, y, self2, false);
-          });
-          matrixSignatures[scalar + ", DenseMatrix"] = typed2.referToSelf((self2) => (x, y) => {
-            return matAlgo14xDs(y, x, self2, true);
-          });
-          matrixSignatures["Array," + scalar] = typed2.referToSelf((self2) => (x, y) => {
-            return matAlgo14xDs(matrix2(x), y, self2, false).valueOf();
-          });
-          matrixSignatures[scalar + ", Array"] = typed2.referToSelf((self2) => (x, y) => {
-            return matAlgo14xDs(matrix2(y), x, self2, true).valueOf();
-          });
-        }
-      }
-      var sS = options.sS !== void 0 ? options.sS : options.Ss;
-      if (elop) {
-        if (options.Ss) {
-          matrixSignatures["SparseMatrix," + scalar] = (x, y) => options.Ss(x, y, elop, false);
-        }
-        if (sS) {
-          matrixSignatures[scalar + ", SparseMatrix"] = (x, y) => sS(y, x, elop, true);
-        }
-      } else {
-        if (options.Ss) {
-          matrixSignatures["SparseMatrix," + scalar] = typed2.referToSelf((self2) => (x, y) => {
-            return options.Ss(x, y, self2, false);
-          });
-        }
-        if (sS) {
-          matrixSignatures[scalar + ", SparseMatrix"] = typed2.referToSelf((self2) => (x, y) => {
-            return sS(y, x, self2, true);
-          });
-        }
-      }
-      if (elop && elop.signatures) {
-        extend(matrixSignatures, elop.signatures);
-      }
-      return matrixSignatures;
-    };
-  });
-
   // node_modules/mathjs/lib/esm/error/ArgumentsError.js
   function ArgumentsError(fn, count2, min3, max3) {
     if (!(this instanceof ArgumentsError)) {
@@ -14466,40 +16326,53 @@ var meta_bind_publish = (() => {
   ArgumentsError.prototype.isArgumentsError = true;
 
   // node_modules/mathjs/lib/esm/function/arithmetic/gcd.js
-  var name51 = "gcd";
-  var dependencies51 = ["typed", "matrix", "equalScalar", "BigNumber", "DenseMatrix", "concat"];
+  var name55 = "gcd";
+  var dependencies55 = ["typed", "config", "round", "matrix", "equalScalar", "zeros", "BigNumber", "DenseMatrix", "concat"];
   var gcdTypes = "number | BigNumber | Fraction | Matrix | Array";
   var gcdManyTypesSignature = "".concat(gcdTypes, ", ").concat(gcdTypes, ", ...").concat(gcdTypes);
   function is1d(array) {
     return !array.some((element2) => Array.isArray(element2));
   }
-  var createGcd = /* @__PURE__ */ factory(name51, dependencies51, (_ref) => {
+  var createGcd = /* @__PURE__ */ factory(name55, dependencies55, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
+      config: config4,
+      round: round3,
       equalScalar: equalScalar2,
+      zeros: zeros3,
       BigNumber: BigNumber2,
       DenseMatrix: DenseMatrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
+    var mod3 = createMod({
+      typed: typed3,
+      config: config4,
+      round: round3,
+      matrix: matrix2,
+      equalScalar: equalScalar2,
+      zeros: zeros3,
+      DenseMatrix: DenseMatrix2,
+      concat: concat3
+    });
     var matAlgo01xDSid = createMatAlgo01xDSid({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo04xSidSid = createMatAlgo04xSidSid({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo10xSids = createMatAlgo10xSids({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
-    return typed2(name51, {
-      "number, number": gcdNumber,
+    return typed3(name55, {
+      "number, number": _gcdNumber,
       "BigNumber, BigNumber": _gcdBigNumber,
       "Fraction, Fraction": (x, y) => x.gcd(y)
     }, matrixAlgorithmSuite({
@@ -14507,14 +16380,14 @@ var meta_bind_publish = (() => {
       DS: matAlgo01xDSid,
       Ss: matAlgo10xSids
     }), {
-      [gcdManyTypesSignature]: typed2.referToSelf((self2) => (a, b, args) => {
+      [gcdManyTypesSignature]: typed3.referToSelf((self2) => (a, b, args) => {
         var res = self2(a, b);
         for (var i2 = 0; i2 < args.length; i2++) {
           res = self2(res, args[i2]);
         }
         return res;
       }),
-      Array: typed2.referToSelf((self2) => (array) => {
+      Array: typed3.referToSelf((self2) => (array) => {
         if (array.length === 1 && Array.isArray(array[0]) && is1d(array[0])) {
           return self2(...array[0]);
         }
@@ -14523,17 +16396,29 @@ var meta_bind_publish = (() => {
         }
         throw new ArgumentsError("gcd() supports only 1d matrices!");
       }),
-      Matrix: typed2.referToSelf((self2) => (matrix3) => {
+      Matrix: typed3.referToSelf((self2) => (matrix3) => {
         return self2(matrix3.toArray());
       })
     });
+    function _gcdNumber(a, b) {
+      if (!isInteger(a) || !isInteger(b)) {
+        throw new Error("Parameters in function gcd must be integer numbers");
+      }
+      var r;
+      while (b !== 0) {
+        r = mod3(a, b);
+        a = b;
+        b = r;
+      }
+      return a < 0 ? -a : a;
+    }
     function _gcdBigNumber(a, b) {
       if (!a.isInt() || !b.isInt()) {
         throw new Error("Parameters in function gcd must be integer numbers");
       }
       var zero = new BigNumber2(0);
       while (!b.isZero()) {
-        var r = a.mod(b);
+        var r = mod3(a, b);
         a = b;
         b = r;
       }
@@ -14541,75 +16426,12 @@ var meta_bind_publish = (() => {
     }
   });
 
-  // node_modules/mathjs/lib/esm/type/matrix/utils/matAlgo02xDS0.js
-  var name52 = "matAlgo02xDS0";
-  var dependencies52 = ["typed", "equalScalar"];
-  var createMatAlgo02xDS0 = /* @__PURE__ */ factory(name52, dependencies52, (_ref) => {
-    var {
-      typed: typed2,
-      equalScalar: equalScalar2
-    } = _ref;
-    return function matAlgo02xDS0(denseMatrix, sparseMatrix, callback, inverse) {
-      var adata = denseMatrix._data;
-      var asize = denseMatrix._size;
-      var adt = denseMatrix._datatype;
-      var bvalues = sparseMatrix._values;
-      var bindex = sparseMatrix._index;
-      var bptr = sparseMatrix._ptr;
-      var bsize = sparseMatrix._size;
-      var bdt = sparseMatrix._datatype;
-      if (asize.length !== bsize.length) {
-        throw new DimensionError(asize.length, bsize.length);
-      }
-      if (asize[0] !== bsize[0] || asize[1] !== bsize[1]) {
-        throw new RangeError("Dimension mismatch. Matrix A (" + asize + ") must match Matrix B (" + bsize + ")");
-      }
-      if (!bvalues) {
-        throw new Error("Cannot perform operation on Dense Matrix and Pattern Sparse Matrix");
-      }
-      var rows = asize[0];
-      var columns = asize[1];
-      var dt;
-      var eq = equalScalar2;
-      var zero = 0;
-      var cf = callback;
-      if (typeof adt === "string" && adt === bdt) {
-        dt = adt;
-        eq = typed2.find(equalScalar2, [dt, dt]);
-        zero = typed2.convert(0, dt);
-        cf = typed2.find(callback, [dt, dt]);
-      }
-      var cvalues = [];
-      var cindex = [];
-      var cptr = [];
-      for (var j = 0; j < columns; j++) {
-        cptr[j] = cindex.length;
-        for (var k0 = bptr[j], k1 = bptr[j + 1], k = k0; k < k1; k++) {
-          var i2 = bindex[k];
-          var cij = inverse ? cf(bvalues[k], adata[i2][j]) : cf(adata[i2][j], bvalues[k]);
-          if (!eq(cij, zero)) {
-            cindex.push(i2);
-            cvalues.push(cij);
-          }
-        }
-      }
-      cptr[columns] = cindex.length;
-      return sparseMatrix.createSparseMatrix({
-        values: cvalues,
-        index: cindex,
-        ptr: cptr,
-        size: [rows, columns],
-        datatype: dt
-      });
-    };
-  });
-
   // node_modules/mathjs/lib/esm/type/matrix/utils/matAlgo06xS0S0.js
-  var name53 = "matAlgo06xS0S0";
-  var dependencies53 = ["typed", "equalScalar"];
-  var createMatAlgo06xS0S0 = /* @__PURE__ */ factory(name53, dependencies53, (_ref) => {
+  var name56 = "matAlgo06xS0S0";
+  var dependencies56 = ["typed", "equalScalar"];
+  var createMatAlgo06xS0S0 = /* @__PURE__ */ factory(name56, dependencies56, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     } = _ref;
     return function matAlgo06xS0S0(a, b, callback) {
@@ -14633,9 +16455,9 @@ var meta_bind_publish = (() => {
       var cf = callback;
       if (typeof adt === "string" && adt === bdt) {
         dt = adt;
-        eq = typed2.find(equalScalar2, [dt, dt]);
-        zero = typed2.convert(0, dt);
-        cf = typed2.find(callback, [dt, dt]);
+        eq = typed3.find(equalScalar2, [dt, dt]);
+        zero = typed3.convert(0, dt);
+        cf = typed3.find(callback, [dt, dt]);
       }
       var cvalues = avalues && bvalues ? [] : void 0;
       var cindex = [];
@@ -14688,42 +16510,42 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/arithmetic/lcm.js
-  var name54 = "lcm";
-  var dependencies54 = ["typed", "matrix", "equalScalar", "concat"];
-  var createLcm = /* @__PURE__ */ factory(name54, dependencies54, (_ref) => {
+  var name57 = "lcm";
+  var dependencies57 = ["typed", "matrix", "equalScalar", "concat"];
+  var createLcm = /* @__PURE__ */ factory(name57, dependencies57, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       equalScalar: equalScalar2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo02xDS0 = createMatAlgo02xDS0({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo06xS0S0 = createMatAlgo06xS0S0({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo11xS0s = createMatAlgo11xS0s({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
     var lcmTypes = "number | BigNumber | Fraction | Matrix | Array";
     var lcmManySignature = {};
-    lcmManySignature["".concat(lcmTypes, ", ").concat(lcmTypes, ", ...").concat(lcmTypes)] = typed2.referToSelf((self2) => (a, b, args) => {
+    lcmManySignature["".concat(lcmTypes, ", ").concat(lcmTypes, ", ...").concat(lcmTypes)] = typed3.referToSelf((self2) => (a, b, args) => {
       var res = self2(a, b);
       for (var i2 = 0; i2 < args.length; i2++) {
         res = self2(res, args[i2]);
       }
       return res;
     });
-    return typed2(name54, {
+    return typed3(name57, {
       "number, number": lcmNumber,
       "BigNumber, BigNumber": _lcmBigNumber,
       "Fraction, Fraction": (x, y) => x.lcm(y)
@@ -14753,15 +16575,15 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/arithmetic/log10.js
-  var name55 = "log10";
-  var dependencies55 = ["typed", "config", "Complex"];
-  var createLog10 = /* @__PURE__ */ factory(name55, dependencies55, (_ref) => {
+  var name58 = "log10";
+  var dependencies58 = ["typed", "config", "Complex"];
+  var createLog10 = /* @__PURE__ */ factory(name58, dependencies58, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       Complex: _Complex
     } = _ref;
-    return typed2(name55, {
+    return typed3(name58, {
       number: function number2(x) {
         if (x >= 0 || config4.predictable) {
           return log10Number(x);
@@ -14779,20 +16601,20 @@ var meta_bind_publish = (() => {
           return new _Complex(x.toNumber(), 0).log().div(Math.LN10);
         }
       },
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2))
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2))
     });
   });
 
   // node_modules/mathjs/lib/esm/function/arithmetic/log2.js
-  var name56 = "log2";
-  var dependencies56 = ["typed", "config", "Complex"];
-  var createLog2 = /* @__PURE__ */ factory(name56, dependencies56, (_ref) => {
+  var name59 = "log2";
+  var dependencies59 = ["typed", "config", "Complex"];
+  var createLog2 = /* @__PURE__ */ factory(name59, dependencies59, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       Complex: Complex3
     } = _ref;
-    return typed2(name56, {
+    return typed3(name59, {
       number: function number2(x) {
         if (x >= 0 || config4.predictable) {
           return log2Number(x);
@@ -14808,7 +16630,7 @@ var meta_bind_publish = (() => {
           return _log2Complex(new Complex3(x.toNumber(), 0));
         }
       },
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2))
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2))
     });
     function _log2Complex(x) {
       var newX = Math.sqrt(x.re * x.re + x.im * x.im);
@@ -14816,233 +16638,14 @@ var meta_bind_publish = (() => {
     }
   });
 
-  // node_modules/mathjs/lib/esm/type/matrix/utils/matAlgo03xDSf.js
-  var name57 = "matAlgo03xDSf";
-  var dependencies57 = ["typed"];
-  var createMatAlgo03xDSf = /* @__PURE__ */ factory(name57, dependencies57, (_ref) => {
-    var {
-      typed: typed2
-    } = _ref;
-    return function matAlgo03xDSf(denseMatrix, sparseMatrix, callback, inverse) {
-      var adata = denseMatrix._data;
-      var asize = denseMatrix._size;
-      var adt = denseMatrix._datatype;
-      var bvalues = sparseMatrix._values;
-      var bindex = sparseMatrix._index;
-      var bptr = sparseMatrix._ptr;
-      var bsize = sparseMatrix._size;
-      var bdt = sparseMatrix._datatype;
-      if (asize.length !== bsize.length) {
-        throw new DimensionError(asize.length, bsize.length);
-      }
-      if (asize[0] !== bsize[0] || asize[1] !== bsize[1]) {
-        throw new RangeError("Dimension mismatch. Matrix A (" + asize + ") must match Matrix B (" + bsize + ")");
-      }
-      if (!bvalues) {
-        throw new Error("Cannot perform operation on Dense Matrix and Pattern Sparse Matrix");
-      }
-      var rows = asize[0];
-      var columns = asize[1];
-      var dt;
-      var zero = 0;
-      var cf = callback;
-      if (typeof adt === "string" && adt === bdt) {
-        dt = adt;
-        zero = typed2.convert(0, dt);
-        cf = typed2.find(callback, [dt, dt]);
-      }
-      var cdata = [];
-      for (var z = 0; z < rows; z++) {
-        cdata[z] = [];
-      }
-      var x = [];
-      var w = [];
-      for (var j = 0; j < columns; j++) {
-        var mark = j + 1;
-        for (var k0 = bptr[j], k1 = bptr[j + 1], k = k0; k < k1; k++) {
-          var i2 = bindex[k];
-          x[i2] = inverse ? cf(bvalues[k], adata[i2][j]) : cf(adata[i2][j], bvalues[k]);
-          w[i2] = mark;
-        }
-        for (var y = 0; y < rows; y++) {
-          if (w[y] === mark) {
-            cdata[y][j] = x[y];
-          } else {
-            cdata[y][j] = inverse ? cf(zero, adata[y][j]) : cf(adata[y][j], zero);
-          }
-        }
-      }
-      return denseMatrix.createDenseMatrix({
-        data: cdata,
-        size: [rows, columns],
-        datatype: dt
-      });
-    };
-  });
-
-  // node_modules/mathjs/lib/esm/type/matrix/utils/matAlgo05xSfSf.js
-  var name58 = "matAlgo05xSfSf";
-  var dependencies58 = ["typed", "equalScalar"];
-  var createMatAlgo05xSfSf = /* @__PURE__ */ factory(name58, dependencies58, (_ref) => {
-    var {
-      typed: typed2,
-      equalScalar: equalScalar2
-    } = _ref;
-    return function matAlgo05xSfSf(a, b, callback) {
-      var avalues = a._values;
-      var aindex = a._index;
-      var aptr = a._ptr;
-      var asize = a._size;
-      var adt = a._datatype;
-      var bvalues = b._values;
-      var bindex = b._index;
-      var bptr = b._ptr;
-      var bsize = b._size;
-      var bdt = b._datatype;
-      if (asize.length !== bsize.length) {
-        throw new DimensionError(asize.length, bsize.length);
-      }
-      if (asize[0] !== bsize[0] || asize[1] !== bsize[1]) {
-        throw new RangeError("Dimension mismatch. Matrix A (" + asize + ") must match Matrix B (" + bsize + ")");
-      }
-      var rows = asize[0];
-      var columns = asize[1];
-      var dt;
-      var eq = equalScalar2;
-      var zero = 0;
-      var cf = callback;
-      if (typeof adt === "string" && adt === bdt) {
-        dt = adt;
-        eq = typed2.find(equalScalar2, [dt, dt]);
-        zero = typed2.convert(0, dt);
-        cf = typed2.find(callback, [dt, dt]);
-      }
-      var cvalues = avalues && bvalues ? [] : void 0;
-      var cindex = [];
-      var cptr = [];
-      var xa = cvalues ? [] : void 0;
-      var xb = cvalues ? [] : void 0;
-      var wa = [];
-      var wb = [];
-      var i2, j, k, k1;
-      for (j = 0; j < columns; j++) {
-        cptr[j] = cindex.length;
-        var mark = j + 1;
-        for (k = aptr[j], k1 = aptr[j + 1]; k < k1; k++) {
-          i2 = aindex[k];
-          cindex.push(i2);
-          wa[i2] = mark;
-          if (xa) {
-            xa[i2] = avalues[k];
-          }
-        }
-        for (k = bptr[j], k1 = bptr[j + 1]; k < k1; k++) {
-          i2 = bindex[k];
-          if (wa[i2] !== mark) {
-            cindex.push(i2);
-          }
-          wb[i2] = mark;
-          if (xb) {
-            xb[i2] = bvalues[k];
-          }
-        }
-        if (cvalues) {
-          k = cptr[j];
-          while (k < cindex.length) {
-            i2 = cindex[k];
-            var wai = wa[i2];
-            var wbi = wb[i2];
-            if (wai === mark || wbi === mark) {
-              var va = wai === mark ? xa[i2] : zero;
-              var vb = wbi === mark ? xb[i2] : zero;
-              var vc = cf(va, vb);
-              if (!eq(vc, zero)) {
-                cvalues.push(vc);
-                k++;
-              } else {
-                cindex.splice(k, 1);
-              }
-            }
-          }
-        }
-      }
-      cptr[columns] = cindex.length;
-      return a.createSparseMatrix({
-        values: cvalues,
-        index: cindex,
-        ptr: cptr,
-        size: [rows, columns],
-        datatype: dt
-      });
-    };
-  });
-
-  // node_modules/mathjs/lib/esm/function/arithmetic/mod.js
-  var name59 = "mod";
-  var dependencies59 = ["typed", "matrix", "equalScalar", "DenseMatrix", "concat"];
-  var createMod = /* @__PURE__ */ factory(name59, dependencies59, (_ref) => {
-    var {
-      typed: typed2,
-      matrix: matrix2,
-      equalScalar: equalScalar2,
-      DenseMatrix: DenseMatrix2,
-      concat: concat2
-    } = _ref;
-    var matAlgo02xDS0 = createMatAlgo02xDS0({
-      typed: typed2,
-      equalScalar: equalScalar2
-    });
-    var matAlgo03xDSf = createMatAlgo03xDSf({
-      typed: typed2
-    });
-    var matAlgo05xSfSf = createMatAlgo05xSfSf({
-      typed: typed2,
-      equalScalar: equalScalar2
-    });
-    var matAlgo11xS0s = createMatAlgo11xS0s({
-      typed: typed2,
-      equalScalar: equalScalar2
-    });
-    var matAlgo12xSfs = createMatAlgo12xSfs({
-      typed: typed2,
-      DenseMatrix: DenseMatrix2
-    });
-    var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
-      matrix: matrix2,
-      concat: concat2
-    });
-    return typed2(name59, {
-      "number, number": modNumber,
-      "BigNumber, BigNumber": function BigNumberBigNumber(x, y) {
-        if (y.isNeg()) {
-          throw new Error("Cannot calculate mod for a negative divisor");
-        }
-        return y.isZero() ? x : x.mod(y);
-      },
-      "Fraction, Fraction": function FractionFraction(x, y) {
-        if (y.compare(0) < 0) {
-          throw new Error("Cannot calculate mod for a negative divisor");
-        }
-        return x.compare(0) >= 0 ? x.mod(y) : x.mod(y).add(y).mod(y);
-      }
-    }, matrixAlgorithmSuite({
-      SS: matAlgo05xSfSf,
-      DS: matAlgo03xDSf,
-      SD: matAlgo02xDS0,
-      Ss: matAlgo11xS0s,
-      sS: matAlgo12xSfs
-    }));
-  });
-
   // node_modules/mathjs/lib/esm/function/arithmetic/multiplyScalar.js
   var name60 = "multiplyScalar";
   var dependencies60 = ["typed"];
   var createMultiplyScalar = /* @__PURE__ */ factory(name60, dependencies60, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2("multiplyScalar", {
+    return typed3("multiplyScalar", {
       "number, number": multiplyNumber,
       "Complex, Complex": function ComplexComplex(x, y) {
         return x.mul(y);
@@ -15063,7 +16666,7 @@ var meta_bind_publish = (() => {
   var dependencies61 = ["typed", "matrix", "addScalar", "multiplyScalar", "equalScalar", "dot"];
   var createMultiply = /* @__PURE__ */ factory(name61, dependencies61, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       addScalar: addScalar2,
       multiplyScalar: multiplyScalar2,
@@ -15071,11 +16674,11 @@ var meta_bind_publish = (() => {
       dot: dot2
     } = _ref;
     var matAlgo11xS0s = createMatAlgo11xS0s({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo14xDs = createMatAlgo14xDs({
-      typed: typed2
+      typed: typed3
     });
     function _validateMatrixDimensions(size1, size2) {
       switch (size1.length) {
@@ -15141,8 +16744,8 @@ var meta_bind_publish = (() => {
       var mf = multiplyScalar2;
       if (adt && bdt && adt === bdt && typeof adt === "string") {
         dt = adt;
-        af = typed2.find(addScalar2, [dt, dt]);
-        mf = typed2.find(multiplyScalar2, [dt, dt]);
+        af = typed3.find(addScalar2, [dt, dt]);
+        mf = typed3.find(multiplyScalar2, [dt, dt]);
       }
       var c = [];
       for (var j = 0; j < bcolumns; j++) {
@@ -15158,11 +16761,11 @@ var meta_bind_publish = (() => {
         datatype: dt
       });
     }
-    var _multiplyMatrixVector = typed2("_multiplyMatrixVector", {
+    var _multiplyMatrixVector = typed3("_multiplyMatrixVector", {
       "DenseMatrix, any": _multiplyDenseMatrixVector,
       "SparseMatrix, any": _multiplySparseMatrixVector
     });
-    var _multiplyMatrixMatrix = typed2("_multiplyMatrixMatrix", {
+    var _multiplyMatrixMatrix = typed3("_multiplyMatrixMatrix", {
       "DenseMatrix, DenseMatrix": _multiplyDenseMatrixDenseMatrix,
       "DenseMatrix, SparseMatrix": _multiplyDenseMatrixSparseMatrix,
       "SparseMatrix, DenseMatrix": _multiplySparseMatrixDenseMatrix,
@@ -15181,8 +16784,8 @@ var meta_bind_publish = (() => {
       var mf = multiplyScalar2;
       if (adt && bdt && adt === bdt && typeof adt === "string") {
         dt = adt;
-        af = typed2.find(addScalar2, [dt, dt]);
-        mf = typed2.find(multiplyScalar2, [dt, dt]);
+        af = typed3.find(addScalar2, [dt, dt]);
+        mf = typed3.find(multiplyScalar2, [dt, dt]);
       }
       var c = [];
       for (var i2 = 0; i2 < arows; i2++) {
@@ -15214,8 +16817,8 @@ var meta_bind_publish = (() => {
       var mf = multiplyScalar2;
       if (adt && bdt && adt === bdt && typeof adt === "string") {
         dt = adt;
-        af = typed2.find(addScalar2, [dt, dt]);
-        mf = typed2.find(multiplyScalar2, [dt, dt]);
+        af = typed3.find(addScalar2, [dt, dt]);
+        mf = typed3.find(multiplyScalar2, [dt, dt]);
       }
       var c = [];
       for (var i2 = 0; i2 < arows; i2++) {
@@ -15256,10 +16859,10 @@ var meta_bind_publish = (() => {
       var zero = 0;
       if (adt && bdt && adt === bdt && typeof adt === "string") {
         dt = adt;
-        af = typed2.find(addScalar2, [dt, dt]);
-        mf = typed2.find(multiplyScalar2, [dt, dt]);
-        eq = typed2.find(equalScalar2, [dt, dt]);
-        zero = typed2.convert(0, dt);
+        af = typed3.find(addScalar2, [dt, dt]);
+        mf = typed3.find(multiplyScalar2, [dt, dt]);
+        eq = typed3.find(equalScalar2, [dt, dt]);
+        zero = typed3.convert(0, dt);
       }
       var cvalues = [];
       var cindex = [];
@@ -15321,10 +16924,10 @@ var meta_bind_publish = (() => {
       var zero = 0;
       if (adt && bdt && adt === bdt && typeof adt === "string") {
         dt = adt;
-        af = typed2.find(addScalar2, [dt, dt]);
-        mf = typed2.find(multiplyScalar2, [dt, dt]);
-        eq = typed2.find(equalScalar2, [dt, dt]);
-        zero = typed2.convert(0, dt);
+        af = typed3.find(addScalar2, [dt, dt]);
+        mf = typed3.find(multiplyScalar2, [dt, dt]);
+        eq = typed3.find(equalScalar2, [dt, dt]);
+        zero = typed3.convert(0, dt);
       }
       var x = [];
       var w = [];
@@ -15377,10 +16980,10 @@ var meta_bind_publish = (() => {
       var zero = 0;
       if (adt && bdt && adt === bdt && typeof adt === "string") {
         dt = adt;
-        af = typed2.find(addScalar2, [dt, dt]);
-        mf = typed2.find(multiplyScalar2, [dt, dt]);
-        eq = typed2.find(equalScalar2, [dt, dt]);
-        zero = typed2.convert(0, dt);
+        af = typed3.find(addScalar2, [dt, dt]);
+        mf = typed3.find(multiplyScalar2, [dt, dt]);
+        eq = typed3.find(equalScalar2, [dt, dt]);
+        zero = typed3.convert(0, dt);
       }
       var cvalues = [];
       var cindex = [];
@@ -15437,8 +17040,8 @@ var meta_bind_publish = (() => {
       var mf = multiplyScalar2;
       if (adt && bdt && adt === bdt && typeof adt === "string") {
         dt = adt;
-        af = typed2.find(addScalar2, [dt, dt]);
-        mf = typed2.find(multiplyScalar2, [dt, dt]);
+        af = typed3.find(addScalar2, [dt, dt]);
+        mf = typed3.find(multiplyScalar2, [dt, dt]);
       }
       var cvalues = values ? [] : void 0;
       var cindex = [];
@@ -15489,8 +17092,8 @@ var meta_bind_publish = (() => {
       cptr[bcolumns] = cindex.length;
       return c;
     }
-    return typed2(name61, multiplyScalar2, {
-      "Array, Array": typed2.referTo("Matrix, Matrix", (selfMM) => (x, y) => {
+    return typed3(name61, multiplyScalar2, {
+      "Array, Array": typed3.referTo("Matrix, Matrix", (selfMM) => (x, y) => {
         _validateMatrixDimensions(arraySize(x), arraySize(y));
         var m = selfMM(matrix2(x), matrix2(y));
         return isMatrix(m) ? m.valueOf() : m;
@@ -15510,8 +17113,8 @@ var meta_bind_publish = (() => {
         }
         return _multiplyMatrixMatrix(x, y);
       },
-      "Matrix, Array": typed2.referTo("Matrix,Matrix", (selfMM) => (x, y) => selfMM(x, matrix2(y))),
-      "Array, Matrix": typed2.referToSelf((self2) => (x, y) => {
+      "Matrix, Array": typed3.referTo("Matrix,Matrix", (selfMM) => (x, y) => selfMM(x, matrix2(y))),
+      "Array, Matrix": typed3.referToSelf((self2) => (x, y) => {
         return self2(matrix2(x, y.storage()), y);
       }),
       "SparseMatrix, any": function SparseMatrixAny(x, y) {
@@ -15533,7 +17136,7 @@ var meta_bind_publish = (() => {
         return matAlgo14xDs(matrix2(y), x, multiplyScalar2, true).valueOf();
       },
       "any, any": multiplyScalar2,
-      "any, any, ...any": typed2.referToSelf((self2) => (x, y, rest) => {
+      "any, any, ...any": typed3.referToSelf((self2) => (x, y, rest) => {
         var result = self2(x, y);
         for (var i2 = 0; i2 < rest.length; i2++) {
           result = self2(result, rest[i2]);
@@ -15548,61 +17151,61 @@ var meta_bind_publish = (() => {
   var dependencies62 = ["typed", "matrix", "equalScalar", "BigNumber", "concat"];
   var createNthRoot = /* @__PURE__ */ factory(name62, dependencies62, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       equalScalar: equalScalar2,
       BigNumber: _BigNumber,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo01xDSid = createMatAlgo01xDSid({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo02xDS0 = createMatAlgo02xDS0({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo06xS0S0 = createMatAlgo06xS0S0({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo11xS0s = createMatAlgo11xS0s({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
     function complexErr() {
       throw new Error("Complex number not supported in function nthRoot. Use nthRoots instead.");
     }
-    return typed2(name62, {
+    return typed3(name62, {
       number: nthRootNumber,
       "number, number": nthRootNumber,
       BigNumber: (x) => _bigNthRoot(x, new _BigNumber(2)),
       "BigNumber, BigNumber": _bigNthRoot,
       Complex: complexErr,
       "Complex, number": complexErr,
-      Array: typed2.referTo("DenseMatrix,number", (selfDn) => (x) => selfDn(matrix2(x), 2).valueOf()),
-      DenseMatrix: typed2.referTo("DenseMatrix,number", (selfDn) => (x) => selfDn(x, 2)),
-      SparseMatrix: typed2.referTo("SparseMatrix,number", (selfSn) => (x) => selfSn(x, 2)),
-      "SparseMatrix, SparseMatrix": typed2.referToSelf((self2) => (x, y) => {
+      Array: typed3.referTo("DenseMatrix,number", (selfDn) => (x) => selfDn(matrix2(x), 2).valueOf()),
+      DenseMatrix: typed3.referTo("DenseMatrix,number", (selfDn) => (x) => selfDn(x, 2)),
+      SparseMatrix: typed3.referTo("SparseMatrix,number", (selfSn) => (x) => selfSn(x, 2)),
+      "SparseMatrix, SparseMatrix": typed3.referToSelf((self2) => (x, y) => {
         if (y.density() === 1) {
           return matAlgo06xS0S0(x, y, self2);
         } else {
           throw new Error("Root must be non-zero");
         }
       }),
-      "DenseMatrix, SparseMatrix": typed2.referToSelf((self2) => (x, y) => {
+      "DenseMatrix, SparseMatrix": typed3.referToSelf((self2) => (x, y) => {
         if (y.density() === 1) {
           return matAlgo01xDSid(x, y, self2, false);
         } else {
           throw new Error("Root must be non-zero");
         }
       }),
-      "Array, SparseMatrix": typed2.referTo("DenseMatrix,SparseMatrix", (selfDS) => (x, y) => selfDS(matrix2(x), y)),
-      "number | BigNumber, SparseMatrix": typed2.referToSelf((self2) => (x, y) => {
+      "Array, SparseMatrix": typed3.referTo("DenseMatrix,SparseMatrix", (selfDS) => (x, y) => selfDS(matrix2(x), y)),
+      "number | BigNumber, SparseMatrix": typed3.referToSelf((self2) => (x, y) => {
         if (y.density() === 1) {
           return matAlgo11xS0s(y, x, self2, true);
         } else {
@@ -15649,12 +17252,12 @@ var meta_bind_publish = (() => {
   var dependencies63 = ["typed", "BigNumber", "Fraction", "complex"];
   var createSign = /* @__PURE__ */ factory(name63, dependencies63, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       BigNumber: _BigNumber,
       complex: complex2,
       Fraction: _Fraction
     } = _ref;
-    return typed2(name63, {
+    return typed3(name63, {
       number: signNumber,
       Complex: function Complex3(x) {
         return x.im === 0 ? complex2(signNumber(x.re)) : x.sign();
@@ -15665,12 +17268,12 @@ var meta_bind_publish = (() => {
       Fraction: function Fraction3(x) {
         return new _Fraction(x.s, 1);
       },
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2, true)),
-      Unit: typed2.referToSelf((self2) => (x) => {
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2, true)),
+      Unit: typed3.referToSelf((self2) => (x) => {
         if (!x._isDerived() && x.units[0].unit.offset !== 0) {
           throw new TypeError("sign is ambiguous for units with offset");
         }
-        return typed2.find(self2, x.valueType())(x.value);
+        return typed3.find(self2, x.valueType())(x.value);
       })
     });
   });
@@ -15681,10 +17284,10 @@ var meta_bind_publish = (() => {
   var createSqrt = /* @__PURE__ */ factory(name64, dependencies64, (_ref) => {
     var {
       config: config4,
-      typed: typed2,
+      typed: typed3,
       Complex: Complex3
     } = _ref;
-    return typed2("sqrt", {
+    return typed3("sqrt", {
       number: _sqrtNumber,
       Complex: function Complex4(x) {
         return x.sqrt();
@@ -15716,9 +17319,9 @@ var meta_bind_publish = (() => {
   var dependencies65 = ["typed"];
   var createSquare = /* @__PURE__ */ factory(name65, dependencies65, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name65, {
+    return typed3(name65, {
       number: squareNumber,
       Complex: function Complex3(x) {
         return x.mul(x);
@@ -15740,43 +17343,43 @@ var meta_bind_publish = (() => {
   var dependencies66 = ["typed", "matrix", "equalScalar", "addScalar", "unaryMinus", "DenseMatrix", "concat"];
   var createSubtract = /* @__PURE__ */ factory(name66, dependencies66, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       equalScalar: equalScalar2,
       addScalar: addScalar2,
       unaryMinus: unaryMinus2,
       DenseMatrix: DenseMatrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo01xDSid = createMatAlgo01xDSid({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo03xDSf = createMatAlgo03xDSf({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo05xSfSf = createMatAlgo05xSfSf({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo10xSids = createMatAlgo10xSids({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matAlgo12xSfs = createMatAlgo12xSfs({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
-    return typed2(name66, {
+    return typed3(name66, {
       "number, number": (x, y) => x - y,
       "Complex, Complex": (x, y) => x.sub(y),
       "BigNumber, BigNumber": (x, y) => x.minus(y),
       "Fraction, Fraction": (x, y) => x.sub(y),
-      "Unit, Unit": typed2.referToSelf((self2) => (x, y) => {
+      "Unit, Unit": typed3.referToSelf((self2) => (x, y) => {
         if (x.value === null) {
           throw new Error("Parameter x contains a unit with undefined value");
         }
@@ -15787,7 +17390,7 @@ var meta_bind_publish = (() => {
           throw new Error("Units do not match");
         }
         var res = x.clone();
-        res.value = typed2.find(self2, [res.valueType(), y.valueType()])(res.value, y.value);
+        res.value = typed3.find(self2, [res.valueType(), y.valueType()])(res.value, y.value);
         res.fixPrefix = false;
         return res;
       })
@@ -15805,12 +17408,12 @@ var meta_bind_publish = (() => {
   var dependencies67 = ["typed", "config", "matrix", "BigNumber"];
   var createXgcd = /* @__PURE__ */ factory(name67, dependencies67, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       matrix: matrix2,
       BigNumber: BigNumber2
     } = _ref;
-    return typed2(name67, {
+    return typed3(name67, {
       "number, number": function numberNumber(a, b) {
         var res = xgcdNumber(a, b);
         return config4.matrix === "Array" ? res : matrix2(res);
@@ -15857,7 +17460,7 @@ var meta_bind_publish = (() => {
   var dependencies68 = ["typed", "config", "BigNumber", "xgcd", "equal", "smaller", "mod", "add", "isInteger"];
   var createInvmod = /* @__PURE__ */ factory(name68, dependencies68, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       BigNumber: BigNumber2,
       xgcd: xgcd2,
@@ -15867,7 +17470,7 @@ var meta_bind_publish = (() => {
       add: add3,
       isInteger: isInteger3
     } = _ref;
-    return typed2(name68, {
+    return typed3(name68, {
       "number, number": invmod2,
       "BigNumber, BigNumber": invmod2
     });
@@ -15894,7 +17497,7 @@ var meta_bind_publish = (() => {
   var dependencies69 = ["typed", "equalScalar"];
   var createMatAlgo09xS0Sf = /* @__PURE__ */ factory(name69, dependencies69, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     } = _ref;
     return function matAlgo09xS0Sf(a, b, callback) {
@@ -15922,9 +17525,9 @@ var meta_bind_publish = (() => {
       var cf = callback;
       if (typeof adt === "string" && adt === bdt) {
         dt = adt;
-        eq = typed2.find(equalScalar2, [dt, dt]);
-        zero = typed2.convert(0, dt);
-        cf = typed2.find(callback, [dt, dt]);
+        eq = typed3.find(equalScalar2, [dt, dt]);
+        zero = typed3.convert(0, dt);
+        cf = typed3.find(callback, [dt, dt]);
       }
       var cvalues = avalues && bvalues ? [] : void 0;
       var cindex = [];
@@ -15972,30 +17575,30 @@ var meta_bind_publish = (() => {
   var dependencies70 = ["typed", "matrix", "equalScalar", "multiplyScalar", "concat"];
   var createDotMultiply = /* @__PURE__ */ factory(name70, dependencies70, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       equalScalar: equalScalar2,
       multiplyScalar: multiplyScalar2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo02xDS0 = createMatAlgo02xDS0({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo09xS0Sf = createMatAlgo09xS0Sf({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo11xS0s = createMatAlgo11xS0s({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
-    return typed2(name70, matrixAlgorithmSuite({
+    return typed3(name70, matrixAlgorithmSuite({
       elop: multiplyScalar2,
       SS: matAlgo09xS0Sf,
       DS: matAlgo02xDS0,
@@ -16168,25 +17771,25 @@ var meta_bind_publish = (() => {
       j--;
     }
     var xe = x.e;
-    var str = r.slice(0, j + 1 || 1);
-    var strL = str.length;
+    var str2 = r.slice(0, j + 1 || 1);
+    var strL = str2.length;
     if (xe > 0) {
       if (++xe > strL) {
         xe -= strL;
         while (xe--) {
-          str += "0";
+          str2 += "0";
         }
       } else if (xe < strL) {
-        str = str.slice(0, xe) + "." + str.slice(xe);
+        str2 = str2.slice(0, xe) + "." + str2.slice(xe);
       }
     }
     var arr = [0];
-    for (var _i2 = 0; _i2 < str.length; ) {
+    for (var _i2 = 0; _i2 < str2.length; ) {
       var arrL = arr.length;
       while (arrL--) {
         arr[arrL] *= 10;
       }
-      arr[0] += parseInt(str.charAt(_i2++));
+      arr[0] += parseInt(str2.charAt(_i2++));
       for (var _j = 0; _j < arr.length; ++_j) {
         if (arr[_j] > 1) {
           if (arr[_j + 1] === null || arr[_j + 1] === void 0) {
@@ -16283,29 +17886,29 @@ var meta_bind_publish = (() => {
   var dependencies71 = ["typed", "matrix", "equalScalar", "concat"];
   var createBitAnd = /* @__PURE__ */ factory(name71, dependencies71, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       equalScalar: equalScalar2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo02xDS0 = createMatAlgo02xDS0({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo06xS0S0 = createMatAlgo06xS0S0({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo11xS0s = createMatAlgo11xS0s({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
-    return typed2(name71, {
+    return typed3(name71, {
       "number, number": bitAndNumber,
       "BigNumber, BigNumber": bitAndBigNumber
     }, matrixAlgorithmSuite({
@@ -16320,12 +17923,12 @@ var meta_bind_publish = (() => {
   var dependencies72 = ["typed"];
   var createBitNot = /* @__PURE__ */ factory(name72, dependencies72, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name72, {
+    return typed3(name72, {
       number: bitNotNumber,
       BigNumber: bitNotBigNumber,
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2))
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2))
     });
   });
 
@@ -16334,29 +17937,29 @@ var meta_bind_publish = (() => {
   var dependencies73 = ["typed", "matrix", "equalScalar", "DenseMatrix", "concat"];
   var createBitOr = /* @__PURE__ */ factory(name73, dependencies73, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       equalScalar: equalScalar2,
       DenseMatrix: DenseMatrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo01xDSid = createMatAlgo01xDSid({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo04xSidSid = createMatAlgo04xSidSid({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo10xSids = createMatAlgo10xSids({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
-    return typed2(name73, {
+    return typed3(name73, {
       "number, number": bitOrNumber,
       "BigNumber, BigNumber": bitOrBigNumber
     }, matrixAlgorithmSuite({
@@ -16371,7 +17974,7 @@ var meta_bind_publish = (() => {
   var dependencies74 = ["typed", "DenseMatrix"];
   var createMatAlgo07xSSf = /* @__PURE__ */ factory(name74, dependencies74, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     } = _ref;
     return function matAlgo07xSSf(a, b, callback) {
@@ -16392,8 +17995,8 @@ var meta_bind_publish = (() => {
       var cf = callback;
       if (typeof adt === "string" && adt === bdt) {
         dt = adt;
-        zero = typed2.convert(0, dt);
-        cf = typed2.find(callback, [dt, dt]);
+        zero = typed3.convert(0, dt);
+        cf = typed3.find(callback, [dt, dt]);
       }
       var i2, j;
       var cdata = [];
@@ -16437,28 +18040,28 @@ var meta_bind_publish = (() => {
   var dependencies75 = ["typed", "matrix", "DenseMatrix", "concat"];
   var createBitXor = /* @__PURE__ */ factory(name75, dependencies75, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       DenseMatrix: DenseMatrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo03xDSf = createMatAlgo03xDSf({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo07xSSf = createMatAlgo07xSSf({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matAlgo12xSfs = createMatAlgo12xSfs({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
-    return typed2(name75, {
+    return typed3(name75, {
       "number, number": bitXorNumber,
       "BigNumber, BigNumber": bitXor
     }, matrixAlgorithmSuite({
@@ -16473,9 +18076,9 @@ var meta_bind_publish = (() => {
   var dependencies76 = ["typed"];
   var createArg = /* @__PURE__ */ factory(name76, dependencies76, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name76, {
+    return typed3(name76, {
       number: function number2(x) {
         return Math.atan2(0, x);
       },
@@ -16485,7 +18088,7 @@ var meta_bind_publish = (() => {
       Complex: function Complex3(x) {
         return x.arg();
       },
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2))
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2))
     });
   });
 
@@ -16494,12 +18097,12 @@ var meta_bind_publish = (() => {
   var dependencies77 = ["typed"];
   var createConj = /* @__PURE__ */ factory(name77, dependencies77, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name77, {
+    return typed3(name77, {
       "number | BigNumber | Fraction": (x) => x,
       Complex: (x) => x.conjugate(),
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2))
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2))
     });
   });
 
@@ -16508,13 +18111,13 @@ var meta_bind_publish = (() => {
   var dependencies78 = ["typed"];
   var createIm = /* @__PURE__ */ factory(name78, dependencies78, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name78, {
+    return typed3(name78, {
       number: () => 0,
       "BigNumber | Fraction": (x) => x.mul(0),
       Complex: (x) => x.im,
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2))
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2))
     });
   });
 
@@ -16523,12 +18126,12 @@ var meta_bind_publish = (() => {
   var dependencies79 = ["typed"];
   var createRe = /* @__PURE__ */ factory(name79, dependencies79, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name79, {
+    return typed3(name79, {
       "number | BigNumber | Fraction": (x) => x,
       Complex: (x) => x.re,
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2))
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2))
     });
   });
 
@@ -16537,9 +18140,9 @@ var meta_bind_publish = (() => {
   var dependencies80 = ["typed"];
   var createNot = /* @__PURE__ */ factory(name80, dependencies80, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name80, {
+    return typed3(name80, {
       "null | undefined": () => true,
       number: notNumber,
       Complex: function Complex3(x) {
@@ -16548,8 +18151,8 @@ var meta_bind_publish = (() => {
       BigNumber: function BigNumber2(x) {
         return x.isZero() || x.isNaN();
       },
-      Unit: typed2.referToSelf((self2) => (x) => typed2.find(self2, x.valueType())(x.value)),
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2))
+      Unit: typed3.referToSelf((self2) => (x) => typed3.find(self2, x.valueType())(x.value)),
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2))
     });
   });
 
@@ -16558,29 +18161,29 @@ var meta_bind_publish = (() => {
   var dependencies81 = ["typed", "matrix", "equalScalar", "DenseMatrix", "concat"];
   var createOr = /* @__PURE__ */ factory(name81, dependencies81, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       equalScalar: equalScalar2,
       DenseMatrix: DenseMatrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo03xDSf = createMatAlgo03xDSf({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo05xSfSf = createMatAlgo05xSfSf({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo12xSfs = createMatAlgo12xSfs({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
-    return typed2(name81, {
+    return typed3(name81, {
       "number, number": orNumber,
       "Complex, Complex": function ComplexComplex(x, y) {
         return x.re !== 0 || x.im !== 0 || y.re !== 0 || y.im !== 0;
@@ -16588,7 +18191,7 @@ var meta_bind_publish = (() => {
       "BigNumber, BigNumber": function BigNumberBigNumber(x, y) {
         return !x.isZero() && !x.isNaN() || !y.isZero() && !y.isNaN();
       },
-      "Unit, Unit": typed2.referToSelf((self2) => (x, y) => self2(x.value || 0, y.value || 0))
+      "Unit, Unit": typed3.referToSelf((self2) => (x, y) => self2(x.value || 0, y.value || 0))
     }, matrixAlgorithmSuite({
       SS: matAlgo05xSfSf,
       DS: matAlgo03xDSf,
@@ -16601,28 +18204,28 @@ var meta_bind_publish = (() => {
   var dependencies82 = ["typed", "matrix", "DenseMatrix", "concat"];
   var createXor = /* @__PURE__ */ factory(name82, dependencies82, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       DenseMatrix: DenseMatrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo03xDSf = createMatAlgo03xDSf({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo07xSSf = createMatAlgo07xSSf({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matAlgo12xSfs = createMatAlgo12xSfs({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
-    return typed2(name82, {
+    return typed3(name82, {
       "number, number": xorNumber,
       "Complex, Complex": function ComplexComplex(x, y) {
         return (x.re !== 0 || x.im !== 0) !== (y.re !== 0 || y.im !== 0);
@@ -16630,7 +18233,7 @@ var meta_bind_publish = (() => {
       "BigNumber, BigNumber": function BigNumberBigNumber(x, y) {
         return (!x.isZero() && !x.isNaN()) !== (!y.isZero() && !y.isNaN());
       },
-      "Unit, Unit": typed2.referToSelf((self2) => (x, y) => self2(x.value || 0, y.value || 0))
+      "Unit, Unit": typed3.referToSelf((self2) => (x, y) => self2(x.value || 0, y.value || 0))
     }, matrixAlgorithmSuite({
       SS: matAlgo07xSSf,
       DS: matAlgo03xDSf,
@@ -16643,11 +18246,11 @@ var meta_bind_publish = (() => {
   var dependencies83 = ["typed", "matrix", "isInteger"];
   var createConcat = /* @__PURE__ */ factory(name83, dependencies83, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       isInteger: isInteger3
     } = _ref;
-    return typed2(name83, {
+    return typed3(name83, {
       "...Array | Matrix | number | BigNumber": function ArrayMatrixNumberBigNumber(args) {
         var i2;
         var len = args.length;
@@ -16688,7 +18291,7 @@ var meta_bind_publish = (() => {
         }
         var res = matrices.shift();
         while (matrices.length) {
-          res = _concat(res, matrices.shift(), dim, 0);
+          res = concat(res, matrices.shift(), dim);
         }
         return asMatrix ? matrix2(res) : res;
       },
@@ -16697,45 +18300,31 @@ var meta_bind_publish = (() => {
       }
     });
   });
-  function _concat(a, b, concatDim, dim) {
-    if (dim < concatDim) {
-      if (a.length !== b.length) {
-        throw new DimensionError(a.length, b.length);
-      }
-      var c = [];
-      for (var i2 = 0; i2 < a.length; i2++) {
-        c[i2] = _concat(a[i2], b[i2], concatDim, dim + 1);
-      }
-      return c;
-    } else {
-      return a.concat(b);
-    }
-  }
 
   // node_modules/mathjs/lib/esm/function/matrix/column.js
   var name84 = "column";
   var dependencies84 = ["typed", "Index", "matrix", "range"];
   var createColumn = /* @__PURE__ */ factory(name84, dependencies84, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       Index: Index2,
       matrix: matrix2,
       range: range2
     } = _ref;
-    return typed2(name84, {
+    return typed3(name84, {
       "Matrix, number": _column,
-      "Array, number": function ArrayNumber(value, column2) {
-        return _column(matrix2(clone(value)), column2).valueOf();
+      "Array, number": function ArrayNumber(value2, column2) {
+        return _column(matrix2(clone(value2)), column2).valueOf();
       }
     });
-    function _column(value, column2) {
-      if (value.size().length !== 2) {
+    function _column(value2, column2) {
+      if (value2.size().length !== 2) {
         throw new Error("Only two dimensional matrix is supported");
       }
-      validateIndex(column2, value.size()[1]);
-      var rowRange = range2(0, value.size()[0]);
+      validateIndex(column2, value2.size()[1]);
+      var rowRange = range2(0, value2.size()[0]);
       var index2 = new Index2(rowRange, column2);
-      var result = value.subset(index2);
+      var result = value2.subset(index2);
       return isMatrix(result) ? result : matrix2([[result]]);
     }
   });
@@ -16745,11 +18334,11 @@ var meta_bind_publish = (() => {
   var dependencies85 = ["typed", "size", "prod"];
   var createCount = /* @__PURE__ */ factory(name85, dependencies85, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       size: size2,
       prod: prod2
     } = _ref;
-    return typed2(name85, {
+    return typed3(name85, {
       string: function string2(x) {
         return x.length;
       },
@@ -16764,12 +18353,12 @@ var meta_bind_publish = (() => {
   var dependencies86 = ["typed", "matrix", "subtract", "multiply"];
   var createCross = /* @__PURE__ */ factory(name86, dependencies86, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       subtract: subtract2,
       multiply: multiply2
     } = _ref;
-    return typed2(name86, {
+    return typed3(name86, {
       "Matrix, Matrix": function MatrixMatrix(x, y) {
         return matrix2(_cross(x.toArray(), y.toArray()));
       },
@@ -16804,12 +18393,12 @@ var meta_bind_publish = (() => {
   var dependencies87 = ["typed", "matrix", "DenseMatrix", "SparseMatrix"];
   var createDiag = /* @__PURE__ */ factory(name87, dependencies87, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       DenseMatrix: DenseMatrix2,
       SparseMatrix: SparseMatrix2
     } = _ref;
-    return typed2(name87, {
+    return typed3(name87, {
       Array: function Array2(x) {
         return _diag(x, 0, arraySize(x), null);
       },
@@ -16889,14 +18478,59 @@ var meta_bind_publish = (() => {
     }
   });
 
+  // node_modules/mathjs/lib/esm/utils/applyCallback.js
+  var import_typed_function2 = __toESM(require_typed_function(), 1);
+  function applyCallback(callback, value2, index2, array, mappingFnName) {
+    if (import_typed_function2.default.isTypedFunction(callback)) {
+      var args3 = [value2, index2, array];
+      var signature3 = import_typed_function2.default.resolve(callback, args3);
+      if (signature3) {
+        return tryWithArgs(signature3.implementation, args3);
+      }
+      var args2 = [value2, index2];
+      var signature2 = import_typed_function2.default.resolve(callback, args2);
+      if (signature2) {
+        return tryWithArgs(signature2.implementation, args2);
+      }
+      var args1 = [value2];
+      var signature1 = import_typed_function2.default.resolve(callback, args1);
+      if (signature1) {
+        return tryWithArgs(signature1.implementation, args1);
+      }
+      return tryWithArgs(callback, args3);
+    } else {
+      return callback(value2, index2, array);
+    }
+    function tryWithArgs(signature, args) {
+      try {
+        return signature.apply(signature, args);
+      } catch (err) {
+        var _err$data;
+        if (err instanceof TypeError && ((_err$data = err.data) === null || _err$data === void 0 ? void 0 : _err$data.category) === "wrongType") {
+          var argsDesc = [];
+          argsDesc.push("value: ".concat(typeOf2(value2)));
+          if (args.length >= 2) {
+            argsDesc.push("index: ".concat(typeOf2(index2)));
+          }
+          if (args.length >= 3) {
+            argsDesc.push("array: ".concat(typeOf2(array)));
+          }
+          throw new TypeError("Function ".concat(mappingFnName, " cannot apply callback arguments ") + "".concat(callback.name, "(").concat(argsDesc.join(", "), ") at index ").concat(JSON.stringify(index2)));
+        } else {
+          throw new TypeError("Function ".concat(mappingFnName, " cannot apply callback arguments ") + "to function ".concat(callback.name, ": ").concat(err.message));
+        }
+      }
+    }
+  }
+
   // node_modules/mathjs/lib/esm/function/matrix/filter.js
   var name88 = "filter";
   var dependencies88 = ["typed"];
   var createFilter = /* @__PURE__ */ factory(name88, dependencies88, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2("filter", {
+    return typed3("filter", {
       "Array, function": _filterCallback,
       "Matrix, function": function MatrixFunction(x, test) {
         return x.create(_filterCallback(x.toArray(), test));
@@ -16908,15 +18542,8 @@ var meta_bind_publish = (() => {
     });
   });
   function _filterCallback(x, callback) {
-    var args = maxArgumentCount(callback);
-    return filter(x, function(value, index2, array) {
-      if (args === 1) {
-        return callback(value);
-      } else if (args === 2) {
-        return callback(value, [index2]);
-      } else {
-        return callback(value, [index2], array);
-      }
+    return filter(x, function(value2, index2, array) {
+      return applyCallback(callback, value2, [index2], array, "filter");
     });
   }
 
@@ -16925,10 +18552,10 @@ var meta_bind_publish = (() => {
   var dependencies89 = ["typed", "matrix"];
   var createFlatten = /* @__PURE__ */ factory(name89, dependencies89, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2
     } = _ref;
-    return typed2(name89, {
+    return typed3(name89, {
       Array: function Array2(x) {
         return flatten(x);
       },
@@ -16944,9 +18571,9 @@ var meta_bind_publish = (() => {
   var dependencies90 = ["typed"];
   var createForEach = /* @__PURE__ */ factory(name90, dependencies90, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name90, {
+    return typed3(name90, {
       "Array, function": _forEach,
       "Matrix, function": function MatrixFunction(x, callback) {
         x.forEach(callback);
@@ -16954,20 +18581,13 @@ var meta_bind_publish = (() => {
     });
   });
   function _forEach(array, callback) {
-    var args = maxArgumentCount(callback);
-    var recurse = function recurse2(value, index2) {
-      if (Array.isArray(value)) {
-        forEach(value, function(child, i2) {
+    var recurse = function recurse2(value2, index2) {
+      if (Array.isArray(value2)) {
+        forEach(value2, function(child, i2) {
           recurse2(child, index2.concat(i2));
         });
       } else {
-        if (args === 1) {
-          callback(value);
-        } else if (args === 2) {
-          callback(value, index2);
-        } else {
-          callback(value, index2, array);
-        }
+        return applyCallback(callback, value2, index2, array, "forEach");
       }
     };
     recurse(array, []);
@@ -16978,11 +18598,11 @@ var meta_bind_publish = (() => {
   var dependencies91 = ["typed"];
   var createGetMatrixDataType = /* @__PURE__ */ factory(name91, dependencies91, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name91, {
+    return typed3(name91, {
       Array: function Array2(x) {
-        return getArrayDataType(x, typeOf);
+        return getArrayDataType(x, typeOf2);
       },
       Matrix: function Matrix2(x) {
         return x.getDataType();
@@ -16995,14 +18615,14 @@ var meta_bind_publish = (() => {
   var dependencies92 = ["typed", "config", "matrix", "BigNumber", "DenseMatrix", "SparseMatrix"];
   var createIdentity = /* @__PURE__ */ factory(name92, dependencies92, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       matrix: matrix2,
       BigNumber: BigNumber2,
       DenseMatrix: DenseMatrix2,
       SparseMatrix: SparseMatrix2
     } = _ref;
-    return typed2(name92, {
+    return typed3(name92, {
       "": function _() {
         return config4.matrix === "Matrix" ? matrix2([]) : [];
       },
@@ -17084,11 +18704,11 @@ var meta_bind_publish = (() => {
   var dependencies93 = ["typed", "matrix", "multiplyScalar"];
   var createKron = /* @__PURE__ */ factory(name93, dependencies93, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       multiplyScalar: multiplyScalar2
     } = _ref;
-    return typed2(name93, {
+    return typed3(name93, {
       "Matrix, Matrix": function MatrixMatrix(x, y) {
         return matrix2(_kron(x.toArray(), y.toArray()));
       },
@@ -17131,9 +18751,9 @@ var meta_bind_publish = (() => {
   var dependencies94 = ["typed"];
   var createMap2 = /* @__PURE__ */ factory(name94, dependencies94, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name94, {
+    return typed3(name94, {
       "Array, function": _map,
       "Matrix, function": function MatrixFunction(x, callback) {
         return x.map(callback);
@@ -17141,37 +18761,13 @@ var meta_bind_publish = (() => {
     });
   });
   function _map(array, callback) {
-    var args = maxArgumentCount(callback);
-    var recurse = function recurse2(value, index2) {
-      if (Array.isArray(value)) {
-        return value.map(function(child, i2) {
+    var recurse = function recurse2(value2, index2) {
+      if (Array.isArray(value2)) {
+        return value2.map(function(child, i2) {
           return recurse2(child, index2.concat(i2));
         });
       } else {
-        try {
-          if (args === 1) {
-            return callback(value);
-          } else if (args === 2) {
-            return callback(value, index2);
-          } else {
-            return callback(value, index2, array);
-          }
-        } catch (err) {
-          if (err instanceof TypeError && "data" in err && err.data.category === "wrongType") {
-            var newmsg = "map attempted to call '".concat(err.data.fn, "(").concat(value);
-            var indexString = JSON.stringify(index2);
-            if (args === 2) {
-              newmsg += "," + indexString;
-            } else if (args !== 1) {
-              newmsg += ",".concat(indexString, ",").concat(array);
-            }
-            newmsg += ")' but argument ".concat(err.data.index + 1, " of type ");
-            newmsg += "".concat(err.data.actual, " does not match expected type ");
-            newmsg += err.data.expected.join(" or ");
-            throw new TypeError(newmsg);
-          }
-          throw err;
-        }
+        return applyCallback(callback, value2, index2, array, "map");
       }
     };
     return recurse(array, []);
@@ -17182,12 +18778,12 @@ var meta_bind_publish = (() => {
   var dependencies95 = ["typed", "matrix", "subtract", "number"];
   var createDiff = /* @__PURE__ */ factory(name95, dependencies95, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       subtract: subtract2,
       number: number2
     } = _ref;
-    return typed2(name95, {
+    return typed3(name95, {
       "Array | Matrix": function ArrayMatrix(arr) {
         if (isMatrix(arr)) {
           return matrix2(_diff(arr.toArray()));
@@ -17204,8 +18800,8 @@ var meta_bind_publish = (() => {
           return _recursive(arr, dim);
         }
       },
-      "Array, BigNumber": typed2.referTo("Array,number", (selfAn) => (arr, dim) => selfAn(arr, number2(dim))),
-      "Matrix, BigNumber": typed2.referTo("Matrix,number", (selfMn) => (arr, dim) => selfMn(arr, number2(dim)))
+      "Array, BigNumber": typed3.referTo("Array,number", (selfAn) => (arr, dim) => selfAn(arr, number2(dim))),
+      "Matrix, BigNumber": typed3.referTo("Matrix,number", (selfMn) => (arr, dim) => selfMn(arr, number2(dim)))
     });
     function _recursive(arr, dim) {
       if (isMatrix(arr)) {
@@ -17267,12 +18863,12 @@ var meta_bind_publish = (() => {
   var dependencies96 = ["typed", "config", "matrix", "BigNumber"];
   var createOnes = /* @__PURE__ */ factory(name96, dependencies96, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       matrix: matrix2,
       BigNumber: BigNumber2
     } = _ref;
-    return typed2("ones", {
+    return typed3("ones", {
       "": function _() {
         return config4.matrix === "Array" ? _ones([]) : _ones([], "default");
       },
@@ -17316,17 +18912,17 @@ var meta_bind_publish = (() => {
     }
     function _normalize(size2) {
       var hasBigNumbers = false;
-      size2.forEach(function(value, index2, arr) {
-        if (isBigNumber(value)) {
+      size2.forEach(function(value2, index2, arr) {
+        if (isBigNumber(value2)) {
           hasBigNumbers = true;
-          arr[index2] = value.toNumber();
+          arr[index2] = value2.toNumber();
         }
       });
       return hasBigNumbers;
     }
     function _validate2(size2) {
-      size2.forEach(function(value) {
-        if (typeof value !== "number" || !isInteger(value) || value < 0) {
+      size2.forEach(function(value2) {
+        if (typeof value2 !== "number" || !isInteger(value2) || value2 < 0) {
           throw new Error("Parameters in function ones must be positive integers");
         }
       });
@@ -17346,46 +18942,54 @@ var meta_bind_publish = (() => {
 
   // node_modules/mathjs/lib/esm/function/matrix/range.js
   var name97 = "range";
-  var dependencies97 = ["typed", "config", "?matrix", "?bignumber", "smaller", "smallerEq", "larger", "largerEq"];
+  var dependencies97 = ["typed", "config", "?matrix", "?bignumber", "smaller", "smallerEq", "larger", "largerEq", "add", "isPositive"];
   var createRange = /* @__PURE__ */ factory(name97, dependencies97, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       matrix: matrix2,
       bignumber: bignumber2,
       smaller: smaller2,
       smallerEq: smallerEq2,
       larger: larger2,
-      largerEq: largerEq2
+      largerEq: largerEq2,
+      add: add3,
+      isPositive: isPositive2
     } = _ref;
-    return typed2(name97, {
+    return typed3(name97, {
       string: _strRange,
       "string, boolean": _strRange,
       "number, number": function numberNumber(start, end) {
-        return _out(_rangeEx(start, end, 1));
+        return _out(_range(start, end, 1, false));
       },
       "number, number, number": function numberNumberNumber(start, end, step) {
-        return _out(_rangeEx(start, end, step));
+        return _out(_range(start, end, step, false));
       },
       "number, number, boolean": function numberNumberBoolean(start, end, includeEnd) {
-        return includeEnd ? _out(_rangeInc(start, end, 1)) : _out(_rangeEx(start, end, 1));
+        return _out(_range(start, end, 1, includeEnd));
       },
       "number, number, number, boolean": function numberNumberNumberBoolean(start, end, step, includeEnd) {
-        return includeEnd ? _out(_rangeInc(start, end, step)) : _out(_rangeEx(start, end, step));
+        return _out(_range(start, end, step, includeEnd));
       },
       "BigNumber, BigNumber": function BigNumberBigNumber(start, end) {
         var BigNumber2 = start.constructor;
-        return _out(_bigRangeEx(start, end, new BigNumber2(1)));
+        return _out(_range(start, end, new BigNumber2(1), false));
       },
       "BigNumber, BigNumber, BigNumber": function BigNumberBigNumberBigNumber(start, end, step) {
-        return _out(_bigRangeEx(start, end, step));
+        return _out(_range(start, end, step, false));
       },
       "BigNumber, BigNumber, boolean": function BigNumberBigNumberBoolean(start, end, includeEnd) {
         var BigNumber2 = start.constructor;
-        return includeEnd ? _out(_bigRangeInc(start, end, new BigNumber2(1))) : _out(_bigRangeEx(start, end, new BigNumber2(1)));
+        return _out(_range(start, end, new BigNumber2(1), includeEnd));
       },
       "BigNumber, BigNumber, BigNumber, boolean": function BigNumberBigNumberBigNumberBoolean(start, end, step, includeEnd) {
-        return includeEnd ? _out(_bigRangeInc(start, end, step)) : _out(_bigRangeEx(start, end, step));
+        return _out(_range(start, end, step, includeEnd));
+      },
+      "Unit, Unit, Unit": function UnitUnitUnit(start, end, step) {
+        return _out(_range(start, end, step, false));
+      },
+      "Unit, Unit, Unit, boolean": function UnitUnitUnitBoolean(start, end, step, includeEnd) {
+        return _out(_range(start, end, step, includeEnd));
       }
     });
     function _out(arr) {
@@ -17394,91 +18998,32 @@ var meta_bind_publish = (() => {
       }
       return arr;
     }
-    function _strRange(str, includeEnd) {
-      var r = _parse(str);
+    function _strRange(str2, includeEnd) {
+      var r = _parse(str2);
       if (!r) {
-        throw new SyntaxError('String "' + str + '" is no valid range');
+        throw new SyntaxError('String "' + str2 + '" is no valid range');
       }
-      var fn;
       if (config4.number === "BigNumber") {
         if (bignumber2 === void 0) {
           noBignumber();
         }
-        fn = includeEnd ? _bigRangeInc : _bigRangeEx;
-        return _out(fn(bignumber2(r.start), bignumber2(r.end), bignumber2(r.step)));
+        return _out(_range(bignumber2(r.start), bignumber2(r.end), bignumber2(r.step)), includeEnd);
       } else {
-        fn = includeEnd ? _rangeInc : _rangeEx;
-        return _out(fn(r.start, r.end, r.step));
+        return _out(_range(r.start, r.end, r.step, includeEnd));
       }
     }
-    function _rangeEx(start, end, step) {
+    function _range(start, end, step, includeEnd) {
       var array = [];
+      var ongoing = isPositive2(step) ? includeEnd ? smallerEq2 : smaller2 : includeEnd ? largerEq2 : larger2;
       var x = start;
-      if (step > 0) {
-        while (smaller2(x, end)) {
-          array.push(x);
-          x += step;
-        }
-      } else if (step < 0) {
-        while (larger2(x, end)) {
-          array.push(x);
-          x += step;
-        }
+      while (ongoing(x, end)) {
+        array.push(x);
+        x = add3(x, step);
       }
       return array;
     }
-    function _rangeInc(start, end, step) {
-      var array = [];
-      var x = start;
-      if (step > 0) {
-        while (smallerEq2(x, end)) {
-          array.push(x);
-          x += step;
-        }
-      } else if (step < 0) {
-        while (largerEq2(x, end)) {
-          array.push(x);
-          x += step;
-        }
-      }
-      return array;
-    }
-    function _bigRangeEx(start, end, step) {
-      var zero = bignumber2(0);
-      var array = [];
-      var x = start;
-      if (step.gt(zero)) {
-        while (smaller2(x, end)) {
-          array.push(x);
-          x = x.plus(step);
-        }
-      } else if (step.lt(zero)) {
-        while (larger2(x, end)) {
-          array.push(x);
-          x = x.plus(step);
-        }
-      }
-      return array;
-    }
-    function _bigRangeInc(start, end, step) {
-      var zero = bignumber2(0);
-      var array = [];
-      var x = start;
-      if (step.gt(zero)) {
-        while (smallerEq2(x, end)) {
-          array.push(x);
-          x = x.plus(step);
-        }
-      } else if (step.lt(zero)) {
-        while (largerEq2(x, end)) {
-          array.push(x);
-          x = x.plus(step);
-        }
-      }
-      return array;
-    }
-    function _parse(str) {
-      var args = str.split(":");
+    function _parse(str2) {
+      var args = str2.split(":");
       var nums = args.map(function(arg2) {
         return Number(arg2);
       });
@@ -17512,10 +19057,10 @@ var meta_bind_publish = (() => {
   var dependencies98 = ["typed", "isInteger", "matrix"];
   var createReshape = /* @__PURE__ */ factory(name98, dependencies98, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       isInteger: isInteger3
     } = _ref;
-    return typed2(name98, {
+    return typed3(name98, {
       "Matrix, Array": function MatrixArray(x, sizes) {
         return x.reshape(sizes, true);
       },
@@ -17546,8 +19091,8 @@ var meta_bind_publish = (() => {
         size2 = size2.valueOf();
       }
       if (isBigNumber(size2[0])) {
-        size2 = size2.map(function(value) {
-          return !isBigNumber(value) ? value : value.toNumber();
+        size2 = size2.map(function(value2) {
+          return !isBigNumber(value2) ? value2 : value2.toNumber();
         });
       }
       if (isMatrix(x)) {
@@ -17571,7 +19116,7 @@ var meta_bind_publish = (() => {
         return asMatrix ? matrix2(res) : res;
       }
     };
-    function _resizeString(str, size2, defaultChar) {
+    function _resizeString(str2, size2, defaultChar) {
       if (defaultChar !== void 0) {
         if (typeof defaultChar !== "string" || defaultChar.length !== 1) {
           throw new TypeError("Single character expected as defaultValue");
@@ -17586,16 +19131,16 @@ var meta_bind_publish = (() => {
       if (typeof len !== "number" || !isInteger(len)) {
         throw new TypeError("Invalid size, must contain positive integers (size: " + format3(size2) + ")");
       }
-      if (str.length > len) {
-        return str.substring(0, len);
-      } else if (str.length < len) {
-        var res = str;
-        for (var i2 = 0, ii = len - str.length; i2 < ii; i2++) {
+      if (str2.length > len) {
+        return str2.substring(0, len);
+      } else if (str2.length < len) {
+        var res = str2;
+        for (var i2 = 0, ii = len - str2.length; i2 < ii; i2++) {
           res += defaultChar;
         }
         return res;
       } else {
-        return str;
+        return str2;
       }
     }
   });
@@ -17605,11 +19150,11 @@ var meta_bind_publish = (() => {
   var dependencies100 = ["typed", "multiply", "rotationMatrix"];
   var createRotate = /* @__PURE__ */ factory(name100, dependencies100, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       multiply: multiply2,
       rotationMatrix: rotationMatrix2
     } = _ref;
-    return typed2(name100, {
+    return typed3(name100, {
       "Array , number | BigNumber | Complex | Unit": function ArrayNumberBigNumberComplexUnit(w, theta) {
         _validateSize(w, 2);
         var matrixRes = multiply2(rotationMatrix2(theta), w);
@@ -17648,7 +19193,7 @@ var meta_bind_publish = (() => {
   var dependencies101 = ["typed", "config", "multiplyScalar", "addScalar", "unaryMinus", "norm", "matrix", "BigNumber", "DenseMatrix", "SparseMatrix", "cos", "sin"];
   var createRotationMatrix = /* @__PURE__ */ factory(name101, dependencies101, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       multiplyScalar: multiplyScalar2,
       addScalar: addScalar2,
@@ -17661,7 +19206,7 @@ var meta_bind_publish = (() => {
       cos: cos3,
       sin: sin3
     } = _ref;
-    return typed2(name101, {
+    return typed3(name101, {
       "": function _() {
         return config4.matrix === "Matrix" ? matrix2([]) : [];
       },
@@ -17756,25 +19301,25 @@ var meta_bind_publish = (() => {
   var dependencies102 = ["typed", "Index", "matrix", "range"];
   var createRow = /* @__PURE__ */ factory(name102, dependencies102, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       Index: Index2,
       matrix: matrix2,
       range: range2
     } = _ref;
-    return typed2(name102, {
+    return typed3(name102, {
       "Matrix, number": _row,
-      "Array, number": function ArrayNumber(value, row2) {
-        return _row(matrix2(clone(value)), row2).valueOf();
+      "Array, number": function ArrayNumber(value2, row2) {
+        return _row(matrix2(clone(value2)), row2).valueOf();
       }
     });
-    function _row(value, row2) {
-      if (value.size().length !== 2) {
+    function _row(value2, row2) {
+      if (value2.size().length !== 2) {
         throw new Error("Only two dimensional matrix is supported");
       }
-      validateIndex(row2, value.size()[0]);
-      var columnRange = range2(0, value.size()[1]);
+      validateIndex(row2, value2.size()[0]);
+      var columnRange = range2(0, value2.size()[1]);
       var index2 = new Index2(row2, columnRange);
-      var result = value.subset(index2);
+      var result = value2.subset(index2);
       return isMatrix(result) ? result : matrix2([[result]]);
     }
   });
@@ -17784,11 +19329,11 @@ var meta_bind_publish = (() => {
   var dependencies103 = ["typed", "config", "?matrix"];
   var createSize = /* @__PURE__ */ factory(name103, dependencies103, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       matrix: matrix2
     } = _ref;
-    return typed2(name103, {
+    return typed3(name103, {
       Matrix: function Matrix2(x) {
         return x.create(x.size());
       },
@@ -17807,10 +19352,10 @@ var meta_bind_publish = (() => {
   var dependencies104 = ["typed", "matrix"];
   var createSqueeze = /* @__PURE__ */ factory(name104, dependencies104, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2
     } = _ref;
-    return typed2(name104, {
+    return typed3(name104, {
       Array: function Array2(x) {
         return squeeze(clone(x));
       },
@@ -17826,61 +19371,105 @@ var meta_bind_publish = (() => {
 
   // node_modules/mathjs/lib/esm/function/matrix/subset.js
   var name105 = "subset";
-  var dependencies105 = ["typed", "matrix"];
+  var dependencies105 = ["typed", "matrix", "zeros", "add"];
   var createSubset = /* @__PURE__ */ factory(name105, dependencies105, (_ref) => {
     var {
-      typed: typed2,
-      matrix: matrix2
+      typed: typed3,
+      matrix: matrix2,
+      zeros: zeros3,
+      add: add3
     } = _ref;
-    return typed2(name105, {
-      "Array, Index": function ArrayIndex(value, index2) {
-        var m = matrix2(value);
-        var subset2 = m.subset(index2);
-        return index2.isScalar() ? subset2 : subset2.valueOf();
+    return typed3(name105, {
+      "Matrix, Index": function MatrixIndex(value2, index2) {
+        if (isEmptyIndex(index2)) {
+          return matrix2();
+        }
+        validateIndexSourceSize(value2, index2);
+        return value2.subset(index2);
       },
-      "Matrix, Index": function MatrixIndex(value, index2) {
-        return value.subset(index2);
-      },
+      "Array, Index": typed3.referTo("Matrix, Index", function(subsetRef) {
+        return function(value2, index2) {
+          var subsetResult = subsetRef(matrix2(value2), index2);
+          return index2.isScalar() ? subsetResult : subsetResult.valueOf();
+        };
+      }),
       "Object, Index": _getObjectProperty,
       "string, Index": _getSubstring,
-      "Array, Index, any": function ArrayIndexAny(value, index2, replacement) {
-        return matrix2(clone(value)).subset(index2, replacement, void 0).valueOf();
+      "Matrix, Index, any, any": function MatrixIndexAnyAny(value2, index2, replacement, defaultValue) {
+        if (isEmptyIndex(index2)) {
+          return value2;
+        }
+        validateIndexSourceSize(value2, index2);
+        return value2.clone().subset(index2, _broadcastReplacement(replacement, index2), defaultValue);
       },
-      "Array, Index, any, any": function ArrayIndexAnyAny(value, index2, replacement, defaultValue) {
-        return matrix2(clone(value)).subset(index2, replacement, defaultValue).valueOf();
-      },
-      "Matrix, Index, any": function MatrixIndexAny(value, index2, replacement) {
-        return value.clone().subset(index2, replacement);
-      },
-      "Matrix, Index, any, any": function MatrixIndexAnyAny(value, index2, replacement, defaultValue) {
-        return value.clone().subset(index2, replacement, defaultValue);
-      },
+      "Array, Index, any, any": typed3.referTo("Matrix, Index, any, any", function(subsetRef) {
+        return function(value2, index2, replacement, defaultValue) {
+          var subsetResult = subsetRef(matrix2(value2), index2, replacement, defaultValue);
+          return subsetResult.isMatrix ? subsetResult.valueOf() : subsetResult;
+        };
+      }),
+      "Array, Index, any": typed3.referTo("Matrix, Index, any, any", function(subsetRef) {
+        return function(value2, index2, replacement) {
+          return subsetRef(matrix2(value2), index2, replacement, void 0).valueOf();
+        };
+      }),
+      "Matrix, Index, any": typed3.referTo("Matrix, Index, any, any", function(subsetRef) {
+        return function(value2, index2, replacement) {
+          return subsetRef(value2, index2, replacement, void 0);
+        };
+      }),
       "string, Index, string": _setSubstring,
       "string, Index, string, string": _setSubstring,
       "Object, Index, any": _setObjectProperty
     });
+    function _broadcastReplacement(replacement, index2) {
+      if (typeof replacement === "string") {
+        throw new Error("can't boradcast a string");
+      }
+      if (index2._isScalar) {
+        return replacement;
+      }
+      var indexSize = index2.size();
+      if (indexSize.every((d) => d > 0)) {
+        try {
+          return add3(replacement, zeros3(indexSize));
+        } catch (error) {
+          return replacement;
+        }
+      } else {
+        return replacement;
+      }
+    }
   });
-  function _getSubstring(str, index2) {
+  function _getSubstring(str2, index2) {
     if (!isIndex(index2)) {
       throw new TypeError("Index expected");
     }
+    if (isEmptyIndex(index2)) {
+      return "";
+    }
+    validateIndexSourceSize(Array.from(str2), index2);
     if (index2.size().length !== 1) {
       throw new DimensionError(index2.size().length, 1);
     }
-    var strLen = str.length;
+    var strLen = str2.length;
     validateIndex(index2.min()[0], strLen);
     validateIndex(index2.max()[0], strLen);
     var range2 = index2.dimension(0);
     var substr = "";
     range2.forEach(function(v) {
-      substr += str.charAt(v);
+      substr += str2.charAt(v);
     });
     return substr;
   }
-  function _setSubstring(str, index2, replacement, defaultValue) {
+  function _setSubstring(str2, index2, replacement, defaultValue) {
     if (!index2 || index2.isIndex !== true) {
       throw new TypeError("Index expected");
     }
+    if (isEmptyIndex(index2)) {
+      return str2;
+    }
+    validateIndexSourceSize(Array.from(str2), index2);
     if (index2.size().length !== 1) {
       throw new DimensionError(index2.size().length, 1);
     }
@@ -17896,12 +19485,12 @@ var meta_bind_publish = (() => {
     if (len !== replacement.length) {
       throw new DimensionError(range2.size()[0], replacement.length);
     }
-    var strLen = str.length;
+    var strLen = str2.length;
     validateIndex(index2.min()[0]);
     validateIndex(index2.max()[0]);
     var chars = [];
     for (var i2 = 0; i2 < strLen; i2++) {
-      chars[i2] = str.charAt(i2);
+      chars[i2] = str2.charAt(i2);
     }
     range2.forEach(function(v, i3) {
       chars[v] = replacement.charAt(i3[0]);
@@ -17916,6 +19505,9 @@ var meta_bind_publish = (() => {
     return chars.join("");
   }
   function _getObjectProperty(object, index2) {
+    if (isEmptyIndex(index2)) {
+      return void 0;
+    }
     if (index2.size().length !== 1) {
       throw new DimensionError(index2.size(), 1);
     }
@@ -17926,6 +19518,9 @@ var meta_bind_publish = (() => {
     return getSafeProperty(object, key);
   }
   function _setObjectProperty(object, index2, replacement) {
+    if (isEmptyIndex(index2)) {
+      return object;
+    }
     if (index2.size().length !== 1) {
       throw new DimensionError(index2.size(), 1);
     }
@@ -17943,10 +19538,10 @@ var meta_bind_publish = (() => {
   var dependencies106 = ["typed", "matrix"];
   var createTranspose = /* @__PURE__ */ factory(name106, dependencies106, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2
     } = _ref;
-    return typed2(name106, {
+    return typed3(name106, {
       Array: (x) => transposeMatrix(matrix2(x)).valueOf(),
       Matrix: transposeMatrix,
       any: clone
@@ -18042,11 +19637,11 @@ var meta_bind_publish = (() => {
   var dependencies107 = ["typed", "transpose", "conj"];
   var createCtranspose = /* @__PURE__ */ factory(name107, dependencies107, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       transpose: transpose2,
       conj: conj2
     } = _ref;
-    return typed2(name107, {
+    return typed3(name107, {
       any: function any(x) {
         return conj2(transpose2(x));
       }
@@ -18058,12 +19653,12 @@ var meta_bind_publish = (() => {
   var dependencies108 = ["typed", "config", "matrix", "BigNumber"];
   var createZeros = /* @__PURE__ */ factory(name108, dependencies108, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       matrix: matrix2,
       BigNumber: BigNumber2
     } = _ref;
-    return typed2(name108, {
+    return typed3(name108, {
       "": function _() {
         return config4.matrix === "Array" ? _zeros([]) : _zeros([], "default");
       },
@@ -18107,17 +19702,17 @@ var meta_bind_publish = (() => {
     }
     function _normalize(size2) {
       var hasBigNumbers = false;
-      size2.forEach(function(value, index2, arr) {
-        if (isBigNumber(value)) {
+      size2.forEach(function(value2, index2, arr) {
+        if (isBigNumber(value2)) {
           hasBigNumbers = true;
-          arr[index2] = value.toNumber();
+          arr[index2] = value2.toNumber();
         }
       });
       return hasBigNumbers;
     }
     function _validate2(size2) {
-      size2.forEach(function(value) {
-        if (typeof value !== "number" || !isInteger(value) || value < 0) {
+      size2.forEach(function(value2) {
+        if (typeof value2 !== "number" || !isInteger(value2) || value2 < 0) {
           throw new Error("Parameters in function zeros must be positive integers");
         }
       });
@@ -18129,7 +19724,7 @@ var meta_bind_publish = (() => {
   var dependencies109 = ["typed", "matrix", "addScalar", "multiplyScalar", "divideScalar", "exp", "tau", "i", "dotDivide", "conj", "pow", "ceil", "log2"];
   var createFft = /* @__PURE__ */ factory(name109, dependencies109, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       addScalar: addScalar2,
       multiplyScalar: multiplyScalar2,
@@ -18143,7 +19738,7 @@ var meta_bind_publish = (() => {
       ceil: ceil3,
       log2: log25
     } = _ref;
-    return typed2(name109, {
+    return typed3(name109, {
       Array: _ndFft,
       Matrix: function Matrix2(matrix3) {
         return matrix3.create(_ndFft(matrix3.toArray()));
@@ -18211,12 +19806,12 @@ var meta_bind_publish = (() => {
   var dependencies110 = ["typed", "fft", "dotDivide", "conj"];
   var createIfft = /* @__PURE__ */ factory(name110, dependencies110, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       fft: fft2,
       dotDivide: dotDivide2,
       conj: conj2
     } = _ref;
-    return typed2(name110, {
+    return typed3(name110, {
       "Array | Matrix": function ArrayMatrix(arr) {
         var size2 = isMatrix(arr) ? arr.size() : arraySize(arr);
         return dotDivide2(conj2(fft2(conj2(arr))), size2.reduce((acc, curr) => acc * curr, 1));
@@ -18224,14 +19819,277 @@ var meta_bind_publish = (() => {
     });
   });
 
-  // node_modules/mathjs/lib/esm/function/special/erf.js
-  var name111 = "erf";
-  var dependencies111 = ["typed"];
-  var createErf = /* @__PURE__ */ factory(name111, dependencies111, (_ref) => {
+  // node_modules/@babel/runtime/helpers/esm/typeof.js
+  function _typeof(o) {
+    "@babel/helpers - typeof";
+    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o2) {
+      return typeof o2;
+    } : function(o2) {
+      return o2 && "function" == typeof Symbol && o2.constructor === Symbol && o2 !== Symbol.prototype ? "symbol" : typeof o2;
+    }, _typeof(o);
+  }
+
+  // node_modules/@babel/runtime/helpers/esm/toPrimitive.js
+  function _toPrimitive(input, hint) {
+    if (_typeof(input) !== "object" || input === null)
+      return input;
+    var prim = input[Symbol.toPrimitive];
+    if (prim !== void 0) {
+      var res = prim.call(input, hint || "default");
+      if (_typeof(res) !== "object")
+        return res;
+      throw new TypeError("@@toPrimitive must return a primitive value.");
+    }
+    return (hint === "string" ? String : Number)(input);
+  }
+
+  // node_modules/@babel/runtime/helpers/esm/toPropertyKey.js
+  function _toPropertyKey(arg2) {
+    var key = _toPrimitive(arg2, "string");
+    return _typeof(key) === "symbol" ? key : String(key);
+  }
+
+  // node_modules/@babel/runtime/helpers/esm/defineProperty.js
+  function _defineProperty(obj, key, value2) {
+    key = _toPropertyKey(key);
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value2,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value2;
+    }
+    return obj;
+  }
+
+  // node_modules/mathjs/lib/esm/function/numeric/solveODE.js
+  function ownKeys(e3, r) {
+    var t = Object.keys(e3);
+    if (Object.getOwnPropertySymbols) {
+      var o = Object.getOwnPropertySymbols(e3);
+      r && (o = o.filter(function(r2) {
+        return Object.getOwnPropertyDescriptor(e3, r2).enumerable;
+      })), t.push.apply(t, o);
+    }
+    return t;
+  }
+  function _objectSpread(e3) {
+    for (var r = 1; r < arguments.length; r++) {
+      var t = null != arguments[r] ? arguments[r] : {};
+      r % 2 ? ownKeys(Object(t), true).forEach(function(r2) {
+        _defineProperty(e3, r2, t[r2]);
+      }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e3, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function(r2) {
+        Object.defineProperty(e3, r2, Object.getOwnPropertyDescriptor(t, r2));
+      });
+    }
+    return e3;
+  }
+  var name111 = "solveODE";
+  var dependencies111 = ["typed", "add", "subtract", "multiply", "divide", "max", "map", "abs", "isPositive", "isNegative", "larger", "smaller", "matrix", "bignumber", "unaryMinus"];
+  var createSolveODE = /* @__PURE__ */ factory(name111, dependencies111, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3,
+      add: add3,
+      subtract: subtract2,
+      multiply: multiply2,
+      divide: divide3,
+      max: max3,
+      map: map3,
+      abs: abs3,
+      isPositive: isPositive2,
+      isNegative: isNegative2,
+      larger: larger2,
+      smaller: smaller2,
+      matrix: matrix2,
+      bignumber: bignumber2,
+      unaryMinus: unaryMinus2
     } = _ref;
-    return typed2("name", {
+    function _rk(butcherTableau) {
+      return function(f, tspan, y0, options) {
+        var wrongTSpan = !(tspan.length === 2 && (tspan.every(isNumOrBig) || tspan.every(isUnit)));
+        if (wrongTSpan) {
+          throw new Error('"tspan" must be an Array of two numeric values or two units [tStart, tEnd]');
+        }
+        var t0 = tspan[0];
+        var tf = tspan[1];
+        var isForwards = larger2(tf, t0);
+        var firstStep = options.firstStep;
+        if (firstStep !== void 0 && !isPositive2(firstStep)) {
+          throw new Error('"firstStep" must be positive');
+        }
+        var maxStep = options.maxStep;
+        if (maxStep !== void 0 && !isPositive2(maxStep)) {
+          throw new Error('"maxStep" must be positive');
+        }
+        var minStep = options.minStep;
+        if (minStep && isNegative2(minStep)) {
+          throw new Error('"minStep" must be positive or zero');
+        }
+        var timeVars = [t0, tf, firstStep, minStep, maxStep].filter((x) => x !== void 0);
+        if (!(timeVars.every(isNumOrBig) || timeVars.every(isUnit))) {
+          throw new Error('Inconsistent type of "t" dependant variables');
+        }
+        var steps = 1;
+        var tol = options.tol ? options.tol : 1e-4;
+        var minDelta = options.minDelta ? options.minDelta : 0.2;
+        var maxDelta = options.maxDelta ? options.maxDelta : 5;
+        var maxIter = options.maxIter ? options.maxIter : 1e4;
+        var hasBigNumbers = [t0, tf, ...y0, maxStep, minStep].some(isBigNumber);
+        var [a, c, b, bp] = hasBigNumbers ? [bignumber2(butcherTableau.a), bignumber2(butcherTableau.c), bignumber2(butcherTableau.b), bignumber2(butcherTableau.bp)] : [butcherTableau.a, butcherTableau.c, butcherTableau.b, butcherTableau.bp];
+        var h = firstStep ? isForwards ? firstStep : unaryMinus2(firstStep) : divide3(subtract2(tf, t0), steps);
+        var t = [t0];
+        var y = [y0];
+        var deltaB = subtract2(b, bp);
+        var n = 0;
+        var iter = 0;
+        var ongoing = _createOngoing(isForwards);
+        var trimStep = _createTrimStep(isForwards);
+        while (ongoing(t[n], tf)) {
+          var k = [];
+          h = trimStep(t[n], tf, h);
+          k.push(f(t[n], y[n]));
+          for (var i2 = 1; i2 < c.length; ++i2) {
+            k.push(f(add3(t[n], multiply2(c[i2], h)), add3(y[n], multiply2(h, a[i2], k))));
+          }
+          var TE = max3(abs3(map3(multiply2(deltaB, k), (X) => isUnit(X) ? X.value : X)));
+          if (TE < tol && tol / TE > 1 / 4) {
+            t.push(add3(t[n], h));
+            y.push(add3(y[n], multiply2(h, b, k)));
+            n++;
+          }
+          var delta = 0.84 * (tol / TE) ** (1 / 5);
+          if (smaller2(delta, minDelta)) {
+            delta = minDelta;
+          } else if (larger2(delta, maxDelta)) {
+            delta = maxDelta;
+          }
+          delta = hasBigNumbers ? bignumber2(delta) : delta;
+          h = multiply2(h, delta);
+          if (maxStep && larger2(abs3(h), maxStep)) {
+            h = isForwards ? maxStep : unaryMinus2(maxStep);
+          } else if (minStep && smaller2(abs3(h), minStep)) {
+            h = isForwards ? minStep : unaryMinus2(minStep);
+          }
+          iter++;
+          if (iter > maxIter) {
+            throw new Error("Maximum number of iterations reached, try changing options");
+          }
+        }
+        return {
+          t,
+          y
+        };
+      };
+    }
+    function _rk23(f, tspan, y0, options) {
+      var a = [[], [1 / 2], [0, 3 / 4], [2 / 9, 1 / 3, 4 / 9]];
+      var c = [null, 1 / 2, 3 / 4, 1];
+      var b = [2 / 9, 1 / 3, 4 / 9, 0];
+      var bp = [7 / 24, 1 / 4, 1 / 3, 1 / 8];
+      var butcherTableau = {
+        a,
+        c,
+        b,
+        bp
+      };
+      return _rk(butcherTableau)(f, tspan, y0, options);
+    }
+    function _rk45(f, tspan, y0, options) {
+      var a = [[], [1 / 5], [3 / 40, 9 / 40], [44 / 45, -56 / 15, 32 / 9], [19372 / 6561, -25360 / 2187, 64448 / 6561, -212 / 729], [9017 / 3168, -355 / 33, 46732 / 5247, 49 / 176, -5103 / 18656], [35 / 384, 0, 500 / 1113, 125 / 192, -2187 / 6784, 11 / 84]];
+      var c = [null, 1 / 5, 3 / 10, 4 / 5, 8 / 9, 1, 1];
+      var b = [35 / 384, 0, 500 / 1113, 125 / 192, -2187 / 6784, 11 / 84, 0];
+      var bp = [5179 / 57600, 0, 7571 / 16695, 393 / 640, -92097 / 339200, 187 / 2100, 1 / 40];
+      var butcherTableau = {
+        a,
+        c,
+        b,
+        bp
+      };
+      return _rk(butcherTableau)(f, tspan, y0, options);
+    }
+    function _solveODE(f, tspan, y0, opt) {
+      var method = opt.method ? opt.method : "RK45";
+      var methods = {
+        RK23: _rk23,
+        RK45: _rk45
+      };
+      if (method.toUpperCase() in methods) {
+        var methodOptions = _objectSpread({}, opt);
+        delete methodOptions.method;
+        return methods[method.toUpperCase()](f, tspan, y0, methodOptions);
+      } else {
+        var methodsWithQuotes = Object.keys(methods).map((x) => '"'.concat(x, '"'));
+        var availableMethodsString = "".concat(methodsWithQuotes.slice(0, -1).join(", "), " and ").concat(methodsWithQuotes.slice(-1));
+        throw new Error('Unavailable method "'.concat(method, '". Available methods are ').concat(availableMethodsString));
+      }
+    }
+    function _createOngoing(isForwards) {
+      return isForwards ? smaller2 : larger2;
+    }
+    function _createTrimStep(isForwards) {
+      var outOfBounds = isForwards ? larger2 : smaller2;
+      return function(t, tf, h) {
+        var next = add3(t, h);
+        return outOfBounds(next, tf) ? subtract2(tf, t) : h;
+      };
+    }
+    function isNumOrBig(x) {
+      return isBigNumber(x) || isNumber(x);
+    }
+    function _matrixSolveODE(f, T, y0, options) {
+      var sol = _solveODE(f, T.toArray(), y0.toArray(), options);
+      return {
+        t: matrix2(sol.t),
+        y: matrix2(sol.y)
+      };
+    }
+    return typed3("solveODE", {
+      "function, Array, Array, Object": _solveODE,
+      "function, Matrix, Matrix, Object": _matrixSolveODE,
+      "function, Array, Array": (f, T, y0) => _solveODE(f, T, y0, {}),
+      "function, Matrix, Matrix": (f, T, y0) => _matrixSolveODE(f, T, y0, {}),
+      "function, Array, number | BigNumber | Unit": (f, T, y0) => {
+        var sol = _solveODE(f, T, [y0], {});
+        return {
+          t: sol.t,
+          y: sol.y.map((Y) => Y[0])
+        };
+      },
+      "function, Matrix, number | BigNumber | Unit": (f, T, y0) => {
+        var sol = _solveODE(f, T.toArray(), [y0], {});
+        return {
+          t: matrix2(sol.t),
+          y: matrix2(sol.y.map((Y) => Y[0]))
+        };
+      },
+      "function, Array, number | BigNumber | Unit, Object": (f, T, y0, options) => {
+        var sol = _solveODE(f, T, [y0], options);
+        return {
+          t: sol.t,
+          y: sol.y.map((Y) => Y[0])
+        };
+      },
+      "function, Matrix, number | BigNumber | Unit, Object": (f, T, y0, options) => {
+        var sol = _solveODE(f, T.toArray(), [y0], options);
+        return {
+          t: matrix2(sol.t),
+          y: matrix2(sol.y.map((Y) => Y[0]))
+        };
+      }
+    });
+  });
+
+  // node_modules/mathjs/lib/esm/function/special/erf.js
+  var name112 = "erf";
+  var dependencies112 = ["typed"];
+  var createErf = /* @__PURE__ */ factory(name112, dependencies112, (_ref) => {
+    var {
+      typed: typed3
+    } = _ref;
+    return typed3("name", {
       number: function number2(x) {
         var y = Math.abs(x);
         if (y >= MAX_NUM) {
@@ -18245,42 +20103,42 @@ var meta_bind_publish = (() => {
         }
         return sign(x) * (1 - erfc3(y));
       },
-      "Array | Matrix": typed2.referToSelf((self2) => (n) => deepMap(n, self2))
+      "Array | Matrix": typed3.referToSelf((self2) => (n) => deepMap(n, self2))
     });
     function erf1(y) {
       var ysq = y * y;
-      var xnum = P2[0][4] * ysq;
+      var xnum = P3[0][4] * ysq;
       var xden = ysq;
       var i2;
       for (i2 = 0; i2 < 3; i2 += 1) {
-        xnum = (xnum + P2[0][i2]) * ysq;
+        xnum = (xnum + P3[0][i2]) * ysq;
         xden = (xden + Q[0][i2]) * ysq;
       }
-      return y * (xnum + P2[0][3]) / (xden + Q[0][3]);
+      return y * (xnum + P3[0][3]) / (xden + Q[0][3]);
     }
     function erfc2(y) {
-      var xnum = P2[1][8] * y;
+      var xnum = P3[1][8] * y;
       var xden = y;
       var i2;
       for (i2 = 0; i2 < 7; i2 += 1) {
-        xnum = (xnum + P2[1][i2]) * y;
+        xnum = (xnum + P3[1][i2]) * y;
         xden = (xden + Q[1][i2]) * y;
       }
-      var result = (xnum + P2[1][7]) / (xden + Q[1][7]);
+      var result = (xnum + P3[1][7]) / (xden + Q[1][7]);
       var ysq = parseInt(y * 16) / 16;
       var del = (y - ysq) * (y + ysq);
       return Math.exp(-ysq * ysq) * Math.exp(-del) * result;
     }
     function erfc3(y) {
       var ysq = 1 / (y * y);
-      var xnum = P2[2][5] * ysq;
+      var xnum = P3[2][5] * ysq;
       var xden = ysq;
       var i2;
       for (i2 = 0; i2 < 4; i2 += 1) {
-        xnum = (xnum + P2[2][i2]) * ysq;
+        xnum = (xnum + P3[2][i2]) * ysq;
         xden = (xden + Q[2][i2]) * ysq;
       }
-      var result = ysq * (xnum + P2[2][4]) / (xden + Q[2][4]);
+      var result = ysq * (xnum + P3[2][4]) / (xden + Q[2][4]);
       result = (SQRPI - result) / y;
       ysq = parseInt(y * 16) / 16;
       var del = (y - ysq) * (y + ysq);
@@ -18289,20 +20147,105 @@ var meta_bind_publish = (() => {
   });
   var THRESH = 0.46875;
   var SQRPI = 0.5641895835477563;
-  var P2 = [[3.1611237438705655, 113.86415415105016, 377.485237685302, 3209.3775891384694, 0.18577770618460315], [0.5641884969886701, 8.883149794388377, 66.11919063714163, 298.6351381974001, 881.952221241769, 1712.0476126340707, 2051.0783778260716, 1230.3393547979972, 21531153547440383e-24], [0.30532663496123236, 0.36034489994980445, 0.12578172611122926, 0.016083785148742275, 6587491615298378e-19, 0.016315387137302097]];
+  var P3 = [[3.1611237438705655, 113.86415415105016, 377.485237685302, 3209.3775891384694, 0.18577770618460315], [0.5641884969886701, 8.883149794388377, 66.11919063714163, 298.6351381974001, 881.952221241769, 1712.0476126340707, 2051.0783778260716, 1230.3393547979972, 21531153547440383e-24], [0.30532663496123236, 0.36034489994980445, 0.12578172611122926, 0.016083785148742275, 6587491615298378e-19, 0.016315387137302097]];
   var Q = [[23.601290952344122, 244.02463793444417, 1282.6165260773723, 2844.236833439171], [15.744926110709835, 117.6939508913125, 537.1811018620099, 1621.3895745666903, 3290.7992357334597, 4362.619090143247, 3439.3676741437216, 1230.3393548037495], [2.568520192289822, 1.8729528499234604, 0.5279051029514285, 0.06051834131244132, 0.0023352049762686918]];
   var MAX_NUM = Math.pow(2, 53);
 
-  // node_modules/mathjs/lib/esm/function/statistics/mode.js
-  var name112 = "mode";
-  var dependencies112 = ["typed", "isNaN", "isNumeric"];
-  var createMode = /* @__PURE__ */ factory(name112, dependencies112, (_ref) => {
+  // node_modules/mathjs/lib/esm/function/special/zeta.js
+  var name113 = "zeta";
+  var dependencies113 = ["typed", "config", "multiply", "pow", "divide", "factorial", "equal", "smallerEq", "isNegative", "gamma", "sin", "subtract", "add", "?Complex", "?BigNumber", "pi"];
+  var createZeta = /* @__PURE__ */ factory(name113, dependencies113, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
+      config: config4,
+      multiply: multiply2,
+      pow: pow3,
+      divide: divide3,
+      factorial: factorial2,
+      equal: equal2,
+      smallerEq: smallerEq2,
+      isNegative: isNegative2,
+      gamma: gamma2,
+      sin: sin3,
+      subtract: subtract2,
+      add: add3,
+      Complex: Complex3,
+      BigNumber: _BigNumber,
+      pi: pi3
+    } = _ref;
+    return typed3(name113, {
+      number: (s) => zetaNumeric(s, (value2) => value2, () => 20),
+      BigNumber: (s) => zetaNumeric(s, (value2) => new _BigNumber(value2), () => {
+        return Math.abs(Math.log10(config4.epsilon));
+      }),
+      Complex: zetaComplex
+    });
+    function zetaNumeric(s, createValue, determineDigits) {
+      if (equal2(s, 0)) {
+        return createValue(-0.5);
+      }
+      if (equal2(s, 1)) {
+        return createValue(NaN);
+      }
+      if (!isFinite(s)) {
+        return isNegative2(s) ? createValue(NaN) : createValue(1);
+      }
+      return zeta2(s, createValue, determineDigits, (s2) => s2);
+    }
+    function zetaComplex(s) {
+      if (s.re === 0 && s.im === 0) {
+        return new Complex3(-0.5);
+      }
+      if (s.re === 1) {
+        return new Complex3(NaN, NaN);
+      }
+      if (s.re === Infinity && s.im === 0) {
+        return new Complex3(1);
+      }
+      if (s.im === Infinity || s.re === -Infinity) {
+        return new Complex3(NaN, NaN);
+      }
+      return zeta2(s, (value2) => value2, (s2) => Math.round(1.3 * 15 + 0.9 * Math.abs(s2.im)), (s2) => s2.re);
+    }
+    function zeta2(s, createValue, determineDigits, getRe) {
+      var n = determineDigits(s);
+      if (getRe(s) > -(n - 1) / 2) {
+        return f(s, createValue(n), createValue);
+      } else {
+        var c = multiply2(pow3(2, s), pow3(createValue(pi3), subtract2(s, 1)));
+        c = multiply2(c, sin3(multiply2(divide3(createValue(pi3), 2), s)));
+        c = multiply2(c, gamma2(subtract2(1, s)));
+        return multiply2(c, zeta2(subtract2(1, s), createValue, determineDigits, getRe));
+      }
+    }
+    function d(k, n) {
+      var S = k;
+      for (var j = k; smallerEq2(j, n); j = add3(j, 1)) {
+        var factor = divide3(multiply2(factorial2(add3(n, subtract2(j, 1))), pow3(4, j)), multiply2(factorial2(subtract2(n, j)), factorial2(multiply2(2, j))));
+        S = add3(S, factor);
+      }
+      return multiply2(n, S);
+    }
+    function f(s, n, createValue) {
+      var c = divide3(1, multiply2(d(createValue(0), n), subtract2(1, pow3(2, subtract2(1, s)))));
+      var S = createValue(0);
+      for (var k = createValue(1); smallerEq2(k, n); k = add3(k, 1)) {
+        S = add3(S, divide3(multiply2((-1) ** (k - 1), d(k, n)), pow3(k, s)));
+      }
+      return multiply2(c, S);
+    }
+  });
+
+  // node_modules/mathjs/lib/esm/function/statistics/mode.js
+  var name114 = "mode";
+  var dependencies114 = ["typed", "isNaN", "isNumeric"];
+  var createMode = /* @__PURE__ */ factory(name114, dependencies114, (_ref) => {
+    var {
+      typed: typed3,
       isNaN: isNaN3,
       isNumeric: isNumeric2
     } = _ref;
-    return typed2(name112, {
+    return typed3(name114, {
       "Array | Matrix": _mode,
       "...": function _(args) {
         return _mode(args);
@@ -18318,19 +20261,19 @@ var meta_bind_publish = (() => {
       var mode2 = [];
       var max3 = 0;
       for (var i2 = 0; i2 < values.length; i2++) {
-        var value = values[i2];
-        if (isNumeric2(value) && isNaN3(value)) {
+        var value2 = values[i2];
+        if (isNumeric2(value2) && isNaN3(value2)) {
           throw new Error("Cannot calculate mode of an array containing NaN values");
         }
-        if (!(value in count2)) {
-          count2[value] = 0;
+        if (!(value2 in count2)) {
+          count2[value2] = 0;
         }
-        count2[value]++;
-        if (count2[value] === max3) {
-          mode2.push(value);
-        } else if (count2[value] > max3) {
-          max3 = count2[value];
-          mode2 = [value];
+        count2[value2]++;
+        if (count2[value2] === max3) {
+          mode2.push(value2);
+        } else if (count2[value2] > max3) {
+          max3 = count2[value2];
+          mode2 = [value2];
         }
       }
       return mode2;
@@ -18338,30 +20281,30 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/statistics/utils/improveErrorMessage.js
-  function improveErrorMessage(err, fnName, value) {
+  function improveErrorMessage(err, fnName, value2) {
     var details;
     if (String(err).indexOf("Unexpected type") !== -1) {
-      details = arguments.length > 2 ? " (type: " + typeOf(value) + ", value: " + JSON.stringify(value) + ")" : " (type: " + err.data.actual + ")";
+      details = arguments.length > 2 ? " (type: " + typeOf2(value2) + ", value: " + JSON.stringify(value2) + ")" : " (type: " + err.data.actual + ")";
       return new TypeError("Cannot calculate " + fnName + ", unexpected type of argument" + details);
     }
     if (String(err).indexOf("complex numbers") !== -1) {
-      details = arguments.length > 2 ? " (type: " + typeOf(value) + ", value: " + JSON.stringify(value) + ")" : "";
+      details = arguments.length > 2 ? " (type: " + typeOf2(value2) + ", value: " + JSON.stringify(value2) + ")" : "";
       return new TypeError("Cannot calculate " + fnName + ", no ordering relation is defined for complex numbers" + details);
     }
     return err;
   }
 
   // node_modules/mathjs/lib/esm/function/statistics/prod.js
-  var name113 = "prod";
-  var dependencies113 = ["typed", "config", "multiplyScalar", "numeric"];
-  var createProd = /* @__PURE__ */ factory(name113, dependencies113, (_ref) => {
+  var name115 = "prod";
+  var dependencies115 = ["typed", "config", "multiplyScalar", "numeric"];
+  var createProd = /* @__PURE__ */ factory(name115, dependencies115, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       multiplyScalar: multiplyScalar2,
       numeric: numeric3
     } = _ref;
-    return typed2(name113, {
+    return typed3(name115, {
       "Array | Matrix": _prod,
       "Array | Matrix, number | BigNumber": function ArrayMatrixNumberBigNumber(array, dim) {
         throw new Error("prod(A, dim) is not yet supported");
@@ -18372,11 +20315,11 @@ var meta_bind_publish = (() => {
     });
     function _prod(array) {
       var prod2;
-      deepForEach(array, function(value) {
+      deepForEach(array, function(value2) {
         try {
-          prod2 = prod2 === void 0 ? value : multiplyScalar2(prod2, value);
+          prod2 = prod2 === void 0 ? value2 : multiplyScalar2(prod2, value2);
         } catch (err) {
-          throw improveErrorMessage(err, "prod", value);
+          throw improveErrorMessage(err, "prod", value2);
         }
       });
       if (typeof prod2 === "string") {
@@ -18390,27 +20333,27 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/string/format.js
-  var name114 = "format";
-  var dependencies114 = ["typed"];
-  var createFormat = /* @__PURE__ */ factory(name114, dependencies114, (_ref) => {
+  var name116 = "format";
+  var dependencies116 = ["typed"];
+  var createFormat = /* @__PURE__ */ factory(name116, dependencies116, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name114, {
+    return typed3(name116, {
       any: format3,
       "any, Object | function | number": format3
     });
   });
 
   // node_modules/mathjs/lib/esm/function/string/bin.js
-  var name115 = "bin";
-  var dependencies115 = ["typed", "format"];
-  var createBin = factory(name115, dependencies115, (_ref) => {
+  var name117 = "bin";
+  var dependencies117 = ["typed", "format"];
+  var createBin = factory(name117, dependencies117, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       format: format5
     } = _ref;
-    return typed2(name115, {
+    return typed3(name117, {
       "number | BigNumber": function numberBigNumber(n) {
         return format5(n, {
           notation: "bin"
@@ -18426,14 +20369,14 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/string/oct.js
-  var name116 = "oct";
-  var dependencies116 = ["typed", "format"];
-  var createOct = factory(name116, dependencies116, (_ref) => {
+  var name118 = "oct";
+  var dependencies118 = ["typed", "format"];
+  var createOct = factory(name118, dependencies118, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       format: format5
     } = _ref;
-    return typed2(name116, {
+    return typed3(name118, {
       "number | BigNumber": function numberBigNumber(n) {
         return format5(n, {
           notation: "oct"
@@ -18449,14 +20392,14 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/string/hex.js
-  var name117 = "hex";
-  var dependencies117 = ["typed", "format"];
-  var createHex = factory(name117, dependencies117, (_ref) => {
+  var name119 = "hex";
+  var dependencies119 = ["typed", "format"];
+  var createHex = factory(name119, dependencies119, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       format: format5
     } = _ref;
-    return typed2(name117, {
+    return typed3(name119, {
       "number | BigNumber": function numberBigNumber(n) {
         return format5(n, {
           notation: "hex"
@@ -18471,31 +20414,37 @@ var meta_bind_publish = (() => {
     });
   });
 
+  // node_modules/mathjs/lib/esm/utils/print.js
+  var printTemplate = /\$([\w.]+)/g;
+
   // node_modules/mathjs/lib/esm/function/string/print.js
-  var name118 = "print";
-  var dependencies118 = ["typed"];
-  var createPrint = /* @__PURE__ */ factory(name118, dependencies118, (_ref) => {
+  var name120 = "print";
+  var dependencies120 = ["typed"];
+  var createPrint = /* @__PURE__ */ factory(name120, dependencies120, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name118, {
+    return typed3(name120, {
       "string, Object | Array": _print,
       "string, Object | Array, number | Object": _print
     });
   });
   function _print(template, values, options) {
-    return template.replace(/\$([\w.]+)/g, function(original, key) {
-      var keys = key.split(".");
-      var value = values[keys.shift()];
-      while (keys.length && value !== void 0) {
-        var k = keys.shift();
-        value = k ? value[k] : value + ".";
+    return template.replace(printTemplate, function(original, key) {
+      var keys2 = key.split(".");
+      var value2 = values[keys2.shift()];
+      if (value2 !== void 0 && value2.isMatrix) {
+        value2 = value2.toArray();
       }
-      if (value !== void 0) {
-        if (!isString(value)) {
-          return format3(value, options);
+      while (keys2.length && value2 !== void 0) {
+        var k = keys2.shift();
+        value2 = k ? value2[k] : value2 + ".";
+      }
+      if (value2 !== void 0) {
+        if (!isString(value2)) {
+          return format3(value2, options);
         } else {
-          return value;
+          return value2;
         }
       }
       return original;
@@ -18503,20 +20452,20 @@ var meta_bind_publish = (() => {
   }
 
   // node_modules/mathjs/lib/esm/function/unit/to.js
-  var name119 = "to";
-  var dependencies119 = ["typed", "matrix", "concat"];
-  var createTo = /* @__PURE__ */ factory(name119, dependencies119, (_ref) => {
+  var name121 = "to";
+  var dependencies121 = ["typed", "matrix", "concat"];
+  var createTo = /* @__PURE__ */ factory(name121, dependencies121, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
-    return typed2(name119, {
+    return typed3(name121, {
       "Unit, Unit | string": (x, unit2) => x.to(unit2)
     }, matrixAlgorithmSuite({
       Ds: true
@@ -18524,13 +20473,13 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/utils/isPrime.js
-  var name120 = "isPrime";
-  var dependencies120 = ["typed"];
-  var createIsPrime = /* @__PURE__ */ factory(name120, dependencies120, (_ref) => {
+  var name122 = "isPrime";
+  var dependencies122 = ["typed"];
+  var createIsPrime = /* @__PURE__ */ factory(name122, dependencies122, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name120, {
+    return typed3(name122, {
       number: function number2(x) {
         if (x * 0 !== 0) {
           return false;
@@ -18611,14 +20560,14 @@ var meta_bind_publish = (() => {
         }
         return true;
       },
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2))
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2))
     });
   });
 
   // node_modules/mathjs/lib/esm/function/utils/numeric.js
-  var name121 = "numeric";
-  var dependencies121 = ["number", "?bignumber", "?fraction"];
-  var createNumeric = /* @__PURE__ */ factory(name121, dependencies121, (_ref) => {
+  var name123 = "numeric";
+  var dependencies123 = ["number", "?bignumber", "?fraction"];
+  var createNumeric = /* @__PURE__ */ factory(name123, dependencies123, (_ref) => {
     var {
       number: _number,
       bignumber: bignumber2,
@@ -18635,36 +20584,36 @@ var meta_bind_publish = (() => {
       BigNumber: bignumber2 ? (x) => bignumber2(x) : noBignumber,
       Fraction: fraction2 ? (x) => fraction2(x) : noFraction
     };
-    return function numeric3(value) {
+    return function numeric3(value2) {
       var outputType = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : "number";
       var check = arguments.length > 2 ? arguments[2] : void 0;
       if (check !== void 0) {
         throw new SyntaxError("numeric() takes one or two arguments");
       }
-      var inputType = typeOf(value);
+      var inputType = typeOf2(value2);
       if (!(inputType in validInputTypes)) {
-        throw new TypeError("Cannot convert " + value + ' of type "' + inputType + '"; valid input types are ' + Object.keys(validInputTypes).join(", "));
+        throw new TypeError("Cannot convert " + value2 + ' of type "' + inputType + '"; valid input types are ' + Object.keys(validInputTypes).join(", "));
       }
       if (!(outputType in validOutputTypes)) {
-        throw new TypeError("Cannot convert " + value + ' to type "' + outputType + '"; valid output types are ' + Object.keys(validOutputTypes).join(", "));
+        throw new TypeError("Cannot convert " + value2 + ' to type "' + outputType + '"; valid output types are ' + Object.keys(validOutputTypes).join(", "));
       }
       if (outputType === inputType) {
-        return value;
+        return value2;
       } else {
-        return validOutputTypes[outputType](value);
+        return validOutputTypes[outputType](value2);
       }
     };
   });
 
   // node_modules/mathjs/lib/esm/function/arithmetic/divideScalar.js
-  var name122 = "divideScalar";
-  var dependencies122 = ["typed", "numeric"];
-  var createDivideScalar = /* @__PURE__ */ factory(name122, dependencies122, (_ref) => {
+  var name124 = "divideScalar";
+  var dependencies124 = ["typed", "numeric"];
+  var createDivideScalar = /* @__PURE__ */ factory(name124, dependencies124, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       numeric: numeric3
     } = _ref;
-    return typed2(name122, {
+    return typed3(name124, {
       "number, number": function numberNumber(x, y) {
         return x / y;
       },
@@ -18683,13 +20632,13 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/arithmetic/pow.js
-  var name123 = "pow";
-  var dependencies123 = ["typed", "config", "identity", "multiply", "matrix", "inv", "fraction", "number", "Complex"];
-  var createPow = /* @__PURE__ */ factory(name123, dependencies123, (_ref) => {
+  var name125 = "pow";
+  var dependencies125 = ["typed", "config", "identity", "multiply", "matrix", "inv", "fraction", "number", "Complex"];
+  var createPow = /* @__PURE__ */ factory(name125, dependencies125, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
-      identity: identity2,
+      identity: identity3,
       multiply: multiply2,
       matrix: matrix2,
       inv: inv2,
@@ -18697,7 +20646,7 @@ var meta_bind_publish = (() => {
       fraction: fraction2,
       Complex: Complex3
     } = _ref;
-    return typed2(name123, {
+    return typed3(name125, {
       "number, number": _pow,
       "Complex, Complex": function ComplexComplex(x, y) {
         return x.pow(y);
@@ -18778,7 +20727,7 @@ var meta_bind_publish = (() => {
           throw error;
         }
       }
-      var res = identity2(s[0]).valueOf();
+      var res = identity3(s[0]).valueOf();
       var px = x;
       while (y >= 1) {
         if ((y & 1) === 1) {
@@ -18796,11 +20745,11 @@ var meta_bind_publish = (() => {
 
   // node_modules/mathjs/lib/esm/function/arithmetic/round.js
   var NO_INT = "Number of decimals in function round must be an integer";
-  var name124 = "round";
-  var dependencies124 = ["typed", "matrix", "equalScalar", "zeros", "BigNumber", "DenseMatrix"];
-  var createRound = /* @__PURE__ */ factory(name124, dependencies124, (_ref) => {
+  var name126 = "round";
+  var dependencies126 = ["typed", "matrix", "equalScalar", "zeros", "BigNumber", "DenseMatrix"];
+  var createRound = /* @__PURE__ */ factory(name126, dependencies126, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       equalScalar: equalScalar2,
       zeros: zeros3,
@@ -18808,17 +20757,17 @@ var meta_bind_publish = (() => {
       DenseMatrix: DenseMatrix2
     } = _ref;
     var matAlgo11xS0s = createMatAlgo11xS0s({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo12xSfs = createMatAlgo12xSfs({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matAlgo14xDs = createMatAlgo14xDs({
-      typed: typed2
+      typed: typed3
     });
-    return typed2(name124, {
+    return typed3(name126, {
       number: roundNumber,
       "number, number": roundNumber,
       "number, BigNumber": function numberBigNumber(x, n) {
@@ -18867,45 +20816,45 @@ var meta_bind_publish = (() => {
         }
         return x.round(n.toNumber());
       },
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2, true)),
-      "SparseMatrix, number | BigNumber": typed2.referToSelf((self2) => (x, y) => {
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2, true)),
+      "SparseMatrix, number | BigNumber": typed3.referToSelf((self2) => (x, y) => {
         return matAlgo11xS0s(x, y, self2, false);
       }),
-      "DenseMatrix, number | BigNumber": typed2.referToSelf((self2) => (x, y) => {
+      "DenseMatrix, number | BigNumber": typed3.referToSelf((self2) => (x, y) => {
         return matAlgo14xDs(x, y, self2, false);
       }),
-      "Array, number | BigNumber": typed2.referToSelf((self2) => (x, y) => {
+      "Array, number | BigNumber": typed3.referToSelf((self2) => (x, y) => {
         return matAlgo14xDs(matrix2(x), y, self2, false).valueOf();
       }),
-      "number | Complex | BigNumber | Fraction, SparseMatrix": typed2.referToSelf((self2) => (x, y) => {
+      "number | Complex | BigNumber | Fraction, SparseMatrix": typed3.referToSelf((self2) => (x, y) => {
         if (equalScalar2(x, 0)) {
           return zeros3(y.size(), y.storage());
         }
         return matAlgo12xSfs(y, x, self2, true);
       }),
-      "number | Complex | BigNumber | Fraction, DenseMatrix": typed2.referToSelf((self2) => (x, y) => {
+      "number | Complex | BigNumber | Fraction, DenseMatrix": typed3.referToSelf((self2) => (x, y) => {
         if (equalScalar2(x, 0)) {
           return zeros3(y.size(), y.storage());
         }
         return matAlgo14xDs(y, x, self2, true);
       }),
-      "number | Complex | BigNumber | Fraction, Array": typed2.referToSelf((self2) => (x, y) => {
+      "number | Complex | BigNumber | Fraction, Array": typed3.referToSelf((self2) => (x, y) => {
         return matAlgo14xDs(matrix2(y), x, self2, true).valueOf();
       })
     });
   });
 
   // node_modules/mathjs/lib/esm/function/arithmetic/log.js
-  var name125 = "log";
-  var dependencies125 = ["config", "typed", "divideScalar", "Complex"];
-  var createLog = /* @__PURE__ */ factory(name125, dependencies125, (_ref) => {
+  var name127 = "log";
+  var dependencies127 = ["config", "typed", "divideScalar", "Complex"];
+  var createLog = /* @__PURE__ */ factory(name127, dependencies127, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       divideScalar: divideScalar2,
       Complex: Complex3
     } = _ref;
-    return typed2(name125, {
+    return typed3(name127, {
       number: function number2(x) {
         if (x >= 0 || config4.predictable) {
           return logNumber(x);
@@ -18923,24 +20872,24 @@ var meta_bind_publish = (() => {
           return new Complex3(x.toNumber(), 0).log();
         }
       },
-      "any, any": typed2.referToSelf((self2) => (x, base) => {
+      "any, any": typed3.referToSelf((self2) => (x, base) => {
         return divideScalar2(self2(x), self2(base));
       })
     });
   });
 
   // node_modules/mathjs/lib/esm/function/arithmetic/log1p.js
-  var name126 = "log1p";
-  var dependencies126 = ["typed", "config", "divideScalar", "log", "Complex"];
-  var createLog1p = /* @__PURE__ */ factory(name126, dependencies126, (_ref) => {
+  var name128 = "log1p";
+  var dependencies128 = ["typed", "config", "divideScalar", "log", "Complex"];
+  var createLog1p = /* @__PURE__ */ factory(name128, dependencies128, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       divideScalar: divideScalar2,
       log: log4,
       Complex: Complex3
     } = _ref;
-    return typed2(name126, {
+    return typed3(name128, {
       number: function number2(x) {
         if (x >= -1 || config4.predictable) {
           return log1p(x);
@@ -18957,8 +20906,8 @@ var meta_bind_publish = (() => {
           return _log1pComplex(new Complex3(x.toNumber(), 0));
         }
       },
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2)),
-      "any, any": typed2.referToSelf((self2) => (x, base) => {
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2)),
+      "any, any": typed3.referToSelf((self2) => (x, base) => {
         return divideScalar2(self2(x), log4(base));
       })
     });
@@ -18969,11 +20918,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/arithmetic/nthRoots.js
-  var name127 = "nthRoots";
-  var dependencies127 = ["config", "typed", "divideScalar", "Complex"];
-  var createNthRoots = /* @__PURE__ */ factory(name127, dependencies127, (_ref) => {
+  var name129 = "nthRoots";
+  var dependencies129 = ["config", "typed", "divideScalar", "Complex"];
+  var createNthRoots = /* @__PURE__ */ factory(name129, dependencies129, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       divideScalar: divideScalar2,
       Complex: Complex3
@@ -19024,7 +20973,7 @@ var meta_bind_publish = (() => {
       }
       return roots;
     }
-    return typed2(name127, {
+    return typed3(name129, {
       Complex: function Complex4(x) {
         return _nthComplexRoots(x, 2);
       },
@@ -19033,36 +20982,36 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/arithmetic/dotPow.js
-  var name128 = "dotPow";
-  var dependencies128 = ["typed", "equalScalar", "matrix", "pow", "DenseMatrix", "concat"];
-  var createDotPow = /* @__PURE__ */ factory(name128, dependencies128, (_ref) => {
+  var name130 = "dotPow";
+  var dependencies130 = ["typed", "equalScalar", "matrix", "pow", "DenseMatrix", "concat"];
+  var createDotPow = /* @__PURE__ */ factory(name130, dependencies130, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2,
       matrix: matrix2,
       pow: pow3,
       DenseMatrix: DenseMatrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo03xDSf = createMatAlgo03xDSf({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo07xSSf = createMatAlgo07xSSf({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matAlgo11xS0s = createMatAlgo11xS0s({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo12xSfs = createMatAlgo12xSfs({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
     var powScalarSignatures = {};
     for (var signature in pow3.signatures) {
@@ -19072,8 +21021,8 @@ var meta_bind_publish = (() => {
         }
       }
     }
-    var powScalar = typed2(powScalarSignatures);
-    return typed2(name128, matrixAlgorithmSuite({
+    var powScalar = typed3(powScalarSignatures);
+    return typed3(name130, matrixAlgorithmSuite({
       elop: powScalar,
       SS: matAlgo07xSSf,
       DS: matAlgo03xDSf,
@@ -19083,42 +21032,42 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/arithmetic/dotDivide.js
-  var name129 = "dotDivide";
-  var dependencies129 = ["typed", "matrix", "equalScalar", "divideScalar", "DenseMatrix", "concat"];
-  var createDotDivide = /* @__PURE__ */ factory(name129, dependencies129, (_ref) => {
+  var name131 = "dotDivide";
+  var dependencies131 = ["typed", "matrix", "equalScalar", "divideScalar", "DenseMatrix", "concat"];
+  var createDotDivide = /* @__PURE__ */ factory(name131, dependencies131, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       equalScalar: equalScalar2,
       divideScalar: divideScalar2,
       DenseMatrix: DenseMatrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo02xDS0 = createMatAlgo02xDS0({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo03xDSf = createMatAlgo03xDSf({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo07xSSf = createMatAlgo07xSSf({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matAlgo11xS0s = createMatAlgo11xS0s({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo12xSfs = createMatAlgo12xSfs({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
-    return typed2(name129, matrixAlgorithmSuite({
+    return typed3(name131, matrixAlgorithmSuite({
       elop: divideScalar2,
       SS: matAlgo07xSSf,
       DS: matAlgo03xDSf,
@@ -19230,11 +21179,11 @@ var meta_bind_publish = (() => {
   }
 
   // node_modules/mathjs/lib/esm/function/algebra/solver/lsolve.js
-  var name130 = "lsolve";
-  var dependencies130 = ["typed", "matrix", "divideScalar", "multiplyScalar", "subtract", "equalScalar", "DenseMatrix"];
-  var createLsolve = /* @__PURE__ */ factory(name130, dependencies130, (_ref) => {
+  var name132 = "lsolve";
+  var dependencies132 = ["typed", "matrix", "divideScalar", "multiplyScalar", "subtract", "equalScalar", "DenseMatrix"];
+  var createLsolve = /* @__PURE__ */ factory(name132, dependencies132, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       divideScalar: divideScalar2,
       multiplyScalar: multiplyScalar2,
@@ -19245,7 +21194,7 @@ var meta_bind_publish = (() => {
     var solveValidation = createSolveValidation({
       DenseMatrix: DenseMatrix2
     });
-    return typed2(name130, {
+    return typed3(name132, {
       "SparseMatrix, Array | Matrix": function SparseMatrixArrayMatrix(m, b) {
         return _sparseForwardSubstitution(m, b);
       },
@@ -19334,11 +21283,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/algebra/solver/usolve.js
-  var name131 = "usolve";
-  var dependencies131 = ["typed", "matrix", "divideScalar", "multiplyScalar", "subtract", "equalScalar", "DenseMatrix"];
-  var createUsolve = /* @__PURE__ */ factory(name131, dependencies131, (_ref) => {
+  var name133 = "usolve";
+  var dependencies133 = ["typed", "matrix", "divideScalar", "multiplyScalar", "subtract", "equalScalar", "DenseMatrix"];
+  var createUsolve = /* @__PURE__ */ factory(name133, dependencies133, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       divideScalar: divideScalar2,
       multiplyScalar: multiplyScalar2,
@@ -19349,7 +21298,7 @@ var meta_bind_publish = (() => {
     var solveValidation = createSolveValidation({
       DenseMatrix: DenseMatrix2
     });
-    return typed2(name131, {
+    return typed3(name133, {
       "SparseMatrix, Array | Matrix": function SparseMatrixArrayMatrix(m, b) {
         return _sparseBackwardSubstitution(m, b);
       },
@@ -19438,11 +21387,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/algebra/solver/lsolveAll.js
-  var name132 = "lsolveAll";
-  var dependencies132 = ["typed", "matrix", "divideScalar", "multiplyScalar", "subtract", "equalScalar", "DenseMatrix"];
-  var createLsolveAll = /* @__PURE__ */ factory(name132, dependencies132, (_ref) => {
+  var name134 = "lsolveAll";
+  var dependencies134 = ["typed", "matrix", "divideScalar", "multiplyScalar", "subtract", "equalScalar", "DenseMatrix"];
+  var createLsolveAll = /* @__PURE__ */ factory(name134, dependencies134, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       divideScalar: divideScalar2,
       multiplyScalar: multiplyScalar2,
@@ -19453,7 +21402,7 @@ var meta_bind_publish = (() => {
     var solveValidation = createSolveValidation({
       DenseMatrix: DenseMatrix2
     });
-    return typed2(name132, {
+    return typed3(name134, {
       "SparseMatrix, Array | Matrix": function SparseMatrixArrayMatrix(m, b) {
         return _sparseForwardSubstitution(m, b);
       },
@@ -19561,11 +21510,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/algebra/solver/usolveAll.js
-  var name133 = "usolveAll";
-  var dependencies133 = ["typed", "matrix", "divideScalar", "multiplyScalar", "subtract", "equalScalar", "DenseMatrix"];
-  var createUsolveAll = /* @__PURE__ */ factory(name133, dependencies133, (_ref) => {
+  var name135 = "usolveAll";
+  var dependencies135 = ["typed", "matrix", "divideScalar", "multiplyScalar", "subtract", "equalScalar", "DenseMatrix"];
+  var createUsolveAll = /* @__PURE__ */ factory(name135, dependencies135, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       divideScalar: divideScalar2,
       multiplyScalar: multiplyScalar2,
@@ -19576,7 +21525,7 @@ var meta_bind_publish = (() => {
     var solveValidation = createSolveValidation({
       DenseMatrix: DenseMatrix2
     });
-    return typed2(name133, {
+    return typed3(name135, {
       "SparseMatrix, Array | Matrix": function SparseMatrixArrayMatrix(m, b) {
         return _sparseBackwardSubstitution(m, b);
       },
@@ -19684,11 +21633,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/type/matrix/utils/matAlgo08xS0Sid.js
-  var name134 = "matAlgo08xS0Sid";
-  var dependencies134 = ["typed", "equalScalar"];
-  var createMatAlgo08xS0Sid = /* @__PURE__ */ factory(name134, dependencies134, (_ref) => {
+  var name136 = "matAlgo08xS0Sid";
+  var dependencies136 = ["typed", "equalScalar"];
+  var createMatAlgo08xS0Sid = /* @__PURE__ */ factory(name136, dependencies136, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     } = _ref;
     return function matAlgo08xS0Sid(a, b, callback) {
@@ -19719,9 +21668,9 @@ var meta_bind_publish = (() => {
       var cf = callback;
       if (typeof adt === "string" && adt === bdt) {
         dt = adt;
-        eq = typed2.find(equalScalar2, [dt, dt]);
-        zero = typed2.convert(0, dt);
-        cf = typed2.find(callback, [dt, dt]);
+        eq = typed3.find(equalScalar2, [dt, dt]);
+        zero = typed3.convert(0, dt);
+        cf = typed3.find(callback, [dt, dt]);
       }
       var cvalues = [];
       var cindex = [];
@@ -19770,82 +21719,82 @@ var meta_bind_publish = (() => {
   // node_modules/mathjs/lib/esm/function/bitwise/useMatrixForArrayScalar.js
   var createUseMatrixForArrayScalar = /* @__PURE__ */ factory("useMatrixForArrayScalar", ["typed", "matrix"], (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2
     } = _ref;
     return {
-      "Array, number": typed2.referTo("DenseMatrix, number", (selfDn) => (x, y) => selfDn(matrix2(x), y).valueOf()),
-      "Array, BigNumber": typed2.referTo("DenseMatrix, BigNumber", (selfDB) => (x, y) => selfDB(matrix2(x), y).valueOf()),
-      "number, Array": typed2.referTo("number, DenseMatrix", (selfnD) => (x, y) => selfnD(x, matrix2(y)).valueOf()),
-      "BigNumber, Array": typed2.referTo("BigNumber, DenseMatrix", (selfBD) => (x, y) => selfBD(x, matrix2(y)).valueOf())
+      "Array, number": typed3.referTo("DenseMatrix, number", (selfDn) => (x, y) => selfDn(matrix2(x), y).valueOf()),
+      "Array, BigNumber": typed3.referTo("DenseMatrix, BigNumber", (selfDB) => (x, y) => selfDB(matrix2(x), y).valueOf()),
+      "number, Array": typed3.referTo("number, DenseMatrix", (selfnD) => (x, y) => selfnD(x, matrix2(y)).valueOf()),
+      "BigNumber, Array": typed3.referTo("BigNumber, DenseMatrix", (selfBD) => (x, y) => selfBD(x, matrix2(y)).valueOf())
     };
   });
 
   // node_modules/mathjs/lib/esm/function/bitwise/leftShift.js
-  var name135 = "leftShift";
-  var dependencies135 = ["typed", "matrix", "equalScalar", "zeros", "DenseMatrix", "concat"];
-  var createLeftShift = /* @__PURE__ */ factory(name135, dependencies135, (_ref) => {
+  var name137 = "leftShift";
+  var dependencies137 = ["typed", "matrix", "equalScalar", "zeros", "DenseMatrix", "concat"];
+  var createLeftShift = /* @__PURE__ */ factory(name137, dependencies137, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       equalScalar: equalScalar2,
       zeros: zeros3,
       DenseMatrix: DenseMatrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo01xDSid = createMatAlgo01xDSid({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo02xDS0 = createMatAlgo02xDS0({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo08xS0Sid = createMatAlgo08xS0Sid({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo10xSids = createMatAlgo10xSids({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matAlgo11xS0s = createMatAlgo11xS0s({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo14xDs = createMatAlgo14xDs({
-      typed: typed2
+      typed: typed3
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
     var useMatrixForArrayScalar = createUseMatrixForArrayScalar({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2
     });
-    return typed2(name135, {
+    return typed3(name137, {
       "number, number": leftShiftNumber,
       "BigNumber, BigNumber": leftShiftBigNumber,
-      "SparseMatrix, number | BigNumber": typed2.referToSelf((self2) => (x, y) => {
+      "SparseMatrix, number | BigNumber": typed3.referToSelf((self2) => (x, y) => {
         if (equalScalar2(y, 0)) {
           return x.clone();
         }
         return matAlgo11xS0s(x, y, self2, false);
       }),
-      "DenseMatrix, number | BigNumber": typed2.referToSelf((self2) => (x, y) => {
+      "DenseMatrix, number | BigNumber": typed3.referToSelf((self2) => (x, y) => {
         if (equalScalar2(y, 0)) {
           return x.clone();
         }
         return matAlgo14xDs(x, y, self2, false);
       }),
-      "number | BigNumber, SparseMatrix": typed2.referToSelf((self2) => (x, y) => {
+      "number | BigNumber, SparseMatrix": typed3.referToSelf((self2) => (x, y) => {
         if (equalScalar2(x, 0)) {
           return zeros3(y.size(), y.storage());
         }
         return matAlgo10xSids(y, x, self2, true);
       }),
-      "number | BigNumber, DenseMatrix": typed2.referToSelf((self2) => (x, y) => {
+      "number | BigNumber, DenseMatrix": typed3.referToSelf((self2) => (x, y) => {
         if (equalScalar2(x, 0)) {
           return zeros3(y.size(), y.storage());
         }
@@ -19859,70 +21808,70 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/bitwise/rightArithShift.js
-  var name136 = "rightArithShift";
-  var dependencies136 = ["typed", "matrix", "equalScalar", "zeros", "DenseMatrix", "concat"];
-  var createRightArithShift = /* @__PURE__ */ factory(name136, dependencies136, (_ref) => {
+  var name138 = "rightArithShift";
+  var dependencies138 = ["typed", "matrix", "equalScalar", "zeros", "DenseMatrix", "concat"];
+  var createRightArithShift = /* @__PURE__ */ factory(name138, dependencies138, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       equalScalar: equalScalar2,
       zeros: zeros3,
       DenseMatrix: DenseMatrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo01xDSid = createMatAlgo01xDSid({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo02xDS0 = createMatAlgo02xDS0({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo08xS0Sid = createMatAlgo08xS0Sid({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo10xSids = createMatAlgo10xSids({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matAlgo11xS0s = createMatAlgo11xS0s({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo14xDs = createMatAlgo14xDs({
-      typed: typed2
+      typed: typed3
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
     var useMatrixForArrayScalar = createUseMatrixForArrayScalar({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2
     });
-    return typed2(name136, {
+    return typed3(name138, {
       "number, number": rightArithShiftNumber,
       "BigNumber, BigNumber": rightArithShiftBigNumber,
-      "SparseMatrix, number | BigNumber": typed2.referToSelf((self2) => (x, y) => {
+      "SparseMatrix, number | BigNumber": typed3.referToSelf((self2) => (x, y) => {
         if (equalScalar2(y, 0)) {
           return x.clone();
         }
         return matAlgo11xS0s(x, y, self2, false);
       }),
-      "DenseMatrix, number | BigNumber": typed2.referToSelf((self2) => (x, y) => {
+      "DenseMatrix, number | BigNumber": typed3.referToSelf((self2) => (x, y) => {
         if (equalScalar2(y, 0)) {
           return x.clone();
         }
         return matAlgo14xDs(x, y, self2, false);
       }),
-      "number | BigNumber, SparseMatrix": typed2.referToSelf((self2) => (x, y) => {
+      "number | BigNumber, SparseMatrix": typed3.referToSelf((self2) => (x, y) => {
         if (equalScalar2(x, 0)) {
           return zeros3(y.size(), y.storage());
         }
         return matAlgo10xSids(y, x, self2, true);
       }),
-      "number | BigNumber, DenseMatrix": typed2.referToSelf((self2) => (x, y) => {
+      "number | BigNumber, DenseMatrix": typed3.referToSelf((self2) => (x, y) => {
         if (equalScalar2(x, 0)) {
           return zeros3(y.size(), y.storage());
         }
@@ -19936,69 +21885,69 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/bitwise/rightLogShift.js
-  var name137 = "rightLogShift";
-  var dependencies137 = ["typed", "matrix", "equalScalar", "zeros", "DenseMatrix", "concat"];
-  var createRightLogShift = /* @__PURE__ */ factory(name137, dependencies137, (_ref) => {
+  var name139 = "rightLogShift";
+  var dependencies139 = ["typed", "matrix", "equalScalar", "zeros", "DenseMatrix", "concat"];
+  var createRightLogShift = /* @__PURE__ */ factory(name139, dependencies139, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       equalScalar: equalScalar2,
       zeros: zeros3,
       DenseMatrix: DenseMatrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo01xDSid = createMatAlgo01xDSid({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo02xDS0 = createMatAlgo02xDS0({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo08xS0Sid = createMatAlgo08xS0Sid({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo10xSids = createMatAlgo10xSids({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matAlgo11xS0s = createMatAlgo11xS0s({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo14xDs = createMatAlgo14xDs({
-      typed: typed2
+      typed: typed3
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
     var useMatrixForArrayScalar = createUseMatrixForArrayScalar({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2
     });
-    return typed2(name137, {
+    return typed3(name139, {
       "number, number": rightLogShiftNumber,
-      "SparseMatrix, number | BigNumber": typed2.referToSelf((self2) => (x, y) => {
+      "SparseMatrix, number | BigNumber": typed3.referToSelf((self2) => (x, y) => {
         if (equalScalar2(y, 0)) {
           return x.clone();
         }
         return matAlgo11xS0s(x, y, self2, false);
       }),
-      "DenseMatrix, number | BigNumber": typed2.referToSelf((self2) => (x, y) => {
+      "DenseMatrix, number | BigNumber": typed3.referToSelf((self2) => (x, y) => {
         if (equalScalar2(y, 0)) {
           return x.clone();
         }
         return matAlgo14xDs(x, y, self2, false);
       }),
-      "number | BigNumber, SparseMatrix": typed2.referToSelf((self2) => (x, y) => {
+      "number | BigNumber, SparseMatrix": typed3.referToSelf((self2) => (x, y) => {
         if (equalScalar2(x, 0)) {
           return zeros3(y.size(), y.storage());
         }
         return matAlgo10xSids(y, x, self2, true);
       }),
-      "number | BigNumber, DenseMatrix": typed2.referToSelf((self2) => (x, y) => {
+      "number | BigNumber, DenseMatrix": typed3.referToSelf((self2) => (x, y) => {
         if (equalScalar2(x, 0)) {
           return zeros3(y.size(), y.storage());
         }
@@ -20012,38 +21961,38 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/logical/and.js
-  var name138 = "and";
-  var dependencies138 = ["typed", "matrix", "equalScalar", "zeros", "not", "concat"];
-  var createAnd = /* @__PURE__ */ factory(name138, dependencies138, (_ref) => {
+  var name140 = "and";
+  var dependencies140 = ["typed", "matrix", "equalScalar", "zeros", "not", "concat"];
+  var createAnd = /* @__PURE__ */ factory(name140, dependencies140, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       equalScalar: equalScalar2,
       zeros: zeros3,
       not: not2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo02xDS0 = createMatAlgo02xDS0({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo06xS0S0 = createMatAlgo06xS0S0({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo11xS0s = createMatAlgo11xS0s({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo14xDs = createMatAlgo14xDs({
-      typed: typed2
+      typed: typed3
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
-    return typed2(name138, {
+    return typed3(name140, {
       "number, number": andNumber,
       "Complex, Complex": function ComplexComplex(x, y) {
         return (x.re !== 0 || x.im !== 0) && (y.re !== 0 || y.im !== 0);
@@ -20051,35 +22000,35 @@ var meta_bind_publish = (() => {
       "BigNumber, BigNumber": function BigNumberBigNumber(x, y) {
         return !x.isZero() && !y.isZero() && !x.isNaN() && !y.isNaN();
       },
-      "Unit, Unit": typed2.referToSelf((self2) => (x, y) => self2(x.value || 0, y.value || 0)),
-      "SparseMatrix, any": typed2.referToSelf((self2) => (x, y) => {
+      "Unit, Unit": typed3.referToSelf((self2) => (x, y) => self2(x.value || 0, y.value || 0)),
+      "SparseMatrix, any": typed3.referToSelf((self2) => (x, y) => {
         if (not2(y)) {
           return zeros3(x.size(), x.storage());
         }
         return matAlgo11xS0s(x, y, self2, false);
       }),
-      "DenseMatrix, any": typed2.referToSelf((self2) => (x, y) => {
+      "DenseMatrix, any": typed3.referToSelf((self2) => (x, y) => {
         if (not2(y)) {
           return zeros3(x.size(), x.storage());
         }
         return matAlgo14xDs(x, y, self2, false);
       }),
-      "any, SparseMatrix": typed2.referToSelf((self2) => (x, y) => {
+      "any, SparseMatrix": typed3.referToSelf((self2) => (x, y) => {
         if (not2(x)) {
           return zeros3(x.size(), x.storage());
         }
         return matAlgo11xS0s(y, x, self2, true);
       }),
-      "any, DenseMatrix": typed2.referToSelf((self2) => (x, y) => {
+      "any, DenseMatrix": typed3.referToSelf((self2) => (x, y) => {
         if (not2(x)) {
           return zeros3(x.size(), x.storage());
         }
         return matAlgo14xDs(y, x, self2, true);
       }),
-      "Array, any": typed2.referToSelf((self2) => (x, y) => {
+      "Array, any": typed3.referToSelf((self2) => (x, y) => {
         return self2(matrix2(x), y).valueOf();
       }),
-      "any, Array": typed2.referToSelf((self2) => (x, y) => {
+      "any, Array": typed3.referToSelf((self2) => (x, y) => {
         return self2(x, matrix2(y)).valueOf();
       })
     }, matrixAlgorithmSuite({
@@ -20089,40 +22038,40 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/relational/compare.js
-  var name139 = "compare";
-  var dependencies139 = ["typed", "config", "matrix", "equalScalar", "BigNumber", "Fraction", "DenseMatrix", "concat"];
-  var createCompare = /* @__PURE__ */ factory(name139, dependencies139, (_ref) => {
+  var name141 = "compare";
+  var dependencies141 = ["typed", "config", "matrix", "equalScalar", "BigNumber", "Fraction", "DenseMatrix", "concat"];
+  var createCompare = /* @__PURE__ */ factory(name141, dependencies141, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       equalScalar: equalScalar2,
       matrix: matrix2,
       BigNumber: BigNumber2,
       Fraction: Fraction3,
       DenseMatrix: DenseMatrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo03xDSf = createMatAlgo03xDSf({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo05xSfSf = createMatAlgo05xSfSf({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo12xSfs = createMatAlgo12xSfs({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
     var compareUnits = createCompareUnits({
-      typed: typed2
+      typed: typed3
     });
-    return typed2(name139, createCompareNumber({
-      typed: typed2,
+    return typed3(name141, createCompareNumber({
+      typed: typed3,
       config: config4
     }), {
       "boolean, boolean": function booleanBoolean(x, y) {
@@ -20143,12 +22092,12 @@ var meta_bind_publish = (() => {
       Ss: matAlgo12xSfs
     }));
   });
-  var createCompareNumber = /* @__PURE__ */ factory(name139, ["typed", "config"], (_ref2) => {
+  var createCompareNumber = /* @__PURE__ */ factory(name141, ["typed", "config"], (_ref2) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4
     } = _ref2;
-    return typed2(name139, {
+    return typed3(name141, {
       "number, number": function numberNumber(x, y) {
         return nearlyEqual(x, y, config4.epsilon) ? 0 : x > y ? 1 : -1;
       }
@@ -20157,20 +22106,20 @@ var meta_bind_publish = (() => {
 
   // node_modules/mathjs/lib/esm/function/relational/compareNatural.js
   var import_javascript_natural_sort = __toESM(require_naturalSort(), 1);
-  var name140 = "compareNatural";
-  var dependencies140 = ["typed", "compare"];
-  var createCompareNatural = /* @__PURE__ */ factory(name140, dependencies140, (_ref) => {
+  var name142 = "compareNatural";
+  var dependencies142 = ["typed", "compare"];
+  var createCompareNatural = /* @__PURE__ */ factory(name142, dependencies142, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       compare: compare2
     } = _ref;
     var compareBooleans = compare2.signatures["boolean,boolean"];
-    return typed2(name140, {
+    return typed3(name142, {
       "any, any": _compareNatural
     });
     function _compareNatural(x, y) {
-      var typeX = typeOf(x);
-      var typeY = typeOf(y);
+      var typeX = typeOf2(x);
+      var typeY = typeOf2(y);
       var c;
       if ((typeX === "number" || typeX === "BigNumber" || typeX === "Fraction") && (typeY === "number" || typeY === "BigNumber" || typeY === "Fraction")) {
         c = compare2(x, y);
@@ -20292,55 +22241,55 @@ var meta_bind_publish = (() => {
   }
 
   // node_modules/mathjs/lib/esm/function/relational/compareText.js
-  var name141 = "compareText";
-  var dependencies141 = ["typed", "matrix", "concat"];
+  var name143 = "compareText";
+  var dependencies143 = ["typed", "matrix", "concat"];
   compareText.signature = "any, any";
-  var createCompareText = /* @__PURE__ */ factory(name141, dependencies141, (_ref) => {
+  var createCompareText = /* @__PURE__ */ factory(name143, dependencies143, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
-    return typed2(name141, compareText, matrixAlgorithmSuite({
+    return typed3(name143, compareText, matrixAlgorithmSuite({
       elop: compareText,
       Ds: true
     }));
   });
 
   // node_modules/mathjs/lib/esm/function/relational/equal.js
-  var name142 = "equal";
-  var dependencies142 = ["typed", "matrix", "equalScalar", "DenseMatrix", "concat"];
-  var createEqual = /* @__PURE__ */ factory(name142, dependencies142, (_ref) => {
+  var name144 = "equal";
+  var dependencies144 = ["typed", "matrix", "equalScalar", "DenseMatrix", "concat"];
+  var createEqual = /* @__PURE__ */ factory(name144, dependencies144, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       equalScalar: equalScalar2,
       DenseMatrix: DenseMatrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo03xDSf = createMatAlgo03xDSf({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo07xSSf = createMatAlgo07xSSf({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matAlgo12xSfs = createMatAlgo12xSfs({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
-    return typed2(name142, createEqualNumber({
-      typed: typed2,
+    return typed3(name144, createEqualNumber({
+      typed: typed3,
       equalScalar: equalScalar2
     }), matrixAlgorithmSuite({
       elop: equalScalar2,
@@ -20349,12 +22298,12 @@ var meta_bind_publish = (() => {
       Ss: matAlgo12xSfs
     }));
   });
-  var createEqualNumber = factory(name142, ["typed", "equalScalar"], (_ref2) => {
+  var createEqualNumber = factory(name144, ["typed", "equalScalar"], (_ref2) => {
     var {
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     } = _ref2;
-    return typed2(name142, {
+    return typed3(name144, {
       "any, any": function anyAny(x, y) {
         if (x === null) {
           return y === null;
@@ -20374,15 +22323,15 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/relational/equalText.js
-  var name143 = "equalText";
-  var dependencies143 = ["typed", "compareText", "isZero"];
-  var createEqualText = /* @__PURE__ */ factory(name143, dependencies143, (_ref) => {
+  var name145 = "equalText";
+  var dependencies145 = ["typed", "compareText", "isZero"];
+  var createEqualText = /* @__PURE__ */ factory(name145, dependencies145, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       compareText: compareText3,
       isZero: isZero2
     } = _ref;
-    return typed2(name143, {
+    return typed3(name145, {
       "any, any": function anyAny(x, y) {
         return isZero2(compareText3(x, y));
       }
@@ -20390,37 +22339,37 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/relational/smaller.js
-  var name144 = "smaller";
-  var dependencies144 = ["typed", "config", "matrix", "DenseMatrix", "concat"];
-  var createSmaller = /* @__PURE__ */ factory(name144, dependencies144, (_ref) => {
+  var name146 = "smaller";
+  var dependencies146 = ["typed", "config", "matrix", "DenseMatrix", "concat"];
+  var createSmaller = /* @__PURE__ */ factory(name146, dependencies146, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       matrix: matrix2,
       DenseMatrix: DenseMatrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo03xDSf = createMatAlgo03xDSf({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo07xSSf = createMatAlgo07xSSf({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matAlgo12xSfs = createMatAlgo12xSfs({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
     var compareUnits = createCompareUnits({
-      typed: typed2
+      typed: typed3
     });
-    return typed2(name144, createSmallerNumber({
-      typed: typed2,
+    return typed3(name146, createSmallerNumber({
+      typed: typed3,
       config: config4
     }), {
       "boolean, boolean": (x, y) => x < y,
@@ -20437,12 +22386,12 @@ var meta_bind_publish = (() => {
       Ss: matAlgo12xSfs
     }));
   });
-  var createSmallerNumber = /* @__PURE__ */ factory(name144, ["typed", "config"], (_ref2) => {
+  var createSmallerNumber = /* @__PURE__ */ factory(name146, ["typed", "config"], (_ref2) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4
     } = _ref2;
-    return typed2(name144, {
+    return typed3(name146, {
       "number, number": function numberNumber(x, y) {
         return x < y && !nearlyEqual(x, y, config4.epsilon);
       }
@@ -20450,37 +22399,37 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/relational/smallerEq.js
-  var name145 = "smallerEq";
-  var dependencies145 = ["typed", "config", "matrix", "DenseMatrix", "concat"];
-  var createSmallerEq = /* @__PURE__ */ factory(name145, dependencies145, (_ref) => {
+  var name147 = "smallerEq";
+  var dependencies147 = ["typed", "config", "matrix", "DenseMatrix", "concat"];
+  var createSmallerEq = /* @__PURE__ */ factory(name147, dependencies147, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       matrix: matrix2,
       DenseMatrix: DenseMatrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo03xDSf = createMatAlgo03xDSf({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo07xSSf = createMatAlgo07xSSf({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matAlgo12xSfs = createMatAlgo12xSfs({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
     var compareUnits = createCompareUnits({
-      typed: typed2
+      typed: typed3
     });
-    return typed2(name145, createSmallerEqNumber({
-      typed: typed2,
+    return typed3(name147, createSmallerEqNumber({
+      typed: typed3,
       config: config4
     }), {
       "boolean, boolean": (x, y) => x <= y,
@@ -20497,12 +22446,12 @@ var meta_bind_publish = (() => {
       Ss: matAlgo12xSfs
     }));
   });
-  var createSmallerEqNumber = /* @__PURE__ */ factory(name145, ["typed", "config"], (_ref2) => {
+  var createSmallerEqNumber = /* @__PURE__ */ factory(name147, ["typed", "config"], (_ref2) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4
     } = _ref2;
-    return typed2(name145, {
+    return typed3(name147, {
       "number, number": function numberNumber(x, y) {
         return x <= y || nearlyEqual(x, y, config4.epsilon);
       }
@@ -20510,37 +22459,37 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/relational/larger.js
-  var name146 = "larger";
-  var dependencies146 = ["typed", "config", "matrix", "DenseMatrix", "concat"];
-  var createLarger = /* @__PURE__ */ factory(name146, dependencies146, (_ref) => {
+  var name148 = "larger";
+  var dependencies148 = ["typed", "config", "matrix", "DenseMatrix", "concat"];
+  var createLarger = /* @__PURE__ */ factory(name148, dependencies148, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       matrix: matrix2,
       DenseMatrix: DenseMatrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo03xDSf = createMatAlgo03xDSf({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo07xSSf = createMatAlgo07xSSf({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matAlgo12xSfs = createMatAlgo12xSfs({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
     var compareUnits = createCompareUnits({
-      typed: typed2
+      typed: typed3
     });
-    return typed2(name146, createLargerNumber({
-      typed: typed2,
+    return typed3(name148, createLargerNumber({
+      typed: typed3,
       config: config4
     }), {
       "boolean, boolean": (x, y) => x > y,
@@ -20557,12 +22506,12 @@ var meta_bind_publish = (() => {
       Ss: matAlgo12xSfs
     }));
   });
-  var createLargerNumber = /* @__PURE__ */ factory(name146, ["typed", "config"], (_ref2) => {
+  var createLargerNumber = /* @__PURE__ */ factory(name148, ["typed", "config"], (_ref2) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4
     } = _ref2;
-    return typed2(name146, {
+    return typed3(name148, {
       "number, number": function numberNumber(x, y) {
         return x > y && !nearlyEqual(x, y, config4.epsilon);
       }
@@ -20570,37 +22519,37 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/relational/largerEq.js
-  var name147 = "largerEq";
-  var dependencies147 = ["typed", "config", "matrix", "DenseMatrix", "concat"];
-  var createLargerEq = /* @__PURE__ */ factory(name147, dependencies147, (_ref) => {
+  var name149 = "largerEq";
+  var dependencies149 = ["typed", "config", "matrix", "DenseMatrix", "concat"];
+  var createLargerEq = /* @__PURE__ */ factory(name149, dependencies149, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       matrix: matrix2,
       DenseMatrix: DenseMatrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo03xDSf = createMatAlgo03xDSf({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo07xSSf = createMatAlgo07xSSf({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matAlgo12xSfs = createMatAlgo12xSfs({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
     var compareUnits = createCompareUnits({
-      typed: typed2
+      typed: typed3
     });
-    return typed2(name147, createLargerEqNumber({
-      typed: typed2,
+    return typed3(name149, createLargerEqNumber({
+      typed: typed3,
       config: config4
     }), {
       "boolean, boolean": (x, y) => x >= y,
@@ -20617,12 +22566,12 @@ var meta_bind_publish = (() => {
       Ss: matAlgo12xSfs
     }));
   });
-  var createLargerEqNumber = /* @__PURE__ */ factory(name147, ["typed", "config"], (_ref2) => {
+  var createLargerEqNumber = /* @__PURE__ */ factory(name149, ["typed", "config"], (_ref2) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4
     } = _ref2;
-    return typed2(name147, {
+    return typed3(name149, {
       "number, number": function numberNumber(x, y) {
         return x >= y || nearlyEqual(x, y, config4.epsilon);
       }
@@ -20630,14 +22579,14 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/relational/deepEqual.js
-  var name148 = "deepEqual";
-  var dependencies148 = ["typed", "equal"];
-  var createDeepEqual = /* @__PURE__ */ factory(name148, dependencies148, (_ref) => {
+  var name150 = "deepEqual";
+  var dependencies150 = ["typed", "equal"];
+  var createDeepEqual = /* @__PURE__ */ factory(name150, dependencies150, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       equal: equal2
     } = _ref;
-    return typed2(name148, {
+    return typed3(name150, {
       "any, any": function anyAny(x, y) {
         return _deepEqual(x.valueOf(), y.valueOf());
       }
@@ -20669,35 +22618,35 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/relational/unequal.js
-  var name149 = "unequal";
-  var dependencies149 = ["typed", "config", "equalScalar", "matrix", "DenseMatrix", "concat"];
-  var createUnequal = /* @__PURE__ */ factory(name149, dependencies149, (_ref) => {
+  var name151 = "unequal";
+  var dependencies151 = ["typed", "config", "equalScalar", "matrix", "DenseMatrix", "concat"];
+  var createUnequal = /* @__PURE__ */ factory(name151, dependencies151, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       equalScalar: equalScalar2,
       matrix: matrix2,
       DenseMatrix: DenseMatrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo03xDSf = createMatAlgo03xDSf({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo07xSSf = createMatAlgo07xSSf({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matAlgo12xSfs = createMatAlgo12xSfs({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
-    return typed2(name149, createUnequalNumber({
-      typed: typed2,
+    return typed3(name151, createUnequalNumber({
+      typed: typed3,
       equalScalar: equalScalar2
     }), matrixAlgorithmSuite({
       elop: _unequal,
@@ -20709,12 +22658,12 @@ var meta_bind_publish = (() => {
       return !equalScalar2(x, y);
     }
   });
-  var createUnequalNumber = factory(name149, ["typed", "equalScalar"], (_ref2) => {
+  var createUnequalNumber = factory(name151, ["typed", "equalScalar"], (_ref2) => {
     var {
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     } = _ref2;
-    return typed2(name149, {
+    return typed3(name151, {
       "any, any": function anyAny(x, y) {
         if (x === null) {
           return y !== null;
@@ -20734,18 +22683,18 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/matrix/partitionSelect.js
-  var name150 = "partitionSelect";
-  var dependencies150 = ["typed", "isNumeric", "isNaN", "compare"];
-  var createPartitionSelect = /* @__PURE__ */ factory(name150, dependencies150, (_ref) => {
+  var name152 = "partitionSelect";
+  var dependencies152 = ["typed", "isNumeric", "isNaN", "compare"];
+  var createPartitionSelect = /* @__PURE__ */ factory(name152, dependencies152, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       isNumeric: isNumeric2,
       isNaN: isNaN3,
       compare: compare2
     } = _ref;
     var asc = compare2;
     var desc = (a, b) => -compare2(a, b);
-    return typed2(name150, {
+    return typed3(name152, {
       "Array | Matrix, number": function ArrayMatrixNumber(x, k) {
         return _partitionSelect(x, k, asc);
       },
@@ -20814,18 +22763,18 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/matrix/sort.js
-  var name151 = "sort";
-  var dependencies151 = ["typed", "matrix", "compare", "compareNatural"];
-  var createSort = /* @__PURE__ */ factory(name151, dependencies151, (_ref) => {
+  var name153 = "sort";
+  var dependencies153 = ["typed", "matrix", "compare", "compareNatural"];
+  var createSort = /* @__PURE__ */ factory(name153, dependencies153, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       compare: compare2,
       compareNatural: compareNatural2
     } = _ref;
     var compareAsc = compare2;
     var compareDesc = (a, b) => -compare2(a, b);
-    return typed2(name151, {
+    return typed3(name153, {
       Array: function Array2(x) {
         _arrayIsVector(x);
         return x.sort(compareAsc);
@@ -20875,16 +22824,16 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/statistics/max.js
-  var name152 = "max";
-  var dependencies152 = ["typed", "config", "numeric", "larger"];
-  var createMax = /* @__PURE__ */ factory(name152, dependencies152, (_ref) => {
+  var name154 = "max";
+  var dependencies154 = ["typed", "config", "numeric", "larger"];
+  var createMax = /* @__PURE__ */ factory(name154, dependencies154, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       numeric: numeric3,
       larger: larger2
     } = _ref;
-    return typed2(name152, {
+    return typed3(name154, {
       "Array | Matrix": _max,
       "Array | Matrix, number | BigNumber": function ArrayMatrixNumberBigNumber(array, dim) {
         return reduce(array, dim.valueOf(), _largest);
@@ -20905,15 +22854,15 @@ var meta_bind_publish = (() => {
     }
     function _max(array) {
       var res;
-      deepForEach(array, function(value) {
+      deepForEach(array, function(value2) {
         try {
-          if (isNaN(value) && typeof value === "number") {
+          if (isNaN(value2) && typeof value2 === "number") {
             res = NaN;
-          } else if (res === void 0 || larger2(value, res)) {
-            res = value;
+          } else if (res === void 0 || larger2(value2, res)) {
+            res = value2;
           }
         } catch (err) {
-          throw improveErrorMessage(err, "max", value);
+          throw improveErrorMessage(err, "max", value2);
         }
       });
       if (res === void 0) {
@@ -20927,16 +22876,16 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/statistics/min.js
-  var name153 = "min";
-  var dependencies153 = ["typed", "config", "numeric", "smaller"];
-  var createMin = /* @__PURE__ */ factory(name153, dependencies153, (_ref) => {
+  var name155 = "min";
+  var dependencies155 = ["typed", "config", "numeric", "smaller"];
+  var createMin = /* @__PURE__ */ factory(name155, dependencies155, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       numeric: numeric3,
       smaller: smaller2
     } = _ref;
-    return typed2(name153, {
+    return typed3(name155, {
       "Array | Matrix": _min,
       "Array | Matrix, number | BigNumber": function ArrayMatrixNumberBigNumber(array, dim) {
         return reduce(array, dim.valueOf(), _smallest);
@@ -20957,15 +22906,15 @@ var meta_bind_publish = (() => {
     }
     function _min(array) {
       var min3;
-      deepForEach(array, function(value) {
+      deepForEach(array, function(value2) {
         try {
-          if (isNaN(value) && typeof value === "number") {
+          if (isNaN(value2) && typeof value2 === "number") {
             min3 = NaN;
-          } else if (min3 === void 0 || smaller2(value, min3)) {
-            min3 = value;
+          } else if (min3 === void 0 || smaller2(value2, min3)) {
+            min3 = value2;
           }
         } catch (err) {
-          throw improveErrorMessage(err, "min", value);
+          throw improveErrorMessage(err, "min", value2);
         }
       });
       if (min3 === void 0) {
@@ -20979,9 +22928,9 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/type/matrix/ImmutableDenseMatrix.js
-  var name154 = "ImmutableDenseMatrix";
-  var dependencies154 = ["smaller", "DenseMatrix"];
-  var createImmutableDenseMatrixClass = /* @__PURE__ */ factory(name154, dependencies154, (_ref) => {
+  var name156 = "ImmutableDenseMatrix";
+  var dependencies156 = ["smaller", "DenseMatrix"];
+  var createImmutableDenseMatrixClass = /* @__PURE__ */ factory(name156, dependencies156, (_ref) => {
     var {
       smaller: smaller2,
       DenseMatrix: DenseMatrix2
@@ -21007,7 +22956,7 @@ var meta_bind_publish = (() => {
         this._min = typeof data.min !== "undefined" ? data.min : null;
         this._max = typeof data.max !== "undefined" ? data.max : null;
       } else if (data) {
-        throw new TypeError("Unsupported type of data (" + typeOf(data) + ")");
+        throw new TypeError("Unsupported type of data (" + typeOf2(data) + ")");
       } else {
         this._data = [];
         this._size = [0];
@@ -21099,28 +23048,42 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/type/matrix/MatrixIndex.js
-  var name155 = "Index";
-  var dependencies155 = ["ImmutableDenseMatrix"];
-  var createIndexClass = /* @__PURE__ */ factory(name155, dependencies155, (_ref) => {
+  var name157 = "Index";
+  var dependencies157 = ["ImmutableDenseMatrix", "getMatrixDataType"];
+  var createIndexClass = /* @__PURE__ */ factory(name157, dependencies157, (_ref) => {
     var {
-      ImmutableDenseMatrix: ImmutableDenseMatrix2
+      ImmutableDenseMatrix: ImmutableDenseMatrix2,
+      getMatrixDataType: getMatrixDataType2
     } = _ref;
     function Index2(ranges) {
       if (!(this instanceof Index2)) {
         throw new SyntaxError("Constructor must be called with the new operator");
       }
       this._dimensions = [];
+      this._sourceSize = [];
       this._isScalar = true;
       for (var i2 = 0, ii = arguments.length; i2 < ii; i2++) {
         var arg2 = arguments[i2];
+        var argIsArray = isArray(arg2);
+        var argIsMatrix = isMatrix(arg2);
+        var sourceSize = null;
         if (isRange(arg2)) {
           this._dimensions.push(arg2);
           this._isScalar = false;
-        } else if (Array.isArray(arg2) || isMatrix(arg2)) {
-          var m = _createImmutableMatrix(arg2.valueOf());
+        } else if (argIsArray || argIsMatrix) {
+          var m = void 0;
+          if (getMatrixDataType2(arg2) === "boolean") {
+            if (argIsArray)
+              m = _createImmutableMatrix(_booleansArrayToNumbersForIndex(arg2).valueOf());
+            if (argIsMatrix)
+              m = _createImmutableMatrix(_booleansArrayToNumbersForIndex(arg2._data).valueOf());
+            sourceSize = arg2.valueOf().length;
+          } else {
+            m = _createImmutableMatrix(arg2.valueOf());
+          }
           this._dimensions.push(m);
           var size2 = m.size();
-          if (size2.length !== 1 || size2[0] !== 1) {
+          if (size2.length !== 1 || size2[0] !== 1 || sourceSize !== null) {
             this._isScalar = false;
           }
         } else if (typeof arg2 === "number") {
@@ -21130,6 +23093,7 @@ var meta_bind_publish = (() => {
         } else {
           throw new TypeError("Dimension must be an Array, Matrix, number, string, or Range");
         }
+        this._sourceSize.push(sourceSize);
       }
     }
     Index2.prototype.type = "Index";
@@ -21146,6 +23110,7 @@ var meta_bind_publish = (() => {
       var index2 = new Index2();
       index2._dimensions = clone(this._dimensions);
       index2._isScalar = this._isScalar;
+      index2._sourceSize = this._sourceSize;
       return index2;
     };
     Index2.create = function(ranges) {
@@ -21228,11 +23193,20 @@ var meta_bind_publish = (() => {
   }, {
     isClass: true
   });
+  function _booleansArrayToNumbersForIndex(booleanArrayIndex) {
+    var indexOfNumbers = [];
+    booleanArrayIndex.forEach((bool, idx) => {
+      if (bool) {
+        indexOfNumbers.push(idx);
+      }
+    });
+    return indexOfNumbers;
+  }
 
   // node_modules/mathjs/lib/esm/type/matrix/FibonacciHeap.js
-  var name156 = "FibonacciHeap";
-  var dependencies156 = ["smaller", "larger"];
-  var createFibonacciHeapClass = /* @__PURE__ */ factory(name156, dependencies156, (_ref) => {
+  var name158 = "FibonacciHeap";
+  var dependencies158 = ["smaller", "larger"];
+  var createFibonacciHeapClass = /* @__PURE__ */ factory(name158, dependencies158, (_ref) => {
     var {
       smaller: smaller2,
       larger: larger2
@@ -21247,10 +23221,10 @@ var meta_bind_publish = (() => {
     }
     FibonacciHeap2.prototype.type = "FibonacciHeap";
     FibonacciHeap2.prototype.isFibonacciHeap = true;
-    FibonacciHeap2.prototype.insert = function(key, value) {
+    FibonacciHeap2.prototype.insert = function(key, value2) {
       var node = {
         key,
-        value,
+        value: value2,
         degree: 0
       };
       if (this._minimum) {
@@ -21437,9 +23411,9 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/type/matrix/Spa.js
-  var name157 = "Spa";
-  var dependencies157 = ["addScalar", "equalScalar", "FibonacciHeap"];
-  var createSpaClass = /* @__PURE__ */ factory(name157, dependencies157, (_ref) => {
+  var name159 = "Spa";
+  var dependencies159 = ["addScalar", "equalScalar", "FibonacciHeap"];
+  var createSpaClass = /* @__PURE__ */ factory(name159, dependencies159, (_ref) => {
     var {
       addScalar: addScalar2,
       equalScalar: equalScalar2,
@@ -21527,52 +23501,6 @@ var meta_bind_publish = (() => {
     isClass: true
   });
 
-  // node_modules/@babel/runtime/helpers/esm/typeof.js
-  function _typeof(obj) {
-    "@babel/helpers - typeof";
-    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(obj2) {
-      return typeof obj2;
-    } : function(obj2) {
-      return obj2 && "function" == typeof Symbol && obj2.constructor === Symbol && obj2 !== Symbol.prototype ? "symbol" : typeof obj2;
-    }, _typeof(obj);
-  }
-
-  // node_modules/@babel/runtime/helpers/esm/toPrimitive.js
-  function _toPrimitive(input, hint) {
-    if (_typeof(input) !== "object" || input === null)
-      return input;
-    var prim = input[Symbol.toPrimitive];
-    if (prim !== void 0) {
-      var res = prim.call(input, hint || "default");
-      if (_typeof(res) !== "object")
-        return res;
-      throw new TypeError("@@toPrimitive must return a primitive value.");
-    }
-    return (hint === "string" ? String : Number)(input);
-  }
-
-  // node_modules/@babel/runtime/helpers/esm/toPropertyKey.js
-  function _toPropertyKey(arg2) {
-    var key = _toPrimitive(arg2, "string");
-    return _typeof(key) === "symbol" ? key : String(key);
-  }
-
-  // node_modules/@babel/runtime/helpers/esm/defineProperty.js
-  function _defineProperty(obj, key, value) {
-    key = _toPropertyKey(key);
-    if (key in obj) {
-      Object.defineProperty(obj, key, {
-        value,
-        enumerable: true,
-        configurable: true,
-        writable: true
-      });
-    } else {
-      obj[key] = value;
-    }
-    return obj;
-  }
-
   // node_modules/mathjs/lib/esm/utils/bignumber/constants.js
   var createBigNumberE = memoize(function(BigNumber2) {
     return new BigNumber2(1).exp();
@@ -21599,30 +23527,30 @@ var meta_bind_publish = (() => {
   }
 
   // node_modules/mathjs/lib/esm/type/unit/Unit.js
-  function ownKeys(object, enumerableOnly) {
-    var keys = Object.keys(object);
+  function ownKeys2(e3, r) {
+    var t = Object.keys(e3);
     if (Object.getOwnPropertySymbols) {
-      var symbols = Object.getOwnPropertySymbols(object);
-      enumerableOnly && (symbols = symbols.filter(function(sym) {
-        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-      })), keys.push.apply(keys, symbols);
+      var o = Object.getOwnPropertySymbols(e3);
+      r && (o = o.filter(function(r2) {
+        return Object.getOwnPropertyDescriptor(e3, r2).enumerable;
+      })), t.push.apply(t, o);
     }
-    return keys;
+    return t;
   }
-  function _objectSpread(target) {
-    for (var i2 = 1; i2 < arguments.length; i2++) {
-      var source = null != arguments[i2] ? arguments[i2] : {};
-      i2 % 2 ? ownKeys(Object(source), true).forEach(function(key) {
-        _defineProperty(target, key, source[key]);
-      }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function(key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+  function _objectSpread2(e3) {
+    for (var r = 1; r < arguments.length; r++) {
+      var t = null != arguments[r] ? arguments[r] : {};
+      r % 2 ? ownKeys2(Object(t), true).forEach(function(r2) {
+        _defineProperty(e3, r2, t[r2]);
+      }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e3, Object.getOwnPropertyDescriptors(t)) : ownKeys2(Object(t)).forEach(function(r2) {
+        Object.defineProperty(e3, r2, Object.getOwnPropertyDescriptor(t, r2));
       });
     }
-    return target;
+    return e3;
   }
-  var name158 = "Unit";
-  var dependencies158 = ["?on", "config", "addScalar", "subtract", "multiplyScalar", "divideScalar", "pow", "abs", "fix", "round", "equal", "isNumeric", "format", "number", "Complex", "BigNumber", "Fraction"];
-  var createUnitClass = /* @__PURE__ */ factory(name158, dependencies158, (_ref) => {
+  var name160 = "Unit";
+  var dependencies160 = ["?on", "config", "addScalar", "subtract", "multiplyScalar", "divideScalar", "pow", "abs", "fix", "round", "equal", "isNumeric", "format", "number", "Complex", "BigNumber", "Fraction"];
+  var createUnitClass = /* @__PURE__ */ factory(name160, dependencies160, (_ref) => {
     var {
       on,
       config: config4,
@@ -21637,17 +23565,17 @@ var meta_bind_publish = (() => {
       equal: equal2,
       isNumeric: isNumeric2,
       format: format5,
-      number: number2,
+      number: _number,
       Complex: Complex3,
       BigNumber: _BigNumber,
       Fraction: _Fraction
     } = _ref;
-    var toNumber = number2;
-    function Unit2(value, valuelessUnit) {
+    var toNumber = _number;
+    function Unit2(value2, valuelessUnit) {
       if (!(this instanceof Unit2)) {
         throw new Error("Constructor must be called with the new operator");
       }
-      if (!(value === null || value === void 0 || isNumeric2(value) || isComplex(value))) {
+      if (!(value2 === null || value2 === void 0 || isNumeric2(value2) || isComplex(value2))) {
         throw new TypeError("First parameter in Unit constructor must be number, BigNumber, Fraction, Complex, or undefined");
       }
       this.fixPrefix = false;
@@ -21667,7 +23595,7 @@ var meta_bind_publish = (() => {
       } else {
         throw new TypeError("Second parameter in Unit constructor must be a string or valueless Unit");
       }
-      this.value = this._normalize(value);
+      this.value = this._normalize(value2);
     }
     Object.defineProperty(Unit2, "name", {
       value: "Unit"
@@ -21696,12 +23624,12 @@ var meta_bind_publish = (() => {
       c = text2.charAt(index2);
     }
     function parseNumber() {
-      var number3 = "";
+      var number2 = "";
       var oldIndex = index2;
       if (c === "+") {
         next();
       } else if (c === "-") {
-        number3 += c;
+        number2 += c;
         next();
       }
       if (!isDigitDot(c)) {
@@ -21709,7 +23637,7 @@ var meta_bind_publish = (() => {
         return null;
       }
       if (c === ".") {
-        number3 += c;
+        number2 += c;
         next();
         if (!isDigit(c)) {
           revert(oldIndex);
@@ -21717,16 +23645,16 @@ var meta_bind_publish = (() => {
         }
       } else {
         while (isDigit(c)) {
-          number3 += c;
+          number2 += c;
           next();
         }
         if (c === ".") {
-          number3 += c;
+          number2 += c;
           next();
         }
       }
       while (isDigit(c)) {
-        number3 += c;
+        number2 += c;
         next();
       }
       if (c === "E" || c === "e") {
@@ -21740,15 +23668,15 @@ var meta_bind_publish = (() => {
         }
         if (!isDigit(c)) {
           revert(tentativeIndex);
-          return number3;
+          return number2;
         }
-        number3 = number3 + tentativeNumber;
+        number2 = number2 + tentativeNumber;
         while (isDigit(c)) {
-          number3 += c;
+          number2 += c;
           next();
         }
       }
-      return number3;
+      return number2;
     }
     function parseUnit() {
       var unitName = "";
@@ -21771,9 +23699,9 @@ var meta_bind_publish = (() => {
         return null;
       }
     }
-    Unit2.parse = function(str, options) {
+    Unit2.parse = function(str2, options) {
       options = options || {};
-      text2 = str;
+      text2 = str2;
       index2 = -1;
       c = "";
       if (typeof text2 !== "string") {
@@ -21786,18 +23714,18 @@ var meta_bind_publish = (() => {
       next();
       skipWhitespace();
       var valueStr = parseNumber();
-      var value = null;
+      var value2 = null;
       if (valueStr) {
         if (config4.number === "BigNumber") {
-          value = new _BigNumber(valueStr);
+          value2 = new _BigNumber(valueStr);
         } else if (config4.number === "Fraction") {
           try {
-            value = new _Fraction(valueStr);
+            value2 = new _Fraction(valueStr);
           } catch (err) {
-            value = parseFloat(valueStr);
+            value2 = parseFloat(valueStr);
           }
         } else {
-          value = parseFloat(valueStr);
+          value2 = parseFloat(valueStr);
         }
         skipWhitespace();
         if (parseCharacter("*")) {
@@ -21839,7 +23767,7 @@ var meta_bind_publish = (() => {
           skipWhitespace();
           var p = parseNumber();
           if (p === null) {
-            throw new SyntaxError('In "' + str + '", "^" must be followed by a floating-point number');
+            throw new SyntaxError('In "' + str2 + '", "^" must be followed by a floating-point number');
           }
           power *= p;
         }
@@ -21880,18 +23808,18 @@ var meta_bind_publish = (() => {
       }
       skipWhitespace();
       if (c) {
-        throw new SyntaxError('Could not parse: "' + str + '"');
+        throw new SyntaxError('Could not parse: "' + str2 + '"');
       }
       if (expectingUnit) {
-        throw new SyntaxError('Trailing characters: "' + str + '"');
+        throw new SyntaxError('Trailing characters: "' + str2 + '"');
       }
       if (powerMultiplierStack.length !== 0) {
         throw new SyntaxError('Unmatched "(" in "' + text2 + '"');
       }
       if (unit3.units.length === 0 && !options.allowNoUnits) {
-        throw new SyntaxError('"' + str + '" contains no units');
+        throw new SyntaxError('"' + str2 + '" contains no units');
       }
-      unit3.value = value !== void 0 ? unit3._normalize(value) : null;
+      unit3.value = value2 !== void 0 ? unit3._normalize(value2) : null;
       return unit3;
     };
     Unit2.prototype.clone = function() {
@@ -21904,7 +23832,7 @@ var meta_bind_publish = (() => {
       for (var i2 = 0; i2 < this.units.length; i2++) {
         unit3.units[i2] = {};
         for (var p in this.units[i2]) {
-          if (hasOwnProperty2(this.units[i2], p)) {
+          if (hasOwnProperty(this.units[i2], p)) {
             unit3.units[i2][p] = this.units[i2][p];
           }
         }
@@ -21912,7 +23840,7 @@ var meta_bind_publish = (() => {
       return unit3;
     };
     Unit2.prototype.valueType = function() {
-      return typeOf(this.value);
+      return typeOf2(this.value);
     };
     Unit2.prototype._isDerived = function() {
       if (this.units.length === 0) {
@@ -21920,12 +23848,12 @@ var meta_bind_publish = (() => {
       }
       return this.units.length > 1 || Math.abs(this.units[0].power - 1) > 1e-15;
     };
-    Unit2.prototype._normalize = function(value) {
-      if (value === null || value === void 0 || this.units.length === 0) {
-        return value;
+    Unit2.prototype._normalize = function(value2) {
+      if (value2 === null || value2 === void 0 || this.units.length === 0) {
+        return value2;
       }
-      var res = value;
-      var convert = Unit2._getNumberConverter(typeOf(value));
+      var res = value2;
+      var convert = Unit2._getNumberConverter(typeOf2(value2));
       for (var i2 = 0; i2 < this.units.length; i2++) {
         var unitValue = convert(this.units[i2].unit.value);
         var unitPrefixValue = convert(this.units[i2].prefix.value);
@@ -21934,12 +23862,12 @@ var meta_bind_publish = (() => {
       }
       return res;
     };
-    Unit2.prototype._denormalize = function(value, prefixValue) {
-      if (value === null || value === void 0 || this.units.length === 0) {
-        return value;
+    Unit2.prototype._denormalize = function(value2, prefixValue) {
+      if (value2 === null || value2 === void 0 || this.units.length === 0) {
+        return value2;
       }
-      var res = value;
-      var convert = Unit2._getNumberConverter(typeOf(value));
+      var res = value2;
+      var convert = Unit2._getNumberConverter(typeOf2(value2));
       for (var i2 = 0; i2 < this.units.length; i2++) {
         var unitValue = convert(this.units[i2].unit.value);
         var unitPrefixValue = convert(this.units[i2].prefix.value);
@@ -21948,9 +23876,9 @@ var meta_bind_publish = (() => {
       }
       return res;
     };
-    var _findUnit = memoize((str) => {
-      if (hasOwnProperty2(UNITS, str)) {
-        var unit3 = UNITS[str];
+    var _findUnit = memoize((str2) => {
+      if (hasOwnProperty(UNITS, str2)) {
+        var unit3 = UNITS[str2];
         var prefix = unit3.prefixes[""];
         return {
           unit: unit3,
@@ -21958,12 +23886,12 @@ var meta_bind_publish = (() => {
         };
       }
       for (var _name in UNITS) {
-        if (hasOwnProperty2(UNITS, _name)) {
-          if (endsWith(str, _name)) {
+        if (hasOwnProperty(UNITS, _name)) {
+          if (endsWith(str2, _name)) {
             var _unit = UNITS[_name];
-            var prefixLen = str.length - _name.length;
-            var prefixName = str.substring(0, prefixLen);
-            var _prefix = hasOwnProperty2(_unit.prefixes, prefixName) ? _unit.prefixes[prefixName] : void 0;
+            var prefixLen = str2.length - _name.length;
+            var prefixName = str2.substring(0, prefixLen);
+            var _prefix = hasOwnProperty(_unit.prefixes, prefixName) ? _unit.prefixes[prefixName] : void 0;
             if (_prefix !== void 0) {
               return {
                 unit: _unit,
@@ -21978,8 +23906,8 @@ var meta_bind_publish = (() => {
       hasher: (args) => args[0],
       limit: 100
     });
-    Unit2.isValuelessUnit = function(name302) {
-      return _findUnit(name302) !== null;
+    Unit2.isValuelessUnit = function(name309) {
+      return _findUnit(name309) !== null;
     };
     Unit2.prototype.hasBase = function(base) {
       if (typeof base === "string") {
@@ -22013,7 +23941,7 @@ var meta_bind_publish = (() => {
         res.dimensions[i2] = (this.dimensions[i2] || 0) + (other.dimensions[i2] || 0);
       }
       for (var _i = 0; _i < other.units.length; _i++) {
-        var inverted = _objectSpread({}, other.units[_i]);
+        var inverted = _objectSpread2({}, other.units[_i]);
         res.units.push(inverted);
       }
       if (this.value !== null || other.value !== null) {
@@ -22038,7 +23966,7 @@ var meta_bind_publish = (() => {
         res.dimensions[i2] = (this.dimensions[i2] || 0) - (other.dimensions[i2] || 0);
       }
       for (var _i2 = 0; _i2 < other.units.length; _i2++) {
-        var inverted = _objectSpread(_objectSpread({}, other.units[_i2]), {}, {
+        var inverted = _objectSpread2(_objectSpread2({}, other.units[_i2]), {}, {
           power: -other.units[_i2].power
         });
         res.units.push(inverted);
@@ -22099,7 +24027,7 @@ var meta_bind_publish = (() => {
       return ret;
     };
     Unit2.prototype.to = function(valuelessUnit) {
-      var value = this.value === null ? this._normalize(1) : this.value;
+      var value2 = this.value === null ? this._normalize(1) : this.value;
       var other;
       if (typeof valuelessUnit === "string") {
         other = Unit2.parse(valuelessUnit);
@@ -22115,16 +24043,16 @@ var meta_bind_publish = (() => {
         throw new Error("Cannot convert to a unit with a value");
       }
       if (this.value === null || this._isDerived() || this.units[0].unit.offset === other.units[0].unit.offset) {
-        other.value = clone(value);
+        other.value = clone(value2);
       } else {
-        var convert = Unit2._getNumberConverter(typeOf(value));
-        var thisUnitValue = convert(this.units[0].unit.value);
-        var thisNominalOffset = convert(this.units[0].unit.offset);
+        var convert = Unit2._getNumberConverter(typeOf2(value2));
+        var thisUnitValue = this.units[0].unit.value;
+        var thisNominalOffset = this.units[0].unit.offset;
         var thisUnitOffset = multiplyScalar2(thisUnitValue, thisNominalOffset);
-        var otherUnitValue = convert(other.units[0].unit.value);
-        var otherNominalOffset = convert(other.units[0].unit.offset);
+        var otherUnitValue = other.units[0].unit.value;
+        var otherNominalOffset = other.units[0].unit.offset;
         var otherUnitOffset = multiplyScalar2(otherUnitValue, otherNominalOffset);
-        other.value = subtract2(addScalar2(value, thisUnitOffset), otherUnitOffset);
+        other.value = addScalar2(value2, convert(subtract2(thisUnitOffset, otherUnitOffset)));
       }
       other.fixPrefix = true;
       other.skipAutomaticSimplification = true;
@@ -22168,7 +24096,7 @@ var meta_bind_publish = (() => {
       var proposedUnitList = [];
       var matchingBase;
       for (var key2 in currentUnitSystem) {
-        if (hasOwnProperty2(currentUnitSystem, key2)) {
+        if (hasOwnProperty(currentUnitSystem, key2)) {
           if (ret.hasBase(BASE_UNITS[key2])) {
             matchingBase = key2;
             break;
@@ -22180,7 +24108,7 @@ var meta_bind_publish = (() => {
       } else {
         var matchingUnit;
         if (matchingBase) {
-          if (hasOwnProperty2(currentUnitSystem, matchingBase)) {
+          if (hasOwnProperty(currentUnitSystem, matchingBase)) {
             matchingUnit = currentUnitSystem[matchingBase];
           }
         }
@@ -22195,7 +24123,7 @@ var meta_bind_publish = (() => {
           for (var i2 = 0; i2 < BASE_DIMENSIONS.length; i2++) {
             var baseDim = BASE_DIMENSIONS[i2];
             if (Math.abs(ret.dimensions[i2] || 0) > 1e-12) {
-              if (hasOwnProperty2(currentUnitSystem, baseDim)) {
+              if (hasOwnProperty(currentUnitSystem, baseDim)) {
                 proposedUnitList.push({
                   unit: currentUnitSystem[baseDim].unit,
                   prefix: currentUnitSystem[baseDim].prefix,
@@ -22219,7 +24147,7 @@ var meta_bind_publish = (() => {
       for (var i2 = 0; i2 < BASE_DIMENSIONS.length; i2++) {
         var baseDim = BASE_DIMENSIONS[i2];
         if (Math.abs(ret.dimensions[i2] || 0) > 1e-12) {
-          if (hasOwnProperty2(UNIT_SYSTEMS.si, baseDim)) {
+          if (hasOwnProperty(UNIT_SYSTEMS.si, baseDim)) {
             proposedUnitList.push({
               unit: UNIT_SYSTEMS.si[baseDim].unit,
               prefix: UNIT_SYSTEMS.si[baseDim].prefix,
@@ -22274,12 +24202,12 @@ var meta_bind_publish = (() => {
       if (nDen > 1 && nNum > 0) {
         strDen = "(" + strDen + ")";
       }
-      var str = strNum;
+      var str2 = strNum;
       if (nNum > 0 && nDen > 0) {
-        str += " / ";
+        str2 += " / ";
       }
-      str += strDen;
-      return str;
+      str2 += strDen;
+      return str2;
     };
     Unit2.prototype.format = function(options) {
       var simp = this.skipAutomaticSimplification || this.value === null ? this.clone() : this.simplify();
@@ -22288,7 +24216,7 @@ var meta_bind_publish = (() => {
         isImaginary = Math.abs(simp.value.re) < 1e-14;
       }
       for (var i2 in simp.units) {
-        if (hasOwnProperty2(simp.units, i2)) {
+        if (hasOwnProperty(simp.units, i2)) {
           if (simp.units[i2].unit) {
             if (simp.units[i2].unit.name === "VA" && isImaginary) {
               simp.units[i2].unit = UNITS.VAR;
@@ -22303,17 +24231,17 @@ var meta_bind_publish = (() => {
           simp.units[0].prefix = simp._bestPrefix();
         }
       }
-      var value = simp._denormalize(simp.value);
-      var str = simp.value !== null ? format5(value, options || {}) : "";
+      var value2 = simp._denormalize(simp.value);
+      var str2 = simp.value !== null ? format5(value2, options || {}) : "";
       var unitStr = simp.formatUnits();
       if (simp.value && isComplex(simp.value)) {
-        str = "(" + str + ")";
+        str2 = "(" + str2 + ")";
       }
-      if (unitStr.length > 0 && str.length > 0) {
-        str += " ";
+      if (unitStr.length > 0 && str2.length > 0) {
+        str2 += " ";
       }
-      str += unitStr;
-      return str;
+      str2 += unitStr;
+      return str2;
     };
     Unit2.prototype._bestPrefix = function() {
       if (this.units.length !== 1) {
@@ -22335,7 +24263,7 @@ var meta_bind_publish = (() => {
       bestDiff = Math.abs(bestDiff);
       var prefixes = this.units[0].unit.prefixes;
       for (var p in prefixes) {
-        if (hasOwnProperty2(prefixes, p)) {
+        if (hasOwnProperty(prefixes, p)) {
           var prefix = prefixes[p];
           if (prefix.scientific) {
             var diff2 = Math.abs(Math.log(absValue / Math.pow(prefix.value * absUnitValue, power)) / Math.LN10 - 1.2);
@@ -23097,7 +25025,7 @@ var meta_bind_publish = (() => {
       }
     };
     for (var key in BASE_UNITS) {
-      if (hasOwnProperty2(BASE_UNITS, key)) {
+      if (hasOwnProperty(BASE_UNITS, key)) {
         BASE_UNITS[key].key = key;
       }
     }
@@ -23858,14 +25786,14 @@ var meta_bind_publish = (() => {
         name: "degF",
         base: BASE_UNITS.TEMPERATURE,
         prefixes: PREFIXES.SHORT,
-        value: 1 / 1.8,
+        value: new _Fraction(5, 9),
         offset: 459.67
       },
       degR: {
         name: "degR",
         base: BASE_UNITS.TEMPERATURE,
         prefixes: PREFIXES.SHORT,
-        value: 1 / 1.8,
+        value: new _Fraction(5, 9),
         offset: 0
       },
       kelvin: {
@@ -23886,14 +25814,14 @@ var meta_bind_publish = (() => {
         name: "fahrenheit",
         base: BASE_UNITS.TEMPERATURE,
         prefixes: PREFIXES.LONG,
-        value: 1 / 1.8,
+        value: new _Fraction(5, 9),
         offset: 459.67
       },
       rankine: {
         name: "rankine",
         base: BASE_UNITS.TEMPERATURE,
         prefixes: PREFIXES.LONG,
-        value: 1 / 1.8,
+        value: new _Fraction(5, 9),
         offset: 0
       },
       mol: {
@@ -23990,14 +25918,14 @@ var meta_bind_publish = (() => {
       joule: {
         name: "joule",
         base: BASE_UNITS.ENERGY,
-        prefixes: PREFIXES.SHORT,
+        prefixes: PREFIXES.LONG,
         value: 1,
         offset: 0
       },
       erg: {
         name: "erg",
         base: BASE_UNITS.ENERGY,
-        prefixes: PREFIXES.NONE,
+        prefixes: PREFIXES.SHORTLONG,
         value: 1e-7,
         offset: 0
       },
@@ -24517,16 +26445,16 @@ var meta_bind_publish = (() => {
     };
     UNIT_SYSTEMS.auto = JSON.parse(JSON.stringify(UNIT_SYSTEMS.si));
     var currentUnitSystem = UNIT_SYSTEMS.auto;
-    Unit2.setUnitSystem = function(name302) {
-      if (hasOwnProperty2(UNIT_SYSTEMS, name302)) {
-        currentUnitSystem = UNIT_SYSTEMS[name302];
+    Unit2.setUnitSystem = function(name309) {
+      if (hasOwnProperty(UNIT_SYSTEMS, name309)) {
+        currentUnitSystem = UNIT_SYSTEMS[name309];
       } else {
-        throw new Error("Unit system " + name302 + " does not exist. Choices are: " + Object.keys(UNIT_SYSTEMS).join(", "));
+        throw new Error("Unit system " + name309 + " does not exist. Choices are: " + Object.keys(UNIT_SYSTEMS).join(", "));
       }
     };
     Unit2.getUnitSystem = function() {
       for (var _key in UNIT_SYSTEMS) {
-        if (hasOwnProperty2(UNIT_SYSTEMS, _key)) {
+        if (hasOwnProperty(UNIT_SYSTEMS, _key)) {
           if (UNIT_SYSTEMS[_key] === currentUnitSystem) {
             return _key;
           }
@@ -24535,6 +26463,8 @@ var meta_bind_publish = (() => {
     };
     Unit2.typeConverters = {
       BigNumber: function BigNumber2(x) {
+        if (x !== null && x !== void 0 && x.isFraction)
+          return new _BigNumber(x.n).div(x.d).times(x.s);
         return new _BigNumber(x + "");
       },
       Fraction: function Fraction3(x) {
@@ -24543,7 +26473,9 @@ var meta_bind_publish = (() => {
       Complex: function Complex4(x) {
         return x;
       },
-      number: function number3(x) {
+      number: function number2(x) {
+        if (x !== null && x !== void 0 && x.isFraction)
+          return _number(x);
         return x;
       }
     };
@@ -24561,17 +26493,17 @@ var meta_bind_publish = (() => {
       return Unit2.typeConverters[type];
     };
     for (var _key2 in UNITS) {
-      if (hasOwnProperty2(UNITS, _key2)) {
+      if (hasOwnProperty(UNITS, _key2)) {
         var unit2 = UNITS[_key2];
         unit2.dimensions = unit2.base.dimensions;
       }
     }
     for (var _name2 in ALIASES) {
-      if (hasOwnProperty2(ALIASES, _name2)) {
+      if (hasOwnProperty(ALIASES, _name2)) {
         var _unit2 = UNITS[ALIASES[_name2]];
         var alias = {};
         for (var _key3 in _unit2) {
-          if (hasOwnProperty2(_unit2, _key3)) {
+          if (hasOwnProperty(_unit2, _key3)) {
             alias[_key3] = _unit2[_key3];
           }
         }
@@ -24582,14 +26514,14 @@ var meta_bind_publish = (() => {
     Unit2.isValidAlpha = function isValidAlpha(c2) {
       return /^[a-zA-Z]$/.test(c2);
     };
-    function assertUnitNameIsValid(name302) {
-      for (var i2 = 0; i2 < name302.length; i2++) {
-        c = name302.charAt(i2);
+    function assertUnitNameIsValid(name309) {
+      for (var i2 = 0; i2 < name309.length; i2++) {
+        c = name309.charAt(i2);
         if (i2 === 0 && !Unit2.isValidAlpha(c)) {
-          throw new Error('Invalid unit name (must begin with alpha character): "' + name302 + '"');
+          throw new Error('Invalid unit name (must begin with alpha character): "' + name309 + '"');
         }
         if (i2 > 0 && !(Unit2.isValidAlpha(c) || isDigit(c))) {
-          throw new Error('Invalid unit name (only alphanumeric characters are allowed): "' + name302 + '"');
+          throw new Error('Invalid unit name (only alphanumeric characters are allowed): "' + name309 + '"');
         }
       }
     }
@@ -24599,7 +26531,7 @@ var meta_bind_publish = (() => {
       }
       if (options && options.override) {
         for (var _key4 in obj) {
-          if (hasOwnProperty2(obj, _key4)) {
+          if (hasOwnProperty(obj, _key4)) {
             Unit2.deleteUnit(_key4);
           }
           if (obj[_key4].aliases) {
@@ -24611,23 +26543,23 @@ var meta_bind_publish = (() => {
       }
       var lastUnit;
       for (var _key5 in obj) {
-        if (hasOwnProperty2(obj, _key5)) {
+        if (hasOwnProperty(obj, _key5)) {
           lastUnit = Unit2.createUnitSingle(_key5, obj[_key5]);
         }
       }
       return lastUnit;
     };
-    Unit2.createUnitSingle = function(name302, obj) {
+    Unit2.createUnitSingle = function(name309, obj) {
       if (typeof obj === "undefined" || obj === null) {
         obj = {};
       }
-      if (typeof name302 !== "string") {
+      if (typeof name309 !== "string") {
         throw new TypeError("createUnitSingle expects first parameter to be of type 'string'");
       }
-      if (hasOwnProperty2(UNITS, name302)) {
-        throw new Error('Cannot create unit "' + name302 + '": a unit with that name already exists');
+      if (hasOwnProperty(UNITS, name309)) {
+        throw new Error('Cannot create unit "' + name309 + '": a unit with that name already exists');
       }
-      assertUnitNameIsValid(name302);
+      assertUnitNameIsValid(name309);
       var defUnit = null;
       var aliases = [];
       var offset = 0;
@@ -24649,11 +26581,11 @@ var meta_bind_publish = (() => {
           aliases = obj.aliases.valueOf();
         }
       } else {
-        throw new TypeError('Cannot create unit "' + name302 + '" from "' + obj.toString() + '": expecting "string" or "Unit" or "Object"');
+        throw new TypeError('Cannot create unit "' + name309 + '" from "' + obj.toString() + '": expecting "string" or "Unit" or "Object"');
       }
       if (aliases) {
         for (var i2 = 0; i2 < aliases.length; i2++) {
-          if (hasOwnProperty2(UNITS, aliases[i2])) {
+          if (hasOwnProperty(UNITS, aliases[i2])) {
             throw new Error('Cannot create alias "' + aliases[i2] + '": a unit with that name already exists');
           }
         }
@@ -24664,7 +26596,7 @@ var meta_bind_publish = (() => {
             allowNoUnits: true
           });
         } catch (ex) {
-          ex.message = 'Could not create unit "' + name302 + '" from "' + definition + '": ' + ex.message;
+          ex.message = 'Could not create unit "' + name309 + '" from "' + definition + '": ' + ex.message;
           throw ex;
         }
       } else if (definition && definition.type === "Unit") {
@@ -24679,13 +26611,13 @@ var meta_bind_publish = (() => {
       }
       var newUnit = {};
       if (!defUnit) {
-        baseName = baseName || name302 + "_STUFF";
+        baseName = baseName || name309 + "_STUFF";
         if (BASE_DIMENSIONS.indexOf(baseName) >= 0) {
-          throw new Error('Cannot create new base unit "' + name302 + '": a base unit with that name already exists (and cannot be overridden)');
+          throw new Error('Cannot create new base unit "' + name309 + '": a base unit with that name already exists (and cannot be overridden)');
         }
         BASE_DIMENSIONS.push(baseName);
         for (var b in BASE_UNITS) {
-          if (hasOwnProperty2(BASE_UNITS, b)) {
+          if (hasOwnProperty(BASE_UNITS, b)) {
             BASE_UNITS[b].dimensions[BASE_DIMENSIONS.length - 1] = 0;
           }
         }
@@ -24699,7 +26631,7 @@ var meta_bind_publish = (() => {
         newBaseUnit.key = baseName;
         BASE_UNITS[baseName] = newBaseUnit;
         newUnit = {
-          name: name302,
+          name: name309,
           value: 1,
           dimensions: BASE_UNITS[baseName].dimensions.slice(0),
           prefixes,
@@ -24712,7 +26644,7 @@ var meta_bind_publish = (() => {
         };
       } else {
         newUnit = {
-          name: name302,
+          name: name309,
           value: defUnit.value,
           dimensions: defUnit.dimensions.slice(0),
           prefixes,
@@ -24720,7 +26652,7 @@ var meta_bind_publish = (() => {
         };
         var anyMatch = false;
         for (var _i7 in BASE_UNITS) {
-          if (hasOwnProperty2(BASE_UNITS, _i7)) {
+          if (hasOwnProperty(BASE_UNITS, _i7)) {
             var match = true;
             for (var j = 0; j < BASE_DIMENSIONS.length; j++) {
               if (Math.abs((newUnit.dimensions[j] || 0) - (BASE_UNITS[_i7].dimensions[j] || 0)) > 1e-12) {
@@ -24736,7 +26668,7 @@ var meta_bind_publish = (() => {
           }
         }
         if (!anyMatch) {
-          baseName = baseName || name302 + "_STUFF";
+          baseName = baseName || name309 + "_STUFF";
           var _newBaseUnit = {
             dimensions: defUnit.dimensions.slice(0)
           };
@@ -24749,12 +26681,12 @@ var meta_bind_publish = (() => {
           newUnit.base = BASE_UNITS[baseName];
         }
       }
-      Unit2.UNITS[name302] = newUnit;
+      Unit2.UNITS[name309] = newUnit;
       for (var _i8 = 0; _i8 < aliases.length; _i8++) {
         var aliasName = aliases[_i8];
         var _alias = {};
         for (var _key6 in newUnit) {
-          if (hasOwnProperty2(newUnit, _key6)) {
+          if (hasOwnProperty(newUnit, _key6)) {
             _alias[_key6] = newUnit[_key6];
           }
         }
@@ -24762,10 +26694,10 @@ var meta_bind_publish = (() => {
         Unit2.UNITS[aliasName] = _alias;
       }
       delete _findUnit.cache;
-      return new Unit2(null, name302);
+      return new Unit2(null, name309);
     };
-    Unit2.deleteUnit = function(name302) {
-      delete Unit2.UNITS[name302];
+    Unit2.deleteUnit = function(name309) {
+      delete Unit2.UNITS[name309];
     };
     Unit2.PREFIXES = PREFIXES;
     Unit2.BASE_DIMENSIONS = BASE_DIMENSIONS;
@@ -24778,14 +26710,14 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/type/unit/function/unit.js
-  var name159 = "unit";
-  var dependencies159 = ["typed", "Unit"];
-  var createUnitFunction = /* @__PURE__ */ factory(name159, dependencies159, (_ref) => {
+  var name161 = "unit";
+  var dependencies161 = ["typed", "Unit"];
+  var createUnitFunction = /* @__PURE__ */ factory(name161, dependencies161, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       Unit: Unit2
     } = _ref;
-    return typed2(name159, {
+    return typed3(name161, {
       Unit: function Unit3(x) {
         return x.clone();
       },
@@ -24797,25 +26729,25 @@ var meta_bind_publish = (() => {
           allowNoUnits: true
         });
       },
-      "number | BigNumber | Fraction | Complex, string | Unit": function numberBigNumberFractionComplexStringUnit(value, unit2) {
-        return new Unit2(value, unit2);
+      "number | BigNumber | Fraction | Complex, string | Unit": function numberBigNumberFractionComplexStringUnit(value2, unit2) {
+        return new Unit2(value2, unit2);
       },
-      "number | BigNumber | Fraction": function numberBigNumberFraction(value) {
-        return new Unit2(value);
+      "number | BigNumber | Fraction": function numberBigNumberFraction(value2) {
+        return new Unit2(value2);
       },
-      "Array | Matrix": typed2.referToSelf((self2) => (x) => deepMap(x, self2))
+      "Array | Matrix": typed3.referToSelf((self2) => (x) => deepMap(x, self2))
     });
   });
 
   // node_modules/mathjs/lib/esm/type/matrix/function/sparse.js
-  var name160 = "sparse";
-  var dependencies160 = ["typed", "SparseMatrix"];
-  var createSparse = /* @__PURE__ */ factory(name160, dependencies160, (_ref) => {
+  var name162 = "sparse";
+  var dependencies162 = ["typed", "SparseMatrix"];
+  var createSparse = /* @__PURE__ */ factory(name162, dependencies162, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       SparseMatrix: SparseMatrix2
     } = _ref;
-    return typed2(name160, {
+    return typed3(name162, {
       "": function _() {
         return new SparseMatrix2([]);
       },
@@ -24832,48 +26764,48 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/type/unit/function/createUnit.js
-  var name161 = "createUnit";
-  var dependencies161 = ["typed", "Unit"];
-  var createCreateUnit = /* @__PURE__ */ factory(name161, dependencies161, (_ref) => {
+  var name163 = "createUnit";
+  var dependencies163 = ["typed", "Unit"];
+  var createCreateUnit = /* @__PURE__ */ factory(name163, dependencies163, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       Unit: Unit2
     } = _ref;
-    return typed2(name161, {
+    return typed3(name163, {
       "Object, Object": function ObjectObject(obj, options) {
         return Unit2.createUnit(obj, options);
       },
       Object: function Object2(obj) {
         return Unit2.createUnit(obj, {});
       },
-      "string, Unit | string | Object, Object": function stringUnitStringObjectObject(name302, def, options) {
+      "string, Unit | string | Object, Object": function stringUnitStringObjectObject(name309, def, options) {
         var obj = {};
-        obj[name302] = def;
+        obj[name309] = def;
         return Unit2.createUnit(obj, options);
       },
-      "string, Unit | string | Object": function stringUnitStringObject(name302, def) {
+      "string, Unit | string | Object": function stringUnitStringObject(name309, def) {
         var obj = {};
-        obj[name302] = def;
+        obj[name309] = def;
         return Unit2.createUnit(obj, {});
       },
-      string: function string2(name302) {
+      string: function string2(name309) {
         var obj = {};
-        obj[name302] = {};
+        obj[name309] = {};
         return Unit2.createUnit(obj, {});
       }
     });
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/acos.js
-  var name162 = "acos";
-  var dependencies162 = ["typed", "config", "Complex"];
-  var createAcos = /* @__PURE__ */ factory(name162, dependencies162, (_ref) => {
+  var name164 = "acos";
+  var dependencies164 = ["typed", "config", "Complex"];
+  var createAcos = /* @__PURE__ */ factory(name164, dependencies164, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       Complex: Complex3
     } = _ref;
-    return typed2(name162, {
+    return typed3(name164, {
       number: function number2(x) {
         if (x >= -1 && x <= 1 || config4.predictable) {
           return Math.acos(x);
@@ -24891,15 +26823,15 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/acosh.js
-  var name163 = "acosh";
-  var dependencies163 = ["typed", "config", "Complex"];
-  var createAcosh = /* @__PURE__ */ factory(name163, dependencies163, (_ref) => {
+  var name165 = "acosh";
+  var dependencies165 = ["typed", "config", "Complex"];
+  var createAcosh = /* @__PURE__ */ factory(name165, dependencies165, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       Complex: Complex3
     } = _ref;
-    return typed2(name163, {
+    return typed3(name165, {
       number: function number2(x) {
         if (x >= 1 || config4.predictable) {
           return acoshNumber(x);
@@ -24919,14 +26851,14 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/acot.js
-  var name164 = "acot";
-  var dependencies164 = ["typed", "BigNumber"];
-  var createAcot = /* @__PURE__ */ factory(name164, dependencies164, (_ref) => {
+  var name166 = "acot";
+  var dependencies166 = ["typed", "BigNumber"];
+  var createAcot = /* @__PURE__ */ factory(name166, dependencies166, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       BigNumber: _BigNumber
     } = _ref;
-    return typed2(name164, {
+    return typed3(name166, {
       number: acotNumber,
       Complex: function Complex3(x) {
         return x.acot();
@@ -24938,16 +26870,16 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/acoth.js
-  var name165 = "acoth";
-  var dependencies165 = ["typed", "config", "Complex", "BigNumber"];
-  var createAcoth = /* @__PURE__ */ factory(name165, dependencies165, (_ref) => {
+  var name167 = "acoth";
+  var dependencies167 = ["typed", "config", "Complex", "BigNumber"];
+  var createAcoth = /* @__PURE__ */ factory(name167, dependencies167, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       Complex: Complex3,
       BigNumber: _BigNumber
     } = _ref;
-    return typed2(name165, {
+    return typed3(name167, {
       number: function number2(x) {
         if (x >= 1 || x <= -1 || config4.predictable) {
           return acothNumber(x);
@@ -24964,16 +26896,16 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/acsc.js
-  var name166 = "acsc";
-  var dependencies166 = ["typed", "config", "Complex", "BigNumber"];
-  var createAcsc = /* @__PURE__ */ factory(name166, dependencies166, (_ref) => {
+  var name168 = "acsc";
+  var dependencies168 = ["typed", "config", "Complex", "BigNumber"];
+  var createAcsc = /* @__PURE__ */ factory(name168, dependencies168, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       Complex: Complex3,
       BigNumber: _BigNumber
     } = _ref;
-    return typed2(name166, {
+    return typed3(name168, {
       number: function number2(x) {
         if (x <= -1 || x >= 1 || config4.predictable) {
           return acscNumber(x);
@@ -24990,14 +26922,14 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/acsch.js
-  var name167 = "acsch";
-  var dependencies167 = ["typed", "BigNumber"];
-  var createAcsch = /* @__PURE__ */ factory(name167, dependencies167, (_ref) => {
+  var name169 = "acsch";
+  var dependencies169 = ["typed", "BigNumber"];
+  var createAcsch = /* @__PURE__ */ factory(name169, dependencies169, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       BigNumber: _BigNumber
     } = _ref;
-    return typed2(name167, {
+    return typed3(name169, {
       number: acschNumber,
       Complex: function Complex3(x) {
         return x.acsch();
@@ -25009,16 +26941,16 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/asec.js
-  var name168 = "asec";
-  var dependencies168 = ["typed", "config", "Complex", "BigNumber"];
-  var createAsec = /* @__PURE__ */ factory(name168, dependencies168, (_ref) => {
+  var name170 = "asec";
+  var dependencies170 = ["typed", "config", "Complex", "BigNumber"];
+  var createAsec = /* @__PURE__ */ factory(name170, dependencies170, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       Complex: Complex3,
       BigNumber: _BigNumber
     } = _ref;
-    return typed2(name168, {
+    return typed3(name170, {
       number: function number2(x) {
         if (x <= -1 || x >= 1 || config4.predictable) {
           return asecNumber(x);
@@ -25035,16 +26967,16 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/asech.js
-  var name169 = "asech";
-  var dependencies169 = ["typed", "config", "Complex", "BigNumber"];
-  var createAsech = /* @__PURE__ */ factory(name169, dependencies169, (_ref) => {
+  var name171 = "asech";
+  var dependencies171 = ["typed", "config", "Complex", "BigNumber"];
+  var createAsech = /* @__PURE__ */ factory(name171, dependencies171, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       Complex: Complex3,
       BigNumber: _BigNumber
     } = _ref;
-    return typed2(name169, {
+    return typed3(name171, {
       number: function number2(x) {
         if (x <= 1 && x >= -1 || config4.predictable) {
           var xInv = 1 / x;
@@ -25066,15 +26998,15 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/asin.js
-  var name170 = "asin";
-  var dependencies170 = ["typed", "config", "Complex"];
-  var createAsin = /* @__PURE__ */ factory(name170, dependencies170, (_ref) => {
+  var name172 = "asin";
+  var dependencies172 = ["typed", "config", "Complex"];
+  var createAsin = /* @__PURE__ */ factory(name172, dependencies172, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       Complex: Complex3
     } = _ref;
-    return typed2(name170, {
+    return typed3(name172, {
       number: function number2(x) {
         if (x >= -1 && x <= 1 || config4.predictable) {
           return Math.asin(x);
@@ -25092,13 +27024,13 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/asinh.js
-  var name171 = "asinh";
-  var dependencies171 = ["typed"];
-  var createAsinh = /* @__PURE__ */ factory(name171, dependencies171, (_ref) => {
+  var name173 = "asinh";
+  var dependencies173 = ["typed"];
+  var createAsinh = /* @__PURE__ */ factory(name173, dependencies173, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2("asinh", {
+    return typed3("asinh", {
       number: asinhNumber,
       Complex: function Complex3(x) {
         return x.asinh();
@@ -25110,13 +27042,13 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/atan.js
-  var name172 = "atan";
-  var dependencies172 = ["typed"];
-  var createAtan = /* @__PURE__ */ factory(name172, dependencies172, (_ref) => {
+  var name174 = "atan";
+  var dependencies174 = ["typed"];
+  var createAtan = /* @__PURE__ */ factory(name174, dependencies174, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2("atan", {
+    return typed3("atan", {
       number: function number2(x) {
         return Math.atan(x);
       },
@@ -25130,42 +27062,42 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/atan2.js
-  var name173 = "atan2";
-  var dependencies173 = ["typed", "matrix", "equalScalar", "BigNumber", "DenseMatrix", "concat"];
-  var createAtan2 = /* @__PURE__ */ factory(name173, dependencies173, (_ref) => {
+  var name175 = "atan2";
+  var dependencies175 = ["typed", "matrix", "equalScalar", "BigNumber", "DenseMatrix", "concat"];
+  var createAtan2 = /* @__PURE__ */ factory(name175, dependencies175, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       equalScalar: equalScalar2,
       BigNumber: BigNumber2,
       DenseMatrix: DenseMatrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo02xDS0 = createMatAlgo02xDS0({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo03xDSf = createMatAlgo03xDSf({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo09xS0Sf = createMatAlgo09xS0Sf({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo11xS0s = createMatAlgo11xS0s({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo12xSfs = createMatAlgo12xSfs({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
-    return typed2(name173, {
+    return typed3(name175, {
       "number, number": Math.atan2,
       "BigNumber, BigNumber": (y, x) => BigNumber2.atan2(y, x)
     }, matrixAlgorithmSuite({
@@ -25179,15 +27111,15 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/atanh.js
-  var name174 = "atanh";
-  var dependencies174 = ["typed", "config", "Complex"];
-  var createAtanh = /* @__PURE__ */ factory(name174, dependencies174, (_ref) => {
+  var name176 = "atanh";
+  var dependencies176 = ["typed", "config", "Complex"];
+  var createAtanh = /* @__PURE__ */ factory(name176, dependencies176, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       Complex: Complex3
     } = _ref;
-    return typed2(name174, {
+    return typed3(name176, {
       number: function number2(x) {
         if (x <= 1 && x >= -1 || config4.predictable) {
           return atanhNumber(x);
@@ -25206,59 +27138,59 @@ var meta_bind_publish = (() => {
   // node_modules/mathjs/lib/esm/function/trigonometry/trigUnit.js
   var createTrigUnit = /* @__PURE__ */ factory("trigUnit", ["typed"], (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
     return {
-      Unit: typed2.referToSelf((self2) => (x) => {
+      Unit: typed3.referToSelf((self2) => (x) => {
         if (!x.hasBase(x.constructor.BASE_UNITS.ANGLE)) {
           throw new TypeError("Unit in function cot is no angle");
         }
-        return typed2.find(self2, x.valueType())(x.value);
+        return typed3.find(self2, x.valueType())(x.value);
       })
     };
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/cos.js
-  var name175 = "cos";
-  var dependencies175 = ["typed"];
-  var createCos = /* @__PURE__ */ factory(name175, dependencies175, (_ref) => {
+  var name177 = "cos";
+  var dependencies177 = ["typed"];
+  var createCos = /* @__PURE__ */ factory(name177, dependencies177, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
     var trigUnit = createTrigUnit({
-      typed: typed2
+      typed: typed3
     });
-    return typed2(name175, {
+    return typed3(name177, {
       number: Math.cos,
       "Complex | BigNumber": (x) => x.cos()
     }, trigUnit);
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/cosh.js
-  var name176 = "cosh";
-  var dependencies176 = ["typed"];
-  var createCosh = /* @__PURE__ */ factory(name176, dependencies176, (_ref) => {
+  var name178 = "cosh";
+  var dependencies178 = ["typed"];
+  var createCosh = /* @__PURE__ */ factory(name178, dependencies178, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name176, {
+    return typed3(name178, {
       number: cosh,
       "Complex | BigNumber": (x) => x.cosh()
     });
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/cot.js
-  var name177 = "cot";
-  var dependencies177 = ["typed", "BigNumber"];
-  var createCot = /* @__PURE__ */ factory(name177, dependencies177, (_ref) => {
+  var name179 = "cot";
+  var dependencies179 = ["typed", "BigNumber"];
+  var createCot = /* @__PURE__ */ factory(name179, dependencies179, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       BigNumber: _BigNumber
     } = _ref;
     var trigUnit = createTrigUnit({
-      typed: typed2
+      typed: typed3
     });
-    return typed2(name177, {
+    return typed3(name179, {
       number: cotNumber,
       Complex: (x) => x.cot(),
       BigNumber: (x) => new _BigNumber(1).div(x.tan())
@@ -25266,14 +27198,14 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/coth.js
-  var name178 = "coth";
-  var dependencies178 = ["typed", "BigNumber"];
-  var createCoth = /* @__PURE__ */ factory(name178, dependencies178, (_ref) => {
+  var name180 = "coth";
+  var dependencies180 = ["typed", "BigNumber"];
+  var createCoth = /* @__PURE__ */ factory(name180, dependencies180, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       BigNumber: _BigNumber
     } = _ref;
-    return typed2(name178, {
+    return typed3(name180, {
       number: cothNumber,
       Complex: (x) => x.coth(),
       BigNumber: (x) => new _BigNumber(1).div(x.tanh())
@@ -25281,17 +27213,17 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/csc.js
-  var name179 = "csc";
-  var dependencies179 = ["typed", "BigNumber"];
-  var createCsc = /* @__PURE__ */ factory(name179, dependencies179, (_ref) => {
+  var name181 = "csc";
+  var dependencies181 = ["typed", "BigNumber"];
+  var createCsc = /* @__PURE__ */ factory(name181, dependencies181, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       BigNumber: _BigNumber
     } = _ref;
     var trigUnit = createTrigUnit({
-      typed: typed2
+      typed: typed3
     });
-    return typed2(name179, {
+    return typed3(name181, {
       number: cscNumber,
       Complex: (x) => x.csc(),
       BigNumber: (x) => new _BigNumber(1).div(x.sin())
@@ -25299,14 +27231,14 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/csch.js
-  var name180 = "csch";
-  var dependencies180 = ["typed", "BigNumber"];
-  var createCsch = /* @__PURE__ */ factory(name180, dependencies180, (_ref) => {
+  var name182 = "csch";
+  var dependencies182 = ["typed", "BigNumber"];
+  var createCsch = /* @__PURE__ */ factory(name182, dependencies182, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       BigNumber: _BigNumber
     } = _ref;
-    return typed2(name180, {
+    return typed3(name182, {
       number: cschNumber,
       Complex: (x) => x.csch(),
       BigNumber: (x) => new _BigNumber(1).div(x.sinh())
@@ -25314,17 +27246,17 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/sec.js
-  var name181 = "sec";
-  var dependencies181 = ["typed", "BigNumber"];
-  var createSec = /* @__PURE__ */ factory(name181, dependencies181, (_ref) => {
+  var name183 = "sec";
+  var dependencies183 = ["typed", "BigNumber"];
+  var createSec = /* @__PURE__ */ factory(name183, dependencies183, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       BigNumber: _BigNumber
     } = _ref;
     var trigUnit = createTrigUnit({
-      typed: typed2
+      typed: typed3
     });
-    return typed2(name181, {
+    return typed3(name183, {
       number: secNumber,
       Complex: (x) => x.sec(),
       BigNumber: (x) => new _BigNumber(1).div(x.cos())
@@ -25332,14 +27264,14 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/sech.js
-  var name182 = "sech";
-  var dependencies182 = ["typed", "BigNumber"];
-  var createSech = /* @__PURE__ */ factory(name182, dependencies182, (_ref) => {
+  var name184 = "sech";
+  var dependencies184 = ["typed", "BigNumber"];
+  var createSech = /* @__PURE__ */ factory(name184, dependencies184, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       BigNumber: _BigNumber
     } = _ref;
-    return typed2(name182, {
+    return typed3(name184, {
       number: sechNumber,
       Complex: (x) => x.sech(),
       BigNumber: (x) => new _BigNumber(1).div(x.cosh())
@@ -25347,76 +27279,76 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/sin.js
-  var name183 = "sin";
-  var dependencies183 = ["typed"];
-  var createSin = /* @__PURE__ */ factory(name183, dependencies183, (_ref) => {
+  var name185 = "sin";
+  var dependencies185 = ["typed"];
+  var createSin = /* @__PURE__ */ factory(name185, dependencies185, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
     var trigUnit = createTrigUnit({
-      typed: typed2
+      typed: typed3
     });
-    return typed2(name183, {
+    return typed3(name185, {
       number: Math.sin,
       "Complex | BigNumber": (x) => x.sin()
     }, trigUnit);
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/sinh.js
-  var name184 = "sinh";
-  var dependencies184 = ["typed"];
-  var createSinh = /* @__PURE__ */ factory(name184, dependencies184, (_ref) => {
+  var name186 = "sinh";
+  var dependencies186 = ["typed"];
+  var createSinh = /* @__PURE__ */ factory(name186, dependencies186, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name184, {
+    return typed3(name186, {
       number: sinhNumber,
       "Complex | BigNumber": (x) => x.sinh()
     });
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/tan.js
-  var name185 = "tan";
-  var dependencies185 = ["typed"];
-  var createTan = /* @__PURE__ */ factory(name185, dependencies185, (_ref) => {
+  var name187 = "tan";
+  var dependencies187 = ["typed"];
+  var createTan = /* @__PURE__ */ factory(name187, dependencies187, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
     var trigUnit = createTrigUnit({
-      typed: typed2
+      typed: typed3
     });
-    return typed2(name185, {
+    return typed3(name187, {
       number: Math.tan,
       "Complex | BigNumber": (x) => x.tan()
     }, trigUnit);
   });
 
   // node_modules/mathjs/lib/esm/function/trigonometry/tanh.js
-  var name186 = "tanh";
-  var dependencies186 = ["typed"];
-  var createTanh = /* @__PURE__ */ factory(name186, dependencies186, (_ref) => {
+  var name188 = "tanh";
+  var dependencies188 = ["typed"];
+  var createTanh = /* @__PURE__ */ factory(name188, dependencies188, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2("tanh", {
+    return typed3("tanh", {
       number: tanh,
       "Complex | BigNumber": (x) => x.tanh()
     });
   });
 
   // node_modules/mathjs/lib/esm/function/set/setCartesian.js
-  var name187 = "setCartesian";
-  var dependencies187 = ["typed", "size", "subset", "compareNatural", "Index", "DenseMatrix"];
-  var createSetCartesian = /* @__PURE__ */ factory(name187, dependencies187, (_ref) => {
+  var name189 = "setCartesian";
+  var dependencies189 = ["typed", "size", "subset", "compareNatural", "Index", "DenseMatrix"];
+  var createSetCartesian = /* @__PURE__ */ factory(name189, dependencies189, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       size: size2,
       subset: subset2,
       compareNatural: compareNatural2,
       Index: Index2,
       DenseMatrix: DenseMatrix2
     } = _ref;
-    return typed2(name187, {
+    return typed3(name189, {
       "Array | Matrix, Array | Matrix": function ArrayMatrixArrayMatrix(a1, a2) {
         var result = [];
         if (subset2(size2(a1), new Index2(0)) !== 0 && subset2(size2(a2), new Index2(0)) !== 0) {
@@ -25438,18 +27370,18 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/set/setDifference.js
-  var name188 = "setDifference";
-  var dependencies188 = ["typed", "size", "subset", "compareNatural", "Index", "DenseMatrix"];
-  var createSetDifference = /* @__PURE__ */ factory(name188, dependencies188, (_ref) => {
+  var name190 = "setDifference";
+  var dependencies190 = ["typed", "size", "subset", "compareNatural", "Index", "DenseMatrix"];
+  var createSetDifference = /* @__PURE__ */ factory(name190, dependencies190, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       size: size2,
       subset: subset2,
       compareNatural: compareNatural2,
       Index: Index2,
       DenseMatrix: DenseMatrix2
     } = _ref;
-    return typed2(name188, {
+    return typed3(name190, {
       "Array | Matrix, Array | Matrix": function ArrayMatrixArrayMatrix(a1, a2) {
         var result;
         if (subset2(size2(a1), new Index2(0)) === 0) {
@@ -25483,18 +27415,18 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/set/setDistinct.js
-  var name189 = "setDistinct";
-  var dependencies189 = ["typed", "size", "subset", "compareNatural", "Index", "DenseMatrix"];
-  var createSetDistinct = /* @__PURE__ */ factory(name189, dependencies189, (_ref) => {
+  var name191 = "setDistinct";
+  var dependencies191 = ["typed", "size", "subset", "compareNatural", "Index", "DenseMatrix"];
+  var createSetDistinct = /* @__PURE__ */ factory(name191, dependencies191, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       size: size2,
       subset: subset2,
       compareNatural: compareNatural2,
       Index: Index2,
       DenseMatrix: DenseMatrix2
     } = _ref;
-    return typed2(name189, {
+    return typed3(name191, {
       "Array | Matrix": function ArrayMatrix(a) {
         var result;
         if (subset2(size2(a), new Index2(0)) === 0) {
@@ -25518,18 +27450,18 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/set/setIntersect.js
-  var name190 = "setIntersect";
-  var dependencies190 = ["typed", "size", "subset", "compareNatural", "Index", "DenseMatrix"];
-  var createSetIntersect = /* @__PURE__ */ factory(name190, dependencies190, (_ref) => {
+  var name192 = "setIntersect";
+  var dependencies192 = ["typed", "size", "subset", "compareNatural", "Index", "DenseMatrix"];
+  var createSetIntersect = /* @__PURE__ */ factory(name192, dependencies192, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       size: size2,
       subset: subset2,
       compareNatural: compareNatural2,
       Index: Index2,
       DenseMatrix: DenseMatrix2
     } = _ref;
-    return typed2(name190, {
+    return typed3(name192, {
       "Array | Matrix, Array | Matrix": function ArrayMatrixArrayMatrix(a1, a2) {
         var result;
         if (subset2(size2(a1), new Index2(0)) === 0 || subset2(size2(a2), new Index2(0)) === 0) {
@@ -25556,17 +27488,17 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/set/setIsSubset.js
-  var name191 = "setIsSubset";
-  var dependencies191 = ["typed", "size", "subset", "compareNatural", "Index"];
-  var createSetIsSubset = /* @__PURE__ */ factory(name191, dependencies191, (_ref) => {
+  var name193 = "setIsSubset";
+  var dependencies193 = ["typed", "size", "subset", "compareNatural", "Index"];
+  var createSetIsSubset = /* @__PURE__ */ factory(name193, dependencies193, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       size: size2,
       subset: subset2,
       compareNatural: compareNatural2,
       Index: Index2
     } = _ref;
-    return typed2(name191, {
+    return typed3(name193, {
       "Array | Matrix, Array | Matrix": function ArrayMatrixArrayMatrix(a1, a2) {
         if (subset2(size2(a1), new Index2(0)) === 0) {
           return true;
@@ -25594,17 +27526,17 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/set/setMultiplicity.js
-  var name192 = "setMultiplicity";
-  var dependencies192 = ["typed", "size", "subset", "compareNatural", "Index"];
-  var createSetMultiplicity = /* @__PURE__ */ factory(name192, dependencies192, (_ref) => {
+  var name194 = "setMultiplicity";
+  var dependencies194 = ["typed", "size", "subset", "compareNatural", "Index"];
+  var createSetMultiplicity = /* @__PURE__ */ factory(name194, dependencies194, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       size: size2,
       subset: subset2,
       compareNatural: compareNatural2,
       Index: Index2
     } = _ref;
-    return typed2(name192, {
+    return typed3(name194, {
       "number | BigNumber | Fraction | Complex, Array | Matrix": function numberBigNumberFractionComplexArrayMatrix(e3, a) {
         if (subset2(size2(a), new Index2(0)) === 0) {
           return 0;
@@ -25622,17 +27554,17 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/set/setPowerset.js
-  var name193 = "setPowerset";
-  var dependencies193 = ["typed", "size", "subset", "compareNatural", "Index"];
-  var createSetPowerset = /* @__PURE__ */ factory(name193, dependencies193, (_ref) => {
+  var name195 = "setPowerset";
+  var dependencies195 = ["typed", "size", "subset", "compareNatural", "Index"];
+  var createSetPowerset = /* @__PURE__ */ factory(name195, dependencies195, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       size: size2,
       subset: subset2,
       compareNatural: compareNatural2,
       Index: Index2
     } = _ref;
-    return typed2(name193, {
+    return typed3(name195, {
       "Array | Matrix": function ArrayMatrix(a) {
         if (subset2(size2(a), new Index2(0)) === 0) {
           return [];
@@ -25672,14 +27604,14 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/set/setSize.js
-  var name194 = "setSize";
-  var dependencies194 = ["typed", "compareNatural"];
-  var createSetSize = /* @__PURE__ */ factory(name194, dependencies194, (_ref) => {
+  var name196 = "setSize";
+  var dependencies196 = ["typed", "compareNatural"];
+  var createSetSize = /* @__PURE__ */ factory(name196, dependencies196, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       compareNatural: compareNatural2
     } = _ref;
-    return typed2(name194, {
+    return typed3(name196, {
       "Array | Matrix": function ArrayMatrix(a) {
         return Array.isArray(a) ? flatten(a).length : flatten(a.toArray()).length;
       },
@@ -25701,18 +27633,18 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/set/setSymDifference.js
-  var name195 = "setSymDifference";
-  var dependencies195 = ["typed", "size", "concat", "subset", "setDifference", "Index"];
-  var createSetSymDifference = /* @__PURE__ */ factory(name195, dependencies195, (_ref) => {
+  var name197 = "setSymDifference";
+  var dependencies197 = ["typed", "size", "concat", "subset", "setDifference", "Index"];
+  var createSetSymDifference = /* @__PURE__ */ factory(name197, dependencies197, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       size: size2,
-      concat: concat2,
+      concat: concat3,
       subset: subset2,
       setDifference: setDifference2,
       Index: Index2
     } = _ref;
-    return typed2(name195, {
+    return typed3(name197, {
       "Array | Matrix, Array | Matrix": function ArrayMatrixArrayMatrix(a1, a2) {
         if (subset2(size2(a1), new Index2(0)) === 0) {
           return flatten(a2);
@@ -25721,25 +27653,25 @@ var meta_bind_publish = (() => {
         }
         var b1 = flatten(a1);
         var b2 = flatten(a2);
-        return concat2(setDifference2(b1, b2), setDifference2(b2, b1));
+        return concat3(setDifference2(b1, b2), setDifference2(b2, b1));
       }
     });
   });
 
   // node_modules/mathjs/lib/esm/function/set/setUnion.js
-  var name196 = "setUnion";
-  var dependencies196 = ["typed", "size", "concat", "subset", "setIntersect", "setSymDifference", "Index"];
-  var createSetUnion = /* @__PURE__ */ factory(name196, dependencies196, (_ref) => {
+  var name198 = "setUnion";
+  var dependencies198 = ["typed", "size", "concat", "subset", "setIntersect", "setSymDifference", "Index"];
+  var createSetUnion = /* @__PURE__ */ factory(name198, dependencies198, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       size: size2,
-      concat: concat2,
+      concat: concat3,
       subset: subset2,
       setIntersect: setIntersect2,
       setSymDifference: setSymDifference2,
       Index: Index2
     } = _ref;
-    return typed2(name196, {
+    return typed3(name198, {
       "Array | Matrix, Array | Matrix": function ArrayMatrixArrayMatrix(a1, a2) {
         if (subset2(size2(a1), new Index2(0)) === 0) {
           return flatten(a2);
@@ -25748,43 +27680,43 @@ var meta_bind_publish = (() => {
         }
         var b1 = flatten(a1);
         var b2 = flatten(a2);
-        return concat2(setSymDifference2(b1, b2), setIntersect2(b1, b2));
+        return concat3(setSymDifference2(b1, b2), setIntersect2(b1, b2));
       }
     });
   });
 
   // node_modules/mathjs/lib/esm/function/arithmetic/add.js
-  var name197 = "add";
-  var dependencies197 = ["typed", "matrix", "addScalar", "equalScalar", "DenseMatrix", "SparseMatrix", "concat"];
-  var createAdd = /* @__PURE__ */ factory(name197, dependencies197, (_ref) => {
+  var name199 = "add";
+  var dependencies199 = ["typed", "matrix", "addScalar", "equalScalar", "DenseMatrix", "SparseMatrix", "concat"];
+  var createAdd = /* @__PURE__ */ factory(name199, dependencies199, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       addScalar: addScalar2,
       equalScalar: equalScalar2,
       DenseMatrix: DenseMatrix2,
       SparseMatrix: SparseMatrix2,
-      concat: concat2
+      concat: concat3
     } = _ref;
     var matAlgo01xDSid = createMatAlgo01xDSid({
-      typed: typed2
+      typed: typed3
     });
     var matAlgo04xSidSid = createMatAlgo04xSidSid({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo10xSids = createMatAlgo10xSids({
-      typed: typed2,
+      typed: typed3,
       DenseMatrix: DenseMatrix2
     });
     var matrixAlgorithmSuite = createMatrixAlgorithmSuite({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      concat: concat2
+      concat: concat3
     });
-    return typed2(name197, {
+    return typed3(name199, {
       "any, any": addScalar2,
-      "any, any, ...any": typed2.referToSelf((self2) => (x, y, rest) => {
+      "any, any, ...any": typed3.referToSelf((self2) => (x, y, rest) => {
         var result = self2(x, y);
         for (var i2 = 0; i2 < rest.length; i2++) {
           result = self2(result, rest[i2]);
@@ -25800,11 +27732,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/arithmetic/hypot.js
-  var name198 = "hypot";
-  var dependencies198 = ["typed", "abs", "addScalar", "divideScalar", "multiplyScalar", "sqrt", "smaller", "isPositive"];
-  var createHypot = /* @__PURE__ */ factory(name198, dependencies198, (_ref) => {
+  var name200 = "hypot";
+  var dependencies200 = ["typed", "abs", "addScalar", "divideScalar", "multiplyScalar", "sqrt", "smaller", "isPositive"];
+  var createHypot = /* @__PURE__ */ factory(name200, dependencies200, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       abs: abs3,
       addScalar: addScalar2,
       divideScalar: divideScalar2,
@@ -25813,7 +27745,7 @@ var meta_bind_publish = (() => {
       smaller: smaller2,
       isPositive: isPositive2
     } = _ref;
-    return typed2(name198, {
+    return typed3(name200, {
       "... number | BigNumber": _hypot,
       Array: _hypot,
       Matrix: (M) => _hypot(flatten(M.toArray()))
@@ -25825,13 +27757,13 @@ var meta_bind_publish = (() => {
         if (isComplex(args[i2])) {
           throw new TypeError("Unexpected type of argument to hypot");
         }
-        var value = abs3(args[i2]);
-        if (smaller2(largest, value)) {
-          result = multiplyScalar2(result, multiplyScalar2(divideScalar2(largest, value), divideScalar2(largest, value)));
+        var value2 = abs3(args[i2]);
+        if (smaller2(largest, value2)) {
+          result = multiplyScalar2(result, multiplyScalar2(divideScalar2(largest, value2), divideScalar2(largest, value2)));
           result = addScalar2(result, 1);
-          largest = value;
+          largest = value2;
         } else {
-          result = addScalar2(result, isPositive2(value) ? multiplyScalar2(divideScalar2(value, largest), divideScalar2(value, largest)) : value);
+          result = addScalar2(result, isPositive2(value2) ? multiplyScalar2(divideScalar2(value2, largest), divideScalar2(value2, largest)) : value2);
         }
       }
       return multiplyScalar2(largest, sqrt3(result));
@@ -25839,11 +27771,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/arithmetic/norm.js
-  var name199 = "norm";
-  var dependencies199 = ["typed", "abs", "add", "pow", "conj", "sqrt", "multiply", "equalScalar", "larger", "smaller", "matrix", "ctranspose", "eigs"];
-  var createNorm = /* @__PURE__ */ factory(name199, dependencies199, (_ref) => {
+  var name201 = "norm";
+  var dependencies201 = ["typed", "abs", "add", "pow", "conj", "sqrt", "multiply", "equalScalar", "larger", "smaller", "matrix", "ctranspose", "eigs"];
+  var createNorm = /* @__PURE__ */ factory(name201, dependencies201, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       abs: abs3,
       add: add3,
       pow: pow3,
@@ -25857,7 +27789,7 @@ var meta_bind_publish = (() => {
       ctranspose: ctranspose2,
       eigs: eigs2
     } = _ref;
-    return typed2(name199, {
+    return typed3(name201, {
       number: Math.abs,
       Complex: function Complex3(x) {
         return x.abs();
@@ -25883,8 +27815,8 @@ var meta_bind_publish = (() => {
     });
     function _vectorNormPlusInfinity(x) {
       var pinf = 0;
-      x.forEach(function(value) {
-        var v = abs3(value);
+      x.forEach(function(value2) {
+        var v = abs3(value2);
         if (larger2(v, pinf)) {
           pinf = v;
         }
@@ -25893,8 +27825,8 @@ var meta_bind_publish = (() => {
     }
     function _vectorNormMinusInfinity(x) {
       var ninf;
-      x.forEach(function(value) {
-        var v = abs3(value);
+      x.forEach(function(value2) {
+        var v = abs3(value2);
         if (!ninf || smaller2(v, ninf)) {
           ninf = v;
         }
@@ -25914,8 +27846,8 @@ var meta_bind_publish = (() => {
       if (typeof p === "number" && !isNaN(p)) {
         if (!equalScalar2(p, 0)) {
           var n = 0;
-          x.forEach(function(value) {
-            n = add3(pow3(abs3(value), p), n);
+          x.forEach(function(value2) {
+            n = add3(pow3(abs3(value2), p), n);
           }, true);
           return pow3(n, 1 / p);
         }
@@ -25925,17 +27857,17 @@ var meta_bind_publish = (() => {
     }
     function _matrixNormFrobenius(x) {
       var fro = 0;
-      x.forEach(function(value, index2) {
-        fro = add3(fro, multiply2(value, conj2(value)));
+      x.forEach(function(value2, index2) {
+        fro = add3(fro, multiply2(value2, conj2(value2)));
       });
       return abs3(sqrt3(fro));
     }
     function _matrixNormOne(x) {
       var c = [];
       var maxc = 0;
-      x.forEach(function(value, index2) {
+      x.forEach(function(value2, index2) {
         var j = index2[1];
-        var cj = add3(c[j] || 0, abs3(value));
+        var cj = add3(c[j] || 0, abs3(value2));
         if (larger2(cj, maxc)) {
           maxc = cj;
         }
@@ -25957,9 +27889,9 @@ var meta_bind_publish = (() => {
     function _matrixNormInfinity(x) {
       var r = [];
       var maxr = 0;
-      x.forEach(function(value, index2) {
+      x.forEach(function(value2, index2) {
         var i2 = index2[0];
-        var ri = add3(r[i2] || 0, abs3(value));
+        var ri = add3(r[i2] || 0, abs3(value2));
         if (larger2(ri, maxr)) {
           maxr = ri;
         }
@@ -25998,17 +27930,17 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/matrix/dot.js
-  var name200 = "dot";
-  var dependencies200 = ["typed", "addScalar", "multiplyScalar", "conj", "size"];
-  var createDot = /* @__PURE__ */ factory(name200, dependencies200, (_ref) => {
+  var name202 = "dot";
+  var dependencies202 = ["typed", "addScalar", "multiplyScalar", "conj", "size"];
+  var createDot = /* @__PURE__ */ factory(name202, dependencies202, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       addScalar: addScalar2,
       multiplyScalar: multiplyScalar2,
       conj: conj2,
       size: size2
     } = _ref;
-    return typed2(name200, {
+    return typed3(name202, {
       "Array | DenseMatrix, Array | DenseMatrix": _denseDot,
       "SparseMatrix, SparseMatrix": _sparseDot
     });
@@ -26048,8 +27980,8 @@ var meta_bind_publish = (() => {
       var mul2 = multiplyScalar2;
       if (adt && bdt && adt === bdt && typeof adt === "string") {
         var dt = adt;
-        add3 = typed2.find(addScalar2, [dt, dt]);
-        mul2 = typed2.find(multiplyScalar2, [dt, dt]);
+        add3 = typed3.find(addScalar2, [dt, dt]);
+        mul2 = typed3.find(multiplyScalar2, [dt, dt]);
       }
       if (!aIsColumn && !bIsColumn) {
         var c = mul2(conj2(adata[0]), bdata[0]);
@@ -26116,15 +28048,15 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/matrix/trace.js
-  var name201 = "trace";
-  var dependencies201 = ["typed", "matrix", "add"];
-  var createTrace = /* @__PURE__ */ factory(name201, dependencies201, (_ref) => {
+  var name203 = "trace";
+  var dependencies203 = ["typed", "matrix", "add"];
+  var createTrace = /* @__PURE__ */ factory(name203, dependencies203, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       add: add3
     } = _ref;
-    return typed2("trace", {
+    return typed3("trace", {
       Array: function _arrayTrace(x) {
         return _denseTrace(matrix2(x));
       },
@@ -26190,19 +28122,19 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/type/matrix/function/index.js
-  var name202 = "index";
-  var dependencies202 = ["typed", "Index"];
-  var createIndex = /* @__PURE__ */ factory(name202, dependencies202, (_ref) => {
+  var name204 = "index";
+  var dependencies204 = ["typed", "Index"];
+  var createIndex = /* @__PURE__ */ factory(name204, dependencies204, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       Index: Index2
     } = _ref;
-    return typed2(name202, {
+    return typed3(name204, {
       "...number | string | BigNumber | Range | Array | Matrix": function numberStringBigNumberRangeArrayMatrix(args) {
         var ranges = args.map(function(arg2) {
           if (isBigNumber(arg2)) {
             return arg2.toNumber();
-          } else if (Array.isArray(arg2) || isMatrix(arg2)) {
+          } else if (isArray(arg2) || isMatrix(arg2)) {
             return arg2.map(function(elem) {
               return isBigNumber(elem) ? elem.toNumber() : elem;
             });
@@ -26221,9 +28153,9 @@ var meta_bind_publish = (() => {
   var keywords = /* @__PURE__ */ new Set(["end"]);
 
   // node_modules/mathjs/lib/esm/expression/node/Node.js
-  var name203 = "Node";
-  var dependencies203 = ["mathWithTransform"];
-  var createNode = /* @__PURE__ */ factory(name203, dependencies203, (_ref) => {
+  var name205 = "Node";
+  var dependencies205 = ["mathWithTransform"];
+  var createNode = /* @__PURE__ */ factory(name205, dependencies205, (_ref) => {
     var {
       mathWithTransform: mathWithTransform2
     } = _ref;
@@ -26404,9 +28336,9 @@ var meta_bind_publish = (() => {
   }
 
   // node_modules/mathjs/lib/esm/expression/node/AccessorNode.js
-  var name204 = "AccessorNode";
-  var dependencies204 = ["subset", "Node"];
-  var createAccessorNode = /* @__PURE__ */ factory(name204, dependencies204, (_ref) => {
+  var name206 = "AccessorNode";
+  var dependencies206 = ["subset", "Node"];
+  var createAccessorNode = /* @__PURE__ */ factory(name206, dependencies206, (_ref) => {
     var {
       subset: subset2,
       Node: Node2
@@ -26437,7 +28369,7 @@ var meta_bind_publish = (() => {
         }
       }
       get type() {
-        return name204;
+        return name206;
       }
       get isAccessorNode() {
         return true;
@@ -26491,7 +28423,7 @@ var meta_bind_publish = (() => {
       }
       toJSON() {
         return {
-          mathjs: name204,
+          mathjs: name206,
           object: this.object,
           index: this.index
         };
@@ -26500,7 +28432,7 @@ var meta_bind_publish = (() => {
         return new AccessorNode2(json.object, json.index);
       }
     }
-    _defineProperty(AccessorNode2, "name", name204);
+    _defineProperty(AccessorNode2, "name", name206);
     return AccessorNode2;
   }, {
     isClass: true,
@@ -26508,9 +28440,9 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/node/ArrayNode.js
-  var name205 = "ArrayNode";
-  var dependencies205 = ["Node"];
-  var createArrayNode = /* @__PURE__ */ factory(name205, dependencies205, (_ref) => {
+  var name207 = "ArrayNode";
+  var dependencies207 = ["Node"];
+  var createArrayNode = /* @__PURE__ */ factory(name207, dependencies207, (_ref) => {
     var {
       Node: Node2
     } = _ref;
@@ -26523,7 +28455,7 @@ var meta_bind_publish = (() => {
         }
       }
       get type() {
-        return name205;
+        return name207;
       }
       get isArrayNode() {
         return true;
@@ -26572,7 +28504,7 @@ var meta_bind_publish = (() => {
       }
       toJSON() {
         return {
-          mathjs: name205,
+          mathjs: name207,
           items: this.items
         };
       }
@@ -26602,7 +28534,7 @@ var meta_bind_publish = (() => {
         return itemsToTex(this.items, false);
       }
     }
-    _defineProperty(ArrayNode2, "name", name205);
+    _defineProperty(ArrayNode2, "name", name207);
     return ArrayNode2;
   }, {
     isClass: true,
@@ -26615,19 +28547,23 @@ var meta_bind_publish = (() => {
       subset: subset2,
       matrix: matrix2
     } = _ref;
-    return function assign2(object, index2, value) {
+    return function assign2(object, index2, value2) {
       try {
         if (Array.isArray(object)) {
-          return matrix2(object).subset(index2, value).valueOf();
+          var result = matrix2(object).subset(index2, value2).valueOf();
+          result.forEach((item, index3) => {
+            object[index3] = item;
+          });
+          return object;
         } else if (object && typeof object.subset === "function") {
-          return object.subset(index2, value);
+          return object.subset(index2, value2);
         } else if (typeof object === "string") {
-          return subset2(object, index2, value);
+          return subset2(object, index2, value2);
         } else if (typeof object === "object") {
           if (!index2.isObjectProperty()) {
             throw TypeError("Cannot apply a numeric index as object property");
           }
-          setSafeProperty(object, index2.getObjectProperty(), value);
+          setSafeProperty(object, index2.getObjectProperty(), value2);
           return object;
         } else {
           throw new TypeError("Cannot apply index: unsupported type of object");
@@ -26868,7 +28804,7 @@ var meta_bind_publish = (() => {
       return null;
     }
     var property = properties[index2][identifier];
-    if (hasOwnProperty2(property, "associativity")) {
+    if (hasOwnProperty(property, "associativity")) {
       if (property.associativity === "left") {
         return "left";
       }
@@ -26889,7 +28825,7 @@ var meta_bind_publish = (() => {
       return null;
     }
     var property = properties[index2][identifierA];
-    if (hasOwnProperty2(property, "associativeWith") && property.associativeWith instanceof Array) {
+    if (hasOwnProperty(property, "associativeWith") && property.associativeWith instanceof Array) {
       for (var i2 = 0; i2 < property.associativeWith.length; i2++) {
         if (property.associativeWith[i2] === identifierB) {
           return true;
@@ -26910,13 +28846,13 @@ var meta_bind_publish = (() => {
   }
 
   // node_modules/mathjs/lib/esm/expression/node/AssignmentNode.js
-  var name206 = "AssignmentNode";
-  var dependencies206 = [
+  var name208 = "AssignmentNode";
+  var dependencies208 = [
     "subset",
     "?matrix",
     "Node"
   ];
-  var createAssignmentNode = /* @__PURE__ */ factory(name206, dependencies206, (_ref) => {
+  var createAssignmentNode = /* @__PURE__ */ factory(name208, dependencies208, (_ref) => {
     var {
       subset: subset2,
       matrix: matrix2,
@@ -26938,11 +28874,11 @@ var meta_bind_publish = (() => {
       return parenthesis === "all" || exprPrecedence !== null && exprPrecedence <= precedence;
     }
     class AssignmentNode2 extends Node2 {
-      constructor(object, index2, value) {
+      constructor(object, index2, value2) {
         super();
         this.object = object;
-        this.index = value ? index2 : null;
-        this.value = value || index2;
+        this.index = value2 ? index2 : null;
+        this.value = value2 || index2;
         if (!isSymbolNode(object) && !isAccessorNode(object)) {
           throw new TypeError('SymbolNode or AccessorNode expected as "object"');
         }
@@ -26964,7 +28900,7 @@ var meta_bind_publish = (() => {
         }
       }
       get type() {
-        return name206;
+        return name208;
       }
       get isAssignmentNode() {
         return true;
@@ -26973,31 +28909,31 @@ var meta_bind_publish = (() => {
         var evalObject = this.object._compile(math2, argNames);
         var evalIndex = this.index ? this.index._compile(math2, argNames) : null;
         var evalValue = this.value._compile(math2, argNames);
-        var name302 = this.object.name;
+        var name309 = this.object.name;
         if (!this.index) {
           if (!isSymbolNode(this.object)) {
             throw new TypeError("SymbolNode expected as object");
           }
           return function evalAssignmentNode(scope, args, context) {
-            var value = evalValue(scope, args, context);
-            scope.set(name302, value);
-            return value;
+            var value2 = evalValue(scope, args, context);
+            scope.set(name309, value2);
+            return value2;
           };
         } else if (this.index.isObjectProperty()) {
           var prop = this.index.getObjectProperty();
           return function evalAssignmentNode(scope, args, context) {
             var object = evalObject(scope, args, context);
-            var value = evalValue(scope, args, context);
-            setSafeProperty(object, prop, value);
-            return value;
+            var value2 = evalValue(scope, args, context);
+            setSafeProperty(object, prop, value2);
+            return value2;
           };
         } else if (isSymbolNode(this.object)) {
           return function evalAssignmentNode(scope, args, context) {
             var childObject = evalObject(scope, args, context);
-            var value = evalValue(scope, args, context);
+            var value2 = evalValue(scope, args, context);
             var index2 = evalIndex(scope, args, childObject);
-            scope.set(name302, assign2(childObject, index2, value));
-            return value;
+            scope.set(name309, assign2(childObject, index2, value2));
+            return value2;
           };
         } else {
           var evalParentObject = this.object.object._compile(math2, argNames);
@@ -27007,9 +28943,9 @@ var meta_bind_publish = (() => {
               var parent = evalParentObject(scope, args, context);
               var childObject = getSafeProperty(parent, parentProp);
               var index2 = evalIndex(scope, args, childObject);
-              var value = evalValue(scope, args, context);
-              setSafeProperty(parent, parentProp, assign2(childObject, index2, value));
-              return value;
+              var value2 = evalValue(scope, args, context);
+              setSafeProperty(parent, parentProp, assign2(childObject, index2, value2));
+              return value2;
             };
           } else {
             var evalParentIndex = this.object.index._compile(math2, argNames);
@@ -27018,9 +28954,9 @@ var meta_bind_publish = (() => {
               var parentIndex = evalParentIndex(scope, args, parent);
               var childObject = access(parent, parentIndex);
               var index2 = evalIndex(scope, args, childObject);
-              var value = evalValue(scope, args, context);
-              assign2(parent, parentIndex, assign2(childObject, index2, value));
-              return value;
+              var value2 = evalValue(scope, args, context);
+              assign2(parent, parentIndex, assign2(childObject, index2, value2));
+              return value2;
             };
           }
         }
@@ -27035,8 +28971,8 @@ var meta_bind_publish = (() => {
       map(callback) {
         var object = this._ifNode(callback(this.object, "object", this));
         var index2 = this.index ? this._ifNode(callback(this.index, "index", this)) : null;
-        var value = this._ifNode(callback(this.value, "value", this));
-        return new AssignmentNode2(object, index2, value);
+        var value2 = this._ifNode(callback(this.value, "value", this));
+        return new AssignmentNode2(object, index2, value2);
       }
       clone() {
         return new AssignmentNode2(this.object, this.index, this.value);
@@ -27044,15 +28980,15 @@ var meta_bind_publish = (() => {
       _toString(options) {
         var object = this.object.toString(options);
         var index2 = this.index ? this.index.toString(options) : "";
-        var value = this.value.toString(options);
+        var value2 = this.value.toString(options);
         if (needParenthesis(this, options && options.parenthesis, options && options.implicit)) {
-          value = "(" + value + ")";
+          value2 = "(" + value2 + ")";
         }
-        return object + index2 + " = " + value;
+        return object + index2 + " = " + value2;
       }
       toJSON() {
         return {
-          mathjs: name206,
+          mathjs: name208,
           object: this.object,
           index: this.index,
           value: this.value
@@ -27064,23 +29000,23 @@ var meta_bind_publish = (() => {
       toHTML(options) {
         var object = this.object.toHTML(options);
         var index2 = this.index ? this.index.toHTML(options) : "";
-        var value = this.value.toHTML(options);
+        var value2 = this.value.toHTML(options);
         if (needParenthesis(this, options && options.parenthesis, options && options.implicit)) {
-          value = '<span class="math-paranthesis math-round-parenthesis">(</span>' + value + '<span class="math-paranthesis math-round-parenthesis">)</span>';
+          value2 = '<span class="math-paranthesis math-round-parenthesis">(</span>' + value2 + '<span class="math-paranthesis math-round-parenthesis">)</span>';
         }
-        return object + index2 + '<span class="math-operator math-assignment-operator math-variable-assignment-operator math-binary-operator">=</span>' + value;
+        return object + index2 + '<span class="math-operator math-assignment-operator math-variable-assignment-operator math-binary-operator">=</span>' + value2;
       }
       _toTex(options) {
         var object = this.object.toTex(options);
         var index2 = this.index ? this.index.toTex(options) : "";
-        var value = this.value.toTex(options);
+        var value2 = this.value.toTex(options);
         if (needParenthesis(this, options && options.parenthesis, options && options.implicit)) {
-          value = "\\left(".concat(value, "\\right)");
+          value2 = "\\left(".concat(value2, "\\right)");
         }
-        return object + index2 + ":=" + value;
+        return object + index2 + ":=" + value2;
       }
     }
-    _defineProperty(AssignmentNode2, "name", name206);
+    _defineProperty(AssignmentNode2, "name", name208);
     return AssignmentNode2;
   }, {
     isClass: true,
@@ -27088,9 +29024,9 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/node/BlockNode.js
-  var name207 = "BlockNode";
-  var dependencies207 = ["ResultSet", "Node"];
-  var createBlockNode = /* @__PURE__ */ factory(name207, dependencies207, (_ref) => {
+  var name209 = "BlockNode";
+  var dependencies209 = ["ResultSet", "Node"];
+  var createBlockNode = /* @__PURE__ */ factory(name209, dependencies209, (_ref) => {
     var {
       ResultSet: ResultSet2,
       Node: Node2
@@ -27115,7 +29051,7 @@ var meta_bind_publish = (() => {
         });
       }
       get type() {
-        return name207;
+        return name209;
       }
       get isBlockNode() {
         return true;
@@ -27171,7 +29107,7 @@ var meta_bind_publish = (() => {
       }
       toJSON() {
         return {
-          mathjs: name207,
+          mathjs: name209,
           blocks: this.blocks
         };
       }
@@ -27189,7 +29125,7 @@ var meta_bind_publish = (() => {
         }).join("\\;\\;\n");
       }
     }
-    _defineProperty(BlockNode2, "name", name207);
+    _defineProperty(BlockNode2, "name", name209);
     return BlockNode2;
   }, {
     isClass: true,
@@ -27197,9 +29133,9 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/node/ConditionalNode.js
-  var name208 = "ConditionalNode";
-  var dependencies208 = ["Node"];
-  var createConditionalNode = /* @__PURE__ */ factory(name208, dependencies208, (_ref) => {
+  var name210 = "ConditionalNode";
+  var dependencies210 = ["Node"];
+  var createConditionalNode = /* @__PURE__ */ factory(name210, dependencies210, (_ref) => {
     var {
       Node: Node2
     } = _ref;
@@ -27221,7 +29157,7 @@ var meta_bind_publish = (() => {
       if (condition === null || condition === void 0) {
         return false;
       }
-      throw new TypeError('Unsupported type of condition "' + typeOf(condition) + '"');
+      throw new TypeError('Unsupported type of condition "' + typeOf2(condition) + '"');
     }
     class ConditionalNode2 extends Node2 {
       constructor(condition, trueExpr, falseExpr) {
@@ -27240,7 +29176,7 @@ var meta_bind_publish = (() => {
         this.falseExpr = falseExpr;
       }
       get type() {
-        return name208;
+        return name210;
       }
       get isConditionalNode() {
         return true;
@@ -27286,7 +29222,7 @@ var meta_bind_publish = (() => {
       }
       toJSON() {
         return {
-          mathjs: name208,
+          mathjs: name210,
           condition: this.condition,
           trueExpr: this.trueExpr,
           falseExpr: this.falseExpr
@@ -27319,7 +29255,7 @@ var meta_bind_publish = (() => {
         return "\\begin{cases} {" + this.trueExpr.toTex(options) + "}, &\\quad{\\text{if }\\;" + this.condition.toTex(options) + "}\\\\{" + this.falseExpr.toTex(options) + "}, &\\quad{\\text{otherwise}}\\end{cases}";
       }
     }
-    _defineProperty(ConditionalNode2, "name", name208);
+    _defineProperty(ConditionalNode2, "name", name210);
     return ConditionalNode2;
   }, {
     isClass: true,
@@ -27767,42 +29703,42 @@ var meta_bind_publish = (() => {
       preserveFormatting: true
     });
   }
-  function toSymbol(name302, isUnit2) {
+  function toSymbol(name309, isUnit2) {
     isUnit2 = typeof isUnit2 === "undefined" ? false : isUnit2;
     if (isUnit2) {
-      if (hasOwnProperty2(latexUnits, name302)) {
-        return latexUnits[name302];
+      if (hasOwnProperty(latexUnits, name309)) {
+        return latexUnits[name309];
       }
-      return "\\mathrm{" + escapeLatex(name302) + "}";
+      return "\\mathrm{" + escapeLatex(name309) + "}";
     }
-    if (hasOwnProperty2(latexSymbols, name302)) {
-      return latexSymbols[name302];
+    if (hasOwnProperty(latexSymbols, name309)) {
+      return latexSymbols[name309];
     }
-    return escapeLatex(name302);
+    return escapeLatex(name309);
   }
 
   // node_modules/mathjs/lib/esm/expression/node/ConstantNode.js
-  var name209 = "ConstantNode";
-  var dependencies209 = ["Node"];
-  var createConstantNode = /* @__PURE__ */ factory(name209, dependencies209, (_ref) => {
+  var name211 = "ConstantNode";
+  var dependencies211 = ["Node"];
+  var createConstantNode = /* @__PURE__ */ factory(name211, dependencies211, (_ref) => {
     var {
       Node: Node2
     } = _ref;
     class ConstantNode2 extends Node2 {
-      constructor(value) {
+      constructor(value2) {
         super();
-        this.value = value;
+        this.value = value2;
       }
       get type() {
-        return name209;
+        return name211;
       }
       get isConstantNode() {
         return true;
       }
       _compile(math2, argNames) {
-        var value = this.value;
+        var value2 = this.value;
         return function evalConstantNode() {
-          return value;
+          return value2;
         };
       }
       forEach(callback) {
@@ -27817,27 +29753,27 @@ var meta_bind_publish = (() => {
         return format3(this.value, options);
       }
       toHTML(options) {
-        var value = this._toString(options);
-        switch (typeOf(this.value)) {
+        var value2 = this._toString(options);
+        switch (typeOf2(this.value)) {
           case "number":
           case "BigNumber":
           case "Fraction":
-            return '<span class="math-number">' + value + "</span>";
+            return '<span class="math-number">' + value2 + "</span>";
           case "string":
-            return '<span class="math-string">' + value + "</span>";
+            return '<span class="math-string">' + value2 + "</span>";
           case "boolean":
-            return '<span class="math-boolean">' + value + "</span>";
+            return '<span class="math-boolean">' + value2 + "</span>";
           case "null":
-            return '<span class="math-null-symbol">' + value + "</span>";
+            return '<span class="math-null-symbol">' + value2 + "</span>";
           case "undefined":
-            return '<span class="math-undefined">' + value + "</span>";
+            return '<span class="math-undefined">' + value2 + "</span>";
           default:
-            return '<span class="math-symbol">' + value + "</span>";
+            return '<span class="math-symbol">' + value2 + "</span>";
         }
       }
       toJSON() {
         return {
-          mathjs: name209,
+          mathjs: name211,
           value: this.value
         };
       }
@@ -27845,30 +29781,30 @@ var meta_bind_publish = (() => {
         return new ConstantNode2(json.value);
       }
       _toTex(options) {
-        var value = this._toString(options);
-        switch (typeOf(this.value)) {
+        var value2 = this._toString(options);
+        switch (typeOf2(this.value)) {
           case "string":
-            return "\\mathtt{" + escapeLatex(value) + "}";
+            return "\\mathtt{" + escapeLatex(value2) + "}";
           case "number":
           case "BigNumber":
             {
               if (!isFinite(this.value)) {
                 return this.value.valueOf() < 0 ? "-\\infty" : "\\infty";
               }
-              var index2 = value.toLowerCase().indexOf("e");
+              var index2 = value2.toLowerCase().indexOf("e");
               if (index2 !== -1) {
-                return value.substring(0, index2) + "\\cdot10^{" + value.substring(index2 + 1) + "}";
+                return value2.substring(0, index2) + "\\cdot10^{" + value2.substring(index2 + 1) + "}";
               }
             }
-            return value;
+            return value2;
           case "Fraction":
             return this.value.toLatex();
           default:
-            return value;
+            return value2;
         }
       }
     }
-    _defineProperty(ConstantNode2, "name", name209);
+    _defineProperty(ConstantNode2, "name", name211);
     return ConstantNode2;
   }, {
     isClass: true,
@@ -27876,11 +29812,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/node/FunctionAssignmentNode.js
-  var name210 = "FunctionAssignmentNode";
-  var dependencies210 = ["typed", "Node"];
-  var createFunctionAssignmentNode = /* @__PURE__ */ factory(name210, dependencies210, (_ref) => {
+  var name212 = "FunctionAssignmentNode";
+  var dependencies212 = ["typed", "Node"];
+  var createFunctionAssignmentNode = /* @__PURE__ */ factory(name212, dependencies212, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       Node: Node2
     } = _ref;
     function needParenthesis(node, parenthesis, implicit) {
@@ -27889,9 +29825,9 @@ var meta_bind_publish = (() => {
       return parenthesis === "all" || exprPrecedence !== null && exprPrecedence <= precedence;
     }
     class FunctionAssignmentNode2 extends Node2 {
-      constructor(name302, params, expr) {
+      constructor(name309, params, expr) {
         super();
-        if (typeof name302 !== "string") {
+        if (typeof name309 !== "string") {
           throw new TypeError('String expected for parameter "name"');
         }
         if (!Array.isArray(params)) {
@@ -27900,8 +29836,8 @@ var meta_bind_publish = (() => {
         if (!isNode(expr)) {
           throw new TypeError('Node expected for parameter "expr"');
         }
-        if (keywords.has(name302)) {
-          throw new Error('Illegal function name, "' + name302 + '" is a reserved keyword');
+        if (keywords.has(name309)) {
+          throw new Error('Illegal function name, "' + name309 + '" is a reserved keyword');
         }
         var paramNames = /* @__PURE__ */ new Set();
         for (var param of params) {
@@ -27912,7 +29848,7 @@ var meta_bind_publish = (() => {
             paramNames.add(_name);
           }
         }
-        this.name = name302;
+        this.name = name309;
         this.params = params.map(function(param2) {
           return param2 && param2.name || param2;
         });
@@ -27922,7 +29858,7 @@ var meta_bind_publish = (() => {
         this.expr = expr;
       }
       get type() {
-        return name210;
+        return name212;
       }
       get isFunctionAssignmentNode() {
         return true;
@@ -27933,10 +29869,10 @@ var meta_bind_publish = (() => {
           childArgNames[param] = true;
         });
         var evalExpr = this.expr._compile(math2, childArgNames);
-        var name302 = this.name;
+        var name309 = this.name;
         var params = this.params;
         var signature = join(this.types, ",");
-        var syntax = name302 + "(" + join(this.params, ", ") + ")";
+        var syntax = name309 + "(" + join(this.params, ", ") + ")";
         return function evalFunctionAssignmentNode(scope, args, context) {
           var signatures = {};
           signatures[signature] = function() {
@@ -27946,9 +29882,9 @@ var meta_bind_publish = (() => {
             }
             return evalExpr(scope, childArgs, context);
           };
-          var fn = typed2(name302, signatures);
+          var fn = typed3(name309, signatures);
           fn.syntax = syntax;
-          scope.set(name302, fn);
+          scope.set(name309, fn);
           return fn;
         };
       }
@@ -27973,7 +29909,7 @@ var meta_bind_publish = (() => {
       toJSON() {
         var types = this.types;
         return {
-          mathjs: name210,
+          mathjs: name212,
           name: this.name,
           params: this.params.map(function(param, index2) {
             return {
@@ -28008,7 +29944,7 @@ var meta_bind_publish = (() => {
         return "\\mathrm{" + this.name + "}\\left(" + this.params.map(toSymbol).join(",") + "\\right):=" + expr;
       }
     }
-    _defineProperty(FunctionAssignmentNode2, "name", name210);
+    _defineProperty(FunctionAssignmentNode2, "name", name212);
     return FunctionAssignmentNode2;
   }, {
     isClass: true,
@@ -28016,9 +29952,9 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/node/IndexNode.js
-  var name211 = "IndexNode";
-  var dependencies211 = ["Node", "size"];
-  var createIndexNode = /* @__PURE__ */ factory(name211, dependencies211, (_ref) => {
+  var name213 = "IndexNode";
+  var dependencies213 = ["Node", "size"];
+  var createIndexNode = /* @__PURE__ */ factory(name213, dependencies213, (_ref) => {
     var {
       Node: Node2,
       size: size2
@@ -28036,7 +29972,7 @@ var meta_bind_publish = (() => {
         }
       }
       get type() {
-        return name211;
+        return name213;
       }
       get isIndexNode() {
         return true;
@@ -28050,7 +29986,7 @@ var meta_bind_publish = (() => {
             var _evalDimension = dimension._compile(math2, childArgNames);
             return function evalDimension(scope, args, context) {
               if (!isMatrix(context) && !isArray(context) && !isString(context)) {
-                throw new TypeError('Cannot resolve "end": context must be a Matrix, Array, or string but is ' + typeOf(context));
+                throw new TypeError('Cannot resolve "end": context must be a Matrix, Array, or string but is ' + typeOf2(context));
               }
               var s = size2(context).valueOf();
               var childArgs = Object.create(args);
@@ -28095,7 +30031,7 @@ var meta_bind_publish = (() => {
       }
       toJSON() {
         return {
-          mathjs: name211,
+          mathjs: name213,
           dimensions: this.dimensions,
           dotNotation: this.dotNotation
         };
@@ -28121,7 +30057,7 @@ var meta_bind_publish = (() => {
         return this.dotNotation ? "." + this.getObjectProperty() : "_{" + dimensions.join(",") + "}";
       }
     }
-    _defineProperty(IndexNode2, "name", name211);
+    _defineProperty(IndexNode2, "name", name213);
     return IndexNode2;
   }, {
     isClass: true,
@@ -28129,9 +30065,9 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/node/ObjectNode.js
-  var name212 = "ObjectNode";
-  var dependencies212 = ["Node"];
-  var createObjectNode = /* @__PURE__ */ factory(name212, dependencies212, (_ref) => {
+  var name214 = "ObjectNode";
+  var dependencies214 = ["Node"];
+  var createObjectNode = /* @__PURE__ */ factory(name214, dependencies214, (_ref) => {
     var {
       Node: Node2
     } = _ref;
@@ -28148,7 +30084,7 @@ var meta_bind_publish = (() => {
         }
       }
       get type() {
-        return name212;
+        return name214;
       }
       get isObjectNode() {
         return true;
@@ -28156,19 +30092,17 @@ var meta_bind_publish = (() => {
       _compile(math2, argNames) {
         var evalEntries = {};
         for (var key in this.properties) {
-          if (hasOwnProperty2(this.properties, key)) {
+          if (hasOwnProperty(this.properties, key)) {
             var stringifiedKey = stringify(key);
             var parsedKey = JSON.parse(stringifiedKey);
-            if (!isSafeProperty(this.properties, parsedKey)) {
-              throw new Error('No access to property "' + parsedKey + '"');
-            }
-            evalEntries[parsedKey] = this.properties[key]._compile(math2, argNames);
+            var prop = getSafeProperty(this.properties, key);
+            evalEntries[parsedKey] = prop._compile(math2, argNames);
           }
         }
         return function evalObjectNode(scope, args, context) {
           var obj = {};
           for (var _key in evalEntries) {
-            if (hasOwnProperty2(evalEntries, _key)) {
+            if (hasOwnProperty(evalEntries, _key)) {
               obj[_key] = evalEntries[_key](scope, args, context);
             }
           }
@@ -28177,7 +30111,7 @@ var meta_bind_publish = (() => {
       }
       forEach(callback) {
         for (var key in this.properties) {
-          if (hasOwnProperty2(this.properties, key)) {
+          if (hasOwnProperty(this.properties, key)) {
             callback(this.properties[key], "properties[" + stringify(key) + "]", this);
           }
         }
@@ -28185,7 +30119,7 @@ var meta_bind_publish = (() => {
       map(callback) {
         var properties2 = {};
         for (var key in this.properties) {
-          if (hasOwnProperty2(this.properties, key)) {
+          if (hasOwnProperty(this.properties, key)) {
             properties2[key] = this._ifNode(callback(this.properties[key], "properties[" + stringify(key) + "]", this));
           }
         }
@@ -28194,7 +30128,7 @@ var meta_bind_publish = (() => {
       clone() {
         var properties2 = {};
         for (var key in this.properties) {
-          if (hasOwnProperty2(this.properties, key)) {
+          if (hasOwnProperty(this.properties, key)) {
             properties2[key] = this.properties[key];
           }
         }
@@ -28203,7 +30137,7 @@ var meta_bind_publish = (() => {
       _toString(options) {
         var entries = [];
         for (var key in this.properties) {
-          if (hasOwnProperty2(this.properties, key)) {
+          if (hasOwnProperty(this.properties, key)) {
             entries.push(stringify(key) + ": " + this.properties[key].toString(options));
           }
         }
@@ -28211,7 +30145,7 @@ var meta_bind_publish = (() => {
       }
       toJSON() {
         return {
-          mathjs: name212,
+          mathjs: name214,
           properties: this.properties
         };
       }
@@ -28221,7 +30155,7 @@ var meta_bind_publish = (() => {
       toHTML(options) {
         var entries = [];
         for (var key in this.properties) {
-          if (hasOwnProperty2(this.properties, key)) {
+          if (hasOwnProperty(this.properties, key)) {
             entries.push('<span class="math-symbol math-property">' + escape(key) + '</span><span class="math-operator math-assignment-operator math-property-assignment-operator math-binary-operator">:</span>' + this.properties[key].toHTML(options));
           }
         }
@@ -28230,7 +30164,7 @@ var meta_bind_publish = (() => {
       _toTex(options) {
         var entries = [];
         for (var key in this.properties) {
-          if (hasOwnProperty2(this.properties, key)) {
+          if (hasOwnProperty(this.properties, key)) {
             entries.push("\\mathbf{" + key + ":} & " + this.properties[key].toTex(options) + "\\\\");
           }
         }
@@ -28238,7 +30172,7 @@ var meta_bind_publish = (() => {
         return tex;
       }
     }
-    _defineProperty(ObjectNode2, "name", name212);
+    _defineProperty(ObjectNode2, "name", name214);
     return ObjectNode2;
   }, {
     isClass: true,
@@ -28246,9 +30180,9 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/node/OperatorNode.js
-  var name213 = "OperatorNode";
-  var dependencies213 = ["Node"];
-  var createOperatorNode = /* @__PURE__ */ factory(name213, dependencies213, (_ref) => {
+  var name215 = "OperatorNode";
+  var dependencies215 = ["Node"];
+  var createOperatorNode = /* @__PURE__ */ factory(name215, dependencies215, (_ref) => {
     var {
       Node: Node2
     } = _ref;
@@ -28424,7 +30358,7 @@ var meta_bind_publish = (() => {
         this.args = args || [];
       }
       get type() {
-        return name213;
+        return name215;
       }
       get isOperatorNode() {
         return true;
@@ -28530,7 +30464,7 @@ var meta_bind_publish = (() => {
       }
       toJSON() {
         return {
-          mathjs: name213,
+          mathjs: name215,
           op: this.op,
           fn: this.fn,
           args: this.args,
@@ -28664,7 +30598,7 @@ var meta_bind_publish = (() => {
         return this.type + ":" + this.fn;
       }
     }
-    _defineProperty(OperatorNode2, "name", name213);
+    _defineProperty(OperatorNode2, "name", name215);
     return OperatorNode2;
   }, {
     isClass: true,
@@ -28672,9 +30606,9 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/node/ParenthesisNode.js
-  var name214 = "ParenthesisNode";
-  var dependencies214 = ["Node"];
-  var createParenthesisNode = /* @__PURE__ */ factory(name214, dependencies214, (_ref) => {
+  var name216 = "ParenthesisNode";
+  var dependencies216 = ["Node"];
+  var createParenthesisNode = /* @__PURE__ */ factory(name216, dependencies216, (_ref) => {
     var {
       Node: Node2
     } = _ref;
@@ -28687,7 +30621,7 @@ var meta_bind_publish = (() => {
         this.content = content;
       }
       get type() {
-        return name214;
+        return name216;
       }
       get isParenthesisNode() {
         return true;
@@ -28716,7 +30650,7 @@ var meta_bind_publish = (() => {
       }
       toJSON() {
         return {
-          mathjs: name214,
+          mathjs: name216,
           content: this.content
         };
       }
@@ -28736,7 +30670,7 @@ var meta_bind_publish = (() => {
         return this.content.toTex(options);
       }
     }
-    _defineProperty(ParenthesisNode2, "name", name214);
+    _defineProperty(ParenthesisNode2, "name", name216);
     return ParenthesisNode2;
   }, {
     isClass: true,
@@ -28744,9 +30678,9 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/node/RangeNode.js
-  var name215 = "RangeNode";
-  var dependencies215 = ["Node"];
-  var createRangeNode = /* @__PURE__ */ factory(name215, dependencies215, (_ref) => {
+  var name217 = "RangeNode";
+  var dependencies217 = ["Node"];
+  var createRangeNode = /* @__PURE__ */ factory(name217, dependencies217, (_ref) => {
     var {
       Node: Node2
     } = _ref;
@@ -28779,7 +30713,7 @@ var meta_bind_publish = (() => {
         this.step = step || null;
       }
       get type() {
-        return name215;
+        return name217;
       }
       get isRangeNode() {
         return true;
@@ -28821,29 +30755,29 @@ var meta_bind_publish = (() => {
       _toString(options) {
         var parenthesis = options && options.parenthesis ? options.parenthesis : "keep";
         var parens = calculateNecessaryParentheses(this, parenthesis, options && options.implicit);
-        var str;
+        var str2;
         var start = this.start.toString(options);
         if (parens.start) {
           start = "(" + start + ")";
         }
-        str = start;
+        str2 = start;
         if (this.step) {
           var step = this.step.toString(options);
           if (parens.step) {
             step = "(" + step + ")";
           }
-          str += ":" + step;
+          str2 += ":" + step;
         }
         var end = this.end.toString(options);
         if (parens.end) {
           end = "(" + end + ")";
         }
-        str += ":" + end;
-        return str;
+        str2 += ":" + end;
+        return str2;
       }
       toJSON() {
         return {
-          mathjs: name215,
+          mathjs: name217,
           start: this.start,
           end: this.end,
           step: this.step
@@ -28855,49 +30789,49 @@ var meta_bind_publish = (() => {
       toHTML(options) {
         var parenthesis = options && options.parenthesis ? options.parenthesis : "keep";
         var parens = calculateNecessaryParentheses(this, parenthesis, options && options.implicit);
-        var str;
+        var str2;
         var start = this.start.toHTML(options);
         if (parens.start) {
           start = '<span class="math-parenthesis math-round-parenthesis">(</span>' + start + '<span class="math-parenthesis math-round-parenthesis">)</span>';
         }
-        str = start;
+        str2 = start;
         if (this.step) {
           var step = this.step.toHTML(options);
           if (parens.step) {
             step = '<span class="math-parenthesis math-round-parenthesis">(</span>' + step + '<span class="math-parenthesis math-round-parenthesis">)</span>';
           }
-          str += '<span class="math-operator math-range-operator">:</span>' + step;
+          str2 += '<span class="math-operator math-range-operator">:</span>' + step;
         }
         var end = this.end.toHTML(options);
         if (parens.end) {
           end = '<span class="math-parenthesis math-round-parenthesis">(</span>' + end + '<span class="math-parenthesis math-round-parenthesis">)</span>';
         }
-        str += '<span class="math-operator math-range-operator">:</span>' + end;
-        return str;
+        str2 += '<span class="math-operator math-range-operator">:</span>' + end;
+        return str2;
       }
       _toTex(options) {
         var parenthesis = options && options.parenthesis ? options.parenthesis : "keep";
         var parens = calculateNecessaryParentheses(this, parenthesis, options && options.implicit);
-        var str = this.start.toTex(options);
+        var str2 = this.start.toTex(options);
         if (parens.start) {
-          str = "\\left(".concat(str, "\\right)");
+          str2 = "\\left(".concat(str2, "\\right)");
         }
         if (this.step) {
           var step = this.step.toTex(options);
           if (parens.step) {
             step = "\\left(".concat(step, "\\right)");
           }
-          str += ":" + step;
+          str2 += ":" + step;
         }
         var end = this.end.toTex(options);
         if (parens.end) {
           end = "\\left(".concat(end, "\\right)");
         }
-        str += ":" + end;
-        return str;
+        str2 += ":" + end;
+        return str2;
       }
     }
-    _defineProperty(RangeNode2, "name", name215);
+    _defineProperty(RangeNode2, "name", name217);
     return RangeNode2;
   }, {
     isClass: true,
@@ -28905,9 +30839,9 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/node/RelationalNode.js
-  var name216 = "RelationalNode";
-  var dependencies216 = ["Node"];
-  var createRelationalNode = /* @__PURE__ */ factory(name216, dependencies216, (_ref) => {
+  var name218 = "RelationalNode";
+  var dependencies218 = ["Node"];
+  var createRelationalNode = /* @__PURE__ */ factory(name218, dependencies218, (_ref) => {
     var {
       Node: Node2
     } = _ref;
@@ -28935,7 +30869,7 @@ var meta_bind_publish = (() => {
         this.params = params;
       }
       get type() {
-        return name216;
+        return name218;
       }
       get isRelationalNode() {
         return true;
@@ -28982,7 +30916,7 @@ var meta_bind_publish = (() => {
       }
       toJSON() {
         return {
-          mathjs: name216,
+          mathjs: name218,
           conditionals: this.conditionals,
           params: this.params
         };
@@ -29017,7 +30951,7 @@ var meta_bind_publish = (() => {
         return ret;
       }
     }
-    _defineProperty(RelationalNode2, "name", name216);
+    _defineProperty(RelationalNode2, "name", name218);
     return RelationalNode2;
   }, {
     isClass: true,
@@ -29025,24 +30959,24 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/node/SymbolNode.js
-  var name217 = "SymbolNode";
-  var dependencies217 = ["math", "?Unit", "Node"];
-  var createSymbolNode = /* @__PURE__ */ factory(name217, dependencies217, (_ref) => {
+  var name219 = "SymbolNode";
+  var dependencies219 = ["math", "?Unit", "Node"];
+  var createSymbolNode = /* @__PURE__ */ factory(name219, dependencies219, (_ref) => {
     var {
       math: math2,
       Unit: Unit2,
       Node: Node2
     } = _ref;
-    function isValuelessUnit(name302) {
-      return Unit2 ? Unit2.isValuelessUnit(name302) : false;
+    function isValuelessUnit(name309) {
+      return Unit2 ? Unit2.isValuelessUnit(name309) : false;
     }
     class SymbolNode2 extends Node2 {
-      constructor(name302) {
+      constructor(name309) {
         super();
-        if (typeof name302 !== "string") {
+        if (typeof name309 !== "string") {
           throw new TypeError('String expected for parameter "name"');
         }
-        this.name = name302;
+        this.name = name309;
       }
       get type() {
         return "SymbolNode";
@@ -29051,19 +30985,19 @@ var meta_bind_publish = (() => {
         return true;
       }
       _compile(math3, argNames) {
-        var name302 = this.name;
-        if (argNames[name302] === true) {
+        var name309 = this.name;
+        if (argNames[name309] === true) {
           return function(scope, args, context) {
-            return args[name302];
+            return getSafeProperty(args, name309);
           };
-        } else if (name302 in math3) {
+        } else if (name309 in math3) {
           return function(scope, args, context) {
-            return scope.has(name302) ? scope.get(name302) : getSafeProperty(math3, name302);
+            return scope.has(name309) ? scope.get(name309) : getSafeProperty(math3, name309);
           };
         } else {
-          var isUnit2 = isValuelessUnit(name302);
+          var isUnit2 = isValuelessUnit(name309);
           return function(scope, args, context) {
-            return scope.has(name302) ? scope.get(name302) : isUnit2 ? new Unit2(null, name302) : SymbolNode2.onUndefinedSymbol(name302);
+            return scope.has(name309) ? scope.get(name309) : isUnit2 ? new Unit2(null, name309) : SymbolNode2.onUndefinedSymbol(name309);
           };
         }
       }
@@ -29072,8 +31006,8 @@ var meta_bind_publish = (() => {
       map(callback) {
         return this.clone();
       }
-      static onUndefinedSymbol(name302) {
-        throw new Error("Undefined symbol " + name302);
+      static onUndefinedSymbol(name309) {
+        throw new Error("Undefined symbol " + name309);
       }
       clone() {
         return new SymbolNode2(this.name);
@@ -29082,21 +31016,21 @@ var meta_bind_publish = (() => {
         return this.name;
       }
       toHTML(options) {
-        var name302 = escape(this.name);
-        if (name302 === "true" || name302 === "false") {
-          return '<span class="math-symbol math-boolean">' + name302 + "</span>";
-        } else if (name302 === "i") {
-          return '<span class="math-symbol math-imaginary-symbol">' + name302 + "</span>";
-        } else if (name302 === "Infinity") {
-          return '<span class="math-symbol math-infinity-symbol">' + name302 + "</span>";
-        } else if (name302 === "NaN") {
-          return '<span class="math-symbol math-nan-symbol">' + name302 + "</span>";
-        } else if (name302 === "null") {
-          return '<span class="math-symbol math-null-symbol">' + name302 + "</span>";
-        } else if (name302 === "undefined") {
-          return '<span class="math-symbol math-undefined-symbol">' + name302 + "</span>";
+        var name309 = escape(this.name);
+        if (name309 === "true" || name309 === "false") {
+          return '<span class="math-symbol math-boolean">' + name309 + "</span>";
+        } else if (name309 === "i") {
+          return '<span class="math-symbol math-imaginary-symbol">' + name309 + "</span>";
+        } else if (name309 === "Infinity") {
+          return '<span class="math-symbol math-infinity-symbol">' + name309 + "</span>";
+        } else if (name309 === "NaN") {
+          return '<span class="math-symbol math-nan-symbol">' + name309 + "</span>";
+        } else if (name309 === "null") {
+          return '<span class="math-symbol math-null-symbol">' + name309 + "</span>";
+        } else if (name309 === "undefined") {
+          return '<span class="math-symbol math-undefined-symbol">' + name309 + "</span>";
         }
-        return '<span class="math-symbol">' + name302 + "</span>";
+        return '<span class="math-symbol">' + name309 + "</span>";
       }
       toJSON() {
         return {
@@ -29137,9 +31071,10 @@ var meta_bind_publish = (() => {
   }
 
   // node_modules/mathjs/lib/esm/expression/node/FunctionNode.js
-  var name218 = "FunctionNode";
-  var dependencies218 = ["math", "Node", "SymbolNode"];
-  var createFunctionNode = /* @__PURE__ */ factory(name218, dependencies218, (_ref) => {
+  var name220 = "FunctionNode";
+  var dependencies220 = ["math", "Node", "SymbolNode"];
+  var createFunctionNode = /* @__PURE__ */ factory(name220, dependencies220, (_ref) => {
+    var _class;
     var {
       math: math2,
       Node: Node2,
@@ -29217,7 +31152,7 @@ var meta_bind_publish = (() => {
         return this.fn.name || "";
       }
       get type() {
-        return name218;
+        return name220;
       }
       get isFunctionNode() {
         return true;
@@ -29230,18 +31165,18 @@ var meta_bind_publish = (() => {
             var fn = _name in math3 ? getSafeProperty(math3, _name) : void 0;
             var isRaw = typeof fn === "function" && fn.rawArgs === true;
             var resolveFn = (scope) => {
-              var value;
+              var value2;
               if (scope.has(_name)) {
-                value = scope.get(_name);
+                value2 = scope.get(_name);
               } else if (_name in math3) {
-                value = getSafeProperty(math3, _name);
+                value2 = getSafeProperty(math3, _name);
               } else {
                 return FunctionNode2.onUndefinedFunction(_name);
               }
-              if (typeof value === "function") {
-                return value;
+              if (typeof value2 === "function") {
+                return value2;
               }
-              throw new TypeError("'".concat(_name, "' is not a function; its value is:\n  ").concat(strin(value)));
+              throw new TypeError("'".concat(_name, "' is not a function; its value is:\n  ").concat(strin(value2)));
             };
             if (isRaw) {
               var rawArgs = this.args;
@@ -29280,7 +31215,7 @@ var meta_bind_publish = (() => {
           } else {
             var _rawArgs = this.args;
             return function evalFunctionNode(scope, args, context) {
-              var fn2 = args[_name];
+              var fn2 = getSafeProperty(args, _name);
               if (typeof fn2 !== "function") {
                 throw new TypeError("Argument '".concat(_name, "' was not a function; received: ").concat(strin(fn2)));
               }
@@ -29298,13 +31233,12 @@ var meta_bind_publish = (() => {
           var _rawArgs2 = this.args;
           return function evalFunctionNode(scope, args, context) {
             var object = evalObject(scope, args, context);
-            validateSafeMethod(object, prop);
-            var isRaw2 = object[prop] && object[prop].rawArgs;
-            if (isRaw2) {
-              return object[prop](_rawArgs2, math3, createSubScope(scope, args), scope);
+            var fn2 = getSafeMethod(object, prop);
+            if (fn2 !== null && fn2 !== void 0 && fn2.rawArgs) {
+              return fn2(_rawArgs2, math3, createSubScope(scope, args), scope);
             } else {
               var values = evalArgs.map((evalArg) => evalArg(scope, args, context));
-              return object[prop].apply(object, values);
+              return fn2.apply(object, values);
             }
           };
         } else {
@@ -29344,9 +31278,9 @@ var meta_bind_publish = (() => {
       }
       toString(options) {
         var customString;
-        var name302 = this.fn.toString(options);
-        if (options && typeof options.handler === "object" && hasOwnProperty2(options.handler, name302)) {
-          customString = options.handler[name302](this, options);
+        var name309 = this.fn.toString(options);
+        if (options && typeof options.handler === "object" && hasOwnProperty(options.handler, name309)) {
+          customString = options.handler[name309](this, options);
         }
         if (typeof customString !== "undefined") {
           return customString;
@@ -29362,7 +31296,7 @@ var meta_bind_publish = (() => {
       }
       toJSON() {
         return {
-          mathjs: name218,
+          mathjs: name220,
           fn: this.fn,
           args: this.args
         };
@@ -29375,7 +31309,7 @@ var meta_bind_publish = (() => {
       }
       toTex(options) {
         var customTex;
-        if (options && typeof options.handler === "object" && hasOwnProperty2(options.handler, this.name)) {
+        if (options && typeof options.handler === "object" && hasOwnProperty(options.handler, this.name)) {
           customTex = options.handler[this.name](this, options);
         }
         if (typeof customTex !== "undefined") {
@@ -29421,12 +31355,13 @@ var meta_bind_publish = (() => {
         return this.type + ":" + this.name;
       }
     }
-    _defineProperty(FunctionNode2, "name", name218);
-    _defineProperty(FunctionNode2, "onUndefinedFunction", function(name302) {
-      throw new Error("Undefined function " + name302);
+    _class = FunctionNode2;
+    _defineProperty(FunctionNode2, "name", name220);
+    _defineProperty(FunctionNode2, "onUndefinedFunction", function(name309) {
+      throw new Error("Undefined function " + name309);
     });
     _defineProperty(FunctionNode2, "fromJSON", function(json) {
-      return new FunctionNode2(json.fn, json.args);
+      return new _class(json.fn, json.args);
     });
     return FunctionNode2;
   }, {
@@ -29435,11 +31370,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/parse.js
-  var name219 = "parse";
-  var dependencies219 = ["typed", "numeric", "config", "AccessorNode", "ArrayNode", "AssignmentNode", "BlockNode", "ConditionalNode", "ConstantNode", "FunctionAssignmentNode", "FunctionNode", "IndexNode", "ObjectNode", "OperatorNode", "ParenthesisNode", "RangeNode", "RelationalNode", "SymbolNode"];
-  var createParse = /* @__PURE__ */ factory(name219, dependencies219, (_ref) => {
+  var name221 = "parse";
+  var dependencies221 = ["typed", "numeric", "config", "AccessorNode", "ArrayNode", "AssignmentNode", "BlockNode", "ConditionalNode", "ConstantNode", "FunctionAssignmentNode", "FunctionNode", "IndexNode", "ObjectNode", "OperatorNode", "ParenthesisNode", "RangeNode", "RelationalNode", "SymbolNode"];
+  var createParse = /* @__PURE__ */ factory(name221, dependencies221, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       numeric: numeric3,
       config: config4,
       AccessorNode: AccessorNode2,
@@ -29458,7 +31393,7 @@ var meta_bind_publish = (() => {
       RelationalNode: RelationalNode2,
       SymbolNode: SymbolNode2
     } = _ref;
-    var parse2 = typed2(name219, {
+    var parse2 = typed3(name221, {
       string: function string2(expression) {
         return parseStart(expression, {});
       },
@@ -29699,7 +31634,7 @@ var meta_bind_publish = (() => {
           state.token += currentCharacter(state);
           next(state);
         }
-        if (hasOwnProperty2(NAMED_DELIMITERS, state.token)) {
+        if (hasOwnProperty(NAMED_DELIMITERS, state.token)) {
           state.tokenType = TOKENTYPE.DELIMITER;
         } else {
           state.tokenType = TOKENTYPE.SYMBOL;
@@ -29809,22 +31744,22 @@ var meta_bind_publish = (() => {
       }
     }
     function parseAssignment(state) {
-      var name302, args, value, valid;
+      var name309, args, value2, valid;
       var node = parseConditional(state);
       if (state.token === "=") {
         if (isSymbolNode(node)) {
-          name302 = node.name;
+          name309 = node.name;
           getTokenSkipNewline(state);
-          value = parseAssignment(state);
-          return new AssignmentNode2(new SymbolNode2(name302), value);
+          value2 = parseAssignment(state);
+          return new AssignmentNode2(new SymbolNode2(name309), value2);
         } else if (isAccessorNode(node)) {
           getTokenSkipNewline(state);
-          value = parseAssignment(state);
-          return new AssignmentNode2(node.object, node.index, value);
+          value2 = parseAssignment(state);
+          return new AssignmentNode2(node.object, node.index, value2);
         } else if (isFunctionNode(node) && isSymbolNode(node.fn)) {
           valid = true;
           args = [];
-          name302 = node.name;
+          name309 = node.name;
           node.args.forEach(function(arg2, index2) {
             if (isSymbolNode(arg2)) {
               args[index2] = arg2.name;
@@ -29834,8 +31769,8 @@ var meta_bind_publish = (() => {
           });
           if (valid) {
             getTokenSkipNewline(state);
-            value = parseAssignment(state);
-            return new FunctionAssignmentNode2(name302, args, value);
+            value2 = parseAssignment(state);
+            return new FunctionAssignmentNode2(name309, args, value2);
           }
         }
         throw createSyntaxError(state, "Invalid left hand side of assignment operator =");
@@ -29919,7 +31854,7 @@ var meta_bind_publish = (() => {
         "<=": "smallerEq",
         ">=": "largerEq"
       };
-      while (hasOwnProperty2(operators, state.token)) {
+      while (hasOwnProperty(operators, state.token)) {
         var cond = {
           name: state.token,
           fn: operators[state.token]
@@ -29937,38 +31872,38 @@ var meta_bind_publish = (() => {
       }
     }
     function parseShift(state) {
-      var node, name302, fn, params;
+      var node, name309, fn, params;
       node = parseConversion(state);
       var operators = {
         "<<": "leftShift",
         ">>": "rightArithShift",
         ">>>": "rightLogShift"
       };
-      while (hasOwnProperty2(operators, state.token)) {
-        name302 = state.token;
-        fn = operators[name302];
+      while (hasOwnProperty(operators, state.token)) {
+        name309 = state.token;
+        fn = operators[name309];
         getTokenSkipNewline(state);
         params = [node, parseConversion(state)];
-        node = new OperatorNode2(name302, fn, params);
+        node = new OperatorNode2(name309, fn, params);
       }
       return node;
     }
     function parseConversion(state) {
-      var node, name302, fn, params;
+      var node, name309, fn, params;
       node = parseRange(state);
       var operators = {
         to: "to",
         in: "to"
       };
-      while (hasOwnProperty2(operators, state.token)) {
-        name302 = state.token;
-        fn = operators[name302];
+      while (hasOwnProperty(operators, state.token)) {
+        name309 = state.token;
+        fn = operators[name309];
         getTokenSkipNewline(state);
-        if (name302 === "in" && state.token === "") {
+        if (name309 === "in" && state.token === "") {
           node = new OperatorNode2("*", "multiply", [node, new SymbolNode2("in")], true);
         } else {
           params = [node, parseRange(state)];
-          node = new OperatorNode2(name302, fn, params);
+          node = new OperatorNode2(name309, fn, params);
         }
       }
       return node;
@@ -30000,15 +31935,15 @@ var meta_bind_publish = (() => {
       return node;
     }
     function parseAddSubtract(state) {
-      var node, name302, fn, params;
+      var node, name309, fn, params;
       node = parseMultiplyDivide(state);
       var operators = {
         "+": "add",
         "-": "subtract"
       };
-      while (hasOwnProperty2(operators, state.token)) {
-        name302 = state.token;
-        fn = operators[name302];
+      while (hasOwnProperty(operators, state.token)) {
+        name309 = state.token;
+        fn = operators[name309];
         getTokenSkipNewline(state);
         var rightNode = parseMultiplyDivide(state);
         if (rightNode.isPercentage) {
@@ -30016,12 +31951,12 @@ var meta_bind_publish = (() => {
         } else {
           params = [node, rightNode];
         }
-        node = new OperatorNode2(name302, fn, params);
+        node = new OperatorNode2(name309, fn, params);
       }
       return node;
     }
     function parseMultiplyDivide(state) {
-      var node, last, name302, fn;
+      var node, last, name309, fn;
       node = parseImplicitMultiplication(state);
       last = node;
       var operators = {
@@ -30031,12 +31966,12 @@ var meta_bind_publish = (() => {
         "./": "dotDivide"
       };
       while (true) {
-        if (hasOwnProperty2(operators, state.token)) {
-          name302 = state.token;
-          fn = operators[name302];
+        if (hasOwnProperty(operators, state.token)) {
+          name309 = state.token;
+          fn = operators[name309];
           getTokenSkipNewline(state);
           last = parseImplicitMultiplication(state);
-          node = new OperatorNode2(name302, fn, [node, last]);
+          node = new OperatorNode2(name309, fn, [node, last]);
         } else {
           break;
         }
@@ -30089,74 +32024,74 @@ var meta_bind_publish = (() => {
       return node;
     }
     function parsePercentage(state) {
-      var node, name302, fn, params;
+      var node, name309, fn, params;
       node = parseUnary(state);
       var operators = {
         "%": "mod",
         mod: "mod"
       };
-      while (hasOwnProperty2(operators, state.token)) {
-        name302 = state.token;
-        fn = operators[name302];
+      while (hasOwnProperty(operators, state.token)) {
+        name309 = state.token;
+        fn = operators[name309];
         getTokenSkipNewline(state);
-        if (name302 === "%" && state.tokenType === TOKENTYPE.DELIMITER && state.token !== "(") {
+        if (name309 === "%" && state.tokenType === TOKENTYPE.DELIMITER && state.token !== "(") {
           node = new OperatorNode2("/", "divide", [node, new ConstantNode2(100)], false, true);
         } else {
           params = [node, parseUnary(state)];
-          node = new OperatorNode2(name302, fn, params);
+          node = new OperatorNode2(name309, fn, params);
         }
       }
       return node;
     }
     function parseUnary(state) {
-      var name302, params, fn;
+      var name309, params, fn;
       var operators = {
         "-": "unaryMinus",
         "+": "unaryPlus",
         "~": "bitNot",
         not: "not"
       };
-      if (hasOwnProperty2(operators, state.token)) {
+      if (hasOwnProperty(operators, state.token)) {
         fn = operators[state.token];
-        name302 = state.token;
+        name309 = state.token;
         getTokenSkipNewline(state);
         params = [parseUnary(state)];
-        return new OperatorNode2(name302, fn, params);
+        return new OperatorNode2(name309, fn, params);
       }
       return parsePow(state);
     }
     function parsePow(state) {
-      var node, name302, fn, params;
+      var node, name309, fn, params;
       node = parseLeftHandOperators(state);
       if (state.token === "^" || state.token === ".^") {
-        name302 = state.token;
-        fn = name302 === "^" ? "pow" : "dotPow";
+        name309 = state.token;
+        fn = name309 === "^" ? "pow" : "dotPow";
         getTokenSkipNewline(state);
         params = [node, parseUnary(state)];
-        node = new OperatorNode2(name302, fn, params);
+        node = new OperatorNode2(name309, fn, params);
       }
       return node;
     }
     function parseLeftHandOperators(state) {
-      var node, name302, fn, params;
+      var node, name309, fn, params;
       node = parseCustomNodes(state);
       var operators = {
         "!": "factorial",
         "'": "ctranspose"
       };
-      while (hasOwnProperty2(operators, state.token)) {
-        name302 = state.token;
-        fn = operators[name302];
+      while (hasOwnProperty(operators, state.token)) {
+        name309 = state.token;
+        fn = operators[name309];
         getToken(state);
         params = [node];
-        node = new OperatorNode2(name302, fn, params);
+        node = new OperatorNode2(name309, fn, params);
         node = parseAccessors(state, node);
       }
       return node;
     }
     function parseCustomNodes(state) {
       var params = [];
-      if (state.tokenType === TOKENTYPE.SYMBOL && hasOwnProperty2(state.extraNodes, state.token)) {
+      if (state.tokenType === TOKENTYPE.SYMBOL && hasOwnProperty(state.extraNodes, state.token)) {
         var CustomNode = state.extraNodes[state.token];
         getToken(state);
         if (state.token === "(") {
@@ -30181,16 +32116,16 @@ var meta_bind_publish = (() => {
       return parseSymbol(state);
     }
     function parseSymbol(state) {
-      var node, name302;
+      var node, name309;
       if (state.tokenType === TOKENTYPE.SYMBOL || state.tokenType === TOKENTYPE.DELIMITER && state.token in NAMED_DELIMITERS) {
-        name302 = state.token;
+        name309 = state.token;
         getToken(state);
-        if (hasOwnProperty2(CONSTANTS, name302)) {
-          node = new ConstantNode2(CONSTANTS[name302]);
-        } else if (NUMERIC_CONSTANTS.indexOf(name302) !== -1) {
-          node = new ConstantNode2(numeric3(name302, "number"));
+        if (hasOwnProperty(CONSTANTS, name309)) {
+          node = new ConstantNode2(CONSTANTS[name309]);
+        } else if (NUMERIC_CONSTANTS.indexOf(name309) !== -1) {
+          node = new ConstantNode2(numeric3(name309, "number"));
         } else {
-          node = new SymbolNode2(name302);
+          node = new SymbolNode2(name309);
         }
         node = parseAccessors(state, node);
         return node;
@@ -30251,23 +32186,23 @@ var meta_bind_publish = (() => {
       return node;
     }
     function parseDoubleQuotesString(state) {
-      var node, str;
+      var node, str2;
       if (state.token === '"') {
-        str = parseDoubleQuotesStringToken(state);
-        node = new ConstantNode2(str);
+        str2 = parseDoubleQuotesStringToken(state);
+        node = new ConstantNode2(str2);
         node = parseAccessors(state, node);
         return node;
       }
       return parseSingleQuotesString(state);
     }
     function parseDoubleQuotesStringToken(state) {
-      var str = "";
+      var str2 = "";
       while (currentCharacter(state) !== "" && currentCharacter(state) !== '"') {
         if (currentCharacter(state) === "\\") {
-          str += currentCharacter(state);
+          str2 += currentCharacter(state);
           next(state);
         }
-        str += currentCharacter(state);
+        str2 += currentCharacter(state);
         next(state);
       }
       getToken(state);
@@ -30275,26 +32210,26 @@ var meta_bind_publish = (() => {
         throw createSyntaxError(state, 'End of string " expected');
       }
       getToken(state);
-      return JSON.parse('"' + str + '"');
+      return JSON.parse('"' + str2 + '"');
     }
     function parseSingleQuotesString(state) {
-      var node, str;
+      var node, str2;
       if (state.token === "'") {
-        str = parseSingleQuotesStringToken(state);
-        node = new ConstantNode2(str);
+        str2 = parseSingleQuotesStringToken(state);
+        node = new ConstantNode2(str2);
         node = parseAccessors(state, node);
         return node;
       }
       return parseMatrix(state);
     }
     function parseSingleQuotesStringToken(state) {
-      var str = "";
+      var str2 = "";
       while (currentCharacter(state) !== "" && currentCharacter(state) !== "'") {
         if (currentCharacter(state) === "\\") {
-          str += currentCharacter(state);
+          str2 += currentCharacter(state);
           next(state);
         }
-        str += currentCharacter(state);
+        str2 += currentCharacter(state);
         next(state);
       }
       getToken(state);
@@ -30302,7 +32237,7 @@ var meta_bind_publish = (() => {
         throw createSyntaxError(state, "End of string ' expected");
       }
       getToken(state);
-      return JSON.parse('"' + str + '"');
+      return JSON.parse('"' + str2 + '"');
     }
     function parseMatrix(state) {
       var array, params, rows, cols;
@@ -30442,7 +32377,7 @@ var meta_bind_publish = (() => {
       error.char = c;
       return error;
     }
-    typed2.addConversion({
+    typed3.addConversion({
       from: "string",
       to: "Node",
       convert: parse2
@@ -30451,14 +32386,14 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/function/compile.js
-  var name220 = "compile";
-  var dependencies220 = ["typed", "parse"];
-  var createCompile = /* @__PURE__ */ factory(name220, dependencies220, (_ref) => {
+  var name222 = "compile";
+  var dependencies222 = ["typed", "parse"];
+  var createCompile = /* @__PURE__ */ factory(name222, dependencies222, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       parse: parse2
     } = _ref;
-    return typed2(name220, {
+    return typed3(name222, {
       string: function string2(expr) {
         return parse2(expr).compile();
       },
@@ -30471,14 +32406,14 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/function/evaluate.js
-  var name221 = "evaluate";
-  var dependencies221 = ["typed", "parse"];
-  var createEvaluate = /* @__PURE__ */ factory(name221, dependencies221, (_ref) => {
+  var name223 = "evaluate";
+  var dependencies223 = ["typed", "parse"];
+  var createEvaluate = /* @__PURE__ */ factory(name223, dependencies223, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       parse: parse2
     } = _ref;
-    return typed2(name221, {
+    return typed3(name223, {
       string: function string2(expr) {
         var scope = createEmptyMap();
         return parse2(expr).compile().evaluate(scope);
@@ -30501,14 +32436,14 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/Parser.js
-  var name222 = "Parser";
-  var dependencies222 = ["evaluate"];
-  var createParserClass = /* @__PURE__ */ factory(name222, dependencies222, (_ref) => {
+  var name224 = "Parser";
+  var dependencies224 = ["evaluate"];
+  var createParserClass = /* @__PURE__ */ factory(name224, dependencies224, (_ref) => {
     var {
       evaluate: evaluate2
     } = _ref;
-    function Parser2() {
-      if (!(this instanceof Parser2)) {
+    function Parser3() {
+      if (!(this instanceof Parser3)) {
         throw new SyntaxError("Constructor must be called with the new operator");
       }
       Object.defineProperty(this, "scope", {
@@ -30516,58 +32451,58 @@ var meta_bind_publish = (() => {
         writable: false
       });
     }
-    Parser2.prototype.type = "Parser";
-    Parser2.prototype.isParser = true;
-    Parser2.prototype.evaluate = function(expr) {
+    Parser3.prototype.type = "Parser";
+    Parser3.prototype.isParser = true;
+    Parser3.prototype.evaluate = function(expr) {
       return evaluate2(expr, this.scope);
     };
-    Parser2.prototype.get = function(name302) {
-      if (this.scope.has(name302)) {
-        return this.scope.get(name302);
+    Parser3.prototype.get = function(name309) {
+      if (this.scope.has(name309)) {
+        return this.scope.get(name309);
       }
     };
-    Parser2.prototype.getAll = function() {
+    Parser3.prototype.getAll = function() {
       return toObject(this.scope);
     };
-    Parser2.prototype.getAllAsMap = function() {
+    Parser3.prototype.getAllAsMap = function() {
       return this.scope;
     };
-    Parser2.prototype.set = function(name302, value) {
-      this.scope.set(name302, value);
-      return value;
+    Parser3.prototype.set = function(name309, value2) {
+      this.scope.set(name309, value2);
+      return value2;
     };
-    Parser2.prototype.remove = function(name302) {
-      this.scope.delete(name302);
+    Parser3.prototype.remove = function(name309) {
+      this.scope.delete(name309);
     };
-    Parser2.prototype.clear = function() {
+    Parser3.prototype.clear = function() {
       this.scope.clear();
     };
-    return Parser2;
+    return Parser3;
   }, {
     isClass: true
   });
 
   // node_modules/mathjs/lib/esm/expression/function/parser.js
-  var name223 = "parser";
-  var dependencies223 = ["typed", "Parser"];
-  var createParser = /* @__PURE__ */ factory(name223, dependencies223, (_ref) => {
+  var name225 = "parser";
+  var dependencies225 = ["typed", "Parser"];
+  var createParser = /* @__PURE__ */ factory(name225, dependencies225, (_ref) => {
     var {
-      typed: typed2,
-      Parser: Parser2
+      typed: typed3,
+      Parser: Parser3
     } = _ref;
-    return typed2(name223, {
+    return typed3(name225, {
       "": function _() {
-        return new Parser2();
+        return new Parser3();
       }
     });
   });
 
   // node_modules/mathjs/lib/esm/function/algebra/decomposition/lup.js
-  var name224 = "lup";
-  var dependencies224 = ["typed", "matrix", "abs", "addScalar", "divideScalar", "multiplyScalar", "subtract", "larger", "equalScalar", "unaryMinus", "DenseMatrix", "SparseMatrix", "Spa"];
-  var createLup = /* @__PURE__ */ factory(name224, dependencies224, (_ref) => {
+  var name226 = "lup";
+  var dependencies226 = ["typed", "matrix", "abs", "addScalar", "divideScalar", "multiplyScalar", "subtract", "larger", "equalScalar", "unaryMinus", "DenseMatrix", "SparseMatrix", "Spa"];
+  var createLup = /* @__PURE__ */ factory(name226, dependencies226, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       abs: abs3,
       addScalar: addScalar2,
@@ -30581,7 +32516,7 @@ var meta_bind_publish = (() => {
       SparseMatrix: SparseMatrix2,
       Spa: Spa2
     } = _ref;
-    return typed2(name224, {
+    return typed3(name226, {
       DenseMatrix: function DenseMatrix3(m) {
         return _denseLUP(m);
       },
@@ -30698,7 +32633,7 @@ var meta_bind_publish = (() => {
         L: l,
         U: u,
         p: pv,
-        toString: function toString() {
+        toString: function toString2() {
           return "L: " + this.L.toString() + "\nU: " + this.U.toString() + "\nP: " + this.p;
         }
       };
@@ -30805,7 +32740,7 @@ var meta_bind_publish = (() => {
           size: usize
         }),
         p: pvCo,
-        toString: function toString() {
+        toString: function toString2() {
           return "L: " + this.L.toString() + "\nU: " + this.U.toString() + "\nP: " + this.p;
         }
       };
@@ -30813,14 +32748,14 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/algebra/decomposition/qr.js
-  var name225 = "qr";
-  var dependencies225 = ["typed", "matrix", "zeros", "identity", "isZero", "equal", "sign", "sqrt", "conj", "unaryMinus", "addScalar", "divideScalar", "multiplyScalar", "subtract", "complex"];
-  var createQr = /* @__PURE__ */ factory(name225, dependencies225, (_ref) => {
+  var name227 = "qr";
+  var dependencies227 = ["typed", "matrix", "zeros", "identity", "isZero", "equal", "sign", "sqrt", "conj", "unaryMinus", "addScalar", "divideScalar", "multiplyScalar", "subtract", "complex"];
+  var createQr = /* @__PURE__ */ factory(name227, dependencies227, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       zeros: zeros3,
-      identity: identity2,
+      identity: identity3,
       isZero: isZero2,
       equal: equal2,
       sign: sign4,
@@ -30833,7 +32768,7 @@ var meta_bind_publish = (() => {
       subtract: subtract2,
       complex: complex2
     } = _ref;
-    return _extends(typed2(name225, {
+    return _extends(typed3(name227, {
       DenseMatrix: function DenseMatrix2(m) {
         return _denseQR(m);
       },
@@ -30854,7 +32789,7 @@ var meta_bind_publish = (() => {
     function _denseQRimpl(m) {
       var rows = m._size[0];
       var cols = m._size[1];
-      var Q2 = identity2([rows], "dense");
+      var Q2 = identity3([rows], "dense");
       var Qdata = Q2._data;
       var R = m.clone();
       var Rdata = R._data;
@@ -30902,7 +32837,7 @@ var meta_bind_publish = (() => {
       return {
         Q: Q2,
         R,
-        toString: function toString() {
+        toString: function toString2() {
           return "Q: " + this.Q.toString() + "\nR: " + this.R.toString();
         }
       };
@@ -31086,9 +33021,9 @@ var meta_bind_publish = (() => {
   }
 
   // node_modules/mathjs/lib/esm/function/algebra/sparse/csAmd.js
-  var name226 = "csAmd";
-  var dependencies226 = ["add", "multiply", "transpose"];
-  var createCsAmd = /* @__PURE__ */ factory(name226, dependencies226, (_ref) => {
+  var name228 = "csAmd";
+  var dependencies228 = ["add", "multiply", "transpose"];
+  var createCsAmd = /* @__PURE__ */ factory(name228, dependencies228, (_ref) => {
     var {
       add: add3,
       multiply: multiply2,
@@ -31109,7 +33044,7 @@ var meta_bind_publish = (() => {
       var cindex = cm._index;
       var cptr = cm._ptr;
       var cnz = cptr[n];
-      var P3 = [];
+      var P4 = [];
       var W = [];
       var len = 0;
       var nv = n + 1;
@@ -31119,7 +33054,7 @@ var meta_bind_publish = (() => {
       var degree = 5 * (n + 1);
       var w = 6 * (n + 1);
       var hhead = 7 * (n + 1);
-      var last = P3;
+      var last = P4;
       var mark = _initializeQuotientGraph(n, cptr, W, len, head, last, next, hhead, nv, w, elen, degree);
       var nel = _initializeDegreeLists(n, cptr, W, degree, elen, w, dense, nv, head, last, next);
       var mindeg = 0;
@@ -31337,11 +33272,11 @@ var meta_bind_publish = (() => {
       }
       for (k = 0, i2 = 0; i2 <= n; i2++) {
         if (cptr[i2] === -1) {
-          k = csTdfs(i2, k, W, head, next, P3, w);
+          k = csTdfs(i2, k, W, head, next, P4, w);
         }
       }
-      P3.splice(P3.length - 1, 1);
-      return P3;
+      P4.splice(P4.length - 1, 1);
+      return P4;
     };
     function _createTargetMatrix(order, a, m, n, dense) {
       var at = transpose2(a);
@@ -31461,9 +33396,9 @@ var meta_bind_publish = (() => {
   }
 
   // node_modules/mathjs/lib/esm/function/algebra/sparse/csCounts.js
-  var name227 = "csCounts";
-  var dependencies227 = ["transpose"];
-  var createCsCounts = /* @__PURE__ */ factory(name227, dependencies227, (_ref) => {
+  var name229 = "csCounts";
+  var dependencies229 = ["transpose"];
+  var createCsCounts = /* @__PURE__ */ factory(name229, dependencies229, (_ref) => {
     var {
       transpose: transpose2
     } = _ref;
@@ -31543,9 +33478,9 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/algebra/sparse/csSqr.js
-  var name228 = "csSqr";
-  var dependencies228 = ["add", "multiply", "transpose"];
-  var createCsSqr = /* @__PURE__ */ factory(name228, dependencies228, (_ref) => {
+  var name230 = "csSqr";
+  var dependencies230 = ["add", "multiply", "transpose"];
+  var createCsSqr = /* @__PURE__ */ factory(name230, dependencies230, (_ref) => {
     var {
       add: add3,
       multiply: multiply2,
@@ -31731,9 +33666,9 @@ var meta_bind_publish = (() => {
   }
 
   // node_modules/mathjs/lib/esm/function/algebra/sparse/csSpsolve.js
-  var name229 = "csSpsolve";
-  var dependencies229 = ["divideScalar", "multiply", "subtract"];
-  var createCsSpsolve = /* @__PURE__ */ factory(name229, dependencies229, (_ref) => {
+  var name231 = "csSpsolve";
+  var dependencies231 = ["divideScalar", "multiply", "subtract"];
+  var createCsSpsolve = /* @__PURE__ */ factory(name231, dependencies231, (_ref) => {
     var {
       divideScalar: divideScalar2,
       multiply: multiply2,
@@ -31777,9 +33712,9 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/algebra/sparse/csLu.js
-  var name230 = "csLu";
-  var dependencies230 = ["abs", "divideScalar", "multiply", "subtract", "larger", "largerEq", "SparseMatrix"];
-  var createCsLu = /* @__PURE__ */ factory(name230, dependencies230, (_ref) => {
+  var name232 = "csLu";
+  var dependencies232 = ["abs", "divideScalar", "multiply", "subtract", "larger", "largerEq", "SparseMatrix"];
+  var createCsLu = /* @__PURE__ */ factory(name232, dependencies232, (_ref) => {
     var {
       abs: abs3,
       divideScalar: divideScalar2,
@@ -31896,11 +33831,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/algebra/decomposition/slu.js
-  var name231 = "slu";
-  var dependencies231 = ["typed", "abs", "add", "multiply", "transpose", "divideScalar", "subtract", "larger", "largerEq", "SparseMatrix"];
-  var createSlu = /* @__PURE__ */ factory(name231, dependencies231, (_ref) => {
+  var name233 = "slu";
+  var dependencies233 = ["typed", "abs", "add", "multiply", "transpose", "divideScalar", "subtract", "larger", "largerEq", "SparseMatrix"];
+  var createSlu = /* @__PURE__ */ factory(name233, dependencies233, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       abs: abs3,
       add: add3,
       multiply: multiply2,
@@ -31925,7 +33860,7 @@ var meta_bind_publish = (() => {
       largerEq: largerEq2,
       SparseMatrix: SparseMatrix2
     });
-    return typed2(name231, {
+    return typed3(name233, {
       "SparseMatrix, number, number": function SparseMatrixNumberNumber(a, order, threshold) {
         if (!isInteger(order) || order < 0 || order > 3) {
           throw new Error("Symbolic Ordering and Analysis order must be an integer number in the interval [0, 3]");
@@ -31940,7 +33875,7 @@ var meta_bind_publish = (() => {
           U: f.U,
           p: f.pinv,
           q: s.q,
-          toString: function toString() {
+          toString: function toString2() {
             return "L: " + this.L.toString() + "\nU: " + this.U.toString() + "\np: " + this.p.toString() + (this.q ? "\nq: " + this.q.toString() : "") + "\n";
           }
         };
@@ -31966,11 +33901,11 @@ var meta_bind_publish = (() => {
   }
 
   // node_modules/mathjs/lib/esm/function/algebra/solver/lusolve.js
-  var name232 = "lusolve";
-  var dependencies232 = ["typed", "matrix", "lup", "slu", "usolve", "lsolve", "DenseMatrix"];
-  var createLusolve = /* @__PURE__ */ factory(name232, dependencies232, (_ref) => {
+  var name234 = "lusolve";
+  var dependencies234 = ["typed", "matrix", "lup", "slu", "usolve", "lsolve", "DenseMatrix"];
+  var createLusolve = /* @__PURE__ */ factory(name234, dependencies234, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       lup: lup2,
       slu: slu2,
@@ -31981,7 +33916,7 @@ var meta_bind_publish = (() => {
     var solveValidation = createSolveValidation({
       DenseMatrix: DenseMatrix2
     });
-    return typed2(name232, {
+    return typed3(name234, {
       "Array, Array | Matrix": function ArrayArrayMatrix(a, b) {
         a = matrix2(a);
         var d = lup2(a);
@@ -32030,11 +33965,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/algebra/polynomialRoot.js
-  var name233 = "polynomialRoot";
-  var dependencies233 = ["typed", "isZero", "equalScalar", "add", "subtract", "multiply", "divide", "sqrt", "unaryMinus", "cbrt", "typeOf", "im", "re"];
-  var createPolynomialRoot = /* @__PURE__ */ factory(name233, dependencies233, (_ref) => {
+  var name235 = "polynomialRoot";
+  var dependencies235 = ["typed", "isZero", "equalScalar", "add", "subtract", "multiply", "divide", "sqrt", "unaryMinus", "cbrt", "typeOf", "im", "re"];
+  var createPolynomialRoot = /* @__PURE__ */ factory(name235, dependencies235, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       isZero: isZero2,
       equalScalar: equalScalar2,
       add: add3,
@@ -32044,11 +33979,11 @@ var meta_bind_publish = (() => {
       sqrt: sqrt3,
       unaryMinus: unaryMinus2,
       cbrt: cbrt5,
-      typeOf: typeOf3,
+      typeOf: typeOf4,
       im: im2,
       re: re2
     } = _ref;
-    return typed2(name233, {
+    return typed3(name235, {
       "number|Complex, ...number|Complex": (constant, restCoeffs) => {
         var coeffs = [constant, ...restCoeffs];
         while (coeffs.length > 0 && isZero2(coeffs[coeffs.length - 1])) {
@@ -32099,7 +34034,7 @@ var meta_bind_publish = (() => {
             var allRoots = true;
             var rawRoots = cbrt5(Ccubed, allRoots).toArray().map((C) => divide3(add3(_b, C, divide3(Delta0, C)), _denom));
             return rawRoots.map((r) => {
-              if (typeOf3(r) === "Complex" && equalScalar2(re2(r), re2(r) + im2(r))) {
+              if (typeOf4(r) === "Complex" && equalScalar2(re2(r), re2(r) + im2(r))) {
                 return re2(r);
               }
               return r;
@@ -32113,9 +34048,9 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/Help.js
-  var name234 = "Help";
-  var dependencies234 = ["parse"];
-  var createHelpClass = /* @__PURE__ */ factory(name234, dependencies234, (_ref) => {
+  var name236 = "Help";
+  var dependencies236 = ["parse"];
+  var createHelpClass = /* @__PURE__ */ factory(name236, dependencies236, (_ref) => {
     var {
       parse: parse2
     } = _ref;
@@ -32191,22 +34126,22 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/type/chain/Chain.js
-  var name235 = "Chain";
-  var dependencies235 = ["?on", "math", "typed"];
-  var createChainClass = /* @__PURE__ */ factory(name235, dependencies235, (_ref) => {
+  var name237 = "Chain";
+  var dependencies237 = ["?on", "math", "typed"];
+  var createChainClass = /* @__PURE__ */ factory(name237, dependencies237, (_ref) => {
     var {
       on,
       math: math2,
-      typed: typed2
+      typed: typed3
     } = _ref;
-    function Chain2(value) {
+    function Chain2(value2) {
       if (!(this instanceof Chain2)) {
         throw new SyntaxError("Constructor must be called with the new operator");
       }
-      if (isChain(value)) {
-        this.value = value.value;
+      if (isChain(value2)) {
+        this.value = value2.value;
       } else {
-        this.value = value;
+        this.value = value2;
       }
     }
     Chain2.prototype.type = "Chain";
@@ -32229,13 +34164,13 @@ var meta_bind_publish = (() => {
     Chain2.fromJSON = function(json) {
       return new Chain2(json.value);
     };
-    function createProxy(name302, fn) {
+    function createProxy(name309, fn) {
       if (typeof fn === "function") {
-        Chain2.prototype[name302] = chainify(fn);
+        Chain2.prototype[name309] = chainify(fn);
       }
     }
-    function createLazyProxy(name302, resolver) {
-      lazy(Chain2.prototype, name302, function outerResolver() {
+    function createLazyProxy(name309, resolver) {
+      lazy(Chain2.prototype, name309, function outerResolver() {
         var fn = resolver();
         if (typeof fn === "function") {
           return chainify(fn);
@@ -32252,8 +34187,8 @@ var meta_bind_publish = (() => {
         for (var i2 = 0; i2 < arguments.length; i2++) {
           args[i2 + 1] = arguments[i2];
         }
-        if (typed2.isTypedFunction(fn)) {
-          var sigObject = typed2.resolve(fn, args);
+        if (typed3.isTypedFunction(fn)) {
+          var sigObject = typed3.resolve(fn, args);
           if (sigObject.params.length === 1) {
             throw new Error("chain function " + fn.name + " cannot match rest parameter between chain value and additional arguments.");
           }
@@ -32267,7 +34202,7 @@ var meta_bind_publish = (() => {
         createProxy(arg0, arg1);
       } else {
         var _loop = function _loop2(_name2) {
-          if (hasOwnProperty2(arg0, _name2) && excludedNames[_name2] === void 0) {
+          if (hasOwnProperty(arg0, _name2) && excludedNames[_name2] === void 0) {
             createLazyProxy(_name2, () => arg0[_name2]);
           }
         };
@@ -32287,9 +34222,9 @@ var meta_bind_publish = (() => {
     };
     Chain2.createProxy(math2);
     if (on) {
-      on("import", function(name302, resolver, path) {
+      on("import", function(name309, resolver, path) {
         if (!path) {
-          createLazyProxy(name302, resolver);
+          createLazyProxy(name309, resolver);
         }
       });
     }
@@ -32524,7 +34459,7 @@ var meta_bind_publish = (() => {
     category: "Construction",
     syntax: ["[start]", "[start:end]", "[start:step:end]", "[start1, start 2, ...]", "[start1:end1, start2:end2, ...]", "[start1:step1:end1, start2:step2:end2, ...]"],
     description: "Create an index to get or replace a subset of a matrix",
-    examples: ["[1, 2, 3]", "A = [1, 2, 3; 4, 5, 6]", "A[1, :]", "A[1, 2] = 50", "A[1:2, 1:2] = ones(2, 2)"],
+    examples: ["A = [1, 2, 3; 4, 5, 6]", "A[1, :]", "A[1, 2] = 50", "A[1:2, 1:2] = 1", "B = [1, 2, 3]", "B[B>1 and B<3]"],
     seealso: ["bignumber", "boolean", "complex", "matrix,", "number", "range", "string", "unit"]
   };
 
@@ -32614,7 +34549,7 @@ var meta_bind_publish = (() => {
     category: "Core",
     syntax: ["typed(signatures)", "typed(name, signatures)"],
     description: "Create a typed function.",
-    examples: ['double = typed({ "number": f(x)=x+x })', "double(2)", 'double("hello")'],
+    examples: ['double = typed({ "number": f(x)=x+x, "string": f(x)=concat(x,x) })', "double(2)", 'double("hello")'],
     seealso: []
   };
 
@@ -32684,7 +34619,7 @@ var meta_bind_publish = (() => {
     category: "Algebra",
     syntax: ["x=polynomialRoot(-6, 3)", "x=polynomialRoot(4, -4, 1)", "x=polynomialRoot(-8, 12, -6, 1)"],
     description: "Finds the roots of a univariate polynomial given by its coefficients starting from constant, linear, and so on, increasing in degree.",
-    examples: ["a = polynomialRoot(-6, 11, -6 1)"],
+    examples: ["a = polynomialRoot(-6, 11, -6, 1)"],
     seealso: ["cbrt", "sqrt"]
   };
 
@@ -32735,7 +34670,7 @@ var meta_bind_publish = (() => {
     category: "Algebra",
     syntax: ["simplifyConstant(expr)", "simplifyConstant(expr, options)"],
     description: "Replace constant subexpressions of node with their values.",
-    examples: ['simplifyConatant("(3-3)*x")', 'simplifyConstant(parse("z-cos(tau/8)"))'],
+    examples: ['simplifyConstant("(3-3)*x")', 'simplifyConstant(parse("z-cos(tau/8)"))'],
     seealso: ["simplify", "simplifyCore", "evaluate"]
   };
 
@@ -32955,7 +34890,7 @@ var meta_bind_publish = (() => {
     category: "Arithmetic",
     syntax: ["invmod(a, b)"],
     description: "Calculate the (modular) multiplicative inverse of a modulo b. Solution to the equation ax \u2263 1 (mod b)",
-    examples: ["invmod(8, 12)=NaN", "invmod(7, 13)=2", "invmod(15151, 15122)=10429"],
+    examples: ["invmod(8, 12)", "invmod(7, 13)", "invmod(15151, 15122)"],
     seealso: ["gcd", "xgcd"]
   };
 
@@ -33108,33 +35043,33 @@ var meta_bind_publish = (() => {
     seealso: ["sqrt", "abs", "square", "multiply"]
   };
 
-  // node_modules/mathjs/lib/esm/expression/embeddedDocs/function/matrix/sylvester.js
+  // node_modules/mathjs/lib/esm/expression/embeddedDocs/function/algebra/sylvester.js
   var sylvesterDocs = {
     name: "sylvester",
-    category: "Matrix",
+    category: "Algebra",
     syntax: ["sylvester(A,B,C)"],
     description: "Solves the real-valued Sylvester equation AX+XB=C for X",
-    examples: ["sylvester([[-1, -2], [1, 1]], [[-2, 1], [-1, 2]], [[-3, 2], [3, 0]])", "sylvester(A,B,C)"],
+    examples: ["sylvester([[-1, -2], [1, 1]], [[-2, 1], [-1, 2]], [[-3, 2], [3, 0]])", "A = [[-1, -2], [1, 1]]; B = [[2, -1], [1, -2]]; C = [[-3, 2], [3, 0]]", "sylvester(A, B, C)"],
     seealso: ["schur", "lyap"]
   };
 
-  // node_modules/mathjs/lib/esm/expression/embeddedDocs/function/matrix/schur.js
+  // node_modules/mathjs/lib/esm/expression/embeddedDocs/function/algebra/schur.js
   var schurDocs = {
     name: "schur",
-    category: "Matrix",
+    category: "Algebra",
     syntax: ["schur(A)"],
     description: "Performs a real Schur decomposition of the real matrix A = UTU'",
-    examples: ["schur([[1, 0], [-4, 3]])", "schur(A)"],
+    examples: ["schur([[1, 0], [-4, 3]])", "A = [[1, 0], [-4, 3]]", "schur(A)"],
     seealso: ["lyap", "sylvester"]
   };
 
-  // node_modules/mathjs/lib/esm/expression/embeddedDocs/function/matrix/lyap.js
+  // node_modules/mathjs/lib/esm/expression/embeddedDocs/function/algebra/lyap.js
   var lyapDocs = {
     name: "lyap",
-    category: "Matrix",
+    category: "Algebra",
     syntax: ["lyap(A,Q)"],
     description: "Solves the Continuous-time Lyapunov equation AP+PA'+Q=0 for P",
-    examples: ["lyap([[-2, 0], [1, -4]], [[3, 1], [1, 3]])", "lyap(A,Q)"],
+    examples: ["lyap([[-2, 0], [1, -4]], [[3, 1], [1, 3]])", "A = [[-2, 0], [1, -4]]", "Q = [[3, 1], [1, 3]]", "lyap(A,Q)"],
     seealso: ["schur", "sylvester"]
   };
 
@@ -33342,9 +35277,9 @@ var meta_bind_publish = (() => {
   var evaluateDocs = {
     name: "evaluate",
     category: "Expression",
-    syntax: ["evaluate(expression)", "evaluate([expr1, expr2, expr3, ...])"],
+    syntax: ["evaluate(expression)", "evaluate(expression, scope)", "evaluate([expr1, expr2, expr3, ...])", "evaluate([expr1, expr2, expr3, ...], scope)"],
     description: "Evaluate an expression or an array with expressions.",
-    examples: ['evaluate("2 + 3")', 'evaluate("sqrt(" + 4 + ")")'],
+    examples: ['evaluate("2 + 3")', 'evaluate("sqrt(16)")', 'evaluate("2 inch to cm")', 'evaluate("sin(x * pi)", { "x": 1/2 })', 'evaluate(["width=2", "height=4","width*height"])'],
     seealso: []
   };
 
@@ -33494,7 +35429,7 @@ var meta_bind_publish = (() => {
     category: "Matrix",
     syntax: ["diff(arr)", "diff(arr, dim)"],
     description: ["Create a new matrix or array with the difference of the passed matrix or array.", "Dim parameter is optional and used to indicant the dimension of the array/matrix to apply the difference", "If no dimension parameter is passed it is assumed as dimension 0", "Dimension is zero-based in javascript and one-based in the parser", "Arrays must be 'rectangular' meaning arrays like [1, 2]", "If something is passed as a matrix it will be returned as a matrix but other than that all matrices are converted to arrays"],
-    examples: ["diff([1, 2, 4, 7, 0])", "diff([1, 2, 4, 7, 0], 0)", "diff(matrix([1, 2, 4, 7, 0]))", "diff([[1, 2], [3, 4]])", "diff([[1, 2], [3, 4]], 0)", "diff([[1, 2], [3, 4]], 1)", "diff([[1, 2], [3, 4]], bignumber(1))", "diff(matrix([[1, 2], [3, 4]]), 1)", "diff([[1, 2], matrix([3, 4])], 1)"],
+    examples: ["A = [1, 2, 4, 7, 0]", "diff(A)", "diff(A, 1)", "B = [[1, 2], [3, 4]]", "diff(B)", "diff(B, 1)", "diff(B, 2)", "diff(B, bignumber(2))", "diff([[1, 2], matrix([3, 4])], 2)"],
     seealso: ["subtract", "partitionSelect"]
   };
 
@@ -33664,7 +35599,7 @@ var meta_bind_publish = (() => {
     category: "Type",
     syntax: ["start:end", "start:step:end", "range(start, end)", "range(start, end, step)", "range(string)"],
     description: "Create a range. Lower bound of the range is included, upper bound is excluded.",
-    examples: ["1:5", "3:-1:-3", "range(3, 7)", "range(0, 12, 2)", 'range("4:10")', "a = [1, 2, 3, 4; 5, 6, 7, 8]", "a[1:2, 1:2]"],
+    examples: ["1:5", "3:-1:-3", "range(3, 7)", "range(0, 12, 2)", 'range("4:10")', "range(1m, 1m, 3m)", "a = [1, 2, 3, 4; 5, 6, 7, 8]", "a[1:2, 1:2]"],
     seealso: ["concat", "det", "diag", "identity", "inv", "ones", "size", "squeeze", "subset", "trace", "transpose", "zeros"]
   };
 
@@ -34128,6 +36063,26 @@ var meta_bind_publish = (() => {
     seealso: ["setIntersect", "setDifference"]
   };
 
+  // node_modules/mathjs/lib/esm/expression/embeddedDocs/function/signal/zpk2tf.js
+  var zpk2tfDocs = {
+    name: "zpk2tf",
+    category: "Signal",
+    syntax: ["zpk2tf(z, p, k)"],
+    description: "Compute the transfer function of a zero-pole-gain model.",
+    examples: ["zpk2tf([1, 2], [-1, -2], 1)", "zpk2tf([1, 2], [-1, -2])", "zpk2tf([1 - 3i, 2 + 2i], [-1, -2])"],
+    seealso: []
+  };
+
+  // node_modules/mathjs/lib/esm/expression/embeddedDocs/function/signal/freqz.js
+  var freqzDocs = {
+    name: "freqz",
+    category: "Signal",
+    syntax: ["freqz(b, a)", "freqz(b, a, w)"],
+    description: "Calculates the frequency response of a filter given its numerator and denominator coefficients.",
+    examples: ["freqz([1, 2], [1, 2, 3])", "freqz([1, 2], [1, 2, 3], [0, 1])", "freqz([1, 2], [1, 2, 3], 512)"],
+    seealso: []
+  };
+
   // node_modules/mathjs/lib/esm/expression/embeddedDocs/function/special/erf.js
   var erfDocs = {
     name: "erf",
@@ -34135,6 +36090,16 @@ var meta_bind_publish = (() => {
     syntax: ["erf(x)"],
     description: "Compute the erf function of a value using a rational Chebyshev approximations for different intervals of x",
     examples: ["erf(0.2)", "erf(-0.5)", "erf(4)"],
+    seealso: []
+  };
+
+  // node_modules/mathjs/lib/esm/expression/embeddedDocs/function/special/zeta.js
+  var zetaDocs = {
+    name: "zeta",
+    category: "Special",
+    syntax: ["zeta(s)"],
+    description: "Compute the Riemann Zeta Function using an infinite series and Riemanns Functional Equation for the entire complex plane",
+    examples: ["zeta(0.2)", "zeta(-0.5)", "zeta(4)"],
     seealso: []
   };
 
@@ -34255,6 +36220,16 @@ var meta_bind_publish = (() => {
     syntax: ["variance(a, b, c, ...)", "variance(A)", "variance(A, dimension)", "variance(A, normalization)", "variance(A, dimension, normalization)"],
     description: 'Compute the variance of all values. Optional parameter normalization can be "unbiased" (default), "uncorrected", or "biased".',
     examples: ["variance(2, 4, 6)", "variance([2, 4, 6, 8])", 'variance([2, 4, 6, 8], "uncorrected")', 'variance([2, 4, 6, 8], "biased")', "variance([1, 2, 3; 4, 5, 6])"],
+    seealso: ["max", "mean", "min", "median", "min", "prod", "std", "sum"]
+  };
+
+  // node_modules/mathjs/lib/esm/expression/embeddedDocs/function/statistics/corr.js
+  var corrDocs = {
+    name: "corr",
+    category: "Statistics",
+    syntax: ["corr(A,B)"],
+    description: "Compute the correlation coefficient of a two list with values, For matrices, the matrix correlation coefficient is calculated.",
+    examples: ["corr([2, 4, 6, 8],[1, 2, 3, 6])", "corr(matrix([[1, 2.2, 3, 4.8, 5], [1, 2, 3, 4, 5]]), matrix([[4, 5.3, 6.6, 7, 8], [1, 2, 3, 4, 5]]))"],
     seealso: ["max", "mean", "min", "median", "min", "prod", "std", "sum"]
   };
 
@@ -34644,7 +36619,7 @@ var meta_bind_publish = (() => {
     category: "Utils",
     syntax: ["numeric(x)"],
     description: "Convert a numeric input to a specific numeric type: number, BigNumber, or Fraction.",
-    examples: ['numeric("4")', 'numeric("4", "number")', 'numeric("4", "BigNumber")', 'numeric("4", "Fraction)', 'numeric(4, "Fraction")', 'numeric(fraction(2, 5), "number)'],
+    examples: ['numeric("4")', 'numeric("4", "number")', 'numeric("4", "BigNumber")', 'numeric("4", "Fraction")', 'numeric(4, "Fraction")', 'numeric(fraction(2, 5), "number")'],
     seealso: ["number", "fraction", "bignumber", "string", "format"]
   };
 
@@ -34664,7 +36639,7 @@ var meta_bind_publish = (() => {
     category: "Utils",
     syntax: ["print(template, values)", "print(template, values, precision)"],
     description: "Interpolate values into a string template.",
-    examples: ['print("Lucy is $age years old", {age: 5})', 'print("The value of pi is $pi", {pi: pi}, 3)', 'print("Hello, $user.name!", {user: {name: "John"}})', 'print("Values: $0, $1, $2", [6, 9, 4])'],
+    examples: ['print("Lucy is $age years old", {age: 5})', 'print("The value of pi is $pi", {pi: pi}, 3)', 'print("Hello, $user.name!", {user: {name: "John"}})', 'print("Values: $1, $2, $3", [6, 9, 4])'],
     seealso: ["format"]
   };
 
@@ -34676,6 +36651,16 @@ var meta_bind_publish = (() => {
     description: "Get the type of a variable.",
     examples: ["typeOf(3.5)", "typeOf(2 - 4i)", "typeOf(45 deg)", 'typeOf("hello world")'],
     seealso: ["getMatrixDataType"]
+  };
+
+  // node_modules/mathjs/lib/esm/expression/embeddedDocs/function/numeric/solveODE.js
+  var solveODEDocs = {
+    name: "solveODE",
+    category: "Numeric",
+    syntax: ["solveODE(func, tspan, y0)", "solveODE(func, tspan, y0, options)"],
+    description: "Numerical Integration of Ordinary Differential Equations.",
+    examples: ["f(t,y) = y", "tspan = [0, 4]", "solveODE(f, tspan, 1)", "solveODE(f, tspan, [1, 2])", 'solveODE(f, tspan, 1, { method:"RK23", maxStep:0.1 })'],
+    seealso: ["derivative", "simplifyCore"]
   };
 
   // node_modules/mathjs/lib/esm/expression/embeddedDocs/embeddedDocs.js
@@ -35033,6 +37018,7 @@ var meta_bind_publish = (() => {
     sylvester: sylvesterDocs,
     schur: schurDocs,
     lyap: lyapDocs,
+    solveODE: solveODEDocs,
     combinations: combinationsDocs,
     combinationsWithRep: combinationsWithRepDocs,
     factorial: factorialDocs,
@@ -35065,7 +37051,10 @@ var meta_bind_publish = (() => {
     setSize: setSizeDocs,
     setSymDifference: setSymDifferenceDocs,
     setUnion: setUnionDocs,
+    zpk2tf: zpk2tfDocs,
+    freqz: freqzDocs,
     erf: erfDocs,
+    zeta: zetaDocs,
     cumsum: cumSumDocs,
     mad: madDocs,
     max: maxDocs,
@@ -35078,6 +37067,7 @@ var meta_bind_publish = (() => {
     std: stdDocs,
     sum: sumDocs,
     variance: varianceDocs,
+    corr: corrDocs,
     acos: acosDocs,
     acosh: acoshDocs,
     acot: acotDocs,
@@ -35123,21 +37113,21 @@ var meta_bind_publish = (() => {
   };
 
   // node_modules/mathjs/lib/esm/expression/function/help.js
-  var name236 = "help";
-  var dependencies236 = ["typed", "mathWithTransform", "Help"];
-  var createHelp = /* @__PURE__ */ factory(name236, dependencies236, (_ref) => {
+  var name238 = "help";
+  var dependencies238 = ["typed", "mathWithTransform", "Help"];
+  var createHelp = /* @__PURE__ */ factory(name238, dependencies238, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       mathWithTransform: mathWithTransform2,
       Help: Help2
     } = _ref;
-    return typed2(name236, {
+    return typed3(name238, {
       any: function any(search) {
         var prop;
         var searchName = search;
         if (typeof search !== "string") {
           for (prop in mathWithTransform2) {
-            if (hasOwnProperty2(mathWithTransform2, prop) && search === mathWithTransform2[prop]) {
+            if (hasOwnProperty(mathWithTransform2, prop) && search === mathWithTransform2[prop]) {
               searchName = prop;
               break;
             }
@@ -35154,29 +37144,29 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/type/chain/function/chain.js
-  var name237 = "chain";
-  var dependencies237 = ["typed", "Chain"];
-  var createChain = /* @__PURE__ */ factory(name237, dependencies237, (_ref) => {
+  var name239 = "chain";
+  var dependencies239 = ["typed", "Chain"];
+  var createChain = /* @__PURE__ */ factory(name239, dependencies239, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       Chain: Chain2
     } = _ref;
-    return typed2(name237, {
+    return typed3(name239, {
       "": function _() {
         return new Chain2();
       },
-      any: function any(value) {
-        return new Chain2(value);
+      any: function any(value2) {
+        return new Chain2(value2);
       }
     });
   });
 
   // node_modules/mathjs/lib/esm/function/matrix/det.js
-  var name238 = "det";
-  var dependencies238 = ["typed", "matrix", "subtract", "multiply", "divideScalar", "isZero", "unaryMinus"];
-  var createDet = /* @__PURE__ */ factory(name238, dependencies238, (_ref) => {
+  var name240 = "det";
+  var dependencies240 = ["typed", "matrix", "subtract", "multiply", "divideScalar", "isZero", "unaryMinus"];
+  var createDet = /* @__PURE__ */ factory(name240, dependencies240, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       subtract: subtract2,
       multiply: multiply2,
@@ -35184,7 +37174,7 @@ var meta_bind_publish = (() => {
       isZero: isZero2,
       unaryMinus: unaryMinus2
     } = _ref;
-    return typed2(name238, {
+    return typed3(name240, {
       any: function any(x) {
         return clone(x);
       },
@@ -35267,21 +37257,21 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/matrix/inv.js
-  var name239 = "inv";
-  var dependencies239 = ["typed", "matrix", "divideScalar", "addScalar", "multiply", "unaryMinus", "det", "identity", "abs"];
-  var createInv = /* @__PURE__ */ factory(name239, dependencies239, (_ref) => {
+  var name241 = "inv";
+  var dependencies241 = ["typed", "matrix", "divideScalar", "addScalar", "multiply", "unaryMinus", "det", "identity", "abs"];
+  var createInv = /* @__PURE__ */ factory(name241, dependencies241, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       divideScalar: divideScalar2,
       addScalar: addScalar2,
       multiply: multiply2,
       unaryMinus: unaryMinus2,
       det: det2,
-      identity: identity2,
+      identity: identity3,
       abs: abs3
     } = _ref;
-    return typed2(name239, {
+    return typed3(name241, {
       "Array | Matrix": function ArrayMatrix(x) {
         var size2 = isMatrix(x) ? x.size() : arraySize(x);
         switch (size2.length) {
@@ -35317,13 +37307,13 @@ var meta_bind_publish = (() => {
       }
     });
     function _inv(mat, rows, cols) {
-      var r, s, f, value, temp;
+      var r, s, f, value2, temp;
       if (rows === 1) {
-        value = mat[0][0];
-        if (value === 0) {
+        value2 = mat[0][0];
+        if (value2 === 0) {
           throw Error("Cannot calculate inverse, determinant is zero");
         }
-        return [[divideScalar2(1, value)]];
+        return [[divideScalar2(1, value2)]];
       } else if (rows === 2) {
         var d = det2(mat);
         if (d === 0) {
@@ -35335,7 +37325,7 @@ var meta_bind_publish = (() => {
         for (r = 0; r < rows; r++) {
           A[r] = A[r].concat();
         }
-        var B = identity2(rows).valueOf();
+        var B = identity3(rows).valueOf();
         for (var c = 0; c < cols; c++) {
           var ABig = abs3(A[c][c]);
           var rBig = c;
@@ -35391,11 +37381,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/matrix/pinv.js
-  var name240 = "pinv";
-  var dependencies240 = ["typed", "matrix", "inv", "deepEqual", "equal", "dotDivide", "dot", "ctranspose", "divideScalar", "multiply", "add", "Complex"];
-  var createPinv = /* @__PURE__ */ factory(name240, dependencies240, (_ref) => {
+  var name242 = "pinv";
+  var dependencies242 = ["typed", "matrix", "inv", "deepEqual", "equal", "dotDivide", "dot", "ctranspose", "divideScalar", "multiply", "add", "Complex"];
+  var createPinv = /* @__PURE__ */ factory(name242, dependencies242, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       inv: inv2,
       deepEqual: deepEqual2,
@@ -35408,7 +37398,7 @@ var meta_bind_publish = (() => {
       add: add3,
       Complex: Complex3
     } = _ref;
-    return typed2(name240, {
+    return typed3(name242, {
       "Array | Matrix": function ArrayMatrix(x) {
         var size2 = isMatrix(x) ? x.size() : arraySize(x);
         switch (size2.length) {
@@ -36160,10 +38150,10 @@ var meta_bind_publish = (() => {
         vectors
       };
     }
-    function createArray(size2, value) {
+    function createArray(size2, value2) {
       var array = new Array(size2);
       for (var i2 = 0; i2 < size2; i2++) {
-        array[i2] = value;
+        array[i2] = value2;
       }
       return array;
     }
@@ -36171,12 +38161,12 @@ var meta_bind_publish = (() => {
   }
 
   // node_modules/mathjs/lib/esm/function/matrix/eigs.js
-  var name241 = "eigs";
-  var dependencies241 = ["config", "typed", "matrix", "addScalar", "equal", "subtract", "abs", "atan", "cos", "sin", "multiplyScalar", "divideScalar", "inv", "bignumber", "multiply", "add", "larger", "column", "flatten", "number", "complex", "sqrt", "diag", "qr", "usolve", "usolveAll", "im", "re", "smaller", "matrixFromColumns", "dot"];
-  var createEigs = /* @__PURE__ */ factory(name241, dependencies241, (_ref) => {
+  var name243 = "eigs";
+  var dependencies243 = ["config", "typed", "matrix", "addScalar", "equal", "subtract", "abs", "atan", "cos", "sin", "multiplyScalar", "divideScalar", "inv", "bignumber", "multiply", "add", "larger", "column", "flatten", "number", "complex", "sqrt", "diag", "qr", "usolve", "usolveAll", "im", "re", "smaller", "matrixFromColumns", "dot"];
+  var createEigs = /* @__PURE__ */ factory(name243, dependencies243, (_ref) => {
     var {
       config: config4,
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       addScalar: addScalar2,
       subtract: subtract2,
@@ -36248,7 +38238,7 @@ var meta_bind_publish = (() => {
       matrixFromColumns: matrixFromColumns2,
       dot: dot2
     });
-    return typed2("eigs", {
+    return typed3("eigs", {
       Array: function Array2(x) {
         var mat = matrix2(x);
         return computeValuesAndVectors(mat);
@@ -36343,7 +38333,7 @@ var meta_bind_publish = (() => {
           } else if (isComplex(el)) {
             hasComplex = true;
           } else {
-            throw TypeError("Unsupported type in Matrix: " + typeOf(el));
+            throw TypeError("Unsupported type in Matrix: " + typeOf2(el));
           }
         }
       }
@@ -36380,18 +38370,18 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/matrix/expm.js
-  var name242 = "expm";
-  var dependencies242 = ["typed", "abs", "add", "identity", "inv", "multiply"];
-  var createExpm = /* @__PURE__ */ factory(name242, dependencies242, (_ref) => {
+  var name244 = "expm";
+  var dependencies244 = ["typed", "abs", "add", "identity", "inv", "multiply"];
+  var createExpm = /* @__PURE__ */ factory(name244, dependencies244, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       abs: abs3,
       add: add3,
-      identity: identity2,
+      identity: identity3,
       inv: inv2,
       multiply: multiply2
     } = _ref;
-    return typed2(name242, {
+    return typed3(name244, {
       Matrix: function Matrix2(A) {
         var size2 = A.size();
         if (size2.length !== 2 || size2[0] !== size2[1]) {
@@ -36404,8 +38394,8 @@ var meta_bind_publish = (() => {
         var q = params.q;
         var j = params.j;
         var Apos = multiply2(A, Math.pow(2, -j));
-        var N = identity2(n);
-        var D = identity2(n);
+        var N = identity3(n);
+        var D = identity3(n);
         var factor = 1;
         var AposToI = Apos;
         var alternate = -1;
@@ -36467,11 +38457,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/matrix/sqrtm.js
-  var name243 = "sqrtm";
-  var dependencies243 = ["typed", "abs", "add", "multiply", "map", "sqrt", "subtract", "inv", "size", "max", "identity"];
-  var createSqrtm = /* @__PURE__ */ factory(name243, dependencies243, (_ref) => {
+  var name245 = "sqrtm";
+  var dependencies245 = ["typed", "abs", "add", "multiply", "map", "sqrt", "subtract", "inv", "size", "max", "identity"];
+  var createSqrtm = /* @__PURE__ */ factory(name245, dependencies245, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       abs: abs3,
       add: add3,
       multiply: multiply2,
@@ -36481,7 +38471,7 @@ var meta_bind_publish = (() => {
       inv: inv2,
       size: size2,
       max: max3,
-      identity: identity2
+      identity: identity3
     } = _ref;
     var _maxIterations = 1e3;
     var _tolerance = 1e-6;
@@ -36489,7 +38479,7 @@ var meta_bind_publish = (() => {
       var error;
       var iterations = 0;
       var Y = A;
-      var Z = identity2(size2(A));
+      var Z = identity3(size2(A));
       do {
         var Yk = Y;
         Y = multiply2(0.5, add3(Yk, inv2(Z)));
@@ -36501,7 +38491,7 @@ var meta_bind_publish = (() => {
       } while (error > _tolerance);
       return Y;
     }
-    return typed2(name243, {
+    return typed3(name245, {
       "Array | Matrix": function ArrayMatrix(A) {
         var size3 = isMatrix(A) ? A.size() : arraySize(A);
         switch (size3.length) {
@@ -36528,27 +38518,27 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/algebra/sylvester.js
-  var name244 = "sylvester";
-  var dependencies244 = ["typed", "schur", "matrixFromColumns", "matrix", "multiply", "range", "concat", "transpose", "index", "subset", "add", "subtract", "identity", "lusolve", "abs"];
-  var createSylvester = /* @__PURE__ */ factory(name244, dependencies244, (_ref) => {
+  var name246 = "sylvester";
+  var dependencies246 = ["typed", "schur", "matrixFromColumns", "matrix", "multiply", "range", "concat", "transpose", "index", "subset", "add", "subtract", "identity", "lusolve", "abs"];
+  var createSylvester = /* @__PURE__ */ factory(name246, dependencies246, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       schur: schur2,
       matrixFromColumns: matrixFromColumns2,
       matrix: matrix2,
       multiply: multiply2,
       range: range2,
-      concat: concat2,
+      concat: concat3,
       transpose: transpose2,
       index: index2,
       subset: subset2,
       add: add3,
       subtract: subtract2,
-      identity: identity2,
+      identity: identity3,
       lusolve: lusolve2,
       abs: abs3
     } = _ref;
-    return typed2(name244, {
+    return typed3(name246, {
       "Matrix, Matrix, Matrix": _sylvester,
       "Array, Matrix, Matrix": function ArrayMatrixMatrix(A, B, C) {
         return _sylvester(matrix2(A), B, C);
@@ -36584,18 +38574,18 @@ var meta_bind_publish = (() => {
       var D = multiply2(multiply2(transpose2(U), C), V);
       var all = range2(0, m);
       var y = [];
-      var hc = (a, b) => concat2(a, b, 1);
-      var vc = (a, b) => concat2(a, b, 0);
+      var hc = (a, b) => concat3(a, b, 1);
+      var vc = (a, b) => concat3(a, b, 0);
       for (var k = 0; k < n; k++) {
         if (k < n - 1 && abs3(subset2(G, index2(k + 1, k))) > 1e-5) {
           var RHS = vc(subset2(D, index2(all, k)), subset2(D, index2(all, k + 1)));
           for (var j = 0; j < k; j++) {
             RHS = add3(RHS, vc(multiply2(y[j], subset2(G, index2(j, k))), multiply2(y[j], subset2(G, index2(j, k + 1)))));
           }
-          var gkk = multiply2(identity2(m), multiply2(-1, subset2(G, index2(k, k))));
-          var gmk = multiply2(identity2(m), multiply2(-1, subset2(G, index2(k + 1, k))));
-          var gkm = multiply2(identity2(m), multiply2(-1, subset2(G, index2(k, k + 1))));
-          var gmm = multiply2(identity2(m), multiply2(-1, subset2(G, index2(k + 1, k + 1))));
+          var gkk = multiply2(identity3(m), multiply2(-1, subset2(G, index2(k, k))));
+          var gmk = multiply2(identity3(m), multiply2(-1, subset2(G, index2(k + 1, k))));
+          var gkm = multiply2(identity3(m), multiply2(-1, subset2(G, index2(k, k + 1))));
+          var gmm = multiply2(identity3(m), multiply2(-1, subset2(G, index2(k + 1, k + 1))));
           var LHS = vc(hc(add3(F, gkk), gmk), hc(gkm, add3(F, gmm)));
           var yAux = lusolve2(LHS, RHS);
           y[k] = yAux.subset(index2(range2(0, m), 0));
@@ -36607,7 +38597,7 @@ var meta_bind_publish = (() => {
             _RHS = add3(_RHS, multiply2(y[_j], subset2(G, index2(_j, k))));
           }
           var _gkk = subset2(G, index2(k, k));
-          var _LHS = subtract2(F, multiply2(_gkk, identity2(m)));
+          var _LHS = subtract2(F, multiply2(_gkk, identity3(m)));
           y[k] = lusolve2(_LHS, _RHS);
         }
       }
@@ -36618,19 +38608,19 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/algebra/decomposition/schur.js
-  var name245 = "schur";
-  var dependencies245 = ["typed", "matrix", "identity", "multiply", "qr", "norm", "subtract"];
-  var createSchur = /* @__PURE__ */ factory(name245, dependencies245, (_ref) => {
+  var name247 = "schur";
+  var dependencies247 = ["typed", "matrix", "identity", "multiply", "qr", "norm", "subtract"];
+  var createSchur = /* @__PURE__ */ factory(name247, dependencies247, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
-      identity: identity2,
+      identity: identity3,
       multiply: multiply2,
       qr: qr2,
       norm: norm2,
       subtract: subtract2
     } = _ref;
-    return typed2(name245, {
+    return typed3(name247, {
       Array: function Array2(X) {
         var r = _schur(matrix2(X));
         return {
@@ -36645,7 +38635,7 @@ var meta_bind_publish = (() => {
     function _schur(X) {
       var n = X.size()[0];
       var A = X;
-      var U = identity2(n);
+      var U = identity3(n);
       var k = 0;
       var A0;
       do {
@@ -36667,17 +38657,17 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/algebra/lyap.js
-  var name246 = "lyap";
-  var dependencies246 = ["typed", "matrix", "sylvester", "multiply", "transpose"];
-  var createLyap = /* @__PURE__ */ factory(name246, dependencies246, (_ref) => {
+  var name248 = "lyap";
+  var dependencies248 = ["typed", "matrix", "sylvester", "multiply", "transpose"];
+  var createLyap = /* @__PURE__ */ factory(name248, dependencies248, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       sylvester: sylvester2,
       multiply: multiply2,
       transpose: transpose2
     } = _ref;
-    return typed2(name246, {
+    return typed3(name248, {
       "Matrix, Matrix": function MatrixMatrix(A, Q2) {
         return sylvester2(A, transpose2(A), multiply2(-1, Q2));
       },
@@ -36694,11 +38684,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/arithmetic/divide.js
-  var name247 = "divide";
-  var dependencies247 = ["typed", "matrix", "multiply", "equalScalar", "divideScalar", "inv"];
-  var createDivide = /* @__PURE__ */ factory(name247, dependencies247, (_ref) => {
+  var name249 = "divide";
+  var dependencies249 = ["typed", "matrix", "multiply", "equalScalar", "divideScalar", "inv"];
+  var createDivide = /* @__PURE__ */ factory(name249, dependencies249, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       multiply: multiply2,
       equalScalar: equalScalar2,
@@ -36706,13 +38696,13 @@ var meta_bind_publish = (() => {
       inv: inv2
     } = _ref;
     var matAlgo11xS0s = createMatAlgo11xS0s({
-      typed: typed2,
+      typed: typed3,
       equalScalar: equalScalar2
     });
     var matAlgo14xDs = createMatAlgo14xDs({
-      typed: typed2
+      typed: typed3
     });
-    return typed2("divide", extend({
+    return typed3("divide", extend({
       "Array | Matrix, Array | Matrix": function ArrayMatrixArrayMatrix(x, y) {
         return multiply2(x, inv2(y));
       },
@@ -36732,20 +38722,20 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/geometry/distance.js
-  var name248 = "distance";
-  var dependencies248 = ["typed", "addScalar", "subtract", "divideScalar", "multiplyScalar", "unaryMinus", "sqrt", "abs"];
-  var createDistance = /* @__PURE__ */ factory(name248, dependencies248, (_ref) => {
+  var name250 = "distance";
+  var dependencies250 = ["typed", "addScalar", "subtract", "divideScalar", "multiplyScalar", "deepEqual", "sqrt", "abs"];
+  var createDistance = /* @__PURE__ */ factory(name250, dependencies250, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       addScalar: addScalar2,
       subtract: subtract2,
       multiplyScalar: multiplyScalar2,
       divideScalar: divideScalar2,
-      unaryMinus: unaryMinus2,
+      deepEqual: deepEqual2,
       sqrt: sqrt3,
       abs: abs3
     } = _ref;
-    return typed2(name248, {
+    return typed3(name250, {
       "Array, Array, Array": function ArrayArrayArray(x, y, z) {
         if (x.length === 2 && y.length === 2 && z.length === 2) {
           if (!_2d(x)) {
@@ -36757,10 +38747,12 @@ var meta_bind_publish = (() => {
           if (!_2d(z)) {
             throw new TypeError("Array with 2 numbers or BigNumbers expected for third argument");
           }
-          var m = divideScalar2(subtract2(z[1], z[0]), subtract2(y[1], y[0]));
-          var xCoeff = multiplyScalar2(multiplyScalar2(m, m), y[0]);
-          var yCoeff = unaryMinus2(multiplyScalar2(m, y[0]));
-          var constant = x[1];
+          if (deepEqual2(y, z)) {
+            throw new TypeError("LinePoint1 should not be same with LinePoint2");
+          }
+          var xCoeff = subtract2(z[1], y[1]);
+          var yCoeff = subtract2(y[0], z[0]);
+          var constant = subtract2(multiplyScalar2(z[0], y[1]), multiplyScalar2(y[0], z[1]));
           return _distancePointLine2D(x[0], x[1], xCoeff, yCoeff, constant);
         } else {
           throw new TypeError("Invalid Arguments: Try again");
@@ -36777,11 +38769,13 @@ var meta_bind_publish = (() => {
           if (!_2d(z)) {
             throw new TypeError("Values of lineTwoPtX and lineTwoPtY should be numbers or BigNumbers");
           }
+          if (deepEqual2(_objectToArray(y), _objectToArray(z))) {
+            throw new TypeError("LinePoint1 should not be same with LinePoint2");
+          }
           if ("pointX" in x && "pointY" in x && "lineOnePtX" in y && "lineOnePtY" in y && "lineTwoPtX" in z && "lineTwoPtY" in z) {
-            var m = divideScalar2(subtract2(z.lineTwoPtY, z.lineTwoPtX), subtract2(y.lineOnePtY, y.lineOnePtX));
-            var xCoeff = multiplyScalar2(multiplyScalar2(m, m), y.lineOnePtX);
-            var yCoeff = unaryMinus2(multiplyScalar2(m, y.lineOnePtX));
-            var constant = x.pointX;
+            var xCoeff = subtract2(z.lineTwoPtY, y.lineOnePtY);
+            var yCoeff = subtract2(y.lineOnePtX, z.lineTwoPtX);
+            var constant = subtract2(multiplyScalar2(z.lineTwoPtX, y.lineOnePtY), multiplyScalar2(y.lineOnePtX, z.lineTwoPtY));
             return _distancePointLine2D(x.pointX, x.pointY, xCoeff, yCoeff, constant);
           } else {
             throw new TypeError("Key names do not match");
@@ -36907,10 +38901,10 @@ var meta_bind_publish = (() => {
       return _isNumber(a[0]) && _isNumber(a[1]) && _isNumber(a[2]) && _isNumber(a[3]) && _isNumber(a[4]) && _isNumber(a[5]);
     }
     function _objectToArray(o) {
-      var keys = Object.keys(o);
+      var keys2 = Object.keys(o);
       var a = [];
-      for (var i2 = 0; i2 < keys.length; i2++) {
-        a.push(o[keys[i2]]);
+      for (var i2 = 0; i2 < keys2.length; i2++) {
+        a.push(o[keys2[i2]]);
       }
       return a;
     }
@@ -36970,11 +38964,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/geometry/intersect.js
-  var name249 = "intersect";
-  var dependencies249 = ["typed", "config", "abs", "add", "addScalar", "matrix", "multiply", "multiplyScalar", "divideScalar", "subtract", "smaller", "equalScalar", "flatten", "isZero", "isNumeric"];
-  var createIntersect = /* @__PURE__ */ factory(name249, dependencies249, (_ref) => {
+  var name251 = "intersect";
+  var dependencies251 = ["typed", "config", "abs", "add", "addScalar", "matrix", "multiply", "multiplyScalar", "divideScalar", "subtract", "smaller", "equalScalar", "flatten", "isZero", "isNumeric"];
+  var createIntersect = /* @__PURE__ */ factory(name251, dependencies251, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       abs: abs3,
       add: add3,
@@ -36990,7 +38984,7 @@ var meta_bind_publish = (() => {
       isZero: isZero2,
       isNumeric: isNumeric2
     } = _ref;
-    return typed2("intersect", {
+    return typed3("intersect", {
       "Array, Array, Array": _AAA,
       "Array, Array, Array, Array": _AAAA,
       "Matrix, Matrix, Matrix": function MatrixMatrixMatrix(x, y, plane) {
@@ -37138,16 +39132,16 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/statistics/sum.js
-  var name250 = "sum";
-  var dependencies250 = ["typed", "config", "add", "numeric"];
-  var createSum = /* @__PURE__ */ factory(name250, dependencies250, (_ref) => {
+  var name252 = "sum";
+  var dependencies252 = ["typed", "config", "add", "numeric"];
+  var createSum = /* @__PURE__ */ factory(name252, dependencies252, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       add: add3,
       numeric: numeric3
     } = _ref;
-    return typed2(name250, {
+    return typed3(name252, {
       "Array | Matrix": _sum,
       "Array | Matrix, number | BigNumber": _nsumDim,
       "...": function _(args) {
@@ -37159,11 +39153,11 @@ var meta_bind_publish = (() => {
     });
     function _sum(array) {
       var sum3;
-      deepForEach(array, function(value) {
+      deepForEach(array, function(value2) {
         try {
-          sum3 = sum3 === void 0 ? value : add3(sum3, value);
+          sum3 = sum3 === void 0 ? value2 : add3(sum3, value2);
         } catch (err) {
-          throw improveErrorMessage(err, "sum", value);
+          throw improveErrorMessage(err, "sum", value2);
         }
       });
       if (sum3 === void 0) {
@@ -37185,15 +39179,15 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/statistics/cumsum.js
-  var name251 = "cumsum";
-  var dependencies251 = ["typed", "add", "unaryPlus"];
-  var createCumSum = /* @__PURE__ */ factory(name251, dependencies251, (_ref) => {
+  var name253 = "cumsum";
+  var dependencies253 = ["typed", "add", "unaryPlus"];
+  var createCumSum = /* @__PURE__ */ factory(name253, dependencies253, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       add: add3,
       unaryPlus: unaryPlus2
     } = _ref;
-    return typed2(name251, {
+    return typed3(name253, {
       Array: _cumsum,
       Matrix: function Matrix2(matrix2) {
         return matrix2.create(_cumsum(matrix2.valueOf()));
@@ -37213,7 +39207,7 @@ var meta_bind_publish = (() => {
       try {
         return _cumsummap(array);
       } catch (err) {
-        throw improveErrorMessage(err, name251);
+        throw improveErrorMessage(err, name253);
       }
     }
     function _cumsummap(array) {
@@ -37234,7 +39228,7 @@ var meta_bind_publish = (() => {
       try {
         return _cumsumDimensional(array, dim);
       } catch (err) {
-        throw improveErrorMessage(err, name251);
+        throw improveErrorMessage(err, name253);
       }
     }
     function _cumsumDimensional(mat, dim) {
@@ -37262,15 +39256,15 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/statistics/mean.js
-  var name252 = "mean";
-  var dependencies252 = ["typed", "add", "divide"];
-  var createMean = /* @__PURE__ */ factory(name252, dependencies252, (_ref) => {
+  var name254 = "mean";
+  var dependencies254 = ["typed", "add", "divide"];
+  var createMean = /* @__PURE__ */ factory(name254, dependencies254, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       add: add3,
       divide: divide3
     } = _ref;
-    return typed2(name252, {
+    return typed3(name254, {
       "Array | Matrix": _mean,
       "Array | Matrix, number | BigNumber": _nmeanDim,
       "...": function _(args) {
@@ -37292,12 +39286,12 @@ var meta_bind_publish = (() => {
     function _mean(array) {
       var sum3;
       var num = 0;
-      deepForEach(array, function(value) {
+      deepForEach(array, function(value2) {
         try {
-          sum3 = sum3 === void 0 ? value : add3(sum3, value);
+          sum3 = sum3 === void 0 ? value2 : add3(sum3, value2);
           num++;
         } catch (err) {
-          throw improveErrorMessage(err, "mean", value);
+          throw improveErrorMessage(err, "mean", value2);
         }
       });
       if (num === 0) {
@@ -37308,11 +39302,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/statistics/median.js
-  var name253 = "median";
-  var dependencies253 = ["typed", "add", "divide", "compare", "partitionSelect"];
-  var createMedian = /* @__PURE__ */ factory(name253, dependencies253, (_ref) => {
+  var name255 = "median";
+  var dependencies255 = ["typed", "add", "divide", "compare", "partitionSelect"];
+  var createMedian = /* @__PURE__ */ factory(name255, dependencies255, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       add: add3,
       divide: divide3,
       compare: compare2,
@@ -37343,17 +39337,17 @@ var meta_bind_publish = (() => {
         throw improveErrorMessage(err, "median");
       }
     }
-    var middle = typed2({
-      "number | BigNumber | Complex | Unit": function numberBigNumberComplexUnit(value) {
-        return value;
+    var middle = typed3({
+      "number | BigNumber | Complex | Unit": function numberBigNumberComplexUnit(value2) {
+        return value2;
       }
     });
-    var middle2 = typed2({
+    var middle2 = typed3({
       "number | BigNumber | Complex | Unit, number | BigNumber | Complex | Unit": function numberBigNumberComplexUnitNumberBigNumberComplexUnit(left, right) {
         return divide3(add3(left, right), 2);
       }
     });
-    return typed2(name253, {
+    return typed3(name255, {
       "Array | Matrix": _median,
       "Array | Matrix, number | BigNumber": function ArrayMatrixNumberBigNumber(array, dim) {
         throw new Error("median(A, dim) is not yet supported");
@@ -37368,17 +39362,17 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/statistics/mad.js
-  var name254 = "mad";
-  var dependencies254 = ["typed", "abs", "map", "median", "subtract"];
-  var createMad = /* @__PURE__ */ factory(name254, dependencies254, (_ref) => {
+  var name256 = "mad";
+  var dependencies256 = ["typed", "abs", "map", "median", "subtract"];
+  var createMad = /* @__PURE__ */ factory(name256, dependencies256, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       abs: abs3,
       map: map3,
       median: median2,
       subtract: subtract2
     } = _ref;
-    return typed2(name254, {
+    return typed3(name256, {
       "Array | Matrix": _mad,
       "...": function _(args) {
         return _mad(args);
@@ -37391,8 +39385,8 @@ var meta_bind_publish = (() => {
       }
       try {
         var med = median2(array);
-        return median2(map3(array, function(value) {
-          return abs3(subtract2(value, med));
+        return median2(map3(array, function(value2) {
+          return abs3(subtract2(value2, med));
         }));
       } catch (err) {
         if (err instanceof TypeError && err.message.indexOf("median") !== -1) {
@@ -37406,11 +39400,11 @@ var meta_bind_publish = (() => {
 
   // node_modules/mathjs/lib/esm/function/statistics/variance.js
   var DEFAULT_NORMALIZATION = "unbiased";
-  var name255 = "variance";
-  var dependencies255 = ["typed", "add", "subtract", "multiply", "divide", "apply", "isNaN"];
-  var createVariance = /* @__PURE__ */ factory(name255, dependencies255, (_ref) => {
+  var name257 = "variance";
+  var dependencies257 = ["typed", "add", "subtract", "multiply", "divide", "apply", "isNaN"];
+  var createVariance = /* @__PURE__ */ factory(name257, dependencies257, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       add: add3,
       subtract: subtract2,
       multiply: multiply2,
@@ -37418,7 +39412,7 @@ var meta_bind_publish = (() => {
       apply: apply2,
       isNaN: isNaN3
     } = _ref;
-    return typed2(name255, {
+    return typed3(name257, {
       "Array | Matrix": function ArrayMatrix(array) {
         return _var(array, DEFAULT_NORMALIZATION);
       },
@@ -37437,20 +39431,20 @@ var meta_bind_publish = (() => {
       if (array.length === 0) {
         throw new SyntaxError("Function variance requires one or more parameters (0 provided)");
       }
-      deepForEach(array, function(value) {
+      deepForEach(array, function(value2) {
         try {
-          sum3 = sum3 === void 0 ? value : add3(sum3, value);
+          sum3 = sum3 === void 0 ? value2 : add3(sum3, value2);
           num++;
         } catch (err) {
-          throw improveErrorMessage(err, "variance", value);
+          throw improveErrorMessage(err, "variance", value2);
         }
       });
       if (num === 0)
         throw new Error("Cannot calculate variance of an empty array");
       var mean2 = divide3(sum3, num);
       sum3 = void 0;
-      deepForEach(array, function(value) {
-        var diff2 = subtract2(value, mean2);
+      deepForEach(array, function(value2) {
+        var diff2 = subtract2(value2, mean2);
         sum3 = sum3 === void 0 ? multiply2(diff2, diff2) : add3(sum3, multiply2(diff2, diff2));
       });
       if (isNaN3(sum3)) {
@@ -37482,95 +39476,73 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/statistics/quantileSeq.js
-  var name256 = "quantileSeq";
-  var dependencies256 = ["typed", "add", "multiply", "partitionSelect", "compare"];
-  var createQuantileSeq = /* @__PURE__ */ factory(name256, dependencies256, (_ref) => {
+  var name258 = "quantileSeq";
+  var dependencies258 = ["typed", "?bignumber", "add", "subtract", "divide", "multiply", "partitionSelect", "compare", "isInteger", "smaller", "smallerEq", "larger"];
+  var createQuantileSeq = /* @__PURE__ */ factory(name258, dependencies258, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
+      bignumber: bignumber2,
       add: add3,
+      subtract: subtract2,
+      divide: divide3,
       multiply: multiply2,
       partitionSelect: partitionSelect2,
-      compare: compare2
+      compare: compare2,
+      isInteger: isInteger3,
+      smaller: smaller2,
+      smallerEq: smallerEq2,
+      larger: larger2
     } = _ref;
-    function quantileSeq2(data, probOrN, sorted) {
-      var probArr, dataArr, one;
-      if (arguments.length < 2 || arguments.length > 3) {
-        throw new SyntaxError("Function quantileSeq requires two or three parameters");
+    var apply2 = createApply({
+      typed: typed3,
+      isInteger: isInteger3
+    });
+    return typed3(name258, {
+      "Array | Matrix, number | BigNumber": (data, p) => _quantileSeqProbNumber(data, p, false),
+      "Array | Matrix, number | BigNumber, number": (data, prob, dim) => _quantileSeqDim(data, prob, false, dim, _quantileSeqProbNumber),
+      "Array | Matrix, number | BigNumber, boolean": _quantileSeqProbNumber,
+      "Array | Matrix, number | BigNumber, boolean, number": (data, prob, sorted, dim) => _quantileSeqDim(data, prob, sorted, dim, _quantileSeqProbNumber),
+      "Array | Matrix, Array | Matrix": (data, p) => _quantileSeqProbCollection(data, p, false),
+      "Array | Matrix, Array | Matrix, number": (data, prob, dim) => _quantileSeqDim(data, prob, false, dim, _quantileSeqProbCollection),
+      "Array | Matrix, Array | Matrix, boolean": _quantileSeqProbCollection,
+      "Array | Matrix, Array | Matrix, boolean, number": (data, prob, sorted, dim) => _quantileSeqDim(data, prob, sorted, dim, _quantileSeqProbCollection)
+    });
+    function _quantileSeqDim(data, prob, sorted, dim, fn) {
+      return apply2(data, dim, (x) => fn(x, prob, sorted));
+    }
+    function _quantileSeqProbNumber(data, probOrN, sorted) {
+      var probArr;
+      var dataArr = data.valueOf();
+      if (smaller2(probOrN, 0)) {
+        throw new Error("N/prob must be non-negative");
       }
-      if (isCollection(data)) {
-        sorted = sorted || false;
-        if (typeof sorted === "boolean") {
-          dataArr = data.valueOf();
-          if (isNumber(probOrN)) {
-            if (probOrN < 0) {
-              throw new Error("N/prob must be non-negative");
-            }
-            if (probOrN <= 1) {
-              return _quantileSeq(dataArr, probOrN, sorted);
-            }
-            if (probOrN > 1) {
-              if (!isInteger(probOrN)) {
-                throw new Error("N must be a positive integer");
-              }
-              var nPlusOne = probOrN + 1;
-              probArr = new Array(probOrN);
-              for (var i2 = 0; i2 < probOrN; ) {
-                probArr[i2] = _quantileSeq(dataArr, ++i2 / nPlusOne, sorted);
-              }
-              return probArr;
-            }
-          }
-          if (isBigNumber(probOrN)) {
-            var BigNumber2 = probOrN.constructor;
-            if (probOrN.isNegative()) {
-              throw new Error("N/prob must be non-negative");
-            }
-            one = new BigNumber2(1);
-            if (probOrN.lte(one)) {
-              return new BigNumber2(_quantileSeq(dataArr, probOrN, sorted));
-            }
-            if (probOrN.gt(one)) {
-              if (!probOrN.isInteger()) {
-                throw new Error("N must be a positive integer");
-              }
-              var intN = probOrN.toNumber();
-              if (intN > 4294967295) {
-                throw new Error("N must be less than or equal to 2^32-1, as that is the maximum length of an Array");
-              }
-              var _nPlusOne = new BigNumber2(intN + 1);
-              probArr = new Array(intN);
-              for (var _i = 0; _i < intN; ) {
-                probArr[_i] = new BigNumber2(_quantileSeq(dataArr, new BigNumber2(++_i).div(_nPlusOne), sorted));
-              }
-              return probArr;
-            }
-          }
-          if (isCollection(probOrN)) {
-            var probOrNArr = probOrN.valueOf();
-            probArr = new Array(probOrNArr.length);
-            for (var _i2 = 0; _i2 < probArr.length; ++_i2) {
-              var currProb = probOrNArr[_i2];
-              if (isNumber(currProb)) {
-                if (currProb < 0 || currProb > 1) {
-                  throw new Error("Probability must be between 0 and 1, inclusive");
-                }
-              } else if (isBigNumber(currProb)) {
-                one = new currProb.constructor(1);
-                if (currProb.isNegative() || currProb.gt(one)) {
-                  throw new Error("Probability must be between 0 and 1, inclusive");
-                }
-              } else {
-                throw new TypeError("Unexpected type of argument in function quantileSeq");
-              }
-              probArr[_i2] = _quantileSeq(dataArr, currProb, sorted);
-            }
-            return probArr;
-          }
-          throw new TypeError("Unexpected type of argument in function quantileSeq");
+      if (smallerEq2(probOrN, 1)) {
+        return isNumber(probOrN) ? _quantileSeq(dataArr, probOrN, sorted) : bignumber2(_quantileSeq(dataArr, probOrN, sorted));
+      }
+      if (larger2(probOrN, 1)) {
+        if (!isInteger3(probOrN)) {
+          throw new Error("N must be a positive integer");
         }
-        throw new TypeError("Unexpected type of argument in function quantileSeq");
+        if (larger2(probOrN, 4294967295)) {
+          throw new Error("N must be less than or equal to 2^32-1, as that is the maximum length of an Array");
+        }
+        var nPlusOne = add3(probOrN, 1);
+        probArr = [];
+        for (var i2 = 0; smaller2(i2, probOrN); i2++) {
+          var prob = divide3(i2 + 1, nPlusOne);
+          probArr.push(_quantileSeq(dataArr, prob, sorted));
+        }
+        return isNumber(probOrN) ? probArr : bignumber2(probArr);
       }
-      throw new TypeError("Unexpected type of argument in function quantileSeq");
+    }
+    function _quantileSeqProbCollection(data, probOrN, sorted) {
+      var dataArr = data.valueOf();
+      var probOrNArr = probOrN.valueOf();
+      var probArr = [];
+      for (var i2 = 0; i2 < probOrNArr.length; ++i2) {
+        probArr.push(_quantileSeq(dataArr, probOrNArr[i2], sorted));
+      }
+      return probArr;
     }
     function _quantileSeq(array, prob, sorted) {
       var flat = flatten(array);
@@ -37578,81 +39550,41 @@ var meta_bind_publish = (() => {
       if (len === 0) {
         throw new Error("Cannot calculate quantile of an empty sequence");
       }
-      if (isNumber(prob)) {
-        var _index = prob * (len - 1);
-        var _fracPart = _index % 1;
-        if (_fracPart === 0) {
-          var value = sorted ? flat[_index] : partitionSelect2(flat, _index);
-          validate2(value);
-          return value;
-        }
-        var _integerPart = Math.floor(_index);
-        var _left;
-        var _right;
-        if (sorted) {
-          _left = flat[_integerPart];
-          _right = flat[_integerPart + 1];
-        } else {
-          _right = partitionSelect2(flat, _integerPart + 1);
-          _left = flat[_integerPart];
-          for (var i2 = 0; i2 < _integerPart; ++i2) {
-            if (compare2(flat[i2], _left) > 0) {
-              _left = flat[i2];
-            }
-          }
-        }
-        validate2(_left);
-        validate2(_right);
-        return add3(multiply2(_left, 1 - _fracPart), multiply2(_right, _fracPart));
+      var index2 = isNumber(prob) ? prob * (len - 1) : prob.times(len - 1);
+      var integerPart = isNumber(prob) ? Math.floor(index2) : index2.floor().toNumber();
+      var fracPart = isNumber(prob) ? index2 % 1 : index2.minus(integerPart);
+      if (isInteger3(index2)) {
+        return sorted ? flat[index2] : partitionSelect2(flat, isNumber(prob) ? index2 : index2.valueOf());
       }
-      var index2 = prob.times(len - 1);
-      if (index2.isInteger()) {
-        index2 = index2.toNumber();
-        var _value = sorted ? flat[index2] : partitionSelect2(flat, index2);
-        validate2(_value);
-        return _value;
-      }
-      var integerPart = index2.floor();
-      var fracPart = index2.minus(integerPart);
-      var integerPartNumber = integerPart.toNumber();
       var left;
       var right;
       if (sorted) {
-        left = flat[integerPartNumber];
-        right = flat[integerPartNumber + 1];
+        left = flat[integerPart];
+        right = flat[integerPart + 1];
       } else {
-        right = partitionSelect2(flat, integerPartNumber + 1);
-        left = flat[integerPartNumber];
-        for (var _i3 = 0; _i3 < integerPartNumber; ++_i3) {
-          if (compare2(flat[_i3], left) > 0) {
-            left = flat[_i3];
+        right = partitionSelect2(flat, integerPart + 1);
+        left = flat[integerPart];
+        for (var i2 = 0; i2 < integerPart; ++i2) {
+          if (compare2(flat[i2], left) > 0) {
+            left = flat[i2];
           }
         }
       }
-      validate2(left);
-      validate2(right);
-      var one = new fracPart.constructor(1);
-      return add3(multiply2(left, one.minus(fracPart)), multiply2(right, fracPart));
+      return add3(multiply2(left, subtract2(1, fracPart)), multiply2(right, fracPart));
     }
-    var validate2 = typed2({
-      "number | BigNumber | Unit": function numberBigNumberUnit(x) {
-        return x;
-      }
-    });
-    return quantileSeq2;
   });
 
   // node_modules/mathjs/lib/esm/function/statistics/std.js
-  var name257 = "std";
-  var dependencies257 = ["typed", "map", "sqrt", "variance"];
-  var createStd = /* @__PURE__ */ factory(name257, dependencies257, (_ref) => {
+  var name259 = "std";
+  var dependencies259 = ["typed", "map", "sqrt", "variance"];
+  var createStd = /* @__PURE__ */ factory(name259, dependencies259, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       map: map3,
       sqrt: sqrt3,
       variance: variance2
     } = _ref;
-    return typed2(name257, {
+    return typed3(name259, {
       "Array | Matrix": _std,
       "Array | Matrix, string": _std,
       "Array | Matrix, number | BigNumber": _std,
@@ -37682,14 +39614,61 @@ var meta_bind_publish = (() => {
     }
   });
 
-  // node_modules/mathjs/lib/esm/function/probability/combinations.js
-  var name258 = "combinations";
-  var dependencies258 = ["typed"];
-  var createCombinations = /* @__PURE__ */ factory(name258, dependencies258, (_ref) => {
+  // node_modules/mathjs/lib/esm/function/statistics/corr.js
+  var name260 = "corr";
+  var dependencies260 = ["typed", "matrix", "mean", "sqrt", "sum", "add", "subtract", "multiply", "pow", "divide"];
+  var createCorr = /* @__PURE__ */ factory(name260, dependencies260, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3,
+      matrix: matrix2,
+      sqrt: sqrt3,
+      sum: sum3,
+      add: add3,
+      subtract: subtract2,
+      multiply: multiply2,
+      pow: pow3,
+      divide: divide3
     } = _ref;
-    return typed2(name258, {
+    return typed3(name260, {
+      "Array, Array": function ArrayArray(A, B) {
+        return _corr(A, B);
+      },
+      "Matrix, Matrix": function MatrixMatrix(xMatrix, yMatrix) {
+        return matrix2(_corr(xMatrix.toArray(), yMatrix.toArray()));
+      }
+    });
+    function _corr(A, B) {
+      if (Array.isArray(A[0]) && Array.isArray(B[0])) {
+        var correlations = [];
+        for (var i2 = 0; i2 < A.length; i2++) {
+          correlations.push(correlation(A[i2], B[i2]));
+        }
+        return correlations;
+      } else {
+        return correlation(A, B);
+      }
+    }
+    function correlation(A, B) {
+      var n = A.length;
+      var sumX = sum3(A);
+      var sumY = sum3(B);
+      var sumXY = A.reduce((acc, x, index2) => add3(acc, multiply2(x, B[index2])), 0);
+      var sumXSquare = sum3(A.map((x) => pow3(x, 2)));
+      var sumYSquare = sum3(B.map((y) => pow3(y, 2)));
+      var numerator = subtract2(multiply2(n, sumXY), multiply2(sumX, sumY));
+      var denominator = sqrt3(multiply2(subtract2(multiply2(n, sumXSquare), pow3(sumX, 2)), subtract2(multiply2(n, sumYSquare), pow3(sumY, 2))));
+      return divide3(numerator, denominator);
+    }
+  });
+
+  // node_modules/mathjs/lib/esm/function/probability/combinations.js
+  var name261 = "combinations";
+  var dependencies261 = ["typed"];
+  var createCombinations = /* @__PURE__ */ factory(name261, dependencies261, (_ref) => {
+    var {
+      typed: typed3
+    } = _ref;
+    return typed3(name261, {
       "number, number": combinationsNumber,
       "BigNumber, BigNumber": function BigNumberBigNumber(n, k) {
         var BigNumber2 = n.constructor;
@@ -37721,13 +39700,13 @@ var meta_bind_publish = (() => {
   }
 
   // node_modules/mathjs/lib/esm/function/probability/combinationsWithRep.js
-  var name259 = "combinationsWithRep";
-  var dependencies259 = ["typed"];
-  var createCombinationsWithRep = /* @__PURE__ */ factory(name259, dependencies259, (_ref) => {
+  var name262 = "combinationsWithRep";
+  var dependencies262 = ["typed"];
+  var createCombinationsWithRep = /* @__PURE__ */ factory(name262, dependencies262, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
-    return typed2(name259, {
+    return typed3(name262, {
       "number, number": function numberNumber(n, k) {
         if (!isInteger(n) || n < 0) {
           throw new TypeError("Positive integer value expected in function combinationsWithRep");
@@ -37775,11 +39754,11 @@ var meta_bind_publish = (() => {
   }
 
   // node_modules/mathjs/lib/esm/function/probability/gamma.js
-  var name260 = "gamma";
-  var dependencies260 = ["typed", "config", "multiplyScalar", "pow", "BigNumber", "Complex"];
-  var createGamma = /* @__PURE__ */ factory(name260, dependencies260, (_ref) => {
+  var name263 = "gamma";
+  var dependencies263 = ["typed", "config", "multiplyScalar", "pow", "BigNumber", "Complex"];
+  var createGamma = /* @__PURE__ */ factory(name263, dependencies263, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       multiplyScalar: multiplyScalar2,
       pow: pow3,
@@ -37807,7 +39786,7 @@ var meta_bind_publish = (() => {
       var expt = t.neg().exp();
       return x.mul(twoPiSqrt).mul(tpow).mul(expt);
     }
-    return typed2(name260, {
+    return typed3(name263, {
       number: gammaNumber,
       Complex: gammaComplex,
       BigNumber: function BigNumber2(n) {
@@ -37844,17 +39823,17 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/probability/lgamma.js
-  var name261 = "lgamma";
-  var dependencies261 = ["Complex", "typed"];
-  var createLgamma = /* @__PURE__ */ factory(name261, dependencies261, (_ref) => {
+  var name264 = "lgamma";
+  var dependencies264 = ["Complex", "typed"];
+  var createLgamma = /* @__PURE__ */ factory(name264, dependencies264, (_ref) => {
     var {
       Complex: Complex3,
-      typed: typed2
+      typed: typed3
     } = _ref;
     var SMALL_RE = 7;
     var SMALL_IM = 7;
     var coeffs = [-0.029550653594771242, 0.00641025641025641, -0.0019175269175269176, 8417508417508417e-19, -5952380952380953e-19, 7936507936507937e-19, -0.002777777777777778, 0.08333333333333333];
-    return typed2(name261, {
+    return typed3(name264, {
       number: lgammaNumber,
       Complex: lgammaComplex,
       BigNumber: function BigNumber2() {
@@ -37916,14 +39895,14 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/probability/factorial.js
-  var name262 = "factorial";
-  var dependencies262 = ["typed", "gamma"];
-  var createFactorial = /* @__PURE__ */ factory(name262, dependencies262, (_ref) => {
+  var name265 = "factorial";
+  var dependencies265 = ["typed", "gamma"];
+  var createFactorial = /* @__PURE__ */ factory(name265, dependencies265, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       gamma: gamma2
     } = _ref;
-    return typed2(name262, {
+    return typed3(name265, {
       number: function number2(n) {
         if (n < 0) {
           throw new Error("Value must be non-negative");
@@ -37936,16 +39915,16 @@ var meta_bind_publish = (() => {
         }
         return gamma2(n.plus(1));
       },
-      "Array | Matrix": typed2.referToSelf((self2) => (n) => deepMap(n, self2))
+      "Array | Matrix": typed3.referToSelf((self2) => (n) => deepMap(n, self2))
     });
   });
 
   // node_modules/mathjs/lib/esm/function/probability/kldivergence.js
-  var name263 = "kldivergence";
-  var dependencies263 = ["typed", "matrix", "divide", "sum", "multiply", "map", "dotDivide", "log", "isNumeric"];
-  var createKldivergence = /* @__PURE__ */ factory(name263, dependencies263, (_ref) => {
+  var name266 = "kldivergence";
+  var dependencies266 = ["typed", "matrix", "divide", "sum", "multiply", "map", "dotDivide", "log", "isNumeric"];
+  var createKldivergence = /* @__PURE__ */ factory(name266, dependencies266, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       divide: divide3,
       sum: sum3,
@@ -37955,7 +39934,7 @@ var meta_bind_publish = (() => {
       log: log4,
       isNumeric: isNumeric2
     } = _ref;
-    return typed2(name263, {
+    return typed3(name266, {
       "Array, Array": function ArrayArray(q, p) {
         return _kldiv(matrix2(q), matrix2(p));
       },
@@ -38001,11 +39980,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/probability/multinomial.js
-  var name264 = "multinomial";
-  var dependencies264 = ["typed", "add", "divide", "multiply", "factorial", "isInteger", "isPositive"];
-  var createMultinomial = /* @__PURE__ */ factory(name264, dependencies264, (_ref) => {
+  var name267 = "multinomial";
+  var dependencies267 = ["typed", "add", "divide", "multiply", "factorial", "isInteger", "isPositive"];
+  var createMultinomial = /* @__PURE__ */ factory(name267, dependencies267, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       add: add3,
       divide: divide3,
       multiply: multiply2,
@@ -38013,7 +39992,7 @@ var meta_bind_publish = (() => {
       isInteger: isInteger3,
       isPositive: isPositive2
     } = _ref;
-    return typed2(name264, {
+    return typed3(name267, {
       "Array | Matrix": function ArrayMatrix(a) {
         var sum3 = 0;
         var denom = 1;
@@ -38030,14 +40009,14 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/probability/permutations.js
-  var name265 = "permutations";
-  var dependencies265 = ["typed", "factorial"];
-  var createPermutations = /* @__PURE__ */ factory(name265, dependencies265, (_ref) => {
+  var name268 = "permutations";
+  var dependencies268 = ["typed", "factorial"];
+  var createPermutations = /* @__PURE__ */ factory(name268, dependencies268, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       factorial: factorial2
     } = _ref;
-    return typed2(name265, {
+    return typed3(name268, {
       "number | BigNumber": factorial2,
       "number, number": function numberNumber(n, k) {
         if (!isInteger(n) || n < 0) {
@@ -38088,11 +40067,11 @@ var meta_bind_publish = (() => {
   }
 
   // node_modules/mathjs/lib/esm/function/probability/pickRandom.js
-  var name266 = "pickRandom";
-  var dependencies266 = ["typed", "config", "?on"];
-  var createPickRandom = /* @__PURE__ */ factory(name266, dependencies266, (_ref) => {
+  var name269 = "pickRandom";
+  var dependencies269 = ["typed", "config", "?on"];
+  var createPickRandom = /* @__PURE__ */ factory(name269, dependencies269, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       on
     } = _ref;
@@ -38104,7 +40083,7 @@ var meta_bind_publish = (() => {
         }
       });
     }
-    return typed2(name266, {
+    return typed3(name269, {
       "Array | Matrix": function ArrayMatrix(possibles) {
         return _pickRandom(possibles, {});
       },
@@ -38204,11 +40183,11 @@ var meta_bind_publish = (() => {
   }
 
   // node_modules/mathjs/lib/esm/function/probability/random.js
-  var name267 = "random";
-  var dependencies267 = ["typed", "config", "?on"];
-  var createRandom = /* @__PURE__ */ factory(name267, dependencies267, (_ref) => {
+  var name270 = "random";
+  var dependencies270 = ["typed", "config", "?on"];
+  var createRandom = /* @__PURE__ */ factory(name270, dependencies270, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       on
     } = _ref;
@@ -38220,7 +40199,7 @@ var meta_bind_publish = (() => {
         }
       });
     }
-    return typed2(name267, {
+    return typed3(name270, {
       "": () => _random(0, 1),
       number: (max3) => _random(0, max3),
       "number, number": (min3, max3) => _random(min3, max3),
@@ -38238,11 +40217,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/probability/randomInt.js
-  var name268 = "randomInt";
-  var dependencies268 = ["typed", "config", "?on"];
-  var createRandomInt = /* @__PURE__ */ factory(name268, dependencies268, (_ref) => {
+  var name271 = "randomInt";
+  var dependencies271 = ["typed", "config", "?on"];
+  var createRandomInt = /* @__PURE__ */ factory(name271, dependencies271, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       on
     } = _ref;
@@ -38254,7 +40233,7 @@ var meta_bind_publish = (() => {
         }
       });
     }
-    return typed2(name268, {
+    return typed3(name271, {
       "": () => _randomInt(0, 1),
       number: (max3) => _randomInt(0, max3),
       "number, number": (min3, max3) => _randomInt(min3, max3),
@@ -38272,11 +40251,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/combinatorics/stirlingS2.js
-  var name269 = "stirlingS2";
-  var dependencies269 = ["typed", "addScalar", "subtract", "multiplyScalar", "divideScalar", "pow", "factorial", "combinations", "isNegative", "isInteger", "number", "?bignumber", "larger"];
-  var createStirlingS2 = /* @__PURE__ */ factory(name269, dependencies269, (_ref) => {
+  var name272 = "stirlingS2";
+  var dependencies272 = ["typed", "addScalar", "subtract", "multiplyScalar", "divideScalar", "pow", "factorial", "combinations", "isNegative", "isInteger", "number", "?bignumber", "larger"];
+  var createStirlingS2 = /* @__PURE__ */ factory(name272, dependencies272, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       addScalar: addScalar2,
       subtract: subtract2,
       multiplyScalar: multiplyScalar2,
@@ -38292,7 +40271,7 @@ var meta_bind_publish = (() => {
     } = _ref;
     var smallCache = [];
     var bigCache = [];
-    return typed2(name269, {
+    return typed3(name272, {
       "number | BigNumber, number | BigNumber": function numberBigNumberNumberBigNumber(n, k) {
         if (!isInteger3(n) || isNegative2(n) || !isInteger3(k) || isNegative2(k)) {
           throw new TypeError("Non-negative integer value expected in function stirlingS2");
@@ -38329,17 +40308,17 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/combinatorics/bellNumbers.js
-  var name270 = "bellNumbers";
-  var dependencies270 = ["typed", "addScalar", "isNegative", "isInteger", "stirlingS2"];
-  var createBellNumbers = /* @__PURE__ */ factory(name270, dependencies270, (_ref) => {
+  var name273 = "bellNumbers";
+  var dependencies273 = ["typed", "addScalar", "isNegative", "isInteger", "stirlingS2"];
+  var createBellNumbers = /* @__PURE__ */ factory(name273, dependencies273, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       addScalar: addScalar2,
       isNegative: isNegative2,
       isInteger: isInteger3,
       stirlingS2: stirlingS22
     } = _ref;
-    return typed2(name270, {
+    return typed3(name273, {
       "number | BigNumber": function numberBigNumber(n) {
         if (!isInteger3(n) || isNegative2(n)) {
           throw new TypeError("Non-negative integer value expected in function bellNumbers");
@@ -38354,11 +40333,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/combinatorics/catalan.js
-  var name271 = "catalan";
-  var dependencies271 = ["typed", "addScalar", "divideScalar", "multiplyScalar", "combinations", "isNegative", "isInteger"];
-  var createCatalan = /* @__PURE__ */ factory(name271, dependencies271, (_ref) => {
+  var name274 = "catalan";
+  var dependencies274 = ["typed", "addScalar", "divideScalar", "multiplyScalar", "combinations", "isNegative", "isInteger"];
+  var createCatalan = /* @__PURE__ */ factory(name274, dependencies274, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       addScalar: addScalar2,
       divideScalar: divideScalar2,
       multiplyScalar: multiplyScalar2,
@@ -38366,7 +40345,7 @@ var meta_bind_publish = (() => {
       isNegative: isNegative2,
       isInteger: isInteger3
     } = _ref;
-    return typed2(name271, {
+    return typed3(name274, {
       "number | BigNumber": function numberBigNumber(n) {
         if (!isInteger3(n) || isNegative2(n)) {
           throw new TypeError("Non-negative integer value expected in function catalan");
@@ -38377,11 +40356,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/combinatorics/composition.js
-  var name272 = "composition";
-  var dependencies272 = ["typed", "addScalar", "combinations", "isNegative", "isPositive", "isInteger", "larger"];
-  var createComposition = /* @__PURE__ */ factory(name272, dependencies272, (_ref) => {
+  var name275 = "composition";
+  var dependencies275 = ["typed", "addScalar", "combinations", "isNegative", "isPositive", "isInteger", "larger"];
+  var createComposition = /* @__PURE__ */ factory(name275, dependencies275, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       addScalar: addScalar2,
       combinations: combinations2,
       isPositive: isPositive2,
@@ -38389,7 +40368,7 @@ var meta_bind_publish = (() => {
       isInteger: isInteger3,
       larger: larger2
     } = _ref;
-    return typed2(name272, {
+    return typed3(name275, {
       "number | BigNumber, number | BigNumber": function numberBigNumberNumberBigNumber(n, k) {
         if (!isInteger3(n) || !isPositive2(n) || !isInteger3(k) || !isPositive2(k)) {
           throw new TypeError("Positive integer value expected in function composition");
@@ -38402,12 +40381,12 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/algebra/leafCount.js
-  var name273 = "leafCount";
-  var dependencies273 = ["parse", "typed"];
-  var createLeafCount = /* @__PURE__ */ factory(name273, dependencies273, (_ref) => {
+  var name276 = "leafCount";
+  var dependencies276 = ["parse", "typed"];
+  var createLeafCount = /* @__PURE__ */ factory(name276, dependencies276, (_ref) => {
     var {
       parse: parse2,
-      typed: typed2
+      typed: typed3
     } = _ref;
     function countLeaves(node) {
       var count2 = 0;
@@ -38416,7 +40395,7 @@ var meta_bind_publish = (() => {
       });
       return count2 || 1;
     }
-    return typed2(name273, {
+    return typed3(name276, {
       Node: function Node2(expr) {
         return countLeaves(expr);
       }
@@ -38441,30 +40420,30 @@ var meta_bind_publish = (() => {
   }
 
   // node_modules/mathjs/lib/esm/function/algebra/simplify/util.js
-  function ownKeys2(object, enumerableOnly) {
-    var keys = Object.keys(object);
+  function ownKeys3(e3, r) {
+    var t = Object.keys(e3);
     if (Object.getOwnPropertySymbols) {
-      var symbols = Object.getOwnPropertySymbols(object);
-      enumerableOnly && (symbols = symbols.filter(function(sym) {
-        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-      })), keys.push.apply(keys, symbols);
+      var o = Object.getOwnPropertySymbols(e3);
+      r && (o = o.filter(function(r2) {
+        return Object.getOwnPropertyDescriptor(e3, r2).enumerable;
+      })), t.push.apply(t, o);
     }
-    return keys;
+    return t;
   }
-  function _objectSpread2(target) {
-    for (var i2 = 1; i2 < arguments.length; i2++) {
-      var source = null != arguments[i2] ? arguments[i2] : {};
-      i2 % 2 ? ownKeys2(Object(source), true).forEach(function(key) {
-        _defineProperty(target, key, source[key]);
-      }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys2(Object(source)).forEach(function(key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+  function _objectSpread3(e3) {
+    for (var r = 1; r < arguments.length; r++) {
+      var t = null != arguments[r] ? arguments[r] : {};
+      r % 2 ? ownKeys3(Object(t), true).forEach(function(r2) {
+        _defineProperty(e3, r2, t[r2]);
+      }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e3, Object.getOwnPropertyDescriptors(t)) : ownKeys3(Object(t)).forEach(function(r2) {
+        Object.defineProperty(e3, r2, Object.getOwnPropertyDescriptor(t, r2));
       });
     }
-    return target;
+    return e3;
   }
-  var name274 = "simplifyUtil";
-  var dependencies274 = ["FunctionNode", "OperatorNode", "SymbolNode"];
-  var createUtil = /* @__PURE__ */ factory(name274, dependencies274, (_ref) => {
+  var name277 = "simplifyUtil";
+  var dependencies277 = ["FunctionNode", "OperatorNode", "SymbolNode"];
+  var createUtil = /* @__PURE__ */ factory(name277, dependencies277, (_ref) => {
     var {
       FunctionNode: FunctionNode2,
       OperatorNode: OperatorNode2,
@@ -38538,35 +40517,35 @@ var meta_bind_publish = (() => {
     };
     function hasProperty(nodeOrName, property) {
       var context = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : defaultContext;
-      var name302 = defaultName;
+      var name309 = defaultName;
       if (typeof nodeOrName === "string") {
-        name302 = nodeOrName;
+        name309 = nodeOrName;
       } else if (isOperatorNode(nodeOrName)) {
-        name302 = nodeOrName.fn.toString();
+        name309 = nodeOrName.fn.toString();
       } else if (isFunctionNode(nodeOrName)) {
-        name302 = nodeOrName.name;
+        name309 = nodeOrName.name;
       } else if (isParenthesisNode(nodeOrName)) {
-        name302 = "paren";
+        name309 = "paren";
       }
-      if (hasOwnProperty2(context, name302)) {
-        var properties2 = context[name302];
-        if (hasOwnProperty2(properties2, property)) {
+      if (hasOwnProperty(context, name309)) {
+        var properties2 = context[name309];
+        if (hasOwnProperty(properties2, property)) {
           return properties2[property];
         }
-        if (hasOwnProperty2(defaultContext, name302)) {
-          return defaultContext[name302][property];
+        if (hasOwnProperty(defaultContext, name309)) {
+          return defaultContext[name309][property];
         }
       }
-      if (hasOwnProperty2(context, defaultName)) {
+      if (hasOwnProperty(context, defaultName)) {
         var _properties = context[defaultName];
-        if (hasOwnProperty2(_properties, property)) {
+        if (hasOwnProperty(_properties, property)) {
           return _properties[property];
         }
         return defaultContext[defaultName][property];
       }
-      if (hasOwnProperty2(defaultContext, name302)) {
-        var _properties2 = defaultContext[name302];
-        if (hasOwnProperty2(_properties2, property)) {
+      if (hasOwnProperty(defaultContext, name309)) {
+        var _properties2 = defaultContext[name309];
+        if (hasOwnProperty(_properties2, property)) {
           return _properties2[property];
         }
       }
@@ -38581,10 +40560,10 @@ var meta_bind_publish = (() => {
       return hasProperty(node, "associative", context);
     }
     function mergeContext(primary, secondary) {
-      var merged = _objectSpread2({}, primary);
+      var merged = _objectSpread3({}, primary);
       for (var prop in secondary) {
-        if (hasOwnProperty2(primary, prop)) {
-          merged[prop] = _objectSpread2(_objectSpread2({}, secondary[prop]), primary[prop]);
+        if (hasOwnProperty(primary, prop)) {
+          merged[prop] = _objectSpread3(_objectSpread3({}, secondary[prop]), primary[prop]);
         } else {
           merged[prop] = secondary[prop];
         }
@@ -38688,12 +40667,12 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/algebra/simplify.js
-  var name275 = "simplify";
-  var dependencies275 = ["config", "typed", "parse", "add", "subtract", "multiply", "divide", "pow", "isZero", "equal", "resolve", "simplifyConstant", "simplifyCore", "?fraction", "?bignumber", "mathWithTransform", "matrix", "AccessorNode", "ArrayNode", "ConstantNode", "FunctionNode", "IndexNode", "ObjectNode", "OperatorNode", "ParenthesisNode", "SymbolNode"];
-  var createSimplify = /* @__PURE__ */ factory(name275, dependencies275, (_ref) => {
+  var name278 = "simplify";
+  var dependencies278 = ["config", "typed", "parse", "add", "subtract", "multiply", "divide", "pow", "isZero", "equal", "resolve", "simplifyConstant", "simplifyCore", "?fraction", "?bignumber", "mathWithTransform", "matrix", "AccessorNode", "ArrayNode", "ConstantNode", "FunctionNode", "IndexNode", "ObjectNode", "OperatorNode", "ParenthesisNode", "SymbolNode"];
+  var createSimplify = /* @__PURE__ */ factory(name278, dependencies278, (_ref) => {
     var {
       config: config4,
-      typed: typed2,
+      typed: typed3,
       parse: parse2,
       add: add3,
       subtract: subtract2,
@@ -38736,12 +40715,12 @@ var meta_bind_publish = (() => {
       OperatorNode: OperatorNode2,
       SymbolNode: SymbolNode2
     });
-    typed2.addConversion({
+    typed3.addConversion({
       from: "Object",
       to: "Map",
       convert: createMap
     });
-    var simplify2 = typed2("simplify", {
+    var simplify2 = typed3("simplify", {
       Node: _simplify,
       "Node, Map": (expr, scope) => _simplify(expr, false, scope),
       "Node, Map, Object": (expr, scope, options) => _simplify(expr, false, scope, options),
@@ -38749,7 +40728,7 @@ var meta_bind_publish = (() => {
       "Node, Array, Map": _simplify,
       "Node, Array, Map, Object": _simplify
     });
-    typed2.removeConversion({
+    typed3.removeConversion({
       from: "Object",
       to: "Map",
       convert: createMap
@@ -39078,6 +41057,10 @@ var meta_bind_publish = (() => {
         r: "n-n1"
       },
       {
+        l: "n+-(n1)",
+        r: "n-(n1)"
+      },
+      {
         s: "n*(n1^-1) -> n/n1",
         assuming: {
           multiply: {
@@ -39227,15 +41210,15 @@ var meta_bind_publish = (() => {
       var res = resolve2(expr, scope);
       res = removeParens(res);
       var visited = {};
-      var str = res.toString({
+      var str2 = res.toString({
         parenthesis: "all"
       });
-      while (!visited[str]) {
-        visited[str] = true;
+      while (!visited[str2]) {
+        visited[str2] = true;
         _lastsym = 0;
-        var laststr = str;
+        var laststr = str2;
         if (debug)
-          console.log("Working on: ", str);
+          console.log("Working on: ", str2);
         for (var i2 = 0; i2 < rules.length; i2++) {
           var rulestr = "";
           if (typeof rules[i2] === "function") {
@@ -39260,7 +41243,7 @@ var meta_bind_publish = (() => {
           }
           unflattenl(res, options.context);
         }
-        str = res.toString({
+        str2 = res.toString({
           parenthesis: "all"
         });
       }
@@ -39362,7 +41345,7 @@ var meta_bind_publish = (() => {
           res.implicit = true;
         }
         res = res.transform(function(node2) {
-          if (node2.isSymbolNode && hasOwnProperty2(matches.placeholders, node2.name)) {
+          if (node2.isSymbolNode && hasOwnProperty(matches.placeholders, node2.name)) {
             return matches.placeholders[node2.name].clone();
           } else {
             return node2;
@@ -39410,9 +41393,9 @@ var meta_bind_publish = (() => {
         return match1;
       }
       for (var key in match1.placeholders) {
-        if (hasOwnProperty2(match1.placeholders, key)) {
+        if (hasOwnProperty(match1.placeholders, key)) {
           res.placeholders[key] = match1.placeholders[key];
-          if (hasOwnProperty2(match2.placeholders, key)) {
+          if (hasOwnProperty(match2.placeholders, key)) {
             if (!_exactMatch(match1.placeholders[key], match2.placeholders[key])) {
               return null;
             }
@@ -39420,7 +41403,7 @@ var meta_bind_publish = (() => {
         }
       }
       for (var _key in match2.placeholders) {
-        if (hasOwnProperty2(match2.placeholders, _key)) {
+        if (hasOwnProperty(match2.placeholders, _key)) {
           res.placeholders[_key] = match2.placeholders[_key];
         }
       }
@@ -39625,11 +41608,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/algebra/simplifyConstant.js
-  var name276 = "simplifyConstant";
-  var dependencies276 = ["typed", "config", "mathWithTransform", "matrix", "?fraction", "?bignumber", "AccessorNode", "ArrayNode", "ConstantNode", "FunctionNode", "IndexNode", "ObjectNode", "OperatorNode", "SymbolNode"];
-  var createSimplifyConstant = /* @__PURE__ */ factory(name276, dependencies276, (_ref) => {
+  var name279 = "simplifyConstant";
+  var dependencies279 = ["typed", "config", "mathWithTransform", "matrix", "?fraction", "?bignumber", "AccessorNode", "ArrayNode", "ConstantNode", "FunctionNode", "IndexNode", "ObjectNode", "OperatorNode", "SymbolNode"];
+  var createSimplifyConstant = /* @__PURE__ */ factory(name279, dependencies279, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       mathWithTransform: mathWithTransform2,
       matrix: matrix2,
@@ -39654,7 +41637,7 @@ var meta_bind_publish = (() => {
       OperatorNode: OperatorNode2,
       SymbolNode: SymbolNode2
     });
-    var simplifyConstant2 = typed2("simplifyConstant", {
+    var simplifyConstant2 = typed3("simplifyConstant", {
       Node: (node) => _ensureNode(foldFraction(node, {})),
       "Node, Object": function NodeObject(expr, options) {
         return _ensureNode(foldFraction(expr, options));
@@ -39680,7 +41663,7 @@ var meta_bind_publish = (() => {
         return _toNumber(mathWithTransform2[fnname].apply(null, args), options);
       }
     }
-    var _toNode = typed2({
+    var _toNode = typed3({
       Fraction: _fractionToNode,
       number: function number2(n) {
         if (n < 0) {
@@ -39721,7 +41704,7 @@ var meta_bind_publish = (() => {
       }
       return n;
     }
-    var _toNumber = typed2({
+    var _toNumber = typed3({
       "string, Object": function stringObject(s, options) {
         if (config4.number === "BigNumber") {
           if (bignumber2 === void 0) {
@@ -39979,11 +41962,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/function/algebra/simplifyCore.js
-  var name277 = "simplifyCore";
-  var dependencies277 = ["typed", "parse", "equal", "isZero", "add", "subtract", "multiply", "divide", "pow", "AccessorNode", "ArrayNode", "ConstantNode", "FunctionNode", "IndexNode", "ObjectNode", "OperatorNode", "ParenthesisNode", "SymbolNode"];
-  var createSimplifyCore = /* @__PURE__ */ factory(name277, dependencies277, (_ref) => {
+  var name280 = "simplifyCore";
+  var dependencies280 = ["typed", "parse", "equal", "isZero", "add", "subtract", "multiply", "divide", "pow", "AccessorNode", "ArrayNode", "ConstantNode", "FunctionNode", "IndexNode", "ObjectNode", "OperatorNode", "ParenthesisNode", "SymbolNode"];
+  var createSimplifyCore = /* @__PURE__ */ factory(name280, dependencies280, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       parse: parse2,
       equal: equal2,
       isZero: isZero2,
@@ -40205,18 +42188,18 @@ var meta_bind_publish = (() => {
       }
       return node;
     }
-    return typed2(name277, {
+    return typed3(name280, {
       Node: _simplifyCore,
       "Node,Object": _simplifyCore
     });
   });
 
   // node_modules/mathjs/lib/esm/function/algebra/resolve.js
-  var name278 = "resolve";
-  var dependencies278 = ["typed", "parse", "ConstantNode", "FunctionNode", "OperatorNode", "ParenthesisNode"];
-  var createResolve = /* @__PURE__ */ factory(name278, dependencies278, (_ref) => {
+  var name281 = "resolve";
+  var dependencies281 = ["typed", "parse", "ConstantNode", "FunctionNode", "OperatorNode", "ParenthesisNode"];
+  var createResolve = /* @__PURE__ */ factory(name281, dependencies281, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       parse: parse2,
       ConstantNode: ConstantNode2,
       FunctionNode: FunctionNode2,
@@ -40233,15 +42216,15 @@ var meta_bind_publish = (() => {
           var variables = Array.from(within).join(", ");
           throw new ReferenceError("recursive loop of variable definitions among {".concat(variables, "}"));
         }
-        var value = scope.get(node.name);
-        if (isNode(value)) {
+        var value2 = scope.get(node.name);
+        if (isNode(value2)) {
           var nextWithin = new Set(within);
           nextWithin.add(node.name);
-          return _resolve(value, scope, nextWithin);
-        } else if (typeof value === "number") {
-          return parse2(String(value));
-        } else if (value !== void 0) {
-          return new ConstantNode2(value);
+          return _resolve(value2, scope, nextWithin);
+        } else if (typeof value2 === "number") {
+          return parse2(String(value2));
+        } else if (value2 !== void 0) {
+          return new ConstantNode2(value2);
         } else {
           return node;
         }
@@ -40260,26 +42243,26 @@ var meta_bind_publish = (() => {
       }
       return node.map((child) => _resolve(child, scope, within));
     }
-    return typed2("resolve", {
+    return typed3("resolve", {
       Node: _resolve,
       "Node, Map | null | undefined": _resolve,
       "Node, Object": (n, scope) => _resolve(n, createMap(scope)),
-      "Array | Matrix": typed2.referToSelf((self2) => (A) => A.map((n) => self2(n))),
-      "Array | Matrix, null | undefined": typed2.referToSelf((self2) => (A) => A.map((n) => self2(n))),
-      "Array, Object": typed2.referTo("Array,Map", (selfAM) => (A, scope) => selfAM(A, createMap(scope))),
-      "Matrix, Object": typed2.referTo("Matrix,Map", (selfMM) => (A, scope) => selfMM(A, createMap(scope))),
-      "Array | Matrix, Map": typed2.referToSelf((self2) => (A, scope) => A.map((n) => self2(n, scope)))
+      "Array | Matrix": typed3.referToSelf((self2) => (A) => A.map((n) => self2(n))),
+      "Array | Matrix, null | undefined": typed3.referToSelf((self2) => (A) => A.map((n) => self2(n))),
+      "Array, Object": typed3.referTo("Array,Map", (selfAM) => (A, scope) => selfAM(A, createMap(scope))),
+      "Matrix, Object": typed3.referTo("Matrix,Map", (selfMM) => (A, scope) => selfMM(A, createMap(scope))),
+      "Array | Matrix, Map": typed3.referToSelf((self2) => (A, scope) => A.map((n) => self2(n, scope)))
     });
   });
 
   // node_modules/mathjs/lib/esm/function/algebra/symbolicEqual.js
-  var name279 = "symbolicEqual";
-  var dependencies279 = ["parse", "simplify", "typed", "OperatorNode"];
-  var createSymbolicEqual = /* @__PURE__ */ factory(name279, dependencies279, (_ref) => {
+  var name282 = "symbolicEqual";
+  var dependencies282 = ["parse", "simplify", "typed", "OperatorNode"];
+  var createSymbolicEqual = /* @__PURE__ */ factory(name282, dependencies282, (_ref) => {
     var {
       parse: parse2,
       simplify: simplify2,
-      typed: typed2,
+      typed: typed3,
       OperatorNode: OperatorNode2
     } = _ref;
     function _symbolicEqual(e1, e22) {
@@ -40288,18 +42271,18 @@ var meta_bind_publish = (() => {
       var simplified = simplify2(diff2, {}, options);
       return isConstantNode(simplified) && !simplified.value;
     }
-    return typed2(name279, {
+    return typed3(name282, {
       "Node, Node": _symbolicEqual,
       "Node, Node, Object": _symbolicEqual
     });
   });
 
   // node_modules/mathjs/lib/esm/function/algebra/derivative.js
-  var name280 = "derivative";
-  var dependencies280 = ["typed", "config", "parse", "simplify", "equal", "isZero", "numeric", "ConstantNode", "FunctionNode", "OperatorNode", "ParenthesisNode", "SymbolNode"];
-  var createDerivative = /* @__PURE__ */ factory(name280, dependencies280, (_ref) => {
+  var name283 = "derivative";
+  var dependencies283 = ["typed", "config", "parse", "simplify", "equal", "isZero", "numeric", "ConstantNode", "FunctionNode", "OperatorNode", "ParenthesisNode", "SymbolNode"];
+  var createDerivative = /* @__PURE__ */ factory(name283, dependencies283, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       parse: parse2,
       simplify: simplify2,
@@ -40321,16 +42304,16 @@ var meta_bind_publish = (() => {
       var res = _derivative(expr, constNodes);
       return options.simplify ? simplify2(res) : res;
     }
-    typed2.addConversion({
+    typed3.addConversion({
       from: "identifier",
       to: "SymbolNode",
       convert: parse2
     });
-    var derivative2 = typed2(name280, {
+    var derivative2 = typed3(name283, {
       "Node, SymbolNode": plainDerivative,
       "Node, SymbolNode, Object": plainDerivative
     });
-    typed2.removeConversion({
+    typed3.removeConversion({
       from: "identifier",
       to: "SymbolNode",
       convert: parse2
@@ -40339,16 +42322,16 @@ var meta_bind_publish = (() => {
     derivative2.toTex = function(deriv) {
       return _derivTex.apply(null, deriv.args);
     };
-    var _derivTex = typed2("_derivTex", {
+    var _derivTex = typed3("_derivTex", {
       "Node, SymbolNode": function NodeSymbolNode(expr, x) {
-        if (isConstantNode(expr) && typeOf(expr.value) === "string") {
+        if (isConstantNode(expr) && typeOf2(expr.value) === "string") {
           return _derivTex(parse2(expr.value).toString(), x.toString(), 1);
         } else {
           return _derivTex(expr.toTex(), x.toString(), 1);
         }
       },
       "Node, ConstantNode": function NodeConstantNode(expr, x) {
-        if (typeOf(x.value) === "string") {
+        if (typeOf2(x.value) === "string") {
           return _derivTex(expr, parse2(x.value));
         } else {
           throw new Error("The second parameter to 'derivative' is a non-string constant");
@@ -40367,7 +42350,7 @@ var meta_bind_publish = (() => {
         return d + "\\left[".concat(expr, "\\right]");
       }
     });
-    var constTag = typed2("constTag", {
+    var constTag = typed3("constTag", {
       "Object, ConstantNode, string": function ObjectConstantNodeString(constNodes, node) {
         constNodes[node] = true;
         return true;
@@ -40403,7 +42386,7 @@ var meta_bind_publish = (() => {
         return false;
       }
     });
-    var _derivative = typed2("_derivative", {
+    var _derivative = typed3("_derivative", {
       "ConstantNode, Object": function ConstantNodeObject(node) {
         return createConstantNode2(0);
       },
@@ -40667,19 +42650,19 @@ var meta_bind_publish = (() => {
       node.compile().evaluate();
       throw new Error("Expected TypeError, but none found");
     }
-    function createConstantNode2(value, valueType) {
-      return new ConstantNode2(numeric3(value, valueType || config4.number));
+    function createConstantNode2(value2, valueType) {
+      return new ConstantNode2(numeric3(value2, valueType || config4.number));
     }
     return derivative2;
   });
 
   // node_modules/mathjs/lib/esm/function/algebra/rationalize.js
-  var name281 = "rationalize";
-  var dependencies281 = ["config", "typed", "equal", "isZero", "add", "subtract", "multiply", "divide", "pow", "parse", "simplifyConstant", "simplifyCore", "simplify", "?bignumber", "?fraction", "mathWithTransform", "matrix", "AccessorNode", "ArrayNode", "ConstantNode", "FunctionNode", "IndexNode", "ObjectNode", "OperatorNode", "SymbolNode", "ParenthesisNode"];
-  var createRationalize = /* @__PURE__ */ factory(name281, dependencies281, (_ref) => {
+  var name284 = "rationalize";
+  var dependencies284 = ["config", "typed", "equal", "isZero", "add", "subtract", "multiply", "divide", "pow", "parse", "simplifyConstant", "simplifyCore", "simplify", "?bignumber", "?fraction", "mathWithTransform", "matrix", "AccessorNode", "ArrayNode", "ConstantNode", "FunctionNode", "IndexNode", "ObjectNode", "OperatorNode", "SymbolNode", "ParenthesisNode"];
+  var createRationalize = /* @__PURE__ */ factory(name284, dependencies284, (_ref) => {
     var {
       config: config4,
-      typed: typed2,
+      typed: typed3,
       equal: equal2,
       isZero: isZero2,
       add: add3,
@@ -40769,7 +42752,7 @@ var meta_bind_publish = (() => {
       retRationalize.expression = expr;
       return retRationalize;
     }
-    return typed2(name281, {
+    return typed3(name284, {
       Node: _rationalize,
       "Node, boolean": (expr, detailed) => _rationalize(expr, {}, detailed),
       "Node, Object": _rationalize,
@@ -41229,39 +43212,198 @@ var meta_bind_publish = (() => {
     }
   });
 
+  // node_modules/mathjs/lib/esm/function/signal/zpk2tf.js
+  var name285 = "zpk2tf";
+  var dependencies285 = ["typed", "add", "multiply", "Complex", "number"];
+  var createZpk2tf = /* @__PURE__ */ factory(name285, dependencies285, (_ref) => {
+    var {
+      typed: typed3,
+      add: add3,
+      multiply: multiply2,
+      Complex: Complex3,
+      number: number2
+    } = _ref;
+    return typed3(name285, {
+      "Array,Array,number": function ArrayArrayNumber(z, p, k) {
+        return _zpk2tf(z, p, k);
+      },
+      "Array,Array": function ArrayArray(z, p) {
+        return _zpk2tf(z, p, 1);
+      },
+      "Matrix,Matrix,number": function MatrixMatrixNumber(z, p, k) {
+        return _zpk2tf(z.valueOf(), p.valueOf(), k);
+      },
+      "Matrix,Matrix": function MatrixMatrix(z, p) {
+        return _zpk2tf(z.valueOf(), p.valueOf(), 1);
+      }
+    });
+    function _zpk2tf(z, p, k) {
+      if (z.some((el) => el.type === "BigNumber")) {
+        z = z.map((el) => number2(el));
+      }
+      if (p.some((el) => el.type === "BigNumber")) {
+        p = p.map((el) => number2(el));
+      }
+      var num = [Complex3(1, 0)];
+      var den = [Complex3(1, 0)];
+      for (var i2 = 0; i2 < z.length; i2++) {
+        var zero = z[i2];
+        if (typeof zero === "number")
+          zero = Complex3(zero, 0);
+        num = _multiply(num, [Complex3(1, 0), Complex3(-zero.re, -zero.im)]);
+      }
+      for (var _i = 0; _i < p.length; _i++) {
+        var pole = p[_i];
+        if (typeof pole === "number")
+          pole = Complex3(pole, 0);
+        den = _multiply(den, [Complex3(1, 0), Complex3(-pole.re, -pole.im)]);
+      }
+      for (var _i2 = 0; _i2 < num.length; _i2++) {
+        num[_i2] = multiply2(num[_i2], k);
+      }
+      return [num, den];
+    }
+    function _multiply(a, b) {
+      var c = [];
+      for (var i2 = 0; i2 < a.length + b.length - 1; i2++) {
+        c[i2] = Complex3(0, 0);
+        for (var j = 0; j < a.length; j++) {
+          if (i2 - j >= 0 && i2 - j < b.length) {
+            c[i2] = add3(c[i2], multiply2(a[j], b[i2 - j]));
+          }
+        }
+      }
+      return c;
+    }
+  });
+
+  // node_modules/mathjs/lib/esm/function/signal/freqz.js
+  var name286 = "freqz";
+  var dependencies286 = ["typed", "add", "multiply", "Complex", "divide", "matrix"];
+  var createFreqz = /* @__PURE__ */ factory(name286, dependencies286, (_ref) => {
+    var {
+      typed: typed3,
+      add: add3,
+      multiply: multiply2,
+      Complex: Complex3,
+      divide: divide3,
+      matrix: matrix2
+    } = _ref;
+    return typed3(name286, {
+      "Array, Array": function ArrayArray(b, a) {
+        var w = createBins(512);
+        return _freqz(b, a, w);
+      },
+      "Array, Array, Array": function ArrayArrayArray(b, a, w) {
+        return _freqz(b, a, w);
+      },
+      "Array, Array, number": function ArrayArrayNumber(b, a, w) {
+        if (w < 0) {
+          throw new Error("w must be a positive number");
+        }
+        var w2 = createBins(w);
+        return _freqz(b, a, w2);
+      },
+      "Matrix, Matrix": function MatrixMatrix(b, a) {
+        var _w = createBins(512);
+        var {
+          w,
+          h
+        } = _freqz(b.valueOf(), a.valueOf(), _w);
+        return {
+          w: matrix2(w),
+          h: matrix2(h)
+        };
+      },
+      "Matrix, Matrix, Matrix": function MatrixMatrixMatrix(b, a, w) {
+        var {
+          h
+        } = _freqz(b.valueOf(), a.valueOf(), w.valueOf());
+        return {
+          h: matrix2(h),
+          w: matrix2(w)
+        };
+      },
+      "Matrix, Matrix, number": function MatrixMatrixNumber(b, a, w) {
+        if (w < 0) {
+          throw new Error("w must be a positive number");
+        }
+        var _w = createBins(w);
+        var {
+          h
+        } = _freqz(b.valueOf(), a.valueOf(), _w);
+        return {
+          h: matrix2(h),
+          w: matrix2(_w)
+        };
+      }
+    });
+    function _freqz(b, a, w) {
+      var num = [];
+      var den = [];
+      for (var i2 = 0; i2 < w.length; i2++) {
+        var sumNum = Complex3(0, 0);
+        var sumDen = Complex3(0, 0);
+        for (var j = 0; j < b.length; j++) {
+          sumNum = add3(sumNum, multiply2(b[j], Complex3(Math.cos(-j * w[i2]), Math.sin(-j * w[i2]))));
+        }
+        for (var _j = 0; _j < a.length; _j++) {
+          sumDen = add3(sumDen, multiply2(a[_j], Complex3(Math.cos(-_j * w[i2]), Math.sin(-_j * w[i2]))));
+        }
+        num.push(sumNum);
+        den.push(sumDen);
+      }
+      var h = [];
+      for (var _i = 0; _i < num.length; _i++) {
+        h.push(divide3(num[_i], den[_i]));
+      }
+      return {
+        h,
+        w
+      };
+    }
+    function createBins(n) {
+      var bins = [];
+      for (var i2 = 0; i2 < n; i2++) {
+        bins.push(i2 / n * Math.PI);
+      }
+      return bins;
+    }
+  });
+
   // node_modules/mathjs/lib/esm/json/reviver.js
-  var name282 = "reviver";
-  var dependencies282 = ["classes"];
-  var createReviver = /* @__PURE__ */ factory(name282, dependencies282, (_ref) => {
+  var name287 = "reviver";
+  var dependencies287 = ["classes"];
+  var createReviver = /* @__PURE__ */ factory(name287, dependencies287, (_ref) => {
     var {
       classes: classes2
     } = _ref;
-    return function reviver2(key, value) {
-      var constructor = classes2[value && value.mathjs];
+    return function reviver2(key, value2) {
+      var constructor = classes2[value2 && value2.mathjs];
       if (constructor && typeof constructor.fromJSON === "function") {
-        return constructor.fromJSON(value);
+        return constructor.fromJSON(value2);
       }
-      return value;
+      return value2;
     };
   });
 
   // node_modules/mathjs/lib/esm/json/replacer.js
-  var name283 = "replacer";
-  var dependencies283 = [];
-  var createReplacer = /* @__PURE__ */ factory(name283, dependencies283, () => {
-    return function replacer2(key, value) {
-      if (typeof value === "number" && (!isFinite(value) || isNaN(value))) {
+  var name288 = "replacer";
+  var dependencies288 = [];
+  var createReplacer = /* @__PURE__ */ factory(name288, dependencies288, () => {
+    return function replacer2(key, value2) {
+      if (typeof value2 === "number" && (!isFinite(value2) || isNaN(value2))) {
         return {
           mathjs: "number",
-          value: String(value)
+          value: String(value2)
         };
       }
-      return value;
+      return value2;
     };
   });
 
   // node_modules/mathjs/lib/esm/version.js
-  var version = "11.8.0";
+  var version = "11.11.1";
 
   // node_modules/mathjs/lib/esm/constants.js
   var createTrue = /* @__PURE__ */ factory("true", [], () => true);
@@ -41362,8 +43504,8 @@ var meta_bind_publish = (() => {
     return Complex3.I;
   });
   var createVersion = /* @__PURE__ */ factory("version", [], () => version);
-  function recreateFactory(name302, dependencies302, create) {
-    return factory(name302, dependencies302, create, {
+  function recreateFactory(name309, dependencies309, create) {
+    return factory(name309, dependencies309, create, {
       recreateOnConfigChange: true
     });
   }
@@ -41419,44 +43561,44 @@ var meta_bind_publish = (() => {
   var createPlanckTime = /* @__PURE__ */ unitFactory("planckTime", "5.391245e-44", "s");
   var createPlanckCharge = /* @__PURE__ */ unitFactory("planckCharge", "1.87554603778e-18", "C");
   var createPlanckTemperature = /* @__PURE__ */ unitFactory("planckTemperature", "1.416785e+32", "K");
-  function unitFactory(name302, valueStr, unitStr) {
-    var dependencies302 = ["config", "Unit", "BigNumber"];
-    return factory(name302, dependencies302, (_ref) => {
+  function unitFactory(name309, valueStr, unitStr) {
+    var dependencies309 = ["config", "Unit", "BigNumber"];
+    return factory(name309, dependencies309, (_ref) => {
       var {
         config: config4,
         Unit: Unit2,
         BigNumber: BigNumber2
       } = _ref;
-      var value = config4.number === "BigNumber" ? new BigNumber2(valueStr) : parseFloat(valueStr);
-      var unit2 = new Unit2(value, unitStr);
+      var value2 = config4.number === "BigNumber" ? new BigNumber2(valueStr) : parseFloat(valueStr);
+      var unit2 = new Unit2(value2, unitStr);
       unit2.fixPrefix = true;
       return unit2;
     });
   }
-  function numberFactory(name302, value) {
-    var dependencies302 = ["config", "BigNumber"];
-    return factory(name302, dependencies302, (_ref2) => {
+  function numberFactory(name309, value2) {
+    var dependencies309 = ["config", "BigNumber"];
+    return factory(name309, dependencies309, (_ref2) => {
       var {
         config: config4,
         BigNumber: BigNumber2
       } = _ref2;
-      return config4.number === "BigNumber" ? new BigNumber2(value) : value;
+      return config4.number === "BigNumber" ? new BigNumber2(value2) : value2;
     });
   }
 
   // node_modules/mathjs/lib/esm/expression/transform/apply.transform.js
-  var name284 = "apply";
-  var dependencies284 = ["typed", "isInteger"];
-  var createApplyTransform = /* @__PURE__ */ factory(name284, dependencies284, (_ref) => {
+  var name289 = "apply";
+  var dependencies289 = ["typed", "isInteger"];
+  var createApplyTransform = /* @__PURE__ */ factory(name289, dependencies289, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       isInteger: isInteger3
     } = _ref;
     var apply2 = createApply({
-      typed: typed2,
+      typed: typed3,
       isInteger: isInteger3
     });
-    return typed2("apply", {
+    return typed3("apply", {
       "...any": function any(args) {
         var dim = args[1];
         if (isNumber(dim)) {
@@ -41476,22 +43618,22 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/transform/column.transform.js
-  var name285 = "column";
-  var dependencies285 = ["typed", "Index", "matrix", "range"];
-  var createColumnTransform = /* @__PURE__ */ factory(name285, dependencies285, (_ref) => {
+  var name290 = "column";
+  var dependencies290 = ["typed", "Index", "matrix", "range"];
+  var createColumnTransform = /* @__PURE__ */ factory(name290, dependencies290, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       Index: Index2,
       matrix: matrix2,
       range: range2
     } = _ref;
     var column2 = createColumn({
-      typed: typed2,
+      typed: typed3,
       Index: Index2,
       matrix: matrix2,
       range: range2
     });
-    return typed2("column", {
+    return typed3("column", {
       "...any": function any(args) {
         var lastIndex = args.length - 1;
         var last = args[lastIndex];
@@ -41517,21 +43659,21 @@ var meta_bind_publish = (() => {
     if (!symbol) {
       throw new Error('No undefined variable found in inline expression "' + expression + '"');
     }
-    var name302 = symbol.name;
+    var name309 = symbol.name;
     var subScope = createSubScope(scope);
     var eq = expression.compile();
     return function inlineExpression(x) {
-      subScope.set(name302, x);
+      subScope.set(name309, x);
       return eq.evaluate(subScope);
     };
   }
 
   // node_modules/mathjs/lib/esm/expression/transform/filter.transform.js
-  var name286 = "filter";
-  var dependencies286 = ["typed"];
-  var createFilterTransform = /* @__PURE__ */ factory(name286, dependencies286, (_ref) => {
+  var name291 = "filter";
+  var dependencies291 = ["typed"];
+  var createFilterTransform = /* @__PURE__ */ factory(name291, dependencies291, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
     function filterTransform(args, math2, scope) {
       var x, callback;
@@ -41548,7 +43690,7 @@ var meta_bind_publish = (() => {
       return filter3(x, callback);
     }
     filterTransform.rawArgs = true;
-    var filter3 = typed2("filter", {
+    var filter3 = typed3("filter", {
       "Array, function": _filter,
       "Matrix, function": function MatrixFunction(x, test) {
         return x.create(_filter(x.toArray(), test));
@@ -41563,24 +43705,17 @@ var meta_bind_publish = (() => {
     isTransformFunction: true
   });
   function _filter(x, callback) {
-    var args = maxArgumentCount(callback);
-    return filter(x, function(value, index2, array) {
-      if (args === 1) {
-        return callback(value);
-      } else if (args === 2) {
-        return callback(value, [index2 + 1]);
-      } else {
-        return callback(value, [index2 + 1], array);
-      }
+    return filter(x, function(value2, index2, array) {
+      return applyCallback(callback, value2, [index2 + 1], array, "filter");
     });
   }
 
   // node_modules/mathjs/lib/esm/expression/transform/forEach.transform.js
-  var name287 = "forEach";
-  var dependencies287 = ["typed"];
-  var createForEachTransform = /* @__PURE__ */ factory(name287, dependencies287, (_ref) => {
+  var name292 = "forEach";
+  var dependencies292 = ["typed"];
+  var createForEachTransform = /* @__PURE__ */ factory(name292, dependencies292, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
     function forEachTransform(args, math2, scope) {
       var x, callback;
@@ -41597,22 +43732,15 @@ var meta_bind_publish = (() => {
       return _forEach2(x, callback);
     }
     forEachTransform.rawArgs = true;
-    var _forEach2 = typed2("forEach", {
+    var _forEach2 = typed3("forEach", {
       "Array | Matrix, function": function ArrayMatrixFunction(array, callback) {
-        var args = maxArgumentCount(callback);
-        var recurse = function recurse2(value, index2) {
-          if (Array.isArray(value)) {
-            forEach(value, function(child, i2) {
+        var recurse = function recurse2(value2, index2) {
+          if (Array.isArray(value2)) {
+            forEach(value2, function(child, i2) {
               recurse2(child, index2.concat(i2 + 1));
             });
           } else {
-            if (args === 1) {
-              callback(value);
-            } else if (args === 2) {
-              callback(value, index2);
-            } else {
-              callback(value, index2, array);
-            }
+            return applyCallback(callback, value2, index2, array, "forEach");
           }
         };
         recurse(array.valueOf(), []);
@@ -41624,11 +43752,12 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/transform/index.transform.js
-  var name288 = "index";
-  var dependencies288 = ["Index"];
-  var createIndexTransform = /* @__PURE__ */ factory(name288, dependencies288, (_ref) => {
+  var name293 = "index";
+  var dependencies293 = ["Index", "getMatrixDataType"];
+  var createIndexTransform = /* @__PURE__ */ factory(name293, dependencies293, (_ref) => {
     var {
-      Index: Index2
+      Index: Index2,
+      getMatrixDataType: getMatrixDataType2
     } = _ref;
     return function indexTransform() {
       var args = [];
@@ -41642,9 +43771,11 @@ var meta_bind_publish = (() => {
             return v - 1;
           });
         } else if (isArray(arg2) || isMatrix(arg2)) {
-          arg2 = arg2.map(function(v) {
-            return v - 1;
-          });
+          if (getMatrixDataType2(arg2) !== "boolean") {
+            arg2 = arg2.map(function(v) {
+              return v - 1;
+            });
+          }
         } else if (isNumber(arg2)) {
           arg2--;
         } else if (isBigNumber(arg2)) {
@@ -41664,11 +43795,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/transform/map.transform.js
-  var name289 = "map";
-  var dependencies289 = ["typed"];
-  var createMapTransform = /* @__PURE__ */ factory(name289, dependencies289, (_ref) => {
+  var name294 = "map";
+  var dependencies294 = ["typed"];
+  var createMapTransform = /* @__PURE__ */ factory(name294, dependencies294, (_ref) => {
     var {
-      typed: typed2
+      typed: typed3
     } = _ref;
     function mapTransform(args, math2, scope) {
       var x, callback;
@@ -41685,7 +43816,7 @@ var meta_bind_publish = (() => {
       return map3(x, callback);
     }
     mapTransform.rawArgs = true;
-    var map3 = typed2("map", {
+    var map3 = typed3("map", {
       "Array, function": function ArrayFunction(x, callback) {
         return _map2(x, callback, x);
       },
@@ -41698,20 +43829,13 @@ var meta_bind_publish = (() => {
     isTransformFunction: true
   });
   function _map2(array, callback, orig) {
-    var argsCount = maxArgumentCount(callback);
-    function recurse(value, index2) {
-      if (Array.isArray(value)) {
-        return map(value, function(child, i2) {
+    function recurse(value2, index2) {
+      if (Array.isArray(value2)) {
+        return map(value2, function(child, i2) {
           return recurse(child, index2.concat(i2 + 1));
         });
       } else {
-        if (argsCount === 1) {
-          return callback(value);
-        } else if (argsCount === 2) {
-          return callback(value, index2);
-        } else {
-          return callback(value, index2, orig);
-        }
+        return applyCallback(callback, value2, index2, orig, "map");
       }
     }
     return recurse(array, []);
@@ -41732,22 +43856,22 @@ var meta_bind_publish = (() => {
   }
 
   // node_modules/mathjs/lib/esm/expression/transform/max.transform.js
-  var name290 = "max";
-  var dependencies290 = ["typed", "config", "numeric", "larger"];
-  var createMaxTransform = /* @__PURE__ */ factory(name290, dependencies290, (_ref) => {
+  var name295 = "max";
+  var dependencies295 = ["typed", "config", "numeric", "larger"];
+  var createMaxTransform = /* @__PURE__ */ factory(name295, dependencies295, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       numeric: numeric3,
       larger: larger2
     } = _ref;
     var max3 = createMax({
-      typed: typed2,
+      typed: typed3,
       config: config4,
       numeric: numeric3,
       larger: larger2
     });
-    return typed2("max", {
+    return typed3("max", {
       "...any": function any(args) {
         args = lastDimToZeroBase(args);
         try {
@@ -41762,20 +43886,20 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/transform/mean.transform.js
-  var name291 = "mean";
-  var dependencies291 = ["typed", "add", "divide"];
-  var createMeanTransform = /* @__PURE__ */ factory(name291, dependencies291, (_ref) => {
+  var name296 = "mean";
+  var dependencies296 = ["typed", "add", "divide"];
+  var createMeanTransform = /* @__PURE__ */ factory(name296, dependencies296, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       add: add3,
       divide: divide3
     } = _ref;
     var mean2 = createMean({
-      typed: typed2,
+      typed: typed3,
       add: add3,
       divide: divide3
     });
-    return typed2("mean", {
+    return typed3("mean", {
       "...any": function any(args) {
         args = lastDimToZeroBase(args);
         try {
@@ -41790,22 +43914,22 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/transform/min.transform.js
-  var name292 = "min";
-  var dependencies292 = ["typed", "config", "numeric", "smaller"];
-  var createMinTransform = /* @__PURE__ */ factory(name292, dependencies292, (_ref) => {
+  var name297 = "min";
+  var dependencies297 = ["typed", "config", "numeric", "smaller"];
+  var createMinTransform = /* @__PURE__ */ factory(name297, dependencies297, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       numeric: numeric3,
       smaller: smaller2
     } = _ref;
     var min3 = createMin({
-      typed: typed2,
+      typed: typed3,
       config: config4,
       numeric: numeric3,
       smaller: smaller2
     });
-    return typed2("min", {
+    return typed3("min", {
       "...any": function any(args) {
         args = lastDimToZeroBase(args);
         try {
@@ -41820,30 +43944,34 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/transform/range.transform.js
-  var name293 = "range";
-  var dependencies293 = ["typed", "config", "?matrix", "?bignumber", "smaller", "smallerEq", "larger", "largerEq"];
-  var createRangeTransform = /* @__PURE__ */ factory(name293, dependencies293, (_ref) => {
+  var name298 = "range";
+  var dependencies298 = ["typed", "config", "?matrix", "?bignumber", "smaller", "smallerEq", "larger", "largerEq", "add", "isPositive"];
+  var createRangeTransform = /* @__PURE__ */ factory(name298, dependencies298, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       matrix: matrix2,
       bignumber: bignumber2,
       smaller: smaller2,
       smallerEq: smallerEq2,
       larger: larger2,
-      largerEq: largerEq2
+      largerEq: largerEq2,
+      add: add3,
+      isPositive: isPositive2
     } = _ref;
     var range2 = createRange({
-      typed: typed2,
+      typed: typed3,
       config: config4,
       matrix: matrix2,
       bignumber: bignumber2,
       smaller: smaller2,
       smallerEq: smallerEq2,
       larger: larger2,
-      largerEq: largerEq2
+      largerEq: largerEq2,
+      add: add3,
+      isPositive: isPositive2
     });
-    return typed2("range", {
+    return typed3("range", {
       "...any": function any(args) {
         var lastIndex = args.length - 1;
         var last = args[lastIndex];
@@ -41858,22 +43986,22 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/transform/row.transform.js
-  var name294 = "row";
-  var dependencies294 = ["typed", "Index", "matrix", "range"];
-  var createRowTransform = /* @__PURE__ */ factory(name294, dependencies294, (_ref) => {
+  var name299 = "row";
+  var dependencies299 = ["typed", "Index", "matrix", "range"];
+  var createRowTransform = /* @__PURE__ */ factory(name299, dependencies299, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       Index: Index2,
       matrix: matrix2,
       range: range2
     } = _ref;
     var row2 = createRow({
-      typed: typed2,
+      typed: typed3,
       Index: Index2,
       matrix: matrix2,
       range: range2
     });
-    return typed2("row", {
+    return typed3("row", {
       "...any": function any(args) {
         var lastIndex = args.length - 1;
         var last = args[lastIndex];
@@ -41892,18 +44020,22 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/transform/subset.transform.js
-  var name295 = "subset";
-  var dependencies295 = ["typed", "matrix"];
-  var createSubsetTransform = /* @__PURE__ */ factory(name295, dependencies295, (_ref) => {
+  var name300 = "subset";
+  var dependencies300 = ["typed", "matrix", "zeros", "add"];
+  var createSubsetTransform = /* @__PURE__ */ factory(name300, dependencies300, (_ref) => {
     var {
-      typed: typed2,
-      matrix: matrix2
+      typed: typed3,
+      matrix: matrix2,
+      zeros: zeros3,
+      add: add3
     } = _ref;
     var subset2 = createSubset({
-      typed: typed2,
-      matrix: matrix2
+      typed: typed3,
+      matrix: matrix2,
+      zeros: zeros3,
+      add: add3
     });
-    return typed2("subset", {
+    return typed3("subset", {
       "...any": function any(args) {
         try {
           return subset2.apply(null, args);
@@ -41917,20 +44049,20 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/transform/concat.transform.js
-  var name296 = "concat";
-  var dependencies296 = ["typed", "matrix", "isInteger"];
-  var createConcatTransform = /* @__PURE__ */ factory(name296, dependencies296, (_ref) => {
+  var name301 = "concat";
+  var dependencies301 = ["typed", "matrix", "isInteger"];
+  var createConcatTransform = /* @__PURE__ */ factory(name301, dependencies301, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       isInteger: isInteger3
     } = _ref;
-    var concat2 = createConcat({
-      typed: typed2,
+    var concat3 = createConcat({
+      typed: typed3,
       matrix: matrix2,
       isInteger: isInteger3
     });
-    return typed2("concat", {
+    return typed3("concat", {
       "...any": function any(args) {
         var lastIndex = args.length - 1;
         var last = args[lastIndex];
@@ -41940,7 +44072,7 @@ var meta_bind_publish = (() => {
           args[lastIndex] = last.minus(1);
         }
         try {
-          return concat2.apply(null, args);
+          return concat3.apply(null, args);
         } catch (err) {
           throw errorTransform(err);
         }
@@ -41951,24 +44083,24 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/transform/diff.transform.js
-  var name297 = "diff";
-  var dependencies297 = ["typed", "matrix", "subtract", "number", "bignumber"];
-  var createDiffTransform = /* @__PURE__ */ factory(name297, dependencies297, (_ref) => {
+  var name302 = "diff";
+  var dependencies302 = ["typed", "matrix", "subtract", "number", "bignumber"];
+  var createDiffTransform = /* @__PURE__ */ factory(name302, dependencies302, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       subtract: subtract2,
       number: number2,
       bignumber: bignumber2
     } = _ref;
     var diff2 = createDiff({
-      typed: typed2,
+      typed: typed3,
       matrix: matrix2,
       subtract: subtract2,
       number: number2,
       bignumber: bignumber2
     });
-    return typed2(name297, {
+    return typed3(name302, {
       "...any": function any(args) {
         args = lastDimToZeroBase(args);
         try {
@@ -41983,22 +44115,22 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/transform/std.transform.js
-  var name298 = "std";
-  var dependencies298 = ["typed", "map", "sqrt", "variance"];
-  var createStdTransform = /* @__PURE__ */ factory(name298, dependencies298, (_ref) => {
+  var name303 = "std";
+  var dependencies303 = ["typed", "map", "sqrt", "variance"];
+  var createStdTransform = /* @__PURE__ */ factory(name303, dependencies303, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       map: map3,
       sqrt: sqrt3,
       variance: variance2
     } = _ref;
     var std2 = createStd({
-      typed: typed2,
+      typed: typed3,
       map: map3,
       sqrt: sqrt3,
       variance: variance2
     });
-    return typed2("std", {
+    return typed3("std", {
       "...any": function any(args) {
         args = lastDimToZeroBase(args);
         try {
@@ -42013,22 +44145,22 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/transform/sum.transform.js
-  var name299 = "sum";
-  var dependencies299 = ["typed", "config", "add", "numeric"];
-  var createSumTransform = /* @__PURE__ */ factory(name299, dependencies299, (_ref) => {
+  var name304 = "sum";
+  var dependencies304 = ["typed", "config", "add", "numeric"];
+  var createSumTransform = /* @__PURE__ */ factory(name304, dependencies304, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       config: config4,
       add: add3,
       numeric: numeric3
     } = _ref;
     var sum3 = createSum({
-      typed: typed2,
+      typed: typed3,
       config: config4,
       add: add3,
       numeric: numeric3
     });
-    return typed2(name299, {
+    return typed3(name304, {
       "...any": function any(args) {
         args = lastDimToZeroBase(args);
         try {
@@ -42042,21 +44174,70 @@ var meta_bind_publish = (() => {
     isTransformFunction: true
   });
 
-  // node_modules/mathjs/lib/esm/expression/transform/cumsum.transform.js
-  var name300 = "cumsum";
-  var dependencies300 = ["typed", "add", "unaryPlus"];
-  var createCumSumTransform = /* @__PURE__ */ factory(name300, dependencies300, (_ref) => {
+  // node_modules/mathjs/lib/esm/expression/transform/quantileSeq.transform.js
+  var name305 = "quantileSeq";
+  var dependencies305 = ["typed", "bignumber", "add", "subtract", "divide", "multiply", "partitionSelect", "compare", "isInteger", "smaller", "smallerEq", "larger"];
+  var createQuantileSeqTransform = /* @__PURE__ */ factory(name305, dependencies305, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
+      bignumber: bignumber2,
+      add: add3,
+      subtract: subtract2,
+      divide: divide3,
+      multiply: multiply2,
+      partitionSelect: partitionSelect2,
+      compare: compare2,
+      isInteger: isInteger3,
+      smaller: smaller2,
+      smallerEq: smallerEq2,
+      larger: larger2
+    } = _ref;
+    var quantileSeq2 = createQuantileSeq({
+      typed: typed3,
+      bignumber: bignumber2,
+      add: add3,
+      subtract: subtract2,
+      divide: divide3,
+      multiply: multiply2,
+      partitionSelect: partitionSelect2,
+      compare: compare2,
+      isInteger: isInteger3,
+      smaller: smaller2,
+      smallerEq: smallerEq2,
+      larger: larger2
+    });
+    return typed3("quantileSeq", {
+      "Array | Matrix, number | BigNumber": quantileSeq2,
+      "Array | Matrix, number | BigNumber, number": (arr, prob, dim) => quantileSeq2(arr, prob, dimToZeroBase(dim)),
+      "Array | Matrix, number | BigNumber, boolean": quantileSeq2,
+      "Array | Matrix, number | BigNumber, boolean, number": (arr, prob, sorted, dim) => quantileSeq2(arr, prob, sorted, dimToZeroBase(dim)),
+      "Array | Matrix, Array | Matrix": quantileSeq2,
+      "Array | Matrix, Array | Matrix, number": (data, prob, dim) => quantileSeq2(data, prob, dimToZeroBase(dim)),
+      "Array | Matrix, Array | Matrix, boolean": quantileSeq2,
+      "Array | Matrix, Array | Matrix, boolean, number": (data, prob, sorted, dim) => quantileSeq2(data, prob, sorted, dimToZeroBase(dim))
+    });
+    function dimToZeroBase(dim) {
+      return lastDimToZeroBase([[], dim])[1];
+    }
+  }, {
+    isTransformFunction: true
+  });
+
+  // node_modules/mathjs/lib/esm/expression/transform/cumsum.transform.js
+  var name306 = "cumsum";
+  var dependencies306 = ["typed", "add", "unaryPlus"];
+  var createCumSumTransform = /* @__PURE__ */ factory(name306, dependencies306, (_ref) => {
+    var {
+      typed: typed3,
       add: add3,
       unaryPlus: unaryPlus2
     } = _ref;
     var cumsum2 = createCumSum({
-      typed: typed2,
+      typed: typed3,
       add: add3,
       unaryPlus: unaryPlus2
     });
-    return typed2(name300, {
+    return typed3(name306, {
       "...any": function any(args) {
         if (args.length === 2 && isCollection(args[0])) {
           var dim = args[1];
@@ -42078,11 +44259,11 @@ var meta_bind_publish = (() => {
   });
 
   // node_modules/mathjs/lib/esm/expression/transform/variance.transform.js
-  var name301 = "variance";
-  var dependencies301 = ["typed", "add", "subtract", "multiply", "divide", "apply", "isNaN"];
-  var createVarianceTransform = /* @__PURE__ */ factory(name301, dependencies301, (_ref) => {
+  var name307 = "variance";
+  var dependencies307 = ["typed", "add", "subtract", "multiply", "divide", "apply", "isNaN"];
+  var createVarianceTransform = /* @__PURE__ */ factory(name307, dependencies307, (_ref) => {
     var {
-      typed: typed2,
+      typed: typed3,
       add: add3,
       subtract: subtract2,
       multiply: multiply2,
@@ -42091,7 +44272,7 @@ var meta_bind_publish = (() => {
       isNaN: isNaN3
     } = _ref;
     var variance2 = createVariance({
-      typed: typed2,
+      typed: typed3,
       add: add3,
       subtract: subtract2,
       multiply: multiply2,
@@ -42099,7 +44280,7 @@ var meta_bind_publish = (() => {
       apply: apply2,
       isNaN: isNaN3
     });
-    return typed2(name301, {
+    return typed3(name307, {
       "...any": function any(args) {
         args = lastDimToZeroBase(args);
         try {
@@ -42109,6 +44290,47 @@ var meta_bind_publish = (() => {
         }
       }
     });
+  }, {
+    isTransformFunction: true
+  });
+
+  // node_modules/mathjs/lib/esm/expression/transform/print.transform.js
+  var name308 = "print";
+  var dependencies308 = ["typed", "matrix", "zeros", "add"];
+  var createPrintTransform = /* @__PURE__ */ factory(name308, dependencies308, (_ref) => {
+    var {
+      typed: typed3,
+      matrix: matrix2,
+      zeros: zeros3,
+      add: add3
+    } = _ref;
+    var print2 = createPrint({
+      typed: typed3,
+      matrix: matrix2,
+      zeros: zeros3,
+      add: add3
+    });
+    return typed3(name308, {
+      "string, Object | Array": function stringObjectArray(template, values) {
+        return print2(_convertTemplateToZeroBasedIndex(template), values);
+      },
+      "string, Object | Array, number | Object": function stringObjectArrayNumberObject(template, values, options) {
+        return print2(_convertTemplateToZeroBasedIndex(template), values, options);
+      }
+    });
+    function _convertTemplateToZeroBasedIndex(template) {
+      return template.replace(printTemplate, (x) => {
+        var parts = x.slice(1).split(".");
+        var result = parts.map(function(part) {
+          if (!isNaN(part) && part.length > 0) {
+            return parseInt(part) - 1;
+          } else {
+            return part;
+          }
+        });
+        return "$" + result.join(".");
+      });
+    }
   }, {
     isTransformFunction: true
   });
@@ -42189,7 +44411,7 @@ var meta_bind_publish = (() => {
     BigNumber,
     config
   });
-  var typed = /* @__PURE__ */ createTyped({
+  var typed2 = /* @__PURE__ */ createTyped({
     BigNumber,
     Complex: Complex2,
     DenseMatrix,
@@ -42198,134 +44420,134 @@ var meta_bind_publish = (() => {
   var unaryPlus = /* @__PURE__ */ createUnaryPlus({
     BigNumber,
     config,
-    typed
+    typed: typed2
   });
   var weakMixingAngle = /* @__PURE__ */ createWeakMixingAngle({
     BigNumber,
     config
   });
   var abs2 = /* @__PURE__ */ createAbs({
-    typed
+    typed: typed2
   });
   var acos2 = /* @__PURE__ */ createAcos({
     Complex: Complex2,
     config,
-    typed
+    typed: typed2
   });
   var acot = /* @__PURE__ */ createAcot({
     BigNumber,
-    typed
+    typed: typed2
   });
   var acsc = /* @__PURE__ */ createAcsc({
     BigNumber,
     Complex: Complex2,
     config,
-    typed
+    typed: typed2
   });
   var addScalar = /* @__PURE__ */ createAddScalar({
-    typed
+    typed: typed2
   });
   var arg = /* @__PURE__ */ createArg({
-    typed
+    typed: typed2
   });
   var asech = /* @__PURE__ */ createAsech({
     BigNumber,
     Complex: Complex2,
     config,
-    typed
+    typed: typed2
   });
   var asinh3 = /* @__PURE__ */ createAsinh({
-    typed
+    typed: typed2
   });
   var atan3 = /* @__PURE__ */ createAtan({
-    typed
+    typed: typed2
   });
   var atanh3 = /* @__PURE__ */ createAtanh({
     Complex: Complex2,
     config,
-    typed
+    typed: typed2
   });
   var bignumber = /* @__PURE__ */ createBignumber({
     BigNumber,
-    typed
+    typed: typed2
   });
   var bitNot = /* @__PURE__ */ createBitNot({
-    typed
+    typed: typed2
   });
   var boolean = /* @__PURE__ */ createBoolean({
-    typed
+    typed: typed2
   });
-  var clone3 = /* @__PURE__ */ createClone({
-    typed
+  var clone4 = /* @__PURE__ */ createClone({
+    typed: typed2
   });
   var combinations = /* @__PURE__ */ createCombinations({
-    typed
+    typed: typed2
   });
   var complex = /* @__PURE__ */ createComplex({
     Complex: Complex2,
-    typed
+    typed: typed2
   });
   var conj = /* @__PURE__ */ createConj({
-    typed
+    typed: typed2
   });
-  var cosh3 = /* @__PURE__ */ createCosh({
-    typed
+  var cos2 = /* @__PURE__ */ createCos({
+    typed: typed2
   });
-  var coth = /* @__PURE__ */ createCoth({
+  var cot = /* @__PURE__ */ createCot({
     BigNumber,
-    typed
+    typed: typed2
   });
   var csc = /* @__PURE__ */ createCsc({
     BigNumber,
-    typed
+    typed: typed2
   });
   var cube = /* @__PURE__ */ createCube({
-    typed
+    typed: typed2
   });
   var equalScalar = /* @__PURE__ */ createEqualScalar({
     config,
-    typed
+    typed: typed2
   });
   var erf = /* @__PURE__ */ createErf({
-    typed
+    typed: typed2
   });
   var exp2 = /* @__PURE__ */ createExp({
-    typed
+    typed: typed2
   });
   var expm13 = /* @__PURE__ */ createExpm1({
     Complex: Complex2,
-    typed
+    typed: typed2
   });
   var filter2 = /* @__PURE__ */ createFilter({
-    typed
+    typed: typed2
   });
   var forEach2 = /* @__PURE__ */ createForEach({
-    typed
+    typed: typed2
   });
   var format4 = /* @__PURE__ */ createFormat({
-    typed
+    typed: typed2
   });
   var getMatrixDataType = /* @__PURE__ */ createGetMatrixDataType({
-    typed
+    typed: typed2
   });
   var hex = /* @__PURE__ */ createHex({
     format: format4,
-    typed
+    typed: typed2
   });
   var im = /* @__PURE__ */ createIm({
-    typed
+    typed: typed2
   });
   var isInteger2 = /* @__PURE__ */ createIsInteger({
-    typed
+    typed: typed2
   });
   var isNegative = /* @__PURE__ */ createIsNegative({
-    typed
+    typed: typed2
   });
   var isPositive = /* @__PURE__ */ createIsPositive({
-    typed
+    typed: typed2
   });
   var isZero = /* @__PURE__ */ createIsZero({
-    typed
+    typed: typed2
   });
   var LOG2E = /* @__PURE__ */ createLOG2E({
     BigNumber,
@@ -42333,178 +44555,178 @@ var meta_bind_publish = (() => {
   });
   var lgamma = /* @__PURE__ */ createLgamma({
     Complex: Complex2,
-    typed
+    typed: typed2
   });
   var log104 = /* @__PURE__ */ createLog10({
     Complex: Complex2,
     config,
-    typed
+    typed: typed2
   });
   var log24 = /* @__PURE__ */ createLog2({
     Complex: Complex2,
     config,
-    typed
+    typed: typed2
   });
   var map2 = /* @__PURE__ */ createMap2({
-    typed
+    typed: typed2
   });
   var multiplyScalar = /* @__PURE__ */ createMultiplyScalar({
-    typed
+    typed: typed2
   });
   var not = /* @__PURE__ */ createNot({
-    typed
+    typed: typed2
   });
   var number = /* @__PURE__ */ createNumber({
-    typed
+    typed: typed2
   });
   var oct = /* @__PURE__ */ createOct({
     format: format4,
-    typed
+    typed: typed2
   });
   var pickRandom = /* @__PURE__ */ createPickRandom({
     config,
-    typed
+    typed: typed2
   });
   var print = /* @__PURE__ */ createPrint({
-    typed
+    typed: typed2
   });
   var random2 = /* @__PURE__ */ createRandom({
     config,
-    typed
+    typed: typed2
   });
   var re = /* @__PURE__ */ createRe({
-    typed
+    typed: typed2
   });
   var sec = /* @__PURE__ */ createSec({
     BigNumber,
-    typed
+    typed: typed2
   });
   var sign3 = /* @__PURE__ */ createSign({
     BigNumber,
     Fraction: Fraction2,
     complex,
-    typed
+    typed: typed2
   });
   var sin2 = /* @__PURE__ */ createSin({
-    typed
+    typed: typed2
   });
   var SparseMatrix = /* @__PURE__ */ createSparseMatrixClass({
     Matrix,
     equalScalar,
-    typed
+    typed: typed2
   });
   var splitUnit = /* @__PURE__ */ createSplitUnit({
-    typed
+    typed: typed2
   });
   var square = /* @__PURE__ */ createSquare({
-    typed
+    typed: typed2
   });
   var string = /* @__PURE__ */ createString({
-    typed
+    typed: typed2
   });
   var tan2 = /* @__PURE__ */ createTan({
-    typed
+    typed: typed2
   });
-  var typeOf2 = /* @__PURE__ */ createTypeOf({
-    typed
+  var typeOf3 = /* @__PURE__ */ createTypeOf({
+    typed: typed2
   });
   var acosh3 = /* @__PURE__ */ createAcosh({
     Complex: Complex2,
     config,
-    typed
+    typed: typed2
   });
   var acsch = /* @__PURE__ */ createAcsch({
     BigNumber,
-    typed
+    typed: typed2
   });
   var apply = /* @__PURE__ */ createApply({
     isInteger: isInteger2,
-    typed
+    typed: typed2
   });
   var asec = /* @__PURE__ */ createAsec({
     BigNumber,
     Complex: Complex2,
     config,
-    typed
+    typed: typed2
   });
   var bin = /* @__PURE__ */ createBin({
     format: format4,
-    typed
+    typed: typed2
   });
   var combinationsWithRep = /* @__PURE__ */ createCombinationsWithRep({
-    typed
+    typed: typed2
   });
-  var cos2 = /* @__PURE__ */ createCos({
-    typed
+  var cosh3 = /* @__PURE__ */ createCosh({
+    typed: typed2
   });
   var csch = /* @__PURE__ */ createCsch({
     BigNumber,
-    typed
+    typed: typed2
   });
   var isNaN2 = /* @__PURE__ */ createIsNaN({
-    typed
+    typed: typed2
   });
   var isPrime = /* @__PURE__ */ createIsPrime({
-    typed
+    typed: typed2
   });
   var randomInt = /* @__PURE__ */ createRandomInt({
     config,
-    typed
+    typed: typed2
   });
   var sech = /* @__PURE__ */ createSech({
     BigNumber,
-    typed
+    typed: typed2
   });
   var sinh3 = /* @__PURE__ */ createSinh({
-    typed
+    typed: typed2
   });
   var sparse = /* @__PURE__ */ createSparse({
     SparseMatrix,
-    typed
+    typed: typed2
   });
   var sqrt2 = /* @__PURE__ */ createSqrt({
     Complex: Complex2,
     config,
-    typed
+    typed: typed2
   });
   var tanh3 = /* @__PURE__ */ createTanh({
-    typed
+    typed: typed2
   });
   var unaryMinus = /* @__PURE__ */ createUnaryMinus({
-    typed
+    typed: typed2
   });
   var acoth = /* @__PURE__ */ createAcoth({
     BigNumber,
     Complex: Complex2,
     config,
-    typed
+    typed: typed2
   });
-  var cot = /* @__PURE__ */ createCot({
+  var coth = /* @__PURE__ */ createCoth({
     BigNumber,
-    typed
+    typed: typed2
   });
   var fraction = /* @__PURE__ */ createFraction({
     Fraction: Fraction2,
-    typed
+    typed: typed2
   });
   var isNumeric = /* @__PURE__ */ createIsNumeric({
-    typed
+    typed: typed2
   });
   var matrix = /* @__PURE__ */ createMatrix({
     DenseMatrix,
     Matrix,
     SparseMatrix,
-    typed
+    typed: typed2
   });
   var matrixFromFunction = /* @__PURE__ */ createMatrixFromFunction({
     isZero,
     matrix,
-    typed
+    typed: typed2
   });
   var mode = /* @__PURE__ */ createMode({
     isNaN: isNaN2,
     isNumeric,
-    typed
+    typed: typed2
   });
   var numeric2 = /* @__PURE__ */ createNumeric({
     bignumber,
@@ -42515,46 +44737,42 @@ var meta_bind_publish = (() => {
     config,
     multiplyScalar,
     numeric: numeric2,
-    typed
+    typed: typed2
   });
   var reshape2 = /* @__PURE__ */ createReshape({
     isInteger: isInteger2,
     matrix,
-    typed
+    typed: typed2
   });
   var size = /* @__PURE__ */ createSize({
     matrix,
     config,
-    typed
+    typed: typed2
   });
   var squeeze2 = /* @__PURE__ */ createSqueeze({
     matrix,
-    typed
-  });
-  var subset = /* @__PURE__ */ createSubset({
-    matrix,
-    typed
+    typed: typed2
   });
   var transpose = /* @__PURE__ */ createTranspose({
     matrix,
-    typed
+    typed: typed2
   });
   var xgcd = /* @__PURE__ */ createXgcd({
     BigNumber,
     config,
     matrix,
-    typed
+    typed: typed2
   });
   var zeros2 = /* @__PURE__ */ createZeros({
     BigNumber,
     config,
     matrix,
-    typed
+    typed: typed2
   });
   var asin2 = /* @__PURE__ */ createAsin({
     Complex: Complex2,
     config,
-    typed
+    typed: typed2
   });
   var cbrt4 = /* @__PURE__ */ createCbrt({
     BigNumber,
@@ -42563,118 +44781,103 @@ var meta_bind_publish = (() => {
     config,
     isNegative,
     matrix,
-    typed,
+    typed: typed2,
     unaryMinus
   });
-  var concat = /* @__PURE__ */ createConcat({
+  var concat2 = /* @__PURE__ */ createConcat({
     isInteger: isInteger2,
     matrix,
-    typed
+    typed: typed2
   });
   var count = /* @__PURE__ */ createCount({
     prod,
     size,
-    typed
+    typed: typed2
   });
   var ctranspose = /* @__PURE__ */ createCtranspose({
     conj,
     transpose,
-    typed
+    typed: typed2
   });
   var diag = /* @__PURE__ */ createDiag({
     DenseMatrix,
     SparseMatrix,
     matrix,
-    typed
+    typed: typed2
   });
   var divideScalar = /* @__PURE__ */ createDivideScalar({
     numeric: numeric2,
-    typed
+    typed: typed2
   });
   var dotDivide = /* @__PURE__ */ createDotDivide({
     DenseMatrix,
-    concat,
+    concat: concat2,
     divideScalar,
     equalScalar,
     matrix,
-    typed
+    typed: typed2
   });
   var equal = /* @__PURE__ */ createEqual({
     DenseMatrix,
-    concat,
+    concat: concat2,
     equalScalar,
     matrix,
-    typed
+    typed: typed2
   });
   var flatten2 = /* @__PURE__ */ createFlatten({
     matrix,
-    typed
-  });
-  var gcd = /* @__PURE__ */ createGcd({
-    BigNumber,
-    DenseMatrix,
-    concat,
-    equalScalar,
-    matrix,
-    typed
+    typed: typed2
   });
   var hasNumericValue = /* @__PURE__ */ createHasNumericValue({
     isNumeric,
-    typed
+    typed: typed2
   });
-  var identity = /* @__PURE__ */ createIdentity({
+  var identity2 = /* @__PURE__ */ createIdentity({
     BigNumber,
     DenseMatrix,
     SparseMatrix,
     config,
     matrix,
-    typed
+    typed: typed2
   });
   var kron = /* @__PURE__ */ createKron({
     matrix,
     multiplyScalar,
-    typed
+    typed: typed2
   });
   var largerEq = /* @__PURE__ */ createLargerEq({
     DenseMatrix,
-    concat,
+    concat: concat2,
     config,
     matrix,
-    typed
+    typed: typed2
   });
   var leftShift = /* @__PURE__ */ createLeftShift({
     DenseMatrix,
-    concat,
+    concat: concat2,
     equalScalar,
     matrix,
-    typed,
+    typed: typed2,
     zeros: zeros2
   });
   var matrixFromColumns = /* @__PURE__ */ createMatrixFromColumns({
     flatten: flatten2,
     matrix,
     size,
-    typed
-  });
-  var mod2 = /* @__PURE__ */ createMod({
-    DenseMatrix,
-    concat,
-    equalScalar,
-    matrix,
-    typed
+    typed: typed2
   });
   var nthRoot = /* @__PURE__ */ createNthRoot({
     BigNumber,
-    concat,
+    concat: concat2,
     equalScalar,
     matrix,
-    typed
+    typed: typed2
   });
   var ones = /* @__PURE__ */ createOnes({
     BigNumber,
     config,
     matrix,
-    typed
+    typed: typed2
   });
   var resize2 = /* @__PURE__ */ createResize({
     config,
@@ -42682,10 +44885,10 @@ var meta_bind_publish = (() => {
   });
   var rightArithShift = /* @__PURE__ */ createRightArithShift({
     DenseMatrix,
-    concat,
+    concat: concat2,
     equalScalar,
     matrix,
-    typed,
+    typed: typed2,
     zeros: zeros2
   });
   var round2 = /* @__PURE__ */ createRound({
@@ -42693,55 +44896,81 @@ var meta_bind_publish = (() => {
     DenseMatrix,
     equalScalar,
     matrix,
-    typed,
+    typed: typed2,
     zeros: zeros2
   });
   var smaller = /* @__PURE__ */ createSmaller({
     DenseMatrix,
-    concat,
+    concat: concat2,
     config,
     matrix,
-    typed
+    typed: typed2
+  });
+  var subtract = /* @__PURE__ */ createSubtract({
+    DenseMatrix,
+    addScalar,
+    concat: concat2,
+    equalScalar,
+    matrix,
+    typed: typed2,
+    unaryMinus
   });
   var to = /* @__PURE__ */ createTo({
-    concat,
+    concat: concat2,
     matrix,
-    typed
+    typed: typed2
   });
   var unequal = /* @__PURE__ */ createUnequal({
     DenseMatrix,
-    concat,
+    concat: concat2,
     config,
     equalScalar,
     matrix,
-    typed
+    typed: typed2
+  });
+  var usolve = /* @__PURE__ */ createUsolve({
+    DenseMatrix,
+    divideScalar,
+    equalScalar,
+    matrix,
+    multiplyScalar,
+    subtract,
+    typed: typed2
   });
   var xor = /* @__PURE__ */ createXor({
     DenseMatrix,
-    concat,
+    concat: concat2,
     matrix,
-    typed
+    typed: typed2
   });
   var add2 = /* @__PURE__ */ createAdd({
     DenseMatrix,
     SparseMatrix,
     addScalar,
-    concat,
+    concat: concat2,
     equalScalar,
     matrix,
-    typed
+    typed: typed2
+  });
+  var atan22 = /* @__PURE__ */ createAtan2({
+    BigNumber,
+    DenseMatrix,
+    concat: concat2,
+    equalScalar,
+    matrix,
+    typed: typed2
   });
   var bitAnd = /* @__PURE__ */ createBitAnd({
-    concat,
+    concat: concat2,
     equalScalar,
     matrix,
-    typed
+    typed: typed2
   });
   var bitXor2 = /* @__PURE__ */ createBitXor({
     DenseMatrix,
-    concat,
+    concat: concat2,
     matrix,
-    typed
+    typed: typed2
   });
   var catalan = /* @__PURE__ */ createCatalan({
     addScalar,
@@ -42750,43 +44979,59 @@ var meta_bind_publish = (() => {
     isInteger: isInteger2,
     isNegative,
     multiplyScalar,
-    typed
+    typed: typed2
   });
   var compare = /* @__PURE__ */ createCompare({
     BigNumber,
     DenseMatrix,
     Fraction: Fraction2,
-    concat,
+    concat: concat2,
     config,
     equalScalar,
     matrix,
-    typed
+    typed: typed2
   });
   var compareText2 = /* @__PURE__ */ createCompareText({
-    concat,
+    concat: concat2,
     matrix,
-    typed
+    typed: typed2
   });
   var cumsum = /* @__PURE__ */ createCumSum({
     add: add2,
-    typed,
+    typed: typed2,
     unaryPlus
   });
   var deepEqual = /* @__PURE__ */ createDeepEqual({
     equal,
-    typed
+    typed: typed2
+  });
+  var diff = /* @__PURE__ */ createDiff({
+    matrix,
+    number,
+    subtract,
+    typed: typed2
+  });
+  var distance = /* @__PURE__ */ createDistance({
+    abs: abs2,
+    addScalar,
+    deepEqual,
+    divideScalar,
+    multiplyScalar,
+    sqrt: sqrt2,
+    subtract,
+    typed: typed2
   });
   var dot = /* @__PURE__ */ createDot({
     addScalar,
     conj,
     multiplyScalar,
     size,
-    typed
+    typed: typed2
   });
   var equalText = /* @__PURE__ */ createEqualText({
     compareText: compareText2,
     isZero,
-    typed
+    typed: typed2
   });
   var floor2 = /* @__PURE__ */ createFloor({
     DenseMatrix,
@@ -42794,7 +45039,18 @@ var meta_bind_publish = (() => {
     equalScalar,
     matrix,
     round: round2,
-    typed,
+    typed: typed2,
+    zeros: zeros2
+  });
+  var gcd = /* @__PURE__ */ createGcd({
+    BigNumber,
+    DenseMatrix,
+    concat: concat2,
+    config,
+    equalScalar,
+    matrix,
+    round: round2,
+    typed: typed2,
     zeros: zeros2
   });
   var hypot2 = /* @__PURE__ */ createHypot({
@@ -42805,50 +45061,59 @@ var meta_bind_publish = (() => {
     multiplyScalar,
     smaller,
     sqrt: sqrt2,
-    typed
+    typed: typed2
   });
   var ImmutableDenseMatrix = /* @__PURE__ */ createImmutableDenseMatrixClass({
     DenseMatrix,
     smaller
   });
   var Index = /* @__PURE__ */ createIndexClass({
-    ImmutableDenseMatrix
-  });
-  var invmod = /* @__PURE__ */ createInvmod({
-    BigNumber,
-    add: add2,
-    config,
-    equal,
-    isInteger: isInteger2,
-    mod: mod2,
-    smaller,
-    typed,
-    xgcd
+    ImmutableDenseMatrix,
+    getMatrixDataType
   });
   var larger = /* @__PURE__ */ createLarger({
     DenseMatrix,
-    concat,
+    concat: concat2,
     config,
     matrix,
-    typed
+    typed: typed2
   });
   var log3 = /* @__PURE__ */ createLog({
     Complex: Complex2,
     config,
     divideScalar,
-    typed
+    typed: typed2
+  });
+  var lsolve = /* @__PURE__ */ createLsolve({
+    DenseMatrix,
+    divideScalar,
+    equalScalar,
+    matrix,
+    multiplyScalar,
+    subtract,
+    typed: typed2
   });
   var matrixFromRows = /* @__PURE__ */ createMatrixFromRows({
     flatten: flatten2,
     matrix,
     size,
-    typed
+    typed: typed2
   });
   var min2 = /* @__PURE__ */ createMin({
     config,
     numeric: numeric2,
     smaller,
-    typed
+    typed: typed2
+  });
+  var mod2 = /* @__PURE__ */ createMod({
+    DenseMatrix,
+    concat: concat2,
+    config,
+    equalScalar,
+    matrix,
+    round: round2,
+    typed: typed2,
+    zeros: zeros2
   });
   var multiply = /* @__PURE__ */ createMultiply({
     addScalar,
@@ -42856,86 +45121,103 @@ var meta_bind_publish = (() => {
     equalScalar,
     matrix,
     multiplyScalar,
-    typed
+    typed: typed2
   });
   var nthRoots = /* @__PURE__ */ createNthRoots({
     Complex: Complex2,
     config,
     divideScalar,
-    typed
+    typed: typed2
   });
   var or = /* @__PURE__ */ createOr({
     DenseMatrix,
-    concat,
+    concat: concat2,
     equalScalar,
     matrix,
-    typed
+    typed: typed2
   });
   var partitionSelect = /* @__PURE__ */ createPartitionSelect({
     compare,
     isNaN: isNaN2,
     isNumeric,
-    typed
+    typed: typed2
   });
-  var quantileSeq = /* @__PURE__ */ createQuantileSeq({
-    add: add2,
-    compare,
-    multiply,
-    partitionSelect,
-    typed
+  var qr = /* @__PURE__ */ createQr({
+    addScalar,
+    complex,
+    conj,
+    divideScalar,
+    equal,
+    identity: identity2,
+    isZero,
+    matrix,
+    multiplyScalar,
+    sign: sign3,
+    sqrt: sqrt2,
+    subtract,
+    typed: typed2,
+    unaryMinus,
+    zeros: zeros2
   });
   var rightLogShift = /* @__PURE__ */ createRightLogShift({
     DenseMatrix,
-    concat,
+    concat: concat2,
     equalScalar,
     matrix,
-    typed,
+    typed: typed2,
     zeros: zeros2
   });
-  var smallerEq = /* @__PURE__ */ createSmallerEq({
-    DenseMatrix,
-    concat,
-    config,
-    matrix,
-    typed
+  var slu = /* @__PURE__ */ createSlu({
+    SparseMatrix,
+    abs: abs2,
+    add: add2,
+    divideScalar,
+    larger,
+    largerEq,
+    multiply,
+    subtract,
+    transpose,
+    typed: typed2
   });
-  var subtract = /* @__PURE__ */ createSubtract({
-    DenseMatrix,
-    addScalar,
-    concat,
-    equalScalar,
+  var subset = /* @__PURE__ */ createSubset({
+    add: add2,
     matrix,
-    typed,
-    unaryMinus
+    typed: typed2,
+    zeros: zeros2
+  });
+  var sum2 = /* @__PURE__ */ createSum({
+    add: add2,
+    config,
+    numeric: numeric2,
+    typed: typed2
   });
   var trace = /* @__PURE__ */ createTrace({
     add: add2,
     matrix,
-    typed
+    typed: typed2
   });
-  var usolve = /* @__PURE__ */ createUsolve({
+  var usolveAll = /* @__PURE__ */ createUsolveAll({
     DenseMatrix,
     divideScalar,
     equalScalar,
     matrix,
     multiplyScalar,
     subtract,
-    typed
+    typed: typed2
   });
-  var and = /* @__PURE__ */ createAnd({
-    concat,
-    equalScalar,
-    matrix,
-    not,
-    typed,
-    zeros: zeros2
+  var zpk2tf = /* @__PURE__ */ createZpk2tf({
+    Complex: Complex2,
+    add: add2,
+    multiply,
+    number,
+    typed: typed2
   });
   var bitOr = /* @__PURE__ */ createBitOr({
     DenseMatrix,
-    concat,
+    concat: concat2,
     equalScalar,
     matrix,
-    typed
+    typed: typed2
   });
   var ceil2 = /* @__PURE__ */ createCeil({
     DenseMatrix,
@@ -42943,12 +45225,12 @@ var meta_bind_publish = (() => {
     equalScalar,
     matrix,
     round: round2,
-    typed,
+    typed: typed2,
     zeros: zeros2
   });
   var compareNatural = /* @__PURE__ */ createCompareNatural({
     compare,
-    typed
+    typed: typed2
   });
   var composition = /* @__PURE__ */ createComposition({
     addScalar,
@@ -42957,13 +45239,13 @@ var meta_bind_publish = (() => {
     isNegative,
     isPositive,
     larger,
-    typed
+    typed: typed2
   });
   var cross = /* @__PURE__ */ createCross({
     matrix,
     multiply,
     subtract,
-    typed
+    typed: typed2
   });
   var det = /* @__PURE__ */ createDet({
     divideScalar,
@@ -42971,31 +45253,15 @@ var meta_bind_publish = (() => {
     matrix,
     multiply,
     subtract,
-    typed,
-    unaryMinus
-  });
-  var diff = /* @__PURE__ */ createDiff({
-    matrix,
-    number,
-    subtract,
-    typed
-  });
-  var distance = /* @__PURE__ */ createDistance({
-    abs: abs2,
-    addScalar,
-    divideScalar,
-    multiplyScalar,
-    sqrt: sqrt2,
-    subtract,
-    typed,
+    typed: typed2,
     unaryMinus
   });
   var dotMultiply = /* @__PURE__ */ createDotMultiply({
-    concat,
+    concat: concat2,
     equalScalar,
     matrix,
     multiplyScalar,
-    typed
+    typed: typed2
   });
   var FibonacciHeap = /* @__PURE__ */ createFibonacciHeapClass({
     larger,
@@ -43008,12 +45274,12 @@ var meta_bind_publish = (() => {
     equalScalar,
     floor: floor2,
     matrix,
-    typed,
+    typed: typed2,
     zeros: zeros2
   });
   var index = /* @__PURE__ */ createIndex({
     Index,
-    typed
+    typed: typed2
   });
   var intersect = /* @__PURE__ */ createIntersect({
     abs: abs2,
@@ -43030,144 +45296,31 @@ var meta_bind_publish = (() => {
     multiplyScalar,
     smaller,
     subtract,
-    typed
+    typed: typed2
+  });
+  var invmod = /* @__PURE__ */ createInvmod({
+    BigNumber,
+    add: add2,
+    config,
+    equal,
+    isInteger: isInteger2,
+    mod: mod2,
+    smaller,
+    typed: typed2,
+    xgcd
   });
   var lcm = /* @__PURE__ */ createLcm({
-    concat,
+    concat: concat2,
     equalScalar,
     matrix,
-    typed
+    typed: typed2
   });
   var log1p2 = /* @__PURE__ */ createLog1p({
     Complex: Complex2,
     config,
     divideScalar,
     log: log3,
-    typed
-  });
-  var lsolve = /* @__PURE__ */ createLsolve({
-    DenseMatrix,
-    divideScalar,
-    equalScalar,
-    matrix,
-    multiplyScalar,
-    subtract,
-    typed
-  });
-  var max2 = /* @__PURE__ */ createMax({
-    config,
-    larger,
-    numeric: numeric2,
-    typed
-  });
-  var qr = /* @__PURE__ */ createQr({
-    addScalar,
-    complex,
-    conj,
-    divideScalar,
-    equal,
-    identity,
-    isZero,
-    matrix,
-    multiplyScalar,
-    sign: sign3,
-    sqrt: sqrt2,
-    subtract,
-    typed,
-    unaryMinus,
-    zeros: zeros2
-  });
-  var range = /* @__PURE__ */ createRange({
-    bignumber,
-    matrix,
-    config,
-    larger,
-    largerEq,
-    smaller,
-    smallerEq,
-    typed
-  });
-  var row = /* @__PURE__ */ createRow({
-    Index,
-    matrix,
-    range,
-    typed
-  });
-  var setCartesian = /* @__PURE__ */ createSetCartesian({
-    DenseMatrix,
-    Index,
-    compareNatural,
-    size,
-    subset,
-    typed
-  });
-  var setDistinct = /* @__PURE__ */ createSetDistinct({
-    DenseMatrix,
-    Index,
-    compareNatural,
-    size,
-    subset,
-    typed
-  });
-  var setIsSubset = /* @__PURE__ */ createSetIsSubset({
-    Index,
-    compareNatural,
-    size,
-    subset,
-    typed
-  });
-  var setPowerset = /* @__PURE__ */ createSetPowerset({
-    Index,
-    compareNatural,
-    size,
-    subset,
-    typed
-  });
-  var slu = /* @__PURE__ */ createSlu({
-    SparseMatrix,
-    abs: abs2,
-    add: add2,
-    divideScalar,
-    larger,
-    largerEq,
-    multiply,
-    subtract,
-    transpose,
-    typed
-  });
-  var Spa = /* @__PURE__ */ createSpaClass({
-    FibonacciHeap,
-    addScalar,
-    equalScalar
-  });
-  var sum2 = /* @__PURE__ */ createSum({
-    add: add2,
-    config,
-    numeric: numeric2,
-    typed
-  });
-  var usolveAll = /* @__PURE__ */ createUsolveAll({
-    DenseMatrix,
-    divideScalar,
-    equalScalar,
-    matrix,
-    multiplyScalar,
-    subtract,
-    typed
-  });
-  var atan22 = /* @__PURE__ */ createAtan2({
-    BigNumber,
-    DenseMatrix,
-    concat,
-    equalScalar,
-    matrix,
-    typed
-  });
-  var column = /* @__PURE__ */ createColumn({
-    Index,
-    matrix,
-    range,
-    typed
+    typed: typed2
   });
   var lsolveAll = /* @__PURE__ */ createLsolveAll({
     DenseMatrix,
@@ -43176,7 +45329,82 @@ var meta_bind_publish = (() => {
     matrix,
     multiplyScalar,
     subtract,
-    typed
+    typed: typed2
+  });
+  var max2 = /* @__PURE__ */ createMax({
+    config,
+    larger,
+    numeric: numeric2,
+    typed: typed2
+  });
+  var setCartesian = /* @__PURE__ */ createSetCartesian({
+    DenseMatrix,
+    Index,
+    compareNatural,
+    size,
+    subset,
+    typed: typed2
+  });
+  var setDistinct = /* @__PURE__ */ createSetDistinct({
+    DenseMatrix,
+    Index,
+    compareNatural,
+    size,
+    subset,
+    typed: typed2
+  });
+  var setIsSubset = /* @__PURE__ */ createSetIsSubset({
+    Index,
+    compareNatural,
+    size,
+    subset,
+    typed: typed2
+  });
+  var setPowerset = /* @__PURE__ */ createSetPowerset({
+    Index,
+    compareNatural,
+    size,
+    subset,
+    typed: typed2
+  });
+  var smallerEq = /* @__PURE__ */ createSmallerEq({
+    DenseMatrix,
+    concat: concat2,
+    config,
+    matrix,
+    typed: typed2
+  });
+  var sort = /* @__PURE__ */ createSort({
+    compare,
+    compareNatural,
+    matrix,
+    typed: typed2
+  });
+  var and = /* @__PURE__ */ createAnd({
+    concat: concat2,
+    equalScalar,
+    matrix,
+    not,
+    typed: typed2,
+    zeros: zeros2
+  });
+  var range = /* @__PURE__ */ createRange({
+    bignumber,
+    matrix,
+    add: add2,
+    config,
+    isPositive,
+    larger,
+    largerEq,
+    smaller,
+    smallerEq,
+    typed: typed2
+  });
+  var row = /* @__PURE__ */ createRow({
+    Index,
+    matrix,
+    range,
+    typed: typed2
   });
   var setDifference = /* @__PURE__ */ createSetDifference({
     DenseMatrix,
@@ -43184,38 +45412,43 @@ var meta_bind_publish = (() => {
     compareNatural,
     size,
     subset,
-    typed
+    typed: typed2
   });
   var setMultiplicity = /* @__PURE__ */ createSetMultiplicity({
     Index,
     compareNatural,
     size,
     subset,
-    typed
+    typed: typed2
   });
   var setSymDifference = /* @__PURE__ */ createSetSymDifference({
     Index,
-    concat,
+    concat: concat2,
     setDifference,
     size,
     subset,
-    typed
+    typed: typed2
   });
-  var sort = /* @__PURE__ */ createSort({
-    compare,
-    compareNatural,
+  var Spa = /* @__PURE__ */ createSpaClass({
+    FibonacciHeap,
+    addScalar,
+    equalScalar
+  });
+  var column = /* @__PURE__ */ createColumn({
+    Index,
     matrix,
-    typed
+    range,
+    typed: typed2
   });
   var inv = /* @__PURE__ */ createInv({
     abs: abs2,
     addScalar,
     det,
     divideScalar,
-    identity,
+    identity: identity2,
     matrix,
     multiply,
-    typed,
+    typed: typed2,
     unaryMinus
   });
   var lup = /* @__PURE__ */ createLup({
@@ -43230,7 +45463,7 @@ var meta_bind_publish = (() => {
     matrix,
     multiplyScalar,
     subtract,
-    typed,
+    typed: typed2,
     unaryMinus
   });
   var pinv = /* @__PURE__ */ createPinv({
@@ -43245,18 +45478,18 @@ var meta_bind_publish = (() => {
     inv,
     matrix,
     multiply,
-    typed
+    typed: typed2
   });
   var pow2 = /* @__PURE__ */ createPow({
     Complex: Complex2,
     config,
     fraction,
-    identity,
+    identity: identity2,
     inv,
     matrix,
     multiply,
     number,
-    typed
+    typed: typed2
   });
   var setIntersect = /* @__PURE__ */ createSetIntersect({
     DenseMatrix,
@@ -43264,21 +45497,21 @@ var meta_bind_publish = (() => {
     compareNatural,
     size,
     subset,
-    typed
+    typed: typed2
   });
   var setUnion = /* @__PURE__ */ createSetUnion({
     Index,
-    concat,
+    concat: concat2,
     setIntersect,
     setSymDifference,
     size,
     subset,
-    typed
+    typed: typed2
   });
   var sqrtm = /* @__PURE__ */ createSqrtm({
     abs: abs2,
     add: add2,
-    identity,
+    identity: identity2,
     inv,
     map: map2,
     max: max2,
@@ -43286,7 +45519,7 @@ var meta_bind_publish = (() => {
     size,
     sqrt: sqrt2,
     subtract,
-    typed
+    typed: typed2
   });
   var Unit = /* @__PURE__ */ createUnitClass({
     BigNumber,
@@ -43336,9 +45569,10 @@ var meta_bind_publish = (() => {
     Unit,
     config
   });
-  var createUnit = /* @__PURE__ */ createCreateUnit({
+  var coulomb = /* @__PURE__ */ createCoulomb({
+    BigNumber,
     Unit,
-    typed
+    config
   });
   var deuteronMass = /* @__PURE__ */ createDeuteronMass({
     BigNumber,
@@ -43347,11 +45581,11 @@ var meta_bind_publish = (() => {
   });
   var dotPow = /* @__PURE__ */ createDotPow({
     DenseMatrix,
-    concat,
+    concat: concat2,
     equalScalar,
     matrix,
     pow: pow2,
-    typed
+    typed: typed2
   });
   var electricConstant = /* @__PURE__ */ createElectricConstant({
     BigNumber,
@@ -43366,10 +45600,10 @@ var meta_bind_publish = (() => {
   var expm = /* @__PURE__ */ createExpm({
     abs: abs2,
     add: add2,
-    identity,
+    identity: identity2,
     inv,
     multiply,
-    typed
+    typed: typed2
   });
   var faraday = /* @__PURE__ */ createFaraday({
     BigNumber,
@@ -43389,7 +45623,7 @@ var meta_bind_publish = (() => {
     multiplyScalar,
     pow: pow2,
     tau: tau2,
-    typed
+    typed: typed2
   });
   var gamma = /* @__PURE__ */ createGamma({
     BigNumber,
@@ -43397,7 +45631,7 @@ var meta_bind_publish = (() => {
     config,
     multiplyScalar,
     pow: pow2,
-    typed
+    typed: typed2
   });
   var gravitationConstant = /* @__PURE__ */ createGravitationConstant({
     BigNumber,
@@ -43413,7 +45647,7 @@ var meta_bind_publish = (() => {
     conj,
     dotDivide,
     fft,
-    typed
+    typed: typed2
   });
   var klitzing = /* @__PURE__ */ createKlitzing({
     BigNumber,
@@ -43470,6 +45704,11 @@ var meta_bind_publish = (() => {
     Unit,
     config
   });
+  var quantumOfCirculation = /* @__PURE__ */ createQuantumOfCirculation({
+    BigNumber,
+    Unit,
+    config
+  });
   var reducedPlanckConstant = /* @__PURE__ */ createReducedPlanckConstant({
     BigNumber,
     Unit,
@@ -43510,10 +45749,9 @@ var meta_bind_publish = (() => {
     Unit,
     config
   });
-  var coulomb = /* @__PURE__ */ createCoulomb({
-    BigNumber,
+  var createUnit = /* @__PURE__ */ createCreateUnit({
     Unit,
-    config
+    typed: typed2
   });
   var divide2 = /* @__PURE__ */ createDivide({
     divideScalar,
@@ -43521,7 +45759,7 @@ var meta_bind_publish = (() => {
     inv,
     matrix,
     multiply,
-    typed
+    typed: typed2
   });
   var electronMass = /* @__PURE__ */ createElectronMass({
     BigNumber,
@@ -43530,14 +45768,14 @@ var meta_bind_publish = (() => {
   });
   var factorial = /* @__PURE__ */ createFactorial({
     gamma,
-    typed
+    typed: typed2
   });
   var firstRadiation = /* @__PURE__ */ createFirstRadiation({
     BigNumber,
     Unit,
     config
   });
-  var gasConstant = /* @__PURE__ */ createGasConstant({
+  var gravity = /* @__PURE__ */ createGravity({
     BigNumber,
     Unit,
     config
@@ -43553,7 +45791,7 @@ var meta_bind_publish = (() => {
     lup,
     matrix,
     slu,
-    typed,
+    typed: typed2,
     usolve
   });
   var magneticFluxQuantum = /* @__PURE__ */ createMagneticFluxQuantum({
@@ -43573,11 +45811,11 @@ var meta_bind_publish = (() => {
     isInteger: isInteger2,
     isPositive,
     multiply,
-    typed
+    typed: typed2
   });
   var permutations = /* @__PURE__ */ createPermutations({
     factorial,
-    typed
+    typed: typed2
   });
   var planckMass = /* @__PURE__ */ createPlanckMass({
     BigNumber,
@@ -43595,13 +45833,30 @@ var meta_bind_publish = (() => {
     re,
     sqrt: sqrt2,
     subtract,
-    typeOf: typeOf2,
-    typed,
+    typeOf: typeOf3,
+    typed: typed2,
     unaryMinus
   });
   var setSize = /* @__PURE__ */ createSetSize({
     compareNatural,
-    typed
+    typed: typed2
+  });
+  var solveODE = /* @__PURE__ */ createSolveODE({
+    abs: abs2,
+    add: add2,
+    bignumber,
+    divide: divide2,
+    isNegative,
+    isPositive,
+    larger,
+    map: map2,
+    matrix,
+    max: max2,
+    multiply,
+    smaller,
+    subtract,
+    typed: typed2,
+    unaryMinus
   });
   var stirlingS2 = /* @__PURE__ */ createStirlingS2({
     bignumber,
@@ -43616,18 +45871,18 @@ var meta_bind_publish = (() => {
     number,
     pow: pow2,
     subtract,
-    typed
+    typed: typed2
   });
   var unit = /* @__PURE__ */ createUnitFunction({
     Unit,
-    typed
+    typed: typed2
   });
   var bellNumbers = /* @__PURE__ */ createBellNumbers({
     addScalar,
     isInteger: isInteger2,
     isNegative,
     stirlingS2,
-    typed
+    typed: typed2
   });
   var eigs = /* @__PURE__ */ createEigs({
     abs: abs2,
@@ -43658,7 +45913,7 @@ var meta_bind_publish = (() => {
     smaller,
     sqrt: sqrt2,
     subtract,
-    typed,
+    typed: typed2,
     usolve,
     usolveAll
   });
@@ -43667,26 +45922,15 @@ var meta_bind_publish = (() => {
     Unit,
     config
   });
-  var gravity = /* @__PURE__ */ createGravity({
+  var gasConstant = /* @__PURE__ */ createGasConstant({
     BigNumber,
     Unit,
     config
   });
-  var kldivergence = /* @__PURE__ */ createKldivergence({
-    divide: divide2,
-    dotDivide,
-    isNumeric,
-    log: log3,
-    map: map2,
-    matrix,
-    multiply,
-    sum: sum2,
-    typed
-  });
   var mean = /* @__PURE__ */ createMean({
     add: add2,
     divide: divide2,
-    typed
+    typed: typed2
   });
   var molarVolume = /* @__PURE__ */ createMolarVolume({
     BigNumber,
@@ -43698,10 +45942,19 @@ var meta_bind_publish = (() => {
     Unit,
     config
   });
-  var quantumOfCirculation = /* @__PURE__ */ createQuantumOfCirculation({
-    BigNumber,
-    Unit,
-    config
+  var quantileSeq = /* @__PURE__ */ createQuantileSeq({
+    bignumber,
+    add: add2,
+    compare,
+    divide: divide2,
+    isInteger: isInteger2,
+    larger,
+    multiply,
+    partitionSelect,
+    smaller,
+    smallerEq,
+    subtract,
+    typed: typed2
   });
   var variance = /* @__PURE__ */ createVariance({
     add: add2,
@@ -43710,7 +45963,7 @@ var meta_bind_publish = (() => {
     isNaN: isNaN2,
     multiply,
     subtract,
-    typed
+    typed: typed2
   });
   var classicalElectronRadius = /* @__PURE__ */ createClassicalElectronRadius({
     BigNumber,
@@ -43722,25 +45975,58 @@ var meta_bind_publish = (() => {
     compare,
     divide: divide2,
     partitionSelect,
-    typed
+    typed: typed2
   });
-  var planckTime = /* @__PURE__ */ createPlanckTime({
-    BigNumber,
-    Unit,
-    config
-  });
-  var std = /* @__PURE__ */ createStd({
-    map: map2,
+  var corr = /* @__PURE__ */ createCorr({
+    add: add2,
+    divide: divide2,
+    matrix,
+    mean,
+    multiply,
+    pow: pow2,
     sqrt: sqrt2,
-    typed,
-    variance
+    subtract,
+    sum: sum2,
+    typed: typed2
+  });
+  var freqz = /* @__PURE__ */ createFreqz({
+    Complex: Complex2,
+    add: add2,
+    divide: divide2,
+    matrix,
+    multiply,
+    typed: typed2
   });
   var mad = /* @__PURE__ */ createMad({
     abs: abs2,
     map: map2,
     median,
     subtract,
-    typed
+    typed: typed2
+  });
+  var std = /* @__PURE__ */ createStd({
+    map: map2,
+    sqrt: sqrt2,
+    typed: typed2,
+    variance
+  });
+  var zeta = /* @__PURE__ */ createZeta({
+    BigNumber,
+    Complex: Complex2,
+    add: add2,
+    config,
+    divide: divide2,
+    equal,
+    factorial,
+    gamma,
+    isNegative,
+    multiply,
+    pi: pi2,
+    pow: pow2,
+    sin: sin2,
+    smallerEq,
+    subtract,
+    typed: typed2
   });
   var norm = /* @__PURE__ */ createNorm({
     abs: abs2,
@@ -43755,7 +46041,7 @@ var meta_bind_publish = (() => {
     pow: pow2,
     smaller,
     sqrt: sqrt2,
-    typed
+    typed: typed2
   });
   var rotationMatrix = /* @__PURE__ */ createRotationMatrix({
     BigNumber,
@@ -43768,28 +46054,44 @@ var meta_bind_publish = (() => {
     multiplyScalar,
     norm,
     sin: sin2,
-    typed,
+    typed: typed2,
     unaryMinus
   });
-  var rotate = /* @__PURE__ */ createRotate({
+  var kldivergence = /* @__PURE__ */ createKldivergence({
+    divide: divide2,
+    dotDivide,
+    isNumeric,
+    log: log3,
+    map: map2,
+    matrix,
     multiply,
-    rotationMatrix,
-    typed
+    sum: sum2,
+    typed: typed2
+  });
+  var planckTime = /* @__PURE__ */ createPlanckTime({
+    BigNumber,
+    Unit,
+    config
   });
   var schur = /* @__PURE__ */ createSchur({
-    identity,
+    identity: identity2,
     matrix,
     multiply,
     norm,
     qr,
     subtract,
-    typed
+    typed: typed2
+  });
+  var rotate = /* @__PURE__ */ createRotate({
+    multiply,
+    rotationMatrix,
+    typed: typed2
   });
   var sylvester = /* @__PURE__ */ createSylvester({
     abs: abs2,
     add: add2,
-    concat,
-    identity,
+    concat: concat2,
+    identity: identity2,
     index,
     lusolve,
     matrix,
@@ -43800,14 +46102,14 @@ var meta_bind_publish = (() => {
     subset,
     subtract,
     transpose,
-    typed
+    typed: typed2
   });
   var lyap = /* @__PURE__ */ createLyap({
     matrix,
     multiply,
     sylvester,
     transpose,
-    typed
+    typed: typed2
   });
 
   // node_modules/mathjs/lib/esm/entry/impureFunctionsAny.generated.js
@@ -43850,23 +46152,23 @@ var meta_bind_publish = (() => {
   });
   var Chain = createChainClass({
     math,
-    typed
+    typed: typed2
   });
   var FunctionAssignmentNode = createFunctionAssignmentNode({
     Node,
-    typed
+    typed: typed2
   });
   var chain = createChain({
     Chain,
-    typed
-  });
-  var AccessorNode = createAccessorNode({
-    Node,
-    subset
+    typed: typed2
   });
   var IndexNode = createIndexNode({
     Node,
     size
+  });
+  var AccessorNode = createAccessorNode({
+    Node,
+    subset
   });
   var AssignmentNode = createAssignmentNode({
     matrix,
@@ -43901,7 +46203,7 @@ var meta_bind_publish = (() => {
     SymbolNode,
     config,
     numeric: numeric2,
-    typed
+    typed: typed2
   });
   var resolve = createResolve({
     ConstantNode,
@@ -43909,7 +46211,7 @@ var meta_bind_publish = (() => {
     OperatorNode,
     ParenthesisNode,
     parse,
-    typed
+    typed: typed2
   });
   var simplifyConstant = createSimplifyConstant({
     bignumber,
@@ -43925,21 +46227,18 @@ var meta_bind_publish = (() => {
     config,
     mathWithTransform,
     matrix,
-    typed
+    typed: typed2
   });
   var compile = createCompile({
     parse,
-    typed
-  });
-  var evaluate = createEvaluate({
-    parse,
-    typed
+    typed: typed2
   });
   var Help = createHelpClass({
     parse
   });
-  var Parser = createParserClass({
-    evaluate
+  var leafCount = createLeafCount({
+    parse,
+    typed: typed2
   });
   var simplifyCore = createSimplifyCore({
     AccessorNode,
@@ -43959,12 +46258,19 @@ var meta_bind_publish = (() => {
     parse,
     pow: pow2,
     subtract,
-    typed
+    typed: typed2
+  });
+  var evaluate = createEvaluate({
+    parse,
+    typed: typed2
   });
   var help = createHelp({
     Help,
     mathWithTransform,
-    typed
+    typed: typed2
+  });
+  var Parser2 = createParserClass({
+    evaluate
   });
   var simplify = createSimplify({
     bignumber,
@@ -43992,35 +46298,17 @@ var meta_bind_publish = (() => {
     simplifyConstant,
     simplifyCore,
     subtract,
-    typed
+    typed: typed2
   });
   var symbolicEqual = createSymbolicEqual({
     OperatorNode,
     parse,
     simplify,
-    typed
-  });
-  var derivative = createDerivative({
-    ConstantNode,
-    FunctionNode,
-    OperatorNode,
-    ParenthesisNode,
-    SymbolNode,
-    config,
-    equal,
-    isZero,
-    numeric: numeric2,
-    parse,
-    simplify,
-    typed
+    typed: typed2
   });
   var parser = createParser({
-    Parser,
-    typed
-  });
-  var leafCount = createLeafCount({
-    parse,
-    typed
+    Parser: Parser2,
+    typed: typed2
   });
   var rationalize = createRationalize({
     bignumber,
@@ -44048,7 +46336,21 @@ var meta_bind_publish = (() => {
     simplifyConstant,
     simplifyCore,
     subtract,
-    typed
+    typed: typed2
+  });
+  var derivative = createDerivative({
+    ConstantNode,
+    FunctionNode,
+    OperatorNode,
+    ParenthesisNode,
+    SymbolNode,
+    config,
+    equal,
+    isZero,
+    numeric: numeric2,
+    parse,
+    simplify,
+    typed: typed2
   });
   _extends(math, {
     e: e2,
@@ -44073,7 +46375,7 @@ var meta_bind_publish = (() => {
     replacer,
     reviver,
     SQRT2,
-    typed,
+    typed: typed2,
     unaryPlus,
     "PI": pi2,
     weakMixingAngle,
@@ -44090,12 +46392,12 @@ var meta_bind_publish = (() => {
     bignumber,
     bitNot,
     boolean,
-    clone: clone3,
+    clone: clone4,
     combinations,
     complex,
     conj,
-    cosh: cosh3,
-    coth,
+    cos: cos2,
+    cot,
     csc,
     cube,
     equalScalar,
@@ -44132,7 +46434,7 @@ var meta_bind_publish = (() => {
     square,
     string,
     tan: tan2,
-    typeOf: typeOf2,
+    typeOf: typeOf3,
     acosh: acosh3,
     acsch,
     apply,
@@ -44140,7 +46442,7 @@ var meta_bind_publish = (() => {
     bin,
     chain,
     combinationsWithRep,
-    cos: cos2,
+    cosh: cosh3,
     csch,
     isNaN: isNaN2,
     isPrime,
@@ -44152,7 +46454,7 @@ var meta_bind_publish = (() => {
     tanh: tanh3,
     unaryMinus,
     acoth,
-    cot,
+    coth,
     fraction,
     isNumeric,
     matrix,
@@ -44163,13 +46465,12 @@ var meta_bind_publish = (() => {
     reshape: reshape2,
     size,
     squeeze: squeeze2,
-    subset,
     transpose,
     xgcd,
     zeros: zeros2,
     asin: asin2,
     cbrt: cbrt4,
-    concat,
+    concat: concat2,
     count,
     ctranspose,
     diag,
@@ -44177,24 +46478,25 @@ var meta_bind_publish = (() => {
     dotDivide,
     equal,
     flatten: flatten2,
-    gcd,
     hasNumericValue,
-    identity,
+    identity: identity2,
     kron,
     largerEq,
     leftShift,
     matrixFromColumns,
-    mod: mod2,
     nthRoot,
     ones,
     resize: resize2,
     rightArithShift,
     round: round2,
     smaller,
+    subtract,
     to,
     unequal,
+    usolve,
     xor,
     add: add2,
+    atan2: atan22,
     bitAnd,
     bitXor: bitXor2,
     catalan,
@@ -44202,59 +46504,59 @@ var meta_bind_publish = (() => {
     compareText: compareText2,
     cumsum,
     deepEqual,
+    diff,
+    distance,
     dot,
     equalText,
     floor: floor2,
+    gcd,
     hypot: hypot2,
-    invmod,
     larger,
     log: log3,
+    lsolve,
     matrixFromRows,
     min: min2,
+    mod: mod2,
     multiply,
     nthRoots,
     or,
     partitionSelect,
-    quantileSeq,
+    qr,
     rightLogShift,
-    smallerEq,
-    subtract,
+    slu,
+    subset,
+    sum: sum2,
     trace,
-    usolve,
-    and,
+    usolveAll,
+    zpk2tf,
     bitOr,
     ceil: ceil2,
     compareNatural,
     composition,
     cross,
     det,
-    diff,
-    distance,
     dotMultiply,
     fix,
     index,
     intersect,
+    invmod,
     lcm,
     log1p: log1p2,
-    lsolve,
+    lsolveAll,
     max: max2,
-    qr,
-    range,
-    row,
     setCartesian,
     setDistinct,
     setIsSubset,
     setPowerset,
-    slu,
-    sum: sum2,
-    usolveAll,
-    atan2: atan22,
-    column,
-    lsolveAll,
+    smallerEq,
+    sort,
+    and,
+    range,
+    row,
     setDifference,
     setMultiplicity,
     setSymDifference,
-    sort,
+    column,
     inv,
     lup,
     pinv,
@@ -44268,7 +46570,7 @@ var meta_bind_publish = (() => {
     bohrMagneton,
     boltzmann,
     conductanceQuantum,
-    createUnit,
+    coulomb,
     deuteronMass,
     dotPow,
     electricConstant,
@@ -44291,6 +46593,7 @@ var meta_bind_publish = (() => {
     planckLength,
     planckTemperature,
     protonMass,
+    quantumOfCirculation,
     reducedPlanckConstant,
     rydberg,
     secondRadiation,
@@ -44299,141 +46602,170 @@ var meta_bind_publish = (() => {
     thomsonCrossSection,
     avogadro,
     bohrRadius,
-    coulomb,
+    createUnit,
     divide: divide2,
     electronMass,
     factorial,
     firstRadiation,
-    gasConstant,
+    gravity,
     inverseConductanceQuantum,
     lusolve,
     magneticFluxQuantum,
     molarMassC12,
     multinomial,
+    parse,
     permutations,
     planckMass,
     polynomialRoot,
+    resolve,
     setSize,
+    simplifyConstant,
+    solveODE,
     stirlingS2,
     unit,
     bellNumbers,
+    compile,
     eigs,
     fermiCoupling,
-    gravity,
-    kldivergence,
+    gasConstant,
+    leafCount,
     mean,
     molarVolume,
     planckConstant,
-    quantumOfCirculation,
+    quantileSeq,
+    simplifyCore,
     variance,
     classicalElectronRadius,
-    median,
-    parse,
-    planckTime,
-    resolve,
-    simplifyConstant,
-    std,
-    compile,
     evaluate,
-    mad,
-    simplifyCore,
     help,
-    norm,
-    rotationMatrix,
+    median,
     simplify,
     symbolicEqual,
-    derivative,
+    corr,
+    freqz,
+    mad,
     parser,
-    rotate,
-    leafCount,
     rationalize,
+    std,
+    zeta,
+    derivative,
+    norm,
+    rotationMatrix,
+    kldivergence,
+    planckTime,
     schur,
+    rotate,
     sylvester,
     lyap,
     config
   });
   _extends(mathWithTransform, math, {
     filter: createFilterTransform({
-      typed
+      typed: typed2
     }),
     forEach: createForEachTransform({
-      typed
+      typed: typed2
     }),
     map: createMapTransform({
-      typed
+      typed: typed2
     }),
     apply: createApplyTransform({
       isInteger: isInteger2,
-      typed
-    }),
-    subset: createSubsetTransform({
-      matrix,
-      typed
+      typed: typed2
     }),
     concat: createConcatTransform({
       isInteger: isInteger2,
       matrix,
-      typed
+      typed: typed2
     }),
     max: createMaxTransform({
       config,
       larger,
       numeric: numeric2,
-      typed
+      typed: typed2
     }),
-    sum: createSumTransform({
+    print: createPrintTransform({
       add: add2,
-      config,
-      numeric: numeric2,
-      typed
-    }),
-    min: createMinTransform({
-      config,
-      numeric: numeric2,
-      smaller,
-      typed
-    }),
-    cumsum: createCumSumTransform({
-      add: add2,
-      typed,
-      unaryPlus
+      matrix,
+      typed: typed2,
+      zeros: zeros2
     }),
     diff: createDiffTransform({
       bignumber,
       matrix,
       number,
       subtract,
-      typed
+      typed: typed2
+    }),
+    min: createMinTransform({
+      config,
+      numeric: numeric2,
+      smaller,
+      typed: typed2
+    }),
+    subset: createSubsetTransform({
+      add: add2,
+      matrix,
+      typed: typed2,
+      zeros: zeros2
+    }),
+    cumsum: createCumSumTransform({
+      add: add2,
+      typed: typed2,
+      unaryPlus
     }),
     index: createIndexTransform({
-      Index
+      Index,
+      getMatrixDataType
+    }),
+    sum: createSumTransform({
+      add: add2,
+      config,
+      numeric: numeric2,
+      typed: typed2
     }),
     range: createRangeTransform({
       bignumber,
       matrix,
+      add: add2,
       config,
+      isPositive,
       larger,
       largerEq,
       smaller,
       smallerEq,
-      typed
+      typed: typed2
     }),
     row: createRowTransform({
       Index,
       matrix,
       range,
-      typed
+      typed: typed2
     }),
     column: createColumnTransform({
       Index,
       matrix,
       range,
-      typed
+      typed: typed2
     }),
     mean: createMeanTransform({
       add: add2,
       divide: divide2,
-      typed
+      typed: typed2
+    }),
+    quantileSeq: createQuantileSeqTransform({
+      add: add2,
+      bignumber,
+      compare,
+      divide: divide2,
+      isInteger: isInteger2,
+      larger,
+      multiply,
+      partitionSelect,
+      smaller,
+      smallerEq,
+      subtract,
+      typed: typed2
     }),
     variance: createVarianceTransform({
       add: add2,
@@ -44442,12 +46774,12 @@ var meta_bind_publish = (() => {
       isNaN: isNaN2,
       multiply,
       subtract,
-      typed
+      typed: typed2
     }),
     std: createStdTransform({
       map: map2,
       sqrt: sqrt2,
-      typed,
+      typed: typed2,
       variance
     })
   });
@@ -44472,18 +46804,18 @@ var meta_bind_publish = (() => {
     Chain,
     FunctionAssignmentNode,
     SparseMatrix,
-    AccessorNode,
     IndexNode,
-    AssignmentNode,
     ImmutableDenseMatrix,
     Index,
+    AccessorNode,
+    AssignmentNode,
     FibonacciHeap,
     Spa,
     Unit,
     SymbolNode,
     FunctionNode,
     Help,
-    Parser
+    Parser: Parser2
   });
   Chain.createProxy(math);
 
@@ -44504,35 +46836,35 @@ var meta_bind_publish = (() => {
     unregisterListenerById(listenerId) {
       this.listeners = this.listeners.filter((x) => x.uuid !== listenerId);
     }
-    notifyListeners(value) {
+    notifyListeners(value2) {
       for (const listener of this.listeners) {
-        listener.callback(value);
+        listener.callback(value2);
       }
     }
   };
   var Signal = class extends Notifier {
-    constructor(value) {
+    constructor(value2) {
       super();
-      this.value = value;
+      this.value = value2;
     }
     get() {
       return this.value;
     }
-    set(value) {
-      this.value = value;
-      this.notifyListeners(value);
+    set(value2) {
+      this.value = value2;
+      this.notifyListeners(value2);
     }
   };
 
   // src/publish/PublishViewFieldMDRC.ts
-  var import_ObjectTraversalUtils4 = __toESM(require_ObjectTraversalUtils());
+  var import_ObjectTraversalUtils3 = __toESM(require_ObjectTraversalUtils());
   var PublishViewFieldMDRC = class extends import_publish2.MarkdownRenderChild {
-    constructor(containerEl, api, declaration, filePath, metadata, uuid) {
+    constructor(containerEl, api, declaration, filePath2, metadata, uuid) {
       var _a;
       super(containerEl);
       this.api = api;
-      this.declaration = declaration;
-      this.filePath = filePath;
+      this.viewFieldDeclaration = declaration;
+      this.filePath = filePath2;
       this.uuid = uuid;
       this.metadata = metadata;
       this.expressionStr = "";
@@ -44541,41 +46873,31 @@ var meta_bind_publish = (() => {
       this.errorCollection.merge(declaration.errorCollection);
       if (this.errorCollection.isEmpty()) {
         try {
-          for (const bindTarget of (_a = this.declaration.bindTargets) != null ? _a : []) {
-            const parsedBindTarget = this.api.bindTargetParser.parseBindTarget(bindTarget, this.filePath);
-            this.variables.push({
-              bindTargetDeclaration: parsedBindTarget,
-              writeSignal: new Signal(this.getValue(parsedBindTarget)),
-              uuid: self.crypto.randomUUID(),
-              metadataCache: void 0,
-              writeSignalListener: void 0,
-              contextName: void 0
-            });
+          let varCounter = 0;
+          this.expressionStr = "";
+          for (const entry of (_a = this.viewFieldDeclaration.declaration) != null ? _a : []) {
+            if (typeof entry !== "string") {
+              const variable = {
+                bindTargetDeclaration: entry,
+                writeSignal: new Signal(void 0),
+                uuid: self.crypto.randomUUID(),
+                metadataCache: void 0,
+                writeSignalListener: void 0,
+                contextName: `MB_VAR_${varCounter}`
+              };
+              this.variables.push(variable);
+              this.expressionStr += variable.contextName;
+              varCounter += 1;
+            } else {
+              this.expressionStr += entry;
+            }
           }
-          this.parseExpression();
+          this.expression = compile(this.expressionStr);
         } catch (e3) {
           this.errorCollection.add(e3);
         }
       }
       this.load();
-    }
-    parseExpression() {
-      var _a;
-      const declaration = (_a = this.declaration.declaration) != null ? _a : "";
-      let varCounter = 0;
-      this.expressionStr = declaration.replace(/{.*?}/g, (substring) => {
-        substring = substring.substring(1, substring.length - 1).trim();
-        for (const variable of this.variables) {
-          if (variable.bindTargetDeclaration.metadataFieldName === substring) {
-            let varName = `MB_VAR_${varCounter}`;
-            variable.contextName = varName;
-            varCounter += 1;
-            return varName;
-          }
-        }
-        return "MB_VAR_NOT_FOUND";
-      });
-      this.expression = compile(this.expressionStr);
     }
     buildContext() {
       var _a, _b;
@@ -44598,7 +46920,7 @@ var meta_bind_publish = (() => {
           return this.expression.evaluate(context);
         } catch (e3) {
           throw new MetaBindExpressionError("ERROR" /* ERROR */, `failed to evaluate expression`, e3, {
-            declaration: this.declaration.declaration,
+            declaration: this.viewFieldDeclaration.declaration,
             expression: this.expressionStr,
             context
           });
@@ -44609,16 +46931,16 @@ var meta_bind_publish = (() => {
       if (bindTarget.filePath !== this.filePath) {
         throw new MetaBindBindTargetError("ERROR" /* ERROR */, "failed to render view field", "can not load metadata of another file in obsidian publish");
       }
-      return (0, import_ObjectTraversalUtils4.traverseObjectByPath)(bindTarget.metadataPath, this.metadata);
+      return (0, import_ObjectTraversalUtils3.traverseObjectByPath)(bindTarget.metadataPath, this.metadata);
     }
     onload() {
       return __async(this, null, function* () {
         console.log("meta-bind | InputFieldMarkdownRenderChild >> load", this);
         this.containerEl.addClass("meta-bind-plugin-view");
         this.containerEl.empty();
-        let value = "placeholder";
+        let value2 = "placeholder";
         try {
-          value = yield this.evaluateExpression();
+          value2 = yield this.evaluateExpression();
         } catch (e3) {
           this.errorCollection.add(e3);
         }
@@ -44626,8 +46948,8 @@ var meta_bind_publish = (() => {
           target: this.containerEl,
           props: {
             errorCollection: this.errorCollection,
-            declaration: this.declaration.fullDeclaration,
-            value,
+            declaration: this.viewFieldDeclaration.fullDeclaration,
+            value: value2,
             fieldType: "VIEW"
           }
         });
@@ -44635,21 +46957,133 @@ var meta_bind_publish = (() => {
     }
   };
 
+  // src/api/InputFieldAPI.ts
+  var InputFieldAPI = class {
+    constructor(api) {
+      this.api = api;
+    }
+    createInputFieldDeclaration(inputFieldType, inputFieldArguments2) {
+      const errorCollection = new ErrorCollection("input field declaration");
+      const mappedArguments = (inputFieldArguments2 != null ? inputFieldArguments2 : []).map((x) => ({
+        name: { value: x.name },
+        value: x.value.map((y) => ({ value: y }))
+      }));
+      return {
+        fullDeclaration: "",
+        inputFieldType: inputFieldType ? { value: inputFieldType } : void 0,
+        bindTarget: void 0,
+        arguments: mappedArguments,
+        errorCollection
+      };
+    }
+    createInputFieldDeclarationFromString(fullDeclaration) {
+      return this.api.newInputFieldParser.parseStringWithoutValidation(fullDeclaration);
+    }
+    setType(unvalidatedDeclaration, inputFieldType) {
+      unvalidatedDeclaration.inputFieldType = { value: inputFieldType };
+      return unvalidatedDeclaration;
+    }
+    setArguments(unvalidatedDeclaration, inputFieldArguments2) {
+      unvalidatedDeclaration.arguments = inputFieldArguments2.map((x) => ({
+        name: { value: x.name },
+        value: x.value.map((y) => ({ value: y }))
+      }));
+      return unvalidatedDeclaration;
+    }
+    addArgument(unvalidatedDeclaration, inputFieldArguments2) {
+      if (Array.isArray(inputFieldArguments2)) {
+        unvalidatedDeclaration.arguments = unvalidatedDeclaration.arguments.concat(
+          inputFieldArguments2.map((x) => ({
+            name: { value: x.name },
+            value: x.value.map((y) => ({ value: y }))
+          }))
+        );
+      } else {
+        unvalidatedDeclaration.arguments.push({
+          name: { value: inputFieldArguments2.name },
+          value: inputFieldArguments2.value.map((y) => ({ value: y }))
+        });
+      }
+      return unvalidatedDeclaration;
+    }
+    setBindTargetFile(unvalidatedDeclaration, bindTargetFile) {
+      if (unvalidatedDeclaration.bindTarget) {
+        unvalidatedDeclaration.bindTarget.file = { value: bindTargetFile };
+      } else {
+        unvalidatedDeclaration.bindTarget = { file: { value: bindTargetFile }, path: [] };
+      }
+      return unvalidatedDeclaration;
+    }
+    setBindTargetMetadataField(unvalidatedDeclaration, bindTargetMetadataField) {
+      if (typeof bindTargetMetadataField === "string") {
+        bindTargetMetadataField = [bindTargetMetadataField];
+      }
+      if (unvalidatedDeclaration.bindTarget) {
+        unvalidatedDeclaration.bindTarget.path = bindTargetMetadataField.map((x) => ({ value: x }));
+      } else {
+        unvalidatedDeclaration.bindTarget = { file: void 0, path: bindTargetMetadataField.map((x) => ({ value: x })) };
+      }
+      return unvalidatedDeclaration;
+    }
+    setTemplateName(unvalidatedDeclaration, templateName) {
+      unvalidatedDeclaration.templateName = { value: templateName };
+      return unvalidatedDeclaration;
+    }
+    applyTemplate(unvalidatedDeclaration) {
+      return this.api.newInputFieldParser.applyTemplate(unvalidatedDeclaration);
+    }
+    getTemplate(templateName) {
+      return this.api.newInputFieldParser.getTemplate(templateName);
+    }
+    merge(unvalidatedDeclaration, override) {
+      var _a, _b;
+      let bindTarget = {};
+      if (unvalidatedDeclaration.bindTarget === void 0) {
+        bindTarget = override.bindTarget;
+      } else {
+        bindTarget = unvalidatedDeclaration.bindTarget;
+        if (((_a = override.bindTarget) == null ? void 0 : _a.file) !== void 0) {
+          bindTarget.file = override.bindTarget.file;
+        }
+        if (((_b = override.bindTarget) == null ? void 0 : _b.path) !== void 0) {
+          bindTarget.path = override.bindTarget.path;
+        }
+      }
+      return {
+        fullDeclaration: override.fullDeclaration,
+        inputFieldType: override.inputFieldType !== void 0 ? override.inputFieldType : unvalidatedDeclaration.inputFieldType,
+        bindTarget,
+        arguments: override.arguments.concat(unvalidatedDeclaration.arguments).reduce((arr, currentValue) => {
+          if (arr.find((x) => x.name === currentValue.name) === void 0) {
+            arr.push(currentValue);
+          }
+          return arr;
+        }, []),
+        errorCollection: new ErrorCollection("input field declaration").merge(unvalidatedDeclaration.errorCollection).merge(override.errorCollection)
+      };
+    }
+  };
+
   // src/publish/PublishAPI.ts
   var PublishAPI = class {
     constructor(plugin) {
       this.plugin = plugin;
-      this.inputFieldParser = new InputFieldDeclarationParser();
-      this.viewFieldParser = new ViewFieldDeclarationParser();
+      this.newInputFieldParser = new NewInputFieldDeclarationParser(this.plugin);
+      this.viewFieldParser = new ViewFieldDeclarationParser(this.plugin);
       this.bindTargetParser = new BindTargetParser(this.plugin);
+      this.inputField = new InputFieldAPI(this);
     }
-    createInputFieldFromString(fullDeclaration, filePath, metadata, container) {
-      const declaration = this.inputFieldParser.parseString(fullDeclaration);
-      return new PublishInputFieldMDRC(container, this, declaration, filePath, metadata, self.crypto.randomUUID());
+    createInputFieldFromString(fullDeclaration, filePath2, metadata, container, component) {
+      const declaration = this.newInputFieldParser.parseString(fullDeclaration);
+      const inputField = new PublishInputFieldMDRC(container, this, declaration, filePath2, metadata, self.crypto.randomUUID());
+      component.addChild(inputField);
+      return inputField;
     }
-    createViewFieldFromString(fullDeclaration, filePath, metadata, container) {
+    createViewFieldFromString(fullDeclaration, filePath2, metadata, container, component) {
       const declaration = this.viewFieldParser.parseString(fullDeclaration);
-      return new PublishViewFieldMDRC(container, this, declaration, filePath, metadata, self.crypto.randomUUID());
+      const viewField = new PublishViewFieldMDRC(container, this, declaration, filePath2, metadata, self.crypto.randomUUID());
+      component.addChild(viewField);
+      return viewField;
     }
   };
 
@@ -44671,12 +47105,10 @@ var meta_bind_publish = (() => {
           const isInputField = fullDeclaration.startsWith("INPUT[") && fullDeclaration.endsWith("]");
           const isViewField = fullDeclaration.startsWith("VIEW[") && fullDeclaration.endsWith("]");
           if (isInputField) {
-            const inputField = this.api.createInputFieldFromString(fullDeclaration, ctx.sourcePath, ctx.frontmatter, codeBlock);
-            ctx.addChild(inputField);
+            this.api.createInputFieldFromString(fullDeclaration, ctx.sourcePath, ctx.frontmatter, codeBlock, ctx);
           }
           if (isViewField) {
-            const viewField = this.api.createViewFieldFromString(fullDeclaration, ctx.sourcePath, ctx.frontmatter, codeBlock);
-            ctx.addChild(viewField);
+            this.api.createViewFieldFromString(fullDeclaration, ctx.sourcePath, ctx.frontmatter, codeBlock, ctx);
           }
         }
       }, 100);
@@ -44690,8 +47122,8 @@ var meta_bind_publish = (() => {
     unload() {
       this.onUnload();
     }
-    getFilePathsByName(name302) {
-      return [name302];
+    getFilePathsByName(name309) {
+      return [name309];
     }
   };
   new MetaBindPublishPlugin(mb_settings);
@@ -44711,9 +47143,9 @@ var meta_bind_publish = (() => {
  * Dual licensed under the MIT or GPL Version 2 licenses.
  **/
 /**
- * @license Fraction.js v4.2.0 05/03/2022
+ * @license Fraction.js v4.3.0 20/08/2023
  * https://www.xarg.org/2014/03/rational-numbers-in-javascript/
  *
- * Copyright (c) 2021, Robert Eisele (robert@xarg.org)
+ * Copyright (c) 2023, Robert Eisele (robert@raw.org)
  * Dual licensed under the MIT or GPL Version 2 licenses.
  **/
