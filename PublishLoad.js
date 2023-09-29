@@ -4,15 +4,23 @@
 
 // The plugin settings. Not all settings are used.
 let mb_settingsString = `{
-	"devMode": false,
-	"preferredDateFormat": "YYYY-MM-DD",
-	"useUsDateInputOrder": false,
-	"syncInterval": 50,
-	"minSyncInterval": 1000,
-	"maxSyncInterval": 50,
-	"inputTemplates": "",
-	"dateFormat": "eu"
-}`;
+    "devMode": false,
+    "ignoreCodeBlockRestrictions": false,
+    "preferredDateFormat": "YYYY-MM-DD",
+    "useUsDateInputOrder": false,
+    "firstWeekday": {
+      "index": 1,
+      "name": "Monday",
+      "shortName": "Mo"
+    },
+    "syncInterval": 50,
+    "minSyncInterval": 1000,
+    "maxSyncInterval": 50,
+    "enableJs": true,
+    "inputFieldTemplates": [],
+    "excludedFolders": [],
+    "dateFormat": "eu"
+  }`;
 
 // if true, the script is pulled from the master branch instead of the release branch
 const mb_dev_mode = false;
@@ -27,4 +35,4 @@ async function mb_load() {
 	eval(script);
 }
 
-await mb_load();
+mb_load();
