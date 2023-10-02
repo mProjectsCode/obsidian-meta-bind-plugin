@@ -1,6 +1,6 @@
 import { ErrorLevel, MetaBindArgumentError } from '../utils/errors/MetaBindErrors';
 import { ParsingResultNode } from '../parsers/newInputFieldParser/InputFieldParser';
-import { InputFieldArgumentConfig, InputFieldType } from '../inputFields/InputFieldConfigs';
+import { InputFieldArgumentConfig, InputFieldArgumentValueConfig, InputFieldType } from '../inputFields/InputFieldConfigs';
 
 export abstract class AbstractInputFieldArgument {
 	value: any;
@@ -8,26 +8,23 @@ export abstract class AbstractInputFieldArgument {
 	abstract getConfig(): InputFieldArgumentConfig;
 
 	parseValue(value: ParsingResultNode[]): void {
-		this.validateValueLength(value, this.getConfig().valueLengthMin, this.getConfig().valueLengthMax);
+		this.validateValues(value, this.getConfig().values);
 		this._parseValue(value);
 	}
 
 	protected abstract _parseValue(value: ParsingResultNode[]): void;
 
-	validateValueLength(value: ParsingResultNode[], min: number, max: number): void {
-		if (value.length < min) {
-			throw new MetaBindArgumentError(
-				ErrorLevel.WARNING,
-				`Failed to parse argument value for argument '${this.getConfig().type}'.`,
-				`Expected length of argument value to be between ${min} and ${max}. Received ${value.length}.`
-			);
-		}
+	validateValues(value: ParsingResultNode[], allowedValues: InputFieldArgumentValueConfig[][]): void {
+		const min = allowedValues[0].length;
+		const max = allowedValues[allowedValues.length - 1].length;
 
-		if (value.length > max) {
+		if (allowedValues.find(x => x.length === value.length) === undefined) {
 			throw new MetaBindArgumentError(
 				ErrorLevel.WARNING,
 				`Failed to parse argument value for argument '${this.getConfig().type}'.`,
-				`Expected length of argument value to be between ${min} and ${max}. Received ${value.length}.`
+				`Expected argument values to follow the form ${allowedValues
+					.map(x => (x.length === 0 ? 'none' : x.map(y => `'${y.name}'`).join(', ')))
+					.join(' or ')}. Received arguments of length ${value.length}.`
 			);
 		}
 	}

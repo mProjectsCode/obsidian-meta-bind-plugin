@@ -39,7 +39,7 @@ Player Level: `INPUT[number:playerLevel]`
 ### Encounter Stats
 
 ```meta-bind-js-view
-{enemy} as enemies
+{enemy} and children as enemies
 {playerCount} as playerCount
 {playerLevel} as playerLevel
 ---

@@ -12,7 +12,7 @@ export class SuggestInputModal extends FuzzySuggestModal<SuggestOption> {
 	}
 
 	public getItemText(item: SuggestOption): string {
-		return item.displayValue;
+		return item.selectModalDisplayValue;
 	}
 
 	public getItems(): SuggestOption[] {

@@ -38,14 +38,14 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 
 		if (this.errorCollection.isEmpty()) {
 			try {
-				for (const bindTarget of this.viewFieldDeclaration.bindTargets ?? []) {
+				for (const bindTargetMapping of this.viewFieldDeclaration.bindTargetMappings ?? []) {
 					this.variables.push({
-						bindTargetDeclaration: this.plugin.api.bindTargetParser.parseAndValidateBindTarget(bindTarget.bindTarget),
+						bindTargetDeclaration: bindTargetMapping.bindTarget,
 						writeSignal: new Signal<any>(undefined),
 						uuid: self.crypto.randomUUID(),
-						metadataCache: undefined,
 						writeSignalListener: undefined,
-						contextName: bindTarget.name,
+						contextName: bindTargetMapping.name,
+						listenToChildren: bindTargetMapping.listenToChildren,
 					});
 				}
 
@@ -106,10 +106,11 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 				},
 			});
 
-			variable.metadataCache = this.plugin.metadataManager.register(
+			this.plugin.metadataManager.register(
 				variable.bindTargetDeclaration.filePath ?? this.filePath,
 				variable.writeSignal,
 				variable.bindTargetDeclaration.metadataPath,
+				variable.listenToChildren,
 				this.uuid + '/' + variable.uuid
 			);
 		}

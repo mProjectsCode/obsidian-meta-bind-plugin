@@ -69,7 +69,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 		}
 	}
 
-	registerSelfToMetadataManager(): MetadataFileCache | undefined {
+	registerSelfToMetadataManager(): undefined {
 		// if bind target is invalid, return
 		if (!this.inputFieldDeclaration?.isBound || !this.inputFieldDeclaration.bindTarget) {
 			return;
@@ -77,10 +77,11 @@ export class InputFieldMDRC extends AbstractMDRC {
 
 		this.metadataManagerReadSignalListener = this.readSignal.registerListener({ callback: this.updateMetadataManager.bind(this) });
 
-		return this.plugin.metadataManager.register(
+		this.plugin.metadataManager.register(
 			this.inputFieldDeclaration.bindTarget.filePath ?? this.filePath,
 			this.writeSignal,
 			this.inputFieldDeclaration.bindTarget.metadataPath,
+			false,
 			this.uuid
 		);
 	}
@@ -118,7 +119,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 		}
 
 		if (this.inputFieldDeclaration?.isBound && this.inputFieldDeclaration.bindTarget) {
-			let value: MBExtendedLiteral | undefined = traverseObjectByPath(this.inputFieldDeclaration.bindTarget.metadataPath, this.metadataCache?.metadata);
+			let value: MBExtendedLiteral | undefined = this.writeSignal.get();
 			value = value === undefined ? this.inputField.getFallbackDefaultValue() : value;
 			console.debug(
 				`meta-bind | InputFieldMarkdownRenderChild >> setting initial value to ${value} (typeof ${typeof value}) for input field ${this.uuid}`
@@ -209,7 +210,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 		});
 
 		if (this.hasValidBindTarget()) {
-			this.metadataCache = this.registerSelfToMetadataManager();
+			this.registerSelfToMetadataManager();
 		}
 		this.plugin.mdrcManager.registerMDRC(this);
 

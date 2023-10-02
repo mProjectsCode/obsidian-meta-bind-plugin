@@ -25,7 +25,7 @@ export class MetadataManager {
 		this.interval = window.setInterval(() => this.update(), this.plugin.settings.syncInterval);
 	}
 
-	register(filePath: string, signal: Signal<any | undefined>, metadataPath: string[], uuid: string): MetadataFileCache {
+	register(filePath: string, signal: Signal<any | undefined>, metadataPath: string[], listenToChildren: boolean, uuid: string): void {
 		const fileCache: MetadataFileCache | undefined = this.getCacheForFile(filePath);
 		if (fileCache) {
 			console.debug(`meta-bind | MetadataManager >> registered ${uuid} to existing file cache ${filePath} -> ${metadataPath}`);
@@ -35,24 +35,24 @@ export class MetadataManager {
 			fileCache.listeners.push({
 				callback: (value: any) => signal.set(value),
 				metadataPath: metadataPath,
+				listenToChildren: listenToChildren,
 				uuid: uuid,
 			});
 			signal.set(traverseObjectByPath(metadataPath, fileCache.metadata));
-
-			return fileCache;
 		} else {
 			console.debug(`meta-bind | MetadataManager >> registered ${uuid} to newly created file cache ${filePath} -> ${metadataPath}`);
 
 			const file = this.plugin.app.vault.getAbstractFileByPath(filePath) as TFile;
 			const frontmatter = this.plugin.app.metadataCache.getFileCache(file)?.frontmatter;
 
-			const c: MetadataFileCache = {
+			const newCache: MetadataFileCache = {
 				file: file,
 				metadata: frontmatter ?? {},
 				listeners: [
 					{
 						callback: (value: any) => signal.set(value),
 						metadataPath: metadataPath,
+						listenToChildren: listenToChildren,
 						uuid: uuid,
 					},
 				],
@@ -61,11 +61,10 @@ export class MetadataManager {
 				inactive: false,
 				changed: false,
 			};
-			console.log(`meta-bind | MetadataManager >> loaded metadata for file ${file.path}`, c.metadata);
-			signal.set(traverseObjectByPath(metadataPath, c.metadata));
+			console.log(`meta-bind | MetadataManager >> loaded metadata for file ${file.path}`, newCache.metadata);
+			signal.set(traverseObjectByPath(metadataPath, newCache.metadata));
 
-			this.cache.set(filePath, c);
-			return c;
+			this.cache.set(filePath, newCache);
 		}
 	}
 
@@ -204,14 +203,17 @@ export class MetadataManager {
 			}
 
 			if (metadataPath) {
-				if (arrayEquals(listener.metadataPath, metadataPath)) {
-					console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata value`, value);
-					listener.callback(value);
-				}
-				if (arrayStartsWith(metadataPath, listener.metadataPath)) {
-					const actualValue = traverseObjectByPath(listener.metadataPath, fileCache.metadata);
-					console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata value`, actualValue);
-					listener.callback(actualValue);
+				if (listener.listenToChildren) {
+					if (arrayStartsWith(metadataPath, listener.metadataPath)) {
+						const actualValue = traverseObjectByPath(listener.metadataPath, fileCache.metadata);
+						console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata value`, actualValue);
+						listener.callback(actualValue);
+					}
+				} else {
+					if (arrayEquals(listener.metadataPath, metadataPath)) {
+						console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata value`, value);
+						listener.callback(value);
+					}
 				}
 			} else {
 				const v = traverseObjectByPath(listener.metadataPath, fileCache.metadata);

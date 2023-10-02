@@ -3,6 +3,7 @@ import { FrontMatterCache, TFile } from 'obsidian';
 
 export interface MetadataFileCacheListener extends Listener<any | undefined> {
 	metadataPath: string[];
+	listenToChildren: boolean;
 }
 
 export interface MetadataFileCache {

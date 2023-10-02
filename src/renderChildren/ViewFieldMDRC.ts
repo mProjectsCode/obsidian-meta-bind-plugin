@@ -14,9 +14,9 @@ export interface ViewFieldVariable {
 	bindTargetDeclaration: BindTargetDeclaration;
 	writeSignal: Signal<any>;
 	uuid: string;
-	metadataCache: MetadataFileCache | undefined;
 	writeSignalListener: Listener<any> | undefined;
 	contextName: string | undefined;
+	listenToChildren: boolean;
 }
 
 export class ViewFieldMDRC extends AbstractViewFieldMDRC {
@@ -60,6 +60,7 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 							metadataCache: undefined,
 							writeSignalListener: undefined,
 							contextName: `MB_VAR_${varCounter}`,
+							listenToChildren: false,
 						};
 
 						this.variables.push(variable);
@@ -115,10 +116,11 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 				},
 			});
 
-			variable.metadataCache = this.plugin.metadataManager.register(
+			this.plugin.metadataManager.register(
 				variable.bindTargetDeclaration.filePath ?? this.filePath,
 				variable.writeSignal,
 				variable.bindTargetDeclaration.metadataPath,
+				variable.listenToChildren,
 				this.uuid + '/' + variable.uuid
 			);
 		}

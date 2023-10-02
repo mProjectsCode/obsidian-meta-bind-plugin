@@ -2,6 +2,7 @@
 	import LinkComponent from '../../../utils/LinkComponent.svelte';
 	import {isMdLink, MarkdownLink, parseMdLink} from '../../../parsers/MarkdownLinkParser';
 	import Icon from '../../../utils/Icon.svelte';
+	import {SuggestOption} from './SuggestInputField';
 
 	export let showSuggest: () => void;
 
@@ -9,16 +10,16 @@
 	let str: string;
 	let isLink: boolean = false;
 
-	export function updateValue(value: string): void {
-		isLink = isMdLink(value);
+	export function updateValue(value: SuggestOption): void {
+		isLink = isMdLink(value.valueAsString());
 		if (isLink) {
 			try {
-				mdLink = parseMdLink(value);
+				mdLink = parseMdLink(value.valueAsString());
 			} catch (e) {
 				console.warn(e);
 			}
 		} else {
-			str = value;
+			str = value.valueAsString();
 		}
 	}
 
