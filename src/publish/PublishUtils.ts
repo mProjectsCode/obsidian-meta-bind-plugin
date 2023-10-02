@@ -49,6 +49,9 @@ export function getPublishDefaultValue(declaration: InputFieldDeclaration): unkn
 		return firstOptionArgument ? firstOptionArgument.value : placeholderString;
 	} else if (declaration.inputFieldType === InputFieldType.LIST) {
 		return placeholderString;
+	} else if (declaration.inputFieldType === InputFieldType.LIST_SUGGESTER) {
+		const firstOptionArgument = declaration.argumentContainer.get(InputFieldArgumentType.OPTION);
+		return firstOptionArgument ? firstOptionArgument.value : placeholderString;
 	}
 
 	return placeholderString;

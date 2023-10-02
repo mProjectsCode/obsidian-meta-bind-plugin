@@ -19,6 +19,7 @@ import { ListInputField } from './fields/List/ListInputField';
 import { InputFieldConfig, InputFieldConfigs, InputFieldType } from './InputFieldConfigs';
 import { SelectInputField } from './fields/Select/SelectInputField';
 import { MultiSelectInputField } from './fields/Select/MultiSelectInputField';
+import { ListSuggestInputField } from './fields/listSuggest/ListSuggestInputField';
 
 export class InputFieldFactory {
 	static createInputField(
@@ -67,6 +68,8 @@ export class InputFieldFactory {
 			return new InlineSelectInputField(args.inputFieldMDRC);
 		} else if (inputFieldType === InputFieldType.LIST) {
 			return new ListInputField(args.inputFieldMDRC);
+		} else if (inputFieldType === InputFieldType.LIST_SUGGESTER) {
+			return new ListSuggestInputField(args.inputFieldMDRC);
 		}
 
 		return undefined;

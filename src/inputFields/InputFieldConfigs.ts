@@ -18,6 +18,7 @@ export enum InputFieldType {
 	PROGRESS_BAR = 'progressBar',
 	INLINE_SELECT = 'inlineSelect',
 	LIST = 'list',
+	LIST_SUGGESTER = 'listSuggester',
 
 	INVALID = 'invalid',
 }
@@ -35,6 +36,7 @@ export enum InputFieldArgumentType {
 	OFF_VALUE = 'offValue',
 	DEFAULT_VALUE = 'defaultValue',
 	PLACEHOLDER = 'placeholder',
+	USE_LINKS = 'useLinks',
 
 	INVALID = 'invalid',
 }
@@ -141,6 +143,11 @@ export const InputFieldConfigs: Record<InputFieldType, InputFieldConfig> = {
 		allowInBlock: true,
 		allowInline: false,
 	},
+	[InputFieldType.LIST_SUGGESTER]: {
+		type: InputFieldType.LIST_SUGGESTER,
+		allowInBlock: true,
+		allowInline: false,
+	},
 	[InputFieldType.INVALID]: {
 		type: InputFieldType.INVALID,
 		allowInBlock: false,
@@ -148,11 +155,17 @@ export const InputFieldConfigs: Record<InputFieldType, InputFieldConfig> = {
 	},
 } as const;
 
+export interface InputFieldArgumentValueConfig {
+	name: string;
+	// empty is any
+	allowed: string[];
+	description: string;
+}
+
 export interface InputFieldArgumentConfig {
 	type: InputFieldArgumentType;
 	allowedInputFieldTypes: InputFieldType[];
-	valueLengthMin: number;
-	valueLengthMax: number;
+	values: InputFieldArgumentValueConfig[][];
 	allowMultiple: boolean;
 }
 
@@ -160,50 +173,100 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	[InputFieldArgumentType.ADD_LABELS]: {
 		type: InputFieldArgumentType.ADD_LABELS,
 		allowedInputFieldTypes: [InputFieldType.SLIDER, InputFieldType.PROGRESS_BAR],
-		valueLengthMin: 0,
-		valueLengthMax: 1,
+		values: [
+			[],
+			[
+				{
+					name: 'value',
+					allowed: ['true', 'false'],
+					description: '',
+				},
+			],
+		],
 		allowMultiple: false,
 	},
 	[InputFieldArgumentType.CLASS]: {
 		type: InputFieldArgumentType.CLASS,
 		allowedInputFieldTypes: [],
-		valueLengthMin: 1,
-		valueLengthMax: 1,
+		values: [
+			[
+				{
+					name: 'className',
+					allowed: [],
+					description: 'the name of the css class to add',
+				},
+			],
+		],
 		allowMultiple: true,
 	},
 	[InputFieldArgumentType.DEFAULT_VALUE]: {
 		type: InputFieldArgumentType.DEFAULT_VALUE,
 		allowedInputFieldTypes: [],
-		valueLengthMin: 1,
-		valueLengthMax: 1,
+		values: [
+			[
+				{
+					name: 'value',
+					allowed: [],
+					description: '',
+				},
+			],
+		],
 		allowMultiple: false,
 	},
 	[InputFieldArgumentType.MAX_VALUE]: {
 		type: InputFieldArgumentType.MAX_VALUE,
 		allowedInputFieldTypes: [InputFieldType.SLIDER, InputFieldType.PROGRESS_BAR],
-		valueLengthMin: 1,
-		valueLengthMax: 1,
+		values: [
+			[
+				{
+					name: 'value',
+					allowed: ['number'],
+					description: 'the maximally allowed value',
+				},
+			],
+		],
 		allowMultiple: false,
 	},
 	[InputFieldArgumentType.MIN_VALUE]: {
 		type: InputFieldArgumentType.MIN_VALUE,
 		allowedInputFieldTypes: [InputFieldType.SLIDER, InputFieldType.PROGRESS_BAR],
-		valueLengthMin: 1,
-		valueLengthMax: 1,
+		values: [
+			[
+				{
+					name: 'value',
+					allowed: ['number'],
+					description: 'the minimally allowed value',
+				},
+			],
+		],
 		allowMultiple: false,
 	},
 	[InputFieldArgumentType.OFF_VALUE]: {
 		type: InputFieldArgumentType.OFF_VALUE,
 		allowedInputFieldTypes: [InputFieldType.TOGGLE],
-		valueLengthMin: 1,
-		valueLengthMax: 1,
+		values: [
+			[
+				{
+					name: 'value',
+					allowed: [],
+					description: 'the value for the off state',
+				},
+			],
+		],
 		allowMultiple: false,
 	},
 	[InputFieldArgumentType.ON_VALUE]: {
 		type: InputFieldArgumentType.ON_VALUE,
 		allowedInputFieldTypes: [InputFieldType.TOGGLE],
-		valueLengthMin: 1,
-		valueLengthMax: 1,
+		values: [
+			[
+				{
+					name: 'value',
+					allowed: [],
+					description: 'the value for the off state',
+				},
+			],
+		],
 		allowMultiple: false,
 	},
 	[InputFieldArgumentType.OPTION]: {
@@ -215,16 +278,43 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 			InputFieldType.SUGGESTER,
 			InputFieldType.IMAGE_SUGGESTER,
 			InputFieldType.INLINE_SELECT,
+			InputFieldType.LIST_SUGGESTER,
 		],
-		valueLengthMin: 1,
-		valueLengthMax: 2,
+		values: [
+			[
+				{
+					name: 'value',
+					allowed: [],
+					description: 'the value and display name of the option',
+				},
+			],
+			[
+				{
+					name: 'value',
+					allowed: [],
+					description: 'the value of the option',
+				},
+				{
+					name: 'name',
+					allowed: [],
+					description: 'the display name of the option',
+				},
+			],
+		],
 		allowMultiple: true,
 	},
 	[InputFieldArgumentType.OPTION_QUERY]: {
 		type: InputFieldArgumentType.OPTION_QUERY,
-		allowedInputFieldTypes: [InputFieldType.SUGGESTER, InputFieldType.IMAGE_SUGGESTER],
-		valueLengthMin: 1,
-		valueLengthMax: 1,
+		allowedInputFieldTypes: [InputFieldType.SUGGESTER, InputFieldType.IMAGE_SUGGESTER, InputFieldType.LIST_SUGGESTER],
+		values: [
+			[
+				{
+					name: 'value',
+					allowed: [],
+					description: 'the query for options',
+				},
+			],
+		],
 		allowMultiple: true,
 	},
 	[InputFieldArgumentType.PLACEHOLDER]: {
@@ -236,30 +326,66 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 			InputFieldType.NUMBER,
 			InputFieldType.LIST,
 		],
-		valueLengthMin: 1,
-		valueLengthMax: 1,
+		values: [
+			[
+				{
+					name: 'value',
+					allowed: [],
+					description: '',
+				},
+			],
+		],
 		allowMultiple: false,
 	},
 
 	[InputFieldArgumentType.SHOWCASE]: {
 		type: InputFieldArgumentType.SHOWCASE,
 		allowedInputFieldTypes: [],
-		valueLengthMin: 0,
-		valueLengthMax: 1,
+		values: [
+			[],
+			[
+				{
+					name: 'value',
+					allowed: ['true', 'false'],
+					description: '',
+				},
+			],
+		],
 		allowMultiple: false,
 	},
 	[InputFieldArgumentType.TITLE]: {
 		type: InputFieldArgumentType.TITLE,
 		allowedInputFieldTypes: [],
-		valueLengthMin: 0,
-		valueLengthMax: 1,
+		values: [
+			[
+				{
+					name: 'value',
+					allowed: [],
+					description: '',
+				},
+			],
+		],
+		allowMultiple: false,
+	},
+	[InputFieldArgumentType.USE_LINKS]: {
+		type: InputFieldArgumentType.USE_LINKS,
+		allowedInputFieldTypes: [InputFieldType.SUGGESTER, InputFieldType.LIST_SUGGESTER],
+		values: [
+			[],
+			[
+				{
+					name: 'value',
+					allowed: ['true', 'false'],
+					description: '',
+				},
+			],
+		],
 		allowMultiple: false,
 	},
 	[InputFieldArgumentType.INVALID]: {
 		type: InputFieldArgumentType.INVALID,
 		allowedInputFieldTypes: [],
-		valueLengthMin: 0,
-		valueLengthMax: 0,
+		values: [[]],
 		allowMultiple: true,
 	},
 };

@@ -7,6 +7,12 @@ import {
 	UnvalidatedInputFieldArgument,
 } from '../newInputFieldParser/InputFieldDeclaration';
 import { createResultNode, ParsingResultNode } from '../newInputFieldParser/InputFieldParser';
+import {
+	JsViewFieldBindTargetMapping,
+	JsViewFieldDeclaration,
+	UnvalidatedJsViewFieldBindTargetMapping,
+	UnvalidatedJsViewFieldDeclaration,
+} from '../ViewFieldDeclarationParser';
 
 const quote = `'`;
 
@@ -61,7 +67,7 @@ const specialSpaceIdent = P.sequenceMap(
 
 const value = P.or(specialSpaceIdent, str);
 
-const filePath = P.noneOf('[]#^|:?')
+const filePath = P.noneOf('{}[]#^|:?')
 	.many()
 	.map(x => x.join(''))
 	.describe('file path');
@@ -218,4 +224,31 @@ export const VIEW_FIELD_FULL_DECLARATION: Parser<(string | UnvalidatedBindTarget
 	VIEW_FIELD_DECLARATION,
 	P.string(']'),
 	P_UTILS.eof()
+);
+
+const jsViewFieldBindTargetMapping: Parser<UnvalidatedJsViewFieldBindTargetMapping> = P.sequenceMap(
+	(bindTarget, children, _1, name) => {
+		return {
+			bindTarget: bindTarget,
+			listenToChildren: children !== undefined,
+			name: name,
+		};
+	},
+	BIND_TARGET.wrap(P.string('{'), P.string('}')),
+	P.string(' and children').optional(),
+	P.string(' as '),
+	ident
+);
+
+export const JS_VIEW_FIELD_DECLARATION: Parser<UnvalidatedJsViewFieldDeclaration> = P.sequenceMap(
+	(bindTargetMappings, _1, _2, code) => {
+		return {
+			bindTargetMappings: bindTargetMappings,
+			code: code,
+		};
+	},
+	jsViewFieldBindTargetMapping.separateBy(P_UTILS.whitespace()),
+	P_UTILS.whitespace(),
+	P.string('---'),
+	P_UTILS.remaining()
 );

@@ -1,43 +1,29 @@
 import { AbstractInputField } from '../../AbstractInputField';
-import SuggestInput from './SuggestInput.svelte';
+import ListSuggestInput from './ListSuggestInput.svelte';
 import { DataArray, getAPI, Literal } from 'obsidian-dataview';
-import { SuggestInputModal } from './SuggestInputModal';
-import { Notice, TFile } from 'obsidian';
-import { ErrorLevel, MetaBindArgumentError, MetaBindInternalError, MetaBindValueError } from '../../../utils/errors/MetaBindErrors';
+import { SuggestInputModal } from '../Suggest/SuggestInputModal';
+import { Notice } from 'obsidian';
+import { ErrorLevel, MetaBindArgumentError, MetaBindInternalError } from '../../../utils/errors/MetaBindErrors';
 import { OptionInputFieldArgument } from '../../../inputFieldArguments/arguments/OptionInputFieldArgument';
 import { OptionQueryInputFieldArgument } from '../../../inputFieldArguments/arguments/OptionQueryInputFieldArgument';
 import { InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
 import { MBExtendedLiteral, MBLiteral } from '../../../utils/Utils';
 import { InputFieldArgumentType } from '../../InputFieldConfigs';
 import { UseLinksInputFieldArgument } from '../../../inputFieldArguments/arguments/UseLinksInputFieldArgument';
+import { SuggestOption } from '../Suggest/SuggestInputField';
 
-export class SuggestOption {
-	value: MBLiteral;
-	selectModalDisplayValue: string;
+type T = MBLiteral[];
 
-	constructor(value: MBLiteral, selectModalDisplayValue: string) {
-		this.value = value;
-		this.selectModalDisplayValue = selectModalDisplayValue;
-	}
-
-	valueAsString(): string {
-		return this.value?.toString() ?? 'null';
-	}
-}
-
-type T = MBLiteral;
-
-export class SuggestInputField extends AbstractInputField<T> {
+export class ListSuggestInputField extends AbstractInputField<T> {
 	container: HTMLDivElement | undefined;
-	component: SuggestInput | undefined;
-	value: SuggestOption;
+	component: ListSuggestInput | undefined;
+	value: T;
 	options: SuggestOption[];
 
 	constructor(inputFieldMDRC: InputFieldMDRC) {
 		super(inputFieldMDRC);
 
-		const fallbackValue = this.getDefaultValue();
-		this.value = new SuggestOption(fallbackValue, `${fallbackValue}`);
+		this.value = this.getDefaultValue();
 
 		this.options = [];
 
@@ -56,11 +42,11 @@ export class SuggestInputField extends AbstractInputField<T> {
 		if (!this.component) {
 			return undefined;
 		}
-		return this.value.value;
+		return this.value;
 	}
 
 	filterValue(value: MBExtendedLiteral | undefined): T | undefined {
-		if (value === undefined || typeof value === 'object') {
+		if (value == null || !Array.isArray(value)) {
 			return undefined;
 		}
 
@@ -68,16 +54,12 @@ export class SuggestInputField extends AbstractInputField<T> {
 	}
 
 	updateDisplayValue(value: T): void {
-		let option = this.options.find(x => x.value === value);
-		if (option === undefined) {
-			option = new SuggestOption(value, `${value}`);
-		}
-		this.value = option;
-		this.component?.updateValue(option);
+		this.value = value;
+		this.component?.updateValue(value);
 	}
 
-	getFallbackDefaultValue(): string {
-		return '';
+	getFallbackDefaultValue(): MBLiteral[] {
+		return [];
 	}
 
 	getHtmlElement(): HTMLElement {
@@ -142,8 +124,9 @@ export class SuggestInputField extends AbstractInputField<T> {
 	async showSuggest(): Promise<void> {
 		await this.getOptions();
 		new SuggestInputModal(this.renderChild.plugin.app, this.options, item => {
-			this.updateDisplayValue(item.value);
-			this.onValueChange(item.value);
+			this.value.push(item.value);
+			this.updateDisplayValue(this.value);
+			this.onValueChange(this.value);
 		}).open();
 	}
 
@@ -154,10 +137,11 @@ export class SuggestInputField extends AbstractInputField<T> {
 
 		this.updateDisplayValue(this.getInitialValue());
 
-		this.component = new SuggestInput({
+		this.component = new ListSuggestInput({
 			target: container,
 			props: {
 				showSuggest: () => this.showSuggest(),
+				onValueChange: (value: T) => this.onValueChange(value),
 			},
 		});
 

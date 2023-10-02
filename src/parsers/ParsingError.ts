@@ -77,7 +77,7 @@ export class ParsingValidationError extends MetaBindError {
 			return '';
 		}
 
-		const spacing = ' '.repeat(this.position.from.index - 1 + offset);
+		const spacing = ' '.repeat(this.position.from.index + offset);
 		// highlight to the end if the end is on the same line. If the end is on a different line, highlight to the end of the line.
 		const toIndex = this.position.to.line === this.position.from.line ? this.position.to.index : lineLength;
 		const underline = '^'.repeat(toIndex - this.position.from.index);
