@@ -7,12 +7,7 @@ import {
 	UnvalidatedInputFieldArgument,
 } from '../inputFieldParser/InputFieldDeclaration';
 import { createResultNode, ParsingResultNode } from '../inputFieldParser/InputFieldParser';
-import {
-	JsViewFieldBindTargetMapping,
-	JsViewFieldDeclaration,
-	UnvalidatedJsViewFieldBindTargetMapping,
-	UnvalidatedJsViewFieldDeclaration,
-} from '../ViewFieldDeclarationParser';
+import { UnvalidatedJsViewFieldBindTargetMapping, UnvalidatedJsViewFieldDeclaration } from '../ViewFieldDeclarationParser';
 
 const quote = `'`;
 

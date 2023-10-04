@@ -13,11 +13,11 @@
 		component = new Component();
 		component.load();
 		table.createCell(cell, element, component);
-	})
+	});
 
-    onDestroy(() => {
+	onDestroy(() => {
 		component.unload();
-    })
+	});
 </script>
 
 <td bind:this={element}></td>

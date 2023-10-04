@@ -6,7 +6,6 @@ import { ViewField } from '../viewFields/ViewField';
 import * as MathJs from 'mathjs';
 import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
 import MetaBindPlugin from '../main';
-import { MetadataFileCache } from '../metadata/MetadataFileCache';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
 import { BindTargetDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 
@@ -34,10 +33,9 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 		declaration: ViewFieldDeclaration,
 		plugin: MetaBindPlugin,
 		filePath: string,
-		uuid: string,
-		frontmatter: any | null | undefined = undefined
+		uuid: string
 	) {
-		super(containerEl, renderChildType, plugin, filePath, uuid, frontmatter);
+		super(containerEl, renderChildType, plugin, filePath, uuid);
 
 		this.errorCollection.merge(declaration.errorCollection);
 
