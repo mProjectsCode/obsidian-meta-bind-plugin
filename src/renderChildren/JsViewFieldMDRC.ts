@@ -24,10 +24,9 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 		declaration: JsViewFieldDeclaration,
 		plugin: MetaBindPlugin,
 		filePath: string,
-		uuid: string,
-		frontmatter: any | null | undefined = undefined
+		uuid: string
 	) {
-		super(containerEl, renderChildType, plugin, filePath, uuid, frontmatter);
+		super(containerEl, renderChildType, plugin, filePath, uuid);
 
 		this.errorCollection.merge(declaration.errorCollection);
 

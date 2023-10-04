@@ -3,7 +3,6 @@ import { InputFieldFactory } from '../inputFields/InputFieldFactory';
 import { AbstractInputFieldArgument } from '../inputFieldArguments/AbstractInputFieldArgument';
 import { ClassInputFieldArgument } from '../inputFieldArguments/arguments/ClassInputFieldArgument';
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
-import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { ShowcaseInputFieldArgument } from '../inputFieldArguments/arguments/ShowcaseInputFieldArgument';
 import { TitleInputFieldArgument } from '../inputFieldArguments/arguments/TitleInputFieldArgument';
 import { isTruthy, MBExtendedLiteral } from '../utils/Utils';
@@ -21,7 +20,6 @@ export enum RenderChildType {
 }
 
 export class InputFieldMDRC extends AbstractMDRC {
-	metadataCache: MetadataFileCache | undefined;
 	inputField: AbstractInputField<MBExtendedLiteral> | undefined;
 
 	fullDeclaration?: string;

@@ -1,7 +1,6 @@
 import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
-
 import { ParsingResultNode } from '../../parsers/inputFieldParser/InputFieldParser';
-import { InputFieldArgumentConfig, InputFieldArgumentConfigs, InputFieldArgumentType, InputFieldType } from '../../inputFields/InputFieldConfigs';
+import { InputFieldArgumentConfig, InputFieldArgumentConfigs } from '../../inputFields/InputFieldConfigs';
 
 export class ShowcaseInputFieldArgument extends AbstractInputFieldArgument {
 	value: boolean = true;

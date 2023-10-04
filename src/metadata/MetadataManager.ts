@@ -1,6 +1,6 @@
 import { CachedMetadata, TFile } from 'obsidian';
 import MetaBindPlugin from '../main';
-import { arrayEquals, arrayStartsWith, traverseObjectToParentByPath } from '../utils/Utils';
+import { arrayStartsWith, traverseObjectToParentByPath } from '../utils/Utils';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { Signal } from '../utils/Signal';
 import { MetadataFileCache } from './MetadataFileCache';
@@ -204,6 +204,7 @@ export class MetadataManager {
 
 			if (metadataPath) {
 				if (listener.listenToChildren) {
+					// TODO: this should update when there is any overlap in the beginning of the array
 					if (arrayStartsWith(metadataPath, listener.metadataPath)) {
 						const actualValue = traverseObjectByPath(listener.metadataPath, fileCache.metadata);
 						console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata value`, actualValue);
