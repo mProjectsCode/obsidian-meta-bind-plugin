@@ -1,7 +1,7 @@
 import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
 import { MBLiteral, parseLiteral } from '../../utils/Utils';
 
-import { ParsingResultNode } from '../../parsers/newInputFieldParser/InputFieldParser';
+import { ParsingResultNode } from '../../parsers/inputFieldParser/InputFieldParser';
 import { InputFieldArgumentConfig, InputFieldArgumentConfigs, InputFieldArgumentType, InputFieldType } from '../../inputFields/InputFieldConfigs';
 
 export class OnValueInputFieldArgument extends AbstractInputFieldArgument {

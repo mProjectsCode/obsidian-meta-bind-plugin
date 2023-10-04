@@ -120,6 +120,12 @@ export function arrayEquals<T>(arr1: T[], arr2: T[]): boolean {
 	return true;
 }
 
+/**
+ * Checks if arr starts with base.
+ *
+ * @param arr
+ * @param base
+ */
 export function arrayStartsWith<T>(arr: T[], base: T[]): boolean {
 	for (let i = 0; i < base.length; i++) {
 		if (arr[i] !== base[i]) {
@@ -292,9 +298,13 @@ export function deepCopy<T extends object>(object: T): T {
 export type MBLiteral = string | number | boolean | null;
 export type MBExtendedLiteral = MBLiteral | MBLiteral[];
 
-const numberParser: Parser<number> = P.or(
-	P.sequenceMap((a, b, c) => Number(a + b + c), P_UTILS.digits(), P.string('.'), P_UTILS.digits()),
-	P_UTILS.digits().map(x => Number(x))
+const numberParser: Parser<number> = P.sequenceMap(
+	(sign, number) => (sign === undefined ? number : -number),
+	P.string('-').optional(),
+	P.or(
+		P.sequenceMap((a, b, c) => Number(a + b + c), P_UTILS.digits(), P.string('.'), P_UTILS.digits()),
+		P_UTILS.digits().map(x => Number(x))
+	)
 ).thenEof();
 
 export function parseLiteral(literalString: string): MBLiteral {

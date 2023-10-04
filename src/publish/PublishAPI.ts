@@ -3,15 +3,15 @@ import { BindTargetParser } from '../parsers/BindTargetParser';
 import { IPlugin } from '../IPlugin';
 import { PublishInputFieldMDRC } from './PublishInputFieldMDRC';
 import { PublishViewFieldMDRC } from './PublishViewFieldMDRC';
-import { NewInputFieldDeclarationParser } from '../parsers/newInputFieldParser/InputFieldParser';
+import { InputFieldDeclarationParser } from '../parsers/inputFieldParser/InputFieldParser';
 import { MarkdownPostProcessorContext } from 'obsidian/publish';
 import { IAPI } from '../api/IAPI';
 import { InputFieldAPI } from '../api/InputFieldAPI';
-import { InputFieldDeclaration } from '../parsers/newInputFieldParser/InputFieldDeclaration';
+import { InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 
 export class PublishAPI implements IAPI {
 	public readonly plugin: IPlugin;
-	public readonly newInputFieldParser: NewInputFieldDeclarationParser;
+	public readonly inputFieldParser: InputFieldDeclarationParser;
 	public readonly viewFieldParser: ViewFieldDeclarationParser;
 	public readonly bindTargetParser: BindTargetParser;
 	public readonly inputField: InputFieldAPI;
@@ -19,7 +19,7 @@ export class PublishAPI implements IAPI {
 	constructor(plugin: IPlugin) {
 		this.plugin = plugin;
 
-		this.newInputFieldParser = new NewInputFieldDeclarationParser(this.plugin);
+		this.inputFieldParser = new InputFieldDeclarationParser(this.plugin);
 		this.viewFieldParser = new ViewFieldDeclarationParser(this.plugin);
 		this.bindTargetParser = new BindTargetParser(this.plugin);
 
@@ -33,7 +33,7 @@ export class PublishAPI implements IAPI {
 		container: HTMLElement,
 		component: MarkdownPostProcessorContext
 	): PublishInputFieldMDRC {
-		const declaration: InputFieldDeclaration = this.newInputFieldParser.parseString(fullDeclaration);
+		const declaration: InputFieldDeclaration = this.inputFieldParser.parseString(fullDeclaration);
 
 		const inputField = new PublishInputFieldMDRC(container, this, declaration, filePath, metadata, self.crypto.randomUUID());
 		component.addChild(inputField);

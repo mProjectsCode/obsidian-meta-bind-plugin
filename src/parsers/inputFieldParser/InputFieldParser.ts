@@ -11,6 +11,7 @@ import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
 import { InputFieldDeclaration, UnvalidatedInputFieldDeclaration } from './InputFieldDeclaration';
 import { ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
 import { InputFieldType } from '../../inputFields/InputFieldConfigs';
+import { BindTargetScope } from '../../metadata/BindTargetScope';
 
 export type InputFieldDeclarationTemplate = TemplateSupplierTemplate<UnvalidatedInputFieldDeclaration>;
 
@@ -26,7 +27,7 @@ export function createResultNode(value: string, range: ParsingRange): ParsingRes
 	};
 }
 
-export class NewInputFieldDeclarationParser implements ITemplateSupplier<UnvalidatedInputFieldDeclaration> {
+export class InputFieldDeclarationParser implements ITemplateSupplier<UnvalidatedInputFieldDeclaration> {
 	plugin: IPlugin;
 	templates: InputFieldDeclarationTemplate[];
 
@@ -35,7 +36,7 @@ export class NewInputFieldDeclarationParser implements ITemplateSupplier<Unvalid
 		this.templates = [];
 	}
 
-	public parseString(fullDeclaration: string): InputFieldDeclaration {
+	public parseString(fullDeclaration: string, scope?: BindTargetScope | undefined): InputFieldDeclaration {
 		const errorCollection = new ErrorCollection('InputFieldParser');
 
 		try {
@@ -47,7 +48,7 @@ export class NewInputFieldDeclarationParser implements ITemplateSupplier<Unvalid
 
 			const declarationValidator = new InputFieldDeclarationValidator(this.plugin, parserResult);
 
-			return declarationValidator.validate();
+			return declarationValidator.validate(scope);
 		} catch (e) {
 			errorCollection.add(e);
 		}
@@ -84,10 +85,10 @@ export class NewInputFieldDeclarationParser implements ITemplateSupplier<Unvalid
 		};
 	}
 
-	public validateDeclaration(unvalidatedDeclaration: UnvalidatedInputFieldDeclaration): InputFieldDeclaration {
+	public validateDeclaration(unvalidatedDeclaration: UnvalidatedInputFieldDeclaration, scope?: BindTargetScope | undefined): InputFieldDeclaration {
 		const declarationValidator = new InputFieldDeclarationValidator(this.plugin, unvalidatedDeclaration);
 
-		return declarationValidator.validate();
+		return declarationValidator.validate(scope);
 	}
 
 	private parseTemplateString(template: string): UnvalidatedInputFieldDeclaration {

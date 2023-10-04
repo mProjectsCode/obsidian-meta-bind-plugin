@@ -1,22 +1,27 @@
 ---
 playerCount: 6
-playerLevel: 2
+playerLevel: 4
 enemy:
-  - name: Something
-    level: 3
+  - name: Someting
+    level: 4
     count: 1
+    variant: 0
   - name: Some other thing
+    level: 2
+    count: 1
+    variant: 0
+  - name: dragon
+    level: 2
+    count: 2
+    variant: -1
+  - name: test
     level: 1
     count: 1
-  - name: ""
-    level: 0
-    count: 0
-  - name: ""
-    level: 0
-    count: 0
-  - name: ""
-    level: 0
-    count: 0
+    variant: 0
+test:
+  - a
+  - b
+  - c
 ---
 
 
@@ -28,13 +33,59 @@ Player Level: `INPUT[number:playerLevel]`
 
 ### Enemies
 
-| Name                        | Level                        | Count                        |
+%% | Name                        | Level                        | Count                        |
 | --------------------------- | ---------------------------- | ---------------------------- |
 | `INPUT[text:enemy[0].name]` | `INPUT[number:enemy[0].level]` | `INPUT[number:enemy[0].count]` |
 | `INPUT[text:enemy[1].name]` | `INPUT[number:enemy[1].level]` | `INPUT[number:enemy[1].count]` |
 | `INPUT[text:enemy[2].name]` | `INPUT[number:enemy[2].level]` | `INPUT[number:enemy[2].count]` |
 | `INPUT[text:enemy[3].name]` | `INPUT[number:enemy[3].level]` | `INPUT[number:enemy[3].count]` |
 | `INPUT[text:enemy[4].name]` | `INPUT[number:enemy[4].level]` | `INPUT[number:enemy[4].count]` |
+
+```js
+const mb = engine.getPlugin('obsidian-meta-bind-plugin').api;
+
+function render(enemies) {
+	const md = engine.markdown.createBuilder();
+	md.createTable(
+		['Name', 'Level', 'Count'], 
+		enemies.map((x, i) => {
+			return [
+				`\`INPUT[text:enemy[${i}].name]\``,
+				`\`INPUT[text:enemy[${i}].level]\``,
+				`\`INPUT[text:enemy[${i}].count]\``
+			]
+		})
+	);
+	return md;
+}
+
+const signal = mb.createSignal([]);
+const unregisterCb = mb.listenToMetadata(signal, context.file.path, ['enemy'], false);
+
+const reactive = engine.reactive(render, signal.get());
+
+component.register(unregisterCb);
+
+return reactive;
+``` 
+%%
+
+
+```js-engine
+const mb = engine.getPlugin('obsidian-meta-bind-plugin').api;
+
+const bindTarget = mb.createBindTarget('enemy');
+const tableHead = ['Name', 'Level', 'Variant', 'Count'];
+const columns = [
+	mb.inputField.createInputFieldDeclarationFromString('INPUT[text:^.name]'),
+	mb.inputField.createInputFieldDeclarationFromString('INPUT[number:^.level]'),
+	mb.inputField.createInputFieldDeclarationFromString('INPUT[inlineSelect(option(-1, weak), option(0, normal), option(1, elite)):^.variant]'),
+	mb.inputField.createInputFieldDeclarationFromString('INPUT[number:^.count]')
+];
+
+mb.createTable(container, context.file.path, component, bindTarget, tableHead, columns);
+```
+
 
 ### Encounter Stats
 
@@ -79,11 +130,11 @@ function getXP(enemyLevel) {
 function calculateTotalXP() {
 	let acc = 0;
 	for (const enemy of context.enemies) {
-		const xp = getXP(enemy.level);
+		const xp = getXP((enemy.level ?? 0) + (enemy.variant ?? 0));
 		if (xp === -1) {
 			return -1;
 		}
-		acc += xp * enemy.count;
+		acc += xp * (enemy.count ?? 0);
 	}
 	return acc;
 }

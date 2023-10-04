@@ -2,6 +2,7 @@ test('placeholder', () => {
 	expect(true).toEqual(true);
 });
 
+// these are the old tests. Now the date parser is just a wrapper around moment, so it does not need testing
 /*
 import {Date, DateParser} from '../src/parsers/DateParser';
 

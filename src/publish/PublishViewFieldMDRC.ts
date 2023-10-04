@@ -8,7 +8,7 @@ import { ViewFieldVariable } from '../renderChildren/ViewFieldMDRC';
 import { Signal } from '../utils/Signal';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import PublishFieldComponent from './PublishFieldComponent.svelte';
-import { BindTargetDeclaration } from '../parsers/newInputFieldParser/InputFieldDeclaration';
+import { BindTargetDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 
 export class PublishViewFieldMDRC extends MarkdownRenderChild {
 	api: PublishAPI;

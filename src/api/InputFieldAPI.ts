@@ -5,7 +5,7 @@ import {
 	UnvalidatedBindTargetDeclaration,
 	UnvalidatedInputFieldArgument,
 	UnvalidatedInputFieldDeclaration,
-} from '../parsers/newInputFieldParser/InputFieldDeclaration';
+} from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { InputFieldArgumentType, InputFieldType } from '../inputFields/InputFieldConfigs';
 
 export class InputFieldAPI {
@@ -36,7 +36,7 @@ export class InputFieldAPI {
 	}
 
 	public createInputFieldDeclarationFromString(fullDeclaration: string): UnvalidatedInputFieldDeclaration {
-		return this.api.newInputFieldParser.parseStringWithoutValidation(fullDeclaration);
+		return this.api.inputFieldParser.parseStringWithoutValidation(fullDeclaration);
 	}
 
 	public setType(unvalidatedDeclaration: UnvalidatedInputFieldDeclaration, inputFieldType: InputFieldType): UnvalidatedInputFieldDeclaration {
@@ -82,7 +82,7 @@ export class InputFieldAPI {
 		if (unvalidatedDeclaration.bindTarget) {
 			unvalidatedDeclaration.bindTarget.file = { value: bindTargetFile };
 		} else {
-			unvalidatedDeclaration.bindTarget = { file: { value: bindTargetFile }, path: [] };
+			unvalidatedDeclaration.bindTarget = { file: { value: bindTargetFile }, path: [], boundToLocalScope: false };
 		}
 
 		return unvalidatedDeclaration;
@@ -99,7 +99,7 @@ export class InputFieldAPI {
 		if (unvalidatedDeclaration.bindTarget) {
 			unvalidatedDeclaration.bindTarget.path = bindTargetMetadataField.map(x => ({ value: x }));
 		} else {
-			unvalidatedDeclaration.bindTarget = { file: undefined, path: bindTargetMetadataField.map(x => ({ value: x })) };
+			unvalidatedDeclaration.bindTarget = { file: undefined, path: bindTargetMetadataField.map(x => ({ value: x })), boundToLocalScope: false };
 		}
 
 		return unvalidatedDeclaration;
@@ -111,11 +111,11 @@ export class InputFieldAPI {
 	}
 
 	public applyTemplate(unvalidatedDeclaration: UnvalidatedInputFieldDeclaration): UnvalidatedInputFieldDeclaration {
-		return this.api.newInputFieldParser.applyTemplate(unvalidatedDeclaration);
+		return this.api.inputFieldParser.applyTemplate(unvalidatedDeclaration);
 	}
 
 	public getTemplate(templateName: string): Readonly<UnvalidatedInputFieldDeclaration> | undefined {
-		return this.api.newInputFieldParser.getTemplate(templateName);
+		return this.api.inputFieldParser.getTemplate(templateName);
 	}
 
 	public merge(unvalidatedDeclaration: UnvalidatedInputFieldDeclaration, override: UnvalidatedInputFieldDeclaration): UnvalidatedInputFieldDeclaration {

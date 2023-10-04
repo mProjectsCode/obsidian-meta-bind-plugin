@@ -1,9 +1,64 @@
-import { MetaBindParsingError } from '../src/utils/errors/MetaBindErrors';
-import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
+import { TestPlugin } from './testAPI/TestAPI';
 
-test('placeholder', () => {
-	const parser = P.string('foo');
-	expect(parser.parse('foo')).toEqual('foo');
+const plugin = new TestPlugin();
+const parser = plugin.api.inputFieldParser;
+
+describe('input field declarations, no templates, no local scope', () => {
+	test('INPUT[text]', () => {
+		const res = parser.parseString('INPUT[text]');
+
+		expect(res).not.toHaveWarnings();
+		expect(res).not.toHaveErrors();
+	});
+
+	test('INPUT[select(option(a), option(b, c), showcase)]', () => {
+		const res = parser.parseString('INPUT[select(option(a), option(b, c), showcase)]');
+
+		expect(res).not.toHaveWarnings();
+		expect(res).not.toHaveErrors();
+	});
+
+	test('INPUT[text:text]', () => {
+		const res = parser.parseString('INPUT[text:text]');
+
+		expect(res).not.toHaveWarnings();
+		expect(res).not.toHaveErrors();
+	});
+
+	test('INPUT[text:["test"]]', () => {
+		const res = parser.parseString('INPUT[text:["test"]]');
+
+		expect(res).not.toHaveWarnings();
+		expect(res).not.toHaveErrors();
+	});
+
+	test('INPUT[text:[0]]', () => {
+		const res = parser.parseString('INPUT[text:[0]]');
+
+		expect(res).not.toHaveWarnings();
+		expect(res).not.toHaveErrors();
+	});
+
+	test('INPUT[text:file#text]', () => {
+		const res = parser.parseString('INPUT[text:file#text]');
+
+		expect(res).not.toHaveWarnings();
+		expect(res).not.toHaveErrors();
+	});
+
+	test('INPUT[text:path/to/file#text]', () => {
+		const res = parser.parseString('INPUT[text:path/to/file#text]');
+
+		expect(res).not.toHaveWarnings();
+		expect(res).not.toHaveErrors();
+	});
+
+	test('INPUT[text:path/to/other file#text]', () => {
+		const res = parser.parseString('INPUT[text:path/to/other file#text]');
+
+		expect(res).not.toHaveWarnings();
+		expect(res).not.toHaveErrors();
+	});
 });
 
 // describe('apply template', () => {

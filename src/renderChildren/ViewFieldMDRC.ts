@@ -8,7 +8,7 @@ import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
 import MetaBindPlugin from '../main';
 import { MetadataFileCache } from '../metadata/MetadataFileCache';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
-import { BindTargetDeclaration } from '../parsers/newInputFieldParser/InputFieldDeclaration';
+import { BindTargetDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 
 export interface ViewFieldVariable {
 	bindTargetDeclaration: BindTargetDeclaration;

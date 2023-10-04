@@ -5,8 +5,8 @@ import {
 	PartialUnvalidatedInputFieldDeclaration,
 	UnvalidatedBindTargetDeclaration,
 	UnvalidatedInputFieldArgument,
-} from '../newInputFieldParser/InputFieldDeclaration';
-import { createResultNode, ParsingResultNode } from '../newInputFieldParser/InputFieldParser';
+} from '../inputFieldParser/InputFieldDeclaration';
+import { createResultNode, ParsingResultNode } from '../inputFieldParser/InputFieldParser';
 import {
 	JsViewFieldBindTargetMapping,
 	JsViewFieldDeclaration,
@@ -74,9 +74,29 @@ const filePath = P.noneOf('{}[]#^|:?')
 
 const bracketMetadataPathPart: Parser<ParsingResultNode> = P.or(P_UTILS.digits(), createStr('"')).wrap(P.string('['), P.string(']')).node(createResultNode);
 
-const firstMetadataPathPart: Parser<ParsingResultNode[]> = P.or(
-	bracketMetadataPathPart.atLeast(1),
-	P.sequenceMap((ident, brackets) => [ident, ...brackets], ident.node(createResultNode), bracketMetadataPathPart.many())
+const firstMetadataPathPart: Parser<UnvalidatedBindTargetDeclaration> = P.or(
+	P.sequenceMap(
+		(prefix, firstPart) => {
+			return {
+				file: undefined,
+				boundToLocalScope: prefix !== undefined,
+				path: firstPart,
+			};
+		},
+		P.string('^').optional(),
+		bracketMetadataPathPart.atLeast(1)
+	),
+	P.sequenceMap(
+		(prefix, firstPart) => {
+			return {
+				file: undefined,
+				boundToLocalScope: prefix !== undefined,
+				path: firstPart,
+			};
+		},
+		P.string('^.').optional(),
+		P.sequenceMap((ident, brackets) => [ident, ...brackets], ident.node(createResultNode), bracketMetadataPathPart.many())
+	)
 );
 
 const metadataPathPart: Parser<ParsingResultNode[]> = P.sequenceMap(
@@ -87,9 +107,10 @@ const metadataPathPart: Parser<ParsingResultNode[]> = P.sequenceMap(
 	bracketMetadataPathPart.many()
 );
 
-const metadataPath: Parser<ParsingResultNode[]> = P.sequenceMap(
-	(fist, others) => {
-		return fist.concat(others.map(x => x[1]).reduce((x, acc) => acc.concat(x), []));
+const metadataPath: Parser<UnvalidatedBindTargetDeclaration> = P.sequenceMap(
+	(declaration, others) => {
+		declaration.path = declaration.path.concat(others.map(x => x[1]).reduce((x, acc) => acc.concat(x), []));
+		return declaration;
 	},
 	firstMetadataPathPart,
 	P.sequence(P.string('.'), metadataPathPart).many()
@@ -97,17 +118,8 @@ const metadataPath: Parser<ParsingResultNode[]> = P.sequenceMap(
 
 export const BIND_TARGET: Parser<UnvalidatedBindTargetDeclaration> = P.sequenceMap(
 	(a, b) => {
-		if (a === undefined) {
-			return {
-				file: undefined,
-				path: b,
-			};
-		} else {
-			return {
-				file: a[0],
-				path: b,
-			};
-		}
+		b.file = a?.[0];
+		return b;
 	},
 	P.sequence(filePath.node(createResultNode), P.string('#')).optional(),
 	metadataPath
@@ -180,7 +192,6 @@ export const INPUT_FIELD_FULL_DECLARATION: Parser<PartialUnvalidatedInputFieldDe
 	),
 	P.sequenceMap(
 		(_1, _2, declaration, _3) => {
-			console.warn('second');
 			return declaration;
 		},
 		P.string('INPUT'),

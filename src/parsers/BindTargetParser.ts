@@ -2,7 +2,8 @@ import { ErrorLevel } from '../utils/errors/MetaBindErrors';
 import { IPlugin } from '../IPlugin';
 import { BIND_TARGET } from './nomParsers/Parsers';
 import { ParsingValidationError } from './ParsingError';
-import { BindTargetDeclaration, UnvalidatedBindTargetDeclaration } from './newInputFieldParser/InputFieldDeclaration';
+import { BindTargetDeclaration, UnvalidatedBindTargetDeclaration } from './inputFieldParser/InputFieldDeclaration';
+import { BindTargetScope } from '../metadata/BindTargetScope';
 
 export class BindTargetParser {
 	plugin: IPlugin;
@@ -11,15 +12,19 @@ export class BindTargetParser {
 		this.plugin = plugin;
 	}
 
-	parseAndValidateBindTarget(bindTargetString: string): BindTargetDeclaration {
-		return this.validateBindTarget(bindTargetString, this.parseBindTarget(bindTargetString));
+	parseAndValidateBindTarget(bindTargetString: string, scope?: BindTargetScope | undefined): BindTargetDeclaration {
+		return this.validateBindTarget(bindTargetString, this.parseBindTarget(bindTargetString), scope);
 	}
 
 	parseBindTarget(bindTargetString: string): UnvalidatedBindTargetDeclaration {
 		return BIND_TARGET.parse(bindTargetString) as UnvalidatedBindTargetDeclaration;
 	}
 
-	validateBindTarget(fullDeclaration: string, unvalidatedBindTargetDeclaration: UnvalidatedBindTargetDeclaration): BindTargetDeclaration {
+	validateBindTarget(
+		fullDeclaration: string,
+		unvalidatedBindTargetDeclaration: UnvalidatedBindTargetDeclaration,
+		scope?: BindTargetScope | undefined
+	): BindTargetDeclaration {
 		const bindTargetDeclaration: BindTargetDeclaration = {} as BindTargetDeclaration;
 
 		const filePath = unvalidatedBindTargetDeclaration.file?.value;
@@ -64,7 +69,22 @@ export class BindTargetParser {
 		}
 
 		bindTargetDeclaration.metadataPath = unvalidatedBindTargetDeclaration.path.map(x => x.value);
+		bindTargetDeclaration.boundToLocalScope = unvalidatedBindTargetDeclaration.boundToLocalScope;
 
-		return bindTargetDeclaration;
+		return this.resolveScope(bindTargetDeclaration, scope);
+	}
+
+	public resolveScope(bindTarget: BindTargetDeclaration, scope?: BindTargetScope | undefined): BindTargetDeclaration {
+		if (bindTarget.boundToLocalScope) {
+			if (scope === undefined) {
+				throw new ParsingValidationError(ErrorLevel.CRITICAL, 'Bind Target Scope Validator', 'Failed to resolve bind target scope, no scope provided');
+			} else {
+				bindTarget.filePath = scope.scope.filePath;
+				bindTarget.metadataPath = scope.scope.metadataPath.concat(bindTarget.metadataPath);
+				return bindTarget;
+			}
+		} else {
+			return bindTarget;
+		}
 	}
 }
