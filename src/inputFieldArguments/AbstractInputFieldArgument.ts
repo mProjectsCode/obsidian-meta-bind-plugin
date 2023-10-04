@@ -1,5 +1,5 @@
 import { ErrorLevel, MetaBindArgumentError } from '../utils/errors/MetaBindErrors';
-import { ParsingResultNode } from '../parsers/newInputFieldParser/InputFieldParser';
+import { ParsingResultNode } from '../parsers/inputFieldParser/InputFieldParser';
 import { InputFieldArgumentConfig, InputFieldArgumentValueConfig, InputFieldType } from '../inputFields/InputFieldConfigs';
 
 export abstract class AbstractInputFieldArgument {
@@ -34,7 +34,9 @@ export abstract class AbstractInputFieldArgument {
 			return true;
 		}
 
-		return this.getConfig().allowedInputFieldTypes.contains(inputFieldType);
+		console.log(this.getConfig().allowedInputFieldTypes);
+
+		return this.getConfig().allowedInputFieldTypes.includes(inputFieldType);
 	}
 
 	getAllowedInputFieldsAsString(): string {

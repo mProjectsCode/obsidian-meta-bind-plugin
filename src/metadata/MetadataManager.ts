@@ -210,9 +210,10 @@ export class MetadataManager {
 						listener.callback(actualValue);
 					}
 				} else {
-					if (arrayEquals(listener.metadataPath, metadataPath)) {
-						console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata value`, value);
-						listener.callback(value);
+					if (arrayStartsWith(listener.metadataPath, metadataPath)) {
+						const actualValue = traverseObjectByPath(listener.metadataPath, fileCache.metadata);
+						console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata value`, actualValue);
+						listener.callback(actualValue);
 					}
 				}
 			} else {

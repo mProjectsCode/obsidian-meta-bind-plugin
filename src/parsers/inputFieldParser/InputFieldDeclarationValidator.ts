@@ -8,6 +8,7 @@ import { IPlugin } from '../../IPlugin';
 import { BindTargetDeclaration, InputFieldDeclaration, UnvalidatedInputFieldDeclaration } from './InputFieldDeclaration';
 import { ParsingResultNode } from './InputFieldParser';
 import { InputFieldArgumentType, InputFieldType } from '../../inputFields/InputFieldConfigs';
+import { BindTargetScope } from '../../metadata/BindTargetScope';
 
 export class InputFieldDeclarationValidator {
 	unvalidatedDeclaration: UnvalidatedInputFieldDeclaration;
@@ -21,9 +22,9 @@ export class InputFieldDeclarationValidator {
 		this.errorCollection = new ErrorCollection('input field declaration');
 	}
 
-	public validate(): InputFieldDeclaration {
+	public validate(scope: BindTargetScope | undefined): InputFieldDeclaration {
 		const inputFieldType = this.validateInputFieldType();
-		const bindTarget = this.validateBindTarget();
+		const bindTarget = this.validateBindTarget(scope);
 		const argumentContainer = this.validateArguments(inputFieldType);
 
 		const declaration: InputFieldDeclaration = {
@@ -100,9 +101,13 @@ export class InputFieldDeclarationValidator {
 		}
 	}
 
-	private validateBindTarget(): BindTargetDeclaration | undefined {
+	private validateBindTarget(scope: BindTargetScope | undefined): BindTargetDeclaration | undefined {
 		if (this.unvalidatedDeclaration.bindTarget !== undefined) {
-			return this.plugin.api.bindTargetParser.validateBindTarget(this.unvalidatedDeclaration.fullDeclaration, this.unvalidatedDeclaration.bindTarget);
+			return this.plugin.api.bindTargetParser.validateBindTarget(
+				this.unvalidatedDeclaration.fullDeclaration,
+				this.unvalidatedDeclaration.bindTarget,
+				scope
+			);
 		} else {
 			return undefined;
 		}
@@ -151,7 +156,6 @@ export class InputFieldDeclarationValidator {
 				inputFieldArgument.parseValue(argument.value);
 			} catch (e) {
 				this.errorCollection.add(e);
-				// TODO: better error message/handling
 				continue;
 			}
 

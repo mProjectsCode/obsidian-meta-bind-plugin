@@ -35,7 +35,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		this.api = new API(this);
 
-		const templateParseErrorCollection = this.api.newInputFieldParser.parseTemplates(this.settings.inputFieldTemplates);
+		const templateParseErrorCollection = this.api.inputFieldParser.parseTemplates(this.settings.inputFieldTemplates);
 		if (templateParseErrorCollection.hasErrors()) {
 			console.warn('meta-bind | failed to parse templates', templateParseErrorCollection);
 		}

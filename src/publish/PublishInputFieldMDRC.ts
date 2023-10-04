@@ -4,7 +4,7 @@ import { PublishAPI } from './PublishAPI';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { ErrorLevel, MetaBindBindTargetError } from '../utils/errors/MetaBindErrors';
 import PublishFieldComponent from './PublishFieldComponent.svelte';
-import { InputFieldDeclaration } from '../parsers/newInputFieldParser/InputFieldDeclaration';
+import { InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { getPublishDefaultValue } from './PublishUtils';
 
 export class PublishInputFieldMDRC extends MarkdownRenderChild {

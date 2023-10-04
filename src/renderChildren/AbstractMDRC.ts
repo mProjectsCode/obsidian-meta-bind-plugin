@@ -8,24 +8,15 @@ export class AbstractMDRC extends MarkdownRenderChild {
 	filePath: string;
 	uuid: string;
 	renderChildType: RenderChildType;
-	frontmatter: any | null | undefined;
 	errorCollection: ErrorCollection;
 
-	constructor(
-		containerEl: HTMLElement,
-		renderChildType: RenderChildType,
-		plugin: MetaBindPlugin,
-		filePath: string,
-		uuid: string,
-		frontmatter?: any | null | undefined
-	) {
+	constructor(containerEl: HTMLElement, renderChildType: RenderChildType, plugin: MetaBindPlugin, filePath: string, uuid: string) {
 		super(containerEl);
 
 		this.renderChildType = renderChildType;
 		this.plugin = plugin;
 		this.filePath = filePath;
 		this.uuid = uuid;
-		this.frontmatter = frontmatter;
 
 		this.errorCollection = new ErrorCollection(this.uuid);
 	}

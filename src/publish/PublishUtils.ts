@@ -1,4 +1,4 @@
-import { InputFieldDeclaration } from '../parsers/newInputFieldParser/InputFieldDeclaration';
+import { InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { InputFieldArgumentType, InputFieldType } from '../inputFields/InputFieldConfigs';
 
 /**

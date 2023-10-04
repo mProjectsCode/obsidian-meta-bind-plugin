@@ -1,16 +1,22 @@
-import { ParserUtils } from '../utils/ParserUtils';
-import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
 import { JS_VIEW_FIELD_DECLARATION, VIEW_FIELD_FULL_DECLARATION } from './nomParsers/Parsers';
 import { IPlugin } from '../IPlugin';
-import { BindTargetDeclaration, UnvalidatedBindTargetDeclaration } from './newInputFieldParser/InputFieldDeclaration';
-import { BindTargetParser } from './BindTargetParser';
+import { BindTargetDeclaration, UnvalidatedBindTargetDeclaration } from './inputFieldParser/InputFieldDeclaration';
+import { BindTargetScope } from '../metadata/BindTargetScope';
 
-export enum ViewFieldType {
-	MATH = 'math',
-	JS = 'js',
+export interface UnvalidatedViewFieldDeclaration {
+	/**
+	 * The full declaration of the view field including the "VIEW[]".
+	 * e.g.
+	 * VIEW[{x} * 2]
+	 */
+	fullDeclaration?: string;
+	/**
+	 * Declaration array.
+	 */
+	declaration?: (string | UnvalidatedBindTargetDeclaration)[];
 
-	INVALID = 'invalid',
+	errorCollection: ErrorCollection;
 }
 
 export interface ViewFieldDeclaration {
@@ -23,7 +29,7 @@ export interface ViewFieldDeclaration {
 	/**
 	 * Declaration array.
 	 */
-	declaration?: (string | BindTargetDeclaration)[];
+	declaration: (string | BindTargetDeclaration)[];
 
 	errorCollection: ErrorCollection;
 }
@@ -61,7 +67,7 @@ export class ViewFieldDeclarationParser {
 		this.plugin = plugin;
 	}
 
-	parseString(fullDeclaration: string): ViewFieldDeclaration {
+	parseString(fullDeclaration: string, scope?: BindTargetScope | undefined): ViewFieldDeclaration {
 		const declaration: ViewFieldDeclaration = {} as ViewFieldDeclaration;
 		declaration.fullDeclaration = fullDeclaration;
 		declaration.errorCollection = new ErrorCollection('ViewFieldDeclaration');
@@ -72,9 +78,44 @@ export class ViewFieldDeclarationParser {
 				if (typeof x === 'string') {
 					return x;
 				} else {
-					return this.plugin.api.bindTargetParser.validateBindTarget(fullDeclaration, x);
+					return this.plugin.api.bindTargetParser.validateBindTarget(fullDeclaration, x, scope);
 				}
 			});
+		} catch (e) {
+			declaration.errorCollection.add(e);
+		}
+
+		return declaration;
+	}
+
+	parseStringWithoutValidation(fullDeclaration: string): UnvalidatedViewFieldDeclaration {
+		const declaration: UnvalidatedViewFieldDeclaration = {} as UnvalidatedViewFieldDeclaration;
+		declaration.fullDeclaration = fullDeclaration;
+		declaration.errorCollection = new ErrorCollection('ViewFieldDeclaration');
+
+		try {
+			declaration.declaration = VIEW_FIELD_FULL_DECLARATION.parse(fullDeclaration) as (string | UnvalidatedBindTargetDeclaration)[];
+		} catch (e) {
+			declaration.errorCollection.add(e);
+		}
+
+		return declaration;
+	}
+
+	validateDeclaration(unvalidatedDeclaration: UnvalidatedViewFieldDeclaration, scope?: BindTargetScope | undefined): ViewFieldDeclaration {
+		const declaration: ViewFieldDeclaration = {} as ViewFieldDeclaration;
+		declaration.fullDeclaration = unvalidatedDeclaration.fullDeclaration;
+		declaration.errorCollection = unvalidatedDeclaration.errorCollection;
+
+		try {
+			declaration.declaration =
+				unvalidatedDeclaration.declaration?.map(x => {
+					if (typeof x === 'string') {
+						return x;
+					} else {
+						return this.plugin.api.bindTargetParser.validateBindTarget(declaration.fullDeclaration ?? '', x, scope);
+					}
+				}) ?? [];
 		} catch (e) {
 			declaration.errorCollection.add(e);
 		}

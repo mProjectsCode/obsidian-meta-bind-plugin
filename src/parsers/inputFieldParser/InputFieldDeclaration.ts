@@ -38,11 +38,13 @@ export interface InputFieldDeclaration {
 
 export interface UnvalidatedBindTargetDeclaration {
 	file?: ParsingResultNode;
+	boundToLocalScope: boolean;
 	path: ParsingResultNode[];
 }
 
 export interface BindTargetDeclaration {
 	filePath: string | undefined;
+	boundToLocalScope: boolean;
 	metadataPath: string[];
 }
 

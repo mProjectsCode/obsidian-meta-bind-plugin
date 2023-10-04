@@ -1,4 +1,4 @@
-import { EnclosingPair, ParserUtils } from '../src/utils/ParserUtils';
+import { EnclosingPair, ParserUtils } from '../../src/utils/ParserUtils';
 
 test('isStringAt', () => {
 	expect(ParserUtils.isStringAt('aaa', 'a', 2)).toEqual(true);

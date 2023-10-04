@@ -12,7 +12,7 @@ import { AbstractMDRC } from './AbstractMDRC';
 import { MetadataFileCache } from '../metadata/MetadataFileCache';
 import MetaBindPlugin from '../main';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
-import { InputFieldDeclaration } from '../parsers/newInputFieldParser/InputFieldDeclaration';
+import { InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { InputFieldArgumentType, InputFieldType } from '../inputFields/InputFieldConfigs';
 
 export enum RenderChildType {
@@ -44,10 +44,9 @@ export class InputFieldMDRC extends AbstractMDRC {
 		declaration: InputFieldDeclaration,
 		plugin: MetaBindPlugin,
 		filePath: string,
-		uuid: string,
-		frontmatter: any | null | undefined = undefined
+		uuid: string
 	) {
-		super(containerEl, renderChildType, plugin, filePath, uuid, frontmatter);
+		super(containerEl, renderChildType, plugin, filePath, uuid);
 
 		this.errorCollection.merge(declaration.errorCollection);
 

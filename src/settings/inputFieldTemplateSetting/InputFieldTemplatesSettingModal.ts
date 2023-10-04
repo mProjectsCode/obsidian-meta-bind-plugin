@@ -36,7 +36,7 @@ export class InputFieldTemplatesSettingModal extends Modal {
 	}
 
 	public save(templates: InputFieldTemplate[]): ErrorCollection | undefined {
-		const errorCollection = this.plugin.api.newInputFieldParser.parseTemplates(templates);
+		const errorCollection = this.plugin.api.inputFieldParser.parseTemplates(templates);
 		if (errorCollection.hasErrors()) {
 			return errorCollection;
 		}
