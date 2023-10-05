@@ -34,8 +34,6 @@ export abstract class AbstractInputFieldArgument {
 			return true;
 		}
 
-		console.log(this.getConfig().allowedInputFieldTypes);
-
 		return this.getConfig().allowedInputFieldTypes.includes(inputFieldType);
 	}
 

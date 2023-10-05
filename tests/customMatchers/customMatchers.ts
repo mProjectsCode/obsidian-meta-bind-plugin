@@ -14,30 +14,30 @@ declare global {
 	}
 }
 
-export function toHaveWarnings(obj: { errorCollection: ErrorCollection }) {
+export function toHaveWarnings(obj: { errorCollection: ErrorCollection }): { pass: boolean; message: () => string } {
 	if (obj.errorCollection.hasWarnings()) {
 		return {
 			pass: true,
-			message: () => `expected error collection to have no warnings`,
+			message: (): string => `expected error collection to have no warnings`,
 		};
 	} else {
 		return {
 			pass: false,
-			message: () => `expected error collection to have warnings`,
+			message: (): string => `expected error collection to have warnings`,
 		};
 	}
 }
 
-export function toHaveErrors(obj: { errorCollection: ErrorCollection }) {
+export function toHaveErrors(obj: { errorCollection: ErrorCollection }): { pass: boolean; message: () => string } {
 	if (obj.errorCollection.hasErrors()) {
 		return {
 			pass: true,
-			message: () => `expected error collection to have no warnings`,
+			message: (): string => `expected error collection to have no errors`,
 		};
 	} else {
 		return {
 			pass: false,
-			message: () => `expected error collection to have warnings`,
+			message: (): string => `expected error collection to have errors`,
 		};
 	}
 }
