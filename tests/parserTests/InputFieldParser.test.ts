@@ -3,61 +3,104 @@ import { TestPlugin } from './testAPI/TestAPI';
 const plugin = new TestPlugin();
 const parser = plugin.api.inputFieldParser;
 
-describe('input field declarations, no templates, no local scope', () => {
-	test('INPUT[text]', () => {
-		const res = parser.parseString('INPUT[text]');
+describe('should not error or warn cases', () => {
+	describe('no templates, no local scope', () => {
+		test('INPUT[text]', () => {
+			const res = parser.parseString('INPUT[text]');
 
-		expect(res).not.toHaveWarnings();
+			expect(res).not.toHaveWarnings();
+			expect(res).not.toHaveErrors();
+		});
+
+		test('INPUT[select(option(a), option(b, c), showcase)]', () => {
+			const res = parser.parseString('INPUT[select(option(a), option(b, c), showcase)]');
+
+			expect(res).not.toHaveWarnings();
+			expect(res).not.toHaveErrors();
+		});
+
+		test('INPUT[text:text]', () => {
+			const res = parser.parseString('INPUT[text:text]');
+
+			expect(res).not.toHaveWarnings();
+			expect(res).not.toHaveErrors();
+		});
+
+		test('INPUT[text:["test"]]', () => {
+			const res = parser.parseString('INPUT[text:["test"]]');
+
+			expect(res).not.toHaveWarnings();
+			expect(res).not.toHaveErrors();
+		});
+
+		test('INPUT[text:[0]]', () => {
+			const res = parser.parseString('INPUT[text:[0]]');
+
+			expect(res).not.toHaveWarnings();
+			expect(res).not.toHaveErrors();
+		});
+
+		test('INPUT[text:file#text]', () => {
+			const res = parser.parseString('INPUT[text:file#text]');
+
+			expect(res).not.toHaveWarnings();
+			expect(res).not.toHaveErrors();
+		});
+
+		test('INPUT[text:path/to/file#text]', () => {
+			const res = parser.parseString('INPUT[text:path/to/file#text]');
+
+			expect(res).not.toHaveWarnings();
+			expect(res).not.toHaveErrors();
+		});
+
+		test('INPUT[text:path/to/other file#text]', () => {
+			const res = parser.parseString('INPUT[text:path/to/other file#text]');
+
+			expect(res).not.toHaveWarnings();
+			expect(res).not.toHaveErrors();
+		});
+	});
+});
+
+describe('should warn on deprecation', () => {
+	test('INPUT[multi_select]', () => {
+		const res = parser.parseString('INPUT[multi_select]');
+
+		expect(res).toHaveWarnings();
 		expect(res).not.toHaveErrors();
 	});
 
-	test('INPUT[select(option(a), option(b, c), showcase)]', () => {
-		const res = parser.parseString('INPUT[select(option(a), option(b, c), showcase)]');
+	test('INPUT[date_picker]', () => {
+		const res = parser.parseString('INPUT[date_picker]');
 
-		expect(res).not.toHaveWarnings();
+		expect(res).toHaveWarnings();
 		expect(res).not.toHaveErrors();
 	});
 
-	test('INPUT[text:text]', () => {
-		const res = parser.parseString('INPUT[text:text]');
+	test('INPUT[text_area]', () => {
+		const res = parser.parseString('INPUT[text_area]');
 
-		expect(res).not.toHaveWarnings();
+		expect(res).toHaveWarnings();
 		expect(res).not.toHaveErrors();
 	});
+});
 
-	test('INPUT[text:["test"]]', () => {
-		const res = parser.parseString('INPUT[text:["test"]]');
+describe('should warn on invalid argument', () => {
+	test('INPUT[text(invalidArgument)]', () => {
+		const res = parser.parseString('INPUT[text(invalidArgument)]');
 
-		expect(res).not.toHaveWarnings();
+		expect(res).toHaveWarnings();
 		expect(res).not.toHaveErrors();
 	});
+});
 
-	test('INPUT[text:[0]]', () => {
-		const res = parser.parseString('INPUT[text:[0]]');
-
-		expect(res).not.toHaveWarnings();
-		expect(res).not.toHaveErrors();
-	});
-
-	test('INPUT[text:file#text]', () => {
-		const res = parser.parseString('INPUT[text:file#text]');
+describe('should error on invalid input field type', () => {
+	test('INPUT[invalidType]', () => {
+		const res = parser.parseString('INPUT[invalidType]');
 
 		expect(res).not.toHaveWarnings();
-		expect(res).not.toHaveErrors();
-	});
-
-	test('INPUT[text:path/to/file#text]', () => {
-		const res = parser.parseString('INPUT[text:path/to/file#text]');
-
-		expect(res).not.toHaveWarnings();
-		expect(res).not.toHaveErrors();
-	});
-
-	test('INPUT[text:path/to/other file#text]', () => {
-		const res = parser.parseString('INPUT[text:path/to/other file#text]');
-
-		expect(res).not.toHaveWarnings();
-		expect(res).not.toHaveErrors();
+		expect(res).toHaveErrors();
 	});
 });
 
