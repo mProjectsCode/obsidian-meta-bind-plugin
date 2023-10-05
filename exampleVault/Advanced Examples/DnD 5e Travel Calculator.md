@@ -1,5 +1,5 @@
 ---
-BaseSpeed: 30
+BaseSpeed: 40
 SpeedMultiplier: 0.666667
 AdditionalBonus: 0
 Encumbered: false

@@ -190,11 +190,6 @@ export class MetadataManager {
 	}
 
 	notifyListeners(fileCache: MetadataFileCache, metadataPath?: string[] | undefined, exceptUuid?: string | undefined): void {
-		let value;
-		if (metadataPath) {
-			value = traverseObjectByPath(metadataPath, fileCache.metadata);
-		}
-
 		// console.log(fileCache);
 
 		for (const listener of fileCache.listeners) {
