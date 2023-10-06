@@ -62,7 +62,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				const isInputField = content.startsWith('INPUT[') && content.endsWith(']');
 				const isViewField = content.startsWith('VIEW[') && content.endsWith(']');
 				if (isInputField) {
-					const inputField = this.api.createInputFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock, ctx);
+					const inputField = this.api.createInputFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock, ctx, undefined);
 					// ctx.addChild(inputField);
 				}
 				if (isViewField) {
@@ -77,7 +77,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			const content = source.trim();
 			const isInputField = content.startsWith('INPUT[') && content.endsWith(']');
 			if (isInputField) {
-				const inputField = this.api.createInputFieldFromString(content, RenderChildType.BLOCK, ctx.sourcePath, codeBlock, ctx);
+				const inputField = this.api.createInputFieldFromString(content, RenderChildType.BLOCK, ctx.sourcePath, codeBlock, ctx, undefined);
 				// ctx.addChild(inputField);
 			}
 		});

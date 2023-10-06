@@ -18,25 +18,29 @@ import { BindTargetDeclaration, InputFieldDeclaration, UnvalidatedInputFieldDecl
 import { Signal } from '../utils/Signal';
 import { BindTargetScope } from '../metadata/BindTargetScope';
 import { MetaBindTable } from '../metaBindTable/MetaBindTable';
+import { NewInputFieldFactory } from '../inputFields/_new/NewInputFieldFactory';
 
 export class API implements IAPI {
 	public plugin: MetaBindPlugin;
+	public readonly inputField: InputFieldAPI;
+
 	// public inputFieldParser: InputFieldDeclarationParser;
 	public readonly inputFieldParser: InputFieldDeclarationParser;
 	public readonly viewFieldParser: ViewFieldDeclarationParser;
 	public readonly bindTargetParser: BindTargetParser;
 
-	public readonly inputField: InputFieldAPI;
+	public readonly inputFieldFactory: NewInputFieldFactory;
 
 	constructor(plugin: MetaBindPlugin) {
 		this.plugin = plugin;
+		this.inputField = new InputFieldAPI(this);
 
 		// this.inputFieldParser = new InputFieldDeclarationParser();
 		this.inputFieldParser = new InputFieldDeclarationParser(this.plugin);
 		this.viewFieldParser = new ViewFieldDeclarationParser(this.plugin);
 		this.bindTargetParser = new BindTargetParser(this.plugin);
 
-		this.inputField = new InputFieldAPI(this);
+		this.inputFieldFactory = new NewInputFieldFactory(this.plugin);
 	}
 
 	public createInputField(
@@ -64,13 +68,13 @@ export class API implements IAPI {
 		filePath: string,
 		containerEl: HTMLElement,
 		component: Component | MarkdownPostProcessorContext,
-		scope: BindTargetScope
+		scope: BindTargetScope | undefined
 	): InputFieldMDRC | ExcludedMDRC {
 		if (this.plugin.isFilePathExcluded(filePath)) {
 			return this.createExcludedField(containerEl, filePath, component);
 		}
 
-		const declaration: InputFieldDeclaration = this.inputFieldParser.parseString(fullDeclaration);
+		const declaration: InputFieldDeclaration = this.inputFieldParser.parseString(fullDeclaration, scope);
 
 		const inputField = new InputFieldMDRC(containerEl, renderType, declaration, this.plugin, filePath, self.crypto.randomUUID());
 		component.addChild(inputField);

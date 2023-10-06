@@ -1,5 +1,5 @@
 ---
-text: text
+text: test
 textArea: textArea
 ---
 

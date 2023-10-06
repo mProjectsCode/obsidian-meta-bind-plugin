@@ -3,11 +3,15 @@ import { ViewFieldDeclarationParser } from '../parsers/ViewFieldDeclarationParse
 import { BindTargetParser } from '../parsers/BindTargetParser';
 import { IPlugin } from '../IPlugin';
 import { InputFieldAPI } from './InputFieldAPI';
+import { NewInputFieldFactory } from '../inputFields/_new/NewInputFieldFactory';
 
 export interface IAPI {
 	readonly plugin: IPlugin;
+	readonly inputField: InputFieldAPI;
+
 	readonly inputFieldParser: InputFieldDeclarationParser;
 	readonly viewFieldParser: ViewFieldDeclarationParser;
 	readonly bindTargetParser: BindTargetParser;
-	readonly inputField: InputFieldAPI;
+
+	readonly inputFieldFactory: NewInputFieldFactory;
 }

@@ -13,6 +13,8 @@ import MetaBindPlugin from '../main';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
 import { InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { InputFieldArgumentType, InputFieldType } from '../inputFields/InputFieldConfigs';
+import { NewAbstractInputField } from '../inputFields/_new/NewAbstractInputField';
+import { NewInputField } from '../inputFields/_new/NewInputFieldFactory';
 
 export enum RenderChildType {
 	INLINE = 'inline',
@@ -20,7 +22,7 @@ export enum RenderChildType {
 }
 
 export class InputFieldMDRC extends AbstractMDRC {
-	inputField: AbstractInputField<MBExtendedLiteral> | undefined;
+	inputField: NewInputField | undefined;
 
 	fullDeclaration?: string;
 	inputFieldDeclaration: InputFieldDeclaration;
@@ -56,10 +58,8 @@ export class InputFieldMDRC extends AbstractMDRC {
 
 		if (!this.errorCollection.hasErrors()) {
 			try {
-				this.inputField = InputFieldFactory.createInputField(this.inputFieldDeclaration.inputFieldType, {
-					renderChildType: renderChildType,
-					inputFieldMDRC: this,
-				});
+				this.inputField = this.plugin.api.inputFieldFactory.createInputField(this.inputFieldDeclaration.inputFieldType, renderChildType, this);
+				this.inputField?.registerListener({ callback: value => this.readSignal.set(value) });
 			} catch (e: any) {
 				this.errorCollection.add(e);
 			}
@@ -72,7 +72,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 			return;
 		}
 
-		this.metadataManagerReadSignalListener = this.readSignal.registerListener({ callback: this.updateMetadataManager.bind(this) });
+		this.metadataManagerReadSignalListener = this.readSignal.registerListener({ callback: value => this.updateMetadataManager(value) });
 
 		this.plugin.metadataManager.register(
 			this.inputFieldDeclaration.bindTarget.filePath ?? this.filePath,
@@ -110,22 +110,22 @@ export class InputFieldMDRC extends AbstractMDRC {
 		);
 	}
 
-	getInitialValue(): MBExtendedLiteral {
-		if (!this.inputField) {
-			throw new MetaBindInternalError(ErrorLevel.CRITICAL, 'can not get initial value for input field', 'input field is undefined');
-		}
-
-		if (this.inputFieldDeclaration?.isBound && this.inputFieldDeclaration.bindTarget) {
-			let value: MBExtendedLiteral | undefined = this.writeSignal.get();
-			value = value === undefined ? this.inputField.getFallbackDefaultValue() : value;
-			console.debug(
-				`meta-bind | InputFieldMarkdownRenderChild >> setting initial value to ${value} (typeof ${typeof value}) for input field ${this.uuid}`
-			);
-			return value;
-		} else {
-			return this.inputField.getFallbackDefaultValue();
-		}
-	}
+	// getInitialValue(): MBExtendedLiteral {
+	// 	if (!this.inputField) {
+	// 		throw new MetaBindInternalError(ErrorLevel.CRITICAL, 'can not get initial value for input field', 'input field is undefined');
+	// 	}
+	//
+	// 	if (this.inputFieldDeclaration?.isBound && this.inputFieldDeclaration.bindTarget) {
+	// 		let value: MBExtendedLiteral | undefined = this.writeSignal.get();
+	// 		value = value === undefined ? this.inputField.getFallbackDefaultValue() : value;
+	// 		console.debug(
+	// 			`meta-bind | InputFieldMarkdownRenderChild >> setting initial value to ${value} (typeof ${typeof value}) for input field ${this.uuid}`
+	// 		);
+	// 		return value;
+	// 	} else {
+	// 		return this.inputField.getFallbackDefaultValue();
+	// 	}
+	// }
 
 	getArguments(name: InputFieldArgumentType): AbstractInputFieldArgument[] {
 		if (this.inputFieldDeclaration.errorCollection.hasErrors()) {
@@ -139,7 +139,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 		return this.getArguments(name).at(0);
 	}
 
-	addCardContainer(): boolean {
+	shouldAddCardContainer(): boolean {
 		const containerInputFieldType =
 			this.inputFieldDeclaration.inputFieldType === InputFieldType.SELECT ||
 			this.inputFieldDeclaration.inputFieldType === InputFieldType.MULTI_SELECT_DEPRECATED ||
@@ -186,7 +186,8 @@ export class InputFieldMDRC extends AbstractMDRC {
 			| undefined;
 		const titleArgument: TitleInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.TITLE) as TitleInputFieldArgument | undefined;
 
-		if (this.addCardContainer()) {
+		// --- Determine Wrapper Element ---
+		if (this.shouldAddCardContainer()) {
 			const cardContainer: HTMLDivElement = this.containerEl.createDiv({ cls: 'meta-bind-plugin-card' });
 			if (titleArgument) {
 				cardContainer.createEl('h3', { text: titleArgument.value });
@@ -197,6 +198,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 			wrapperContainer = this.containerEl;
 		}
 
+		// --- Create Error Indicator ---
 		new ErrorIndicatorComponent({
 			target: wrapperContainer,
 			props: {
@@ -206,26 +208,32 @@ export class InputFieldMDRC extends AbstractMDRC {
 			},
 		});
 
+		// --- Register to Metadata ---
 		if (this.hasValidBindTarget()) {
 			this.registerSelfToMetadataManager();
 		}
+
+		// --- Register to MDRC manager ---
 		this.plugin.mdrcManager.registerMDRC(this);
 
-		// input field container
+		// --- Create Container Element ---
 		const container: HTMLDivElement = createDiv();
 		container.addClass('meta-bind-plugin-input-wrapper');
 
-		this.inputField?.filterValue(this.getInitialValue());
-		this.inputField?.render(container);
+		// --- Mount Input Field ---
+		this.inputField?.mount(container);
 
+		// --- Apply Class Arguments ---
 		const classArguments: ClassInputFieldArgument[] = this.getArguments(InputFieldArgumentType.CLASS) as ClassInputFieldArgument[];
 		if (classArguments) {
-			this.inputField?.getHtmlElement().addClasses(classArguments.map(x => x.value).flat());
+			container.addClasses(classArguments.map(x => x.value).flat());
 		}
 
+		// --- Append Container Element to Wrapper ---
 		wrapperContainer.appendChild(container);
 
-		if (this.addCardContainer() && showcaseArgument) {
+		// --- Add Showcase Argument ---
+		if (this.shouldAddCardContainer() && showcaseArgument) {
 			wrapperContainer.createEl('code', { text: this.fullDeclaration, cls: 'meta-bind-none' });
 		}
 	}
@@ -233,7 +241,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 	onunload(): void {
 		console.log('meta-bind | InputFieldMarkdownRenderChild >> unload', this);
 
-		this.inputField?.destroy();
+		this.inputField?.unmount();
 		this.plugin.mdrcManager.unregisterMDRC(this);
 		this.unregisterSelfFromMetadataManager();
 
