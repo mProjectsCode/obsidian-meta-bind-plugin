@@ -36,7 +36,7 @@ export class InputFieldDeclarationParser implements ITemplateSupplier<Unvalidate
 		this.templates = [];
 	}
 
-	public parseString(fullDeclaration: string, scope?: BindTargetScope | undefined): InputFieldDeclaration {
+	public parseString(fullDeclaration: string, scope: BindTargetScope | undefined): InputFieldDeclaration {
 		const errorCollection = new ErrorCollection('InputFieldParser');
 
 		try {
