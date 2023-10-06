@@ -6,7 +6,6 @@ import { DateParser } from './parsers/DateParser';
 import { MetadataManager } from './metadata/MetadataManager';
 import { API } from './api/API';
 import { setFirstWeekday } from './inputFields/fields/DatePicker/DatePickerInputSvelteHelpers';
-import './frontmatterDisplay/custom_overlay';
 import { createMarkdownRenderChildWidgetEditorPlugin } from './cm6/Cm6_ViewPlugin';
 import { MDRCManager } from './MDRCManager';
 import { DEFAULT_SETTINGS, InputFieldTemplate, MetaBindPluginSettings } from './settings/Settings';
@@ -46,28 +45,22 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		this.registerMarkdownPostProcessor((el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
 			const codeBlocks = el.querySelectorAll('code');
 
-			// console.log(el.outerHTML);
-
 			for (let index = 0; index < codeBlocks.length; index++) {
 				const codeBlock = codeBlocks.item(index);
 
-				// console.log(codeBlock.outerHTML);
-				// console.log(codeBlock.tagName, codeBlock.className, codeBlock.innerText);
-
-				if (codeBlock.hasClass('meta-bind-none')) {
+				if (codeBlock.hasClass('mb-none')) {
 					continue;
 				}
 
 				const content = codeBlock.innerText;
 				const isInputField = content.startsWith('INPUT[') && content.endsWith(']');
 				const isViewField = content.startsWith('VIEW[') && content.endsWith(']');
+
 				if (isInputField) {
-					const inputField = this.api.createInputFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock, ctx, undefined);
-					// ctx.addChild(inputField);
+					this.api.createInputFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock, ctx, undefined);
 				}
 				if (isViewField) {
-					const viewField = this.api.createViewFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock, ctx);
-					// ctx.addChild(viewField);
+					this.api.createViewFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock, ctx);
 				}
 			}
 		}, 100);
@@ -76,15 +69,18 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			const codeBlock = el;
 			const content = source.trim();
 			const isInputField = content.startsWith('INPUT[') && content.endsWith(']');
+			const isViewField = content.startsWith('VIEW[') && content.endsWith(']');
+
 			if (isInputField) {
-				const inputField = this.api.createInputFieldFromString(content, RenderChildType.BLOCK, ctx.sourcePath, codeBlock, ctx, undefined);
-				// ctx.addChild(inputField);
+				this.api.createInputFieldFromString(content, RenderChildType.BLOCK, ctx.sourcePath, codeBlock, ctx, undefined);
+			}
+			if (isViewField) {
+				this.api.createViewFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock, ctx);
 			}
 		});
 
 		this.registerMarkdownCodeBlockProcessor('meta-bind-js-view', (source, el, ctx) => {
-			const inputField = this.api.createJsViewFieldFromString(source, RenderChildType.BLOCK, ctx.sourcePath, el, ctx);
-			// ctx.addChild(inputField);
+			this.api.createJsViewFieldFromString(source, RenderChildType.BLOCK, ctx.sourcePath, el, ctx);
 		});
 
 		this.registerEditorExtension(createMarkdownRenderChildWidgetEditorPlugin(this));

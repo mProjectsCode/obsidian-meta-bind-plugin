@@ -52,13 +52,13 @@ export class PublishViewFieldMDRC extends MarkdownRenderChild {
 
 				for (const entry of this.viewFieldDeclaration.declaration ?? []) {
 					if (typeof entry !== 'string') {
-						const variable = {
+						const variable: ViewFieldVariable = {
 							bindTargetDeclaration: entry,
 							writeSignal: new Signal<any>(undefined),
 							uuid: self.crypto.randomUUID(),
-							metadataCache: undefined,
 							writeSignalListener: undefined,
 							contextName: `MB_VAR_${varCounter}`,
+							listenToChildren: false,
 						};
 
 						this.variables.push(variable);

@@ -5,8 +5,10 @@ import { IPlugin } from '../../IPlugin';
 import { Toggle } from './fields/Toggle/Toggle';
 import { Text } from './fields/Text/Text';
 import { Slider } from './fields/Slider/Slider';
+import { TextArea } from './fields/TextArea/TextArea';
+import { Select } from './fields/Select/Select';
 
-export type NewInputField = Toggle | Slider | Text;
+export type NewInputField = Toggle | Slider | Text | TextArea | Select;
 
 export class NewInputFieldFactory {
 	plugin: IPlugin;
@@ -26,6 +28,12 @@ export class NewInputFieldFactory {
 			return new Slider(renderChild);
 		} else if (type === InputFieldType.TEXT) {
 			return new Text(renderChild);
+		} else if (type === InputFieldType.TEXT_AREA) {
+			return new TextArea(renderChild);
+		} else if (type === InputFieldType.TEXT_AREA_DEPRECATED) {
+			return new TextArea(renderChild);
+		} else if (type === InputFieldType.SELECT) {
+			return new Select(renderChild);
 		}
 
 		return undefined;

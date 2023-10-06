@@ -12,6 +12,4 @@ export interface IAPI {
 	readonly inputFieldParser: InputFieldDeclarationParser;
 	readonly viewFieldParser: ViewFieldDeclarationParser;
 	readonly bindTargetParser: BindTargetParser;
-
-	readonly inputFieldFactory: NewInputFieldFactory;
 }

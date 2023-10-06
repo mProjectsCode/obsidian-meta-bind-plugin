@@ -131,7 +131,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 	async onload(): Promise<void> {
 		console.log('meta-bind | ViewFieldMarkdownRenderChild >> load', this);
 
-		this.containerEl.addClass('meta-bind-plugin-view');
+		this.containerEl.addClass('mb-view');
 		this.containerEl.empty();
 
 		new ErrorIndicatorComponent({
@@ -150,7 +150,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 		this.plugin.mdrcManager.registerMDRC(this);
 
 		const container: HTMLDivElement = createDiv();
-		container.addClass('meta-bind-plugin-view-wrapper');
+		container.addClass('mb-view-wrapper');
 
 		this.viewField.render(container);
 
@@ -164,7 +164,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 		this.unregisterSelfFromMetadataManager();
 
 		this.containerEl.empty();
-		this.containerEl.createEl('span', { text: 'unloaded meta bind view field', cls: 'meta-bind-plugin-error' });
+		this.containerEl.createEl('span', { text: 'unloaded meta bind view field', cls: 'mb-error' });
 
 		super.onunload();
 	}

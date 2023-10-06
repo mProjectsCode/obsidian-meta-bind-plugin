@@ -33,7 +33,7 @@ export class PublishAPI implements IAPI {
 		container: HTMLElement,
 		component: MarkdownPostProcessorContext
 	): PublishInputFieldMDRC {
-		const declaration: InputFieldDeclaration = this.inputFieldParser.parseString(fullDeclaration);
+		const declaration: InputFieldDeclaration = this.inputFieldParser.parseString(fullDeclaration, undefined);
 
 		const inputField = new PublishInputFieldMDRC(container, this, declaration, filePath, metadata, self.crypto.randomUUID());
 		component.addChild(inputField);
