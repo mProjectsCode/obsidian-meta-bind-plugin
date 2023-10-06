@@ -158,7 +158,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 	async onload(): Promise<void> {
 		console.log('meta-bind | InputFieldMarkdownRenderChild >> load', this);
 
-		this.containerEl.addClass('meta-bind-plugin-input');
+		this.containerEl.addClass('mb-input');
 		this.containerEl.empty();
 
 		if (!this.errorCollection.hasErrors() && !this.inputField) {
@@ -188,7 +188,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 
 		// --- Determine Wrapper Element ---
 		if (this.shouldAddCardContainer()) {
-			const cardContainer: HTMLDivElement = this.containerEl.createDiv({ cls: 'meta-bind-plugin-card' });
+			const cardContainer: HTMLDivElement = this.containerEl.createDiv({ cls: 'mb-card' });
 			if (titleArgument) {
 				cardContainer.createEl('h3', { text: titleArgument.value });
 			}
@@ -218,7 +218,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 
 		// --- Create Container Element ---
 		const container: HTMLDivElement = createDiv();
-		container.addClass('meta-bind-plugin-input-wrapper');
+		container.addClass('mb-input-wrapper');
 
 		// --- Mount Input Field ---
 		this.inputField?.mount(container);
@@ -234,7 +234,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 
 		// --- Add Showcase Argument ---
 		if (this.shouldAddCardContainer() && showcaseArgument) {
-			wrapperContainer.createEl('code', { text: this.fullDeclaration, cls: 'meta-bind-none' });
+			wrapperContainer.createEl('code', { text: this.fullDeclaration, cls: 'mb-none' });
 		}
 	}
 
@@ -246,7 +246,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 		this.unregisterSelfFromMetadataManager();
 
 		this.containerEl.empty();
-		this.containerEl.createEl('span', { text: 'unloaded meta bind input field', cls: 'meta-bind-plugin-error' });
+		this.containerEl.createEl('span', { text: 'unloaded meta bind input field', cls: 'mb-error' });
 
 		super.onunload();
 	}

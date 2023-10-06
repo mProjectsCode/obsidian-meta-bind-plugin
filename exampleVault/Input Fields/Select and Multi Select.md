@@ -1,9 +1,10 @@
 ---
-select: 2
+select: 1
 multiSelect:
   - option 1
   - option 3
-select2: 1
+select2: false
+select3: 3
 ---
 
 ### Select
@@ -25,6 +26,16 @@ showcase
 ):select2]
 ```
 
+```meta-bind
+INPUT[select(
+option(1, option 1), 
+option(2, option 2), 
+option(3, option 3), 
+option(3, option 3), 
+option(2, option 2), 
+showcase
+):select3]
+```
 
 ### Multi Select
 ```meta-bind

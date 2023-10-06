@@ -4,12 +4,17 @@ import { BindTargetParser } from '../../../src/parsers/BindTargetParser';
 import { InputFieldAPI } from '../../../src/api/InputFieldAPI';
 import { InputFieldDeclarationParser } from '../../../src/parsers/inputFieldParser/InputFieldParser';
 import { ViewFieldDeclarationParser } from '../../../src/parsers/ViewFieldDeclarationParser';
+import { NewInputFieldFactory } from '../../../src/inputFields/_new/NewInputFieldFactory';
+import { DEFAULT_SETTINGS, MetaBindPluginSettings } from '../../../src/settings/Settings';
 
 export class TestPlugin implements IPlugin {
 	public api: TestAPI;
+	public settings: MetaBindPluginSettings;
 
 	constructor() {
 		this.api = new TestAPI(this);
+
+		this.settings = DEFAULT_SETTINGS;
 	}
 
 	public getFilePathsByName(name: string): string[] {
@@ -19,19 +24,19 @@ export class TestPlugin implements IPlugin {
 
 export class TestAPI implements IAPI {
 	public readonly plugin: TestPlugin;
+	public readonly inputField: InputFieldAPI;
 
 	public readonly bindTargetParser: BindTargetParser;
 	public readonly inputFieldParser: InputFieldDeclarationParser;
 	public readonly viewFieldParser: ViewFieldDeclarationParser;
-	public readonly inputField: InputFieldAPI;
 
 	constructor(plugin: TestPlugin) {
 		this.plugin = plugin;
 
+		this.inputField = new InputFieldAPI(this);
+
 		this.inputFieldParser = new InputFieldDeclarationParser(this.plugin);
 		this.viewFieldParser = new ViewFieldDeclarationParser(this.plugin);
 		this.bindTargetParser = new BindTargetParser(this.plugin);
-
-		this.inputField = new InputFieldAPI(this);
 	}
 }

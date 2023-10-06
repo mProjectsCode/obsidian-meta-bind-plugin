@@ -13,7 +13,7 @@
 	}
 
 	function toggleValueOnKey(event: KeyboardEvent) {
-		if (event.code === ' ') {
+		if (event.key === ' ') {
 			toggleValue();
 		}
 	}
