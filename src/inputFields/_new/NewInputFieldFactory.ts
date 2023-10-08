@@ -7,8 +7,10 @@ import { Text } from './fields/Text/Text';
 import { Slider } from './fields/Slider/Slider';
 import { TextArea } from './fields/TextArea/TextArea';
 import { Select } from './fields/Select/Select';
+import { MultiSelect } from './fields/MultiSelect/MultiSelect';
+import { DatePicker } from './fields/DatePicker/DatePicker';
 
-export type NewInputField = Toggle | Slider | Text | TextArea | Select;
+export type NewInputField = Toggle | Slider | Text | TextArea | Select | MultiSelect | DatePicker;
 
 export class NewInputFieldFactory {
 	plugin: IPlugin;
@@ -22,6 +24,8 @@ export class NewInputFieldFactory {
 			this.checkRenderChildTypeAllowed(type, renderChildType);
 		}
 
+		// Skipped: Date, Time
+
 		if (type === InputFieldType.TOGGLE) {
 			return new Toggle(renderChild);
 		} else if (type === InputFieldType.SLIDER) {
@@ -34,6 +38,14 @@ export class NewInputFieldFactory {
 			return new TextArea(renderChild);
 		} else if (type === InputFieldType.SELECT) {
 			return new Select(renderChild);
+		} else if (type === InputFieldType.MULTI_SELECT) {
+			return new MultiSelect(renderChild);
+		} else if (type === InputFieldType.MULTI_SELECT_DEPRECATED) {
+			return new MultiSelect(renderChild);
+		} else if (type === InputFieldType.DATE_PICKER) {
+			return new DatePicker(renderChild);
+		} else if (type === InputFieldType.DATE_PICKER_DEPRECATED) {
+			return new DatePicker(renderChild);
 		}
 
 		return undefined;

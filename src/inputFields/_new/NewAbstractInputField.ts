@@ -68,8 +68,37 @@ export abstract class NewAbstractInputField<MetadataValueType, ComponentValueTyp
 		return this.rawMapValue(value);
 	}
 
-	private getValue(): MetadataValueType {
+	/**
+	 * Get the metadata value that the input field currently has.
+	 */
+	public getValue(): MetadataValueType {
 		return this.signal.get();
+	}
+
+	/**
+	 * Get the internal representation of the metadata value that the input field currently has.
+	 */
+	public getInternalValue(): ComponentValueType {
+		return this.reverseMapValue(this.getValue());
+	}
+
+	/**
+	 * Set the value of this input field as if the user updated the field.
+	 *
+	 * @param value
+	 */
+	public setValue(value: MetadataValueType): void {
+		this.signal.set(value);
+		this.notifyListeners(value);
+	}
+
+	/**
+	 * Set the value of this input field as if the user updated the field.
+	 *
+	 * @param value
+	 */
+	public setInternalValue(value: ComponentValueType): void {
+		this.setValue(this.mapValue(value));
 	}
 
 	private getDefaultValue(): MetadataValueType {
