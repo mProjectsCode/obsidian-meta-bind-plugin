@@ -1,10 +1,17 @@
 ---
 select: 1
+select2: false
+select3: 3
 multiSelect:
   - option 1
   - option 3
-select2: false
-select3: 3
+multiSelect2:
+  - option 3
+  - option 1
+multiSelect3:
+  - 
+  - false
+  - 1
 ---
 
 ### Select
@@ -38,6 +45,7 @@ showcase
 ```
 
 ### Multi Select
+
 ```meta-bind
 INPUT[multi_select(
 option(option 1), 
@@ -45,5 +53,24 @@ option(option 2),
 option(option 3), 
 showcase
 ):multiSelect]
+```
 
+```meta-bind
+INPUT[multiSelect(
+option(option 1), 
+option(option 2), 
+option(option 3), 
+option(option 3), 
+option(option 2), 
+showcase
+):multiSelect2]
+```
+
+```meta-bind
+INPUT[multiSelect(
+option(1, option 1), 
+option(false, option 2), 
+option(null, option 3), 
+showcase
+):multiSelect3]
 ```

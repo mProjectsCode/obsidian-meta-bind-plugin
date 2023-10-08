@@ -1,3 +1,4 @@
+<script src='DatePickerModal.ts'></script>
 <script lang="ts">
 	import type {Moment} from 'moment';
 	import Icon from '../../../utils/Icon.svelte';

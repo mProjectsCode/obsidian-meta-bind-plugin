@@ -45,7 +45,7 @@
 		flex-wrap:       wrap;
 		gap:             var(--size-4-1);
 		background:      var(--background-secondary);
-		border-radius:   var(--meta-bind-plugin-border-radius);
+		border-radius:   var(--mb-border-radius);
 		margin-bottom:   var(--size-4-1);;
 	}
 
@@ -62,7 +62,7 @@
 		display:         flex;
 		justify-content: center;
 		align-items:     center;
-		border-radius:   var(--meta-bind-plugin-border-radius);
+		border-radius:   var(--mb-border-radius);
 	}
 
 	.content-cell {
@@ -102,6 +102,8 @@
 				class="cell"
 				on:click={() => selectCell(value)}
 				on:keydown={(event) => selectCellKey(event, value)}
+				role='button'
+				tabindex='0'
 				class:highlight={value}
 				class:content-cell={value}
 				class:selected={selectedDate?.year() === year && selectedDate?.month() === month && selectedDate?.date() === value}>
