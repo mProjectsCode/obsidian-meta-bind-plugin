@@ -1,5 +1,5 @@
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
-import { JS_VIEW_FIELD_DECLARATION, VIEW_FIELD_FULL_DECLARATION } from './nomParsers/Parsers';
+import { JS_VIEW_FIELD_DECLARATION, VIEW_FIELD_FULL_DECLARATION } from './nomParsers/ViewFieldParsers';
 import { IPlugin } from '../IPlugin';
 import { BindTargetDeclaration, UnvalidatedBindTargetDeclaration } from './inputFieldParser/InputFieldDeclaration';
 import { BindTargetScope } from '../metadata/BindTargetScope';
