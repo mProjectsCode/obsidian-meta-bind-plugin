@@ -5,7 +5,7 @@ import { InputFieldTemplate } from '../../settings/Settings';
 import { deepFreeze } from '../../utils/Utils';
 import { InputFieldDeclarationValidator } from './InputFieldDeclarationValidator';
 import { ITemplateSupplier, TemplateSupplierTemplate } from './ITemplateSupplier';
-import { INPUT_FIELD_FULL_DECLARATION, TEMPLATE_INPUT_FIELD_FULL_DECLARATION } from '../nomParsers/Parsers';
+import { INPUT_FIELD_FULL_DECLARATION, TEMPLATE_INPUT_FIELD_FULL_DECLARATION } from '../nomParsers/InputFieldParsers';
 import { ParsingValidationError } from '../ParsingError';
 import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
 import { InputFieldDeclaration, UnvalidatedInputFieldDeclaration } from './InputFieldDeclaration';
