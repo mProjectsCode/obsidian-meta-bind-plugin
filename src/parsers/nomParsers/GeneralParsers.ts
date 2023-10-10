@@ -1,6 +1,7 @@
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { Parser } from '@lemons_dev/parsinom/lib/Parser';
+import { ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
 
 export const ident = P.regexp(/^[a-z][a-z0-9_-]*/i)
 	.map(x => {
@@ -41,3 +42,15 @@ function stringFactory(quotes: string): Parser<string> {
 
 export const singleQuotedString = stringFactory("'");
 export const doubleQuotedString = stringFactory('"');
+
+export interface ParsingResultNode {
+	value: string;
+	position?: ParsingRange;
+}
+
+export function createResultNode(value: string, range: ParsingRange): ParsingResultNode {
+	return {
+		value: value,
+		position: range,
+	};
+}

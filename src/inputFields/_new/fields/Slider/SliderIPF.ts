@@ -5,7 +5,7 @@ import { SvelteComponent } from 'svelte';
 import SliderComponent from './SliderComponent.svelte';
 import { InputFieldArgumentType } from '../../../InputFieldConfigs';
 
-export class Slider extends NewAbstractInputField<number, number> {
+export class SliderIPF extends NewAbstractInputField<number, number> {
 	minValue: number;
 	maxValue: number;
 

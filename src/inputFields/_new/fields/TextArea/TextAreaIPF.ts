@@ -1,11 +1,11 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
-import { isLiteral, MBLiteral, parseLiteral, stringifyLiteral } from '../../../../utils/Utils';
 import { InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
+import { isLiteral } from '../../../../utils/Utils';
 import { SvelteComponent } from 'svelte';
-import TextComponent from './TextComponent.svelte';
+import TextAreaComponent from './TextAreaComponent.svelte';
 import { InputFieldArgumentType } from '../../../InputFieldConfigs';
 
-export class Text extends NewAbstractInputField<string, string> {
+export class TextAreaIPF extends NewAbstractInputField<string, string> {
 	constructor(renderChild: InputFieldMDRC) {
 		super(renderChild);
 	}
@@ -19,7 +19,7 @@ export class Text extends NewAbstractInputField<string, string> {
 	}
 
 	protected getSvelteComponent(): typeof SvelteComponent {
-		return TextComponent;
+		return TextAreaComponent;
 	}
 
 	protected rawReverseMapValue(value: string): string | undefined {

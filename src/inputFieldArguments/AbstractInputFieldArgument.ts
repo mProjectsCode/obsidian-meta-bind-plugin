@@ -1,6 +1,6 @@
 import { ErrorLevel, MetaBindArgumentError } from '../utils/errors/MetaBindErrors';
-import { ParsingResultNode } from '../parsers/inputFieldParser/InputFieldParser';
 import { InputFieldArgumentConfig, InputFieldArgumentValueConfig, InputFieldType } from '../inputFields/InputFieldConfigs';
+import { ParsingResultNode } from '../parsers/nomParsers/GeneralParsers';
 
 export abstract class AbstractInputFieldArgument {
 	value: any;

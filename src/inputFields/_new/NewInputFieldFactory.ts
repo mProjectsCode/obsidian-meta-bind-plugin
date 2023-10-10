@@ -2,15 +2,30 @@ import { InputFieldConfig, InputFieldConfigs, InputFieldType } from '../InputFie
 import { InputFieldMDRC, RenderChildType } from '../../renderChildren/InputFieldMDRC';
 import { ErrorLevel, MetaBindParsingError } from '../../utils/errors/MetaBindErrors';
 import { IPlugin } from '../../IPlugin';
-import { Toggle } from './fields/Toggle/Toggle';
-import { Text } from './fields/Text/Text';
-import { Slider } from './fields/Slider/Slider';
-import { TextArea } from './fields/TextArea/TextArea';
-import { Select } from './fields/Select/Select';
-import { MultiSelect } from './fields/MultiSelect/MultiSelect';
-import { DatePicker } from './fields/DatePicker/DatePicker';
+import { ToggleIPF } from './fields/Toggle/ToggleIPF';
+import { TextIPF } from './fields/Text/TextIPF';
+import { SliderIPF } from './fields/Slider/SliderIPF';
+import { TextAreaIPF } from './fields/TextArea/TextAreaIPF';
+import { SelectIPF } from './fields/Select/SelectIPF';
+import { MultiSelectIPF } from './fields/MultiSelect/MultiSelectIPF';
+import { DatePickerIPF } from './fields/DatePicker/DatePickerIPF';
+import { NumberIPF } from './fields/Number/NumberIPF';
+import { SuggesterIPF } from './fields/Suggester/SuggesterIPF';
+import { EditorIPF } from './fields/Editor/EditorIPF';
+import { ProgressBarIPF } from './fields/ProgressBar/ProgressBarIPF';
 
-export type NewInputField = Toggle | Slider | Text | TextArea | Select | MultiSelect | DatePicker;
+export type NewInputField =
+	| ToggleIPF
+	| SliderIPF
+	| TextIPF
+	| TextAreaIPF
+	| SelectIPF
+	| MultiSelectIPF
+	| DatePickerIPF
+	| NumberIPF
+	| SuggesterIPF
+	| EditorIPF
+	| ProgressBarIPF;
 
 export class NewInputFieldFactory {
 	plugin: IPlugin;
@@ -24,28 +39,36 @@ export class NewInputFieldFactory {
 			this.checkRenderChildTypeAllowed(type, renderChildType);
 		}
 
-		// Skipped: Date, Time
+		// Skipped: Date, Time, Image Suggester
 
 		if (type === InputFieldType.TOGGLE) {
-			return new Toggle(renderChild);
+			return new ToggleIPF(renderChild);
 		} else if (type === InputFieldType.SLIDER) {
-			return new Slider(renderChild);
+			return new SliderIPF(renderChild);
 		} else if (type === InputFieldType.TEXT) {
-			return new Text(renderChild);
+			return new TextIPF(renderChild);
 		} else if (type === InputFieldType.TEXT_AREA) {
-			return new TextArea(renderChild);
+			return new TextAreaIPF(renderChild);
 		} else if (type === InputFieldType.TEXT_AREA_DEPRECATED) {
-			return new TextArea(renderChild);
+			return new TextAreaIPF(renderChild);
 		} else if (type === InputFieldType.SELECT) {
-			return new Select(renderChild);
+			return new SelectIPF(renderChild);
 		} else if (type === InputFieldType.MULTI_SELECT) {
-			return new MultiSelect(renderChild);
+			return new MultiSelectIPF(renderChild);
 		} else if (type === InputFieldType.MULTI_SELECT_DEPRECATED) {
-			return new MultiSelect(renderChild);
+			return new MultiSelectIPF(renderChild);
 		} else if (type === InputFieldType.DATE_PICKER) {
-			return new DatePicker(renderChild);
+			return new DatePickerIPF(renderChild);
 		} else if (type === InputFieldType.DATE_PICKER_DEPRECATED) {
-			return new DatePicker(renderChild);
+			return new DatePickerIPF(renderChild);
+		} else if (type === InputFieldType.NUMBER) {
+			return new NumberIPF(renderChild);
+		} else if (type === InputFieldType.SUGGESTER) {
+			return new SuggesterIPF(renderChild);
+		} else if (type === InputFieldType.EDITOR) {
+			return new EditorIPF(renderChild);
+		} else if (type === InputFieldType.PROGRESS_BAR) {
+			return new ProgressBarIPF(renderChild);
 		}
 
 		return undefined;

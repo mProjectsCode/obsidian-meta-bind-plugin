@@ -6,7 +6,7 @@ import { InputFieldArgumentType } from '../../../InputFieldConfigs';
 import { SvelteComponent } from 'svelte';
 import MultiSelectComponent from './MultiSelectComponent.svelte';
 
-export class MultiSelect extends NewAbstractInputField<MBLiteral[], MBLiteral[]> {
+export class MultiSelectIPF extends NewAbstractInputField<MBLiteral[], MBLiteral[]> {
 	options: OptionInputFieldArgument[];
 
 	constructor(renderChild: InputFieldMDRC) {

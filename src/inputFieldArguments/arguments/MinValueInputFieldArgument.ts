@@ -1,7 +1,7 @@
 import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
 import { ErrorLevel, MetaBindParsingError } from '../../utils/errors/MetaBindErrors';
-import { ParsingResultNode } from '../../parsers/inputFieldParser/InputFieldParser';
 import { InputFieldArgumentConfig, InputFieldArgumentConfigs } from '../../inputFields/InputFieldConfigs';
+import { ParsingResultNode } from '../../parsers/nomParsers/GeneralParsers';
 
 export class MinValueInputFieldArgument extends AbstractInputFieldArgument {
 	value: number = 0;

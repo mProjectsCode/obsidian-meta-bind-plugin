@@ -1,7 +1,7 @@
 import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
 import { MBLiteral, parseLiteral } from '../../utils/Utils';
-import { ParsingResultNode } from '../../parsers/inputFieldParser/InputFieldParser';
 import { InputFieldArgumentConfig, InputFieldArgumentConfigs } from '../../inputFields/InputFieldConfigs';
+import { ParsingResultNode } from '../../parsers/nomParsers/GeneralParsers';
 
 export class OnValueInputFieldArgument extends AbstractInputFieldArgument {
 	value: MBLiteral = true;

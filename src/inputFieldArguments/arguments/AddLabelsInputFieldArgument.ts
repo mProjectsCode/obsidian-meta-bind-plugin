@@ -1,6 +1,6 @@
 import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
-import { ParsingResultNode } from '../../parsers/inputFieldParser/InputFieldParser';
 import { InputFieldArgumentConfig, InputFieldArgumentConfigs } from '../../inputFields/InputFieldConfigs';
+import { ParsingResultNode } from '../../parsers/nomParsers/GeneralParsers';
 
 export class AddLabelsInputFieldArgument extends AbstractInputFieldArgument {
 	value: boolean = true;

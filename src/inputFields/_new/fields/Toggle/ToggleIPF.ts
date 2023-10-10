@@ -5,7 +5,7 @@ import { InputFieldArgumentType } from '../../../InputFieldConfigs';
 import { SvelteComponent } from 'svelte';
 import ToggleComponent from './ToggleComponent.svelte';
 
-export class Toggle extends NewAbstractInputField<MBLiteral, boolean> {
+export class ToggleIPF extends NewAbstractInputField<MBLiteral, boolean> {
 	onValue: MBLiteral;
 	offValue: MBLiteral;
 
