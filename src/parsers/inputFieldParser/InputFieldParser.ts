@@ -9,23 +9,10 @@ import { INPUT_FIELD_FULL_DECLARATION, TEMPLATE_INPUT_FIELD_FULL_DECLARATION } f
 import { ParsingValidationError } from '../ParsingError';
 import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
 import { InputFieldDeclaration, UnvalidatedInputFieldDeclaration } from './InputFieldDeclaration';
-import { ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
 import { InputFieldType } from '../../inputFields/InputFieldConfigs';
 import { BindTargetScope } from '../../metadata/BindTargetScope';
 
 export type InputFieldDeclarationTemplate = TemplateSupplierTemplate<UnvalidatedInputFieldDeclaration>;
-
-export interface ParsingResultNode {
-	value: string;
-	position?: ParsingRange;
-}
-
-export function createResultNode(value: string, range: ParsingRange): ParsingResultNode {
-	return {
-		value: value,
-		position: range,
-	};
-}
 
 export class InputFieldDeclarationParser implements ITemplateSupplier<UnvalidatedInputFieldDeclaration> {
 	plugin: IPlugin;

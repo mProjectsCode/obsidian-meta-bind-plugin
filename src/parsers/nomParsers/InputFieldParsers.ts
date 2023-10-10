@@ -1,7 +1,6 @@
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
-import { ident, identWithSpaces, singleQuotedString } from './GeneralParsers';
+import { createResultNode, ident, identWithSpaces, ParsingResultNode, singleQuotedString } from './GeneralParsers';
 import { Parser } from '@lemons_dev/parsinom/lib/Parser';
-import { createResultNode, ParsingResultNode } from '../inputFieldParser/InputFieldParser';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { PartialUnvalidatedInputFieldDeclaration, UnvalidatedInputFieldArgument } from '../inputFieldParser/InputFieldDeclaration';
 import { BIND_TARGET } from './BindTargetParsers';

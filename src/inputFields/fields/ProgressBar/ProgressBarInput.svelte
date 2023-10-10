@@ -1,3 +1,4 @@
+<script src='../../_new/fields/Slider/SliderIPF.ts'></script>
 <script lang="ts">
 	import {ProgressBarInputField} from './ProgressBarInputField';
 	import {clamp, remapRange} from '../../../utils/Utils';

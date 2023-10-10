@@ -8,7 +8,7 @@ import DatePickerComponent from './DatePickerComponent.svelte';
 import { DateParser } from '../../../../parsers/DateParser';
 import { DatePickerInputModal } from './DatePickerInputModal';
 
-export class DatePicker extends NewAbstractInputField<string | null, moment.Moment | null> {
+export class DatePickerIPF extends NewAbstractInputField<string | null, moment.Moment | null> {
 	options: OptionInputFieldArgument[];
 
 	constructor(renderChild: InputFieldMDRC) {

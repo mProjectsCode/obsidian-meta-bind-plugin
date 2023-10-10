@@ -1,18 +1,15 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
-import { isLiteral, MBLiteral, stringifyLiteral } from '../../../../utils/Utils';
-import { InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
-import { SvelteComponent } from 'svelte';
-import SelectComponent from './SelectComponent.svelte';
+import { isLiteral, MBLiteral } from '../../../../utils/Utils';
 import { OptionInputFieldArgument } from '../../../../inputFieldArguments/arguments/OptionInputFieldArgument';
+import { InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { InputFieldArgumentType } from '../../../InputFieldConfigs';
+import { SvelteComponent } from 'svelte';
+import SuggesterComponent from './SuggesterComponent.svelte';
+import { openSuggesterModalForInputField } from './SuggesterHelper';
 
-export class Select extends NewAbstractInputField<MBLiteral, MBLiteral> {
-	options: OptionInputFieldArgument[];
-
+export class SuggesterIPF extends NewAbstractInputField<MBLiteral, MBLiteral> {
 	constructor(renderChild: InputFieldMDRC) {
 		super(renderChild);
-
-		this.options = this.renderChild.getArguments(InputFieldArgumentType.OPTION) as OptionInputFieldArgument[];
 	}
 
 	protected filterValue(value: any): MBLiteral | undefined {
@@ -24,7 +21,7 @@ export class Select extends NewAbstractInputField<MBLiteral, MBLiteral> {
 	}
 
 	protected getSvelteComponent(): typeof SvelteComponent {
-		return SelectComponent;
+		return SuggesterComponent;
 	}
 
 	protected rawMapValue(value: MBLiteral): MBLiteral {
@@ -37,7 +34,11 @@ export class Select extends NewAbstractInputField<MBLiteral, MBLiteral> {
 
 	protected getMountArgs(): Record<string, any> {
 		return {
-			options: this.options,
+			showSuggester: () => this.openModal(),
 		};
+	}
+
+	openModal(): void {
+		openSuggesterModalForInputField(this, selected => this.setInternalValue(selected.value));
 	}
 }

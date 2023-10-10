@@ -6,9 +6,9 @@ import { AbstractInputFieldArgument } from '../../inputFieldArguments/AbstractIn
 import { InputFieldArgumentFactory } from '../../inputFieldArguments/InputFieldArgumentFactory';
 import { IPlugin } from '../../IPlugin';
 import { BindTargetDeclaration, InputFieldDeclaration, UnvalidatedInputFieldDeclaration } from './InputFieldDeclaration';
-import { ParsingResultNode } from './InputFieldParser';
 import { InputFieldArgumentType, InputFieldType } from '../../inputFields/InputFieldConfigs';
 import { BindTargetScope } from '../../metadata/BindTargetScope';
+import { ParsingResultNode } from '../nomParsers/GeneralParsers';
 
 export class InputFieldDeclarationValidator {
 	unvalidatedDeclaration: UnvalidatedInputFieldDeclaration;

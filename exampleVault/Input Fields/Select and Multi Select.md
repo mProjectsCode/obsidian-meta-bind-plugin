@@ -1,7 +1,7 @@
 ---
 select: 1
 select2: false
-select3: 3
+select3: 2
 multiSelect:
   - option 1
   - option 3
