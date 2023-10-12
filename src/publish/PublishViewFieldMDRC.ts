@@ -1,7 +1,6 @@
 import { MarkdownRenderChild } from 'obsidian/publish';
 import { PublishAPI } from './PublishAPI';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
-import { ViewFieldDeclaration } from '../parsers/ViewFieldDeclarationParser';
 import * as MathJs from 'mathjs';
 import { ErrorLevel, MetaBindBindTargetError, MetaBindExpressionError } from '../utils/errors/MetaBindErrors';
 import { ViewFieldVariable } from '../renderChildren/ViewFieldMDRC';
@@ -9,6 +8,7 @@ import { Signal } from '../utils/Signal';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import PublishFieldComponent from './PublishFieldComponent.svelte';
 import { BindTargetDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
+import { ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
 
 export class PublishViewFieldMDRC extends MarkdownRenderChild {
 	api: PublishAPI;

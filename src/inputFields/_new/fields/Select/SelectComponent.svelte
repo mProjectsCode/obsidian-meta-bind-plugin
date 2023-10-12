@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {MBLiteral, stringifyLiteral} from '../../../../utils/Utils';
-	import {OptionInputFieldArgument} from '../../../../inputFieldArguments/arguments/OptionInputFieldArgument';
+	import {OptionInputFieldArgument} from '../../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 
 	export let value: MBLiteral;
 	export let options: OptionInputFieldArgument[];

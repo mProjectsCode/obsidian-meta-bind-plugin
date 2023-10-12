@@ -2,9 +2,9 @@ import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { UnvalidatedBindTargetDeclaration } from '../inputFieldParser/InputFieldDeclaration';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
-import { UnvalidatedJsViewFieldBindTargetMapping, UnvalidatedJsViewFieldDeclaration } from '../ViewFieldDeclarationParser';
 import { BIND_TARGET } from './BindTargetParsers';
 import { ident } from './GeneralParsers';
+import { UnvalidatedJsViewFieldBindTargetMapping, UnvalidatedJsViewFieldDeclaration } from '../viewFieldParser/ViewFieldDeclaration';
 
 const viewFieldMathJS = P.manyNotOf('{}[]').describe('MathJS');
 

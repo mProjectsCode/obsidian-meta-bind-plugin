@@ -1,11 +1,16 @@
-import { AbstractInputFieldArgument } from './AbstractInputFieldArgument';
+import { InputFieldArgumentType } from '../parsers/inputFieldParser/InputFieldConfigs';
 import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
-import { InputFieldArgumentType } from '../inputFields/InputFieldConfigs';
+import { FieldArgumentConfig } from '../parsers/GeneralConfigs';
+import { AbstractFieldArgument } from './AbstractFieldArgument';
 
-export class InputFieldArgumentContainer {
-	arguments: AbstractInputFieldArgument[] = [];
+export abstract class AbstractFieldArgumentContainer<
+	FieldType extends string,
+	FieldArgumentType extends string,
+	FieldConfig extends FieldArgumentConfig<FieldArgumentType, FieldType>
+> {
+	arguments: AbstractFieldArgument<FieldType, FieldArgumentType, FieldConfig>[] = [];
 
-	add(argument: AbstractInputFieldArgument): void {
+	add(argument: AbstractFieldArgument<FieldType, FieldArgumentType, FieldConfig>): void {
 		this.arguments.push(argument);
 	}
 
@@ -30,12 +35,14 @@ export class InputFieldArgumentContainer {
 	}
 
 	/**
-	 * Merges two InputFieldArgumentContainers by overriding.
+	 * Merges two FieldArgumentContainers by overriding.
 	 * The arguments form the other container take priority.
 	 *
 	 * @param other
 	 */
-	mergeByOverride(other: InputFieldArgumentContainer): InputFieldArgumentContainer {
+	mergeByOverride(
+		other: AbstractFieldArgumentContainer<FieldType, FieldArgumentType, FieldConfig>
+	): AbstractFieldArgumentContainer<FieldType, FieldArgumentType, FieldConfig> {
 		for (const argument of other.arguments) {
 			const argumentConfig = argument.getConfig();
 			if (!argumentConfig.allowMultiple) {
@@ -51,12 +58,14 @@ export class InputFieldArgumentContainer {
 	}
 
 	/**
-	 * Merges two InputFieldArgumentContainers.
+	 * Merges two FieldArgumentContainers.
 	 * If there is an argument that does not allow duplicates in both containers this will throw an error.
 	 *
 	 * @param other
 	 */
-	mergeByThrow(other: InputFieldArgumentContainer): InputFieldArgumentContainer {
+	mergeByThrow(
+		other: AbstractFieldArgumentContainer<FieldType, FieldArgumentType, FieldConfig>
+	): AbstractFieldArgumentContainer<FieldType, FieldArgumentType, FieldConfig> {
 		for (const argument of other.arguments) {
 			const argumentConfig = argument.getConfig();
 			if (!argumentConfig.allowMultiple) {
@@ -64,7 +73,7 @@ export class InputFieldArgumentContainer {
 					throw new MetaBindParsingError(
 						ErrorLevel.ERROR,
 						'failed to merge argument container',
-						'can not merge InputFieldArgumentContainers, since arguments overlap'
+						'can not merge FieldArgumentContainers, since arguments overlap'
 					);
 				}
 			}
@@ -77,11 +86,11 @@ export class InputFieldArgumentContainer {
 		return this;
 	}
 
-	getAll(name: InputFieldArgumentType): AbstractInputFieldArgument[] {
+	getAll(name: FieldArgumentType): AbstractFieldArgument<FieldType, FieldArgumentType, FieldConfig>[] {
 		return this.arguments.filter(x => x.getConfig().type === name);
 	}
 
-	get(name: InputFieldArgumentType): AbstractInputFieldArgument | undefined {
+	get(name: FieldArgumentType): AbstractFieldArgument<FieldType, FieldArgumentType, FieldConfig> | undefined {
 		return this.getAll(name).at(0);
 	}
 }

@@ -1,5 +1,5 @@
 import { InputFieldDeclarationParser } from '../parsers/inputFieldParser/InputFieldParser';
-import { ViewFieldDeclarationParser } from '../parsers/ViewFieldDeclarationParser';
+import { ViewFieldDeclarationParser } from '../parsers/viewFieldParser/ViewFieldDeclarationParser';
 import { BindTargetParser } from '../parsers/BindTargetParser';
 import { IPlugin } from '../IPlugin';
 import { InputFieldAPI } from './InputFieldAPI';

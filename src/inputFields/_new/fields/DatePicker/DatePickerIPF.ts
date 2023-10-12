@@ -1,7 +1,7 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
-import { OptionInputFieldArgument } from '../../../../inputFieldArguments/arguments/OptionInputFieldArgument';
+import { OptionInputFieldArgument } from '../../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 import { InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
-import { InputFieldArgumentType } from '../../../InputFieldConfigs';
+import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
 import { SvelteComponent } from 'svelte';
 import { moment } from 'obsidian';
 import DatePickerComponent from './DatePickerComponent.svelte';

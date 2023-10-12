@@ -1,7 +1,7 @@
 import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
-import { ErrorLevel, MetaBindParsingError } from '../../utils/errors/MetaBindErrors';
-import { InputFieldArgumentConfig, InputFieldArgumentConfigs } from '../../inputFields/InputFieldConfigs';
-import { ParsingResultNode } from '../../parsers/nomParsers/GeneralParsers';
+import { ErrorLevel, MetaBindParsingError } from '../../../utils/errors/MetaBindErrors';
+import { InputFieldArgumentConfig, InputFieldArgumentConfigs } from '../../../parsers/inputFieldParser/InputFieldConfigs';
+import { ParsingResultNode } from '../../../parsers/nomParsers/GeneralParsers';
 
 export class MaxValueInputFieldArgument extends AbstractInputFieldArgument {
 	value: number = 100;

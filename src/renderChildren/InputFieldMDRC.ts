@@ -1,10 +1,10 @@
 import { AbstractInputField } from '../inputFields/AbstractInputField';
 import { InputFieldFactory } from '../inputFields/InputFieldFactory';
-import { AbstractInputFieldArgument } from '../inputFieldArguments/AbstractInputFieldArgument';
-import { ClassInputFieldArgument } from '../inputFieldArguments/arguments/ClassInputFieldArgument';
+import { AbstractInputFieldArgument } from '../fieldArguments/inputFieldArguments/AbstractInputFieldArgument';
+import { ClassInputFieldArgument } from '../fieldArguments/inputFieldArguments/arguments/ClassInputFieldArgument';
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
-import { ShowcaseInputFieldArgument } from '../inputFieldArguments/arguments/ShowcaseInputFieldArgument';
-import { TitleInputFieldArgument } from '../inputFieldArguments/arguments/TitleInputFieldArgument';
+import { ShowcaseInputFieldArgument } from '../fieldArguments/inputFieldArguments/arguments/ShowcaseInputFieldArgument';
+import { TitleInputFieldArgument } from '../fieldArguments/inputFieldArguments/arguments/TitleInputFieldArgument';
 import { isTruthy, MBExtendedLiteral } from '../utils/Utils';
 import { Listener, Signal } from '../utils/Signal';
 import { AbstractMDRC } from './AbstractMDRC';
@@ -12,7 +12,7 @@ import { MetadataFileCache } from '../metadata/MetadataFileCache';
 import MetaBindPlugin from '../main';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
 import { InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
-import { InputFieldArgumentType, InputFieldType } from '../inputFields/InputFieldConfigs';
+import { InputFieldArgumentType, InputFieldType } from '../parsers/inputFieldParser/InputFieldConfigs';
 import { NewAbstractInputField } from '../inputFields/_new/NewAbstractInputField';
 import { NewInputField } from '../inputFields/_new/NewInputFieldFactory';
 

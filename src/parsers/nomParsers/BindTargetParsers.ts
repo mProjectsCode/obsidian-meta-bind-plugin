@@ -4,10 +4,7 @@ import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { UnvalidatedBindTargetDeclaration } from '../inputFieldParser/InputFieldDeclaration';
 import { createResultNode, doubleQuotedString, ident, ParsingResultNode } from './GeneralParsers';
 
-const filePath: Parser<string> = P.noneOf('{}[]#^|:?')
-	.many()
-	.map(x => x.join(''))
-	.box('file path');
+const filePath: Parser<string> = P.manyNotOf('{}[]#^|:?').box('file path');
 
 const metadataPathPartIdent: Parser<ParsingResultNode> = ident.node(createResultNode);
 
@@ -18,22 +15,24 @@ const firstMetadataPathPart: Parser<UnvalidatedBindTargetDeclaration> = P.or(
 		(prefix, firstPart) => {
 			return {
 				file: undefined,
-				boundToLocalScope: prefix !== undefined,
+				boundToLocalScope: prefix === '^',
+				boundToComputedValue: prefix === '?',
 				path: firstPart,
 			};
 		},
-		P.string('^').optional(),
+		P.or(P.string('^'), P.string('?')).optional(),
 		bracketMetadataPathPart.atLeast(1)
 	),
 	P.sequenceMap(
 		(prefix, firstPart, bracketPath) => {
 			return {
 				file: undefined,
-				boundToLocalScope: prefix !== undefined,
+				boundToLocalScope: prefix === '^',
+				boundToComputedValue: prefix === '?',
 				path: [firstPart, ...bracketPath],
 			};
 		},
-		P.string('^').optional(),
+		P.or(P.string('^'), P.string('?')).optional(),
 		metadataPathPartIdent,
 		bracketMetadataPathPart.many()
 	)

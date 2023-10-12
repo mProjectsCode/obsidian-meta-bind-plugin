@@ -3,7 +3,7 @@
 	import Icon from '../../../utils/Icon.svelte';
 	import {Button, TextInput} from 'obsidian-svelte';
 
-	import {InputFieldArgumentType} from '../../InputFieldConfigs';
+	import {InputFieldArgumentType} from '../../../parsers/inputFieldParser/InputFieldConfigs';
 
 	export let value: string[] = [];
 	export let onValueChange: (value: any) => void;

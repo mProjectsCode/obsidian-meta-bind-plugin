@@ -3,7 +3,7 @@ import { TextComponent } from 'obsidian';
 import { MBExtendedLiteral, numberToString } from '../../utils/Utils';
 import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
 
-import { InputFieldArgumentType } from '../InputFieldConfigs';
+import { InputFieldArgumentType } from '../../parsers/inputFieldParser/InputFieldConfigs';
 
 type T = number;
 

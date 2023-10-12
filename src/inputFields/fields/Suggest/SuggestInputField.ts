@@ -4,12 +4,12 @@ import { DataArray, getAPI, Literal } from 'obsidian-dataview';
 import { SuggestInputModal } from './SuggestInputModal';
 import { Notice } from 'obsidian';
 import { ErrorLevel, MetaBindArgumentError, MetaBindInternalError } from '../../../utils/errors/MetaBindErrors';
-import { OptionInputFieldArgument } from '../../../inputFieldArguments/arguments/OptionInputFieldArgument';
-import { OptionQueryInputFieldArgument } from '../../../inputFieldArguments/arguments/OptionQueryInputFieldArgument';
+import { OptionInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
+import { OptionQueryInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionQueryInputFieldArgument';
 import { InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
 import { MBExtendedLiteral, MBLiteral } from '../../../utils/Utils';
-import { InputFieldArgumentType } from '../../InputFieldConfigs';
-import { UseLinksInputFieldArgument } from '../../../inputFieldArguments/arguments/UseLinksInputFieldArgument';
+import { InputFieldArgumentType } from '../../../parsers/inputFieldParser/InputFieldConfigs';
+import { UseLinksInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/UseLinksInputFieldArgument';
 
 export class SuggestOption {
 	value: MBLiteral;

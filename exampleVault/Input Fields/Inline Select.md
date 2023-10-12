@@ -1,7 +1,7 @@
 ---
 select: a
 select2: 1
-select3: 1 hour
+select3: 2 hours
 ---
 
 ```meta-bind

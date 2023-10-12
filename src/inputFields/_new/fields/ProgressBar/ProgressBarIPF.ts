@@ -1,6 +1,6 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
 import { InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
-import { InputFieldArgumentType } from '../../../InputFieldConfigs';
+import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
 import { clamp } from '../../../../utils/Utils';
 import { SvelteComponent } from 'svelte';
 import ProgressBarComponent from './ProgressBarComponent.svelte';

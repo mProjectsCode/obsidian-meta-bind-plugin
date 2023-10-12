@@ -5,14 +5,14 @@ import { MaxValueInputFieldArgument } from './arguments/MaxValueInputFieldArgume
 import { OptionInputFieldArgument } from './arguments/OptionInputFieldArgument';
 import { TitleInputFieldArgument } from './arguments/TitleInputFieldArgument';
 import { OptionQueryInputFieldArgument } from './arguments/OptionQueryInputFieldArgument';
-import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
+import { ErrorLevel, MetaBindParsingError } from '../../utils/errors/MetaBindErrors';
 import { AbstractInputFieldArgument } from './AbstractInputFieldArgument';
 import { ShowcaseInputFieldArgument } from './arguments/ShowcaseInputFieldArgument';
 import { OffValueInputFieldArgument } from './arguments/OffValueInputFieldArgument';
 import { OnValueInputFieldArgument } from './arguments/OnValueInputFieldArgument';
 import { DefaultValueInputFieldArgument } from './arguments/DefaultValueInputFieldArgument';
 import { PlaceholderInputFieldArgument } from './arguments/PlaceholderInputFieldArgument';
-import { InputFieldArgumentType } from '../inputFields/InputFieldConfigs';
+import { InputFieldArgumentType } from '../../parsers/inputFieldParser/InputFieldConfigs';
 import { UseLinksInputFieldArgument } from './arguments/UseLinksInputFieldArgument';
 
 export class InputFieldArgumentFactory {

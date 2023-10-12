@@ -1,11 +1,11 @@
-import { OptionInputFieldArgument } from '../../../../inputFieldArguments/arguments/OptionInputFieldArgument';
-import { OptionQueryInputFieldArgument } from '../../../../inputFieldArguments/arguments/OptionQueryInputFieldArgument';
+import { OptionInputFieldArgument } from '../../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
+import { OptionQueryInputFieldArgument } from '../../../../fieldArguments/inputFieldArguments/arguments/OptionQueryInputFieldArgument';
 import { MBLiteral } from '../../../../utils/Utils';
 import { DataArray, DataviewApi, getAPI, Literal } from 'obsidian-dataview';
 import { Notice } from 'obsidian';
 import { NewAbstractInputField } from '../../NewAbstractInputField';
-import { InputFieldArgumentType } from '../../../InputFieldConfigs';
-import { UseLinksInputFieldArgument } from '../../../../inputFieldArguments/arguments/UseLinksInputFieldArgument';
+import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
+import { UseLinksInputFieldArgument } from '../../../../fieldArguments/inputFieldArguments/arguments/UseLinksInputFieldArgument';
 import { SuggesterInputModal } from './SuggesterInputModal';
 
 export class SuggesterOption {

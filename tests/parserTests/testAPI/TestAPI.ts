@@ -3,7 +3,7 @@ import { IPlugin } from '../../../src/IPlugin';
 import { BindTargetParser } from '../../../src/parsers/BindTargetParser';
 import { InputFieldAPI } from '../../../src/api/InputFieldAPI';
 import { InputFieldDeclarationParser } from '../../../src/parsers/inputFieldParser/InputFieldParser';
-import { ViewFieldDeclarationParser } from '../../../src/parsers/ViewFieldDeclarationParser';
+import { ViewFieldDeclarationParser } from '../../../src/parsers/viewFieldParser/ViewFieldDeclarationParser';
 import { NewInputFieldFactory } from '../../../src/inputFields/_new/NewInputFieldFactory';
 import { DEFAULT_SETTINGS, MetaBindPluginSettings } from '../../../src/settings/Settings';
 
