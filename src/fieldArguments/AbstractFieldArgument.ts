@@ -1,11 +1,15 @@
-import { ErrorLevel, MetaBindArgumentError } from '../utils/errors/MetaBindErrors';
-import { InputFieldArgumentConfig, InputFieldArgumentValueConfig, InputFieldType } from '../inputFields/InputFieldConfigs';
 import { ParsingResultNode } from '../parsers/nomParsers/GeneralParsers';
+import { ErrorLevel, MetaBindArgumentError } from '../utils/errors/MetaBindErrors';
+import { FieldArgumentConfig, FieldArgumentValueConfig } from '../parsers/GeneralConfigs';
 
-export abstract class AbstractInputFieldArgument {
+export abstract class AbstractFieldArgument<
+	FieldType extends string,
+	FieldArgumentType extends string,
+	FieldConfig extends FieldArgumentConfig<FieldArgumentType, FieldType>
+> {
 	value: any;
 
-	abstract getConfig(): InputFieldArgumentConfig;
+	abstract getConfig(): FieldConfig;
 
 	parseValue(value: ParsingResultNode[]): void {
 		this.validateValues(value, this.getConfig().values);
@@ -14,7 +18,7 @@ export abstract class AbstractInputFieldArgument {
 
 	protected abstract _parseValue(value: ParsingResultNode[]): void;
 
-	validateValues(value: ParsingResultNode[], allowedValues: InputFieldArgumentValueConfig[][]): void {
+	validateValues(value: ParsingResultNode[], allowedValues: FieldArgumentValueConfig[][]): void {
 		const min = allowedValues[0].length;
 		const max = allowedValues[allowedValues.length - 1].length;
 
@@ -29,15 +33,15 @@ export abstract class AbstractInputFieldArgument {
 		}
 	}
 
-	isAllowed(inputFieldType: InputFieldType): boolean {
-		if (this.getConfig().allowedInputFieldTypes.length === 0) {
+	isAllowed(fieldType: FieldType): boolean {
+		if (this.getConfig().allowedFieldTypes.length === 0) {
 			return true;
 		}
 
-		return this.getConfig().allowedInputFieldTypes.includes(inputFieldType);
+		return this.getConfig().allowedFieldTypes.includes(fieldType);
 	}
 
-	getAllowedInputFieldsAsString(): string {
-		return this.getConfig().allowedInputFieldTypes.length === 0 ? 'all' : this.getConfig().allowedInputFieldTypes.join(', ');
+	getAllowedFieldsAsString(): string {
+		return this.getConfig().allowedFieldTypes.length === 0 ? 'all' : this.getConfig().allowedFieldTypes.join(', ');
 	}
 }

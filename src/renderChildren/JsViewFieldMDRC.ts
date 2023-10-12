@@ -2,12 +2,12 @@ import MetaBindPlugin from '../main';
 import { ErrorLevel, MetaBindExpressionError, MetaBindJsError } from '../utils/errors/MetaBindErrors';
 import { Signal } from '../utils/Signal';
 import { RenderChildType } from './InputFieldMDRC';
-import { JsViewFieldDeclaration } from '../parsers/ViewFieldDeclarationParser';
 import { ViewField } from '../viewFields/ViewField';
 import { ViewFieldVariable } from './ViewFieldMDRC';
 import { getAPI } from 'obsidian-dataview';
 import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
+import { JsViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
 
 export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 	viewField: ViewField;

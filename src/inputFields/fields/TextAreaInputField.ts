@@ -3,7 +3,7 @@ import { TextAreaComponent } from 'obsidian';
 import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
 import { MBExtendedLiteral, stringifyLiteral } from '../../utils/Utils';
 
-import { InputFieldArgumentType } from '../InputFieldConfigs';
+import { InputFieldArgumentType } from '../../parsers/inputFieldParser/InputFieldConfigs';
 
 type T = string;
 

@@ -3,7 +3,7 @@ import { ToggleComponent } from 'obsidian';
 import { ErrorLevel, MetaBindInternalError, MetaBindValueError } from '../../utils/errors/MetaBindErrors';
 import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 import { isLiteral, MBExtendedLiteral, MBLiteral } from '../../utils/Utils';
-import { InputFieldArgumentType } from '../InputFieldConfigs';
+import { InputFieldArgumentType } from '../../parsers/inputFieldParser/InputFieldConfigs';
 
 type T = MBLiteral;
 

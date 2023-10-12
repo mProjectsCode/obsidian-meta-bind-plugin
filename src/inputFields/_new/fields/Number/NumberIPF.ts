@@ -2,7 +2,7 @@ import { NewAbstractInputField } from '../../NewAbstractInputField';
 import { InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { SvelteComponent } from 'svelte';
 import NumberComponent from './NumberComponent.svelte';
-import { InputFieldArgumentType } from '../../../InputFieldConfigs';
+import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
 
 export class NumberIPF extends NewAbstractInputField<number, number> {
 	constructor(renderChild: InputFieldMDRC) {

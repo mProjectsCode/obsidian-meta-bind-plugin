@@ -1,4 +1,4 @@
-import { InputFieldArgumentContainer } from '../../inputFieldArguments/InputFieldArgumentContainer';
+import { InputFieldArgumentContainer } from '../../fieldArguments/inputFieldArguments/InputFieldArgumentContainer';
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { IPlugin } from '../../IPlugin';
 import { InputFieldTemplate } from '../../settings/Settings';
@@ -9,7 +9,7 @@ import { INPUT_FIELD_FULL_DECLARATION, TEMPLATE_INPUT_FIELD_FULL_DECLARATION } f
 import { ParsingValidationError } from '../ParsingError';
 import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
 import { InputFieldDeclaration, UnvalidatedInputFieldDeclaration } from './InputFieldDeclaration';
-import { InputFieldType } from '../../inputFields/InputFieldConfigs';
+import { InputFieldType } from './InputFieldConfigs';
 import { BindTargetScope } from '../../metadata/BindTargetScope';
 
 export type InputFieldDeclarationTemplate = TemplateSupplierTemplate<UnvalidatedInputFieldDeclaration>;

@@ -1,4 +1,4 @@
-import { InputFieldConfig, InputFieldConfigs, InputFieldType } from '../InputFieldConfigs';
+import { InputFieldConfig, InputFieldConfigs, InputFieldType } from '../../parsers/inputFieldParser/InputFieldConfigs';
 import { InputFieldMDRC, RenderChildType } from '../../renderChildren/InputFieldMDRC';
 import { ErrorLevel, MetaBindParsingError } from '../../utils/errors/MetaBindErrors';
 import { IPlugin } from '../../IPlugin';
@@ -13,6 +13,7 @@ import { NumberIPF } from './fields/Number/NumberIPF';
 import { SuggesterIPF } from './fields/Suggester/SuggesterIPF';
 import { EditorIPF } from './fields/Editor/EditorIPF';
 import { ProgressBarIPF } from './fields/ProgressBar/ProgressBarIPF';
+import { InlineSelectIPF } from './fields/InlineSelect/InlineSelectIPF';
 
 export type NewInputField =
 	| ToggleIPF
@@ -25,7 +26,8 @@ export type NewInputField =
 	| NumberIPF
 	| SuggesterIPF
 	| EditorIPF
-	| ProgressBarIPF;
+	| ProgressBarIPF
+	| InlineSelectIPF;
 
 export class NewInputFieldFactory {
 	plugin: IPlugin;
@@ -69,6 +71,8 @@ export class NewInputFieldFactory {
 			return new EditorIPF(renderChild);
 		} else if (type === InputFieldType.PROGRESS_BAR) {
 			return new ProgressBarIPF(renderChild);
+		} else if (type === InputFieldType.INLINE_SELECT) {
+			return new InlineSelectIPF(renderChild);
 		}
 
 		return undefined;

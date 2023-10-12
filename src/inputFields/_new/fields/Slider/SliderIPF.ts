@@ -3,7 +3,7 @@ import { clamp } from '../../../../utils/Utils';
 import { InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { SvelteComponent } from 'svelte';
 import SliderComponent from './SliderComponent.svelte';
-import { InputFieldArgumentType } from '../../../InputFieldConfigs';
+import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
 
 export class SliderIPF extends NewAbstractInputField<number, number> {
 	minValue: number;

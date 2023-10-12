@@ -1,6 +1,6 @@
-import { InputFieldArgumentContainer } from '../../inputFieldArguments/InputFieldArgumentContainer';
+import { InputFieldArgumentContainer } from '../../fieldArguments/inputFieldArguments/InputFieldArgumentContainer';
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
-import { InputFieldType } from '../../inputFields/InputFieldConfigs';
+import { InputFieldType } from './InputFieldConfigs';
 import { ParsingResultNode } from '../nomParsers/GeneralParsers';
 
 export interface InputFieldDeclaration {
@@ -39,16 +39,18 @@ export interface InputFieldDeclaration {
 export interface UnvalidatedBindTargetDeclaration {
 	file?: ParsingResultNode;
 	boundToLocalScope: boolean;
+	boundToComputedValue: boolean;
 	path: ParsingResultNode[];
 }
 
 export interface BindTargetDeclaration {
 	filePath: string | undefined;
 	boundToLocalScope: boolean;
+	boundToComputedValue: boolean;
 	metadataPath: string[];
 }
 
-export interface UnvalidatedInputFieldArgument {
+export interface UnvalidatedFieldArgument {
 	name: ParsingResultNode;
 	value: ParsingResultNode[];
 }
@@ -57,7 +59,7 @@ export interface PartialUnvalidatedInputFieldDeclaration {
 	inputFieldType?: ParsingResultNode;
 	templateName?: ParsingResultNode;
 	bindTarget?: UnvalidatedBindTargetDeclaration;
-	arguments: UnvalidatedInputFieldArgument[];
+	arguments: UnvalidatedFieldArgument[];
 }
 
 export interface UnvalidatedInputFieldDeclaration extends PartialUnvalidatedInputFieldDeclaration {

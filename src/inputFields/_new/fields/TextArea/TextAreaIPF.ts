@@ -3,7 +3,7 @@ import { InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { isLiteral } from '../../../../utils/Utils';
 import { SvelteComponent } from 'svelte';
 import TextAreaComponent from './TextAreaComponent.svelte';
-import { InputFieldArgumentType } from '../../../InputFieldConfigs';
+import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
 
 export class TextAreaIPF extends NewAbstractInputField<string, string> {
 	constructor(renderChild: InputFieldMDRC) {

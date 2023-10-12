@@ -1,7 +1,7 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
 import { isLiteral, MBLiteral } from '../../../../utils/Utils';
 import { InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
-import { InputFieldArgumentType } from '../../../InputFieldConfigs';
+import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
 import { SvelteComponent } from 'svelte';
 import ToggleComponent from './ToggleComponent.svelte';
 

@@ -1,10 +1,5 @@
 import { InputFieldMDRC, RenderChildType } from '../renderChildren/InputFieldMDRC';
-import {
-	JsViewFieldDeclaration,
-	UnvalidatedViewFieldDeclaration,
-	ViewFieldDeclaration,
-	ViewFieldDeclarationParser,
-} from '../parsers/ViewFieldDeclarationParser';
+import { ViewFieldDeclarationParser } from '../parsers/viewFieldParser/ViewFieldDeclarationParser';
 import { BindTargetParser } from '../parsers/BindTargetParser';
 import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
 import { JsViewFieldMDRC } from '../renderChildren/JsViewFieldMDRC';
@@ -19,6 +14,7 @@ import { Signal } from '../utils/Signal';
 import { BindTargetScope } from '../metadata/BindTargetScope';
 import { MetaBindTable } from '../metaBindTable/MetaBindTable';
 import { NewInputFieldFactory } from '../inputFields/_new/NewInputFieldFactory';
+import { JsViewFieldDeclaration, UnvalidatedViewFieldDeclaration, ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
 
 export class API implements IAPI {
 	public plugin: MetaBindPlugin;

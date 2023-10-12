@@ -16,7 +16,7 @@ import MetaBindPlugin from '../main';
 import { ProgressBarInputField } from './fields/ProgressBar/ProgressBarInputField';
 import { InlineSelectInputField } from './fields/InlineSelectInputField';
 import { ListInputField } from './fields/List/ListInputField';
-import { InputFieldConfig, InputFieldConfigs, InputFieldType } from './InputFieldConfigs';
+import { InputFieldConfig, InputFieldConfigs, InputFieldType } from '../parsers/inputFieldParser/InputFieldConfigs';
 import { SelectInputField } from './fields/Select/SelectInputField';
 import { MultiSelectInputField } from './fields/Select/MultiSelectInputField';
 import { ListSuggestInputField } from './fields/listSuggest/ListSuggestInputField';

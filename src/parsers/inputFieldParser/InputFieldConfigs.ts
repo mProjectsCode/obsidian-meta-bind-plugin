@@ -1,3 +1,5 @@
+import { FieldArgumentConfig } from '../GeneralConfigs';
+
 export enum InputFieldType {
 	TOGGLE = 'toggle',
 	SLIDER = 'slider',
@@ -155,24 +157,12 @@ export const InputFieldConfigs: Record<InputFieldType, InputFieldConfig> = {
 	},
 } as const;
 
-export interface InputFieldArgumentValueConfig {
-	name: string;
-	// empty is any
-	allowed: string[];
-	description: string;
-}
-
-export interface InputFieldArgumentConfig {
-	type: InputFieldArgumentType;
-	allowedInputFieldTypes: InputFieldType[];
-	values: InputFieldArgumentValueConfig[][];
-	allowMultiple: boolean;
-}
+export type InputFieldArgumentConfig = FieldArgumentConfig<InputFieldArgumentType, InputFieldType>;
 
 export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFieldArgumentConfig> = {
 	[InputFieldArgumentType.ADD_LABELS]: {
 		type: InputFieldArgumentType.ADD_LABELS,
-		allowedInputFieldTypes: [InputFieldType.SLIDER, InputFieldType.PROGRESS_BAR],
+		allowedFieldTypes: [InputFieldType.SLIDER, InputFieldType.PROGRESS_BAR],
 		values: [
 			[],
 			[
@@ -187,7 +177,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	},
 	[InputFieldArgumentType.CLASS]: {
 		type: InputFieldArgumentType.CLASS,
-		allowedInputFieldTypes: [],
+		allowedFieldTypes: [],
 		values: [
 			[
 				{
@@ -201,7 +191,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	},
 	[InputFieldArgumentType.DEFAULT_VALUE]: {
 		type: InputFieldArgumentType.DEFAULT_VALUE,
-		allowedInputFieldTypes: [],
+		allowedFieldTypes: [],
 		values: [
 			[
 				{
@@ -215,7 +205,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	},
 	[InputFieldArgumentType.MAX_VALUE]: {
 		type: InputFieldArgumentType.MAX_VALUE,
-		allowedInputFieldTypes: [InputFieldType.SLIDER, InputFieldType.PROGRESS_BAR],
+		allowedFieldTypes: [InputFieldType.SLIDER, InputFieldType.PROGRESS_BAR],
 		values: [
 			[
 				{
@@ -229,7 +219,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	},
 	[InputFieldArgumentType.MIN_VALUE]: {
 		type: InputFieldArgumentType.MIN_VALUE,
-		allowedInputFieldTypes: [InputFieldType.SLIDER, InputFieldType.PROGRESS_BAR],
+		allowedFieldTypes: [InputFieldType.SLIDER, InputFieldType.PROGRESS_BAR],
 		values: [
 			[
 				{
@@ -243,7 +233,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	},
 	[InputFieldArgumentType.OFF_VALUE]: {
 		type: InputFieldArgumentType.OFF_VALUE,
-		allowedInputFieldTypes: [InputFieldType.TOGGLE],
+		allowedFieldTypes: [InputFieldType.TOGGLE],
 		values: [
 			[
 				{
@@ -257,7 +247,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	},
 	[InputFieldArgumentType.ON_VALUE]: {
 		type: InputFieldArgumentType.ON_VALUE,
-		allowedInputFieldTypes: [InputFieldType.TOGGLE],
+		allowedFieldTypes: [InputFieldType.TOGGLE],
 		values: [
 			[
 				{
@@ -271,7 +261,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	},
 	[InputFieldArgumentType.OPTION]: {
 		type: InputFieldArgumentType.OPTION,
-		allowedInputFieldTypes: [
+		allowedFieldTypes: [
 			InputFieldType.SELECT,
 			InputFieldType.MULTI_SELECT_DEPRECATED,
 			InputFieldType.MULTI_SELECT,
@@ -305,7 +295,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	},
 	[InputFieldArgumentType.OPTION_QUERY]: {
 		type: InputFieldArgumentType.OPTION_QUERY,
-		allowedInputFieldTypes: [InputFieldType.SUGGESTER, InputFieldType.IMAGE_SUGGESTER, InputFieldType.LIST_SUGGESTER],
+		allowedFieldTypes: [InputFieldType.SUGGESTER, InputFieldType.IMAGE_SUGGESTER, InputFieldType.LIST_SUGGESTER],
 		values: [
 			[
 				{
@@ -319,13 +309,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	},
 	[InputFieldArgumentType.PLACEHOLDER]: {
 		type: InputFieldArgumentType.PLACEHOLDER,
-		allowedInputFieldTypes: [
-			InputFieldType.TEXT,
-			InputFieldType.TEXT_AREA,
-			InputFieldType.TEXT_AREA_DEPRECATED,
-			InputFieldType.NUMBER,
-			InputFieldType.LIST,
-		],
+		allowedFieldTypes: [InputFieldType.TEXT, InputFieldType.TEXT_AREA, InputFieldType.TEXT_AREA_DEPRECATED, InputFieldType.NUMBER, InputFieldType.LIST],
 		values: [
 			[
 				{
@@ -340,7 +324,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 
 	[InputFieldArgumentType.SHOWCASE]: {
 		type: InputFieldArgumentType.SHOWCASE,
-		allowedInputFieldTypes: [],
+		allowedFieldTypes: [],
 		values: [
 			[],
 			[
@@ -355,7 +339,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	},
 	[InputFieldArgumentType.TITLE]: {
 		type: InputFieldArgumentType.TITLE,
-		allowedInputFieldTypes: [],
+		allowedFieldTypes: [],
 		values: [
 			[
 				{
@@ -369,7 +353,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	},
 	[InputFieldArgumentType.USE_LINKS]: {
 		type: InputFieldArgumentType.USE_LINKS,
-		allowedInputFieldTypes: [InputFieldType.SUGGESTER, InputFieldType.LIST_SUGGESTER],
+		allowedFieldTypes: [InputFieldType.SUGGESTER, InputFieldType.LIST_SUGGESTER],
 		values: [
 			[],
 			[
@@ -384,7 +368,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	},
 	[InputFieldArgumentType.INVALID]: {
 		type: InputFieldArgumentType.INVALID,
-		allowedInputFieldTypes: [],
+		allowedFieldTypes: [],
 		values: [[]],
 		allowMultiple: true,
 	},

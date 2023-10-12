@@ -2,7 +2,7 @@ import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { createResultNode, ident, identWithSpaces, ParsingResultNode, singleQuotedString } from './GeneralParsers';
 import { Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
-import { PartialUnvalidatedInputFieldDeclaration, UnvalidatedInputFieldArgument } from '../inputFieldParser/InputFieldDeclaration';
+import { PartialUnvalidatedInputFieldDeclaration, UnvalidatedFieldArgument } from '../inputFieldParser/InputFieldDeclaration';
 import { BIND_TARGET } from './BindTargetParsers';
 
 const nonStringArgumentValue: Parser<string> = P.regexp(/^[^()',]+/).describe('any character except parentheses, single quotation marks and commas');
@@ -11,8 +11,8 @@ const argumentValue: Parser<ParsingResultNode> = P.or(singleQuotedString, nonStr
 
 const argumentValues: Parser<ParsingResultNode[]> = P.separateBy(argumentValue, P.string(',').trim(P_UTILS.optionalWhitespace()));
 
-const inputFieldArgument: Parser<UnvalidatedInputFieldArgument> = P.sequenceMap(
-	(name, value): UnvalidatedInputFieldArgument => {
+const inputFieldArgument: Parser<UnvalidatedFieldArgument> = P.sequenceMap(
+	(name, value): UnvalidatedFieldArgument => {
 		return {
 			name: name,
 			value: value,
@@ -25,7 +25,7 @@ const inputFieldArgument: Parser<UnvalidatedInputFieldArgument> = P.sequenceMap(
 		.optional([] as ParsingResultNode[])
 );
 
-const inputFieldArguments: Parser<UnvalidatedInputFieldArgument[]> = P.separateBy(inputFieldArgument, P.string(',').trim(P_UTILS.optionalWhitespace()));
+const inputFieldArguments: Parser<UnvalidatedFieldArgument[]> = P.separateBy(inputFieldArgument, P.string(',').trim(P_UTILS.optionalWhitespace()));
 
 export const INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclaration> = P.sequenceMap(
 	(type, args, b) => {
@@ -40,7 +40,7 @@ export const INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclara
 	inputFieldArguments
 		.trim(P_UTILS.optionalWhitespace())
 		.wrap(P.string('('), P.string(')'))
-		.optional([] as UnvalidatedInputFieldArgument[]),
+		.optional([] as UnvalidatedFieldArgument[]),
 	P.sequence(P.string(':'), BIND_TARGET).optional()
 );
 
@@ -57,7 +57,7 @@ export const PARTIAL_INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFiel
 	inputFieldArguments
 		.trim(P_UTILS.optionalWhitespace())
 		.wrap(P.string('('), P.string(')'))
-		.optional([] as UnvalidatedInputFieldArgument[]),
+		.optional([] as UnvalidatedFieldArgument[]),
 	P.sequence(P.string(':'), BIND_TARGET).optional()
 );
 

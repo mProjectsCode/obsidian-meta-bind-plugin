@@ -1,6 +1,6 @@
 import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
-import { InputFieldArgumentConfig, InputFieldArgumentConfigs } from '../../inputFields/InputFieldConfigs';
-import { ParsingResultNode } from '../../parsers/nomParsers/GeneralParsers';
+import { InputFieldArgumentConfig, InputFieldArgumentConfigs } from '../../../parsers/inputFieldParser/InputFieldConfigs';
+import { ParsingResultNode } from '../../../parsers/nomParsers/GeneralParsers';
 
 export class OptionQueryInputFieldArgument extends AbstractInputFieldArgument {
 	value: string = '';

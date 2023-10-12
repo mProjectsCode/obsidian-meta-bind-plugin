@@ -2,8 +2,8 @@ import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 import { InputFieldComponent } from './InputFieldComponent';
 import { SvelteComponent } from 'svelte';
 import { ComputedSignal, Listener, Notifier } from '../../utils/Signal';
-import { InputFieldArgumentType } from '../InputFieldConfigs';
-import { DefaultValueInputFieldArgument } from '../../inputFieldArguments/arguments/DefaultValueInputFieldArgument';
+import { InputFieldArgumentType } from '../../parsers/inputFieldParser/InputFieldConfigs';
+import { DefaultValueInputFieldArgument } from '../../fieldArguments/inputFieldArguments/arguments/DefaultValueInputFieldArgument';
 
 export abstract class NewAbstractInputField<MetadataValueType, ComponentValueType> extends Notifier<MetadataValueType, Listener<MetadataValueType>> {
 	readonly renderChild: InputFieldMDRC;

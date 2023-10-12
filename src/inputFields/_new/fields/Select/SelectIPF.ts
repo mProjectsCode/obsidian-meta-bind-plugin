@@ -3,8 +3,8 @@ import { isLiteral, MBLiteral, stringifyLiteral } from '../../../../utils/Utils'
 import { InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { SvelteComponent } from 'svelte';
 import SelectComponent from './SelectComponent.svelte';
-import { OptionInputFieldArgument } from '../../../../inputFieldArguments/arguments/OptionInputFieldArgument';
-import { InputFieldArgumentType } from '../../../InputFieldConfigs';
+import { OptionInputFieldArgument } from '../../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
+import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
 
 export class SelectIPF extends NewAbstractInputField<MBLiteral, MBLiteral> {
 	options: OptionInputFieldArgument[];

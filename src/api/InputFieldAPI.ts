@@ -3,10 +3,10 @@ import { ErrorCollection } from '../utils/errors/ErrorCollection';
 import { IAPI } from './IAPI';
 import {
 	UnvalidatedBindTargetDeclaration,
-	UnvalidatedInputFieldArgument,
+	UnvalidatedFieldArgument,
 	UnvalidatedInputFieldDeclaration,
 } from '../parsers/inputFieldParser/InputFieldDeclaration';
-import { InputFieldArgumentType, InputFieldType } from '../inputFields/InputFieldConfigs';
+import { InputFieldArgumentType, InputFieldType } from '../parsers/inputFieldParser/InputFieldConfigs';
 
 export class InputFieldAPI {
 	private readonly api: IAPI;
@@ -21,7 +21,7 @@ export class InputFieldAPI {
 	): UnvalidatedInputFieldDeclaration {
 		const errorCollection = new ErrorCollection('input field declaration');
 
-		const mappedArguments: UnvalidatedInputFieldArgument[] = (inputFieldArguments ?? []).map(x => ({
+		const mappedArguments: UnvalidatedFieldArgument[] = (inputFieldArguments ?? []).map(x => ({
 			name: { value: x.name },
 			value: x.value.map(y => ({ value: y })),
 		}));
@@ -137,7 +137,7 @@ export class InputFieldAPI {
 			fullDeclaration: override.fullDeclaration,
 			inputFieldType: override.inputFieldType !== undefined ? override.inputFieldType : unvalidatedDeclaration.inputFieldType,
 			bindTarget: bindTarget,
-			arguments: override.arguments.concat(unvalidatedDeclaration.arguments).reduce<UnvalidatedInputFieldArgument[]>((arr, currentValue) => {
+			arguments: override.arguments.concat(unvalidatedDeclaration.arguments).reduce<UnvalidatedFieldArgument[]>((arr, currentValue) => {
 				// filter out duplicates
 				if (arr.find(x => x.name === currentValue.name) === undefined) {
 					arr.push(currentValue);

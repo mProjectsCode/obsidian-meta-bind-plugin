@@ -3,9 +3,9 @@ import { MBExtendedLiteral, mod } from '../../../utils/Utils';
 import { SelectInputFieldElement } from './SelectInputFieldElement';
 import { InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
 import { ErrorLevel, MetaBindInternalError } from '../../../utils/errors/MetaBindErrors';
-import { OptionInputFieldArgument } from '../../../inputFieldArguments/arguments/OptionInputFieldArgument';
+import { OptionInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 
-import { InputFieldArgumentType } from '../../InputFieldConfigs';
+import { InputFieldArgumentType } from '../../../parsers/inputFieldParser/InputFieldConfigs';
 
 export abstract class AbstractSelectInputField<T extends MBExtendedLiteral> extends AbstractInputField<T> {
 	elements: SelectInputFieldElement[];

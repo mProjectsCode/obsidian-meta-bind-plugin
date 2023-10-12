@@ -1,64 +1,9 @@
-import { ErrorCollection } from '../utils/errors/ErrorCollection';
-import { JS_VIEW_FIELD_DECLARATION, VIEW_FIELD_FULL_DECLARATION } from './nomParsers/ViewFieldParsers';
-import { IPlugin } from '../IPlugin';
-import { BindTargetDeclaration, UnvalidatedBindTargetDeclaration } from './inputFieldParser/InputFieldDeclaration';
-import { BindTargetScope } from '../metadata/BindTargetScope';
-
-export interface UnvalidatedViewFieldDeclaration {
-	/**
-	 * The full declaration of the view field including the "VIEW[]".
-	 * e.g.
-	 * VIEW[{x} * 2]
-	 */
-	fullDeclaration?: string;
-	/**
-	 * Declaration array.
-	 */
-	declaration?: (string | UnvalidatedBindTargetDeclaration)[];
-
-	errorCollection: ErrorCollection;
-}
-
-export interface ViewFieldDeclaration {
-	/**
-	 * The full declaration of the view field including the "VIEW[]".
-	 * e.g.
-	 * VIEW[{x} * 2]
-	 */
-	fullDeclaration?: string;
-	/**
-	 * Declaration array.
-	 */
-	declaration: (string | BindTargetDeclaration)[];
-
-	errorCollection: ErrorCollection;
-}
-
-export interface UnvalidatedJsViewFieldBindTargetMapping {
-	bindTarget: UnvalidatedBindTargetDeclaration;
-	listenToChildren: boolean;
-	name: string;
-}
-
-export interface UnvalidatedJsViewFieldDeclaration {
-	bindTargetMappings: UnvalidatedJsViewFieldBindTargetMapping[];
-	code: string;
-}
-
-export interface JsViewFieldBindTargetMapping {
-	bindTarget: BindTargetDeclaration;
-	listenToChildren: boolean;
-	name: string;
-}
-
-export interface JsViewFieldDeclaration {
-	fullDeclaration: string;
-
-	bindTargetMappings: JsViewFieldBindTargetMapping[];
-	code: string;
-
-	errorCollection: ErrorCollection;
-}
+import { ErrorCollection } from '../../utils/errors/ErrorCollection';
+import { JS_VIEW_FIELD_DECLARATION, VIEW_FIELD_FULL_DECLARATION } from '../nomParsers/ViewFieldParsers';
+import { IPlugin } from '../../IPlugin';
+import { UnvalidatedBindTargetDeclaration } from '../inputFieldParser/InputFieldDeclaration';
+import { BindTargetScope } from '../../metadata/BindTargetScope';
+import { JsViewFieldDeclaration, UnvalidatedViewFieldDeclaration, ViewFieldDeclaration } from './ViewFieldDeclaration';
 
 export class ViewFieldDeclarationParser {
 	plugin: IPlugin;
@@ -94,7 +39,7 @@ export class ViewFieldDeclarationParser {
 		declaration.errorCollection = new ErrorCollection('ViewFieldDeclaration');
 
 		try {
-			declaration.declaration = VIEW_FIELD_FULL_DECLARATION.parse(fullDeclaration) as (string | UnvalidatedBindTargetDeclaration)[];
+			declaration.templateDeclaration = VIEW_FIELD_FULL_DECLARATION.parse(fullDeclaration) as (string | UnvalidatedBindTargetDeclaration)[];
 		} catch (e) {
 			declaration.errorCollection.add(e);
 		}
@@ -109,7 +54,7 @@ export class ViewFieldDeclarationParser {
 
 		try {
 			declaration.declaration =
-				unvalidatedDeclaration.declaration?.map(x => {
+				unvalidatedDeclaration.templateDeclaration?.map(x => {
 					if (typeof x === 'string') {
 						return x;
 					} else {

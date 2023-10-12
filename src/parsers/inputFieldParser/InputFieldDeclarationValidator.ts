@@ -1,12 +1,12 @@
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { ParsingValidationError } from '../ParsingError';
 import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
-import { InputFieldArgumentContainer } from '../../inputFieldArguments/InputFieldArgumentContainer';
-import { AbstractInputFieldArgument } from '../../inputFieldArguments/AbstractInputFieldArgument';
-import { InputFieldArgumentFactory } from '../../inputFieldArguments/InputFieldArgumentFactory';
+import { InputFieldArgumentContainer } from '../../fieldArguments/inputFieldArguments/InputFieldArgumentContainer';
+import { AbstractInputFieldArgument } from '../../fieldArguments/inputFieldArguments/AbstractInputFieldArgument';
+import { InputFieldArgumentFactory } from '../../fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
 import { IPlugin } from '../../IPlugin';
 import { BindTargetDeclaration, InputFieldDeclaration, UnvalidatedInputFieldDeclaration } from './InputFieldDeclaration';
-import { InputFieldArgumentType, InputFieldType } from '../../inputFields/InputFieldConfigs';
+import { InputFieldArgumentType, InputFieldType } from './InputFieldConfigs';
 import { BindTargetScope } from '../../metadata/BindTargetScope';
 import { ParsingResultNode } from '../nomParsers/GeneralParsers';
 

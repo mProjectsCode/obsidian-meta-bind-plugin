@@ -1,5 +1,4 @@
 import { BindTargetDeclaration, InputFieldDeclaration, UnvalidatedInputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
-import { UnvalidatedViewFieldDeclaration, ViewFieldDeclaration } from '../parsers/ViewFieldDeclarationParser';
 import { AbstractMDRC } from '../renderChildren/AbstractMDRC';
 import { InputFieldMDRC, RenderChildType } from '../renderChildren/InputFieldMDRC';
 import MetaBindPlugin from '../main';
@@ -9,6 +8,7 @@ import { MBExtendedLiteral } from '../utils/Utils';
 import MetaBindTableComponent from './MetaBindTableComponent.svelte';
 import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
 import { Component } from 'obsidian';
+import { UnvalidatedViewFieldDeclaration, ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
 
 export type MetaBindTableCell = InputFieldDeclaration | ViewFieldDeclaration;
 
