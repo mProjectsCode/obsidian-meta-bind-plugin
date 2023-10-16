@@ -55,7 +55,7 @@ option(option d)
 
 A multi select to a different note
 ```meta-bind
-INPUT[multi_select(
+INPUT[multiSelect(
 title(A multi select input),
 option(option a),
 option(option b),
