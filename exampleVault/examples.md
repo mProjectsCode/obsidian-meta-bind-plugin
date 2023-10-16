@@ -36,7 +36,7 @@ inlineSelect: 0
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. Curabitur sed rhoncus nisl.
 
 ```meta-bind
-INPUT[text_area(
+INPUT[textArea(
 title(text area),
 class(meta-bind-full-width),
 class(meta-bind-high)
