@@ -36,7 +36,7 @@ inlineSelect: 0
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. Curabitur sed rhoncus nisl.
 
 ```meta-bind
-INPUT[text_area(
+INPUT[textArea(
 title(text area),
 class(meta-bind-full-width),
 class(meta-bind-high)
@@ -55,7 +55,7 @@ option(option d)
 
 A multi select to a different note
 ```meta-bind
-INPUT[multi_select(
+INPUT[multiSelect(
 title(A multi select input),
 option(option a),
 option(option b),
@@ -64,7 +64,7 @@ option(option d)
 ):other note#multi-select]
 ```
 
-Lorem ipsum dolor sit amet, `INPUT[date():other note#date]` consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. `INPUT[date():other note#date]` Curabitur sed rhoncus nisl. Maecenas nisi justo, viverra vel tempus vel, hendrerit at metus. `INPUT[date_picker():other note#date]`  asdasd asdasdasd
+Lorem ipsum dolor sit amet, `INPUT[date():other note#date]` consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. `INPUT[date():other note#date]` Curabitur sed rhoncus nisl. Maecenas nisi justo, viverra vel tempus vel, hendrerit at metus. `INPUT[datePicker():other note#date]`  asdasd asdasdasd
 
 ## Templates
 - `INPUT[][toggle:toggle1]` empty template
