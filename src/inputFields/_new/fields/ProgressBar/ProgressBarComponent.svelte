@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang='ts'>
 
 	import { clamp, remapRange } from '../../../../utils/Utils';
 
@@ -92,45 +92,45 @@
 </script>
 
 <style>
-    .mb-progress-bar-input {
-        height:        32px;
-        width:         100%;
-        border-radius: var(--mb-border-radius);
-        border:        var(--mb-border-width) solid var(--background-modifier-border);
-        position:      relative;
-        cursor:        col-resize;
-    }
+	.mb-progress-bar-input {
+		height:        32px;
+		width:         100%;
+		border-radius: var(--mb-border-radius);
+		border:        var(--mb-border-width) solid var(--background-modifier-border);
+		position:      relative;
+		cursor:        col-resize;
+	}
 
-    .mb-progress-bar-input:focus-visible {
-        box-shadow: 0 0 0 3px var(--background-modifier-border-focus);
-    }
+	.mb-progress-bar-input:focus-visible {
+		box-shadow: 0 0 0 3px var(--background-modifier-border-focus);
+	}
 
-    .mb-progress-bar-progress {
-        height:        32px;
-        background:    var(--color-accent);
-        border-radius: var(--mb-border-radius);
-    }
+	.mb-progress-bar-progress {
+		height:        32px;
+		background:    var(--color-accent);
+		border-radius: var(--mb-border-radius);
+	}
 
-    .mb-progress-bar-value {
-        position:  absolute;
-        top:       50%;
-        left:      50%;
-        transform: translate(-50%, -50%);
-    }
+	.mb-progress-bar-value {
+		position:  absolute;
+		top:       50%;
+		left:      50%;
+		transform: translate(-50%, -50%);
+	}
 
-    .mb-progress-bar-label-left {
-        position:  absolute;
-        top:       50%;
-        transform: translate(0, -50%);
-        left:      var(--size-4-2);
-    }
+	.mb-progress-bar-label-left {
+		position:  absolute;
+		top:       50%;
+		transform: translate(0, -50%);
+		left:      var(--size-4-2);
+	}
 
-    .mb-progress-bar-label-right {
-        position:  absolute;
-        top:       50%;
-        transform: translate(0, -50%);
-        right:     var(--size-4-2);
-    }
+	.mb-progress-bar-label-right {
+		position:  absolute;
+		top:       50%;
+		transform: translate(0, -50%);
+		right:     var(--size-4-2);
+	}
 
 
 </style>
@@ -144,19 +144,19 @@
 />
 
 <div
-	class="mb-progress-bar-input"
-	tabindex="0"
+	class='mb-progress-bar-input'
+	tabindex='0'
 	bind:this={progressBarEl}
-	role="slider"
+	role='slider'
 	aria-valuemin={minValue}
 	aria-valuemax={maxValue}
 	aria-valuenow={value}
 	on:keydown={onKeyPress}
 	on:mousedown={onTrackEvent}
 	on:touchstart={onTrackEvent}>
-	<div class="mb-progress-bar-progress" style={`width: ${getProgressPercent(value)}%`}
+	<div class='mb-progress-bar-progress' style={`width: ${getProgressPercent(value)}%`}
 		 on:dragstart={() => drag = true}></div>
-	<span class="mb-progress-bar-value">{value}</span>
-	<span class="mb-progress-bar-label-left">{minValue}</span>
-	<span class="mb-progress-bar-label-right">{maxValue}</span>
+	<span class='mb-progress-bar-value'>{value}</span>
+	<span class='mb-progress-bar-label-left'>{minValue}</span>
+	<span class='mb-progress-bar-label-right'>{maxValue}</span>
 </div>

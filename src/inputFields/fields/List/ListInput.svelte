@@ -1,9 +1,9 @@
-<script lang="ts">
-	import {ListInputField} from './ListInputField';
+<script lang='ts'>
+	import { ListInputField } from './ListInputField';
 	import Icon from '../../../utils/Icon.svelte';
-	import {Button, TextInput} from 'obsidian-svelte';
+	import { Button, TextInput } from 'obsidian-svelte';
 
-	import {InputFieldArgumentType} from '../../../parsers/inputFieldParser/InputFieldConfigs';
+	import { InputFieldArgumentType } from '../../../parsers/inputFieldParser/InputFieldConfigs';
 
 	export let value: string[] = [];
 	export let onValueChange: (value: any) => void;
@@ -35,22 +35,22 @@
 	}
 </script>
 
-<div class="mb-list-items">
+<div class='mb-list-items'>
 	{#each value as entry, i}
-		<div class="mb-list-item">
+		<div class='mb-list-item'>
 			<span>{entry}</span>
 			<Button on:click={() => remove(i)}>
-				<Icon iconName="x"/>
+				<Icon iconName='x' />
 			</Button>
 		</div>
 	{:else}
-		<span class="mb-list-empty">Empty</span>
+		<span class='mb-list-empty'>Empty</span>
 	{/each}
 </div>
-<div class="mb-list-input">
-	<TextInput bind:value={addValue} placeholder="{placeholder?.value ?? 'add entry...'}" width="100%"></TextInput>
-	<Button on:click={() => add()} disabled="{!addValue}">
-		<Icon iconName="plus"/>
+<div class='mb-list-input'>
+	<TextInput bind:value={addValue} placeholder="{placeholder?.value ?? 'add entry...'}" width='100%'></TextInput>
+	<Button on:click={() => add()} disabled='{!addValue}'>
+		<Icon iconName='plus' />
 	</Button>
 </div>
 

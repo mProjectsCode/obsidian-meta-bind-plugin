@@ -1,8 +1,8 @@
-<script lang="ts">
+<script lang='ts'>
 	import LinkComponent from '../../../utils/LinkComponent.svelte';
-	import {isMdLink, MarkdownLink, parseMdLink} from '../../../parsers/MarkdownLinkParser';
+	import { isMdLink, MarkdownLink, parseMdLink } from '../../../parsers/MarkdownLinkParser';
 	import Icon from '../../../utils/Icon.svelte';
-	import {SuggestOption} from './SuggestInputField';
+	import { SuggestOption } from './SuggestInputField';
 
 	export let showSuggest: () => void;
 
@@ -57,17 +57,17 @@
 </style>
 
 <div
-	class="suggest-input"
+	class='suggest-input'
 	on:click={suggest}
 	on:keydown={suggestKey}
-	role="button"
-	tabindex=0>
-	<div class="suggest-text">
+	role='button'
+	tabindex='0'>
+	<div class='suggest-text'>
 		{#if isLink}
 			<LinkComponent bind:mdLink={mdLink}></LinkComponent>
 		{:else}
 			<span>{str}</span>
 		{/if}
 	</div>
-	<Icon iconName="list"/>
+	<Icon iconName='list' />
 </div>

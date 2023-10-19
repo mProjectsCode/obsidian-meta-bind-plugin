@@ -1,9 +1,11 @@
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { JS_VIEW_FIELD_DECLARATION, VIEW_FIELD_FULL_DECLARATION } from '../nomParsers/ViewFieldParsers';
 import { IPlugin } from '../../IPlugin';
-import { UnvalidatedBindTargetDeclaration } from '../inputFieldParser/InputFieldDeclaration';
 import { BindTargetScope } from '../../metadata/BindTargetScope';
 import { JsViewFieldDeclaration, UnvalidatedViewFieldDeclaration, ViewFieldDeclaration } from './ViewFieldDeclaration';
+import { ViewFieldDeclarationValidator } from './ViewFieldDeclarationValidator';
+import { ViewFieldType } from './ViewFieldConfigs';
+import { ViewFieldArgumentContainer } from '../../fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
 
 export class ViewFieldDeclarationParser {
 	plugin: IPlugin;
@@ -13,59 +15,55 @@ export class ViewFieldDeclarationParser {
 	}
 
 	parseString(fullDeclaration: string, scope?: BindTargetScope | undefined): ViewFieldDeclaration {
-		const declaration: ViewFieldDeclaration = {} as ViewFieldDeclaration;
-		declaration.fullDeclaration = fullDeclaration;
-		declaration.errorCollection = new ErrorCollection('ViewFieldDeclaration');
+		const errorCollection = new ErrorCollection('ViewFieldDeclaration');
 
 		try {
-			const parserResult = VIEW_FIELD_FULL_DECLARATION.parse(fullDeclaration) as (string | UnvalidatedBindTargetDeclaration)[];
-			declaration.declaration = parserResult.map(x => {
-				if (typeof x === 'string') {
-					return x;
-				} else {
-					return this.plugin.api.bindTargetParser.validateBindTarget(fullDeclaration, x, scope);
-				}
-			});
+			const parserResult = VIEW_FIELD_FULL_DECLARATION.parse(fullDeclaration) as UnvalidatedViewFieldDeclaration;
+			parserResult.fullDeclaration = fullDeclaration;
+			parserResult.errorCollection = errorCollection;
+
+			return this.validateDeclaration(parserResult, scope);
 		} catch (e) {
-			declaration.errorCollection.add(e);
+			errorCollection.add(e);
 		}
 
-		return declaration;
+		return {
+			fullDeclaration: fullDeclaration,
+			errorCollection: errorCollection,
+			templateDeclaration: [],
+			viewFieldType: ViewFieldType.INVALID,
+			argumentContainer: new ViewFieldArgumentContainer(),
+			writeToBindTarget: undefined,
+		};
 	}
 
 	parseStringWithoutValidation(fullDeclaration: string): UnvalidatedViewFieldDeclaration {
-		const declaration: UnvalidatedViewFieldDeclaration = {} as UnvalidatedViewFieldDeclaration;
-		declaration.fullDeclaration = fullDeclaration;
-		declaration.errorCollection = new ErrorCollection('ViewFieldDeclaration');
+		const errorCollection = new ErrorCollection('ViewFieldDeclaration');
 
 		try {
-			declaration.templateDeclaration = VIEW_FIELD_FULL_DECLARATION.parse(fullDeclaration) as (string | UnvalidatedBindTargetDeclaration)[];
+			const parserResult = VIEW_FIELD_FULL_DECLARATION.parse(fullDeclaration) as UnvalidatedViewFieldDeclaration;
+			parserResult.fullDeclaration = fullDeclaration;
+			parserResult.errorCollection = errorCollection;
+
+			return parserResult;
 		} catch (e) {
-			declaration.errorCollection.add(e);
+			errorCollection.add(e);
 		}
 
-		return declaration;
+		return {
+			fullDeclaration: fullDeclaration,
+			errorCollection: errorCollection,
+			viewFieldType: { value: ViewFieldType.INVALID },
+			writeToBindTarget: undefined,
+			arguments: [],
+			templateDeclaration: [],
+		};
 	}
 
 	validateDeclaration(unvalidatedDeclaration: UnvalidatedViewFieldDeclaration, scope?: BindTargetScope | undefined): ViewFieldDeclaration {
-		const declaration: ViewFieldDeclaration = {} as ViewFieldDeclaration;
-		declaration.fullDeclaration = unvalidatedDeclaration.fullDeclaration;
-		declaration.errorCollection = unvalidatedDeclaration.errorCollection;
+		const validator = new ViewFieldDeclarationValidator(unvalidatedDeclaration, this.plugin);
 
-		try {
-			declaration.declaration =
-				unvalidatedDeclaration.templateDeclaration?.map(x => {
-					if (typeof x === 'string') {
-						return x;
-					} else {
-						return this.plugin.api.bindTargetParser.validateBindTarget(declaration.fullDeclaration ?? '', x, scope);
-					}
-				}) ?? [];
-		} catch (e) {
-			declaration.errorCollection.add(e);
-		}
-
-		return declaration;
+		return validator.validate(scope);
 	}
 
 	parseJsString(fullDeclaration: string): JsViewFieldDeclaration {

@@ -50,7 +50,7 @@ export class PublishViewFieldMDRC extends MarkdownRenderChild {
 				let varCounter = 0;
 				this.expressionStr = '';
 
-				for (const entry of this.viewFieldDeclaration.declaration ?? []) {
+				for (const entry of this.viewFieldDeclaration.templateDeclaration ?? []) {
 					if (typeof entry !== 'string') {
 						const variable: ViewFieldVariable = {
 							bindTargetDeclaration: entry,
@@ -101,7 +101,7 @@ export class PublishViewFieldMDRC extends MarkdownRenderChild {
 			return this.expression.evaluate(context);
 		} catch (e: any) {
 			throw new MetaBindExpressionError(ErrorLevel.ERROR, `failed to evaluate expression`, e, {
-				declaration: this.viewFieldDeclaration.declaration,
+				declaration: this.viewFieldDeclaration.templateDeclaration,
 				expression: this.expressionStr,
 				context: context,
 			});

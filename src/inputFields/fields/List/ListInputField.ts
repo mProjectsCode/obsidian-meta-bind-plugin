@@ -2,7 +2,7 @@ import { AbstractInputField } from '../../AbstractInputField';
 import ListInput from './ListInput.svelte';
 import { InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
 import { ErrorLevel, MetaBindInternalError } from '../../../utils/errors/MetaBindErrors';
-import { doArraysContainEqualValues, MBExtendedLiteral, MBLiteral, parseLiteral, stringifyLiteral } from '../../../utils/Utils';
+import { areArraysEqual, MBExtendedLiteral, MBLiteral, parseLiteral, stringifyLiteral } from '../../../utils/Utils';
 
 type T = MBLiteral[];
 
@@ -43,7 +43,7 @@ export class ListInputField extends AbstractInputField<T> {
 			return false;
 		}
 
-		return doArraysContainEqualValues(this.getValue(), value);
+		return areArraysEqual(this.getValue(), value);
 	}
 
 	getFallbackDefaultValue(): string[] {

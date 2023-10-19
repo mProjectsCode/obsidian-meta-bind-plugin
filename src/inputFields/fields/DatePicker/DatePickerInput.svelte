@@ -1,6 +1,6 @@
 <script src='DatePickerModal.ts'></script>
-<script lang="ts">
-	import type {Moment} from 'moment';
+<script lang='ts'>
+	import type { Moment } from 'moment';
 	import Icon from '../../../utils/Icon.svelte';
 
 	export let showDatePicker: () => void;
@@ -43,11 +43,11 @@
 </style>
 
 <div
-	class="date-picker-input"
+	class='date-picker-input'
 	on:click={datePicker}
 	on:keydown={datePickerKey}>
-	<div class="date-picker-text">
+	<div class='date-picker-text'>
 		<span>{selectedDate ? selectedDate.format(dateFormat) : "none"}</span>
 	</div>
-	<Icon iconName="calendar"/>
+	<Icon iconName='calendar' />
 </div>

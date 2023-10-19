@@ -1,9 +1,9 @@
-<script lang="ts">
-	import {createEventDispatcher} from 'svelte';
+<script lang='ts'>
+	import { createEventDispatcher } from 'svelte';
 	import Calender from './Calender.svelte';
-	import {getMonthName} from './DatePickerInputSvelteHelpers.js';
-	import {moment} from 'obsidian';
-	import type {Moment} from 'moment';
+	import { getMonthName } from './DatePickerInputSvelteHelpers.js';
+	import { moment } from 'obsidian';
+	import type { Moment } from 'moment';
 
 	const dispatch = createEventDispatcher();
 
@@ -115,15 +115,15 @@
 	}
 </style>
 
-<div class="date-picker">
-	<div class="date-picker-header">
-		<button class="month-switch-button" on:click={prevMonth}>Prev</button>
-		<div class="date-picker-header-text">
-			<span class="date-picker-header-text-month">{getMonthName(month)}</span>
-			<input class="date-picker-header-text-year" type="number" value="{year.toString()}"
-				   on:input="{changeYear}">
+<div class='date-picker'>
+	<div class='date-picker-header'>
+		<button class='month-switch-button' on:click={prevMonth}>Prev</button>
+		<div class='date-picker-header-text'>
+			<span class='date-picker-header-text-month'>{getMonthName(month)}</span>
+			<input class='date-picker-header-text-year' type='number' value='{year.toString()}'
+				   on:input='{changeYear}'>
 		</div>
-		<button class="month-switch-button" on:click={nextMonth}>Next</button>
+		<button class='month-switch-button' on:click={nextMonth}>Next</button>
 	</div>
 	<Calender
 		on:dateChange={onDateChange}
@@ -131,7 +131,7 @@
 		year={year}
 		selectedDate={selectedDate}>
 	</Calender>
-	<div class="date-picker-footer">
-		<button class="none-button" on:click={setDateToNull}>Set no Date</button>
+	<div class='date-picker-footer'>
+		<button class='none-button' on:click={setDateToNull}>Set no Date</button>
 	</div>
 </div>

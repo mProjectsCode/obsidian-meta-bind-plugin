@@ -1,5 +1,5 @@
-<script lang="ts">
-	import {MarkdownLink} from '../parsers/MarkdownLinkParser';
+<script lang='ts'>
+	import { MarkdownLink } from '../parsers/MarkdownLinkParser';
 
 	export let mdLink: MarkdownLink;
 
@@ -11,20 +11,20 @@
 	<a
 		data-href={linkHref}
 		href={linkHref}
-		class="internal-link"
-		target="_blank"
-		rel="noopener"
+		class='internal-link'
+		target='_blank'
+		rel='noopener'
 		aria-label={linkHref}
-		aria-label-position="top">
+		aria-label-position='top'>
 		{mdLink.alias}
 	</a>
 {:else}
 	<a
 		data-href={linkHref}
 		href={linkHref}
-		class="internal-link"
-		target="_blank"
-		rel="noopener">
+		class='internal-link'
+		target='_blank'
+		rel='noopener'>
 		{linkHref}
 	</a>
 {/if}

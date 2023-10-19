@@ -1,8 +1,9 @@
 ---
-number1: 13
+number1: 12
 number2: 200
 unit: km
-distance: 5
+distance: 12534
+computed: "**12534**"
 ---
 
 `INPUT[number:number1]`
@@ -20,8 +21,17 @@ Combined: `VIEW[{number1} * {number2}]` cm equals `VIEW[{number2} * {number1} cm
 
 `VIEW[{Other Note#text}]`
 
-## Distance example
+## Distance Example
 
 Distance: `INPUT[number:distance]` km
 Distance in freedom units: `VIEW[number({distance} km, miles)]` miles
 Distance in freedom units: `VIEW[round(number({distance} km, miles), 2)]` miles
+
+## Text Example
+
+Text: `VIEW[**{distance}**][text]`
+Markdown: `VIEW[**{distance}**][text(renderMarkdown)]`
+Hidden: `VIEW[**{distance}**][text(hidden):computed]`
+Display Computed: `VIEW[{computed}][text()]`
+Display Computed as Markdown: `VIEW[{computed}][text(renderMarkdown)]`
+Loop Error: `VIEW[**{computed}**][text():distance]`

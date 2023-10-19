@@ -1,5 +1,3 @@
-import { AbstractInputField } from '../inputFields/AbstractInputField';
-import { InputFieldFactory } from '../inputFields/InputFieldFactory';
 import { AbstractInputFieldArgument } from '../fieldArguments/inputFieldArguments/AbstractInputFieldArgument';
 import { ClassInputFieldArgument } from '../fieldArguments/inputFieldArguments/arguments/ClassInputFieldArgument';
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
@@ -8,12 +6,11 @@ import { TitleInputFieldArgument } from '../fieldArguments/inputFieldArguments/a
 import { isTruthy, MBExtendedLiteral } from '../utils/Utils';
 import { Listener, Signal } from '../utils/Signal';
 import { AbstractMDRC } from './AbstractMDRC';
-import { MetadataFileCache } from '../metadata/MetadataFileCache';
+import { MetadataSubscription } from '../metadata/MetadataFileCache';
 import MetaBindPlugin from '../main';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
 import { InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { InputFieldArgumentType, InputFieldType } from '../parsers/inputFieldParser/InputFieldConfigs';
-import { NewAbstractInputField } from '../inputFields/_new/NewAbstractInputField';
 import { NewInputField } from '../inputFields/_new/NewInputFieldFactory';
 
 export enum RenderChildType {
@@ -27,16 +24,18 @@ export class InputFieldMDRC extends AbstractMDRC {
 	fullDeclaration?: string;
 	inputFieldDeclaration: InputFieldDeclaration;
 
-	private metadataManagerReadSignalListener: Listener<MBExtendedLiteral | undefined> | undefined;
+	private metadataManagerOutputSignalListener: Listener<MBExtendedLiteral | undefined> | undefined;
 
 	/**
 	 * Signal to write to the input field
 	 */
-	public writeSignal: Signal<MBExtendedLiteral | undefined>;
+	public inputSignal: Signal<MBExtendedLiteral | undefined>;
 	/**
 	 * Signal to read from the input field
 	 */
-	public readSignal: Signal<MBExtendedLiteral | undefined>;
+	public outputSignal: Signal<MBExtendedLiteral | undefined>;
+
+	metadataSubscription?: MetadataSubscription;
 
 	constructor(
 		containerEl: HTMLElement,
@@ -53,13 +52,13 @@ export class InputFieldMDRC extends AbstractMDRC {
 		this.fullDeclaration = declaration.fullDeclaration;
 		this.inputFieldDeclaration = declaration;
 
-		this.writeSignal = new Signal<MBExtendedLiteral | undefined>(undefined);
-		this.readSignal = new Signal<MBExtendedLiteral | undefined>(undefined);
+		this.inputSignal = new Signal<MBExtendedLiteral | undefined>(undefined);
+		this.outputSignal = new Signal<MBExtendedLiteral | undefined>(undefined);
 
 		if (!this.errorCollection.hasErrors()) {
 			try {
 				this.inputField = this.plugin.api.inputFieldFactory.createInputField(this.inputFieldDeclaration.inputFieldType, renderChildType, this);
-				this.inputField?.registerListener({ callback: value => this.readSignal.set(value) });
+				this.inputField?.registerListener({ callback: value => this.outputSignal.set(value) });
 			} catch (e: any) {
 				this.errorCollection.add(e);
 			}
@@ -72,15 +71,13 @@ export class InputFieldMDRC extends AbstractMDRC {
 			return;
 		}
 
-		this.metadataManagerReadSignalListener = this.readSignal.registerListener({ callback: value => this.updateMetadataManager(value) });
-
-		this.plugin.metadataManager.register(
-			this.inputFieldDeclaration.bindTarget.filePath ?? this.filePath,
-			this.writeSignal,
-			this.inputFieldDeclaration.bindTarget.metadataPath,
-			false,
-			this.uuid
+		this.metadataSubscription = this.plugin.metadataManager.subscribe(
+			this.uuid,
+			this.inputSignal,
+			this.plugin.api.bindTargetParser.toFullDeclaration(this.inputFieldDeclaration.bindTarget, this.filePath)
 		);
+
+		this.metadataManagerOutputSignalListener = this.outputSignal.registerListener({ callback: value => this.updateMetadataManager(value) });
 	}
 
 	unregisterSelfFromMetadataManager(): void {
@@ -89,11 +86,11 @@ export class InputFieldMDRC extends AbstractMDRC {
 			return;
 		}
 
-		if (this.metadataManagerReadSignalListener) {
-			this.readSignal.unregisterListener(this.metadataManagerReadSignalListener);
+		if (this.metadataManagerOutputSignalListener) {
+			this.outputSignal.unregisterListener(this.metadataManagerOutputSignalListener);
 		}
 
-		this.plugin.metadataManager.unregister(this.inputFieldDeclaration.bindTarget.filePath ?? this.filePath, this.uuid);
+		this.metadataSubscription?.unsubscribe();
 	}
 
 	updateMetadataManager(value: unknown): void {
@@ -102,30 +99,8 @@ export class InputFieldMDRC extends AbstractMDRC {
 			return;
 		}
 
-		this.plugin.metadataManager.updatePropertyInCache(
-			value,
-			this.inputFieldDeclaration.bindTarget.metadataPath,
-			this.inputFieldDeclaration.bindTarget.filePath ?? this.filePath,
-			this.uuid
-		);
+		this.metadataSubscription?.update(value);
 	}
-
-	// getInitialValue(): MBExtendedLiteral {
-	// 	if (!this.inputField) {
-	// 		throw new MetaBindInternalError(ErrorLevel.CRITICAL, 'can not get initial value for input field', 'input field is undefined');
-	// 	}
-	//
-	// 	if (this.inputFieldDeclaration?.isBound && this.inputFieldDeclaration.bindTarget) {
-	// 		let value: MBExtendedLiteral | undefined = this.writeSignal.get();
-	// 		value = value === undefined ? this.inputField.getFallbackDefaultValue() : value;
-	// 		console.debug(
-	// 			`meta-bind | InputFieldMarkdownRenderChild >> setting initial value to ${value} (typeof ${typeof value}) for input field ${this.uuid}`
-	// 		);
-	// 		return value;
-	// 	} else {
-	// 		return this.inputField.getFallbackDefaultValue();
-	// 	}
-	// }
 
 	getArguments(name: InputFieldArgumentType): AbstractInputFieldArgument[] {
 		if (this.inputFieldDeclaration.errorCollection.hasErrors()) {

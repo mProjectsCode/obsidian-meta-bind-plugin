@@ -2,21 +2,21 @@ import MetaBindPlugin from '../main';
 import { ErrorLevel, MetaBindExpressionError, MetaBindJsError } from '../utils/errors/MetaBindErrors';
 import { Signal } from '../utils/Signal';
 import { RenderChildType } from './InputFieldMDRC';
-import { ViewField } from '../viewFields/ViewField';
 import { ViewFieldVariable } from './ViewFieldMDRC';
 import { getAPI } from 'obsidian-dataview';
 import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
 import { JsViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
+import { ComputedMetadataSubscription, ComputedSubscriptionDependency } from '../metadata/MetadataFileCache';
 
 export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
-	viewField: ViewField;
-
 	fullDeclaration?: string;
 	// user code function
 	expression?: any;
 	viewFieldDeclaration: JsViewFieldDeclaration;
 	variables: ViewFieldVariable[];
+	renderContainer?: HTMLElement;
+	metadataSubscription?: ComputedMetadataSubscription;
 
 	constructor(
 		containerEl: HTMLElement,
@@ -30,7 +30,6 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 
 		this.errorCollection.merge(declaration.errorCollection);
 
-		this.viewField = new ViewField(this);
 		this.fullDeclaration = declaration.fullDeclaration;
 		this.viewFieldDeclaration = declaration;
 		this.variables = [];
@@ -98,30 +97,47 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 	}
 
 	registerSelfToMetadataManager(): void {
-		for (const variable of this.variables) {
-			variable.writeSignalListener = variable.writeSignal.registerListener({
-				callback: () => {
-					this.viewField.update();
-				},
-			});
+		const updateSignal = new Signal<any>(undefined);
 
-			this.plugin.metadataManager.register(
-				variable.bindTargetDeclaration.filePath ?? this.filePath,
-				variable.writeSignal,
-				variable.bindTargetDeclaration.metadataPath,
-				variable.listenToChildren,
-				this.uuid + '/' + variable.uuid
-			);
-		}
+		this.metadataSubscription = this.plugin.metadataManager.subscribeComputed(
+			this.uuid,
+			updateSignal,
+			undefined,
+			this.variables.map((x): ComputedSubscriptionDependency => {
+				return {
+					bindTarget: this.plugin.api.bindTargetParser.toFullDeclaration(x.bindTargetDeclaration, this.filePath),
+					callbackSignal: x.writeSignal,
+				};
+			}),
+			() => this.update()
+		);
+
+		// for (const variable of this.variables) {
+		// 	variable.writeSignalListener = variable.writeSignal.registerListener({
+		// 		callback: () => {
+		// 			this.update();
+		// 		},
+		// 	});
+		//
+		// 	this.plugin.metadataManager.register(
+		// 		variable.bindTargetDeclaration.filePath ?? this.filePath,
+		// 		variable.writeSignal,
+		// 		variable.bindTargetDeclaration.metadataPath,
+		// 		variable.listenToChildren,
+		// 		this.uuid + '/' + variable.uuid
+		// 	);
+		// }
 	}
 
 	unregisterSelfFromMetadataManager(): void {
-		for (const variable of this.variables) {
-			if (variable.writeSignalListener) {
-				variable.writeSignal.unregisterListener(variable.writeSignalListener);
-			}
-			this.plugin.metadataManager.unregister(variable.bindTargetDeclaration.filePath ?? this.filePath, this.uuid + '/' + variable.uuid);
-		}
+		this.metadataSubscription?.unsubscribe();
+
+		// for (const variable of this.variables) {
+		// 	if (variable.writeSignalListener) {
+		// 		variable.writeSignal.unregisterListener(variable.writeSignalListener);
+		// 	}
+		// 	this.plugin.metadataManager.unregister(variable.bindTargetDeclaration.filePath ?? this.filePath, this.uuid + '/' + variable.uuid);
+		// }
 	}
 
 	getInitialValue(): string {
@@ -152,7 +168,8 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 		const container: HTMLDivElement = createDiv();
 		container.addClass('mb-view-wrapper');
 
-		this.viewField.render(container);
+		this.renderContainer = container;
+		await this.update();
 
 		this.containerEl.appendChild(container);
 	}
@@ -167,5 +184,21 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 		this.containerEl.createEl('span', { text: 'unloaded meta bind view field', cls: 'mb-error' });
 
 		super.onunload();
+	}
+
+	async update(): Promise<void> {
+		if (!this.renderContainer) {
+			return;
+		}
+
+		try {
+			this.renderContainer.innerText = await this.evaluateExpression();
+			this.renderContainer.removeClass('mb-error');
+		} catch (e) {
+			if (e instanceof Error) {
+				this.renderContainer.innerText = e.message;
+				this.renderContainer.addClass('mb-error');
+			}
+		}
 	}
 }

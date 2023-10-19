@@ -2,6 +2,7 @@ import { BindTargetDeclaration, UnvalidatedBindTargetDeclaration, UnvalidatedFie
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { ViewFieldType } from './ViewFieldConfigs';
 import { ParsingResultNode } from '../nomParsers/GeneralParsers';
+import { ViewFieldArgumentContainer } from '../../fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
 
 export interface PartialUnvalidatedViewFieldDeclaration {
 	/**
@@ -19,7 +20,7 @@ export interface UnvalidatedViewFieldDeclaration extends PartialUnvalidatedViewF
 	 * e.g.
 	 * VIEW[{x} * 2]
 	 */
-	fullDeclaration?: string;
+	fullDeclaration: string;
 
 	errorCollection: ErrorCollection;
 }
@@ -30,11 +31,14 @@ export interface ViewFieldDeclaration {
 	 * e.g.
 	 * VIEW[{x} * 2]
 	 */
-	fullDeclaration?: string;
+	fullDeclaration: string;
 	/**
 	 * Declaration array.
 	 */
-	declaration: (string | BindTargetDeclaration)[];
+	templateDeclaration: (string | BindTargetDeclaration)[];
+	viewFieldType: ViewFieldType;
+	argumentContainer: ViewFieldArgumentContainer;
+	writeToBindTarget?: BindTargetDeclaration;
 
 	errorCollection: ErrorCollection;
 }

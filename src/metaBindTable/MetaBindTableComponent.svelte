@@ -1,8 +1,8 @@
-<script lang="ts">
-	import {MetaBindTable, MetaBindTableRow} from './MetaBindTable';
+<script lang='ts'>
+	import { MetaBindTable, MetaBindTableRow } from './MetaBindTable';
 	import MetaBindTableCellComponent from './MetaBindTableCellComponent.svelte';
 	import Icon from '../utils/Icon.svelte';
-	import {Button} from 'obsidian-svelte';
+	import { Button } from 'obsidian-svelte';
 
 	export let table: MetaBindTable;
 	export let tableHead: string[] = [];
@@ -32,14 +32,14 @@
 					<MetaBindTableCellComponent table={table} bind:cell={tableCell}></MetaBindTableCellComponent>
 				{/each}
 			{:else}
-				<td class="meta-bind-error" colspan={tableHead.length}>
+				<td class='meta-bind-error' colspan={tableHead.length}>
 					invalid data
 				</td>
 			{/if}
 
 			<td>
 				<Button on:click={() => table.removeColumn(tableRow.index)}>
-					<Icon iconName="x"/>
+					<Icon iconName='x' />
 				</Button>
 			</td>
 		</tr>

@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang='ts'>
 	export let value: number;
 	export let minValue: number;
 	export let maxValue: number;
@@ -11,11 +11,13 @@
 </script>
 
 {#if addLabels}
-    <span class="meta-bind-plugin-slider-input-label">{minValue}</span>
-    <input type="range" tabindex="0" min={minValue} max={maxValue} bind:value={value} on:input={() => onValueChange(value)}>
-    <span class="meta-bind-plugin-slider-input-label">{maxValue}</span>
+	<span class='meta-bind-plugin-slider-input-label'>{minValue}</span>
+	<input type='range' tabindex='0' min={minValue} max={maxValue} bind:value={value}
+		   on:input={() => onValueChange(value)}>
+	<span class='meta-bind-plugin-slider-input-label'>{maxValue}</span>
 {:else}
-    <input type="range" tabindex="0" min={minValue} max={maxValue} bind:value={value} on:input={() => onValueChange(value)}>
+	<input type='range' tabindex='0' min={minValue} max={maxValue} bind:value={value}
+		   on:input={() => onValueChange(value)}>
 {/if}
 
 

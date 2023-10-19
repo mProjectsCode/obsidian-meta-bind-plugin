@@ -11,8 +11,8 @@ if you want to view the source, please visit the github repository of this plugi
 */
 `;
 
-esbuild
-	.build({
+const context = await esbuild
+	.context({
 		banner: {
 			js: banner,
 		},
@@ -45,7 +45,6 @@ esbuild
 			...builtins,
 		],
 		format: 'cjs',
-		watch: true,
 		target: 'es2016',
 		logLevel: 'info',
 		sourcemap: 'inline',
@@ -53,16 +52,18 @@ esbuild
 		outdir: 'exampleVault/.obsidian/plugins/obsidian-meta-bind-plugin/',
 		outbase: 'src',
 		plugins: [
-			copy([
-				{
-					from: './styles.css',
-					to: '',
-				},
-				{
-					from: './manifest.json',
-					to: '',
-				},
-			]),
+			copy({
+				paths: [
+					{
+						from: './styles.css',
+						to: '',
+					},
+					{
+						from: './manifest.json',
+						to: '',
+					},
+				],
+			}),
 			esbuildSvelte({
 				compilerOptions: { css: true },
 				preprocess: sveltePreprocess(),
@@ -70,3 +71,5 @@ esbuild
 		],
 	})
 	.catch(() => process.exit(1));
+
+await context.watch();

@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang='ts'>
 	import ImageCard from './ImageCard.svelte';
 
 	export let options: string[];
@@ -13,7 +13,7 @@
 	}
 </style>
 
-<div class="image-card-grid">
+<div class='image-card-grid'>
 	{#each options as option}
 		<ImageCard image={option} onSelect={onSelect}></ImageCard>
 	{/each}

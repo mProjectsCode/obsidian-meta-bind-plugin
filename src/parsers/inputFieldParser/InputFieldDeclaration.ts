@@ -39,14 +39,20 @@ export interface InputFieldDeclaration {
 export interface UnvalidatedBindTargetDeclaration {
 	file?: ParsingResultNode;
 	boundToLocalScope: boolean;
-	boundToComputedValue: boolean;
 	path: ParsingResultNode[];
 }
 
 export interface BindTargetDeclaration {
 	filePath: string | undefined;
 	boundToLocalScope: boolean;
-	boundToComputedValue: boolean;
+	listenToChildren: boolean;
+	metadataPath: string[];
+}
+
+export interface FullBindTarget {
+	filePath: string;
+	boundToLocalScope: boolean;
+	listenToChildren: boolean;
 	metadataPath: string[];
 }
 

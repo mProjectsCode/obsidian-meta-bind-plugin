@@ -16,7 +16,7 @@ export abstract class NewAbstractInputField<MetadataValueType, ComponentValueTyp
 		this.renderChild = renderChild;
 		this.inputFieldComponent = new InputFieldComponent<ComponentValueType>(this.getSvelteComponent());
 
-		this.signal = new ComputedSignal<any, MetadataValueType>(this.renderChild.writeSignal, (value: any): MetadataValueType => {
+		this.signal = new ComputedSignal<any, MetadataValueType>(this.renderChild.inputSignal, (value: any): MetadataValueType => {
 			const filteredValue = this.filterValue(value);
 			return filteredValue !== undefined ? filteredValue : this.getDefaultValue();
 		});
@@ -50,6 +50,7 @@ export abstract class NewAbstractInputField<MetadataValueType, ComponentValueTyp
 	 * @param value
 	 */
 	protected abstract rawReverseMapValue(value: MetadataValueType): ComponentValueType | undefined;
+
 	protected abstract rawMapValue(value: ComponentValueType): MetadataValueType;
 
 	private reverseMapValue(value: MetadataValueType): ComponentValueType {

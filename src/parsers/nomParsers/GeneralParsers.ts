@@ -2,6 +2,7 @@ import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
+import { UnvalidatedFieldArgument } from '../inputFieldParser/InputFieldDeclaration';
 
 export const ident = P.regexp(/^[a-z][a-z0-9_-]*/i)
 	.map(x => {
@@ -54,3 +55,25 @@ export function createResultNode(value: string, range: ParsingRange): ParsingRes
 		position: range,
 	};
 }
+
+export const nonStringArgumentValue: Parser<string> = P.regexp(/^[^()',]+/).describe('any character except parentheses, single quotation marks and commas');
+
+export const argumentValue: Parser<ParsingResultNode> = P.or(singleQuotedString, nonStringArgumentValue).node(createResultNode);
+
+export const argumentValues: Parser<ParsingResultNode[]> = P.separateBy(argumentValue, P.string(',').trim(P_UTILS.optionalWhitespace()));
+
+export const fieldArgument: Parser<UnvalidatedFieldArgument> = P.sequenceMap(
+	(name, value): UnvalidatedFieldArgument => {
+		return {
+			name: name,
+			value: value,
+		};
+	},
+	ident.node(createResultNode),
+	argumentValues
+		.trim(P_UTILS.optionalWhitespace())
+		.wrap(P.string('('), P.string(')'))
+		.optional([] as ParsingResultNode[])
+);
+
+export const fieldArguments: Parser<UnvalidatedFieldArgument[]> = P.separateBy(fieldArgument, P.string(',').trim(P_UTILS.optionalWhitespace()));

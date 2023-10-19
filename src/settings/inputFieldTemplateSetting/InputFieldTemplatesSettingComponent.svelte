@@ -1,9 +1,9 @@
-<script lang="ts">
-	import {InputFieldTemplate} from '../Settings';
-	import {Button, ModalButtonGroup} from 'obsidian-svelte';
+<script lang='ts'>
+	import { InputFieldTemplate } from '../Settings';
+	import { Button, ModalButtonGroup } from 'obsidian-svelte';
 	import InputFieldTemplateSettingComponent from './InputFieldTemplateSettingComponent.svelte';
-	import {InputFieldTemplatesSettingModal} from './InputFieldTemplatesSettingModal';
-	import {ErrorCollection} from '../../utils/errors/ErrorCollection';
+	import { InputFieldTemplatesSettingModal } from './InputFieldTemplatesSettingModal';
+	import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 	import ErrorCollectionComponent from '../../utils/errors/ErrorCollectionComponent.svelte';
 
 	export let inputFieldTemplates: InputFieldTemplate[];
@@ -18,7 +18,7 @@
 	function addTemplate(): void {
 		inputFieldTemplates.push({
 			name: '',
-			declaration: '',
+			declaration: ''
 		});
 
 		inputFieldTemplates = inputFieldTemplates;
@@ -60,11 +60,11 @@
 		</tbody>
 	</table>
 
-	<Button on:click={() => addTemplate()} variant="primary" tooltip="Create New Template">Add Template</Button>
+	<Button on:click={() => addTemplate()} variant='primary' tooltip='Create New Template'>Add Template</Button>
 
 	{#if errorCollection}
 		<div>
-			<h3 class="mod-error">Some Templates Failed to Parse</h3>
+			<h3 class='mod-error'>Some Templates Failed to Parse</h3>
 
 			<ErrorCollectionComponent errorCollection={errorCollection}
 									  declaration={undefined}></ErrorCollectionComponent>
@@ -73,7 +73,7 @@
 
 
 	<ModalButtonGroup>
-		<Button on:click={() => save()} variant="primary" tooltip="Save Changes">Save</Button>
-		<Button on:click={() => cancel()} tooltip="Revert Changes">Cancel</Button>
+		<Button on:click={() => save()} variant='primary' tooltip='Save Changes'>Save</Button>
+		<Button on:click={() => cancel()} tooltip='Revert Changes'>Cancel</Button>
 	</ModalButtonGroup>
 </div>

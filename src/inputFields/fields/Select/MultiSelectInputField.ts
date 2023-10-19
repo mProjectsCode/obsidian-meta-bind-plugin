@@ -1,4 +1,4 @@
-import { doArraysContainEqualValues, MBExtendedLiteral, MBLiteral } from '../../../utils/Utils';
+import { areArraysEqual, MBExtendedLiteral, MBLiteral } from '../../../utils/Utils';
 import { InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
 import { AbstractSelectInputField } from './AbstractSelectInputField';
 
@@ -53,7 +53,7 @@ export class MultiSelectInputField extends AbstractSelectInputField<T> {
 			return false;
 		}
 
-		return doArraysContainEqualValues(this.getValue(), value);
+		return areArraysEqual(this.getValue(), value);
 	}
 
 	getFallbackDefaultValue(): T {

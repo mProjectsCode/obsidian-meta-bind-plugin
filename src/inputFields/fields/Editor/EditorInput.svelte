@@ -1,7 +1,7 @@
-<script lang="ts">
-	import {MarkdownRenderer} from 'obsidian';
-	import {EditorInputField} from './EditorInputField';
-	import {onMount} from 'svelte';
+<script lang='ts'>
+	import { MarkdownRenderer } from 'obsidian';
+	import { EditorInputField } from './EditorInputField';
+	import { onMount } from 'svelte';
 	import MetaBindPlugin from '../../../main';
 
 	export let onValueChange: (value: any) => void;
@@ -74,7 +74,7 @@
 	}
 </style>
 
-<div class="editor-input card" on:click={(event) => focusIn(event)}>
+<div class='editor-input card' on:click={(event) => focusIn(event)}>
 	<textarea bind:this={inputEl} bind:value={value} on:focusout={(event) => focusOut(event)}></textarea>
 	<div bind:this={renderEl}></div>
 </div>

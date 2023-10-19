@@ -1,31 +1,9 @@
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
-import { createResultNode, ident, identWithSpaces, ParsingResultNode, singleQuotedString } from './GeneralParsers';
+import { createResultNode, fieldArguments, ident, identWithSpaces } from './GeneralParsers';
 import { Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { PartialUnvalidatedInputFieldDeclaration, UnvalidatedFieldArgument } from '../inputFieldParser/InputFieldDeclaration';
 import { BIND_TARGET } from './BindTargetParsers';
-
-const nonStringArgumentValue: Parser<string> = P.regexp(/^[^()',]+/).describe('any character except parentheses, single quotation marks and commas');
-
-const argumentValue: Parser<ParsingResultNode> = P.or(singleQuotedString, nonStringArgumentValue).node(createResultNode);
-
-const argumentValues: Parser<ParsingResultNode[]> = P.separateBy(argumentValue, P.string(',').trim(P_UTILS.optionalWhitespace()));
-
-const inputFieldArgument: Parser<UnvalidatedFieldArgument> = P.sequenceMap(
-	(name, value): UnvalidatedFieldArgument => {
-		return {
-			name: name,
-			value: value,
-		};
-	},
-	ident.node(createResultNode),
-	argumentValues
-		.trim(P_UTILS.optionalWhitespace())
-		.wrap(P.string('('), P.string(')'))
-		.optional([] as ParsingResultNode[])
-);
-
-const inputFieldArguments: Parser<UnvalidatedFieldArgument[]> = P.separateBy(inputFieldArgument, P.string(',').trim(P_UTILS.optionalWhitespace()));
 
 export const INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclaration> = P.sequenceMap(
 	(type, args, b) => {
@@ -33,11 +11,11 @@ export const INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclara
 		return {
 			inputFieldType: type,
 			arguments: args,
-			bindTarget: bindTarget,
-		};
+			bindTarget: bindTarget
+		} satisfies PartialUnvalidatedInputFieldDeclaration;
 	},
 	ident.node(createResultNode).describe('input field type'),
-	inputFieldArguments
+	fieldArguments
 		.trim(P_UTILS.optionalWhitespace())
 		.wrap(P.string('('), P.string(')'))
 		.optional([] as UnvalidatedFieldArgument[]),
@@ -50,11 +28,11 @@ export const PARTIAL_INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFiel
 		return {
 			inputFieldType: type,
 			arguments: args,
-			bindTarget: bindTarget,
-		};
+			bindTarget: bindTarget
+		} satisfies PartialUnvalidatedInputFieldDeclaration;
 	},
 	ident.node(createResultNode).optional().describe('input field type'),
-	inputFieldArguments
+	fieldArguments
 		.trim(P_UTILS.optionalWhitespace())
 		.wrap(P.string('('), P.string(')'))
 		.optional([] as UnvalidatedFieldArgument[]),
@@ -63,36 +41,30 @@ export const PARTIAL_INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFiel
 
 export const INPUT_FIELD_FULL_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclaration> = P.or(
 	P.sequenceMap(
-		(_1, templateName, _2, declaration, _3) => {
+		(_1, templateName, declaration) => {
 			declaration.templateName = templateName;
 			return declaration;
 		},
 		P.string('INPUT'),
 		P.sequenceMap((_1, templateName, _2) => templateName, P.string('['), identWithSpaces.node(createResultNode).describe('template name'), P.string(']')),
-		P.string('['),
-		PARTIAL_INPUT_FIELD_DECLARATION,
-		P.string(']'),
+		PARTIAL_INPUT_FIELD_DECLARATION.wrap(P.string('['), P.string(']')),
 		P_UTILS.eof()
 	),
 	P.sequenceMap(
-		(_1, _2, declaration, _3) => {
+		(_1, declaration) => {
 			return declaration;
 		},
 		P.string('INPUT'),
-		P.string('['),
-		INPUT_FIELD_DECLARATION,
-		P.string(']'),
+		INPUT_FIELD_DECLARATION.wrap(P.string('['), P.string(']')),
 		P_UTILS.eof()
 	)
 );
 
 export const TEMPLATE_INPUT_FIELD_FULL_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclaration> = P.sequenceMap(
-	(_1, _2, declaration, _3) => {
+	(_1, declaration) => {
 		return declaration;
 	},
 	P.string('INPUT'),
-	P.string('['),
-	PARTIAL_INPUT_FIELD_DECLARATION,
-	P.string(']'),
+	PARTIAL_INPUT_FIELD_DECLARATION.wrap(P.string('['), P.string(']')),
 	P_UTILS.eof()
 );

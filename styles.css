@@ -26,6 +26,11 @@ body {
 	margin: 0;
 }
 
+div.mb-view-wrapper.mb-view-markdown > p {
+	margin: 0;
+	display: inline-block;
+}
+
 div.mb-view-wrapper {
 	display: inline;
 }

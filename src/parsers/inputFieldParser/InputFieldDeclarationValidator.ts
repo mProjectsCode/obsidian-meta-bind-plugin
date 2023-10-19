@@ -36,7 +36,7 @@ export class InputFieldDeclarationValidator {
 			errorCollection: this.errorCollection.merge(this.unvalidatedDeclaration.errorCollection),
 		};
 
-		this.checkForDepracation(declaration);
+		this.checkForDeprecation(declaration);
 
 		return declaration;
 	}
@@ -73,7 +73,7 @@ export class InputFieldDeclarationValidator {
 		return InputFieldType.INVALID;
 	}
 
-	private checkForDepracation(declaration: InputFieldDeclaration): void {
+	private checkForDeprecation(declaration: InputFieldDeclaration): void {
 		if (
 			declaration.inputFieldType === InputFieldType.DATE_PICKER_DEPRECATED ||
 			declaration.inputFieldType === InputFieldType.TEXT_AREA_DEPRECATED ||
@@ -132,7 +132,7 @@ export class InputFieldDeclarationValidator {
 							'Declaration Validator',
 							`Failed to parse input field arguments. Argument "${
 								argument.name.value
-							}" is only applicable to "${inputFieldArgument.getAllowedInputFieldsAsString()}" input fields.`,
+							}" is only applicable to "${inputFieldArgument.getAllowedFieldsAsString()}" input fields.`,
 							this.unvalidatedDeclaration.fullDeclaration,
 							argument.name.position
 						)
@@ -144,7 +144,7 @@ export class InputFieldDeclarationValidator {
 							'Declaration Validator',
 							`Failed to parse input field arguments. Argument "${
 								argument.name.value
-							}" is only applicable to "${inputFieldArgument.getAllowedInputFieldsAsString()}" input fields.`
+							}" is only applicable to "${inputFieldArgument.getAllowedFieldsAsString()}" input fields.`
 						)
 					);
 				}

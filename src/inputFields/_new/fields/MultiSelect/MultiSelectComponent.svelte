@@ -1,6 +1,8 @@
-<script lang="ts">
-	import {MBLiteral, stringifyLiteral} from '../../../../utils/Utils';
-	import {OptionInputFieldArgument} from '../../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
+<script lang='ts'>
+	import { MBLiteral } from '../../../../utils/Utils';
+	import {
+		OptionInputFieldArgument
+	} from '../../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 
 	export let value: MBLiteral[];
 	export let options: OptionInputFieldArgument[];
@@ -30,10 +32,10 @@
 
 {#each options as option}
 	<div
-		class="mb-select-input-element"
+		class='mb-select-input-element'
 		class:is-selected={value.includes(option.value)}
-		role="button"
-		tabindex="0"
+		role='button'
+		tabindex='0'
 		on:click={() => selectOption(option.value)}
 		on:keypress={(event) => selectOptionOnKey(event, option.value)}
 	>

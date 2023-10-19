@@ -2,7 +2,7 @@ import { ErrorLevel } from '../utils/errors/MetaBindErrors';
 import { IPlugin } from '../IPlugin';
 import { BIND_TARGET } from './nomParsers/BindTargetParsers';
 import { ParsingValidationError } from './ParsingError';
-import { BindTargetDeclaration, UnvalidatedBindTargetDeclaration } from './inputFieldParser/InputFieldDeclaration';
+import { BindTargetDeclaration, FullBindTarget, UnvalidatedBindTargetDeclaration } from './inputFieldParser/InputFieldDeclaration';
 import { BindTargetScope } from '../metadata/BindTargetScope';
 
 export class BindTargetParser {
@@ -86,5 +86,19 @@ export class BindTargetParser {
 		} else {
 			return bindTarget;
 		}
+	}
+
+	public toFullDeclaration(bindTarget: undefined, filePath: string): undefined;
+	public toFullDeclaration(bindTarget: BindTargetDeclaration, filePath: string): FullBindTarget;
+	public toFullDeclaration(bindTarget: BindTargetDeclaration | undefined, filePath: string): FullBindTarget | undefined;
+	public toFullDeclaration(bindTarget: BindTargetDeclaration | undefined, filePath: string): FullBindTarget | undefined {
+		if (bindTarget === undefined) {
+			return undefined;
+		}
+
+		if (bindTarget.filePath === undefined) {
+			bindTarget.filePath = filePath;
+		}
+		return bindTarget as FullBindTarget;
 	}
 }

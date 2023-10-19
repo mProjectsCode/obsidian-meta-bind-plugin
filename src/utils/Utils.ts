@@ -77,7 +77,7 @@ export function mod(n: number, m: number): number {
  * @param arr1
  * @param arr2
  */
-export function doArraysContainEqualValues<T>(arr1: T[] | undefined, arr2: T[] | undefined): boolean {
+export function areArraysEqual<T>(arr1: T[] | undefined, arr2: T[] | undefined): boolean {
 	if (arr1 == null && arr2 == null) {
 		return true;
 	}
