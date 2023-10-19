@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang='ts'>
 	export let value: string;
 	export let placeholder: string;
 	export let onValueChange: (value: string) => void;
@@ -8,4 +8,4 @@
 	}
 </script>
 
-<textarea tabindex="0" placeholder={placeholder} bind:value={value} on:input={() => onValueChange(value)}></textarea>
+<textarea tabindex='0' placeholder={placeholder} bind:value={value} on:input={() => onValueChange(value)}></textarea>

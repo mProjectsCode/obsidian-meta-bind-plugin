@@ -19,7 +19,7 @@ export type ViewFieldArgumentConfig = FieldArgumentConfig<ViewFieldArgumentType,
 export const ViewFieldArgumentConfigs: Record<ViewFieldArgumentType, ViewFieldArgumentConfig> = {
 	[ViewFieldArgumentType.RENDER_MARKDOWN]: {
 		type: ViewFieldArgumentType.RENDER_MARKDOWN,
-		allowedFieldTypes: [],
+		allowedFieldTypes: [ViewFieldType.TEXT],
 		values: [
 			[],
 			[

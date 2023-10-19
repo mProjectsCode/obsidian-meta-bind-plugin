@@ -1,7 +1,7 @@
 <script src='../../_new/fields/Slider/SliderIPF.ts'></script>
-<script lang="ts">
-	import {ProgressBarInputField} from './ProgressBarInputField';
-	import {clamp, remapRange} from '../../../utils/Utils';
+<script lang='ts'>
+	import { ProgressBarInputField } from './ProgressBarInputField';
+	import { clamp, remapRange } from '../../../utils/Utils';
 
 
 	export let onValueChange: (value: any) => void;
@@ -145,19 +145,19 @@
 />
 
 <div
-	class="mb-progress-bar-input"
-	tabindex="0"
+	class='mb-progress-bar-input'
+	tabindex='0'
 	bind:this={progressBarEl}
-	role="slider"
+	role='slider'
 	aria-valuemin={progressBarInput.minValue}
 	aria-valuemax={progressBarInput.maxValue}
 	aria-valuenow={value}
 	on:keydown={onKeyPress}
 	on:mousedown={onTrackEvent}
 	on:touchstart={onTrackEvent}>
-	<div class="mb-progress-bar-progress" style={`width: ${getProgressPercent(value)}%`}
+	<div class='mb-progress-bar-progress' style={`width: ${getProgressPercent(value)}%`}
 		 on:dragstart={() => drag = true}></div>
-	<span class="mb-progress-bar-value">{value}</span>
-	<span class="mb-progress-bar-label-left">{progressBarInput.minValue}</span>
-	<span class="mb-progress-bar-label-right">{progressBarInput.maxValue}</span>
+	<span class='mb-progress-bar-value'>{value}</span>
+	<span class='mb-progress-bar-label-left'>{progressBarInput.minValue}</span>
+	<span class='mb-progress-bar-label-right'>{progressBarInput.maxValue}</span>
 </div>

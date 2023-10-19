@@ -1,5 +1,5 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
-import { isLiteral, MBLiteral, stringifyLiteral } from '../../../../utils/Utils';
+import { isLiteral, MBLiteral } from '../../../../utils/Utils';
 import { InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { SvelteComponent } from 'svelte';
 import SelectComponent from './SelectComponent.svelte';

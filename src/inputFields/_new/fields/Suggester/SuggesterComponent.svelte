@@ -1,5 +1,5 @@
-<script lang="ts">
-	import {MBLiteral, stringifyLiteral} from '../../../../utils/Utils';
+<script lang='ts'>
+	import { MBLiteral } from '../../../../utils/Utils';
 	import Icon from '../../../../utils/Icon.svelte';
 	import LinkComponent from '../../../../utils/LinkComponent.svelte';
 	import { isMdLink, MarkdownLink, parseMdLink } from '../../../../parsers/MarkdownLinkParser';
@@ -14,8 +14,8 @@
 	let isLink: boolean = false;
 
 	onMount(() => {
-		setValue(value)
-	})
+		setValue(value);
+	});
 
 	export function setValue(v: MBLiteral): void {
 		let valueAsString = v?.toString() ?? 'null';
@@ -47,36 +47,36 @@
 </script>
 
 <style>
-    .suggest-input {
-        background:    var(--background-secondary);
-        border-radius: var(--mb-border-radius);
-        border:        var(--mb-border-width) solid var(--background-modifier-border);
-        padding:       5px 5px 5px 7px;
-        cursor:        pointer;
-        position:      relative;
-        color:         var(--text-normal);
-        display:       inline-flex;
-        align-items:   center;
-        gap:           5px;
-    }
+	.suggest-input {
+		background:    var(--background-secondary);
+		border-radius: var(--mb-border-radius);
+		border:        var(--mb-border-width) solid var(--background-modifier-border);
+		padding:       5px 5px 5px 7px;
+		cursor:        pointer;
+		position:      relative;
+		color:         var(--text-normal);
+		display:       inline-flex;
+		align-items:   center;
+		gap:           5px;
+	}
 
-    .suggest-text {
-        display: inline-block;
-    }
+	.suggest-text {
+		display: inline-block;
+	}
 </style>
 
 <div
-	class="suggest-input"
+	class='suggest-input'
 	on:click={openSuggester}
 	on:keydown={openSuggesterOnKey}
-	role="button"
-	tabindex=0>
-	<div class="suggest-text">
+	role='button'
+	tabindex='0'>
+	<div class='suggest-text'>
 		{#if isLink}
 			<LinkComponent bind:mdLink={mdLink}></LinkComponent>
 		{:else}
 			<span>{str}</span>
 		{/if}
 	</div>
-	<Icon iconName="list"/>
+	<Icon iconName='list' />
 </div>

@@ -1,8 +1,8 @@
-<script lang="ts">
-	import {genSvelteId, getDateRows, getWeekDays} from './DatePickerInputSvelteHelpers.js';
-	import {createEventDispatcher} from 'svelte';
-	import {moment} from 'obsidian';
-	import type {Moment} from 'moment';
+<script lang='ts'>
+	import { genSvelteId, getDateRows, getWeekDays } from './DatePickerInputSvelteHelpers.js';
+	import { createEventDispatcher } from 'svelte';
+	import { moment } from 'obsidian';
+	import type { Moment } from 'moment';
 
 	const dispatch = createEventDispatcher();
 
@@ -76,6 +76,7 @@
 
 	.selected {
 		background: var(--interactive-accent);
+		color:      var(--text-on-accent);
 	}
 
 	.highlight:hover {
@@ -87,19 +88,19 @@
 	}
 </style>
 
-<div class="calendar">
-	<div class="calendar-header">
+<div class='calendar'>
+	<div class='calendar-header'>
 		{#each getWeekDays() as day}
-			<div class="cell header-cell">
-				<span class="cell-text">{day}</span>
+			<div class='cell header-cell'>
+				<span class='cell-text'>{day}</span>
 			</div>
 		{/each}
 	</div>
 
-	<div class="calendar-content">
+	<div class='calendar-content'>
 		{#each cells as value (genSvelteId())}
 			<div
-				class="cell"
+				class='cell'
 				on:click={() => selectCell(value)}
 				on:keydown={(event) => selectCellKey(event, value)}
 				role='button'
@@ -107,7 +108,7 @@
 				class:highlight={value}
 				class:content-cell={value}
 				class:selected={selectedDate?.year() === year && selectedDate?.month() === month && selectedDate?.date() === value}>
-				<span class="cell-text">{value || ''}</span>
+				<span class='cell-text'>{value || ''}</span>
 			</div>
 		{/each}
 	</div>

@@ -1,5 +1,5 @@
-<script lang="ts">
-	import {imagePathToUri} from '../../../utils/Utils';
+<script lang='ts'>
+	import { imagePathToUri } from '../../../utils/Utils';
 
 	export let image: string;
 	export let onSelect: (item: string) => void;
@@ -27,8 +27,8 @@
 	}
 </style>
 
-<div class="image-card" on:click={() => onSelect(image)} on:keydown={(event) => keySelect(event, image)} role="button"
-	 tabindex=0>
-	<img class="image-card-image" src={imagePathToUri(image)} alt={image}/>
-	<span class="image-card-text">{image}</span>
+<div class='image-card' on:click={() => onSelect(image)} on:keydown={(event) => keySelect(event, image)} role='button'
+	 tabindex='0'>
+	<img class='image-card-image' src={imagePathToUri(image)} alt={image} />
+	<span class='image-card-text'>{image}</span>
 </div>

@@ -1,13 +1,15 @@
-import { ErrorLevel, MetaBindExpressionError } from '../utils/errors/MetaBindErrors';
 import { Listener, Signal } from '../utils/Signal';
 import { RenderChildType } from './InputFieldMDRC';
-import { ViewField } from '../viewFields/ViewField';
-import * as MathJs from 'mathjs';
 import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
 import MetaBindPlugin from '../main';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
 import { BindTargetDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
+import { AbstractViewField } from '../viewFields/AbstractViewField';
+import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
+import { AbstractViewFieldArgument } from '../fieldArguments/viewFieldArguments/AbstractViewFieldArgument';
+import { ViewFieldArgumentType } from '../parsers/viewFieldParser/ViewFieldConfigs';
+import { ComputedMetadataSubscription, ComputedSubscriptionDependency } from '../metadata/MetadataFileCache';
 
 export interface ViewFieldVariable {
 	bindTargetDeclaration: BindTargetDeclaration;
@@ -19,13 +21,13 @@ export interface ViewFieldVariable {
 }
 
 export class ViewFieldMDRC extends AbstractViewFieldMDRC {
-	viewField: ViewField;
+	viewField?: AbstractViewField;
 
 	fullDeclaration?: string;
-	expressionStr?: string;
-	expression?: MathJs.EvalFunction;
 	viewFieldDeclaration: ViewFieldDeclaration;
 	variables: ViewFieldVariable[];
+	metadataSubscription?: ComputedMetadataSubscription;
+	inputSignal: Signal<any>;
 
 	constructor(
 		containerEl: HTMLElement,
@@ -39,102 +41,83 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 
 		this.errorCollection.merge(declaration.errorCollection);
 
-		this.viewField = new ViewField(this);
 		this.fullDeclaration = declaration.fullDeclaration;
 		this.viewFieldDeclaration = declaration;
 		this.variables = [];
+		this.inputSignal = new Signal<any>(undefined);
 
 		if (this.errorCollection.isEmpty()) {
 			try {
-				let varCounter = 0;
-				this.expressionStr = '';
-
-				for (const entry of this.viewFieldDeclaration.declaration ?? []) {
-					if (typeof entry !== 'string') {
-						const variable = {
-							bindTargetDeclaration: entry,
-							writeSignal: new Signal<any>(undefined),
-							uuid: self.crypto.randomUUID(),
-							metadataCache: undefined,
-							writeSignalListener: undefined,
-							contextName: `MB_VAR_${varCounter}`,
-							listenToChildren: false,
-						};
-
-						this.variables.push(variable);
-						this.expressionStr += variable.contextName;
-						varCounter += 1;
-					} else {
-						this.expressionStr += entry;
-					}
-				}
-
-				this.expression = MathJs.compile(this.expressionStr);
+				this.viewField = this.plugin.api.viewFieldFactory.createViewField(declaration.viewFieldType, this);
+				this.variables = this.viewField?.buildVariables(this.viewFieldDeclaration) ?? [];
 			} catch (e) {
 				this.errorCollection.add(e);
 			}
 		}
 	}
 
-	buildContext(): Record<string, any> {
-		const context: Record<string, any> = {};
-		for (const variable of this.variables ?? []) {
-			if (!variable.contextName || !variable.writeSignal) {
-				continue;
-			}
-
-			context[variable.contextName] = variable.writeSignal.get() ?? '';
-		}
-
-		return context;
-	}
-
-	async evaluateExpression(): Promise<string> {
-		if (!this.expression) {
-			throw new MetaBindExpressionError(ErrorLevel.ERROR, 'failed to evaluate expression', 'expression is undefined');
-		}
-
-		const context = this.buildContext();
-		try {
-			return this.expression.evaluate(context);
-		} catch (e: any) {
-			throw new MetaBindExpressionError(ErrorLevel.ERROR, `failed to evaluate expression`, e, {
-				declaration: this.viewFieldDeclaration.declaration,
-				expression: this.expressionStr,
-				context: context,
-			});
-		}
-	}
-
 	registerSelfToMetadataManager(): void {
-		for (const variable of this.variables) {
-			variable.writeSignalListener = variable.writeSignal.registerListener({
-				callback: () => {
-					this.viewField.update();
-				},
-			});
-
-			this.plugin.metadataManager.register(
-				variable.bindTargetDeclaration.filePath ?? this.filePath,
-				variable.writeSignal,
-				variable.bindTargetDeclaration.metadataPath,
-				variable.listenToChildren,
-				this.uuid + '/' + variable.uuid
+		try {
+			this.metadataSubscription = this.plugin.metadataManager.subscribeComputed(
+				this.uuid,
+				this.inputSignal,
+				this.plugin.api.bindTargetParser.toFullDeclaration(this.viewFieldDeclaration.writeToBindTarget, this.filePath),
+				this.variables.map((x): ComputedSubscriptionDependency => {
+					return {
+						bindTarget: this.plugin.api.bindTargetParser.toFullDeclaration(x.bindTargetDeclaration, this.filePath),
+						callbackSignal: x.writeSignal,
+					};
+				}),
+				async () => await this.viewField?.computeValue(this.variables)
 			);
+
+			this.inputSignal.registerListener({ callback: value => this.viewField?.update(value) });
+		} catch (e) {
+			this.errorCollection.add(e);
 		}
+
+		// for (const variable of this.variables) {
+		// 	variable.writeSignalListener = variable.writeSignal.registerListener({
+		// 		callback: () => {
+		// 			this.viewField?.update(this.variables);
+		// 		},
+		// 	});
+		//
+		// 	this.plugin.metadataManager.register(
+		// 		variable.bindTargetDeclaration.filePath ?? this.filePath,
+		// 		variable.writeSignal,
+		// 		variable.bindTargetDeclaration.metadataPath,
+		// 		variable.listenToChildren,
+		// 		this.uuid + '/' + variable.uuid
+		// 	);
+		// }
 	}
 
 	unregisterSelfFromMetadataManager(): void {
-		for (const variable of this.variables) {
-			if (variable.writeSignalListener) {
-				variable.writeSignal.unregisterListener(variable.writeSignalListener);
-			}
-			this.plugin.metadataManager.unregister(variable.bindTargetDeclaration.filePath ?? this.filePath, this.uuid + '/' + variable.uuid);
-		}
+		this.metadataSubscription?.unsubscribe();
+
+		// for (const variable of this.variables) {
+		// 	if (variable.writeSignalListener) {
+		// 		variable.writeSignal.unregisterListener(variable.writeSignalListener);
+		// 	}
+		// 	this.plugin.metadataManager.unregister(variable.bindTargetDeclaration.filePath ?? this.filePath, this.uuid + '/' + variable.uuid);
+		// }
 	}
 
 	getInitialValue(): string {
 		return '';
+	}
+
+	getArguments(name: ViewFieldArgumentType): AbstractViewFieldArgument[] {
+		if (this.viewFieldDeclaration.errorCollection.hasErrors()) {
+			throw new MetaBindInternalError(ErrorLevel.ERROR, 'can not retrieve arguments', 'inputFieldDeclaration has errors');
+		}
+
+		return this.viewFieldDeclaration.argumentContainer.getAll(name);
+	}
+
+	getArgument(name: ViewFieldArgumentType): AbstractViewFieldArgument | undefined {
+		return this.getArguments(name).at(0);
 	}
 
 	async onload(): Promise<void> {
@@ -142,6 +125,10 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 
 		this.containerEl.addClass('mb-view');
 		this.containerEl.empty();
+
+		if (!this.errorCollection.hasErrors()) {
+			this.registerSelfToMetadataManager();
+		}
 
 		new ErrorIndicatorComponent({
 			target: this.containerEl,
@@ -155,13 +142,12 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 			return;
 		}
 
-		this.registerSelfToMetadataManager();
 		this.plugin.mdrcManager.registerMDRC(this);
 
 		const container: HTMLDivElement = createDiv();
 		container.addClass('mb-view-wrapper');
 
-		this.viewField.render(container);
+		this.viewField?.render(container);
 
 		this.containerEl.appendChild(container);
 	}
@@ -171,6 +157,7 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 
 		this.plugin.mdrcManager.unregisterMDRC(this);
 		this.unregisterSelfFromMetadataManager();
+		this.viewField?.destroy();
 
 		this.containerEl.empty();
 		this.containerEl.createEl('span', { text: 'unloaded meta bind view field', cls: 'mb-error' });

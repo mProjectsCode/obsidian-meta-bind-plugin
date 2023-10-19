@@ -16,7 +16,6 @@ const firstMetadataPathPart: Parser<UnvalidatedBindTargetDeclaration> = P.or(
 			return {
 				file: undefined,
 				boundToLocalScope: prefix === '^',
-				boundToComputedValue: prefix === '?',
 				path: firstPart,
 			};
 		},
@@ -28,7 +27,6 @@ const firstMetadataPathPart: Parser<UnvalidatedBindTargetDeclaration> = P.or(
 			return {
 				file: undefined,
 				boundToLocalScope: prefix === '^',
-				boundToComputedValue: prefix === '?',
 				path: [firstPart, ...bracketPath],
 			};
 		},

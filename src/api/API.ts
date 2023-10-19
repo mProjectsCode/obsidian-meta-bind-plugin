@@ -15,6 +15,7 @@ import { BindTargetScope } from '../metadata/BindTargetScope';
 import { MetaBindTable } from '../metaBindTable/MetaBindTable';
 import { NewInputFieldFactory } from '../inputFields/_new/NewInputFieldFactory';
 import { JsViewFieldDeclaration, UnvalidatedViewFieldDeclaration, ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
+import { ViewFieldFactory } from '../viewFields/ViewFieldFactory';
 
 export class API implements IAPI {
 	public plugin: MetaBindPlugin;
@@ -26,6 +27,7 @@ export class API implements IAPI {
 	public readonly bindTargetParser: BindTargetParser;
 
 	public readonly inputFieldFactory: NewInputFieldFactory;
+	public readonly viewFieldFactory: ViewFieldFactory;
 
 	constructor(plugin: MetaBindPlugin) {
 		this.plugin = plugin;
@@ -37,6 +39,7 @@ export class API implements IAPI {
 		this.bindTargetParser = new BindTargetParser(this.plugin);
 
 		this.inputFieldFactory = new NewInputFieldFactory(this.plugin);
+		this.viewFieldFactory = new ViewFieldFactory(this.plugin);
 	}
 
 	public createInputField(

@@ -16,11 +16,11 @@ export abstract class AbstractInputField<T extends MBExtendedLiteral> {
 
 		this.onValueChange = (value: T | undefined) => {
 			console.debug(`meta-bind | input field on value change`, value);
-			this.renderChild.readSignal.set(value);
+			this.renderChild.outputSignal.set(value);
 		};
 
 		this.filteredWriteSignal = new ComputedSignal<MBExtendedLiteral | undefined, T>(
-			this.renderChild.writeSignal,
+			this.renderChild.inputSignal,
 			(value: MBExtendedLiteral | undefined) => {
 				const filteredValue = this.filterValue(value);
 				return filteredValue !== undefined ? filteredValue : this.getDefaultValue();

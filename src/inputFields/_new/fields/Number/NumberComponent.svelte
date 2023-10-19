@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang='ts'>
 	export let value: number;
 	export let placeholder: string;
 	export let onValueChange: (value: number) => void;
@@ -8,4 +8,4 @@
 	}
 </script>
 
-<input type="number" tabindex="0" placeholder={placeholder} bind:value={value} on:input={() => onValueChange(value)}>
+<input type='number' tabindex='0' placeholder={placeholder} bind:value={value} on:input={() => onValueChange(value)}>

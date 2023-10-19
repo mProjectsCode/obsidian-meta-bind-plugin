@@ -1,7 +1,7 @@
-<script lang="ts">
-	import {MetaBindTable, MetaBindTableCell} from './MetaBindTable';
-	import {onDestroy, onMount} from 'svelte';
-	import {Component} from 'obsidian';
+<script lang='ts'>
+	import { MetaBindTable, MetaBindTableCell } from './MetaBindTable';
+	import { onDestroy, onMount } from 'svelte';
+	import { Component } from 'obsidian';
 
 	export let table: MetaBindTable;
 	export let cell: MetaBindTableCell;

@@ -1,5 +1,5 @@
-<script lang="ts">
-	import {imagePathToUri} from '../../../utils/Utils';
+<script lang='ts'>
+	import { imagePathToUri } from '../../../utils/Utils';
 
 	export let showSuggest: () => void;
 
@@ -47,14 +47,14 @@
 	}
 </style>
 
-<div class="image-suggest-input">
+<div class='image-suggest-input'>
 	{#if image}
-		<img class="image-suggest-image" src={imagePathToUri(image)} alt={image}/>
+		<img class='image-suggest-image' src={imagePathToUri(image)} alt={image} />
 	{/if}
-	<div class="image-suggest-footer">
-		<span class="image-suggest-footer-text">{image || 'no image selected'}</span>
+	<div class='image-suggest-footer'>
+		<span class='image-suggest-footer-text'>{image || 'no image selected'}</span>
 		<button
-			class="btn btn-active"
+			class='btn btn-active'
 			on:click={suggest}
 			on:keydown={suggestKey}>
 			change image
