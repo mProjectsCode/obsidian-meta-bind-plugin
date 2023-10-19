@@ -29,11 +29,9 @@ export class TextVF extends AbstractViewField {
 			if (typeof entry !== 'string') {
 				const variable: ViewFieldVariable = {
 					bindTargetDeclaration: entry,
-					writeSignal: new Signal<any>(undefined),
+					inputSignal: new Signal<any>(undefined),
 					uuid: self.crypto.randomUUID(),
-					writeSignalListener: undefined,
 					contextName: `MB_VAR_${varCounter}`,
-					listenToChildren: false,
 				};
 
 				variables.push(variable);
@@ -80,7 +78,7 @@ export class TextVF extends AbstractViewField {
 		return this.textParts
 			.map(x => {
 				if (typeof x === 'number') {
-					return variables[x].writeSignal.get();
+					return variables[x].inputSignal.get();
 				} else {
 					return x;
 				}

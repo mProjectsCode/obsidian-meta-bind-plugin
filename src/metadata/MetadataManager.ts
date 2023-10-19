@@ -355,21 +355,6 @@ export class MetadataManager {
 					console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata value`, value);
 					listener.notify(value);
 				}
-
-				// if (listener.bindTarget.listenToChildren) {
-				// 	// TODO: this should update when there is any overlap in the beginning of the array
-				// 	if (arrayStartsWith(metadataPath, listener.bindTarget.metadataPath)) {
-				// 		const actualValue = traverseObjectByPath(listener.bindTarget.metadataPath, fileCache.metadata);
-				// 		console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata value`, actualValue);
-				// 		listener.notify(actualValue);
-				// 	}
-				// } else {
-				// 	if (arrayStartsWith(listener.bindTarget.metadataPath, metadataPath)) {
-				// 		const actualValue = traverseObjectByPath(listener.bindTarget.metadataPath, fileCache.metadata);
-				// 		console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata value`, actualValue);
-				// 		listener.notify(actualValue);
-				// 	}
-				// }
 			} else {
 				const v = traverseObjectByPath(listener.bindTarget.metadataPath, fileCache.metadata);
 				console.debug(

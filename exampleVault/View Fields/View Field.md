@@ -2,8 +2,8 @@
 number1: 12
 number2: 200
 unit: km
-distance: 12534
-computed: "**12534**"
+distance: 12
+computed: "**12**"
 ---
 
 `INPUT[number:number1]`

@@ -56,9 +56,12 @@ export const VIEW_FIELD_FULL_DECLARATION: Parser<PartialUnvalidatedViewFieldDecl
 
 const jsViewFieldBindTargetMapping: Parser<UnvalidatedJsViewFieldBindTargetMapping> = P.sequenceMap(
 	(bindTarget, children, _1, name) => {
+		if (children !== undefined) {
+			bindTarget.listenToChildren = true;
+		}
+
 		return {
 			bindTarget: bindTarget,
-			listenToChildren: children !== undefined,
 			name: name
 		} satisfies UnvalidatedJsViewFieldBindTargetMapping;
 	},

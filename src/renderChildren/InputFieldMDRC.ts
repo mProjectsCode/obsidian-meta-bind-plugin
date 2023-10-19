@@ -35,7 +35,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 	 */
 	public outputSignal: Signal<MBExtendedLiteral | undefined>;
 
-	metadataSubscription?: MetadataSubscription;
+	private metadataSubscription?: MetadataSubscription;
 
 	constructor(
 		containerEl: HTMLElement,

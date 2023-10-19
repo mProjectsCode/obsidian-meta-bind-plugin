@@ -16,10 +16,11 @@ const firstMetadataPathPart: Parser<UnvalidatedBindTargetDeclaration> = P.or(
 			return {
 				file: undefined,
 				boundToLocalScope: prefix === '^',
+				listenToChildren: false,
 				path: firstPart,
-			};
+			} satisfies UnvalidatedBindTargetDeclaration;
 		},
-		P.or(P.string('^'), P.string('?')).optional(),
+		P.string('^').optional(),
 		bracketMetadataPathPart.atLeast(1)
 	),
 	P.sequenceMap(
@@ -27,10 +28,11 @@ const firstMetadataPathPart: Parser<UnvalidatedBindTargetDeclaration> = P.or(
 			return {
 				file: undefined,
 				boundToLocalScope: prefix === '^',
+				listenToChildren: false,
 				path: [firstPart, ...bracketPath],
-			};
+			} satisfies UnvalidatedBindTargetDeclaration;
 		},
-		P.or(P.string('^'), P.string('?')).optional(),
+		P.string('^').skip(P.string('.')).optional(),
 		metadataPathPartIdent,
 		bracketMetadataPathPart.many()
 	)

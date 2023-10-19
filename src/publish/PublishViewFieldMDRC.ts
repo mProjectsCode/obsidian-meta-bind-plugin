@@ -54,11 +54,9 @@ export class PublishViewFieldMDRC extends MarkdownRenderChild {
 					if (typeof entry !== 'string') {
 						const variable: ViewFieldVariable = {
 							bindTargetDeclaration: entry,
-							writeSignal: new Signal<any>(undefined),
+							inputSignal: new Signal<any>(undefined),
 							uuid: self.crypto.randomUUID(),
-							writeSignalListener: undefined,
 							contextName: `MB_VAR_${varCounter}`,
-							listenToChildren: false,
 						};
 
 						this.variables.push(variable);
@@ -81,11 +79,11 @@ export class PublishViewFieldMDRC extends MarkdownRenderChild {
 	buildContext(): Record<string, any> {
 		const context: Record<string, any> = {};
 		for (const variable of this.variables ?? []) {
-			if (!variable.contextName || !variable.writeSignal) {
+			if (!variable.contextName || !variable.inputSignal) {
 				continue;
 			}
 
-			context[variable.contextName] = variable.writeSignal.get() ?? '';
+			context[variable.contextName] = variable.inputSignal.get() ?? '';
 		}
 
 		return context;
