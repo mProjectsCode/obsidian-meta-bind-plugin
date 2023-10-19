@@ -28,11 +28,9 @@ export class MathVF extends AbstractViewField {
 			if (typeof entry !== 'string') {
 				const variable: ViewFieldVariable = {
 					bindTargetDeclaration: entry,
-					writeSignal: new Signal<any>(undefined),
+					inputSignal: new Signal<any>(undefined),
 					uuid: self.crypto.randomUUID(),
-					writeSignalListener: undefined,
 					contextName: `MB_VAR_${varCounter}`,
-					listenToChildren: false,
 				};
 
 				variables.push(variable);
@@ -60,11 +58,11 @@ export class MathVF extends AbstractViewField {
 	buildContext(variables: ViewFieldVariable[]): Record<string, any> {
 		const context: Record<string, any> = {};
 		for (const variable of variables ?? []) {
-			if (!variable.contextName || !variable.writeSignal) {
+			if (!variable.contextName || !variable.inputSignal) {
 				continue;
 			}
 
-			context[variable.contextName] = variable.writeSignal.get() ?? '';
+			context[variable.contextName] = variable.inputSignal.get() ?? '';
 		}
 
 		return context;

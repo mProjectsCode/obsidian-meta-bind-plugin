@@ -3,8 +3,8 @@ playerCount: 6
 playerLevel: 4
 enemy:
   - name: Somthing
-    level: 4
-    count: 1
+    level: 2
+    count: 2
     variant: 0
   - name: Some other thing
     level: 2

@@ -39,11 +39,9 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 				for (const bindTargetMapping of this.viewFieldDeclaration.bindTargetMappings ?? []) {
 					this.variables.push({
 						bindTargetDeclaration: bindTargetMapping.bindTarget,
-						writeSignal: new Signal<any>(undefined),
+						inputSignal: new Signal<any>(undefined),
 						uuid: self.crypto.randomUUID(),
-						writeSignalListener: undefined,
 						contextName: bindTargetMapping.name,
-						listenToChildren: bindTargetMapping.listenToChildren,
 					});
 				}
 
@@ -67,11 +65,11 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 	buildContext(): Record<string, any> {
 		const context: Record<string, any> = {};
 		for (const variable of this.variables ?? []) {
-			if (!variable.contextName || !variable.writeSignal) {
+			if (!variable.contextName || !variable.inputSignal) {
 				continue;
 			}
 
-			context[variable.contextName] = variable.writeSignal.get() ?? '';
+			context[variable.contextName] = variable.inputSignal.get() ?? '';
 		}
 
 		return context;
@@ -106,7 +104,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 			this.variables.map((x): ComputedSubscriptionDependency => {
 				return {
 					bindTarget: this.plugin.api.bindTargetParser.toFullDeclaration(x.bindTargetDeclaration, this.filePath),
-					callbackSignal: x.writeSignal,
+					callbackSignal: x.inputSignal,
 				};
 			}),
 			() => this.update()

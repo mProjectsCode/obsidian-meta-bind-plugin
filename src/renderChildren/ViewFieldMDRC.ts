@@ -13,11 +13,9 @@ import { ComputedMetadataSubscription, ComputedSubscriptionDependency } from '..
 
 export interface ViewFieldVariable {
 	bindTargetDeclaration: BindTargetDeclaration;
-	writeSignal: Signal<any>;
+	inputSignal: Signal<any>;
 	uuid: string;
-	writeSignalListener: Listener<any> | undefined;
 	contextName: string | undefined;
-	listenToChildren: boolean;
 }
 
 export class ViewFieldMDRC extends AbstractViewFieldMDRC {
@@ -65,7 +63,7 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 				this.variables.map((x): ComputedSubscriptionDependency => {
 					return {
 						bindTarget: this.plugin.api.bindTargetParser.toFullDeclaration(x.bindTargetDeclaration, this.filePath),
-						callbackSignal: x.writeSignal,
+						callbackSignal: x.inputSignal,
 					};
 				}),
 				async () => await this.viewField?.computeValue(this.variables)

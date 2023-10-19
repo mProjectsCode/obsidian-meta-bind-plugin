@@ -39,6 +39,7 @@ export interface InputFieldDeclaration {
 export interface UnvalidatedBindTargetDeclaration {
 	file?: ParsingResultNode;
 	boundToLocalScope: boolean;
+	listenToChildren: boolean;
 	path: ParsingResultNode[];
 }
 

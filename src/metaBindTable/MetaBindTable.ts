@@ -9,6 +9,7 @@ import MetaBindTableComponent from './MetaBindTableComponent.svelte';
 import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
 import { Component } from 'obsidian';
 import { UnvalidatedViewFieldDeclaration, ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
+import { MetadataSubscription } from '../metadata/MetadataFileCache';
 
 export type MetaBindTableCell = InputFieldDeclaration | ViewFieldDeclaration;
 
@@ -29,16 +30,18 @@ export class MetaBindTable extends AbstractMDRC {
 	columns: MetaBindColumnDeclaration[];
 	tableComponent: MetaBindTableComponent | undefined;
 
-	private metadataManagerReadSignalListener: Listener<T | undefined> | undefined;
+	private metadataManagerOutputSignalListener: Listener<T | undefined> | undefined;
 
 	/**
 	 * Signal to write to the input field
 	 */
-	public writeSignal: Signal<T | undefined>;
+	public inputSignal: Signal<T | undefined>;
 	/**
 	 * Signal to read from the input field
 	 */
-	public readSignal: Signal<T | undefined>;
+	public outputSignal: Signal<T | undefined>;
+
+	private metadataSubscription?: MetadataSubscription;
 
 	constructor(
 		containerEl: HTMLElement,
@@ -55,30 +58,34 @@ export class MetaBindTable extends AbstractMDRC {
 		this.tableHead = tableHead;
 		this.columns = columns;
 
-		this.writeSignal = new Signal<T | undefined>(undefined);
-		this.readSignal = new Signal<T | undefined>(undefined);
+		this.inputSignal = new Signal<T | undefined>(undefined);
+		this.outputSignal = new Signal<T | undefined>(undefined);
 	}
 
 	registerSelfToMetadataManager(): undefined {
-		this.metadataManagerReadSignalListener = this.readSignal.registerListener({ callback: this.updateMetadataManager.bind(this) });
+		this.metadataManagerOutputSignalListener = this.outputSignal.registerListener({ callback: this.updateMetadataManager.bind(this) });
 
-		this.plugin.metadataManager.register(this.bindTarget.filePath ?? this.filePath, this.writeSignal, this.bindTarget.metadataPath, false, this.uuid);
+		this.metadataSubscription = this.plugin.metadataManager.subscribe(
+			this.uuid,
+			this.inputSignal,
+			this.plugin.api.bindTargetParser.toFullDeclaration(this.bindTarget, this.filePath)
+		);
 	}
 
 	unregisterSelfFromMetadataManager(): void {
-		if (this.metadataManagerReadSignalListener) {
-			this.readSignal.unregisterListener(this.metadataManagerReadSignalListener);
+		if (this.metadataManagerOutputSignalListener) {
+			this.outputSignal.unregisterListener(this.metadataManagerOutputSignalListener);
 		}
 
-		this.plugin.metadataManager.unregister(this.bindTarget.filePath ?? this.filePath, this.uuid);
+		this.metadataSubscription?.unsubscribe();
 	}
 
 	updateMetadataManager(value: unknown): void {
-		this.plugin.metadataManager.updatePropertyInCache(value, this.bindTarget.metadataPath, this.bindTarget.filePath ?? this.filePath, this.uuid);
+		this.metadataSubscription?.update(value);
 	}
 
 	getInitialValue(): T {
-		return this.writeSignal.get() ?? [];
+		return this.inputSignal.get() ?? [];
 	}
 
 	updateDisplayValue(values: T | undefined): void {
@@ -90,6 +97,7 @@ export class MetaBindTable extends AbstractMDRC {
 				const scope = new BindTargetScope({
 					metadataPath: [...this.bindTarget.metadataPath, i.toString()],
 					filePath: this.bindTarget.filePath,
+					listenToChildren: false,
 					boundToLocalScope: false,
 				});
 
@@ -132,16 +140,16 @@ export class MetaBindTable extends AbstractMDRC {
 	}
 
 	removeColumn(index: number): void {
-		const value = this.writeSignal.get() ?? [];
+		const value = this.inputSignal.get() ?? [];
 		value.splice(index, 1);
-		this.readSignal.set(value);
+		this.outputSignal.set(value);
 		this.updateDisplayValue(value);
 	}
 
 	addColumn(): void {
-		const value = this.writeSignal.get() ?? [];
+		const value = this.inputSignal.get() ?? [];
 		value.push({});
-		this.readSignal.set(value);
+		this.outputSignal.set(value);
 		this.updateDisplayValue(value);
 	}
 
@@ -156,13 +164,13 @@ export class MetaBindTable extends AbstractMDRC {
 			},
 		});
 
-		this.writeSignal.registerListener({
+		this.inputSignal.registerListener({
 			callback: values => {
 				this.updateDisplayValue(values);
 			},
 		});
 
-		this.updateDisplayValue(this.writeSignal.get());
+		this.updateDisplayValue(this.inputSignal.get());
 	}
 
 	public onunload(): void {

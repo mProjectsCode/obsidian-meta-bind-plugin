@@ -70,6 +70,7 @@ export class BindTargetParser {
 
 		bindTargetDeclaration.metadataPath = unvalidatedBindTargetDeclaration.path.map(x => x.value);
 		bindTargetDeclaration.boundToLocalScope = unvalidatedBindTargetDeclaration.boundToLocalScope;
+		bindTargetDeclaration.listenToChildren = unvalidatedBindTargetDeclaration.listenToChildren;
 
 		return this.resolveScope(bindTargetDeclaration, scope);
 	}

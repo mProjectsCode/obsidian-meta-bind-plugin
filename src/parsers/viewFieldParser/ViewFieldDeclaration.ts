@@ -45,7 +45,6 @@ export interface ViewFieldDeclaration {
 
 export interface UnvalidatedJsViewFieldBindTargetMapping {
 	bindTarget: UnvalidatedBindTargetDeclaration;
-	listenToChildren: boolean;
 	name: string;
 }
 
