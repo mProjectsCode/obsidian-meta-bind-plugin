@@ -10,7 +10,7 @@ const viewFieldMathJS = P.manyNotOf('{}[]').describe('MathJS');
 
 export const VIEW_FIELD_DECLARATION: Parser<(string | UnvalidatedBindTargetDeclaration)[]> = P.sequenceMap(
 	(first, other) => {
-		return [first, ...other.reduce<(UnvalidatedBindTargetDeclaration | string)[]>((acc, x) => acc.concat(x), [])];
+		return [first, ...other.flat()];
 	},
 	viewFieldMathJS,
 	P.sequence(BIND_TARGET.wrap(P.string('{'), P.string('}')), viewFieldMathJS).many()
