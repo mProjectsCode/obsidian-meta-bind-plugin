@@ -1,6 +1,6 @@
 import { AbstractViewField } from '../AbstractViewField';
-import { ViewFieldDeclaration } from '../../parsers/viewFieldParser/ViewFieldDeclaration';
-import { ViewFieldMDRC, ViewFieldVariable } from '../../renderChildren/ViewFieldMDRC';
+import { type ViewFieldDeclaration } from '../../parsers/viewFieldParser/ViewFieldDeclaration';
+import { type ViewFieldMDRC, type ViewFieldVariable } from '../../renderChildren/ViewFieldMDRC';
 import { ErrorLevel, MetaBindExpressionError } from '../../utils/errors/MetaBindErrors';
 import * as MathJs from 'mathjs';
 import { Signal } from '../../utils/Signal';
@@ -47,16 +47,17 @@ export class MathVF extends AbstractViewField {
 		return variables;
 	}
 
-	protected _render(container: HTMLElement): void | Promise<void> {}
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	protected _render(container: HTMLElement): void {}
 
-	async _update(container: HTMLElement, text: string): Promise<any> {
+	protected _update(container: HTMLElement, text: string): void {
 		container.innerText = text;
 	}
 
 	public destroy(): void {}
 
-	buildContext(variables: ViewFieldVariable[]): Record<string, any> {
-		const context: Record<string, any> = {};
+	buildContext(variables: ViewFieldVariable[]): Record<string, unknown> {
+		const context: Record<string, unknown> = {};
 		for (const variable of variables ?? []) {
 			if (!variable.contextName || !variable.inputSignal) {
 				continue;
@@ -75,12 +76,16 @@ export class MathVF extends AbstractViewField {
 
 		const context = this.buildContext(variables);
 		try {
-			return this.expression.evaluate(context);
-		} catch (e: any) {
-			throw new MetaBindExpressionError(ErrorLevel.ERROR, `failed to evaluate expression`, e, {
-				expression: this.expressionStr,
-				context: context,
-			});
+			return this.expression.evaluate(context) as Promise<string>;
+		} catch (e) {
+			if (e instanceof Error) {
+				throw new MetaBindExpressionError(ErrorLevel.ERROR, `failed to evaluate expression`, e, {
+					expression: this.expressionStr,
+					context: context,
+				});
+			} else {
+				throw new Error('failed to evaluate js expression because of: unexpected thrown value');
+			}
 		}
 	}
 

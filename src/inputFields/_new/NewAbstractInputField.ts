@@ -8,7 +8,7 @@ import { DefaultValueInputFieldArgument } from '../../fieldArguments/inputFieldA
 export abstract class NewAbstractInputField<MetadataValueType, ComponentValueType> extends Notifier<MetadataValueType, Listener<MetadataValueType>> {
 	readonly renderChild: InputFieldMDRC;
 	readonly inputFieldComponent: InputFieldComponent<ComponentValueType>;
-	readonly signal: ComputedSignal<any, MetadataValueType>;
+	readonly signal: ComputedSignal<unknown, MetadataValueType>;
 
 	protected constructor(renderChild: InputFieldMDRC) {
 		super();
@@ -16,9 +16,9 @@ export abstract class NewAbstractInputField<MetadataValueType, ComponentValueTyp
 		this.renderChild = renderChild;
 		this.inputFieldComponent = new InputFieldComponent<ComponentValueType>(this.getSvelteComponent());
 
-		this.signal = new ComputedSignal<any, MetadataValueType>(this.renderChild.inputSignal, (value: any): MetadataValueType => {
+		this.signal = new ComputedSignal<unknown, MetadataValueType>(this.renderChild.inputSignal, (value: unknown): MetadataValueType => {
 			const filteredValue = this.filterValue(value);
-			return filteredValue !== undefined ? filteredValue : this.getDefaultValue();
+			return filteredValue ?? this.getDefaultValue();
 		});
 
 		this.signal.registerListener({
@@ -27,7 +27,7 @@ export abstract class NewAbstractInputField<MetadataValueType, ComponentValueTyp
 
 		this.inputFieldComponent.registerListener({
 			callback: value => {
-				console.log('input field component change', value);
+				// console.log('input field component change', value);
 				this.notifyListeners(this.mapValue(value));
 			},
 		});
@@ -40,7 +40,7 @@ export abstract class NewAbstractInputField<MetadataValueType, ComponentValueTyp
 	 *
 	 * @param value
 	 */
-	protected abstract filterValue(value: any): MetadataValueType | undefined;
+	protected abstract filterValue(value: unknown): MetadataValueType | undefined;
 
 	protected abstract getFallbackDefaultValue(): ComponentValueType;
 
@@ -108,10 +108,10 @@ export abstract class NewAbstractInputField<MetadataValueType, ComponentValueTyp
 			return this.mapValue(this.getFallbackDefaultValue());
 		}
 		const filteredValue = this.filterValue(defaultValueArgument.value);
-		return filteredValue !== undefined ? filteredValue : this.mapValue(this.getFallbackDefaultValue());
+		return filteredValue ?? this.mapValue(this.getFallbackDefaultValue());
 	}
 
-	protected getMountArgs(): Record<string, any> {
+	protected getMountArgs(): Record<string, unknown> {
 		return {};
 	}
 

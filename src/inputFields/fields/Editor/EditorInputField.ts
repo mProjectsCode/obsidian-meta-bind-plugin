@@ -47,7 +47,7 @@ export class EditorInputField extends AbstractInputField<T> {
 			throw new MetaBindInternalError(
 				ErrorLevel.WARNING,
 				'failed to get html element for input field',
-				"container is undefined, field hasn't been rendered yet"
+				"container is undefined, field hasn't been rendered yet",
 			);
 		}
 

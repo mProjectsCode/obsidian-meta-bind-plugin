@@ -32,7 +32,7 @@ export class ListSuggestInputField extends AbstractInputField<T> {
 				throw new MetaBindArgumentError(
 					ErrorLevel.ERROR,
 					'can not create suggest input field',
-					`dataview needs to be installed and enabled to use suggest option queries`
+					`dataview needs to be installed and enabled to use suggest option queries`,
 				);
 			}
 		}
@@ -67,7 +67,7 @@ export class ListSuggestInputField extends AbstractInputField<T> {
 			throw new MetaBindInternalError(
 				ErrorLevel.WARNING,
 				'failed to get html element for input field',
-				"container is undefined, field hasn't been rendered yet"
+				"container is undefined, field hasn't been rendered yet",
 			);
 		}
 
@@ -83,7 +83,7 @@ export class ListSuggestInputField extends AbstractInputField<T> {
 
 		const optionArguments: OptionInputFieldArgument[] = this.renderChild.getArguments(InputFieldArgumentType.OPTION) as OptionInputFieldArgument[];
 		const optionQueryArguments: OptionQueryInputFieldArgument[] = this.renderChild.getArguments(
-			InputFieldArgumentType.OPTION_QUERY
+			InputFieldArgumentType.OPTION_QUERY,
 		) as OptionQueryInputFieldArgument[];
 
 		const useLinksArgument: UseLinksInputFieldArgument | undefined = this.renderChild.getArgument(InputFieldArgumentType.USE_LINKS) as

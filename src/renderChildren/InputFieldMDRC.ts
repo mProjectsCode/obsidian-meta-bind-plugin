@@ -1,17 +1,17 @@
-import { AbstractInputFieldArgument } from '../fieldArguments/inputFieldArguments/AbstractInputFieldArgument';
-import { ClassInputFieldArgument } from '../fieldArguments/inputFieldArguments/arguments/ClassInputFieldArgument';
+import { type ClassInputFieldArgument } from '../fieldArguments/inputFieldArguments/arguments/ClassInputFieldArgument';
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
-import { ShowcaseInputFieldArgument } from '../fieldArguments/inputFieldArguments/arguments/ShowcaseInputFieldArgument';
-import { TitleInputFieldArgument } from '../fieldArguments/inputFieldArguments/arguments/TitleInputFieldArgument';
-import { isTruthy, MBExtendedLiteral } from '../utils/Utils';
-import { Listener, Signal } from '../utils/Signal';
+import { type ShowcaseInputFieldArgument } from '../fieldArguments/inputFieldArguments/arguments/ShowcaseInputFieldArgument';
+import { type TitleInputFieldArgument } from '../fieldArguments/inputFieldArguments/arguments/TitleInputFieldArgument';
+import { isTruthy } from '../utils/Utils';
+import { type Listener, Signal } from '../utils/Signal';
 import { AbstractMDRC } from './AbstractMDRC';
-import { MetadataSubscription } from '../metadata/MetadataFileCache';
-import MetaBindPlugin from '../main';
+import { type MetadataSubscription } from '../metadata/MetadataFileCache';
+import type MetaBindPlugin from '../main';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
-import { InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
+import { type InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { InputFieldArgumentType, InputFieldType } from '../parsers/inputFieldParser/InputFieldConfigs';
-import { NewInputField } from '../inputFields/_new/NewInputFieldFactory';
+import { type NewInputField } from '../inputFields/_new/NewInputFieldFactory';
+import { type InputFieldArgumentMapType } from '../fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
 
 export enum RenderChildType {
 	INLINE = 'inline',
@@ -24,16 +24,16 @@ export class InputFieldMDRC extends AbstractMDRC {
 	fullDeclaration?: string;
 	inputFieldDeclaration: InputFieldDeclaration;
 
-	private metadataManagerOutputSignalListener: Listener<MBExtendedLiteral | undefined> | undefined;
+	private metadataManagerOutputSignalListener: Listener<unknown> | undefined;
 
 	/**
 	 * Signal to write to the input field
 	 */
-	public inputSignal: Signal<MBExtendedLiteral | undefined>;
+	public inputSignal: Signal<unknown>;
 	/**
 	 * Signal to read from the input field
 	 */
-	public outputSignal: Signal<MBExtendedLiteral | undefined>;
+	public outputSignal: Signal<unknown>;
 
 	private metadataSubscription?: MetadataSubscription;
 
@@ -43,7 +43,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 		declaration: InputFieldDeclaration,
 		plugin: MetaBindPlugin,
 		filePath: string,
-		uuid: string
+		uuid: string,
 	) {
 		super(containerEl, renderChildType, plugin, filePath, uuid);
 
@@ -52,14 +52,14 @@ export class InputFieldMDRC extends AbstractMDRC {
 		this.fullDeclaration = declaration.fullDeclaration;
 		this.inputFieldDeclaration = declaration;
 
-		this.inputSignal = new Signal<MBExtendedLiteral | undefined>(undefined);
-		this.outputSignal = new Signal<MBExtendedLiteral | undefined>(undefined);
+		this.inputSignal = new Signal<unknown>(undefined);
+		this.outputSignal = new Signal<unknown>(undefined);
 
 		if (!this.errorCollection.hasErrors()) {
 			try {
 				this.inputField = this.plugin.api.inputFieldFactory.createInputField(this.inputFieldDeclaration.inputFieldType, renderChildType, this);
 				this.inputField?.registerListener({ callback: value => this.outputSignal.set(value) });
-			} catch (e: any) {
+			} catch (e) {
 				this.errorCollection.add(e);
 			}
 		}
@@ -74,7 +74,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 		this.metadataSubscription = this.plugin.metadataManager.subscribe(
 			this.uuid,
 			this.inputSignal,
-			this.plugin.api.bindTargetParser.toFullDeclaration(this.inputFieldDeclaration.bindTarget, this.filePath)
+			this.plugin.api.bindTargetParser.toFullDeclaration(this.inputFieldDeclaration.bindTarget, this.filePath),
 		);
 
 		this.metadataManagerOutputSignalListener = this.outputSignal.registerListener({ callback: value => this.updateMetadataManager(value) });
@@ -102,7 +102,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 		this.metadataSubscription?.update(value);
 	}
 
-	getArguments(name: InputFieldArgumentType): AbstractInputFieldArgument[] {
+	getArguments<T extends InputFieldArgumentType>(name: T): InputFieldArgumentMapType<T>[] {
 		if (this.inputFieldDeclaration.errorCollection.hasErrors()) {
 			throw new MetaBindInternalError(ErrorLevel.ERROR, 'can not retrieve arguments', 'inputFieldDeclaration has errors');
 		}
@@ -110,7 +110,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 		return this.inputFieldDeclaration.argumentContainer.getAll(name);
 	}
 
-	getArgument(name: InputFieldArgumentType): AbstractInputFieldArgument | undefined {
+	getArgument<T extends InputFieldArgumentType>(name: T): InputFieldArgumentMapType<T> | undefined {
 		return this.getArguments(name).at(0);
 	}
 
@@ -130,7 +130,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 		return isTruthy(this.inputFieldDeclaration?.isBound) && isTruthy(this.inputFieldDeclaration.bindTarget);
 	}
 
-	async onload(): Promise<void> {
+	onload(): void {
 		console.log('meta-bind | InputFieldMarkdownRenderChild >> load', this);
 
 		this.containerEl.addClass('mb-input');
@@ -156,10 +156,8 @@ export class InputFieldMDRC extends AbstractMDRC {
 		// if card container this points to the container.
 		let wrapperContainer: HTMLElement;
 
-		const showcaseArgument: ShowcaseInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.SHOWCASE) as
-			| ShowcaseInputFieldArgument
-			| undefined;
-		const titleArgument: TitleInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.TITLE) as TitleInputFieldArgument | undefined;
+		const showcaseArgument: ShowcaseInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.SHOWCASE);
+		const titleArgument: TitleInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.TITLE);
 
 		// --- Determine Wrapper Element ---
 		if (this.shouldAddCardContainer()) {
@@ -199,7 +197,7 @@ export class InputFieldMDRC extends AbstractMDRC {
 		this.inputField?.mount(container);
 
 		// --- Apply Class Arguments ---
-		const classArguments: ClassInputFieldArgument[] = this.getArguments(InputFieldArgumentType.CLASS) as ClassInputFieldArgument[];
+		const classArguments: ClassInputFieldArgument[] = this.getArguments(InputFieldArgumentType.CLASS);
 		if (classArguments) {
 			container.addClasses(classArguments.map(x => x.value).flat());
 		}

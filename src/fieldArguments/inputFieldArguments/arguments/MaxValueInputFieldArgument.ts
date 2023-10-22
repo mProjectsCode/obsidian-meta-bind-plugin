@@ -1,7 +1,7 @@
 import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
 import { ErrorLevel, MetaBindParsingError } from '../../../utils/errors/MetaBindErrors';
-import { InputFieldArgumentConfig, InputFieldArgumentConfigs } from '../../../parsers/inputFieldParser/InputFieldConfigs';
-import { ParsingResultNode } from '../../../parsers/nomParsers/GeneralParsers';
+import { type InputFieldArgumentConfig, InputFieldArgumentConfigs } from '../../../parsers/inputFieldParser/InputFieldConfigs';
+import { type ParsingResultNode } from '../../../parsers/nomParsers/GeneralParsers';
 
 export class MaxValueInputFieldArgument extends AbstractInputFieldArgument {
 	value: number = 100;
@@ -12,7 +12,7 @@ export class MaxValueInputFieldArgument extends AbstractInputFieldArgument {
 			throw new MetaBindParsingError(
 				ErrorLevel.ERROR,
 				'failed to set value for input field argument',
-				"value of argument 'maxValue' must be of type number"
+				"value of argument 'maxValue' must be of type number",
 			);
 		}
 	}

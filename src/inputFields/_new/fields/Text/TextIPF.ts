@@ -1,7 +1,7 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
 import { isLiteral } from '../../../../utils/Utils';
-import { InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
-import { SvelteComponent } from 'svelte';
+import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
+import { type SvelteComponent } from 'svelte';
 import TextComponent from './TextComponent.svelte';
 import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
 
@@ -10,7 +10,7 @@ export class TextIPF extends NewAbstractInputField<string, string> {
 		super(renderChild);
 	}
 
-	protected filterValue(value: any): string | undefined {
+	protected filterValue(value: unknown): string | undefined {
 		return isLiteral(value) ? value?.toString() : undefined;
 	}
 
@@ -30,7 +30,7 @@ export class TextIPF extends NewAbstractInputField<string, string> {
 		return value;
 	}
 
-	protected getMountArgs(): Record<string, any> {
+	protected getMountArgs(): Record<string, unknown> {
 		return {
 			placeholder: this.renderChild.getArgument(InputFieldArgumentType.PLACEHOLDER)?.value ?? 'Text',
 		};

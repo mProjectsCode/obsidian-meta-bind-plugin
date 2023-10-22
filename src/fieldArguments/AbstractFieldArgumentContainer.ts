@@ -1,12 +1,12 @@
 import { InputFieldArgumentType } from '../parsers/inputFieldParser/InputFieldConfigs';
 import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
-import { FieldArgumentConfig } from '../parsers/GeneralConfigs';
-import { AbstractFieldArgument } from './AbstractFieldArgument';
+import { type FieldArgumentConfig } from '../parsers/GeneralConfigs';
+import { type AbstractFieldArgument } from './AbstractFieldArgument';
 
 export abstract class AbstractFieldArgumentContainer<
 	FieldType extends string,
 	FieldArgumentType extends string,
-	FieldConfig extends FieldArgumentConfig<FieldArgumentType, FieldType>
+	FieldConfig extends FieldArgumentConfig<FieldArgumentType, FieldType>,
 > {
 	arguments: AbstractFieldArgument<FieldType, FieldArgumentType, FieldConfig>[] = [];
 
@@ -28,7 +28,7 @@ export abstract class AbstractFieldArgumentContainer<
 				throw new MetaBindParsingError(
 					ErrorLevel.CRITICAL,
 					'failed to validate argument container',
-					`argument '${argumentConfig.type}' does not allow duplicates`
+					`argument '${argumentConfig.type}' does not allow duplicates`,
 				);
 			}
 		}
@@ -41,7 +41,7 @@ export abstract class AbstractFieldArgumentContainer<
 	 * @param other
 	 */
 	mergeByOverride(
-		other: AbstractFieldArgumentContainer<FieldType, FieldArgumentType, FieldConfig>
+		other: AbstractFieldArgumentContainer<FieldType, FieldArgumentType, FieldConfig>,
 	): AbstractFieldArgumentContainer<FieldType, FieldArgumentType, FieldConfig> {
 		for (const argument of other.arguments) {
 			const argumentConfig = argument.getConfig();
@@ -64,7 +64,7 @@ export abstract class AbstractFieldArgumentContainer<
 	 * @param other
 	 */
 	mergeByThrow(
-		other: AbstractFieldArgumentContainer<FieldType, FieldArgumentType, FieldConfig>
+		other: AbstractFieldArgumentContainer<FieldType, FieldArgumentType, FieldConfig>,
 	): AbstractFieldArgumentContainer<FieldType, FieldArgumentType, FieldConfig> {
 		for (const argument of other.arguments) {
 			const argumentConfig = argument.getConfig();
@@ -73,7 +73,7 @@ export abstract class AbstractFieldArgumentContainer<
 					throw new MetaBindParsingError(
 						ErrorLevel.ERROR,
 						'failed to merge argument container',
-						'can not merge FieldArgumentContainers, since arguments overlap'
+						'can not merge FieldArgumentContainers, since arguments overlap',
 					);
 				}
 			}
@@ -86,6 +86,7 @@ export abstract class AbstractFieldArgumentContainer<
 		return this;
 	}
 
+	// TODO: every implementer needs to override this with the concrete type
 	getAll(name: FieldArgumentType): AbstractFieldArgument<FieldType, FieldArgumentType, FieldConfig>[] {
 		return this.arguments.filter(x => x.getConfig().type === name);
 	}

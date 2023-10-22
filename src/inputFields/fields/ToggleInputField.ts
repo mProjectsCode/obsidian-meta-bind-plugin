@@ -47,7 +47,7 @@ export class ToggleInputField extends AbstractInputField<T> {
 			throw new MetaBindInternalError(
 				ErrorLevel.WARNING,
 				'failed to get html element for input field',
-				"container is undefined, field hasn't been rendered yet"
+				"container is undefined, field hasn't been rendered yet",
 			);
 		}
 
@@ -77,8 +77,8 @@ export class ToggleInputField extends AbstractInputField<T> {
 				new MetaBindValueError(
 					ErrorLevel.WARNING,
 					'failed to reverse map value',
-					`invalid value '${value}' at toggleInputField ${this.renderChild.uuid}`
-				)
+					`invalid value '${value}' at toggleInputField ${this.renderChild.uuid}`,
+				),
 			);
 			return false;
 		}

@@ -1,8 +1,8 @@
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { JS_VIEW_FIELD_DECLARATION, VIEW_FIELD_FULL_DECLARATION } from '../nomParsers/ViewFieldParsers';
-import { IPlugin } from '../../IPlugin';
-import { BindTargetScope } from '../../metadata/BindTargetScope';
-import { JsViewFieldDeclaration, UnvalidatedViewFieldDeclaration, ViewFieldDeclaration } from './ViewFieldDeclaration';
+import { type IPlugin } from '../../IPlugin';
+import { type BindTargetScope } from '../../metadata/BindTargetScope';
+import { type JsViewFieldDeclaration, type UnvalidatedViewFieldDeclaration, type ViewFieldDeclaration } from './ViewFieldDeclaration';
 import { ViewFieldDeclarationValidator } from './ViewFieldDeclarationValidator';
 import { ViewFieldType } from './ViewFieldConfigs';
 import { ViewFieldArgumentContainer } from '../../fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
@@ -77,7 +77,6 @@ export class ViewFieldDeclarationParser {
 			declaration.bindTargetMappings = unvalidatedDeclaration.bindTargetMappings.map(x => {
 				return {
 					bindTarget: this.plugin.api.bindTargetParser.validateBindTarget(fullDeclaration, x.bindTarget),
-					listenToChildren: x.listenToChildren,
 					name: x.name,
 				};
 			});

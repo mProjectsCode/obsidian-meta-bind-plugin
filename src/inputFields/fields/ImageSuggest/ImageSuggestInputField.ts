@@ -57,7 +57,7 @@ export class ImageSuggestInputField extends AbstractInputField<T> {
 			throw new MetaBindInternalError(
 				ErrorLevel.WARNING,
 				'failed to get html element for input field',
-				"container is undefined, field hasn't been rendered yet"
+				"container is undefined, field hasn't been rendered yet",
 			);
 		}
 
@@ -71,7 +71,7 @@ export class ImageSuggestInputField extends AbstractInputField<T> {
 
 	async getOptions(): Promise<void> {
 		const folderPaths: OptionQueryInputFieldArgument[] = this.renderChild.getArguments(
-			InputFieldArgumentType.OPTION_QUERY
+			InputFieldArgumentType.OPTION_QUERY,
 		) as OptionQueryInputFieldArgument[];
 		const images: string[] = [];
 
@@ -83,7 +83,7 @@ export class ImageSuggestInputField extends AbstractInputField<T> {
 				const error = new MetaBindArgumentError(
 					ErrorLevel.ERROR,
 					'failed to get suggest options',
-					`expected suggest option query for image suggester to start and end with double quotation marks`
+					`expected suggest option query for image suggester to start and end with double quotation marks`,
 				);
 				new Notice(`meta-bind | ${error.message}`);
 				console.warn(error);
@@ -95,7 +95,7 @@ export class ImageSuggestInputField extends AbstractInputField<T> {
 				const error = new MetaBindArgumentError(
 					ErrorLevel.ERROR,
 					'failed to get suggest options',
-					`expected suggest option query ${folderPathString} for image suggester to exist`
+					`expected suggest option query ${folderPathString} for image suggester to exist`,
 				);
 				new Notice(`meta-bind | ${error.message}`);
 				console.warn(error);
@@ -106,7 +106,7 @@ export class ImageSuggestInputField extends AbstractInputField<T> {
 				const error = new MetaBindArgumentError(
 					ErrorLevel.ERROR,
 					'failed to get suggest options',
-					`expected suggest option query ${folderPath.value} for image suggester to be a folder`
+					`expected suggest option query ${folderPath.value} for image suggester to be a folder`,
 				);
 				new Notice(`meta-bind | ${error.message}`);
 				console.warn(error);
@@ -129,7 +129,7 @@ export class ImageSuggestInputField extends AbstractInputField<T> {
 				const error = new MetaBindArgumentError(
 					ErrorLevel.ERROR,
 					'failed to get suggest options',
-					`expected suggest option ${imagePath.value} to be truthy`
+					`expected suggest option ${imagePath.value} to be truthy`,
 				);
 				new Notice(`meta-bind | ${error.message}`);
 				console.warn(error);
@@ -142,7 +142,7 @@ export class ImageSuggestInputField extends AbstractInputField<T> {
 				const error = new MetaBindArgumentError(
 					ErrorLevel.ERROR,
 					'failed to get suggest options',
-					`expected suggest option ${imagePath.value} for image suggester to exist`
+					`expected suggest option ${imagePath.value} for image suggester to exist`,
 				);
 				new Notice(`meta-bind | ${error.message}`);
 				console.warn(error);
@@ -153,7 +153,7 @@ export class ImageSuggestInputField extends AbstractInputField<T> {
 				const error = new MetaBindArgumentError(
 					ErrorLevel.ERROR,
 					'failed to get suggest options',
-					`expected suggest option ${imagePath.value} for image suggester to be a file`
+					`expected suggest option ${imagePath.value} for image suggester to be a file`,
 				);
 				new Notice(`meta-bind | ${error.message}`);
 				console.warn(error);
@@ -164,7 +164,7 @@ export class ImageSuggestInputField extends AbstractInputField<T> {
 				const error = new MetaBindArgumentError(
 					ErrorLevel.ERROR,
 					'failed to get suggest options',
-					`expected suggest option ${imagePath.value} for image suggester to be an image file`
+					`expected suggest option ${imagePath.value} for image suggester to be an image file`,
 				);
 				new Notice(`meta-bind | ${error.message}`);
 				console.warn(error);

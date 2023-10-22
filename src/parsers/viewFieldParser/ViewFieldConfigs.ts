@@ -1,4 +1,4 @@
-import { FieldArgumentConfig } from '../GeneralConfigs';
+import { type FieldArgumentConfig } from '../GeneralConfigs';
 
 export enum ViewFieldType {
 	MATH = 'math',

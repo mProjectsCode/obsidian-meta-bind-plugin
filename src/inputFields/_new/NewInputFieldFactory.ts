@@ -1,7 +1,7 @@
-import { InputFieldConfig, InputFieldConfigs, InputFieldType } from '../../parsers/inputFieldParser/InputFieldConfigs';
-import { InputFieldMDRC, RenderChildType } from '../../renderChildren/InputFieldMDRC';
+import { type InputFieldConfig, InputFieldConfigs, InputFieldType } from '../../parsers/inputFieldParser/InputFieldConfigs';
+import { type InputFieldMDRC, RenderChildType } from '../../renderChildren/InputFieldMDRC';
 import { ErrorLevel, MetaBindParsingError } from '../../utils/errors/MetaBindErrors';
-import { IPlugin } from '../../IPlugin';
+import { type IPlugin } from '../../IPlugin';
 import { ToggleIPF } from './fields/Toggle/ToggleIPF';
 import { TextIPF } from './fields/Text/TextIPF';
 import { SliderIPF } from './fields/Slider/SliderIPF';

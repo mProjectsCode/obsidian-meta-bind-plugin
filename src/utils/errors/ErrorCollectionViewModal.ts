@@ -1,5 +1,5 @@
-import { App, Modal } from 'obsidian';
-import { ErrorCollection } from './ErrorCollection';
+import { type App, Modal } from 'obsidian';
+import { type ErrorCollection } from './ErrorCollection';
 import ErrorCollectionComponent from './ErrorCollectionComponent.svelte';
 
 export class ErrorCollectionViewModal extends Modal {

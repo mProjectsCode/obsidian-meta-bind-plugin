@@ -1,8 +1,8 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
-import { InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
+import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
 import { clamp } from '../../../../utils/Utils';
-import { SvelteComponent } from 'svelte';
+import { type SvelteComponent } from 'svelte';
 import ProgressBarComponent from './ProgressBarComponent.svelte';
 
 export class ProgressBarIPF extends NewAbstractInputField<number, number> {

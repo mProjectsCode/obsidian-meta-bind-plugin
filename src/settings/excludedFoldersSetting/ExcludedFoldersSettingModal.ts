@@ -1,5 +1,5 @@
-import { App, Modal } from 'obsidian';
-import MetaBindPlugin from '../../main';
+import { type App, Modal } from 'obsidian';
+import type MetaBindPlugin from '../../main';
 import ExcludedFoldersSettingComponent from './ExcludedFoldersSettingComponent.svelte';
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 

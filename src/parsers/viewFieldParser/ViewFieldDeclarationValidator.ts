@@ -1,15 +1,15 @@
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
-import { IPlugin } from '../../IPlugin';
-import { UnvalidatedViewFieldDeclaration, ViewFieldDeclaration } from './ViewFieldDeclaration';
-import { BindTargetScope } from '../../metadata/BindTargetScope';
-import { BindTargetDeclaration } from '../inputFieldParser/InputFieldDeclaration';
+import { type IPlugin } from '../../IPlugin';
+import { type UnvalidatedViewFieldDeclaration, type ViewFieldDeclaration } from './ViewFieldDeclaration';
+import { type BindTargetScope } from '../../metadata/BindTargetScope';
+import { type BindTargetDeclaration } from '../inputFieldParser/InputFieldDeclaration';
 import { ParsingValidationError } from '../ParsingError';
 import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
 import { ViewFieldArgumentType, ViewFieldType } from './ViewFieldConfigs';
-import { ParsingResultNode } from '../nomParsers/GeneralParsers';
+import { type ParsingResultNode } from '../nomParsers/GeneralParsers';
 import { ViewFieldArgumentContainer } from '../../fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
 import { ViewFieldArgumentFactory } from '../../fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
-import { AbstractViewFieldArgument } from '../../fieldArguments/viewFieldArguments/AbstractViewFieldArgument';
+import { type AbstractViewFieldArgument } from '../../fieldArguments/viewFieldArguments/AbstractViewFieldArgument';
 
 export class ViewFieldDeclarationValidator {
 	unvalidatedDeclaration: UnvalidatedViewFieldDeclaration;
@@ -51,6 +51,7 @@ export class ViewFieldDeclarationValidator {
 		}
 
 		for (const entry of Object.entries(ViewFieldType)) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
 			if (entry[1] === viewFieldType?.value) {
 				return entry[1];
 			}
@@ -63,16 +64,16 @@ export class ViewFieldDeclarationValidator {
 					'Declaration Validator',
 					`Encountered invalid identifier. Expected token to be a view field type but received '${viewFieldType.value}'.`,
 					this.unvalidatedDeclaration.fullDeclaration,
-					viewFieldType.position
-				)
+					viewFieldType.position,
+				),
 			);
 		} else {
 			this.errorCollection.add(
 				new ParsingValidationError(
 					ErrorLevel.ERROR,
 					'Declaration Validator',
-					`Encountered invalid identifier. Expected token to be a view field type but received '${viewFieldType?.value}'.`
-				)
+					`Encountered invalid identifier. Expected token to be a view field type but received '${viewFieldType?.value}'.`,
+				),
 			);
 		}
 
@@ -86,7 +87,7 @@ export class ViewFieldDeclarationValidator {
 			return this.plugin.api.bindTargetParser.validateBindTarget(
 				this.unvalidatedDeclaration.fullDeclaration,
 				this.unvalidatedDeclaration.writeToBindTarget,
-				scope
+				scope,
 			);
 		} else {
 			return undefined;
@@ -114,8 +115,8 @@ export class ViewFieldDeclarationValidator {
 								argument.name.value
 							}" is only applicable to "${viewFieldArgument.getAllowedFieldsAsString()}" view fields.`,
 							this.unvalidatedDeclaration.fullDeclaration,
-							argument.name.position
-						)
+							argument.name.position,
+						),
 					);
 				} else {
 					this.errorCollection.add(
@@ -124,8 +125,8 @@ export class ViewFieldDeclarationValidator {
 							'Declaration Validator',
 							`Failed to parse view field arguments. Argument "${
 								argument.name.value
-							}" is only applicable to "${viewFieldArgument.getAllowedFieldsAsString()}" view fields.`
-						)
+							}" is only applicable to "${viewFieldArgument.getAllowedFieldsAsString()}" view fields.`,
+						),
 					);
 				}
 
@@ -153,6 +154,7 @@ export class ViewFieldDeclarationValidator {
 
 	private validateArgumentType(argumentType: ParsingResultNode): ViewFieldArgumentType {
 		for (const entry of Object.entries(ViewFieldArgumentType)) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
 			if (entry[1] === argumentType.value) {
 				return entry[1];
 			}
@@ -165,16 +167,16 @@ export class ViewFieldDeclarationValidator {
 					'Declaration Validator',
 					`Encountered invalid identifier. Expected identifier to be a view field argument type but received '${argumentType.value}'.`,
 					this.unvalidatedDeclaration.fullDeclaration,
-					argumentType.position
-				)
+					argumentType.position,
+				),
 			);
 		} else {
 			this.errorCollection.add(
 				new ParsingValidationError(
 					ErrorLevel.WARNING,
 					'Declaration Validator',
-					`Encountered invalid identifier. Expected identifier to be a view field argument type but received '${argumentType.value}'.`
-				)
+					`Encountered invalid identifier. Expected identifier to be a view field argument type but received '${argumentType.value}'.`,
+				),
 			);
 		}
 

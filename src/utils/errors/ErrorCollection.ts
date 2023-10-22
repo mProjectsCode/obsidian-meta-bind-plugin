@@ -10,7 +10,7 @@ export class ErrorCollection {
 		this.errors = [];
 	}
 
-	add(error: any): void {
+	add(error: unknown): void {
 		if (error instanceof Error) {
 			if (error instanceof MetaBindError) {
 				this.errors.push(error);

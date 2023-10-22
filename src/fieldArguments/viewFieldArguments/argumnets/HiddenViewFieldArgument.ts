@@ -1,6 +1,6 @@
-import { ParsingResultNode } from '../../../parsers/nomParsers/GeneralParsers';
+import { type ParsingResultNode } from '../../../parsers/nomParsers/GeneralParsers';
 import { AbstractViewFieldArgument } from '../AbstractViewFieldArgument';
-import { ViewFieldArgumentConfig, ViewFieldArgumentConfigs } from '../../../parsers/viewFieldParser/ViewFieldConfigs';
+import { type ViewFieldArgumentConfig, ViewFieldArgumentConfigs } from '../../../parsers/viewFieldParser/ViewFieldConfigs';
 
 export class HiddenViewFieldArgument extends AbstractViewFieldArgument {
 	value: boolean = true;

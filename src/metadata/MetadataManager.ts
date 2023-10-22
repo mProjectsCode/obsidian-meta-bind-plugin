@@ -1,17 +1,17 @@
-import { CachedMetadata, TFile } from 'obsidian';
-import MetaBindPlugin from '../main';
+import { type CachedMetadata, type TFile } from 'obsidian';
+import type MetaBindPlugin from '../main';
 import { areArraysEqual, arrayStartsWith, traverseObjectToParentByPath } from '../utils/Utils';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
-import { Signal } from '../utils/Signal';
+import { type Signal } from '../utils/Signal';
 import {
 	ComputedMetadataSubscription,
-	ComputedSubscriptionDependency,
-	ComputeFunction,
-	IMetadataSubscription,
-	MetadataFileCache,
+	type ComputedSubscriptionDependency,
+	type ComputeFunction,
+	type IMetadataSubscription,
+	type MetadataFileCache,
 	MetadataSubscription,
 } from './MetadataFileCache';
-import { FullBindTarget } from '../parsers/inputFieldParser/InputFieldDeclaration';
+import { type FullBindTarget } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { ErrorLevel, MetaBindBindTargetError, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
 
 export const metadataCacheUpdateCycleThreshold = 5; // {syncInterval (200)} * 5 = 1s
@@ -44,6 +44,7 @@ function hasUpdateOverlap(a: FullBindTarget | undefined, b: FullBindTarget | und
  *
  * @param a
  * @param b
+ * @param listenToChildren whether b listens to updates in children
  */
 function metadataPathHasUpdateOverlap(a: string[], b: string[], listenToChildren: boolean): boolean {
 	if (areArraysEqual(a, b)) {
@@ -54,11 +55,7 @@ function metadataPathHasUpdateOverlap(a: string[], b: string[], listenToChildren
 		return true;
 	}
 
-	if (listenToChildren && arrayStartsWith(a, b)) {
-		return true;
-	}
-
-	return false;
+	return listenToChildren && arrayStartsWith(a, b);
 }
 
 function bindTargetToString(a: FullBindTarget | undefined): string {
@@ -80,7 +77,7 @@ export class MetadataManager {
 		this.cache = new Map<string, MetadataFileCache>();
 
 		this.plugin.registerEvent(
-			this.plugin.app.metadataCache.on('changed', (file, data, cache) => this.updateCacheOnFrontmatterUpdate(file.path, data, cache))
+			this.plugin.app.metadataCache.on('changed', (file, data, cache) => this.updateCacheOnFrontmatterUpdate(file.path, data, cache)),
 		);
 
 		this.interval = window.setInterval(() => this.update(), this.plugin.settings.syncInterval);
@@ -95,7 +92,7 @@ export class MetadataManager {
 
 		if (fileCache) {
 			console.debug(
-				`meta-bind | MetadataManager >> registered ${subscription.uuid} to existing file cache ${subscription.bindTarget.filePath} -> ${subscription.bindTarget.metadataPath}`
+				`meta-bind | MetadataManager >> registered ${subscription.uuid} to existing file cache ${subscription.bindTarget.filePath} -> ${subscription.bindTarget.metadataPath}`,
 			);
 
 			fileCache.inactive = false;
@@ -105,7 +102,7 @@ export class MetadataManager {
 			subscription.notify(traverseObjectByPath(subscription.bindTarget.metadataPath, fileCache.metadata));
 		} else {
 			console.debug(
-				`meta-bind | MetadataManager >> registered ${subscription.uuid} to newly created file cache ${subscription.bindTarget.filePath} -> ${subscription.bindTarget.metadataPath}`
+				`meta-bind | MetadataManager >> registered ${subscription.uuid} to newly created file cache ${subscription.bindTarget.filePath} -> ${subscription.bindTarget.metadataPath}`,
 			);
 
 			const file = this.plugin.app.vault.getAbstractFileByPath(subscription.bindTarget.filePath) as TFile;
@@ -128,7 +125,7 @@ export class MetadataManager {
 		}
 	}
 
-	subscribe(uuid: string, callbackSignal: Signal<any>, bindTarget: FullBindTarget): MetadataSubscription {
+	subscribe(uuid: string, callbackSignal: Signal<unknown>, bindTarget: FullBindTarget): MetadataSubscription {
 		const subscription: MetadataSubscription = new MetadataSubscription(uuid, callbackSignal, this, bindTarget);
 
 		this.subscribeSubscription(subscription);
@@ -138,10 +135,10 @@ export class MetadataManager {
 
 	subscribeComputed(
 		uuid: string,
-		callbackSignal: Signal<any>,
+		callbackSignal: Signal<unknown>,
 		bindTarget: FullBindTarget | undefined,
 		dependencies: ComputedSubscriptionDependency[],
-		computeFunction: ComputeFunction
+		computeFunction: ComputeFunction,
 	): ComputedMetadataSubscription {
 		const subscription: ComputedMetadataSubscription = new ComputedMetadataSubscription(
 			uuid,
@@ -149,7 +146,7 @@ export class MetadataManager {
 			this,
 			bindTarget,
 			dependencies,
-			computeFunction
+			computeFunction,
 		);
 
 		this.checkForLoops(subscription);
@@ -180,7 +177,7 @@ export class MetadataManager {
 			throw new MetaBindBindTargetError(
 				ErrorLevel.ERROR,
 				'bind target dependency loop detected',
-				`the loop is as follows: ${dependencyPath.map(x => `"${bindTargetToString(x.bindTarget)}"`).join(' -> ')}`
+				`the loop is as follows: ${dependencyPath.map(x => `"${bindTargetToString(x.bindTarget)}"`).join(' -> ')}`,
 			);
 		}
 
@@ -257,7 +254,7 @@ export class MetadataManager {
 		for (const [filePath, cacheEntry] of this.cache) {
 			// if the entry changed, update the frontmatter of the note
 			if (cacheEntry.changed) {
-				this.updateFrontmatter(cacheEntry);
+				void this.updateFrontmatter(cacheEntry);
 			}
 			cacheEntry.cyclesSinceLastChange += 1;
 
@@ -305,10 +302,11 @@ export class MetadataManager {
 
 		const { parent, child } = traverseObjectToParentByPath(metadataPath, fileCache.metadata);
 
-		if (parent.value === undefined) {
+		if (parent.value == null) {
 			throw Error(`The parent of "${JSON.stringify(metadataPath)}" does not exist in Object, please create the parent first`);
 		}
 
+		// @ts-ignore
 		parent.value[child.key] = value;
 		fileCache.cyclesSinceLastChange = 0;
 		fileCache.changed = true;
@@ -327,7 +325,7 @@ export class MetadataManager {
 			return;
 		}
 
-		const metadata: Record<string, any> = Object.assign({}, cache.frontmatter); // copy
+		const metadata: Record<string, unknown> = Object.assign({}, cache.frontmatter); // copy
 		delete metadata.position;
 
 		console.debug(`meta-bind | MetadataManager >> updating "${filePath}" on frontmatter update`, metadata);
@@ -351,19 +349,19 @@ export class MetadataManager {
 
 			if (metadataPath) {
 				if (metadataPathHasUpdateOverlap(metadataPath, listener.bindTarget.metadataPath, listener.bindTarget.listenToChildren)) {
-					const value = traverseObjectByPath(listener.bindTarget.metadataPath, fileCache.metadata);
+					const value: unknown = traverseObjectByPath(listener.bindTarget.metadataPath, fileCache.metadata);
 					console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata value`, value);
 					listener.notify(value);
 				}
 			} else {
-				const v = traverseObjectByPath(listener.bindTarget.metadataPath, fileCache.metadata);
+				const value: unknown = traverseObjectByPath(listener.bindTarget.metadataPath, fileCache.metadata);
 				console.debug(
 					`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata`,
 					listener.bindTarget.metadataPath,
 					fileCache.metadata,
-					v
+					value,
 				);
-				listener.notify(v);
+				listener.notify(value);
 			}
 		}
 	}

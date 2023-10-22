@@ -1,15 +1,14 @@
-import { MarkdownPostProcessorContext, Plugin } from 'obsidian';
+import { type MarkdownPostProcessorContext, Plugin } from 'obsidian';
 import { MetaBindSettingTab } from './settings/SettingsTab';
 import { RenderChildType } from './renderChildren/InputFieldMDRC';
-import { getFileName, isPath, removeFileEnding } from './utils/Utils';
 import { DateParser } from './parsers/DateParser';
 import { MetadataManager } from './metadata/MetadataManager';
 import { API } from './api/API';
 import { setFirstWeekday } from './inputFields/fields/DatePicker/DatePickerInputSvelteHelpers';
 import { createMarkdownRenderChildWidgetEditorPlugin } from './cm6/Cm6_ViewPlugin';
 import { MDRCManager } from './MDRCManager';
-import { DEFAULT_SETTINGS, InputFieldTemplate, MetaBindPluginSettings } from './settings/Settings';
-import { IPlugin } from './IPlugin';
+import { DEFAULT_SETTINGS, type InputFieldTemplate, type MetaBindPluginSettings } from './settings/Settings';
+import { type IPlugin } from './IPlugin';
 import { EnclosingPair, ParserUtils } from './utils/ParserUtils';
 import { ErrorLevel, MetaBindParsingError } from './utils/errors/MetaBindErrors';
 
@@ -89,6 +88,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			id: 'mb-debugger-command',
 			name: 'debugger',
 			callback: () => {
+				// eslint-disable-next-line no-debugger
 				debugger;
 			},
 		});
@@ -102,25 +102,29 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	}
 
 	getFilePathsByName(name: string): string[] {
-		const fileNameIsPath = isPath(name);
-		const processedFileName = fileNameIsPath ? removeFileEnding(name) : getFileName(removeFileEnding(name));
+		const bestLinkPath = this.app.metadataCache.getFirstLinkpathDest(name, '');
 
-		const allFiles = this.app.vault.getMarkdownFiles();
-		const filePaths: string[] = [];
-		for (const file of allFiles) {
-			// console.log(removeFileEnding(file.path));
-			if (fileNameIsPath) {
-				if (removeFileEnding(file.path) === processedFileName) {
-					filePaths.push(file.path);
-				}
-			} else {
-				if (getFileName(removeFileEnding(file.name)) === processedFileName) {
-					filePaths.push(file.path);
-				}
-			}
-		}
+		return bestLinkPath === null ? [] : [bestLinkPath.path];
 
-		return filePaths;
+		// const fileNameIsPath = isPath(name);
+		// const processedFileName = fileNameIsPath ? removeFileEnding(name) : getFileName(removeFileEnding(name));
+		//
+		// const allFiles = this.app.vault.getMarkdownFiles();
+		// const filePaths: string[] = [];
+		// for (const file of allFiles) {
+		// 	// console.log(removeFileEnding(file.path));
+		// 	if (fileNameIsPath) {
+		// 		if (removeFileEnding(file.path) === processedFileName) {
+		// 			filePaths.push(file.path);
+		// 		}
+		// 	} else {
+		// 		if (getFileName(removeFileEnding(file.name)) === processedFileName) {
+		// 			filePaths.push(file.path);
+		// 		}
+		// 	}
+		// }
+		//
+		// return filePaths;
 	}
 
 	isFilePathExcluded(path: string): boolean {
@@ -136,7 +140,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	async loadSettings(): Promise<void> {
 		console.log(`meta-bind | Main >> settings load`);
 
-		let loadedSettings = await this.loadData();
+		let loadedSettings = (await this.loadData()) as MetaBindPluginSettings;
 
 		loadedSettings = this.applyTemplatesMigration(Object.assign({}, DEFAULT_SETTINGS, loadedSettings));
 
@@ -154,7 +158,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		await this.saveData(this.settings);
 	}
 
-	applyTemplatesMigration(oldSettings: any): any {
+	applyTemplatesMigration(oldSettings: MetaBindPluginSettings): MetaBindPluginSettings {
 		if (oldSettings.inputTemplates !== undefined) {
 			const templates = oldSettings.inputTemplates;
 			const newTemplates: InputFieldTemplate[] = [];

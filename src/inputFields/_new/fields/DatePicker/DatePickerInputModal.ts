@@ -17,7 +17,7 @@ export class DatePickerInputModal extends Modal {
 			target: this.contentEl,
 			props: {
 				selectedDate: this.datePicker.getInternalValue(),
-				dateChangeCallback: (value: Moment | null) => {
+				dateChangeCallback: (value: Moment | null): void => {
 					this.datePicker.setInternalValue(value);
 					this.close();
 				},

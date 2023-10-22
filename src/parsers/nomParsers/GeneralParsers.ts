@@ -1,8 +1,8 @@
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
-import { Parser } from '@lemons_dev/parsinom/lib/Parser';
-import { ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
-import { UnvalidatedFieldArgument } from '../inputFieldParser/InputFieldDeclaration';
+import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
+import { type ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
+import { type UnvalidatedFieldArgument } from '../inputFieldParser/InputFieldDeclaration';
 
 export const ident = P.regexp(/^[a-z][a-z0-9_-]*/i)
 	.map(x => {
@@ -16,7 +16,7 @@ export const identWithSpaces = P.sequenceMap(
 		return a + b.map(x => x[0] + x[1]).join('');
 	},
 	ident,
-	P.sequence(P_UTILS.optionalWhitespace(), ident).many()
+	P.sequence(P_UTILS.optionalWhitespace(), ident).many(),
 ).describe('identifier with spaces');
 
 export const escapeCharacter = P.string('\\')
@@ -36,7 +36,7 @@ function stringFactory(quotes: string): Parser<string> {
 		.then(
 			P.or(escapeCharacter, P.noneOf(quotes + '\\'))
 				.many()
-				.map(x => x.join(''))
+				.map(x => x.join('')),
 		)
 		.skip(P.string(quotes));
 }
@@ -73,7 +73,7 @@ export const fieldArgument: Parser<UnvalidatedFieldArgument> = P.sequenceMap(
 	argumentValues
 		.trim(P_UTILS.optionalWhitespace())
 		.wrap(P.string('('), P.string(')'))
-		.optional([] as ParsingResultNode[])
+		.optional([] as ParsingResultNode[]),
 );
 
 export const fieldArguments: Parser<UnvalidatedFieldArgument[]> = P.separateBy(fieldArgument, P.string(',').trim(P_UTILS.optionalWhitespace()));

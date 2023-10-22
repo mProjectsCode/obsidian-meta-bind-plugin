@@ -16,7 +16,8 @@ export abstract class AbstractViewField {
 
 	abstract buildVariables(declaration: ViewFieldDeclaration): ViewFieldVariable[];
 
-	abstract computeValue(variables: ViewFieldVariable[]): any | Promise<any>;
+	// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+	abstract computeValue(variables: ViewFieldVariable[]): unknown | Promise<unknown>;
 
 	abstract getDefaultDisplayValue(): string;
 
@@ -30,12 +31,12 @@ export abstract class AbstractViewField {
 			this.container.addClass('mb-view-hidden');
 		}
 
-		this._render(container);
+		await this._render(container);
 
-		return await this.update(this.getDefaultDisplayValue());
+		await this.update(this.getDefaultDisplayValue());
 	}
 
-	async update(value: any): Promise<void> {
+	async update(value: unknown): Promise<void> {
 		if (!this.container) {
 			return;
 		}
@@ -45,7 +46,7 @@ export abstract class AbstractViewField {
 
 			if (!this.hidden) {
 				this.container.empty();
-				this._update(this.container, text);
+				await this._update(this.container, text);
 			}
 			this.container.removeClass('mb-error');
 		} catch (e) {

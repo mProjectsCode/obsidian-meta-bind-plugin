@@ -32,7 +32,7 @@ export class PublishAPI implements IAPI {
 		filePath: string,
 		metadata: Record<string, any> | undefined,
 		container: HTMLElement,
-		component: MarkdownPostProcessorContext
+		component: MarkdownPostProcessorContext,
 	): PublishInputFieldMDRC {
 		const declaration: InputFieldDeclaration = this.inputFieldParser.parseString(fullDeclaration, undefined);
 
@@ -47,7 +47,7 @@ export class PublishAPI implements IAPI {
 		filePath: string,
 		metadata: Record<string, any> | undefined,
 		container: HTMLElement,
-		component: MarkdownPostProcessorContext
+		component: MarkdownPostProcessorContext,
 	): PublishViewFieldMDRC {
 		const declaration: ViewFieldDeclaration = this.viewFieldParser.parseString(fullDeclaration);
 

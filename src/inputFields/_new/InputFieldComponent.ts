@@ -33,11 +33,11 @@ export class InputFieldComponent<Value> extends Notifier<Value, Listener<Value>>
 			{
 				value: initialValue,
 				onValueChange: (value: Value) => {
-					console.log('prop value change');
+					// console.log('prop value change');
 					this.notifyListeners(value);
 				},
 			},
-			mountArgs
+			mountArgs,
 		);
 
 		this.svelteComponentInstance = new this.svelteComponent({

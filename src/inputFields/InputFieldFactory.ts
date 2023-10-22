@@ -24,7 +24,7 @@ import { ListSuggestInputField } from './fields/listSuggest/ListSuggestInputFiel
 export class InputFieldFactory {
 	static createInputField(
 		inputFieldType: InputFieldType,
-		args: { renderChildType: RenderChildType; inputFieldMDRC: InputFieldMDRC }
+		args: { renderChildType: RenderChildType; inputFieldMDRC: InputFieldMDRC },
 	): AbstractInputField<any> | undefined {
 		if (inputFieldType !== InputFieldType.INVALID) {
 			InputFieldFactory.checkRenderChildTypeAllowed(inputFieldType, args.renderChildType, args.inputFieldMDRC.plugin);

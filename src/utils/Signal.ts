@@ -47,7 +47,7 @@ export interface Listener<T> {
 
 export type ListenerCallback<T> = (value: T) => void;
 
-export type SignalLike<T> = Signal<T> | ComputedSignal<any, T>;
+export type SignalLike<T> = Signal<T> | ComputedSignal<unknown, T>;
 
 export class Signal<T> extends Notifier<T, Listener<T>> {
 	value: T;

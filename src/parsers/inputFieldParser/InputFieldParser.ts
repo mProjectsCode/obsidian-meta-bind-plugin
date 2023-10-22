@@ -1,16 +1,16 @@
 import { InputFieldArgumentContainer } from '../../fieldArguments/inputFieldArguments/InputFieldArgumentContainer';
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
-import { IPlugin } from '../../IPlugin';
-import { InputFieldTemplate } from '../../settings/Settings';
+import { type IPlugin } from '../../IPlugin';
+import { type InputFieldTemplate } from '../../settings/Settings';
 import { deepFreeze } from '../../utils/Utils';
 import { InputFieldDeclarationValidator } from './InputFieldDeclarationValidator';
-import { ITemplateSupplier, TemplateSupplierTemplate } from './ITemplateSupplier';
+import { type ITemplateSupplier, type TemplateSupplierTemplate } from './ITemplateSupplier';
 import { INPUT_FIELD_FULL_DECLARATION, TEMPLATE_INPUT_FIELD_FULL_DECLARATION } from '../nomParsers/InputFieldParsers';
 import { ParsingValidationError } from '../ParsingError';
 import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
-import { InputFieldDeclaration, UnvalidatedInputFieldDeclaration } from './InputFieldDeclaration';
+import { type InputFieldDeclaration, type UnvalidatedInputFieldDeclaration } from './InputFieldDeclaration';
 import { InputFieldType } from './InputFieldConfigs';
-import { BindTargetScope } from '../../metadata/BindTargetScope';
+import { type BindTargetScope } from '../../metadata/BindTargetScope';
 
 export type InputFieldDeclarationTemplate = TemplateSupplierTemplate<UnvalidatedInputFieldDeclaration>;
 
@@ -139,16 +139,16 @@ export class InputFieldDeclarationParser implements ITemplateSupplier<Unvalidate
 						'Input Field Parser',
 						`Invalid template name. Could not find template with name '${declaration.templateName.value}'`,
 						declaration.fullDeclaration,
-						declaration.templateName.position
-					)
+						declaration.templateName.position,
+					),
 				);
 			} else {
 				declaration.errorCollection.add(
 					new ParsingValidationError(
 						ErrorLevel.WARNING,
 						'Input Field Parser',
-						`Invalid template name. Could not find template with name '${declaration.templateName.value}'`
-					)
+						`Invalid template name. Could not find template with name '${declaration.templateName.value}'`,
+					),
 				);
 			}
 

@@ -1,18 +1,18 @@
-import MetaBindPlugin from '../main';
+import type MetaBindPlugin from '../main';
 import { ErrorLevel, MetaBindExpressionError, MetaBindJsError } from '../utils/errors/MetaBindErrors';
 import { Signal } from '../utils/Signal';
-import { RenderChildType } from './InputFieldMDRC';
-import { ViewFieldVariable } from './ViewFieldMDRC';
+import { type RenderChildType } from './InputFieldMDRC';
+import { type ViewFieldVariable } from './ViewFieldMDRC';
 import { getAPI } from 'obsidian-dataview';
 import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
-import { JsViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
-import { ComputedMetadataSubscription, ComputedSubscriptionDependency } from '../metadata/MetadataFileCache';
+import { type JsViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
+import { type ComputedMetadataSubscription, type ComputedSubscriptionDependency } from '../metadata/MetadataFileCache';
 
 export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 	fullDeclaration?: string;
 	// user code function
-	expression?: any;
+	expression?: (...args: unknown[]) => unknown;
 	viewFieldDeclaration: JsViewFieldDeclaration;
 	variables: ViewFieldVariable[];
 	renderContainer?: HTMLElement;
@@ -24,7 +24,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 		declaration: JsViewFieldDeclaration,
 		plugin: MetaBindPlugin,
 		filePath: string,
-		uuid: string
+		uuid: string,
 	) {
 		super(containerEl, renderChildType, plugin, filePath, uuid);
 
@@ -39,14 +39,14 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 				for (const bindTargetMapping of this.viewFieldDeclaration.bindTargetMappings ?? []) {
 					this.variables.push({
 						bindTargetDeclaration: bindTargetMapping.bindTarget,
-						inputSignal: new Signal<any>(undefined),
+						inputSignal: new Signal<unknown>(undefined),
 						uuid: self.crypto.randomUUID(),
 						contextName: bindTargetMapping.name,
 					});
 				}
 
 				this.parseExpression();
-			} catch (e: any) {
+			} catch (e) {
 				this.errorCollection.add(e);
 			}
 		}
@@ -59,11 +59,12 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 
 		const isAsync = this.viewFieldDeclaration.code.contains('await');
 		const funcConstructor = isAsync ? async function (): Promise<void> {}.constructor : Function;
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		this.expression = funcConstructor('app', 'mb', 'dv', 'filePath', 'context', this.viewFieldDeclaration.code);
 	}
 
-	buildContext(): Record<string, any> {
-		const context: Record<string, any> = {};
+	buildContext(): Record<string, unknown> {
+		const context: Record<string, unknown> = {};
 		for (const variable of this.variables ?? []) {
 			if (!variable.contextName || !variable.inputSignal) {
 				continue;
@@ -85,17 +86,22 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 
 		const context = this.buildContext();
 		try {
-			return await Promise.resolve<string>(this.expression(this.plugin.app, this.plugin.api, getAPI(this.plugin.app), this.filePath, context));
-		} catch (e: any) {
-			throw new MetaBindExpressionError(ErrorLevel.ERROR, `failed to evaluate js expression`, e, {
-				declaration: this.viewFieldDeclaration.code,
-				context: context,
-			});
+			const retValue = await Promise.resolve<unknown>(this.expression(this.plugin.app, this.plugin.api, getAPI(this.plugin.app), this.filePath, context));
+			return retValue?.toString() ?? 'null';
+		} catch (e) {
+			if (e instanceof Error) {
+				throw new MetaBindExpressionError(ErrorLevel.ERROR, `failed to evaluate js expression`, e, {
+					declaration: this.viewFieldDeclaration.code,
+					context: context,
+				});
+			} else {
+				throw new Error('failed to evaluate js expression because of: unexpected thrown value');
+			}
 		}
 	}
 
 	registerSelfToMetadataManager(): void {
-		const updateSignal = new Signal<any>(undefined);
+		const updateSignal = new Signal<unknown>(undefined);
 
 		this.metadataSubscription = this.plugin.metadataManager.subscribeComputed(
 			this.uuid,
@@ -107,35 +113,12 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 					callbackSignal: x.inputSignal,
 				};
 			}),
-			() => this.update()
+			() => this.update(),
 		);
-
-		// for (const variable of this.variables) {
-		// 	variable.writeSignalListener = variable.writeSignal.registerListener({
-		// 		callback: () => {
-		// 			this.update();
-		// 		},
-		// 	});
-		//
-		// 	this.plugin.metadataManager.register(
-		// 		variable.bindTargetDeclaration.filePath ?? this.filePath,
-		// 		variable.writeSignal,
-		// 		variable.bindTargetDeclaration.metadataPath,
-		// 		variable.listenToChildren,
-		// 		this.uuid + '/' + variable.uuid
-		// 	);
-		// }
 	}
 
 	unregisterSelfFromMetadataManager(): void {
 		this.metadataSubscription?.unsubscribe();
-
-		// for (const variable of this.variables) {
-		// 	if (variable.writeSignalListener) {
-		// 		variable.writeSignal.unregisterListener(variable.writeSignalListener);
-		// 	}
-		// 	this.plugin.metadataManager.unregister(variable.bindTargetDeclaration.filePath ?? this.filePath, this.uuid + '/' + variable.uuid);
-		// }
 	}
 
 	getInitialValue(): string {
