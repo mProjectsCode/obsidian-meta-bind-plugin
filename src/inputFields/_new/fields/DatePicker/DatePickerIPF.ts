@@ -1,9 +1,9 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
-import { OptionInputFieldArgument } from '../../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
-import { InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
+import { type OptionInputFieldArgument } from '../../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
+import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
-import { SvelteComponent } from 'svelte';
-import { moment } from 'obsidian';
+import { type SvelteComponent } from 'svelte';
+import { type moment } from 'obsidian';
 import DatePickerComponent from './DatePickerComponent.svelte';
 import { DateParser } from '../../../../parsers/DateParser';
 import { DatePickerInputModal } from './DatePickerInputModal';

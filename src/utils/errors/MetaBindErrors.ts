@@ -24,9 +24,9 @@ export abstract class MetaBindError extends Error {
 	errorLevel: ErrorLevel;
 	effect: string;
 	cause: string | Error;
-	context: Record<string, any>;
+	context: Record<string, unknown>;
 
-	constructor(errorLevel: ErrorLevel, effect: string, cause: string | Error, context: Record<string, any> = {}) {
+	constructor(errorLevel: ErrorLevel, effect: string, cause: string | Error, context: Record<string, unknown> = {}) {
 		super('');
 
 		this.errorLevel = errorLevel;

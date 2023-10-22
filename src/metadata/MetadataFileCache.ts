@@ -1,25 +1,25 @@
-import { Signal } from '../utils/Signal';
-import { FrontMatterCache, TFile } from 'obsidian';
-import { FullBindTarget } from '../parsers/inputFieldParser/InputFieldDeclaration';
-import { MetadataManager } from './MetadataManager';
+import { type Signal } from '../utils/Signal';
+import { type FrontMatterCache, type TFile } from 'obsidian';
+import { type FullBindTarget } from '../parsers/inputFieldParser/InputFieldDeclaration';
+import { type MetadataManager } from './MetadataManager';
 
 export interface IMetadataSubscription {
 	uuid: string;
 	bindTarget: FullBindTarget | undefined;
 	unsubscribe: () => void;
-	notify: (value: any) => void;
+	notify: (value: unknown) => void;
 	getDependencies: () => ComputedSubscriptionDependency[];
 }
 
 export class MetadataSubscription implements IMetadataSubscription {
 	readonly uuid: string;
-	readonly callbackSignal: Signal<any>;
+	readonly callbackSignal: Signal<unknown>;
 
 	readonly metadataManager: MetadataManager;
 
 	readonly bindTarget: FullBindTarget;
 
-	constructor(uuid: string, callbackSignal: Signal<any>, metadataManager: MetadataManager, bindTarget: FullBindTarget) {
+	constructor(uuid: string, callbackSignal: Signal<unknown>, metadataManager: MetadataManager, bindTarget: FullBindTarget) {
 		this.uuid = uuid;
 		this.callbackSignal = callbackSignal;
 		this.metadataManager = metadataManager;
@@ -38,7 +38,7 @@ export class MetadataSubscription implements IMetadataSubscription {
 	 *
 	 * @param value
 	 */
-	public update(value: any): void {
+	public update(value: unknown): void {
 		this.metadataManager.updateCache(value, this);
 	}
 
@@ -49,7 +49,7 @@ export class MetadataSubscription implements IMetadataSubscription {
 	 *
 	 * @param value
 	 */
-	public notify(value: any): void {
+	public notify(value: unknown): void {
 		this.callbackSignal.set(value);
 	}
 
@@ -58,16 +58,17 @@ export class MetadataSubscription implements IMetadataSubscription {
 	}
 }
 
-export type ComputeFunction = (values: any[]) => Promise<any> | any;
+// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+export type ComputeFunction = (values: unknown[]) => Promise<unknown> | unknown;
 
 export interface ComputedSubscriptionDependency {
 	bindTarget: FullBindTarget;
-	callbackSignal: Signal<any>;
+	callbackSignal: Signal<unknown>;
 }
 
 export class ComputedMetadataSubscription implements IMetadataSubscription {
 	readonly uuid: string;
-	readonly callbackSignal: Signal<any>;
+	readonly callbackSignal: Signal<unknown>;
 
 	readonly metadataManager: MetadataManager;
 
@@ -80,11 +81,11 @@ export class ComputedMetadataSubscription implements IMetadataSubscription {
 
 	constructor(
 		uuid: string,
-		callbackSignal: Signal<any>,
+		callbackSignal: Signal<unknown>,
 		metadataManager: MetadataManager,
 		bindTarget: FullBindTarget | undefined,
 		dependencies: ComputedSubscriptionDependency[],
-		computeFunction: ComputeFunction
+		computeFunction: ComputeFunction,
 	) {
 		this.uuid = uuid;
 		this.callbackSignal = callbackSignal;
@@ -106,10 +107,10 @@ export class ComputedMetadataSubscription implements IMetadataSubscription {
 
 			this.dependencySubscriptions.push(this.metadataManager.subscribe(dependencyId, dependency.callbackSignal, dependency.bindTarget));
 
-			dependency.callbackSignal.registerListener({ callback: () => this.computeValue() });
+			dependency.callbackSignal.registerListener({ callback: () => void this.computeValue() });
 		}
 
-		this.computeValue();
+		void this.computeValue();
 	}
 
 	private async computeValue(): Promise<void> {
@@ -133,9 +134,9 @@ export class ComputedMetadataSubscription implements IMetadataSubscription {
 	/**
 	 * Does nothing.
 	 *
-	 * @param value
+	 * @param _
 	 */
-	public notify(value: any): void {}
+	public notify(_: unknown): void {}
 
 	public getDependencies(): ComputedSubscriptionDependency[] {
 		return this.dependencies;

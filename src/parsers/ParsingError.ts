@@ -1,5 +1,5 @@
-import { ErrorLevel, ErrorType, MetaBindError } from '../utils/errors/MetaBindErrors';
-import { ParseFailure, ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
+import { type ErrorLevel, ErrorType, MetaBindError } from '../utils/errors/MetaBindErrors';
+import { type ParseFailure, type ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
 
 export class ParsingError extends MetaBindError {
 	str: string;

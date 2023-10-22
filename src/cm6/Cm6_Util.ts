@@ -1,10 +1,10 @@
-import { EditorSelection, EditorState } from '@codemirror/state';
-import MetaBindPlugin from '../main';
-import { Component, editorInfoField, TFile } from 'obsidian';
+import { type EditorSelection, type EditorState } from '@codemirror/state';
+import type MetaBindPlugin from '../main';
+import { type Component, editorInfoField, type TFile } from 'obsidian';
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
-import { InputFieldWidget, MarkdownRenderChildWidget, MBWidgetType, ViewFieldWidget } from './Cm6_Widgets';
-import { DecorationSet, EditorView } from '@codemirror/view';
-import { AbstractMDRC } from '../renderChildren/AbstractMDRC';
+import { InputFieldWidget, type MarkdownRenderChildWidget, MBWidgetType, ViewFieldWidget } from './Cm6_Widgets';
+import { type DecorationSet, type EditorView } from '@codemirror/view';
+import { type AbstractMDRC } from '../renderChildren/AbstractMDRC';
 
 export class Cm6_Util {
 	static checkSelectionOverlap(selection: EditorSelection | undefined, from: number, to: number): boolean {
@@ -30,7 +30,7 @@ export class Cm6_Util {
 		content: string,
 		filePath: string,
 		component: Component,
-		plugin: MetaBindPlugin
+		plugin: MetaBindPlugin,
 	): MarkdownRenderChildWidget<AbstractMDRC> | undefined {
 		if (widgetType === MBWidgetType.INPUT_FIELD_WIDGET) {
 			return new InputFieldWidget(content, filePath, component, plugin);

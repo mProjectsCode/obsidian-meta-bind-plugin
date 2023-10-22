@@ -1,7 +1,7 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
-import { InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
+import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { isLiteral } from '../../../../utils/Utils';
-import { SvelteComponent } from 'svelte';
+import { type SvelteComponent } from 'svelte';
 import EditorComponent from './EditorComponent.svelte';
 import { MarkdownRenderer } from 'obsidian';
 
@@ -38,6 +38,6 @@ export class EditorIPF extends NewAbstractInputField<string, string> {
 
 	renderInElement(el: HTMLElement, value: string): void {
 		el.empty();
-		MarkdownRenderer.render(this.renderChild.plugin.app, value, el, this.renderChild.filePath, this.renderChild);
+		void MarkdownRenderer.render(this.renderChild.plugin.app, value, el, this.renderChild.filePath, this.renderChild);
 	}
 }

@@ -1,4 +1,4 @@
-import { UnvalidatedInputFieldDeclaration } from './InputFieldDeclaration';
+import { type UnvalidatedInputFieldDeclaration } from './InputFieldDeclaration';
 
 export interface TemplateSupplierTemplate<T> {
 	readonly name: string;
@@ -10,6 +10,7 @@ export interface ITemplateSupplier<T> {
 }
 
 export class EmptyTemplateSupplier implements ITemplateSupplier<UnvalidatedInputFieldDeclaration> {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public getTemplate(templateName: string): Readonly<UnvalidatedInputFieldDeclaration> | undefined {
 		return undefined;
 	}

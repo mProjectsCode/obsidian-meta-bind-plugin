@@ -69,7 +69,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			}
 
 			removeDecoration(node: SyntaxNode): void {
-				this.decorations.between(node.from - 1, node.to + 1, (from, to, value) => {
+				this.decorations.between(node.from - 1, node.to + 1, (from, to, _) => {
 					this.decorations = this.decorations.update({
 						filterFrom: from,
 						filterTo: to,
@@ -111,7 +111,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			getRenderInfo(view: EditorView, node: SyntaxNode): { shouldRender: boolean; content: string | undefined; widgetType: MBWidgetType | undefined } {
 				// get the node props
 				const propsString: string | undefined = node.type.prop<string>(tokenClassNodeProp);
-				const props: Set<any> = new Set(propsString?.split(' '));
+				const props: Set<string> = new Set<string>(propsString?.split(' '));
 
 				// node is inline code
 				if (props.has('inline-code') && !props.has('formatting')) {
@@ -193,7 +193,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 		},
 		{
 			decorations: v => v.decorations,
-		}
+		},
 	);
 
 	// return StateField.define<RangeSet<Decoration>>({

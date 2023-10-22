@@ -1,7 +1,7 @@
-import { InputFieldArgumentContainer } from '../../fieldArguments/inputFieldArguments/InputFieldArgumentContainer';
-import { ErrorCollection } from '../../utils/errors/ErrorCollection';
-import { InputFieldType } from './InputFieldConfigs';
-import { ParsingResultNode } from '../nomParsers/GeneralParsers';
+import { type InputFieldArgumentContainer } from '../../fieldArguments/inputFieldArguments/InputFieldArgumentContainer';
+import { type ErrorCollection } from '../../utils/errors/ErrorCollection';
+import { type InputFieldType } from './InputFieldConfigs';
+import { type ParsingResultNode } from '../nomParsers/GeneralParsers';
 
 export interface InputFieldDeclaration {
 	/**

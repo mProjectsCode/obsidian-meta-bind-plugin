@@ -1,7 +1,7 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
 import { clamp } from '../../../../utils/Utils';
-import { InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
-import { SvelteComponent } from 'svelte';
+import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
+import { type SvelteComponent } from 'svelte';
 import SliderComponent from './SliderComponent.svelte';
 import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
 

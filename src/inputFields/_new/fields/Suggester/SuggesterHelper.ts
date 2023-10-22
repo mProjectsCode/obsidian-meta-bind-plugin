@@ -1,11 +1,10 @@
-import { OptionInputFieldArgument } from '../../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
-import { OptionQueryInputFieldArgument } from '../../../../fieldArguments/inputFieldArguments/arguments/OptionQueryInputFieldArgument';
-import { MBLiteral } from '../../../../utils/Utils';
-import { DataArray, DataviewApi, getAPI, Literal } from 'obsidian-dataview';
+import { type OptionInputFieldArgument } from '../../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
+import { type OptionQueryInputFieldArgument } from '../../../../fieldArguments/inputFieldArguments/arguments/OptionQueryInputFieldArgument';
+import { type MBLiteral } from '../../../../utils/Utils';
+import { type DataArray, type DataviewApi, getAPI, type Literal } from 'obsidian-dataview';
 import { Notice } from 'obsidian';
-import { NewAbstractInputField } from '../../NewAbstractInputField';
+import { type NewAbstractInputField } from '../../NewAbstractInputField';
 import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
-import { UseLinksInputFieldArgument } from '../../../../fieldArguments/inputFieldArguments/arguments/UseLinksInputFieldArgument';
 import { SuggesterInputModal } from './SuggesterInputModal';
 
 export class SuggesterOption {
@@ -27,7 +26,7 @@ export function getSuggesterOptions(
 	filePath: string,
 	optionArgs: OptionInputFieldArgument[],
 	optionQueryArgs: OptionQueryInputFieldArgument[],
-	useLinks: boolean
+	useLinks: boolean,
 ): SuggesterOption[] {
 	const options: SuggesterOption[] = [];
 
@@ -46,7 +45,7 @@ export function getSuggesterOptions(
 
 			result.forEach((file: Record<string, Literal>) => {
 				try {
-					const dvFile: any = file.file as any;
+					const dvFile: any = file.file;
 
 					if (useLinks) {
 						options.push(new SuggesterOption(`[[${dvFile.path}|${dvFile.name}]]`, `file-link: ${dvFile.name}`));
@@ -67,9 +66,9 @@ export function getSuggesterOptions(
 export function getSuggesterOptionsForInputField(inputField: NewAbstractInputField<any, any>): SuggesterOption[] {
 	const app = inputField.renderChild.plugin.app;
 	const dv = getAPI(app);
-	const optionArgs = inputField.renderChild.getArguments(InputFieldArgumentType.OPTION) as OptionInputFieldArgument[];
-	const optionQueryArgs = inputField.renderChild.getArguments(InputFieldArgumentType.OPTION_QUERY) as OptionQueryInputFieldArgument[];
-	const useLinksArgs = inputField.renderChild.getArgument(InputFieldArgumentType.USE_LINKS) as UseLinksInputFieldArgument;
+	const optionArgs = inputField.renderChild.getArguments(InputFieldArgumentType.OPTION);
+	const optionQueryArgs = inputField.renderChild.getArguments(InputFieldArgumentType.OPTION_QUERY);
+	const useLinksArgs = inputField.renderChild.getArgument(InputFieldArgumentType.USE_LINKS)!;
 	// in not present, we treat the use links argument as true
 	return getSuggesterOptions(dv, inputField.renderChild.filePath, optionArgs, optionQueryArgs, useLinksArgs === undefined || useLinksArgs.value);
 }

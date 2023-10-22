@@ -1,4 +1,4 @@
-import { AbstractMDRC } from './renderChildren/AbstractMDRC';
+import { type AbstractMDRC } from './renderChildren/AbstractMDRC';
 
 export class MDRCManager {
 	activeMDRCs: Map<string, AbstractMDRC>;

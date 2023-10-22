@@ -1,19 +1,19 @@
-import { Listener, Signal } from '../utils/Signal';
-import { RenderChildType } from './InputFieldMDRC';
+import { Signal } from '../utils/Signal';
+import { type RenderChildType } from './InputFieldMDRC';
 import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
-import MetaBindPlugin from '../main';
+import type MetaBindPlugin from '../main';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
-import { BindTargetDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
-import { ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
-import { AbstractViewField } from '../viewFields/AbstractViewField';
+import { type BindTargetDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
+import { type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
+import { type AbstractViewField } from '../viewFields/AbstractViewField';
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
-import { AbstractViewFieldArgument } from '../fieldArguments/viewFieldArguments/AbstractViewFieldArgument';
-import { ViewFieldArgumentType } from '../parsers/viewFieldParser/ViewFieldConfigs';
-import { ComputedMetadataSubscription, ComputedSubscriptionDependency } from '../metadata/MetadataFileCache';
+import { type ViewFieldArgumentType } from '../parsers/viewFieldParser/ViewFieldConfigs';
+import { type ComputedMetadataSubscription, type ComputedSubscriptionDependency } from '../metadata/MetadataFileCache';
+import { ViewFieldArgumentMapType } from '../fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
 
 export interface ViewFieldVariable {
 	bindTargetDeclaration: BindTargetDeclaration;
-	inputSignal: Signal<any>;
+	inputSignal: Signal<unknown>;
 	uuid: string;
 	contextName: string | undefined;
 }
@@ -25,7 +25,7 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 	viewFieldDeclaration: ViewFieldDeclaration;
 	variables: ViewFieldVariable[];
 	metadataSubscription?: ComputedMetadataSubscription;
-	inputSignal: Signal<any>;
+	inputSignal: Signal<unknown>;
 
 	constructor(
 		containerEl: HTMLElement,
@@ -33,7 +33,7 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 		declaration: ViewFieldDeclaration,
 		plugin: MetaBindPlugin,
 		filePath: string,
-		uuid: string
+		uuid: string,
 	) {
 		super(containerEl, renderChildType, plugin, filePath, uuid);
 
@@ -42,7 +42,7 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 		this.fullDeclaration = declaration.fullDeclaration;
 		this.viewFieldDeclaration = declaration;
 		this.variables = [];
-		this.inputSignal = new Signal<any>(undefined);
+		this.inputSignal = new Signal<unknown>(undefined);
 
 		if (this.errorCollection.isEmpty()) {
 			try {
@@ -66,10 +66,10 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 						callbackSignal: x.inputSignal,
 					};
 				}),
-				async () => await this.viewField?.computeValue(this.variables)
+				async () => await this.viewField?.computeValue(this.variables),
 			);
 
-			this.inputSignal.registerListener({ callback: value => this.viewField?.update(value) });
+			this.inputSignal.registerListener({ callback: value => void this.viewField?.update(value) });
 		} catch (e) {
 			this.errorCollection.add(e);
 		}
@@ -106,7 +106,7 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 		return '';
 	}
 
-	getArguments(name: ViewFieldArgumentType): AbstractViewFieldArgument[] {
+	getArguments<T extends ViewFieldArgumentType>(name: T): ViewFieldArgumentMapType<T>[] {
 		if (this.viewFieldDeclaration.errorCollection.hasErrors()) {
 			throw new MetaBindInternalError(ErrorLevel.ERROR, 'can not retrieve arguments', 'inputFieldDeclaration has errors');
 		}
@@ -114,11 +114,11 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 		return this.viewFieldDeclaration.argumentContainer.getAll(name);
 	}
 
-	getArgument(name: ViewFieldArgumentType): AbstractViewFieldArgument | undefined {
+	getArgument<T extends ViewFieldArgumentType>(name: T): ViewFieldArgumentMapType<T> | undefined {
 		return this.getArguments(name).at(0);
 	}
 
-	async onload(): Promise<void> {
+	onload(): void {
 		console.log('meta-bind | ViewFieldMarkdownRenderChild >> load', this);
 
 		this.containerEl.addClass('mb-view');

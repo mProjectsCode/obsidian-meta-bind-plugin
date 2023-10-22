@@ -1,6 +1,6 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
-import { InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
-import { SvelteComponent } from 'svelte';
+import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
+import { type SvelteComponent } from 'svelte';
 import NumberComponent from './NumberComponent.svelte';
 import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
 
@@ -9,7 +9,7 @@ export class NumberIPF extends NewAbstractInputField<number, number> {
 		super(renderChild);
 	}
 
-	protected filterValue(value: any): number | undefined {
+	protected filterValue(value: unknown): number | undefined {
 		if (typeof value === 'number') {
 			return value;
 		} else if (typeof value === 'string') {
@@ -40,9 +40,9 @@ export class NumberIPF extends NewAbstractInputField<number, number> {
 		return value;
 	}
 
-	protected getMountArgs(): Record<string, any> {
+	protected getMountArgs(): Record<string, unknown> {
 		return {
-			placeholder: this.renderChild.getArgument(InputFieldArgumentType.PLACEHOLDER)?.value ?? 'Number',
+			placeholder: this.renderChild.getArgument(InputFieldArgumentType.PLACEHOLDER) ?? 'Number',
 		};
 	}
 }

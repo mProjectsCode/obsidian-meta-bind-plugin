@@ -91,7 +91,7 @@ describe('getInBetween', () => {
 		expect(ParserUtils.getInBetween('aa[a]sd[a]', new EnclosingPair('[', ']'))).toEqual(['a', 'a']);
 		expect(ParserUtils.getInBetween('aa[a[sd]a]', new EnclosingPair('[', ']'))).toEqual('a[sd]a');
 		expect(ParserUtils.getInBetween('slider(addLabels, minValue(10), maxValue(60))', new EnclosingPair('(', ')'))).toEqual(
-			'addLabels, minValue(10), maxValue(60)'
+			'addLabels, minValue(10), maxValue(60)',
 		);
 	});
 

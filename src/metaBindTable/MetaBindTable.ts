@@ -1,15 +1,19 @@
-import { BindTargetDeclaration, InputFieldDeclaration, UnvalidatedInputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
+import {
+	type BindTargetDeclaration,
+	type InputFieldDeclaration,
+	type UnvalidatedInputFieldDeclaration,
+} from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { AbstractMDRC } from '../renderChildren/AbstractMDRC';
 import { InputFieldMDRC, RenderChildType } from '../renderChildren/InputFieldMDRC';
-import MetaBindPlugin from '../main';
+import type MetaBindPlugin from '../main';
 import { BindTargetScope } from '../metadata/BindTargetScope';
-import { Listener, Signal } from '../utils/Signal';
-import { MBExtendedLiteral } from '../utils/Utils';
+import { type Listener, Signal } from '../utils/Signal';
+import { type MBExtendedLiteral } from '../utils/Utils';
 import MetaBindTableComponent from './MetaBindTableComponent.svelte';
 import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
-import { Component } from 'obsidian';
-import { UnvalidatedViewFieldDeclaration, ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
-import { MetadataSubscription } from '../metadata/MetadataFileCache';
+import { type Component } from 'obsidian';
+import { type UnvalidatedViewFieldDeclaration, type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
+import { type MetadataSubscription } from '../metadata/MetadataFileCache';
 
 export type MetaBindTableCell = InputFieldDeclaration | ViewFieldDeclaration;
 
@@ -30,16 +34,16 @@ export class MetaBindTable extends AbstractMDRC {
 	columns: MetaBindColumnDeclaration[];
 	tableComponent: MetaBindTableComponent | undefined;
 
-	private metadataManagerOutputSignalListener: Listener<T | undefined> | undefined;
+	private metadataManagerOutputSignalListener: Listener<unknown> | undefined;
 
 	/**
 	 * Signal to write to the input field
 	 */
-	public inputSignal: Signal<T | undefined>;
+	public inputSignal: Signal<unknown>;
 	/**
 	 * Signal to read from the input field
 	 */
-	public outputSignal: Signal<T | undefined>;
+	public outputSignal: Signal<unknown>;
 
 	private metadataSubscription?: MetadataSubscription;
 
@@ -51,15 +55,15 @@ export class MetaBindTable extends AbstractMDRC {
 		uuid: string,
 		bindTarget: BindTargetDeclaration,
 		tableHead: string[],
-		columns: MetaBindColumnDeclaration[]
+		columns: MetaBindColumnDeclaration[],
 	) {
 		super(containerEl, renderChildType, plugin, filePath, uuid);
 		this.bindTarget = bindTarget;
 		this.tableHead = tableHead;
 		this.columns = columns;
 
-		this.inputSignal = new Signal<T | undefined>(undefined);
-		this.outputSignal = new Signal<T | undefined>(undefined);
+		this.inputSignal = new Signal<unknown>(undefined);
+		this.outputSignal = new Signal<unknown>(undefined);
 	}
 
 	registerSelfToMetadataManager(): undefined {
@@ -68,7 +72,7 @@ export class MetaBindTable extends AbstractMDRC {
 		this.metadataSubscription = this.plugin.metadataManager.subscribe(
 			this.uuid,
 			this.inputSignal,
-			this.plugin.api.bindTargetParser.toFullDeclaration(this.bindTarget, this.filePath)
+			this.plugin.api.bindTargetParser.toFullDeclaration(this.bindTarget, this.filePath),
 		);
 	}
 
@@ -85,7 +89,8 @@ export class MetaBindTable extends AbstractMDRC {
 	}
 
 	getInitialValue(): T {
-		return this.inputSignal.get() ?? [];
+		// TODO: do type checking
+		return (this.inputSignal.get() as T) ?? [];
 	}
 
 	updateDisplayValue(values: T | undefined): void {
@@ -125,6 +130,7 @@ export class MetaBindTable extends AbstractMDRC {
 			}
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		this.tableComponent?.updateTable(tableRows);
 	}
 
@@ -140,20 +146,20 @@ export class MetaBindTable extends AbstractMDRC {
 	}
 
 	removeColumn(index: number): void {
-		const value = this.inputSignal.get() ?? [];
+		const value = (this.inputSignal.get() as T) ?? [];
 		value.splice(index, 1);
 		this.outputSignal.set(value);
 		this.updateDisplayValue(value);
 	}
 
 	addColumn(): void {
-		const value = this.inputSignal.get() ?? [];
+		const value = (this.inputSignal.get() as T) ?? [];
 		value.push({});
 		this.outputSignal.set(value);
 		this.updateDisplayValue(value);
 	}
 
-	async onload(): Promise<void> {
+	onload(): void {
 		this.registerSelfToMetadataManager();
 
 		this.tableComponent = new MetaBindTableComponent({
@@ -166,11 +172,11 @@ export class MetaBindTable extends AbstractMDRC {
 
 		this.inputSignal.registerListener({
 			callback: values => {
-				this.updateDisplayValue(values);
+				this.updateDisplayValue(values as T);
 			},
 		});
 
-		this.updateDisplayValue(this.inputSignal.get());
+		this.updateDisplayValue(this.inputSignal.get() as T);
 	}
 
 	public onunload(): void {

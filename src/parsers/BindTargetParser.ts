@@ -1,9 +1,9 @@
 import { ErrorLevel } from '../utils/errors/MetaBindErrors';
-import { IPlugin } from '../IPlugin';
+import { type IPlugin } from '../IPlugin';
 import { BIND_TARGET } from './nomParsers/BindTargetParsers';
 import { ParsingValidationError } from './ParsingError';
-import { BindTargetDeclaration, FullBindTarget, UnvalidatedBindTargetDeclaration } from './inputFieldParser/InputFieldDeclaration';
-import { BindTargetScope } from '../metadata/BindTargetScope';
+import { type BindTargetDeclaration, type FullBindTarget, type UnvalidatedBindTargetDeclaration } from './inputFieldParser/InputFieldDeclaration';
+import { type BindTargetScope } from '../metadata/BindTargetScope';
 
 export class BindTargetParser {
 	plugin: IPlugin;
@@ -17,13 +17,13 @@ export class BindTargetParser {
 	}
 
 	parseBindTarget(bindTargetString: string): UnvalidatedBindTargetDeclaration {
-		return BIND_TARGET.parse(bindTargetString) as UnvalidatedBindTargetDeclaration;
+		return BIND_TARGET.parse(bindTargetString);
 	}
 
 	validateBindTarget(
 		fullDeclaration: string,
 		unvalidatedBindTargetDeclaration: UnvalidatedBindTargetDeclaration,
-		scope?: BindTargetScope | undefined
+		scope?: BindTargetScope | undefined,
 	): BindTargetDeclaration {
 		const bindTargetDeclaration: BindTargetDeclaration = {} as BindTargetDeclaration;
 
@@ -38,13 +38,13 @@ export class BindTargetParser {
 						'Bind Target Validator',
 						`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file.value}' not found.`,
 						fullDeclaration,
-						unvalidatedBindTargetDeclaration.file.position
+						unvalidatedBindTargetDeclaration.file.position,
 					);
 				} else {
 					throw new ParsingValidationError(
 						ErrorLevel.CRITICAL,
 						'Bind Target Validator',
-						`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file?.value}' not found.`
+						`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file?.value}' not found.`,
 					);
 				}
 			} else if (filePaths.length === 1) {
@@ -56,13 +56,13 @@ export class BindTargetParser {
 						'Bind Target Validator',
 						`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file.value}' resolves to multiple files, please also specify the file path.`,
 						fullDeclaration,
-						unvalidatedBindTargetDeclaration.file.position
+						unvalidatedBindTargetDeclaration.file.position,
 					);
 				} else {
 					throw new ParsingValidationError(
 						ErrorLevel.CRITICAL,
 						'Bind Target Validator',
-						`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file?.value}' resolves to multiple files, please also specify the file path.`
+						`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file?.value}' resolves to multiple files, please also specify the file path.`,
 					);
 				}
 			}

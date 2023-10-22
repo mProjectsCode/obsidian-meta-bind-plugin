@@ -1,11 +1,11 @@
-import { ParsingResultNode } from '../parsers/nomParsers/GeneralParsers';
+import { type ParsingResultNode } from '../parsers/nomParsers/GeneralParsers';
 import { ErrorLevel, MetaBindArgumentError } from '../utils/errors/MetaBindErrors';
-import { FieldArgumentConfig, FieldArgumentValueConfig } from '../parsers/GeneralConfigs';
+import { type FieldArgumentConfig, type FieldArgumentValueConfig } from '../parsers/GeneralConfigs';
 
 export abstract class AbstractFieldArgument<
 	FieldType extends string,
 	FieldArgumentType extends string,
-	FieldConfig extends FieldArgumentConfig<FieldArgumentType, FieldType>
+	FieldConfig extends FieldArgumentConfig<FieldArgumentType, FieldType>,
 > {
 	value: any;
 
@@ -19,16 +19,13 @@ export abstract class AbstractFieldArgument<
 	protected abstract _parseValue(value: ParsingResultNode[]): void;
 
 	validateValues(value: ParsingResultNode[], allowedValues: FieldArgumentValueConfig[][]): void {
-		const min = allowedValues[0].length;
-		const max = allowedValues[allowedValues.length - 1].length;
-
 		if (allowedValues.find(x => x.length === value.length) === undefined) {
 			throw new MetaBindArgumentError(
 				ErrorLevel.WARNING,
 				`Failed to parse argument value for argument '${this.getConfig().type}'.`,
 				`Expected argument values to follow the form ${allowedValues
 					.map(x => (x.length === 0 ? 'none' : x.map(y => `'${y.name}'`).join(', ')))
-					.join(' or ')}. Received arguments of length ${value.length}.`
+					.join(' or ')}. Received arguments of length ${value.length}.`,
 			);
 		}
 	}

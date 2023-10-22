@@ -21,7 +21,7 @@ export class SelectInputFieldElement {
 		parentElement: HTMLElement,
 		id: number,
 		multiSelectInputField: AbstractSelectInputField<any>,
-		active: boolean = false
+		active: boolean = false,
 	) {
 		this.value = value;
 		this.name = name;

@@ -1,9 +1,9 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
-import { isLiteral, MBLiteral } from '../../../../utils/Utils';
-import { InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
-import { SvelteComponent } from 'svelte';
+import { isLiteral, type MBLiteral } from '../../../../utils/Utils';
+import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
+import { type SvelteComponent } from 'svelte';
 import SelectComponent from './SelectComponent.svelte';
-import { OptionInputFieldArgument } from '../../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
+import { type OptionInputFieldArgument } from '../../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
 
 export class SelectIPF extends NewAbstractInputField<MBLiteral, MBLiteral> {
@@ -12,10 +12,10 @@ export class SelectIPF extends NewAbstractInputField<MBLiteral, MBLiteral> {
 	constructor(renderChild: InputFieldMDRC) {
 		super(renderChild);
 
-		this.options = this.renderChild.getArguments(InputFieldArgumentType.OPTION) as OptionInputFieldArgument[];
+		this.options = this.renderChild.getArguments(InputFieldArgumentType.OPTION);
 	}
 
-	protected filterValue(value: any): MBLiteral | undefined {
+	protected filterValue(value: unknown): MBLiteral | undefined {
 		return isLiteral(value) ? value : undefined;
 	}
 
@@ -35,7 +35,7 @@ export class SelectIPF extends NewAbstractInputField<MBLiteral, MBLiteral> {
 		return value;
 	}
 
-	protected getMountArgs(): Record<string, any> {
+	protected getMountArgs(): Record<string, unknown> {
 		return {
 			options: this.options,
 		};

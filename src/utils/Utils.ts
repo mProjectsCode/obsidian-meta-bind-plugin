@@ -1,9 +1,9 @@
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
-import { KeyValuePair } from '@opd-libs/opd-utils-lib/lib/Utils';
+import { type KeyValuePair } from '@opd-libs/opd-utils-lib/lib/Utils';
 import structuredClone from '@ungap/structured-clone';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
-import { Parser } from '@lemons_dev/parsinom/lib/Parser';
+import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
 
 if (!('structuredClone' in globalThis)) {
 	// @ts-ignore
@@ -136,11 +136,11 @@ export function arrayStartsWith<T>(arr: T[], base: T[]): boolean {
 	return true;
 }
 
-export function isTruthy(value: any): boolean {
+export function isTruthy(value: unknown): boolean {
 	return !!value;
 }
 
-export function isFalsy(value: any): boolean {
+export function isFalsy(value: unknown): boolean {
 	return !value;
 }
 
@@ -152,17 +152,22 @@ export function numberToString(n: number | string): string {
 	return n + '';
 }
 
-export function traverseObjectToParentByPath(pathParts: string[], o: any): { parent: KeyValuePair<string[], any>; child: KeyValuePair<string, any> } {
+export function traverseObjectToParentByPath(
+	pathParts: string[],
+	o: unknown,
+): { parent: KeyValuePair<string[], unknown>; child: KeyValuePair<string, unknown> } {
 	if (pathParts[0] === '') {
 		throw new Error('can not traverse to parent on self reference');
 	}
 
 	const parentPath = pathParts.slice(0, -1);
 	const childKey: string = pathParts.at(-1) ?? '';
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	const parentObject = traverseObjectByPath(parentPath, o);
 
 	return {
 		parent: { key: parentPath, value: parentObject },
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 		child: { key: childKey, value: parentObject[childKey] },
 	};
 }
@@ -280,8 +285,8 @@ export function deepFreeze<T extends object>(object: T): Readonly<T> {
 
 	// Freeze properties before freezing self
 	for (const name of propNames) {
-		// @ts-ignores
-		const value: any = object[name];
+		// @ts-ignore
+		const value: unknown = object[name];
 
 		if ((value && typeof value === 'object') || typeof value === 'function') {
 			deepFreeze(value);
@@ -303,8 +308,8 @@ const numberParser: Parser<number> = P.sequenceMap(
 	P.string('-').optional(),
 	P.or(
 		P.sequenceMap((a, b, c) => Number(a + b + c), P_UTILS.digits(), P.string('.'), P_UTILS.digits()),
-		P_UTILS.digits().map(x => Number(x))
-	)
+		P_UTILS.digits().map(x => Number(x)),
+	),
 ).thenEof();
 
 export function parseLiteral(literalString: string): MBLiteral {

@@ -29,7 +29,7 @@ export class TextVF extends AbstractViewField {
 			if (typeof entry !== 'string') {
 				const variable: ViewFieldVariable = {
 					bindTargetDeclaration: entry,
-					inputSignal: new Signal<any>(undefined),
+					inputSignal: new Signal<unknown>(undefined),
 					uuid: self.crypto.randomUUID(),
 					contextName: `MB_VAR_${varCounter}`,
 				};
@@ -46,7 +46,7 @@ export class TextVF extends AbstractViewField {
 		return variables;
 	}
 
-	public async _render(container: HTMLElement): Promise<void> {
+	protected _render(container: HTMLElement): void {
 		this.renderMarkdown = this.renderChild.getArgument(ViewFieldArgumentType.RENDER_MARKDOWN)?.value ?? false;
 		this.markdownComponent.load();
 
@@ -55,7 +55,7 @@ export class TextVF extends AbstractViewField {
 		}
 	}
 
-	public async _update(container: HTMLElement, text: string): Promise<void> {
+	protected async _update(container: HTMLElement, text: string): Promise<void> {
 		if (this.renderMarkdown) {
 			this.markdownComponent.unload();
 			this.markdownComponent.load();

@@ -3,18 +3,22 @@ import { ViewFieldDeclarationParser } from '../parsers/viewFieldParser/ViewField
 import { BindTargetParser } from '../parsers/BindTargetParser';
 import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
 import { JsViewFieldMDRC } from '../renderChildren/JsViewFieldMDRC';
-import MetaBindPlugin from '../main';
+import type MetaBindPlugin from '../main';
 import { InputFieldDeclarationParser } from '../parsers/inputFieldParser/InputFieldParser';
-import { Component, MarkdownPostProcessorContext } from 'obsidian';
+import { type Component, type MarkdownPostProcessorContext } from 'obsidian';
 import { InputFieldAPI } from './InputFieldAPI';
-import { IAPI } from './IAPI';
+import { type IAPI } from './IAPI';
 import { ExcludedMDRC } from '../renderChildren/ExcludedMDRC';
-import { BindTargetDeclaration, InputFieldDeclaration, UnvalidatedInputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
+import {
+	type BindTargetDeclaration,
+	type InputFieldDeclaration,
+	type UnvalidatedInputFieldDeclaration,
+} from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { Signal } from '../utils/Signal';
-import { BindTargetScope } from '../metadata/BindTargetScope';
+import { type BindTargetScope } from '../metadata/BindTargetScope';
 import { MetaBindTable } from '../metaBindTable/MetaBindTable';
 import { NewInputFieldFactory } from '../inputFields/_new/NewInputFieldFactory';
-import { JsViewFieldDeclaration, UnvalidatedViewFieldDeclaration, ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
+import { type JsViewFieldDeclaration, type UnvalidatedViewFieldDeclaration, type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
 import { ViewFieldFactory } from '../viewFields/ViewFieldFactory';
 
 export class API implements IAPI {
@@ -47,7 +51,7 @@ export class API implements IAPI {
 		renderType: RenderChildType,
 		filePath: string,
 		containerEl: HTMLElement,
-		component: Component | MarkdownPostProcessorContext
+		component: Component | MarkdownPostProcessorContext,
 	): InputFieldMDRC | ExcludedMDRC {
 		if (this.plugin.isFilePathExcluded(filePath)) {
 			return this.createExcludedField(containerEl, filePath, component);
@@ -67,7 +71,7 @@ export class API implements IAPI {
 		filePath: string,
 		containerEl: HTMLElement,
 		component: Component | MarkdownPostProcessorContext,
-		scope: BindTargetScope | undefined
+		scope: BindTargetScope | undefined,
 	): InputFieldMDRC | ExcludedMDRC {
 		if (this.plugin.isFilePathExcluded(filePath)) {
 			return this.createExcludedField(containerEl, filePath, component);
@@ -86,7 +90,7 @@ export class API implements IAPI {
 		renderType: RenderChildType,
 		filePath: string,
 		containerEl: HTMLElement,
-		component: Component | MarkdownPostProcessorContext
+		component: Component | MarkdownPostProcessorContext,
 	): ViewFieldMDRC | ExcludedMDRC {
 		if (this.plugin.isFilePathExcluded(filePath)) {
 			return this.createExcludedField(containerEl, filePath, component);
@@ -105,7 +109,7 @@ export class API implements IAPI {
 		renderType: RenderChildType,
 		filePath: string,
 		containerEl: HTMLElement,
-		component: Component | MarkdownPostProcessorContext
+		component: Component | MarkdownPostProcessorContext,
 	): JsViewFieldMDRC | ExcludedMDRC {
 		if (this.plugin.isFilePathExcluded(filePath)) {
 			return this.createExcludedField(containerEl, filePath, component);
@@ -140,10 +144,16 @@ export class API implements IAPI {
 	 */
 	public listenToMetadata(signal: Signal<unknown>, filePath: string, metadataPath: string[], listenToChildren: boolean = false): () => void {
 		const uuid = self.crypto.randomUUID();
-		this.plugin.metadataManager.register(filePath, signal, metadataPath, listenToChildren, uuid);
+
+		const subscription = this.plugin.metadataManager.subscribe(uuid, signal, {
+			filePath: filePath,
+			metadataPath: metadataPath,
+			listenToChildren: listenToChildren,
+			boundToLocalScope: false,
+		});
 
 		return () => {
-			this.plugin.metadataManager.unregister(filePath, uuid);
+			subscription.unsubscribe();
 		};
 	}
 
@@ -153,7 +163,7 @@ export class API implements IAPI {
 		component: Component | MarkdownPostProcessorContext,
 		bindTarget: BindTargetDeclaration,
 		tableHead: string[],
-		columns: (UnvalidatedInputFieldDeclaration | UnvalidatedViewFieldDeclaration)[]
+		columns: (UnvalidatedInputFieldDeclaration | UnvalidatedViewFieldDeclaration)[],
 	): MetaBindTable {
 		const table = new MetaBindTable(containerEl, RenderChildType.INLINE, this.plugin, filePath, self.crypto.randomUUID(), bindTarget, tableHead, columns);
 		component.addChild(table);

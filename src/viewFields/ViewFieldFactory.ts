@@ -1,7 +1,7 @@
-import { IPlugin } from '../IPlugin';
+import { type IPlugin } from '../IPlugin';
 import { ViewFieldType } from '../parsers/viewFieldParser/ViewFieldConfigs';
-import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
-import { AbstractViewField } from './AbstractViewField';
+import { type ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
+import { type AbstractViewField } from './AbstractViewField';
 import { MathVF } from './fields/MathVF';
 import { TextVF } from './fields/TextVF';
 

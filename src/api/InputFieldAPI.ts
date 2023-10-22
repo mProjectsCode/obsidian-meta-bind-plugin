@@ -1,12 +1,12 @@
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
 
-import { IAPI } from './IAPI';
+import { type IAPI } from './IAPI';
 import {
-	UnvalidatedBindTargetDeclaration,
-	UnvalidatedFieldArgument,
-	UnvalidatedInputFieldDeclaration,
+	type UnvalidatedBindTargetDeclaration,
+	type UnvalidatedFieldArgument,
+	type UnvalidatedInputFieldDeclaration,
 } from '../parsers/inputFieldParser/InputFieldDeclaration';
-import { InputFieldArgumentType, InputFieldType } from '../parsers/inputFieldParser/InputFieldConfigs';
+import { type InputFieldArgumentType, type InputFieldType } from '../parsers/inputFieldParser/InputFieldConfigs';
 
 export class InputFieldAPI {
 	private readonly api: IAPI;
@@ -17,7 +17,7 @@ export class InputFieldAPI {
 
 	public createInputFieldDeclaration(
 		inputFieldType?: InputFieldType,
-		inputFieldArguments?: { name: InputFieldArgumentType; value: string[] }[]
+		inputFieldArguments?: { name: InputFieldArgumentType; value: string[] }[],
 	): UnvalidatedInputFieldDeclaration {
 		const errorCollection = new ErrorCollection('input field declaration');
 
@@ -47,7 +47,7 @@ export class InputFieldAPI {
 
 	public setArguments(
 		unvalidatedDeclaration: UnvalidatedInputFieldDeclaration,
-		inputFieldArguments: { name: InputFieldArgumentType; value: string[] }[]
+		inputFieldArguments: { name: InputFieldArgumentType; value: string[] }[],
 	): UnvalidatedInputFieldDeclaration {
 		unvalidatedDeclaration.arguments = inputFieldArguments.map(x => ({
 			name: { value: x.name },
@@ -59,14 +59,14 @@ export class InputFieldAPI {
 
 	public addArgument(
 		unvalidatedDeclaration: UnvalidatedInputFieldDeclaration,
-		inputFieldArguments: { name: InputFieldArgumentType; value: string[] }[] | { name: InputFieldArgumentType; value: string[] }
+		inputFieldArguments: { name: InputFieldArgumentType; value: string[] }[] | { name: InputFieldArgumentType; value: string[] },
 	): UnvalidatedInputFieldDeclaration {
 		if (Array.isArray(inputFieldArguments)) {
 			unvalidatedDeclaration.arguments = unvalidatedDeclaration.arguments.concat(
 				inputFieldArguments.map(x => ({
 					name: { value: x.name },
 					value: x.value.map(y => ({ value: y })),
-				}))
+				})),
 			);
 		} else {
 			unvalidatedDeclaration.arguments.push({
@@ -82,7 +82,7 @@ export class InputFieldAPI {
 		if (unvalidatedDeclaration.bindTarget) {
 			unvalidatedDeclaration.bindTarget.file = { value: bindTargetFile };
 		} else {
-			unvalidatedDeclaration.bindTarget = { file: { value: bindTargetFile }, path: [], boundToLocalScope: false };
+			unvalidatedDeclaration.bindTarget = { file: { value: bindTargetFile }, path: [], boundToLocalScope: false, listenToChildren: false };
 		}
 
 		return unvalidatedDeclaration;
@@ -90,7 +90,7 @@ export class InputFieldAPI {
 
 	public setBindTargetMetadataField(
 		unvalidatedDeclaration: UnvalidatedInputFieldDeclaration,
-		bindTargetMetadataField: string | string[]
+		bindTargetMetadataField: string | string[],
 	): UnvalidatedInputFieldDeclaration {
 		if (typeof bindTargetMetadataField === 'string') {
 			bindTargetMetadataField = [bindTargetMetadataField];
@@ -99,7 +99,12 @@ export class InputFieldAPI {
 		if (unvalidatedDeclaration.bindTarget) {
 			unvalidatedDeclaration.bindTarget.path = bindTargetMetadataField.map(x => ({ value: x }));
 		} else {
-			unvalidatedDeclaration.bindTarget = { file: undefined, path: bindTargetMetadataField.map(x => ({ value: x })), boundToLocalScope: false };
+			unvalidatedDeclaration.bindTarget = {
+				file: undefined,
+				path: bindTargetMetadataField.map(x => ({ value: x })),
+				boundToLocalScope: false,
+				listenToChildren: false,
+			};
 		}
 
 		return unvalidatedDeclaration;
@@ -135,7 +140,7 @@ export class InputFieldAPI {
 
 		return {
 			fullDeclaration: override.fullDeclaration,
-			inputFieldType: override.inputFieldType !== undefined ? override.inputFieldType : unvalidatedDeclaration.inputFieldType,
+			inputFieldType: override.inputFieldType ?? unvalidatedDeclaration.inputFieldType,
 			bindTarget: bindTarget,
 			arguments: override.arguments.concat(unvalidatedDeclaration.arguments).reduce<UnvalidatedFieldArgument[]>((arr, currentValue) => {
 				// filter out duplicates

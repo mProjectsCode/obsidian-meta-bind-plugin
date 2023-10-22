@@ -1,8 +1,8 @@
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
-import { Parser } from '@lemons_dev/parsinom/lib/Parser';
+import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
-import { UnvalidatedBindTargetDeclaration } from '../inputFieldParser/InputFieldDeclaration';
-import { createResultNode, doubleQuotedString, ident, ParsingResultNode } from './GeneralParsers';
+import { type UnvalidatedBindTargetDeclaration } from '../inputFieldParser/InputFieldDeclaration';
+import { createResultNode, doubleQuotedString, ident, type ParsingResultNode } from './GeneralParsers';
 
 const filePath: Parser<string> = P.manyNotOf('{}[]#^|:?').box('file path');
 
@@ -21,7 +21,7 @@ const firstMetadataPathPart: Parser<UnvalidatedBindTargetDeclaration> = P.or(
 			} satisfies UnvalidatedBindTargetDeclaration;
 		},
 		P.string('^').optional(),
-		bracketMetadataPathPart.atLeast(1)
+		bracketMetadataPathPart.atLeast(1),
 	),
 	P.sequenceMap(
 		(prefix, firstPart, bracketPath) => {
@@ -34,8 +34,8 @@ const firstMetadataPathPart: Parser<UnvalidatedBindTargetDeclaration> = P.or(
 		},
 		P.string('^').skip(P.string('.')).optional(),
 		metadataPathPartIdent,
-		bracketMetadataPathPart.many()
-	)
+		bracketMetadataPathPart.many(),
+	),
 );
 
 const metadataPathPart: Parser<ParsingResultNode[]> = P.sequenceMap(
@@ -43,7 +43,7 @@ const metadataPathPart: Parser<ParsingResultNode[]> = P.sequenceMap(
 		return [ident, ...brackets];
 	},
 	metadataPathPartIdent,
-	bracketMetadataPathPart.many()
+	bracketMetadataPathPart.many(),
 );
 
 const metadataPath: Parser<UnvalidatedBindTargetDeclaration> = P.sequenceMap(
@@ -52,7 +52,7 @@ const metadataPath: Parser<UnvalidatedBindTargetDeclaration> = P.sequenceMap(
 		return declaration;
 	},
 	firstMetadataPathPart,
-	P.string('.').then(metadataPathPart).many()
+	P.string('.').then(metadataPathPart).many(),
 );
 
 export const BIND_TARGET: Parser<UnvalidatedBindTargetDeclaration> = P.sequenceMap(
@@ -61,5 +61,5 @@ export const BIND_TARGET: Parser<UnvalidatedBindTargetDeclaration> = P.sequenceM
 		return b;
 	},
 	P.sequence(filePath.node(createResultNode), P.string('#')).optional(),
-	metadataPath
+	metadataPath,
 );

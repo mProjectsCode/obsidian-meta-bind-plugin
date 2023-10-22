@@ -30,7 +30,7 @@ export class PublishViewFieldMDRC extends MarkdownRenderChild {
 		declaration: ViewFieldDeclaration,
 		filePath: string,
 		metadata: Record<string, any> | undefined,
-		uuid: string
+		uuid: string,
 	) {
 		super(containerEl);
 

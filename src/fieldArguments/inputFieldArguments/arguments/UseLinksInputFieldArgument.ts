@@ -1,6 +1,6 @@
 import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
-import { InputFieldArgumentConfig, InputFieldArgumentConfigs } from '../../../parsers/inputFieldParser/InputFieldConfigs';
-import { ParsingResultNode } from '../../../parsers/nomParsers/GeneralParsers';
+import { type InputFieldArgumentConfig, InputFieldArgumentConfigs } from '../../../parsers/inputFieldParser/InputFieldConfigs';
+import { type ParsingResultNode } from '../../../parsers/nomParsers/GeneralParsers';
 
 export class UseLinksInputFieldArgument extends AbstractInputFieldArgument {
 	value: boolean = true;

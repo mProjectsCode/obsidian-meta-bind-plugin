@@ -2,13 +2,13 @@ import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { ParsingValidationError } from '../ParsingError';
 import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
 import { InputFieldArgumentContainer } from '../../fieldArguments/inputFieldArguments/InputFieldArgumentContainer';
-import { AbstractInputFieldArgument } from '../../fieldArguments/inputFieldArguments/AbstractInputFieldArgument';
+import { type AbstractInputFieldArgument } from '../../fieldArguments/inputFieldArguments/AbstractInputFieldArgument';
 import { InputFieldArgumentFactory } from '../../fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
-import { IPlugin } from '../../IPlugin';
-import { BindTargetDeclaration, InputFieldDeclaration, UnvalidatedInputFieldDeclaration } from './InputFieldDeclaration';
+import { type IPlugin } from '../../IPlugin';
+import { type BindTargetDeclaration, type InputFieldDeclaration, type UnvalidatedInputFieldDeclaration } from './InputFieldDeclaration';
 import { InputFieldArgumentType, InputFieldType } from './InputFieldConfigs';
-import { BindTargetScope } from '../../metadata/BindTargetScope';
-import { ParsingResultNode } from '../nomParsers/GeneralParsers';
+import { type BindTargetScope } from '../../metadata/BindTargetScope';
+import { type ParsingResultNode } from '../nomParsers/GeneralParsers';
 
 export class InputFieldDeclarationValidator {
 	unvalidatedDeclaration: UnvalidatedInputFieldDeclaration;
@@ -57,16 +57,16 @@ export class InputFieldDeclarationValidator {
 					'Declaration Validator',
 					`Encountered invalid identifier. Expected token to be an input field type but received '${inputFieldType.value}'.`,
 					this.unvalidatedDeclaration.fullDeclaration,
-					inputFieldType.position
-				)
+					inputFieldType.position,
+				),
 			);
 		} else {
 			this.errorCollection.add(
 				new ParsingValidationError(
 					ErrorLevel.ERROR,
 					'Declaration Validator',
-					`Encountered invalid identifier. Expected token to be an input field type but received '${inputFieldType?.value}'.`
-				)
+					`Encountered invalid identifier. Expected token to be an input field type but received '${inputFieldType?.value}'.`,
+				),
 			);
 		}
 
@@ -86,16 +86,16 @@ export class InputFieldDeclarationValidator {
 						'Declaration Validator',
 						`'${declaration.inputFieldType}' is deprecated, as it has been renamed to be in camel case ('input_field_type' => 'inputFieldType').`,
 						this.unvalidatedDeclaration.fullDeclaration,
-						this.unvalidatedDeclaration.inputFieldType.position
-					)
+						this.unvalidatedDeclaration.inputFieldType.position,
+					),
 				);
 			} else {
 				this.errorCollection.add(
 					new ParsingValidationError(
 						ErrorLevel.WARNING,
 						'Declaration Validator',
-						`'${declaration.inputFieldType}' is deprecated, as it has been renamed to be in camel case ('input_field_type' => 'inputFieldType').`
-					)
+						`'${declaration.inputFieldType}' is deprecated, as it has been renamed to be in camel case ('input_field_type' => 'inputFieldType').`,
+					),
 				);
 			}
 		}
@@ -106,7 +106,7 @@ export class InputFieldDeclarationValidator {
 			return this.plugin.api.bindTargetParser.validateBindTarget(
 				this.unvalidatedDeclaration.fullDeclaration,
 				this.unvalidatedDeclaration.bindTarget,
-				scope
+				scope,
 			);
 		} else {
 			return undefined;
@@ -134,8 +134,8 @@ export class InputFieldDeclarationValidator {
 								argument.name.value
 							}" is only applicable to "${inputFieldArgument.getAllowedFieldsAsString()}" input fields.`,
 							this.unvalidatedDeclaration.fullDeclaration,
-							argument.name.position
-						)
+							argument.name.position,
+						),
 					);
 				} else {
 					this.errorCollection.add(
@@ -144,8 +144,8 @@ export class InputFieldDeclarationValidator {
 							'Declaration Validator',
 							`Failed to parse input field arguments. Argument "${
 								argument.name.value
-							}" is only applicable to "${inputFieldArgument.getAllowedFieldsAsString()}" input fields.`
-						)
+							}" is only applicable to "${inputFieldArgument.getAllowedFieldsAsString()}" input fields.`,
+						),
 					);
 				}
 
@@ -173,6 +173,7 @@ export class InputFieldDeclarationValidator {
 
 	private validateArgumentType(argumentType: ParsingResultNode): InputFieldArgumentType {
 		for (const entry of Object.entries(InputFieldArgumentType)) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
 			if (entry[1] === argumentType.value) {
 				return entry[1];
 			}
@@ -185,16 +186,16 @@ export class InputFieldDeclarationValidator {
 					'Declaration Validator',
 					`Encountered invalid identifier. Expected identifier to be an input field argument type but received '${argumentType.value}'.`,
 					this.unvalidatedDeclaration.fullDeclaration,
-					argumentType.position
-				)
+					argumentType.position,
+				),
 			);
 		} else {
 			this.errorCollection.add(
 				new ParsingValidationError(
 					ErrorLevel.WARNING,
 					'Declaration Validator',
-					`Encountered invalid identifier. Expected identifier to be an input field argument type but received '${argumentType.value}'.`
-				)
+					`Encountered invalid identifier. Expected identifier to be an input field argument type but received '${argumentType.value}'.`,
+				),
 			);
 		}
 

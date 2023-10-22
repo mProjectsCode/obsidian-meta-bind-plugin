@@ -1,8 +1,8 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
-import { isLiteral, MBLiteral } from '../../../../utils/Utils';
-import { InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
+import { isLiteral, type MBLiteral } from '../../../../utils/Utils';
+import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
-import { SvelteComponent } from 'svelte';
+import { type SvelteComponent } from 'svelte';
 import ToggleComponent from './ToggleComponent.svelte';
 
 export class ToggleIPF extends NewAbstractInputField<MBLiteral, boolean> {
@@ -16,7 +16,7 @@ export class ToggleIPF extends NewAbstractInputField<MBLiteral, boolean> {
 		this.offValue = this.renderChild.getArgument(InputFieldArgumentType.OFF_VALUE)?.value ?? false;
 	}
 
-	protected filterValue(value: any): MBLiteral | undefined {
+	protected filterValue(value: unknown): MBLiteral | undefined {
 		return isLiteral(value) ? value : undefined;
 	}
 
