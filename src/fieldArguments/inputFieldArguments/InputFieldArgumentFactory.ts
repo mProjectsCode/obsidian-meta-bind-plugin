@@ -13,12 +13,14 @@ import { DefaultValueInputFieldArgument } from './arguments/DefaultValueInputFie
 import { PlaceholderInputFieldArgument } from './arguments/PlaceholderInputFieldArgument';
 import { InputFieldArgumentType } from '../../parsers/inputFieldParser/InputFieldConfigs';
 import { UseLinksInputFieldArgument } from './arguments/UseLinksInputFieldArgument';
+import { StepSizeValueInputFieldArgument } from './arguments/StepSizeValueInputFieldArgument';
 
 export const INPUT_FIELD_ARGUMENT_MAP = {
 	[InputFieldArgumentType.CLASS]: ClassInputFieldArgument,
 	[InputFieldArgumentType.ADD_LABELS]: AddLabelsInputFieldArgument,
 	[InputFieldArgumentType.MIN_VALUE]: MinValueInputFieldArgument,
 	[InputFieldArgumentType.MAX_VALUE]: MaxValueInputFieldArgument,
+	[InputFieldArgumentType.STEP_SIZE]: StepSizeValueInputFieldArgument,
 	[InputFieldArgumentType.OPTION]: OptionInputFieldArgument,
 	[InputFieldArgumentType.TITLE]: TitleInputFieldArgument,
 	[InputFieldArgumentType.OPTION_QUERY]: OptionQueryInputFieldArgument,
