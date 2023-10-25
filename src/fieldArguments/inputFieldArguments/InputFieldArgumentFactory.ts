@@ -31,7 +31,7 @@ export const INPUT_FIELD_ARGUMENT_MAP = {
 	[InputFieldArgumentType.DEFAULT_VALUE]: DefaultValueInputFieldArgument,
 	[InputFieldArgumentType.PLACEHOLDER]: PlaceholderInputFieldArgument,
 	[InputFieldArgumentType.USE_LINKS]: UseLinksInputFieldArgument,
-	[InputFieldArgumentType.LIMIT] : LimitInputFieldArgument,
+	[InputFieldArgumentType.LIMIT]: LimitInputFieldArgument,
 } as const;
 
 export type InputFieldArgumentMapType<T extends InputFieldArgumentType> = T extends keyof typeof INPUT_FIELD_ARGUMENT_MAP

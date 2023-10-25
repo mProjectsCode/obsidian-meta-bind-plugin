@@ -21,7 +21,6 @@ export class StepSizeValueInputFieldArgument extends AbstractInputFieldArgument 
 				'failed to set value for input field argument',
 				"value of argument 'stepSize' must be a positive number",
 			);
-
 		}
 	}
 
