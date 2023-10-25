@@ -30,6 +30,7 @@ export enum InputFieldArgumentType {
 	ADD_LABELS = 'addLabels',
 	MIN_VALUE = 'minValue',
 	MAX_VALUE = 'maxValue',
+	STEP_SIZE = 'stepSize',
 	OPTION = 'option',
 	TITLE = 'title',
 	OPTION_QUERY = 'optionQuery',
@@ -226,6 +227,20 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 					name: 'value',
 					allowed: ['number'],
 					description: 'the minimally allowed value',
+				},
+			],
+		],
+		allowMultiple: false,
+	},
+	[InputFieldArgumentType.STEP_SIZE]: {
+		type: InputFieldArgumentType.STEP_SIZE,
+		allowedFieldTypes: [InputFieldType.SLIDER],
+		values: [
+			[
+				{
+					name: 'value',
+					allowed: ['number'],
+					description: 'the step size for sliders',
 				},
 			],
 		],
