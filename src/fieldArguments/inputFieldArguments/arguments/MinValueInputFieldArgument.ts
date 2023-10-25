@@ -7,7 +7,7 @@ export class MinValueInputFieldArgument extends AbstractInputFieldArgument {
 	value: number = 0;
 
 	_parseValue(value: ParsingResultNode[]): void {
-		this.value = Number.parseInt(value[0].value);
+		this.value = Number.parseFloat(value[0].value);
 		if (Number.isNaN(this.value)) {
 			throw new MetaBindParsingError(
 				ErrorLevel.ERROR,
