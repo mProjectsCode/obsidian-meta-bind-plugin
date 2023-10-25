@@ -8,12 +8,15 @@ import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/Inp
 export class SliderIPF extends NewAbstractInputField<number, number> {
 	minValue: number;
 	maxValue: number;
+	stepSize: number;
 
 	constructor(renderChild: InputFieldMDRC) {
 		super(renderChild);
 
+		// FIXME: Check that minvalue < maxvalue.
 		this.minValue = this.renderChild.getArgument(InputFieldArgumentType.MIN_VALUE)?.value ?? 0;
 		this.maxValue = this.renderChild.getArgument(InputFieldArgumentType.MAX_VALUE)?.value ?? 100;
+		this.stepSize = this.renderChild.getArgument(InputFieldArgumentType.STEP_SIZE)?.value ?? 1;
 	}
 
 	protected filterValue(value: any): number | undefined {
@@ -51,6 +54,7 @@ export class SliderIPF extends NewAbstractInputField<number, number> {
 		return {
 			minValue: this.minValue,
 			maxValue: this.maxValue,
+			stepSize: this.stepSize,
 			addLabels: this.renderChild.getArgument(InputFieldArgumentType.ADD_LABELS)?.value === true,
 		};
 	}
