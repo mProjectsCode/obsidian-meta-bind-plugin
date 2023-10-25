@@ -1,6 +1,8 @@
 <script lang='ts'>
 	export let value: string;
 	export let placeholder: string;
+	export let limit: number | undefined;
+
 	export let onValueChange: (value: string) => void;
 
 	export function setValue(v: string): void {
@@ -8,4 +10,5 @@
 	}
 </script>
 
-<textarea tabindex='0' placeholder={placeholder} bind:value={value} on:input={() => onValueChange(value)}></textarea>
+<textarea tabindex='0' placeholder={placeholder} bind:value={value} maxlength={limit}
+		  on:input={() => onValueChange(value)}></textarea>
