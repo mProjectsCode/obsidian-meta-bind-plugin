@@ -33,7 +33,7 @@ export class TextIPF extends NewAbstractInputField<string, string> {
 	protected getMountArgs(): Record<string, unknown> {
 		return {
 			placeholder: this.renderChild.getArgument(InputFieldArgumentType.PLACEHOLDER)?.value ?? 'Text',
-			limit: this.renderChild.getArgument(InputFieldArgumentType.LIMIT)?.value
+			limit: this.renderChild.getArgument(InputFieldArgumentType.LIMIT)?.value,
 		};
 	}
 }

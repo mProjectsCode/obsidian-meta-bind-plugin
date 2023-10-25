@@ -17,11 +17,7 @@ export class LimitInputFieldArgument extends AbstractInputFieldArgument {
 		}
 
 		if (this.value <= 0) {
-			throw new MetaBindParsingError(
-				ErrorLevel.WARNING,
-				'failed to set value for input field argument',
-				"value of argument 'limit' must be positive",
-			);
+			throw new MetaBindParsingError(ErrorLevel.WARNING, 'failed to set value for input field argument', "value of argument 'limit' must be positive");
 		}
 	}
 
