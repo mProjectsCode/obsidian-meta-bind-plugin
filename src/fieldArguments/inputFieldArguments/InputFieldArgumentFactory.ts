@@ -14,6 +14,7 @@ import { PlaceholderInputFieldArgument } from './arguments/PlaceholderInputField
 import { InputFieldArgumentType } from '../../parsers/inputFieldParser/InputFieldConfigs';
 import { UseLinksInputFieldArgument } from './arguments/UseLinksInputFieldArgument';
 import { StepSizeValueInputFieldArgument } from './arguments/StepSizeValueInputFieldArgument';
+import { LimitInputFieldArgument } from './arguments/LimitInputFieldArgument';
 
 export const INPUT_FIELD_ARGUMENT_MAP = {
 	[InputFieldArgumentType.CLASS]: ClassInputFieldArgument,
@@ -30,6 +31,7 @@ export const INPUT_FIELD_ARGUMENT_MAP = {
 	[InputFieldArgumentType.DEFAULT_VALUE]: DefaultValueInputFieldArgument,
 	[InputFieldArgumentType.PLACEHOLDER]: PlaceholderInputFieldArgument,
 	[InputFieldArgumentType.USE_LINKS]: UseLinksInputFieldArgument,
+	[InputFieldArgumentType.LIMIT]: LimitInputFieldArgument,
 } as const;
 
 export type InputFieldArgumentMapType<T extends InputFieldArgumentType> = T extends keyof typeof INPUT_FIELD_ARGUMENT_MAP
