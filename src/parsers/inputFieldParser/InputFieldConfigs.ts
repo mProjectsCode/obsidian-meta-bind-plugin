@@ -40,6 +40,7 @@ export enum InputFieldArgumentType {
 	DEFAULT_VALUE = 'defaultValue',
 	PLACEHOLDER = 'placeholder',
 	USE_LINKS = 'useLinks',
+	LIMIT = 'limit',
 
 	INVALID = 'invalid',
 }
@@ -386,5 +387,20 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 		allowedFieldTypes: [],
 		values: [[]],
 		allowMultiple: true,
+	},
+	[InputFieldArgumentType.LIMIT]: {
+		type: InputFieldArgumentType.LIMIT,
+		// FIXME: LIST is not yet converted to the newer version, so should still implement the LIMIT argument
+		allowedFieldTypes: [InputFieldType.TEXT, InputFieldType.TEXT_AREA, InputFieldType.LIST],
+		values: [
+			[
+				{
+					name: 'value',
+					allowed: ['number'],
+					description: 'character limit for text fields',
+				},
+			],
+		],
+		allowMultiple: false,
 	},
 };
