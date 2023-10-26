@@ -1,10 +1,10 @@
-import { EditorView, WidgetType } from '@codemirror/view';
-import MetaBindPlugin from '../main';
-import { AbstractMDRC } from '../renderChildren/AbstractMDRC';
-import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
-import { InputFieldMDRC, RenderChildType } from '../renderChildren/InputFieldMDRC';
-import { Component } from 'obsidian';
-import { ExcludedMDRC } from '../renderChildren/ExcludedMDRC';
+import { type EditorView, WidgetType } from '@codemirror/view';
+import type MetaBindPlugin from '../main';
+import { type AbstractMDRC } from '../renderChildren/AbstractMDRC';
+import { type ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
+import { type InputFieldMDRC, RenderChildType } from '../renderChildren/InputFieldMDRC';
+import { type Component } from 'obsidian';
+import { type ExcludedMDRC } from '../renderChildren/ExcludedMDRC';
 
 export abstract class MarkdownRenderChildWidget<T extends AbstractMDRC> extends WidgetType {
 	content: string;
@@ -27,7 +27,7 @@ export abstract class MarkdownRenderChildWidget<T extends AbstractMDRC> extends 
 
 	abstract createRenderChild(container: HTMLElement, component: Component): T | ExcludedMDRC;
 
-	public toDOM(view: EditorView): HTMLElement {
+	public toDOM(_: EditorView): HTMLElement {
 		const div = document.createElement('span');
 		div.addClass('cm-inline-code');
 

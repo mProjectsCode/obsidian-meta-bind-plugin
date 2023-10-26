@@ -12,10 +12,6 @@ export const VIEW_FIELD_ARGUMENT_MAP = {
 	[ViewFieldArgumentType.HIDDEN]: HiddenViewFieldArgument,
 } as const;
 
-// export type ViewFieldArgumentMapType<T extends ViewFieldArgumentType> = AbstractFieldArgumentMapType<T, typeof VIEW_FIELD_ARGUMENT_MAP>;
-//
-// export type ViewFieldArgumentConstructorMapType<T extends ViewFieldArgumentType> = AbstractFieldArgumentConstructorMapType<T, typeof VIEW_FIELD_ARGUMENT_MAP>;
-
 export type ViewFieldArgumentMapType<T extends ViewFieldArgumentType> = T extends keyof typeof VIEW_FIELD_ARGUMENT_MAP
 	? InstanceType<(typeof VIEW_FIELD_ARGUMENT_MAP)[T]>
 	: undefined;
@@ -23,9 +19,6 @@ export type ViewFieldArgumentMapType<T extends ViewFieldArgumentType> = T extend
 export type ViewFieldArgumentConstructorMapType<T extends ViewFieldArgumentType> = T extends keyof typeof VIEW_FIELD_ARGUMENT_MAP
 	? (typeof VIEW_FIELD_ARGUMENT_MAP)[T]
 	: undefined;
-
-type a = ViewFieldArgumentConstructorMapType<ViewFieldArgumentType.HIDDEN>;
-type b = ViewFieldArgumentMapType<ViewFieldArgumentType.HIDDEN>;
 
 export class ViewFieldArgumentFactory {
 	static createViewFieldArgument(argumentIdentifier: ViewFieldArgumentType): NonNullable<ViewFieldArgumentMapType<typeof argumentIdentifier>> {
@@ -40,13 +33,5 @@ export class ViewFieldArgumentFactory {
 		}
 
 		throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not crate view field argument', `unknown argument '${argumentIdentifier}'`);
-
-		// if (argumentIdentifier === ViewFieldArgumentType.RENDER_MARKDOWN) {
-		// 	return new RenderMarkdownViewFieldArgument();
-		// } else if (argumentIdentifier === ViewFieldArgumentType.HIDDEN) {
-		// 	return new HiddenViewFieldArgument();
-		// } else {
-		// 	throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not crate view field argument', `unknown argument '${argumentIdentifier}'`);
-		// }
 	}
 }

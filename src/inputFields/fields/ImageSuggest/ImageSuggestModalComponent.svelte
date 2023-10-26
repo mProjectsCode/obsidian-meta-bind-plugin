@@ -6,11 +6,11 @@
 </script>
 
 <style>
-	.image-card-grid {
-		display:               grid;
-		grid-template-columns: repeat(auto-fit, minmax(min(500px, 100%), 1fr));
-		gap:                   var(--size-4-4);
-	}
+    .image-card-grid {
+        display:               grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(500px, 100%), 1fr));
+        gap:                   var(--size-4-4);
+    }
 </style>
 
 <div class='image-card-grid'>

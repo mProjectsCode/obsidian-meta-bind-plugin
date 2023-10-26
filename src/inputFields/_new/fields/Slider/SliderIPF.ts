@@ -1,5 +1,5 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
-import { clamp } from '../../../../utils/Utils';
+import { optClamp, parseUnknownToFloat } from '../../../../utils/Utils';
 import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { type SvelteComponent } from 'svelte';
 import SliderComponent from './SliderComponent.svelte';
@@ -19,19 +19,8 @@ export class SliderIPF extends NewAbstractInputField<number, number> {
 		this.stepSize = this.renderChild.getArgument(InputFieldArgumentType.STEP_SIZE)?.value ?? 1;
 	}
 
-	protected filterValue(value: any): number | undefined {
-		if (typeof value === 'number') {
-			return clamp(value, this.minValue, this.maxValue);
-		} else if (typeof value === 'string') {
-			const v = Number.parseFloat(value);
-			if (Number.isNaN(v)) {
-				return undefined;
-			} else {
-				return clamp(v, this.minValue, this.maxValue);
-			}
-		} else {
-			return undefined;
-		}
+	protected filterValue(value: unknown): number | undefined {
+		return optClamp(parseUnknownToFloat(value), this.minValue, this.maxValue);
 	}
 
 	protected getFallbackDefaultValue(): number {
@@ -50,7 +39,7 @@ export class SliderIPF extends NewAbstractInputField<number, number> {
 		return value;
 	}
 
-	protected getMountArgs(): Record<string, any> {
+	protected getMountArgs(): Record<string, unknown> {
 		return {
 			minValue: this.minValue,
 			maxValue: this.maxValue,

@@ -1,6 +1,6 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
 import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
-import { isLiteral } from '../../../../utils/Utils';
+import { parseUnknownToString } from '../../../../utils/Utils';
 import { type SvelteComponent } from 'svelte';
 import TextAreaComponent from './TextAreaComponent.svelte';
 import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
@@ -11,7 +11,7 @@ export class TextAreaIPF extends NewAbstractInputField<string, string> {
 	}
 
 	protected filterValue(value: unknown): string | undefined {
-		return isLiteral(value) ? value?.toString() : undefined;
+		return parseUnknownToString(value);
 	}
 
 	protected getFallbackDefaultValue(): string {

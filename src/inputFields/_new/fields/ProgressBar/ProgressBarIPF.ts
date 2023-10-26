@@ -1,7 +1,7 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
 import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
-import { clamp } from '../../../../utils/Utils';
+import { optClamp, parseUnknownToFloat } from '../../../../utils/Utils';
 import { type SvelteComponent } from 'svelte';
 import ProgressBarComponent from './ProgressBarComponent.svelte';
 
@@ -16,19 +16,8 @@ export class ProgressBarIPF extends NewAbstractInputField<number, number> {
 		this.maxValue = this.renderChild.getArgument(InputFieldArgumentType.MAX_VALUE)?.value ?? 100;
 	}
 
-	protected filterValue(value: any): number | undefined {
-		if (typeof value === 'number') {
-			return clamp(value, this.minValue, this.maxValue);
-		} else if (typeof value === 'string') {
-			const v = Number.parseFloat(value);
-			if (Number.isNaN(v)) {
-				return undefined;
-			} else {
-				return clamp(v, this.minValue, this.maxValue);
-			}
-		} else {
-			return undefined;
-		}
+	protected filterValue(value: unknown): number | undefined {
+		return optClamp(parseUnknownToFloat(value), this.minValue, this.maxValue);
 	}
 
 	protected getFallbackDefaultValue(): number {
@@ -47,7 +36,7 @@ export class ProgressBarIPF extends NewAbstractInputField<number, number> {
 		return value;
 	}
 
-	protected getMountArgs(): Record<string, any> {
+	protected getMountArgs(): Record<string, unknown> {
 		return {
 			minValue: this.minValue,
 			maxValue: this.maxValue,

@@ -54,36 +54,6 @@ export class InputFieldArgumentFactory {
 			}
 		}
 
-		// if (argumentIdentifier === InputFieldArgumentType.CLASS) {
-		// 	return new ClassInputFieldArgument();
-		// } else if (argumentIdentifier === InputFieldArgumentType.ADD_LABELS) {
-		// 	return new AddLabelsInputFieldArgument();
-		// } else if (argumentIdentifier === InputFieldArgumentType.MIN_VALUE) {
-		// 	return new MinValueInputFieldArgument();
-		// } else if (argumentIdentifier === InputFieldArgumentType.MAX_VALUE) {
-		// 	return new MaxValueInputFieldArgument();
-		// } else if (argumentIdentifier === InputFieldArgumentType.OPTION) {
-		// 	return new OptionInputFieldArgument();
-		// } else if (argumentIdentifier === InputFieldArgumentType.TITLE) {
-		// 	return new TitleInputFieldArgument();
-		// } else if (argumentIdentifier === InputFieldArgumentType.OPTION_QUERY) {
-		// 	return new OptionQueryInputFieldArgument();
-		// } else if (argumentIdentifier === InputFieldArgumentType.SHOWCASE) {
-		// 	return new ShowcaseInputFieldArgument();
-		// } else if (argumentIdentifier === InputFieldArgumentType.OFF_VALUE) {
-		// 	return new OffValueInputFieldArgument();
-		// } else if (argumentIdentifier === InputFieldArgumentType.ON_VALUE) {
-		// 	return new OnValueInputFieldArgument();
-		// } else if (argumentIdentifier === InputFieldArgumentType.DEFAULT_VALUE) {
-		// 	return new DefaultValueInputFieldArgument();
-		// } else if (argumentIdentifier === InputFieldArgumentType.PLACEHOLDER) {
-		// 	return new PlaceholderInputFieldArgument();
-		// } else if (argumentIdentifier === InputFieldArgumentType.USE_LINKS) {
-		// 	return new UseLinksInputFieldArgument();
-		// } else {
-		//
-		// }
-
 		throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not crate input field argument', `unknown argument '${argumentIdentifier}'`);
 	}
 }

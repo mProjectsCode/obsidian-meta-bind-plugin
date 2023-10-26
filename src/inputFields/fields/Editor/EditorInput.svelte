@@ -48,30 +48,30 @@
 </script>
 
 <style>
-	.editor-input {
-		background:  var(--background-secondary);
-		width:       100%;
-		height:      500px;
-		padding:     0;
-		position:    relative;
-		margin-left: 0;
-	}
+    .editor-input {
+        background:  var(--background-secondary);
+        width:       100%;
+        height:      500px;
+        padding:     0;
+        position:    relative;
+        margin-left: 0;
+    }
 
-	.editor-input > textarea {
-		background: var(--background-secondary);
-		border:     none;
-		padding:    var(--size-4-4) var(--size-4-8);
-		margin:     0;
-		position:   absolute;
-		inset:      0;
-		resize:     none;
-	}
+    .editor-input > textarea {
+        background: var(--background-secondary);
+        border:     none;
+        padding:    var(--size-4-4) var(--size-4-8);
+        margin:     0;
+        position:   absolute;
+        inset:      0;
+        resize:     none;
+    }
 
-	.editor-input > div {
-		padding:  var(--size-4-4) var(--size-4-8);
-		position: absolute;
-		inset:    0;
-	}
+    .editor-input > div {
+        padding:  var(--size-4-4) var(--size-4-8);
+        position: absolute;
+        inset:    0;
+    }
 </style>
 
 <div class='editor-input card' on:click={(event) => focusIn(event)}>

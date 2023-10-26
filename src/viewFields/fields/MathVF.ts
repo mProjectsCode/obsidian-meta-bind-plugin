@@ -28,7 +28,7 @@ export class MathVF extends AbstractViewField {
 			if (typeof entry !== 'string') {
 				const variable: ViewFieldVariable = {
 					bindTargetDeclaration: entry,
-					inputSignal: new Signal<any>(undefined),
+					inputSignal: new Signal<unknown>(undefined),
 					uuid: self.crypto.randomUUID(),
 					contextName: `MB_VAR_${varCounter}`,
 				};

@@ -3,6 +3,7 @@ import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { type SvelteComponent } from 'svelte';
 import NumberComponent from './NumberComponent.svelte';
 import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
+import { parseUnknownToFloat } from '../../../../utils/Utils';
 
 export class NumberIPF extends NewAbstractInputField<number, number> {
 	constructor(renderChild: InputFieldMDRC) {
@@ -10,18 +11,7 @@ export class NumberIPF extends NewAbstractInputField<number, number> {
 	}
 
 	protected filterValue(value: unknown): number | undefined {
-		if (typeof value === 'number') {
-			return value;
-		} else if (typeof value === 'string') {
-			const v = Number.parseFloat(value);
-			if (Number.isNaN(v)) {
-				return undefined;
-			} else {
-				return v;
-			}
-		} else {
-			return undefined;
-		}
+		return parseUnknownToFloat(value);
 	}
 
 	protected getFallbackDefaultValue(): number {

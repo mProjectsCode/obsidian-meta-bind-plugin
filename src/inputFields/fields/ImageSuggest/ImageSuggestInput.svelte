@@ -22,29 +22,29 @@
 </script>
 
 <style>
-	.image-suggest-input {
-		background:    var(--background-secondary);
-		border-radius: var(--meta-bind-plugin-border-radius);
-		border:        var(--meta-bind-plugin-border-width) solid var(--background-modifier-border);
-		padding:       var(--size-4-2);
-		width:         100%;
-	}
+    .image-suggest-input {
+        background:    var(--background-secondary);
+        border-radius: var(--meta-bind-plugin-border-radius);
+        border:        var(--meta-bind-plugin-border-width) solid var(--background-modifier-border);
+        padding:       var(--size-4-2);
+        width:         100%;
+    }
 
-	.image-suggest-image {
-		width: 100%;
-	}
+    .image-suggest-image {
+        width: 100%;
+    }
 
-	.image-suggest-footer {
-		display:        flex;
-		flex-direction: row;
-		color:          var(--text-normal);
-		align-items:    baseline;
-	}
+    .image-suggest-footer {
+        display:        flex;
+        flex-direction: row;
+        color:          var(--text-normal);
+        align-items:    baseline;
+    }
 
-	.image-suggest-footer-text {
-		flex:        1;
-		margin-left: var(--size-4-2);
-	}
+    .image-suggest-footer-text {
+        flex:        1;
+        margin-left: var(--size-4-2);
+    }
 </style>
 
 <div class='image-suggest-input'>

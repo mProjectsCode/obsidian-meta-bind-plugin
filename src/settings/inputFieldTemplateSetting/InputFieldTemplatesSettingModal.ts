@@ -22,6 +22,7 @@ export class InputFieldTemplatesSettingModal extends Modal {
 		this.component = new InputFieldTemplatesSettingComponent({
 			target: this.contentEl,
 			props: {
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 				inputFieldTemplates: JSON.parse(JSON.stringify(this.plugin.settings.inputFieldTemplates)),
 				modal: this,
 			},
@@ -42,7 +43,7 @@ export class InputFieldTemplatesSettingModal extends Modal {
 		}
 
 		this.plugin.settings.inputFieldTemplates = templates;
-		this.plugin.saveSettings();
+		void this.plugin.saveSettings();
 
 		return undefined;
 	}

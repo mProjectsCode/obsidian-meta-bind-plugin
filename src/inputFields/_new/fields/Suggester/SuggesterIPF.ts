@@ -1,7 +1,7 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
-import { isLiteral, MBLiteral } from '../../../../utils/Utils';
-import { InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
-import { SvelteComponent } from 'svelte';
+import { type MBLiteral, parseUnknownToLiteral } from '../../../../utils/Utils';
+import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
+import { type SvelteComponent } from 'svelte';
 import SuggesterComponent from './SuggesterComponent.svelte';
 import { openSuggesterModalForInputField } from './SuggesterHelper';
 
@@ -10,8 +10,8 @@ export class SuggesterIPF extends NewAbstractInputField<MBLiteral, MBLiteral> {
 		super(renderChild);
 	}
 
-	protected filterValue(value: any): MBLiteral | undefined {
-		return isLiteral(value) ? value : undefined;
+	protected filterValue(value: unknown): MBLiteral | undefined {
+		return parseUnknownToLiteral(value);
 	}
 
 	protected getFallbackDefaultValue(): MBLiteral {
@@ -30,7 +30,7 @@ export class SuggesterIPF extends NewAbstractInputField<MBLiteral, MBLiteral> {
 		return value;
 	}
 
-	protected getMountArgs(): Record<string, any> {
+	protected getMountArgs(): Record<string, unknown> {
 		return {
 			showSuggester: () => this.openModal(),
 		};

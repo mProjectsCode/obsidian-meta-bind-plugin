@@ -2,3 +2,4 @@ npm node_modules
 build
 main.js
 Publish.js
+*.svelte

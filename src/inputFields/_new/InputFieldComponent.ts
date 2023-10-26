@@ -1,5 +1,5 @@
-import { SvelteComponent } from 'svelte';
-import { Listener, Notifier } from '../../utils/Signal';
+import { type SvelteComponent } from 'svelte';
+import { type Listener, Notifier } from '../../utils/Signal';
 
 export class InputFieldComponent<Value> extends Notifier<Value, Listener<Value>> {
 	private readonly svelteComponent: typeof SvelteComponent;
@@ -17,6 +17,7 @@ export class InputFieldComponent<Value> extends Notifier<Value, Listener<Value>>
 	 * @param value
 	 */
 	public setValue(value: Value): void {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		this.svelteComponentInstance?.setValue(value);
 	}
 
@@ -28,7 +29,7 @@ export class InputFieldComponent<Value> extends Notifier<Value, Listener<Value>>
 	 * @param initialValue
 	 * @param mountArgs
 	 */
-	public mount(container: HTMLElement, initialValue: Value, mountArgs: Record<string, any> = {}): void {
+	public mount(container: HTMLElement, initialValue: Value, mountArgs: Record<string, unknown> = {}): void {
 		const props = Object.assign(
 			{
 				value: initialValue,

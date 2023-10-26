@@ -80,7 +80,7 @@ export class ViewFieldDeclarationValidator {
 		return ViewFieldType.INVALID;
 	}
 
-	private checkForDeprecation(declaration: ViewFieldDeclaration): void {}
+	private checkForDeprecation(_: ViewFieldDeclaration): void {}
 
 	private validateBindTarget(scope: BindTargetScope | undefined): BindTargetDeclaration | undefined {
 		if (this.unvalidatedDeclaration.writeToBindTarget !== undefined) {

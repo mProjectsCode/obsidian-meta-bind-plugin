@@ -1,5 +1,5 @@
 <script lang='ts'>
-	import { imagePathToUri } from '../../../utils/Utils';
+	import { imagePathToUri } from '../../../../utils/Utils';
 
 	export let image: string;
 	export let onSelect: (item: string) => void;

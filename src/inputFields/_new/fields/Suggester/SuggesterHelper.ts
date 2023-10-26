@@ -3,15 +3,15 @@ import { type OptionQueryInputFieldArgument } from '../../../../fieldArguments/i
 import { type MBLiteral } from '../../../../utils/Utils';
 import { type DataArray, type DataviewApi, getAPI, type Literal } from 'obsidian-dataview';
 import { Notice } from 'obsidian';
-import { type NewAbstractInputField } from '../../NewAbstractInputField';
 import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
 import { SuggesterInputModal } from './SuggesterInputModal';
+import { type SuggesterIPF } from './SuggesterIPF';
 
-export class SuggesterOption {
-	value: MBLiteral;
+export class SuggesterOption<T> {
+	value: T;
 	displayValue: string;
 
-	constructor(value: MBLiteral, displayValue: string) {
+	constructor(value: T, displayValue: string) {
 		this.value = value;
 		this.displayValue = displayValue;
 	}
@@ -27,11 +27,11 @@ export function getSuggesterOptions(
 	optionArgs: OptionInputFieldArgument[],
 	optionQueryArgs: OptionQueryInputFieldArgument[],
 	useLinks: boolean,
-): SuggesterOption[] {
-	const options: SuggesterOption[] = [];
+): SuggesterOption<MBLiteral>[] {
+	const options: SuggesterOption<MBLiteral>[] = [];
 
 	for (const suggestOptionsArgument of optionArgs) {
-		options.push(new SuggesterOption(suggestOptionsArgument.value, suggestOptionsArgument.name));
+		options.push(new SuggesterOption<MBLiteral>(suggestOptionsArgument.value, suggestOptionsArgument.name));
 	}
 
 	if (optionQueryArgs.length > 0) {
@@ -45,13 +45,14 @@ export function getSuggesterOptions(
 
 			result.forEach((file: Record<string, Literal>) => {
 				try {
-					const dvFile: any = file.file;
+					// FIXME: this is unsafe, maybe add validation
+					const dvFile = file.file as { name: string; path: string };
 
 					if (useLinks) {
-						options.push(new SuggesterOption(`[[${dvFile.path}|${dvFile.name}]]`, `file-link: ${dvFile.name}`));
+						options.push(new SuggesterOption<MBLiteral>(`[[${dvFile.path}|${dvFile.name}]]`, `file-link: ${dvFile.name}`));
 					} else {
 						// console.log(tFile);
-						options.push(new SuggesterOption(dvFile.name, `file: ${dvFile.name}`));
+						options.push(new SuggesterOption<MBLiteral>(dvFile.name, `file: ${dvFile.name}`));
 					}
 				} catch (e) {
 					console.warn('meta-bind | error while computing suggest options', e);
@@ -63,16 +64,16 @@ export function getSuggesterOptions(
 	return options;
 }
 
-export function getSuggesterOptionsForInputField(inputField: NewAbstractInputField<any, any>): SuggesterOption[] {
+export function getSuggesterOptionsForInputField(inputField: SuggesterIPF): SuggesterOption<MBLiteral>[] {
 	const app = inputField.renderChild.plugin.app;
 	const dv = getAPI(app);
 	const optionArgs = inputField.renderChild.getArguments(InputFieldArgumentType.OPTION);
 	const optionQueryArgs = inputField.renderChild.getArguments(InputFieldArgumentType.OPTION_QUERY);
-	const useLinksArgs = inputField.renderChild.getArgument(InputFieldArgumentType.USE_LINKS)!;
+	const useLinksArgs = inputField.renderChild.getArgument(InputFieldArgumentType.USE_LINKS);
 	// in not present, we treat the use links argument as true
 	return getSuggesterOptions(dv, inputField.renderChild.filePath, optionArgs, optionQueryArgs, useLinksArgs === undefined || useLinksArgs.value);
 }
 
-export function openSuggesterModalForInputField(inputField: NewAbstractInputField<any, any>, selectCallback: (selected: SuggesterOption) => void): void {
+export function openSuggesterModalForInputField(inputField: SuggesterIPF, selectCallback: (selected: SuggesterOption<MBLiteral>) => void): void {
 	new SuggesterInputModal(inputField.renderChild.plugin.app, getSuggesterOptionsForInputField(inputField), selectCallback).open();
 }

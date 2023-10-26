@@ -14,10 +14,10 @@ export class DatePickerIPF extends NewAbstractInputField<string | null, moment.M
 	constructor(renderChild: InputFieldMDRC) {
 		super(renderChild);
 
-		this.options = this.renderChild.getArguments(InputFieldArgumentType.OPTION) as OptionInputFieldArgument[];
+		this.options = this.renderChild.getArguments(InputFieldArgumentType.OPTION);
 	}
 
-	protected filterValue(value: any): string | null | undefined {
+	protected filterValue(value: unknown): string | null | undefined {
 		if (value === null) {
 			return null;
 		}
@@ -59,7 +59,7 @@ export class DatePickerIPF extends NewAbstractInputField<string | null, moment.M
 		}
 	}
 
-	protected getMountArgs(): Record<string, any> {
+	protected getMountArgs(): Record<string, unknown> {
 		return {
 			dateFormat: this.renderChild.plugin.settings.preferredDateFormat,
 			showDatePicker: (): void => {

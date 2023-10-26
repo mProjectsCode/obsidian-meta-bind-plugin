@@ -1,21 +1,21 @@
 import { MarkdownRenderChild } from 'obsidian/publish';
-import { PublishAPI } from './PublishAPI';
+import { type PublishAPI } from './PublishAPI';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
 import * as MathJs from 'mathjs';
 import { ErrorLevel, MetaBindBindTargetError, MetaBindExpressionError } from '../utils/errors/MetaBindErrors';
-import { ViewFieldVariable } from '../renderChildren/ViewFieldMDRC';
+import { type ViewFieldVariable } from '../renderChildren/ViewFieldMDRC';
 import { Signal } from '../utils/Signal';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import PublishFieldComponent from './PublishFieldComponent.svelte';
-import { BindTargetDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
-import { ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
+import { type BindTargetDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
+import { type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
 
 export class PublishViewFieldMDRC extends MarkdownRenderChild {
 	api: PublishAPI;
 
 	uuid: string;
 	filePath: string;
-	metadata: Record<string, any> | undefined;
+	metadata: Record<string, unknown> | undefined;
 
 	viewFieldDeclaration: ViewFieldDeclaration;
 	expressionStr: string;
@@ -29,7 +29,7 @@ export class PublishViewFieldMDRC extends MarkdownRenderChild {
 		api: PublishAPI,
 		declaration: ViewFieldDeclaration,
 		filePath: string,
-		metadata: Record<string, any> | undefined,
+		metadata: Record<string, unknown> | undefined,
 		uuid: string,
 	) {
 		super(containerEl);
@@ -54,7 +54,7 @@ export class PublishViewFieldMDRC extends MarkdownRenderChild {
 					if (typeof entry !== 'string') {
 						const variable: ViewFieldVariable = {
 							bindTargetDeclaration: entry,
-							inputSignal: new Signal<any>(undefined),
+							inputSignal: new Signal<unknown>(undefined),
 							uuid: self.crypto.randomUUID(),
 							contextName: `MB_VAR_${varCounter}`,
 						};
@@ -76,8 +76,8 @@ export class PublishViewFieldMDRC extends MarkdownRenderChild {
 		this.load();
 	}
 
-	buildContext(): Record<string, any> {
-		const context: Record<string, any> = {};
+	buildContext(): Record<string, unknown> {
+		const context: Record<string, unknown> = {};
 		for (const variable of this.variables ?? []) {
 			if (!variable.contextName || !variable.inputSignal) {
 				continue;
@@ -96,17 +96,21 @@ export class PublishViewFieldMDRC extends MarkdownRenderChild {
 
 		const context = this.buildContext();
 		try {
-			return this.expression.evaluate(context);
-		} catch (e: any) {
-			throw new MetaBindExpressionError(ErrorLevel.ERROR, `failed to evaluate expression`, e, {
-				declaration: this.viewFieldDeclaration.templateDeclaration,
-				expression: this.expressionStr,
-				context: context,
-			});
+			return this.expression.evaluate(context) as Promise<string>;
+		} catch (e) {
+			if (e instanceof Error) {
+				throw new MetaBindExpressionError(ErrorLevel.ERROR, `failed to evaluate expression`, e, {
+					declaration: this.viewFieldDeclaration.templateDeclaration,
+					expression: this.expressionStr,
+					context: context,
+				});
+			} else {
+				throw new Error('encountered non thrown error that does not inherit from Error');
+			}
 		}
 	}
 
-	getValue(bindTarget: BindTargetDeclaration): any {
+	getValue(bindTarget: BindTargetDeclaration): unknown {
 		if (bindTarget.filePath !== this.filePath) {
 			throw new MetaBindBindTargetError(ErrorLevel.ERROR, 'failed to render view field', 'can not load metadata of another file in obsidian publish');
 		}
