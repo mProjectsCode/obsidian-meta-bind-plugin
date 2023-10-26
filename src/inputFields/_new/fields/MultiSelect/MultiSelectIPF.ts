@@ -1,5 +1,5 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
-import { type MBLiteral } from '../../../../utils/Utils';
+import { type MBLiteral, parseUnknownToLiteralArray } from '../../../../utils/Utils';
 import { type OptionInputFieldArgument } from '../../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
@@ -12,17 +12,11 @@ export class MultiSelectIPF extends NewAbstractInputField<MBLiteral[], MBLiteral
 	constructor(renderChild: InputFieldMDRC) {
 		super(renderChild);
 
-		this.options = this.renderChild.getArguments(InputFieldArgumentType.OPTION) as OptionInputFieldArgument[];
+		this.options = this.renderChild.getArguments(InputFieldArgumentType.OPTION);
 	}
 
-	protected filterValue(value: any): MBLiteral[] | undefined {
-		if (value === null || value === undefined) {
-			return undefined;
-		} else if (Array.isArray(value)) {
-			return value;
-		} else {
-			return [value];
-		}
+	protected filterValue(value: unknown): MBLiteral[] | undefined {
+		return parseUnknownToLiteralArray(value);
 	}
 
 	protected getFallbackDefaultValue(): MBLiteral[] {
@@ -41,7 +35,7 @@ export class MultiSelectIPF extends NewAbstractInputField<MBLiteral[], MBLiteral
 		return value;
 	}
 
-	protected getMountArgs(): Record<string, any> {
+	protected getMountArgs(): Record<string, unknown> {
 		return {
 			options: this.options,
 		};

@@ -1,9 +1,8 @@
-import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
+import { type InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 import { InputFieldComponent } from './InputFieldComponent';
-import { SvelteComponent } from 'svelte';
-import { ComputedSignal, Listener, Notifier } from '../../utils/Signal';
+import { type SvelteComponent } from 'svelte';
+import { ComputedSignal, type Listener, Notifier } from '../../utils/Signal';
 import { InputFieldArgumentType } from '../../parsers/inputFieldParser/InputFieldConfigs';
-import { DefaultValueInputFieldArgument } from '../../fieldArguments/inputFieldArguments/arguments/DefaultValueInputFieldArgument';
 
 export abstract class NewAbstractInputField<MetadataValueType, ComponentValueType> extends Notifier<MetadataValueType, Listener<MetadataValueType>> {
 	readonly renderChild: InputFieldMDRC;
@@ -103,7 +102,7 @@ export abstract class NewAbstractInputField<MetadataValueType, ComponentValueTyp
 	}
 
 	private getDefaultValue(): MetadataValueType {
-		const defaultValueArgument = this.renderChild.getArgument(InputFieldArgumentType.DEFAULT_VALUE) as DefaultValueInputFieldArgument | undefined;
+		const defaultValueArgument = this.renderChild.getArgument(InputFieldArgumentType.DEFAULT_VALUE);
 		if (!defaultValueArgument) {
 			return this.mapValue(this.getFallbackDefaultValue());
 		}

@@ -1,12 +1,13 @@
-import { Decoration, DecorationSet, EditorView, ViewPlugin, ViewUpdate } from '@codemirror/view';
-import { Range, RangeSet } from '@codemirror/state';
+import { Decoration, type DecorationSet, type EditorView, ViewPlugin, type ViewUpdate } from '@codemirror/view';
+import { type Range, type RangeSet } from '@codemirror/state';
 import { syntaxTree, tokenClassNodeProp } from '@codemirror/language';
-import { SyntaxNode } from '@lezer/common';
-import { Component, editorLivePreviewField, TFile } from 'obsidian';
-import MetaBindPlugin from '../main';
-import { MBWidgetType } from './Cm6_Widgets';
+import { type SyntaxNode } from '@lezer/common';
+import { Component, editorLivePreviewField, type TFile } from 'obsidian';
+import type MetaBindPlugin from '../main';
+import { type MBWidgetType } from './Cm6_Widgets';
 import { Cm6_Util } from './Cm6_Util';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlugin): ViewPlugin<any> {
 	return ViewPlugin.fromClass(
 		class {
@@ -195,54 +196,4 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			decorations: v => v.decorations,
 		},
 	);
-
-	// return StateField.define<RangeSet<Decoration>>({
-	// 	create(state): RangeSet<Decoration> {
-	// 		return Decoration.none;
-	// 	},
-	//
-	// 	update(oldState: RangeSet<Decoration>, transaction: Transaction): RangeSet<Decoration> {
-	// 		const builder = new RangeSetBuilder<Decoration>();
-	// 		const filePath = transaction.state.field(editorInfoField).file?.path ?? '';
-	//
-	// 		syntaxTree(transaction.state).iterate({
-	// 			enter(node: SyntaxNodeRef) {
-	// 				// check for inline code
-	// 				if (node.type.name !== 'inline-code') {
-	// 					return;
-	// 				}
-	//
-	// 				// check for selection and cursor
-	// 				if (Cm6_Util.checkSelectionOverlap(transaction.selection, node.from, node.to)) {
-	// 					return;
-	// 				}
-	//
-	// 				// check for content
-	// 				const content = transaction.state.sliceDoc(node.from, node.to);
-	// 				if (!isDeclaration(widgetType, content)) {
-	// 					return;
-	// 				}
-	//
-	// 				const widget = constructMarkdownRenderChildWidget(widgetType, content, filePath, plugin);
-	// 				if (!widget) {
-	// 					return;
-	// 				}
-	//
-	// 				builder.add(
-	// 					node.from,
-	// 					node.to,
-	// 					Decoration.replace({
-	// 						widget: widget,
-	// 					})
-	// 				);
-	// 			},
-	// 		});
-	//
-	// 		return builder.finish();
-	// 	},
-	//
-	// 	provide(field: StateField<DecorationSet>): Extension {
-	// 		return EditorView.decorations.from(field);
-	// 	},
-	// });
 }

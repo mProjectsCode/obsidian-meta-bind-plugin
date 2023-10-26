@@ -1,14 +1,14 @@
 import { ViewFieldDeclarationParser } from '../parsers/viewFieldParser/ViewFieldDeclarationParser';
 import { BindTargetParser } from '../parsers/BindTargetParser';
-import { IPlugin } from '../IPlugin';
+import { type IPlugin } from '../IPlugin';
 import { PublishInputFieldMDRC } from './PublishInputFieldMDRC';
 import { PublishViewFieldMDRC } from './PublishViewFieldMDRC';
 import { InputFieldDeclarationParser } from '../parsers/inputFieldParser/InputFieldParser';
-import { MarkdownPostProcessorContext } from 'obsidian/publish';
-import { IAPI } from '../api/IAPI';
+import { type MarkdownPostProcessorContext } from 'obsidian/publish';
+import { type IAPI } from '../api/IAPI';
 import { InputFieldAPI } from '../api/InputFieldAPI';
-import { InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
-import { ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
+import { type InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
+import { type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
 
 export class PublishAPI implements IAPI {
 	public readonly plugin: IPlugin;
@@ -30,7 +30,7 @@ export class PublishAPI implements IAPI {
 	public createInputFieldFromString(
 		fullDeclaration: string,
 		filePath: string,
-		metadata: Record<string, any> | undefined,
+		metadata: Record<string, unknown> | undefined,
 		container: HTMLElement,
 		component: MarkdownPostProcessorContext,
 	): PublishInputFieldMDRC {
@@ -45,7 +45,7 @@ export class PublishAPI implements IAPI {
 	public createViewFieldFromString(
 		fullDeclaration: string,
 		filePath: string,
-		metadata: Record<string, any> | undefined,
+		metadata: Record<string, unknown> | undefined,
 		container: HTMLElement,
 		component: MarkdownPostProcessorContext,
 	): PublishViewFieldMDRC {

@@ -46,7 +46,7 @@ export class ExcludedFoldersSettingModal extends Modal {
 		}
 
 		this.plugin.settings.excludedFolders = folders;
-		this.plugin.saveSettings();
+		void this.plugin.saveSettings();
 
 		return undefined;
 	}

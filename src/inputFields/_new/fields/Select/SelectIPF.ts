@@ -1,5 +1,5 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
-import { isLiteral, type MBLiteral } from '../../../../utils/Utils';
+import { type MBLiteral, parseUnknownToLiteral } from '../../../../utils/Utils';
 import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { type SvelteComponent } from 'svelte';
 import SelectComponent from './SelectComponent.svelte';
@@ -16,7 +16,7 @@ export class SelectIPF extends NewAbstractInputField<MBLiteral, MBLiteral> {
 	}
 
 	protected filterValue(value: unknown): MBLiteral | undefined {
-		return isLiteral(value) ? value : undefined;
+		return parseUnknownToLiteral(value);
 	}
 
 	protected getFallbackDefaultValue(): MBLiteral {

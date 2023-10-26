@@ -23,22 +23,22 @@
 </script>
 
 <style>
-	.date-picker-input {
-		background:    var(--background-secondary);
-		border-radius: var(--mb-border-radius);
-		border:        var(--mb-border-width) solid var(--background-modifier-border);
-		padding:       5px 5px 5px 7px;
-		cursor:        pointer;
-		position:      relative;
-		color:         var(--text-normal);
-		display:       inline-flex;
-		align-items:   center;
-		gap:           5px;
-	}
+    .date-picker-input {
+        background:    var(--background-secondary);
+        border-radius: var(--mb-border-radius);
+        border:        var(--mb-border-width) solid var(--background-modifier-border);
+        padding:       5px 5px 5px 7px;
+        cursor:        pointer;
+        position:      relative;
+        color:         var(--text-normal);
+        display:       inline-flex;
+        align-items:   center;
+        gap:           5px;
+    }
 
-	.date-picker-text {
-		display: inline-block;
-	}
+    .date-picker-text {
+        display: inline-block;
+    }
 </style>
 
 <div

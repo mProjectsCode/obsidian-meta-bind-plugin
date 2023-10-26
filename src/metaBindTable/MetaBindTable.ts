@@ -22,7 +22,7 @@ export type MetaBindColumnDeclaration = UnvalidatedInputFieldDeclaration | Unval
 export interface MetaBindTableRow {
 	cells: MetaBindTableCell[];
 	index: number;
-	value: any;
+	value: unknown;
 	isValid: boolean;
 }
 

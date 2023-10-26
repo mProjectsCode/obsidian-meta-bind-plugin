@@ -35,57 +35,57 @@
 </script>
 
 <style>
-	.calendar {
-		margin-top: 10px;
-	}
+    .calendar {
+        margin-top: 10px;
+    }
 
-	.calendar-header {
-		display:         flex;
-		justify-content: space-around;
-		flex-wrap:       wrap;
-		gap:             var(--size-4-1);
-		background:      var(--background-secondary);
-		border-radius:   var(--mb-border-radius);
-		margin-bottom:   var(--size-4-1);;
-	}
+    .calendar-header {
+        display:         flex;
+        justify-content: space-around;
+        flex-wrap:       wrap;
+        gap:             var(--size-4-1);
+        background:      var(--background-secondary);
+        border-radius:   var(--mb-border-radius);
+        margin-bottom:   var(--size-4-1);;
+    }
 
-	.calendar-content {
-		display:               grid;
-		flex-wrap:             wrap;
-		grid-template-columns: repeat(7, 1fr);
-		gap:                   var(--size-4-1);
-	}
+    .calendar-content {
+        display:               grid;
+        flex-wrap:             wrap;
+        grid-template-columns: repeat(7, 1fr);
+        gap:                   var(--size-4-1);
+    }
 
-	.cell {
-		min-width:       40px;
-		padding:         var(--size-4-2);
-		display:         flex;
-		justify-content: center;
-		align-items:     center;
-		border-radius:   var(--mb-border-radius);
-	}
+    .cell {
+        min-width:       40px;
+        padding:         var(--size-4-2);
+        display:         flex;
+        justify-content: center;
+        align-items:     center;
+        border-radius:   var(--mb-border-radius);
+    }
 
-	.content-cell {
-		cursor: pointer;
-	}
+    .content-cell {
+        cursor: pointer;
+    }
 
-	.cell-text {
-		margin:     auto;
-		text-align: center;
-	}
+    .cell-text {
+        margin:     auto;
+        text-align: center;
+    }
 
-	.selected {
-		background: var(--interactive-accent);
-		color:      var(--text-on-accent);
-	}
+    .selected {
+        background: var(--interactive-accent);
+        color:      var(--text-on-accent);
+    }
 
-	.highlight:hover {
-		background: var(--interactive-hover);
-	}
+    .highlight:hover {
+        background: var(--interactive-hover);
+    }
 
-	.selected.highlight:hover {
-		background: var(--interactive-accent-hover);
-	}
+    .selected.highlight:hover {
+        background: var(--interactive-accent-hover);
+    }
 </style>
 
 <div class='calendar'>

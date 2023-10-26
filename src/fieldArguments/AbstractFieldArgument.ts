@@ -7,7 +7,7 @@ export abstract class AbstractFieldArgument<
 	FieldArgumentType extends string,
 	FieldConfig extends FieldArgumentConfig<FieldArgumentType, FieldType>,
 > {
-	value: any;
+	value: unknown;
 
 	abstract getConfig(): FieldConfig;
 

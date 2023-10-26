@@ -10,7 +10,7 @@ export class EditorIPF extends NewAbstractInputField<string, string> {
 		super(renderChild);
 	}
 
-	protected filterValue(value: any): string | undefined {
+	protected filterValue(value: unknown): string | undefined {
 		return isLiteral(value) ? value?.toString() : undefined;
 	}
 
@@ -30,7 +30,7 @@ export class EditorIPF extends NewAbstractInputField<string, string> {
 		return value;
 	}
 
-	protected getMountArgs(): Record<string, any> {
+	protected getMountArgs(): Record<string, unknown> {
 		return {
 			render: (el: HTMLElement, value: string) => this.renderInElement(el, value),
 		};

@@ -9,7 +9,7 @@ import { type AbstractViewField } from '../viewFields/AbstractViewField';
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
 import { type ViewFieldArgumentType } from '../parsers/viewFieldParser/ViewFieldConfigs';
 import { type ComputedMetadataSubscription, type ComputedSubscriptionDependency } from '../metadata/MetadataFileCache';
-import { ViewFieldArgumentMapType } from '../fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
+import { type ViewFieldArgumentMapType } from '../fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
 
 export interface ViewFieldVariable {
 	bindTargetDeclaration: BindTargetDeclaration;
@@ -145,7 +145,7 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 		const container: HTMLDivElement = createDiv();
 		container.addClass('mb-view-wrapper');
 
-		this.viewField?.render(container);
+		void this.viewField?.render(container);
 
 		this.containerEl.appendChild(container);
 	}

@@ -14,20 +14,20 @@
 </script>
 
 <style>
-	.icon-wrapper {
-		display:  inline-block;
-		position: relative;
-		width:    18px;
-		height:   18px;
-	}
+    .icon-wrapper {
+        display:  inline-block;
+        position: relative;
+        width:    18px;
+        height:   18px;
+    }
 
-	.icon-wrapper > svg {
-		position: absolute;
-		top:      0;
-		bottom:   0;
-		left:     0;
-		right:    0;
-	}
+    .icon-wrapper > svg {
+        position: absolute;
+        top:      0;
+        bottom:   0;
+        left:     0;
+        right:    0;
+    }
 </style>
 
 {#if iconName.length > 0}

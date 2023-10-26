@@ -1,5 +1,5 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
-import { isLiteral, type MBLiteral } from '../../../../utils/Utils';
+import { type MBLiteral, parseUnknownToLiteral } from '../../../../utils/Utils';
 import { type OptionInputFieldArgument } from '../../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
@@ -12,11 +12,11 @@ export class InlineSelectIPF extends NewAbstractInputField<MBLiteral, MBLiteral>
 	constructor(renderChild: InputFieldMDRC) {
 		super(renderChild);
 
-		this.options = this.renderChild.getArguments(InputFieldArgumentType.OPTION) as OptionInputFieldArgument[];
+		this.options = this.renderChild.getArguments(InputFieldArgumentType.OPTION);
 	}
 
-	protected filterValue(value: any): MBLiteral | undefined {
-		return isLiteral(value) ? value : undefined;
+	protected filterValue(value: unknown): MBLiteral | undefined {
+		return parseUnknownToLiteral(value);
 	}
 
 	protected getFallbackDefaultValue(): MBLiteral {
@@ -35,7 +35,7 @@ export class InlineSelectIPF extends NewAbstractInputField<MBLiteral, MBLiteral>
 		return value;
 	}
 
-	protected getMountArgs(): Record<string, any> {
+	protected getMountArgs(): Record<string, unknown> {
 		return {
 			options: this.options,
 		};

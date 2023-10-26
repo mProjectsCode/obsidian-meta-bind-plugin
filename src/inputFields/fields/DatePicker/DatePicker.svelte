@@ -68,51 +68,51 @@
 
 <style>
 
-	.date-picker {
-		display: block;
-		padding: var(--size-4-4);
-	}
+    .date-picker {
+        display: block;
+        padding: var(--size-4-4);
+    }
 
-	.date-picker-header {
-		display:         flex;
-		gap:             var(--size-4-2);
-		align-items:     center;
-		justify-content: space-around;
-	}
+    .date-picker-header {
+        display:         flex;
+        gap:             var(--size-4-2);
+        align-items:     center;
+        justify-content: space-around;
+    }
 
-	.date-picker-header-text {
-		flex:            1;
-		text-align:      center;
-		display:         flex;
-		gap:             var(--size-4-2);
-		align-items:     center;
-		justify-content: center;
-		width:           min-content;
-	}
+    .date-picker-header-text {
+        flex:            1;
+        text-align:      center;
+        display:         flex;
+        gap:             var(--size-4-2);
+        align-items:     center;
+        justify-content: center;
+        width:           min-content;
+    }
 
-	.date-picker-header-text-year {
-		width:   60px;
-		padding: var(--size-4-2);
-	}
+    .date-picker-header-text-year {
+        width:   60px;
+        padding: var(--size-4-2);
+    }
 
-	.date-picker-header-text-month {
-		height: min-content;
-	}
+    .date-picker-header-text-month {
+        height: min-content;
+    }
 
-	.month-switch-button {
-		margin: 0;
-	}
+    .month-switch-button {
+        margin: 0;
+    }
 
-	.date-picker-footer {
-		display:         flex;
-		gap:             var(--size-4-2);
-		align-items:     center;
-		justify-content: center;
-	}
+    .date-picker-footer {
+        display:         flex;
+        gap:             var(--size-4-2);
+        align-items:     center;
+        justify-content: center;
+    }
 
-	.none-button {
-		margin: 0;
-	}
+    .none-button {
+        margin: 0;
+    }
 </style>
 
 <div class='date-picker'>

@@ -1,5 +1,5 @@
-import { ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
-import { ViewFieldMDRC, ViewFieldVariable } from '../renderChildren/ViewFieldMDRC';
+import { type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
+import { type ViewFieldMDRC, type ViewFieldVariable } from '../renderChildren/ViewFieldMDRC';
 import { ViewFieldArgumentType } from '../parsers/viewFieldParser/ViewFieldConfigs';
 
 export abstract class AbstractViewField {

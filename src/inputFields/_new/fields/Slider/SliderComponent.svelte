@@ -12,12 +12,14 @@
 </script>
 
 {#if addLabels}
-	<span class='meta-bind-plugin-slider-input-label'>{minValue}</span>
-	<input type='range' tabindex='0' min={minValue} max={maxValue} step={stepSize} bind:value={value}
+	<span class='mb-slider-input-label'>{minValue}</span>
+	<input class='mb-slider-input' type='range' tabindex='0' min={minValue} max={maxValue} step={stepSize}
+		   bind:value={value}
 		   on:input={() => onValueChange(value)}>
-	<span class='meta-bind-plugin-slider-input-label'>{maxValue}</span>
+	<span class='mb-slider-input-label'>{maxValue}</span>
 {:else}
-	<input type='range' tabindex='0' min={minValue} max={maxValue} step={stepSize} bind:value={value}
+	<input class='mb-slider-input' type='range' tabindex='0' min={minValue} max={maxValue} step={stepSize}
+		   bind:value={value}
 		   on:input={() => onValueChange(value)}>
 {/if}
 

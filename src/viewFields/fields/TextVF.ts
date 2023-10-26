@@ -1,6 +1,6 @@
 import { AbstractViewField } from '../AbstractViewField';
-import { ViewFieldDeclaration } from '../../parsers/viewFieldParser/ViewFieldDeclaration';
-import { ViewFieldMDRC, ViewFieldVariable } from '../../renderChildren/ViewFieldMDRC';
+import { type ViewFieldDeclaration } from '../../parsers/viewFieldParser/ViewFieldDeclaration';
+import { type ViewFieldMDRC, type ViewFieldVariable } from '../../renderChildren/ViewFieldMDRC';
 import { Signal } from '../../utils/Signal';
 import { ErrorLevel, MetaBindExpressionError } from '../../utils/errors/MetaBindErrors';
 import { ViewFieldArgumentType } from '../../parsers/viewFieldParser/ViewFieldConfigs';

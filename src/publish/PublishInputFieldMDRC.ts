@@ -1,10 +1,10 @@
 import { MarkdownRenderChild } from 'obsidian/publish';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
-import { PublishAPI } from './PublishAPI';
+import { type PublishAPI } from './PublishAPI';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { ErrorLevel, MetaBindBindTargetError } from '../utils/errors/MetaBindErrors';
 import PublishFieldComponent from './PublishFieldComponent.svelte';
-import { InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
+import { type InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { getPublishDefaultValue } from './PublishUtils';
 
 export class PublishInputFieldMDRC extends MarkdownRenderChild {
@@ -12,12 +12,12 @@ export class PublishInputFieldMDRC extends MarkdownRenderChild {
 
 	declaration: InputFieldDeclaration;
 	filePath: string;
-	metadata: any | undefined;
+	metadata: unknown;
 	uuid: string;
 
 	errorCollection: ErrorCollection;
 
-	constructor(containerEl: HTMLElement, api: PublishAPI, declaration: InputFieldDeclaration, filePath: string, metadata: any | undefined, uuid: string) {
+	constructor(containerEl: HTMLElement, api: PublishAPI, declaration: InputFieldDeclaration, filePath: string, metadata: unknown, uuid: string) {
 		super(containerEl);
 
 		//console.log(this);
@@ -34,7 +34,7 @@ export class PublishInputFieldMDRC extends MarkdownRenderChild {
 		this.load();
 	}
 
-	getValue(): any {
+	getValue(): unknown {
 		if (!this.declaration.bindTarget) {
 			this.errorCollection.add(new MetaBindBindTargetError(ErrorLevel.WARNING, 'populated with default data', 'input field not bound'));
 			return getPublishDefaultValue(this.declaration);
@@ -47,7 +47,7 @@ export class PublishInputFieldMDRC extends MarkdownRenderChild {
 			return getPublishDefaultValue(this.declaration);
 		}
 
-		const value = traverseObjectByPath(this.declaration.bindTarget.metadataPath, this.metadata);
+		const value: unknown = traverseObjectByPath(this.declaration.bindTarget.metadataPath, this.metadata);
 
 		if (value === undefined) {
 			this.errorCollection.add(new MetaBindBindTargetError(ErrorLevel.WARNING, 'populated with default data', 'value in metadata is undefined'));
@@ -63,7 +63,7 @@ export class PublishInputFieldMDRC extends MarkdownRenderChild {
 		this.containerEl.addClass('meta-bind-plugin-input');
 		this.containerEl.empty();
 
-		const value = this.getValue().toString();
+		const value = this.getValue()?.toString() ?? 'unknown';
 
 		new PublishFieldComponent({
 			target: this.containerEl,

@@ -1,5 +1,5 @@
 import { NewAbstractInputField } from '../../NewAbstractInputField';
-import { isLiteral, type MBLiteral } from '../../../../utils/Utils';
+import { type MBLiteral, parseUnknownToLiteral } from '../../../../utils/Utils';
 import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
 import { type SvelteComponent } from 'svelte';
@@ -17,7 +17,7 @@ export class ToggleIPF extends NewAbstractInputField<MBLiteral, boolean> {
 	}
 
 	protected filterValue(value: unknown): MBLiteral | undefined {
-		return isLiteral(value) ? value : undefined;
+		return parseUnknownToLiteral(value);
 	}
 
 	protected getFallbackDefaultValue(): boolean {
