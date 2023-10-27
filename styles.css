@@ -58,6 +58,16 @@ div.mb-view-wrapper {
 	color: var(--text-muted);
 }
 
+/* Text Input */
+.mb-content-limit-indicator {
+	color: var(--text-muted);
+    font-size: var(--font-ui-small);
+}
+
+.mb-content-limit-indicator-overflow {
+	color: var(--color-red);
+}
+
 /* Select Input */
 .mb-select-input-element {
 	cursor: pointer;
