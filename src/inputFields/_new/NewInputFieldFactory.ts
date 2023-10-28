@@ -15,6 +15,7 @@ import { EditorIPF } from './fields/Editor/EditorIPF';
 import { ProgressBarIPF } from './fields/ProgressBar/ProgressBarIPF';
 import { InlineSelectIPF } from './fields/InlineSelect/InlineSelectIPF';
 import { ImageSuggesterIPF } from './fields/ImageSuggester/ImageSuggesterIPF';
+import { ListIPF } from './fields/List/ListIPF';
 
 export type NewInputField =
 	| ToggleIPF
@@ -29,7 +30,8 @@ export type NewInputField =
 	| EditorIPF
 	| ProgressBarIPF
 	| InlineSelectIPF
-	| ImageSuggesterIPF;
+	| ImageSuggesterIPF
+	| ListIPF;
 
 export class NewInputFieldFactory {
 	plugin: IPlugin;
@@ -77,6 +79,8 @@ export class NewInputFieldFactory {
 			return new InlineSelectIPF(renderChild);
 		} else if (type === InputFieldType.IMAGE_SUGGESTER) {
 			return new ImageSuggesterIPF(renderChild);
+		} else if (type === InputFieldType.LIST) {
+			return new ListIPF(renderChild);
 		}
 
 		return undefined;
