@@ -61,7 +61,7 @@ div.mb-view-wrapper {
 /* Text Input */
 .mb-content-limit-indicator {
 	color: var(--text-muted);
-    font-size: var(--font-ui-small);
+	font-size: var(--font-ui-small);
 }
 
 .mb-content-limit-indicator-overflow {
@@ -143,6 +143,24 @@ div.mb-view-wrapper {
 
 .mb-list-item > span {
 	flex-grow: 1;
+}
+
+/* Suggester Input */
+.mb-suggest-input {
+	background: var(--background-secondary);
+	border-radius: var(--mb-border-radius);
+	border: var(--mb-border-width) solid var(--background-modifier-border);
+	padding: 5px 5px 5px 7px;
+	cursor: pointer;
+	position: relative;
+	color: var(--text-normal);
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+}
+
+.mb-suggest-text {
+	display: inline-block;
 }
 
 /* Card */

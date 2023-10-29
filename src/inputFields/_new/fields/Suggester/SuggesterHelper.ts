@@ -6,6 +6,7 @@ import { Notice } from 'obsidian';
 import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
 import { SuggesterInputModal } from './SuggesterInputModal';
 import { type SuggesterIPF } from './SuggesterIPF';
+import { ListSuggesterIPF } from '../ListSuggester/ListSuggesterIPF';
 
 export class SuggesterOption<T> {
 	value: T;
@@ -64,7 +65,7 @@ export function getSuggesterOptions(
 	return options;
 }
 
-export function getSuggesterOptionsForInputField(inputField: SuggesterIPF): SuggesterOption<MBLiteral>[] {
+export function getSuggesterOptionsForInputField(inputField: SuggesterIPF | ListSuggesterIPF): SuggesterOption<MBLiteral>[] {
 	const app = inputField.renderChild.plugin.app;
 	const dv = getAPI(app);
 	const optionArgs = inputField.renderChild.getArguments(InputFieldArgumentType.OPTION);
@@ -74,6 +75,9 @@ export function getSuggesterOptionsForInputField(inputField: SuggesterIPF): Sugg
 	return getSuggesterOptions(dv, inputField.renderChild.filePath, optionArgs, optionQueryArgs, useLinksArgs === undefined || useLinksArgs.value);
 }
 
-export function openSuggesterModalForInputField(inputField: SuggesterIPF, selectCallback: (selected: SuggesterOption<MBLiteral>) => void): void {
+export function openSuggesterModalForInputField(
+	inputField: SuggesterIPF | ListSuggesterIPF,
+	selectCallback: (selected: SuggesterOption<MBLiteral>) => void,
+): void {
 	new SuggesterInputModal(inputField.renderChild.plugin.app, getSuggesterOptionsForInputField(inputField), selectCallback).open();
 }

@@ -16,6 +16,7 @@ import { ProgressBarIPF } from './fields/ProgressBar/ProgressBarIPF';
 import { InlineSelectIPF } from './fields/InlineSelect/InlineSelectIPF';
 import { ImageSuggesterIPF } from './fields/ImageSuggester/ImageSuggesterIPF';
 import { ListIPF } from './fields/List/ListIPF';
+import { ListSuggesterIPF } from './fields/ListSuggester/ListSuggesterIPF';
 
 export type NewInputField =
 	| ToggleIPF
@@ -31,7 +32,8 @@ export type NewInputField =
 	| ProgressBarIPF
 	| InlineSelectIPF
 	| ImageSuggesterIPF
-	| ListIPF;
+	| ListIPF
+	| ListSuggesterIPF;
 
 export class NewInputFieldFactory {
 	plugin: IPlugin;
@@ -45,7 +47,7 @@ export class NewInputFieldFactory {
 			this.checkRenderChildTypeAllowed(type, renderChildType);
 		}
 
-		// Skipped: Date, Time, Image Suggester
+		// Skipped: Date, Time, List Suggester
 
 		if (type === InputFieldType.TOGGLE) {
 			return new ToggleIPF(renderChild);
@@ -81,6 +83,8 @@ export class NewInputFieldFactory {
 			return new ImageSuggesterIPF(renderChild);
 		} else if (type === InputFieldType.LIST) {
 			return new ListIPF(renderChild);
+		} else if (type === InputFieldType.LIST_SUGGESTER) {
+			return new ListSuggesterIPF(renderChild);
 		}
 
 		return undefined;

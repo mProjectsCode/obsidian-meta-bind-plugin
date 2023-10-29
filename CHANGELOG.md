@@ -1,30 +1,30 @@
 # Obsidian Meta Bind Changelog
 
-
 # Unreleased
 
 Breaking Changes
 
-- Renamed all CSS variables to start with `mb-` for consistency
+-   Renamed all CSS variables to start with `mb-` for consistency
 
 New Features
 
-- View Fields can now render as plain text or as markdown e.g.
-  - `VIEW[{a} * {b}]` or `VIEW[{a} * {b}][math]` this does math as before 
-  - `VIEW[this is plain text][text]` this renders as plain text
-  - `VIEW[this is **markdown**][text(renderMarkdown)]` this renders as markdown
-  - `VIEW[this is hidden][text(hidden)]` this does not render
-- View Fields can now save their computed value to another frontmatter property
-  - `VIEW[{a} * {b}][math:c]` will save `a * b` in `c`
-- Meta Bind Table, a way to build an expandable table from an array of objects where each cell is an input or view field
-  - currently only accessible via the JavaScript API
-- New Input Field type `listSuggester` a list where new items are added with a suggester
-- New argument for `suggester`, `useLinks(true | false)` that can be used to turn off the usage of links
-- New `stepSize` argument for `slider` and `progressBar`, thanks @dbarenholz
-- New `limit` argument for `text` and `textArea`, thanks @dbarenholz
+-   View Fields can now render as plain text or as markdown e.g.
+    -   `VIEW[{a} * {b}]` or `VIEW[{a} * {b}][math]` this does math as before
+    -   `VIEW[this is plain text][text]` this renders as plain text
+    -   `VIEW[this is **markdown**][text(renderMarkdown)]` this renders as markdown
+    -   `VIEW[this is hidden][text(hidden)]` this does not render
+-   View Fields can now save their computed value to another frontmatter property
+    -   `VIEW[{a} * {b}][math:c]` will save `a * b` in `c`
+-   Meta Bind Table, a way to build an expandable table from an array of objects where each cell is an input or view field
+    -   currently only accessible via the JavaScript API
+-   New Input Field type `listSuggester` a list where new items are added with a suggester
+-   New argument for `suggester`, `useLinks(true | false)` that can be used to turn off the usage of links
+-   New `stepSize` argument for `slider` and `progressBar`, thanks @dbarenholz
+-   New `limit` argument for `text` and `textArea`, thanks @dbarenholz
 
 Changes
-- Rewrote all Input Fields to fix Input Fields sometimes overriding frontmatter when changing the frontmatter manually in edit mode
+
+-   Rewrote all Input Fields to fix Input Fields sometimes overriding frontmatter when changing the frontmatter manually in edit mode
 
 # 0.6.3
 
