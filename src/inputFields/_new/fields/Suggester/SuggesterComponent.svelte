@@ -46,32 +46,13 @@
 	}
 </script>
 
-<style>
-    .suggest-input {
-        background:    var(--background-secondary);
-        border-radius: var(--mb-border-radius);
-        border:        var(--mb-border-width) solid var(--background-modifier-border);
-        padding:       5px 5px 5px 7px;
-        cursor:        pointer;
-        position:      relative;
-        color:         var(--text-normal);
-        display:       inline-flex;
-        align-items:   center;
-        gap:           5px;
-    }
-
-    .suggest-text {
-        display: inline-block;
-    }
-</style>
-
 <div
-	class='suggest-input'
+	class='mb-suggest-input'
 	on:click={openSuggester}
 	on:keydown={openSuggesterOnKey}
 	role='button'
 	tabindex='0'>
-	<div class='suggest-text'>
+	<div class='mb-suggest-text'>
 		{#if isLink}
 			<LinkComponent bind:mdLink={mdLink}></LinkComponent>
 		{:else}

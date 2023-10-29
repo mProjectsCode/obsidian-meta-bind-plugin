@@ -5,8 +5,8 @@ list:
   - berries
 list2:
   - "[[Other/Example Notes/Example Note with Image.md|Example Note with Image]]"
-  - something
   - "[[Other/Example Notes/Example Note with Callouts.md|Example Note with Callouts]]"
+  - something
 list3:
   - Example Note with Image
   - Example Note with Callouts

@@ -23,8 +23,8 @@
 <style>
     .mb-image-suggest-input {
         background:    var(--background-secondary);
-        border-radius: var(--meta-bind-plugin-border-radius);
-        border:        var(--meta-bind-plugin-border-width) solid var(--background-modifier-border);
+        border-radius: var(--mb-border-radius);
+        border:        var(--mb-border-width) solid var(--background-modifier-border);
         padding:       var(--size-4-2);
         width:         100%;
     }
