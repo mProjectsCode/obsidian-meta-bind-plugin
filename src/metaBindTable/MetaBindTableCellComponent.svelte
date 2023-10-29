@@ -20,4 +20,6 @@
 	});
 </script>
 
-<td bind:this={element}></td>
+<td>
+	<div bind:this={element}></div>
+</td>

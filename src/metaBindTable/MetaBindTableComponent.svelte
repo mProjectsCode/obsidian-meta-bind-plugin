@@ -21,6 +21,7 @@
 		{#each tableHead as headCell}
 			<th>{headCell}</th>
 		{/each}
+		<th></th>
 	</tr>
 	</thead>
 	<tbody>
