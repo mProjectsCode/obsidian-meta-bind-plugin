@@ -1,5 +1,5 @@
 <script lang='ts'>
-	import { genSvelteId, getDateRows, getWeekDays } from './DatePickerInputSvelteHelpers.js';
+	import { genSvelteId, getDateRows, getWeekDays } from '../../../utils/DatePickerUtils.js';
 	import { createEventDispatcher } from 'svelte';
 	import { moment } from 'obsidian';
 	import type { Moment } from 'moment';

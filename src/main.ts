@@ -4,7 +4,7 @@ import { RenderChildType } from './renderChildren/InputFieldMDRC';
 import { DateParser } from './parsers/DateParser';
 import { MetadataManager } from './metadata/MetadataManager';
 import { API } from './api/API';
-import { setFirstWeekday } from './inputFields/fields/DatePicker/DatePickerInputSvelteHelpers';
+import { setFirstWeekday } from './utils/DatePickerUtils';
 import { createMarkdownRenderChildWidgetEditorPlugin } from './cm6/Cm6_ViewPlugin';
 import { MDRCManager } from './MDRCManager';
 import { DEFAULT_SETTINGS, type InputFieldTemplate, type MetaBindPluginSettings } from './settings/Settings';

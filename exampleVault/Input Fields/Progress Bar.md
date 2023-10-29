@@ -1,5 +1,5 @@
 ---
-progress1: -4
+progress1: -6
 progress2: 0.2
 ---
 

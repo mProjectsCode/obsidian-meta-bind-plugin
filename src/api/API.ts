@@ -17,7 +17,7 @@ import {
 import { Signal } from '../utils/Signal';
 import { type BindTargetScope } from '../metadata/BindTargetScope';
 import { MetaBindTable } from '../metaBindTable/MetaBindTable';
-import { NewInputFieldFactory } from '../inputFields/_new/NewInputFieldFactory';
+import { NewInputFieldFactory } from '../inputFields/NewInputFieldFactory';
 import { type JsViewFieldDeclaration, type UnvalidatedViewFieldDeclaration, type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
 import { ViewFieldFactory } from '../viewFields/ViewFieldFactory';
 

@@ -10,7 +10,7 @@ import type MetaBindPlugin from '../main';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
 import { type InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { InputFieldArgumentType, InputFieldType } from '../parsers/inputFieldParser/InputFieldConfigs';
-import { type NewInputField } from '../inputFields/_new/NewInputFieldFactory';
+import { type NewInputField } from '../inputFields/NewInputFieldFactory';
 import { type InputFieldArgumentMapType } from '../fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
 
 export enum RenderChildType {
