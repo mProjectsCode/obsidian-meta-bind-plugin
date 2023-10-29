@@ -1,22 +1,18 @@
 <script lang='ts'>
-	import { createEventDispatcher } from 'svelte';
 	import Calender from './Calender.svelte';
-	import { getMonthName } from './DatePickerInputSvelteHelpers.js';
+	import { getMonthName } from '../../../utils/DatePickerUtils.js';
 	import { moment } from 'obsidian';
 	import type { Moment } from 'moment';
-
-	const dispatch = createEventDispatcher();
 
 	export let selectedDate: Moment | null = moment();
 	export let dateChangeCallback: (date: Moment | null) => void;
 
 	let month: number;
 	let year: number;
-	let isDatePickerVisible: boolean;
 
 	// so that these change with props
 	$: {
-		console.log('update date picker', selectedDate);
+		// console.log('update date picker', selectedDate);
 		if (selectedDate) {
 			month = selectedDate.month();
 			year = selectedDate.year();
@@ -54,13 +50,11 @@
 	}
 
 	function onDateChange(d: { detail: Moment }): void {
-		isDatePickerVisible = false;
 		selectedDate = d.detail;
 		dateChangeCallback(d.detail);
 	}
 
 	function setDateToNull(): void {
-		isDatePickerVisible = false;
 		selectedDate = null;
 		dateChangeCallback(null);
 	}
