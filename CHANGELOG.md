@@ -12,7 +12,7 @@ New Features
     -   `VIEW[{a} * {b}]` or `VIEW[{a} * {b}][math]` this does math as before
     -   `VIEW[this is plain text][text]` this renders as plain text
     -   `VIEW[this is **markdown**][text(renderMarkdown)]` this renders as markdown
-    -   `VIEW[this is hidden][text(hidden)]` this does not render
+    -   `VIEW[this is hidden][text(hidden)]` this does not render, useful for computations that save their value
 -   View Fields can now save their computed value to another frontmatter property
     -   `VIEW[{a} * {b}][math:c]` will save `a * b` in `c`
 -   Meta Bind Table, a way to build an expandable table from an array of objects where each cell is an input or view field
