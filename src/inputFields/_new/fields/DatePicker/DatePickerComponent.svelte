@@ -1,13 +1,13 @@
 <script lang='ts'>
-	import type { Moment } from 'moment';
+	import type { moment } from 'obsidian';
 	import Icon from '../../../../utils/Icon.svelte';
 
-	export let value: Moment | null;
+	export let value: moment.Moment | null;
 	export let dateFormat: string;
 	export let showDatePicker: () => void;
-	export let onValueChange: (value: Moment | null) => void;
+	export let onValueChange: (value: moment.Moment | null) => void;
 
-	export function setValue(v: Moment | null): void {
+	export function setValue(v: moment.Moment | null): void {
 		value = v;
 	}
 

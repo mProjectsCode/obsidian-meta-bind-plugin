@@ -4,6 +4,7 @@ import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { type SvelteComponent } from 'svelte';
 import SliderComponent from './SliderComponent.svelte';
 import { InputFieldArgumentType } from '../../../../parsers/inputFieldParser/InputFieldConfigs';
+import { ErrorLevel, MetaBindArgumentError } from '../../../../utils/errors/MetaBindErrors';
 
 export class SliderIPF extends NewAbstractInputField<number, number> {
 	minValue: number;
@@ -17,6 +18,14 @@ export class SliderIPF extends NewAbstractInputField<number, number> {
 		this.minValue = this.renderChild.getArgument(InputFieldArgumentType.MIN_VALUE)?.value ?? 0;
 		this.maxValue = this.renderChild.getArgument(InputFieldArgumentType.MAX_VALUE)?.value ?? 100;
 		this.stepSize = this.renderChild.getArgument(InputFieldArgumentType.STEP_SIZE)?.value ?? 1;
+
+		if (this.minValue >= this.maxValue) {
+			throw new MetaBindArgumentError(
+				ErrorLevel.ERROR,
+				'can not create slider input field',
+				`minValue (${this.maxValue}) must be less than maxValue (${this.maxValue})`,
+			);
+		}
 	}
 
 	protected filterValue(value: unknown): number | undefined {

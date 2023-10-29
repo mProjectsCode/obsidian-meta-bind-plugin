@@ -5,6 +5,7 @@
 	export let value: number;
 	export let minValue: number;
 	export let maxValue: number;
+	export let stepSize: number;
 
 
 	let drag: boolean = false;
@@ -64,13 +65,21 @@
 		clientX = clamp(clientX, boundingRect.left, boundingRect.right);
 
 		let value = remapRange(clientX, boundingRect.left, boundingRect.right, minValue, maxValue);
-		value = Math.round(value);
+		value = round(value, stepSize);
 
 		setValueInternal(value);
 	}
 
+	function round(number: number, increment: number) {
+		// the parsing is done to fix floating point errors
+		return Number.parseFloat((Math.round(number / increment ) * increment).toFixed(15));
+	}
+
 	function onKeyPress(e: KeyboardEvent) {
-		if (keydownAcceleration < 50) keydownAcceleration++;
+		if (keydownAcceleration < 50) {
+			keydownAcceleration += 1;
+		}
+
 		let throttled = Math.ceil(keydownAcceleration / 5);
 
 		if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {

@@ -17,6 +17,8 @@ import { InlineSelectIPF } from './fields/InlineSelect/InlineSelectIPF';
 import { ImageSuggesterIPF } from './fields/ImageSuggester/ImageSuggesterIPF';
 import { ListIPF } from './fields/List/ListIPF';
 import { ListSuggesterIPF } from './fields/ListSuggester/ListSuggesterIPF';
+import { DateIPF } from './fields/Date/DateIPF';
+import { TimeIPF } from './fields/Time/TimeIPF';
 
 export type NewInputField =
 	| ToggleIPF
@@ -33,7 +35,9 @@ export type NewInputField =
 	| InlineSelectIPF
 	| ImageSuggesterIPF
 	| ListIPF
-	| ListSuggesterIPF;
+	| ListSuggesterIPF
+	| DateIPF
+	| TimeIPF;
 
 export class NewInputFieldFactory {
 	plugin: IPlugin;
@@ -47,7 +51,7 @@ export class NewInputFieldFactory {
 			this.checkRenderChildTypeAllowed(type, renderChildType);
 		}
 
-		// Skipped: Date, Time, List Suggester
+		// Skipped: Date, Time
 
 		if (type === InputFieldType.TOGGLE) {
 			return new ToggleIPF(renderChild);
@@ -85,6 +89,10 @@ export class NewInputFieldFactory {
 			return new ListIPF(renderChild);
 		} else if (type === InputFieldType.LIST_SUGGESTER) {
 			return new ListSuggesterIPF(renderChild);
+		} else if (type === InputFieldType.DATE) {
+			return new DateIPF(renderChild);
+		} else if (type === InputFieldType.TIME) {
+			return new TimeIPF(renderChild);
 		}
 
 		return undefined;

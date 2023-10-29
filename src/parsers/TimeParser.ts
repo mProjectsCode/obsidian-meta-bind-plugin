@@ -32,11 +32,11 @@ export class Time {
 	}
 
 	public getUniformHour(): string {
-		return ('00' + this.getHour().toString()).slice(-2);
+		return this.getHour().toString().padStart(2, '0');
 	}
 
 	public getUniformMinute(): string {
-		return ('00' + this.getMinute().toString()).slice(-2);
+		return this.getMinute().toString().padStart(2, '0');
 	}
 
 	public setHourFromString(str: string): void {

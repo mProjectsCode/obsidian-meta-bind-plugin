@@ -98,6 +98,8 @@ div.mb-view-wrapper {
 
 /* Input Element Group */
 .mb-input-element-group {
+	display: inline-flex;
+	flex-direction: row;
 }
 
 .mb-input-element-group .mb-input-element-group-element:focus {
