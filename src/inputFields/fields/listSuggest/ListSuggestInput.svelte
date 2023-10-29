@@ -1,3 +1,4 @@
+<script src='../DateInputField.ts'></script>
 <script src='ListSuggestInputField.ts'></script>
 <script lang='ts'>
 	import Icon from '../../../utils/Icon.svelte';

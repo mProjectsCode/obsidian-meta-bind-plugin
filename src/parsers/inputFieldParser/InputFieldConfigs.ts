@@ -235,7 +235,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	},
 	[InputFieldArgumentType.STEP_SIZE]: {
 		type: InputFieldArgumentType.STEP_SIZE,
-		allowedFieldTypes: [InputFieldType.SLIDER],
+		allowedFieldTypes: [InputFieldType.SLIDER, InputFieldType.PROGRESS_BAR],
 		values: [
 			[
 				{
@@ -382,12 +382,6 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 		],
 		allowMultiple: false,
 	},
-	[InputFieldArgumentType.INVALID]: {
-		type: InputFieldArgumentType.INVALID,
-		allowedFieldTypes: [],
-		values: [[]],
-		allowMultiple: true,
-	},
 	[InputFieldArgumentType.LIMIT]: {
 		type: InputFieldArgumentType.LIMIT,
 		// FIXME: LIST is not yet converted to the newer version, so should still implement the LIMIT argument
@@ -402,5 +396,11 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 			],
 		],
 		allowMultiple: false,
+	},
+	[InputFieldArgumentType.INVALID]: {
+		type: InputFieldArgumentType.INVALID,
+		allowedFieldTypes: [],
+		values: [[]],
+		allowMultiple: true,
 	},
 };
