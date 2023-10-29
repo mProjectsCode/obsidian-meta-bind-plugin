@@ -3,7 +3,7 @@ import process from 'process';
 import builtins from 'builtin-modules';
 import esbuildSvelte from 'esbuild-svelte';
 import sveltePreprocess from 'svelte-preprocess';
-import manifest from './manifest.json' assert { type: "json" };
+import manifest from './manifest.json' assert { type: 'json' };
 
 const banner = `/*
 -------------------------------------------
