@@ -11,6 +11,7 @@ import { DEFAULT_SETTINGS, type InputFieldTemplate, type MetaBindPluginSettings 
 import { type IPlugin } from './IPlugin';
 import { EnclosingPair, ParserUtils } from './utils/ParserUtils';
 import { ErrorLevel, MetaBindParsingError } from './utils/errors/MetaBindErrors';
+import { ObsidianMetadataAdapter } from './metadata/ObsidianMetadataAdapter';
 
 export default class MetaBindPlugin extends Plugin implements IPlugin {
 	// @ts-ignore defined in `onload`
@@ -39,7 +40,9 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		}
 
 		this.mdrcManager = new MDRCManager();
-		this.metadataManager = new MetadataManager(this);
+
+		const metadataAdapter = new ObsidianMetadataAdapter(this);
+		this.metadataManager = new MetadataManager(metadataAdapter);
 
 		this.registerMarkdownPostProcessor((el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
 			const codeBlocks = el.querySelectorAll('code');
@@ -99,6 +102,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	onunload(): void {
 		console.log(`meta-bind | Main >> unload`);
 		this.mdrcManager.unload();
+		this.metadataManager.unload();
 	}
 
 	getFilePathsByName(name: string): string[] {

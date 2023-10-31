@@ -1,18 +1,13 @@
-import { type CachedMetadata, type TFile } from 'obsidian';
-import type MetaBindPlugin from '../main';
 import { areArraysEqual, arrayStartsWith, traverseObjectToParentByPath } from '../utils/Utils';
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { type Signal } from '../utils/Signal';
-import {
-	ComputedMetadataSubscription,
-	type ComputedSubscriptionDependency,
-	type ComputeFunction,
-	type IMetadataSubscription,
-	type MetadataFileCache,
-	MetadataSubscription,
-} from './MetadataFileCache';
+import { type Metadata, type MetadataManagerCacheItem } from './MetadataManagerCacheItem';
 import { type FullBindTarget } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { ErrorLevel, MetaBindBindTargetError, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
+import { type IMetadataAdapter } from './IMetadataAdapter';
+import { type IMetadataSubscription } from './IMetadataSubscription';
+import { MetadataSubscription } from './MetadataSubscription';
+import { ComputedMetadataSubscription, type ComputedSubscriptionDependency, type ComputeFunction } from './ComputedMetadataSubscription';
 
 export const metadataCacheUpdateCycleThreshold = 5; // {syncInterval (200)} * 5 = 1s
 export const metadataCacheInactiveCycleThreshold = 5 * 60; // {syncInterval (200)} * 5 * 60 = 1 minute
@@ -67,28 +62,34 @@ function bindTargetToString(a: FullBindTarget | undefined): string {
 }
 
 export class MetadataManager {
-	cache: Map<string, MetadataFileCache>;
-	plugin: MetaBindPlugin;
-	interval: number | undefined;
+	cache: Map<string, MetadataManagerCacheItem>;
+	// interval: number | undefined;
+	metadataAdapter: IMetadataAdapter;
 
-	constructor(plugin: MetaBindPlugin) {
-		this.plugin = plugin;
+	constructor(metadataAdapter: IMetadataAdapter) {
+		this.cache = new Map<string, MetadataManagerCacheItem>();
 
-		this.cache = new Map<string, MetadataFileCache>();
-
-		this.plugin.registerEvent(
-			this.plugin.app.metadataCache.on('changed', (file, data, cache) => this.updateCacheOnFrontmatterUpdate(file.path, data, cache)),
-		);
-
-		this.interval = window.setInterval(() => this.update(), this.plugin.settings.syncInterval);
+		this.metadataAdapter = metadataAdapter;
+		this.metadataAdapter.setManagerInstance(this);
+		this.metadataAdapter.load();
 	}
 
+	unload(): void {
+		this.metadataAdapter.unload();
+	}
+
+	/**
+	 * Subscribes a not yet subscribed subscription instance.
+	 *
+	 * @param subscription
+	 * @private
+	 */
 	private subscribeSubscription(subscription: IMetadataSubscription): void {
 		if (subscription.bindTarget === undefined) {
 			return;
 		}
 
-		const fileCache: MetadataFileCache | undefined = this.getCacheForFile(subscription.bindTarget.filePath);
+		const fileCache: MetadataManagerCacheItem | undefined = this.getCacheForFile(subscription.bindTarget.filePath);
 
 		if (fileCache) {
 			console.debug(
@@ -105,19 +106,23 @@ export class MetadataManager {
 				`meta-bind | MetadataManager >> registered ${subscription.uuid} to newly created file cache ${subscription.bindTarget.filePath} -> ${subscription.bindTarget.metadataPath}`,
 			);
 
-			const file = this.plugin.app.vault.getAbstractFileByPath(subscription.bindTarget.filePath) as TFile;
-			const frontmatter = this.plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+			// const file = this.plugin.app.vault.getAbstractFileByPath(subscription.bindTarget.filePath) as TFile;
+			// const frontmatter = this.plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+			const { metadata, extraCache } = this.metadataAdapter.getMetadataAndExtraCache(subscription);
 
-			const newCache: MetadataFileCache = {
-				file: file,
-				metadata: frontmatter ?? {},
-				listeners: [subscription],
-				cyclesSinceLastChange: 0,
-				cyclesSinceInactive: 0,
-				inactive: false,
-				changed: false,
-			};
-			console.log(`meta-bind | MetadataManager >> loaded metadata for file ${file.path}`, newCache.metadata);
+			const newCache: MetadataManagerCacheItem = Object.assign(
+				{},
+				{
+					extraCache: extraCache,
+					metadata: metadata,
+					listeners: [subscription],
+					cyclesSinceLastChange: 0,
+					cyclesSinceInactive: 0,
+					inactive: false,
+					changed: false,
+				},
+			);
+			console.log(`meta-bind | MetadataManager >> loaded metadata for file ${subscription.bindTarget.filePath}`, newCache.metadata);
 
 			subscription.notify(traverseObjectByPath(subscription.bindTarget.metadataPath, newCache.metadata));
 
@@ -125,7 +130,14 @@ export class MetadataManager {
 		}
 	}
 
-	subscribe(uuid: string, callbackSignal: Signal<unknown>, bindTarget: FullBindTarget): MetadataSubscription {
+	/**
+	 * Subscribes to the metadata manager.
+	 *
+	 * @param uuid
+	 * @param callbackSignal
+	 * @param bindTarget
+	 */
+	public subscribe(uuid: string, callbackSignal: Signal<unknown>, bindTarget: FullBindTarget): MetadataSubscription {
 		const subscription: MetadataSubscription = new MetadataSubscription(uuid, callbackSignal, this, bindTarget);
 
 		this.subscribeSubscription(subscription);
@@ -133,7 +145,16 @@ export class MetadataManager {
 		return subscription;
 	}
 
-	subscribeComputed(
+	/**
+	 * Subscribes a computed subscription to the metadata manager.
+	 *
+	 * @param uuid
+	 * @param callbackSignal
+	 * @param bindTarget
+	 * @param dependencies
+	 * @param computeFunction
+	 */
+	public subscribeComputed(
 		uuid: string,
 		callbackSignal: Signal<unknown>,
 		bindTarget: FullBindTarget | undefined,
@@ -164,6 +185,12 @@ export class MetadataManager {
 		}
 	}
 
+	/**
+	 * Recursively checks for loops in subscription dependencies
+	 *
+	 * @param dependencyPath
+	 * @private
+	 */
 	private recCheckForLoops(dependencyPath: IMetadataSubscription[]): void {
 		// console.warn('checking for loops', dependencyPath.map(x => `"${bindTargetsToString(x.bindTarget)}"`).join(' -> '));
 
@@ -188,6 +215,12 @@ export class MetadataManager {
 		}
 	}
 
+	/**
+	 * Gets all subscriptions that listen to any of a subscriptions dependencies.
+	 *
+	 * @param subscription
+	 * @private
+	 */
 	private getAllSubscriptionsToDependencies(subscription: IMetadataSubscription): IMetadataSubscription[] {
 		return subscription
 			.getDependencies()
@@ -195,6 +228,12 @@ export class MetadataManager {
 			.flat();
 	}
 
+	/**
+	 * Gets all subscriptions that listen to a specific bind target.
+	 *
+	 * @param bindTarget
+	 * @private
+	 */
 	private getAllSubscriptionsToBindTarget(bindTarget: FullBindTarget | undefined): IMetadataSubscription[] {
 		if (bindTarget === undefined) {
 			return [];
@@ -215,6 +254,11 @@ export class MetadataManager {
 		return fileCache.listeners.filter(x => hasUpdateOverlap(x.bindTarget, bindTarget));
 	}
 
+	/**
+	 * Unsubscribe a subscription.
+	 *
+	 * @param subscription
+	 */
 	unsubscribe(subscription: IMetadataSubscription): void {
 		if (subscription.bindTarget === undefined) {
 			return;
@@ -236,25 +280,36 @@ export class MetadataManager {
 		}
 	}
 
-	getCacheForFile(filePath: string): MetadataFileCache | undefined {
+	getCacheForFile(filePath: string): MetadataManagerCacheItem | undefined {
 		return this.cache.get(filePath);
 	}
 
-	createCacheForFile(filePath: string, cache: MetadataFileCache): void {
+	/**
+	 * Creates a cache for a file path, throws if the cache already exists.
+	 *
+	 * @param filePath
+	 * @param cache
+	 */
+	createCacheForFile(filePath: string, cache: MetadataManagerCacheItem): void {
 		if (this.cache.has(filePath)) {
 			throw new MetaBindInternalError(ErrorLevel.CRITICAL, 'can not create metadata file cache', 'cache for file already exists');
 		}
 		this.cache.set(filePath, cache);
 	}
 
-	private update(): void {
+	/**
+	 * Internal update function that runs each cycle.
+	 *
+	 * @private
+	 */
+	public update(): void {
 		// console.debug('meta-bind | updating metadata manager');
 		const markedForDelete: string[] = [];
 
 		for (const [filePath, cacheEntry] of this.cache) {
 			// if the entry changed, update the frontmatter of the note
 			if (cacheEntry.changed) {
-				void this.updateFrontmatter(cacheEntry);
+				void this.updateExternal(filePath, cacheEntry);
 			}
 			cacheEntry.cyclesSinceLastChange += 1;
 
@@ -272,19 +327,27 @@ export class MetadataManager {
 		}
 	}
 
-	async updateFrontmatter(fileCache: MetadataFileCache): Promise<void> {
-		console.debug(`meta-bind | MetadataManager >> updating frontmatter of "${fileCache.file.path}" to`, fileCache.metadata);
+	/**
+	 * Updates the external cached source.
+	 *
+	 * @param fileCache
+	 */
+	async updateExternal(filePath: string, fileCache: MetadataManagerCacheItem): Promise<void> {
+		// console.debug(`meta-bind | MetadataManager >> updating frontmatter of "${fileCache.file.path}" to`, fileCache.metadata);
 		try {
-			await this.plugin.app.fileManager.processFrontMatter(fileCache.file, frontMatter => {
-				fileCache.changed = false;
-				Object.assign(frontMatter, fileCache.metadata);
-			});
+			await this.metadataAdapter.updateMetadata(filePath, fileCache);
 		} catch (e) {
 			fileCache.changed = false;
 			console.warn('failed to update frontmatter', e);
 		}
 	}
 
+	/**
+	 * For when a subscription want's to update the cache.
+	 *
+	 * @param value
+	 * @param subscription
+	 */
 	updateCache(value: unknown, subscription: IMetadataSubscription): void {
 		if (subscription.bindTarget === undefined) {
 			return;
@@ -314,7 +377,13 @@ export class MetadataManager {
 		this.notifyListeners(fileCache, metadataPath, subscription.uuid);
 	}
 
-	updateCacheOnFrontmatterUpdate(filePath: string, data: string, cache: CachedMetadata): void {
+	/**
+	 * For when the external cached source updates.
+	 *
+	 * @param filePath
+	 * @param newMetadata
+	 */
+	updateCacheOnExternalUpdate(filePath: string, newMetadata: Metadata): void {
 		const fileCache = this.getCacheForFile(filePath);
 		if (!fileCache) {
 			return;
@@ -325,7 +394,7 @@ export class MetadataManager {
 			return;
 		}
 
-		const metadata: Record<string, unknown> = Object.assign({}, cache.frontmatter); // copy
+		const metadata: Record<string, unknown> = Object.assign({}, newMetadata); // copy
 		delete metadata.position;
 
 		console.debug(`meta-bind | MetadataManager >> updating "${filePath}" on frontmatter update`, metadata);
@@ -335,7 +404,14 @@ export class MetadataManager {
 		this.notifyListeners(fileCache);
 	}
 
-	notifyListeners(fileCache: MetadataFileCache, metadataPath?: string[] | undefined, exceptUuid?: string | undefined): void {
+	/**
+	 * Notifies all subscriptions except a certain except id to prevent infinite loops.
+	 *
+	 * @param fileCache
+	 * @param metadataPath
+	 * @param exceptUuid
+	 */
+	notifyListeners(fileCache: MetadataManagerCacheItem, metadataPath?: string[] | undefined, exceptUuid?: string | undefined): void {
 		// console.log(fileCache);
 
 		for (const listener of fileCache.listeners) {

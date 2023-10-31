@@ -1,4 +1,4 @@
-import { NewAbstractInputField } from '../../NewAbstractInputField';
+import { AbstractInputField } from '../../AbstractInputField';
 import { type InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
 import { InputFieldArgumentType } from '../../../parsers/inputFieldParser/InputFieldConfigs';
 import { optClamp, parseUnknownToFloat } from '../../../utils/Utils';
@@ -6,7 +6,7 @@ import { type SvelteComponent } from 'svelte';
 import ProgressBarComponent from './ProgressBarComponent.svelte';
 import { ErrorLevel, MetaBindArgumentError } from '../../../utils/errors/MetaBindErrors';
 
-export class ProgressBarIPF extends NewAbstractInputField<number, number> {
+export class ProgressBarIPF extends AbstractInputField<number, number> {
 	minValue: number;
 	maxValue: number;
 	stepSize: number;

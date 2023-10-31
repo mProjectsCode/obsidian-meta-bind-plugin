@@ -1,6 +1,6 @@
 # Obsidian Meta Bind Changelog
 
-# Unreleased
+# 0.7.0
 
 Breaking Changes
 

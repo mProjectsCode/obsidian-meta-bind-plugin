@@ -39,7 +39,7 @@ export type NewInputField =
 	| DateIPF
 	| TimeIPF;
 
-export class NewInputFieldFactory {
+export class InputFieldFactory {
 	plugin: IPlugin;
 
 	constructor(plugin: IPlugin) {

@@ -4,7 +4,7 @@ import { BindTargetParser } from '../../../src/parsers/BindTargetParser';
 import { InputFieldAPI } from '../../../src/api/InputFieldAPI';
 import { InputFieldDeclarationParser } from '../../../src/parsers/inputFieldParser/InputFieldParser';
 import { ViewFieldDeclarationParser } from '../../../src/parsers/viewFieldParser/ViewFieldDeclarationParser';
-import { NewInputFieldFactory } from '../../../src/inputFields/NewInputFieldFactory';
+import { InputFieldFactory } from '../../../src/inputFields/InputFieldFactory';
 import { DEFAULT_SETTINGS, MetaBindPluginSettings } from '../../../src/settings/Settings';
 
 export class TestPlugin implements IPlugin {

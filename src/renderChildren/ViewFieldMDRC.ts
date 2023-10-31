@@ -8,8 +8,8 @@ import { type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldD
 import { type AbstractViewField } from '../viewFields/AbstractViewField';
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
 import { type ViewFieldArgumentType } from '../parsers/viewFieldParser/ViewFieldConfigs';
-import { type ComputedMetadataSubscription, type ComputedSubscriptionDependency } from '../metadata/MetadataFileCache';
 import { type ViewFieldArgumentMapType } from '../fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
+import { type ComputedMetadataSubscription, type ComputedSubscriptionDependency } from '../metadata/ComputedMetadataSubscription';
 
 export interface ViewFieldVariable {
 	bindTargetDeclaration: BindTargetDeclaration;

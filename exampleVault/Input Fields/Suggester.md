@@ -1,6 +1,6 @@
 ---
 fileSuggest: "[[Other/Example Notes/Example Note with Embeds.md|Example Note with Embeds]]"
-fileSuggest2: Example Note with Embeds
+fileSuggest2: Example Note with E
 suggest: option 2
 ---
 

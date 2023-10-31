@@ -9,6 +9,7 @@ import { type IAPI } from '../api/IAPI';
 import { InputFieldAPI } from '../api/InputFieldAPI';
 import { type InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
+import { getUUID } from '../utils/Utils';
 
 export class PublishAPI implements IAPI {
 	public readonly plugin: IPlugin;
@@ -36,7 +37,7 @@ export class PublishAPI implements IAPI {
 	): PublishInputFieldMDRC {
 		const declaration: InputFieldDeclaration = this.inputFieldParser.parseString(fullDeclaration, undefined);
 
-		const inputField = new PublishInputFieldMDRC(container, this, declaration, filePath, metadata, self.crypto.randomUUID());
+		const inputField = new PublishInputFieldMDRC(container, this, declaration, filePath, metadata, getUUID());
 		component.addChild(inputField);
 
 		return inputField;
@@ -51,7 +52,7 @@ export class PublishAPI implements IAPI {
 	): PublishViewFieldMDRC {
 		const declaration: ViewFieldDeclaration = this.viewFieldParser.parseString(fullDeclaration);
 
-		const viewField = new PublishViewFieldMDRC(container, this, declaration, filePath, metadata, self.crypto.randomUUID());
+		const viewField = new PublishViewFieldMDRC(container, this, declaration, filePath, metadata, getUUID());
 		component.addChild(viewField);
 
 		return viewField;

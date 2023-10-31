@@ -1,62 +1,10 @@
-import { type Signal } from '../utils/Signal';
-import { type FrontMatterCache, type TFile } from 'obsidian';
+// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 import { type FullBindTarget } from '../parsers/inputFieldParser/InputFieldDeclaration';
+import { type Signal } from '../utils/Signal';
+import { type IMetadataSubscription } from './IMetadataSubscription';
 import { type MetadataManager } from './MetadataManager';
-
-export interface IMetadataSubscription {
-	uuid: string;
-	bindTarget: FullBindTarget | undefined;
-	unsubscribe: () => void;
-	notify: (value: unknown) => void;
-	getDependencies: () => ComputedSubscriptionDependency[];
-}
-
-export class MetadataSubscription implements IMetadataSubscription {
-	readonly uuid: string;
-	readonly callbackSignal: Signal<unknown>;
-
-	readonly metadataManager: MetadataManager;
-
-	readonly bindTarget: FullBindTarget;
-
-	constructor(uuid: string, callbackSignal: Signal<unknown>, metadataManager: MetadataManager, bindTarget: FullBindTarget) {
-		this.uuid = uuid;
-		this.callbackSignal = callbackSignal;
-		this.metadataManager = metadataManager;
-		this.bindTarget = bindTarget;
-	}
-
-	/**
-	 * Unsubscribes from the cache.
-	 */
-	public unsubscribe(): void {
-		this.metadataManager.unsubscribe(this);
-	}
-
-	/**
-	 * Updates the cache.
-	 *
-	 * @param value
-	 */
-	public update(value: unknown): void {
-		this.metadataManager.updateCache(value, this);
-	}
-
-	/**
-	 * DO NOT CALL!
-	 *
-	 * Notifies the subscription of an updated value in the cache.
-	 *
-	 * @param value
-	 */
-	public notify(value: unknown): void {
-		this.callbackSignal.set(value);
-	}
-
-	public getDependencies(): ComputedSubscriptionDependency[] {
-		return [];
-	}
-}
+import { type MetadataSubscription } from './MetadataSubscription';
+import { getUUID } from '../utils/Utils';
 
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 export type ComputeFunction = (values: unknown[]) => Promise<unknown> | unknown;
@@ -103,7 +51,7 @@ export class ComputedMetadataSubscription implements IMetadataSubscription {
 	 */
 	public init(): void {
 		for (const dependency of this.dependencies) {
-			const dependencyId = this.uuid + '/' + self.crypto.randomUUID();
+			const dependencyId = this.uuid + '/' + getUUID();
 
 			this.dependencySubscriptions.push(this.metadataManager.subscribe(dependencyId, dependency.callbackSignal, dependency.bindTarget));
 
@@ -141,26 +89,4 @@ export class ComputedMetadataSubscription implements IMetadataSubscription {
 	public getDependencies(): ComputedSubscriptionDependency[] {
 		return this.dependencies;
 	}
-}
-
-export interface MetadataFileCache {
-	file: TFile;
-	metadata: FrontMatterCache;
-	listeners: IMetadataSubscription[];
-	/**
-	 * The cycles since the last change to the cache by the plugin.
-	 */
-	cyclesSinceLastChange: number;
-	/**
-	 * Whether the cache was changed by th plugin. If this is true, the frotmatter should be updated.
-	 */
-	changed: boolean;
-	/**
-	 * The cycles that the cache has been inactive, meaning no listener registered to it.
-	 */
-	cyclesSinceInactive: number;
-	/**
-	 * Whether the there are no subscribers to the cache.
-	 */
-	inactive: boolean;
 }

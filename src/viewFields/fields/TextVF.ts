@@ -5,6 +5,7 @@ import { Signal } from '../../utils/Signal';
 import { ErrorLevel, MetaBindExpressionError } from '../../utils/errors/MetaBindErrors';
 import { ViewFieldArgumentType } from '../../parsers/viewFieldParser/ViewFieldConfigs';
 import { Component, MarkdownRenderer } from 'obsidian';
+import { getUUID } from '../../utils/Utils';
 
 export class TextVF extends AbstractViewField {
 	textParts?: (string | number)[];
@@ -30,7 +31,7 @@ export class TextVF extends AbstractViewField {
 				const variable: ViewFieldVariable = {
 					bindTargetDeclaration: entry,
 					inputSignal: new Signal<unknown>(undefined),
-					uuid: self.crypto.randomUUID(),
+					uuid: getUUID(),
 					contextName: `MB_VAR_${varCounter}`,
 				};
 

@@ -36,3 +36,6 @@ Display Computed: `VIEW[{computed}][text()]`
 Display Computed as Markdown: `VIEW[{computed}][text(renderMarkdown)]`
 Loop Error: `VIEW[**{computed}**][text():distance]`
 Self Loop Error: `VIEW[**{computed}**][text():computed]`
+
+
+`VIEW['[[{file}|link]]'][text(renderMarkdown)]`

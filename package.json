@@ -13,6 +13,7 @@
 		"update-snapshots": "jest --updateSnapshot",
 		"format": "prettier --write .",
 		"lint": "eslint --max-warnings=0 src/**",
+		"lint-fix": "eslint --max-warnings=0 --fix src/**",
 		"types": "tsc -p \"./tsconfig.types.json\""
 	},
 	"keywords": [],

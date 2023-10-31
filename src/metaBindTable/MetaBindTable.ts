@@ -8,12 +8,13 @@ import { InputFieldMDRC, RenderChildType } from '../renderChildren/InputFieldMDR
 import type MetaBindPlugin from '../main';
 import { BindTargetScope } from '../metadata/BindTargetScope';
 import { type Listener, Signal } from '../utils/Signal';
-import { type MBExtendedLiteral } from '../utils/Utils';
+import { getUUID, type MBExtendedLiteral } from '../utils/Utils';
 import MetaBindTableComponent from './MetaBindTableComponent.svelte';
 import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
 import { type Component } from 'obsidian';
 import { type UnvalidatedViewFieldDeclaration, type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
-import { type MetadataSubscription } from '../metadata/MetadataFileCache';
+
+import { type MetadataSubscription } from '../metadata/MetadataSubscription';
 
 export type MetaBindTableCell = InputFieldDeclaration | ViewFieldDeclaration;
 
@@ -135,7 +136,7 @@ export class MetaBindTable extends AbstractMDRC {
 	}
 
 	createCell(cell: MetaBindTableCell, element: HTMLElement, cellComponent: Component): void {
-		const uuid = self.crypto.randomUUID();
+		const uuid = getUUID();
 		if ('inputFieldType' in cell) {
 			const field = new InputFieldMDRC(element, RenderChildType.INLINE, cell, this.plugin, this.filePath, `${this.uuid}/${uuid}`);
 			cellComponent.addChild(field);

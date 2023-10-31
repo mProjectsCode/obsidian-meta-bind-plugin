@@ -1,11 +1,11 @@
-import { NewAbstractInputField } from '../../NewAbstractInputField';
+import { AbstractInputField } from '../../AbstractInputField';
 import { type MBLiteral, parseUnknownToLiteral } from '../../../utils/Utils';
 import { type InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
 import { InputFieldArgumentType } from '../../../parsers/inputFieldParser/InputFieldConfigs';
 import { type SvelteComponent } from 'svelte';
 import ToggleComponent from './ToggleComponent.svelte';
 
-export class ToggleIPF extends NewAbstractInputField<MBLiteral, boolean> {
+export class ToggleIPF extends AbstractInputField<MBLiteral, boolean> {
 	onValue: MBLiteral;
 	offValue: MBLiteral;
 

@@ -1,11 +1,11 @@
-import { NewAbstractInputField } from '../../NewAbstractInputField';
+import { AbstractInputField } from '../../AbstractInputField';
 import { type InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
 import { isLiteral } from '../../../utils/Utils';
 import { type SvelteComponent } from 'svelte';
 import EditorComponent from './EditorComponent.svelte';
 import { MarkdownRenderer } from 'obsidian';
 
-export class EditorIPF extends NewAbstractInputField<string, string> {
+export class EditorIPF extends AbstractInputField<string, string> {
 	constructor(renderChild: InputFieldMDRC) {
 		super(renderChild);
 	}

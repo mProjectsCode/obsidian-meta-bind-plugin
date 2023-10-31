@@ -7,7 +7,8 @@ import { getAPI } from 'obsidian-dataview';
 import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
 import { type JsViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
-import { type ComputedMetadataSubscription, type ComputedSubscriptionDependency } from '../metadata/MetadataFileCache';
+import { type ComputedMetadataSubscription, type ComputedSubscriptionDependency } from '../metadata/ComputedMetadataSubscription';
+import { getUUID } from '../utils/Utils';
 
 export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 	fullDeclaration?: string;
@@ -40,7 +41,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 					this.variables.push({
 						bindTargetDeclaration: bindTargetMapping.bindTarget,
 						inputSignal: new Signal<unknown>(undefined),
-						uuid: self.crypto.randomUUID(),
+						uuid: getUUID(),
 						contextName: bindTargetMapping.name,
 					});
 				}

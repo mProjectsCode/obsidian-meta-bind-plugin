@@ -4,7 +4,7 @@ import { type SvelteComponent } from 'svelte';
 import { ComputedSignal, type Listener, Notifier } from '../utils/Signal';
 import { InputFieldArgumentType } from '../parsers/inputFieldParser/InputFieldConfigs';
 
-export abstract class NewAbstractInputField<MetadataValueType, ComponentValueType> extends Notifier<MetadataValueType, Listener<MetadataValueType>> {
+export abstract class AbstractInputField<MetadataValueType, ComponentValueType> extends Notifier<MetadataValueType, Listener<MetadataValueType>> {
 	readonly renderChild: InputFieldMDRC;
 	readonly inputFieldComponent: InputFieldComponent<ComponentValueType>;
 	readonly signal: ComputedSignal<unknown, MetadataValueType>;

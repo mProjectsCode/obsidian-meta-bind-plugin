@@ -1,3 +1,5 @@
+import { getUUID } from './Utils';
+
 export interface NotifierInterface<T, L extends Listener<T>> {
 	registerListener(listener: Omit<L, 'uuid'>): L;
 
@@ -17,7 +19,7 @@ export class Notifier<T, L extends Listener<T>> implements NotifierInterface<T, 
 
 	public registerListener(listener: Omit<L, 'uuid'>): L {
 		const l: L = listener as L;
-		l.uuid = self.crypto.randomUUID();
+		l.uuid = getUUID();
 
 		this.listeners.push(l);
 

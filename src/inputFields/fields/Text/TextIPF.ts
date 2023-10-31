@@ -1,11 +1,11 @@
-import { NewAbstractInputField } from '../../NewAbstractInputField';
+import { AbstractInputField } from '../../AbstractInputField';
 import { parseUnknownToString } from '../../../utils/Utils';
 import { type InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
 import { type SvelteComponent } from 'svelte';
 import TextComponent from './TextComponent.svelte';
 import { InputFieldArgumentType } from '../../../parsers/inputFieldParser/InputFieldConfigs';
 
-export class TextIPF extends NewAbstractInputField<string, string> {
+export class TextIPF extends AbstractInputField<string, string> {
 	constructor(renderChild: InputFieldMDRC) {
 		super(renderChild);
 	}

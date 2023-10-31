@@ -5,13 +5,13 @@ import { type TitleInputFieldArgument } from '../fieldArguments/inputFieldArgume
 import { isTruthy } from '../utils/Utils';
 import { type Listener, Signal } from '../utils/Signal';
 import { AbstractMDRC } from './AbstractMDRC';
-import { type MetadataSubscription } from '../metadata/MetadataFileCache';
 import type MetaBindPlugin from '../main';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
 import { type InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { InputFieldArgumentType, InputFieldType } from '../parsers/inputFieldParser/InputFieldConfigs';
-import { type NewInputField } from '../inputFields/NewInputFieldFactory';
+import { type NewInputField } from '../inputFields/InputFieldFactory';
 import { type InputFieldArgumentMapType } from '../fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
+import { type MetadataSubscription } from '../metadata/MetadataSubscription';
 
 export enum RenderChildType {
 	INLINE = 'inline',

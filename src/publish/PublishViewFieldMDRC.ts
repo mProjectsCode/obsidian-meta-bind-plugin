@@ -9,6 +9,7 @@ import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversa
 import PublishFieldComponent from './PublishFieldComponent.svelte';
 import { type BindTargetDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
+import { getUUID } from '../utils/Utils';
 
 export class PublishViewFieldMDRC extends MarkdownRenderChild {
 	api: PublishAPI;
@@ -55,7 +56,7 @@ export class PublishViewFieldMDRC extends MarkdownRenderChild {
 						const variable: ViewFieldVariable = {
 							bindTargetDeclaration: entry,
 							inputSignal: new Signal<unknown>(undefined),
-							uuid: self.crypto.randomUUID(),
+							uuid: getUUID(),
 							contextName: `MB_VAR_${varCounter}`,
 						};
 

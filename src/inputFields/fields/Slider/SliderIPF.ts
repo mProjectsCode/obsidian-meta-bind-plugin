@@ -1,4 +1,4 @@
-import { NewAbstractInputField } from '../../NewAbstractInputField';
+import { AbstractInputField } from '../../AbstractInputField';
 import { optClamp, parseUnknownToFloat } from '../../../utils/Utils';
 import { type InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
 import { type SvelteComponent } from 'svelte';
@@ -6,7 +6,7 @@ import SliderComponent from './SliderComponent.svelte';
 import { InputFieldArgumentType } from '../../../parsers/inputFieldParser/InputFieldConfigs';
 import { ErrorLevel, MetaBindArgumentError } from '../../../utils/errors/MetaBindErrors';
 
-export class SliderIPF extends NewAbstractInputField<number, number> {
+export class SliderIPF extends AbstractInputField<number, number> {
 	minValue: number;
 	maxValue: number;
 	stepSize: number;

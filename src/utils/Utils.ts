@@ -419,3 +419,8 @@ export function parseUnknownToString(literal: unknown): string | undefined {
 export function parseUnknownToLiteral(literal: unknown): MBLiteral | undefined {
 	return isLiteral(literal) ? literal : undefined;
 }
+
+export function getUUID(): string {
+	// TODO: figure out a way that works everywhere and in jest
+	return window.crypto.randomUUID();
+}

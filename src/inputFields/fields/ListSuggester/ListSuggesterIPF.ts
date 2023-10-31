@@ -1,11 +1,11 @@
-import { NewAbstractInputField } from '../../NewAbstractInputField';
+import { AbstractInputField } from '../../AbstractInputField';
 import { type MBLiteral, parseUnknownToLiteralArray } from '../../../utils/Utils';
 import { type InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
 import { type SvelteComponent } from 'svelte';
 import ListSuggesterComponent from './ListSuggesterComponent.svelte';
 import { openSuggesterModalForInputField } from '../Suggester/SuggesterHelper';
 
-export class ListSuggesterIPF extends NewAbstractInputField<MBLiteral[], MBLiteral[]> {
+export class ListSuggesterIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> {
 	constructor(renderChild: InputFieldMDRC) {
 		super(renderChild);
 	}

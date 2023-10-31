@@ -4,6 +4,7 @@ import { type ViewFieldMDRC, type ViewFieldVariable } from '../../renderChildren
 import { ErrorLevel, MetaBindExpressionError } from '../../utils/errors/MetaBindErrors';
 import * as MathJs from 'mathjs';
 import { Signal } from '../../utils/Signal';
+import { getUUID } from '../../utils/Utils';
 
 export class MathVF extends AbstractViewField {
 	container?: HTMLElement;
@@ -29,7 +30,7 @@ export class MathVF extends AbstractViewField {
 				const variable: ViewFieldVariable = {
 					bindTargetDeclaration: entry,
 					inputSignal: new Signal<unknown>(undefined),
-					uuid: self.crypto.randomUUID(),
+					uuid: getUUID(),
 					contextName: `MB_VAR_${varCounter}`,
 				};
 
