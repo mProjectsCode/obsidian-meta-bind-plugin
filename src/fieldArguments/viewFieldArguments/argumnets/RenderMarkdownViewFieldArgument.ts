@@ -1,6 +1,6 @@
 import { type ParsingResultNode } from '../../../parsers/nomParsers/GeneralParsers';
 import { AbstractViewFieldArgument } from '../AbstractViewFieldArgument';
-import { ViewFieldArgumentConfig, ViewFieldArgumentConfigs } from '../../../parsers/GeneralConfigs';
+import { type ViewFieldArgumentConfig, ViewFieldArgumentConfigs } from '../../../parsers/GeneralConfigs';
 
 export class RenderMarkdownViewFieldArgument extends AbstractViewFieldArgument {
 	value: boolean = true;

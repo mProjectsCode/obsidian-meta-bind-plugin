@@ -1,7 +1,7 @@
 import { type App, FuzzySuggestModal } from 'obsidian';
 import { type SuggesterOption } from './SuggesterHelper';
 
-import { MBLiteral } from '../../../utils/Literal';
+import { type MBLiteral } from '../../../utils/Literal';
 
 export class SuggesterInputModal extends FuzzySuggestModal<SuggesterOption<MBLiteral>> {
 	options: SuggesterOption<MBLiteral>[];

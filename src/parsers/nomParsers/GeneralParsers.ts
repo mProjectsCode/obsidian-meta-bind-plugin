@@ -32,13 +32,10 @@ export const escapeCharacter = P.string('\\')
 	});
 
 function stringFactory(quotes: string): Parser<string> {
-	return P.string(quotes)
-		.then(
-			P.or(escapeCharacter, P.noneOf(quotes + '\\'))
-				.many()
-				.map(x => x.join('')),
-		)
-		.skip(P.string(quotes));
+	return P.or(escapeCharacter, P.noneOf(quotes + '\\'))
+		.many()
+		.map(x => x.join(''))
+		.trim(P.string(quotes));
 }
 
 export const singleQuotedString = stringFactory("'");

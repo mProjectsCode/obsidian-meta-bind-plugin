@@ -33,7 +33,8 @@ Player Level: `INPUT[number:playerLevel]`
 
 ### Enemies
 
-%% | Name                        | Level                        | Count                        |
+%% 
+| Name                        | Level                        | Count                        |
 | --------------------------- | ---------------------------- | ---------------------------- |
 | `INPUT[text:enemy[0].name]` | `INPUT[number:enemy[0].level]` | `INPUT[number:enemy[0].count]` |
 | `INPUT[text:enemy[1].name]` | `INPUT[number:enemy[1].level]` | `INPUT[number:enemy[1].count]` |

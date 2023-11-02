@@ -1,7 +1,7 @@
 import { type InputFieldArgumentContainer } from '../../fieldArguments/inputFieldArguments/InputFieldArgumentContainer';
 import { type ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { type ParsingResultNode } from '../nomParsers/GeneralParsers';
-import { InputFieldType } from '../GeneralConfigs';
+import { type InputFieldType } from '../GeneralConfigs';
 
 export interface InputFieldDeclaration {
 	/**

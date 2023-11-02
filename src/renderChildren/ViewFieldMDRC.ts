@@ -9,7 +9,7 @@ import { type AbstractViewField } from '../viewFields/AbstractViewField';
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
 import { type ViewFieldArgumentMapType } from '../fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
 import { type ComputedMetadataSubscription, type ComputedSubscriptionDependency } from '../metadata/ComputedMetadataSubscription';
-import { ViewFieldArgumentType } from '../parsers/GeneralConfigs';
+import { type ViewFieldArgumentType } from '../parsers/GeneralConfigs';
 
 export interface ViewFieldVariable {
 	bindTargetDeclaration: BindTargetDeclaration;

@@ -10,6 +10,8 @@ list:
   - 3
 object:
   key: value
+file: Example Note with Embeds
+image: Other/Images/img_frozen_branch.jpg
 ---
 
 `INPUT[number:number1]`
@@ -43,8 +45,13 @@ Display Computed as Markdown: `VIEW[{computed}][text(renderMarkdown)]`
 Loop Error: `VIEW[**{computed}**][text():distance]`
 Self Loop Error: `VIEW[**{computed}**][text():computed]`
 
+## Links
 
-`VIEW['[[{file}|link]]'][text(renderMarkdown)]`
+`INPUT[suggester(optionQuery(#example-note), useLinks(false)):file]`
+`VIEW[\[\[{file}|link\]\]][text(renderMarkdown)]`
+
+`INPUT[imageSuggester(optionQuery("Other/Images")):image]`
+`VIEW[!\[\[{image}\]\]][text(renderMarkdown)]`
 
 ## Arrays and Objects
 

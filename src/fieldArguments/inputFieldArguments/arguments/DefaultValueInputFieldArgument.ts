@@ -1,7 +1,7 @@
 import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
 import { type ParsingResultNode } from '../../../parsers/nomParsers/GeneralParsers';
-import { InputFieldArgumentConfig, InputFieldArgumentConfigs } from '../../../parsers/GeneralConfigs';
-import { MBExtendedLiteral, parseLiteral } from '../../../utils/Literal';
+import { type InputFieldArgumentConfig, InputFieldArgumentConfigs } from '../../../parsers/GeneralConfigs';
+import { type MBExtendedLiteral, parseLiteral } from '../../../utils/Literal';
 
 export class DefaultValueInputFieldArgument extends AbstractInputFieldArgument {
 	value: MBExtendedLiteral = '';

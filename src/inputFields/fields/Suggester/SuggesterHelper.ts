@@ -6,7 +6,7 @@ import { SuggesterInputModal } from './SuggesterInputModal';
 import { type SuggesterIPF } from './SuggesterIPF';
 import { type ListSuggesterIPF } from '../ListSuggester/ListSuggesterIPF';
 import { InputFieldArgumentType } from '../../../parsers/GeneralConfigs';
-import { MBLiteral } from '../../../utils/Literal';
+import { type MBLiteral } from '../../../utils/Literal';
 
 export class SuggesterOption<T> {
 	value: T;

@@ -3,7 +3,7 @@ import { type InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
 import { type SvelteComponent } from 'svelte';
 import SuggesterComponent from './SuggesterComponent.svelte';
 import { openSuggesterModalForInputField } from './SuggesterHelper';
-import { MBLiteral, parseUnknownToLiteral } from '../../../utils/Literal';
+import { type MBLiteral, parseUnknownToLiteral } from '../../../utils/Literal';
 
 export class SuggesterIPF extends AbstractInputField<MBLiteral, MBLiteral> {
 	constructor(renderChild: InputFieldMDRC) {

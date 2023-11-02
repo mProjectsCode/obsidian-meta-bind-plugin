@@ -1,4 +1,4 @@
-import { Parser } from '@lemons_dev/parsinom/lib/Parser';
+import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 

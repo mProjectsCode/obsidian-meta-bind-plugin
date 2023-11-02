@@ -2,7 +2,7 @@ import { type BindTargetDeclaration, type UnvalidatedBindTargetDeclaration, type
 import { type ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { type ParsingResultNode } from '../nomParsers/GeneralParsers';
 import { type ViewFieldArgumentContainer } from '../../fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
-import { ViewFieldType } from '../GeneralConfigs';
+import { type ViewFieldType } from '../GeneralConfigs';
 
 export interface PartialUnvalidatedViewFieldDeclaration {
 	/**

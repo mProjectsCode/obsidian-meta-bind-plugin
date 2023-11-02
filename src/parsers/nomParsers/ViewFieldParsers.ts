@@ -10,14 +10,38 @@ import {
 	type UnvalidatedJsViewFieldDeclaration,
 } from '../viewFieldParser/ViewFieldDeclaration';
 
-const viewFieldMathJS = P.manyNotOf('{}[]').describe('MathJS');
+export const viewFieldContentEscapeCharacter = P.string('\\')
+	.then(P_UTILS.any())
+	.map(escaped => {
+		if (escaped === '[') {
+			return '[';
+		} else if (escaped === ']') {
+			return ']';
+		} else if (escaped === '{') {
+			return '{';
+		} else if (escaped === '}') {
+			return '}';
+		} else if (escaped === '\\') {
+			return '\\';
+		} else {
+			return '\\' + escaped;
+		}
+	});
+
+const viewFieldContent: Parser<string> = P.sequenceMap(
+	(first, other) => {
+		return first + other.flat().join('');
+	},
+	P.manyNotOf('{}[]\\'),
+	P.sequence(viewFieldContentEscapeCharacter, P.manyNotOf('{}[]\\')).many(),
+).box('View Field Content');
 
 export const VIEW_FIELD_DECLARATION: Parser<(string | UnvalidatedBindTargetDeclaration)[]> = P.sequenceMap(
 	(first, other) => {
 		return [first, ...other.flat()];
 	},
-	viewFieldMathJS,
-	P.sequence(BIND_TARGET.wrap(P.string('{'), P.string('}')), viewFieldMathJS).many(),
+	viewFieldContent,
+	P.sequence(BIND_TARGET.wrap(P.string('{'), P.string('}')), viewFieldContent).many(),
 );
 
 const viewFieldExtraDeclaration: Parser<PartialUnvalidatedViewFieldDeclaration> = P.sequenceMap(

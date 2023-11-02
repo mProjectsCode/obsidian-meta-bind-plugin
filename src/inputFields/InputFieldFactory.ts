@@ -18,7 +18,7 @@ import { ListIPF } from './fields/List/ListIPF';
 import { ListSuggesterIPF } from './fields/ListSuggester/ListSuggesterIPF';
 import { DateIPF } from './fields/Date/DateIPF';
 import { TimeIPF } from './fields/Time/TimeIPF';
-import { InputFieldConfig, InputFieldConfigs, InputFieldType } from '../parsers/GeneralConfigs';
+import { type InputFieldConfig, InputFieldConfigs, InputFieldType } from '../parsers/GeneralConfigs';
 
 export type NewInputField =
 	| ToggleIPF

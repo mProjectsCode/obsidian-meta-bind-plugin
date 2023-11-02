@@ -15,7 +15,7 @@ import { type Component } from 'obsidian';
 import { type UnvalidatedViewFieldDeclaration, type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
 
 import { type MetadataSubscription } from '../metadata/MetadataSubscription';
-import { MBExtendedLiteral } from '../utils/Literal';
+import { type MBExtendedLiteral } from '../utils/Literal';
 
 export type MetaBindTableCell = InputFieldDeclaration | ViewFieldDeclaration;
 

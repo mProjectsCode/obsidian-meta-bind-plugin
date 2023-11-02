@@ -1,6 +1,6 @@
 import { AbstractFieldArgumentContainer } from '../AbstractFieldArgumentContainer';
 import { type ViewFieldArgumentMapType } from './ViewFieldArgumentFactory';
-import { ViewFieldArgumentConfig, ViewFieldArgumentType, ViewFieldType } from '../../parsers/GeneralConfigs';
+import { type ViewFieldArgumentConfig, type ViewFieldArgumentType, type ViewFieldType } from '../../parsers/GeneralConfigs';
 
 export class ViewFieldArgumentContainer extends AbstractFieldArgumentContainer<ViewFieldType, ViewFieldArgumentType, ViewFieldArgumentConfig> {
 	getAll<T extends ViewFieldArgumentType>(name: T): NonNullable<ViewFieldArgumentMapType<T>>[] {
