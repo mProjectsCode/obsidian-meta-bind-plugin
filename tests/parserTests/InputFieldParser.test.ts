@@ -1,4 +1,4 @@
-import { TestPlugin } from './testAPI/TestAPI';
+import { TestPlugin } from './mocks/TestAPI';
 
 const plugin = new TestPlugin();
 const parser = plugin.api.inputFieldParser;

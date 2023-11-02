@@ -116,7 +116,7 @@ export class MetadataManager {
 					extraCache: extraCache,
 					metadata: metadata,
 					listeners: [subscription],
-					cyclesSinceLastChange: 0,
+					cyclesSinceLastChange: metadataCacheUpdateCycleThreshold + 1, // +1, so that is it bigger than the threshold
 					cyclesSinceInactive: 0,
 					inactive: false,
 					changed: false,
