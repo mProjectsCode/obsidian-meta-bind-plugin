@@ -1,9 +1,9 @@
 import { type IPlugin } from '../IPlugin';
-import { ViewFieldType } from '../parsers/viewFieldParser/ViewFieldConfigs';
 import { type ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
 import { type AbstractViewField } from './AbstractViewField';
 import { MathVF } from './fields/MathVF';
 import { TextVF } from './fields/TextVF';
+import { ViewFieldType } from '../parsers/GeneralConfigs';
 
 export class ViewFieldFactory {
 	plugin: IPlugin;

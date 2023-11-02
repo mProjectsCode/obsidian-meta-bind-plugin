@@ -4,8 +4,8 @@ import { type IPlugin } from '../../IPlugin';
 import { type BindTargetScope } from '../../metadata/BindTargetScope';
 import { type JsViewFieldDeclaration, type UnvalidatedViewFieldDeclaration, type ViewFieldDeclaration } from './ViewFieldDeclaration';
 import { ViewFieldDeclarationValidator } from './ViewFieldDeclarationValidator';
-import { ViewFieldType } from './ViewFieldConfigs';
 import { ViewFieldArgumentContainer } from '../../fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
+import { ViewFieldType } from '../GeneralConfigs';
 
 export class ViewFieldDeclarationParser {
 	plugin: IPlugin;

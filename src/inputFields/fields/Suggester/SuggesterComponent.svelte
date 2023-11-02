@@ -1,9 +1,9 @@
 <script lang='ts'>
-	import { MBLiteral } from '../../../utils/Utils';
 	import Icon from '../../../utils/Icon.svelte';
 	import LinkComponent from '../../../utils/LinkComponent.svelte';
 	import { isMdLink, MarkdownLink, parseMdLink } from '../../../parsers/MarkdownLinkParser';
 	import { onMount } from 'svelte';
+	import { MBLiteral } from '../../../utils/Literal';
 
 	export let value: MBLiteral;
 	export let showSuggester: () => void;

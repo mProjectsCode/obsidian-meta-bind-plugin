@@ -1,9 +1,9 @@
 import { AbstractInputField } from '../../AbstractInputField';
-import { isLiteral, type MBLiteral, stringifyLiteral } from '../../../utils/Utils';
 import { type InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
 import { type SvelteComponent } from 'svelte';
 import ImageSuggesterComponent from './ImageSuggesterComponent.svelte';
 import { openImageSuggesterModalForInputField } from './ImageSuggesterHelper';
+import { isLiteral, MBLiteral, stringifyLiteral } from '../../../utils/Literal';
 
 export class ImageSuggesterIPF extends AbstractInputField<MBLiteral, string> {
 	constructor(renderChild: InputFieldMDRC) {

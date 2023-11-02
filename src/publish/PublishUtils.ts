@@ -1,5 +1,5 @@
 import { type InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
-import { InputFieldArgumentType, InputFieldType } from '../parsers/inputFieldParser/InputFieldConfigs';
+import { InputFieldArgumentType, InputFieldType } from '../parsers/GeneralConfigs';
 
 /**
  * Used for publish.

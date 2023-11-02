@@ -1,10 +1,11 @@
 import { AbstractInputField } from '../../AbstractInputField';
-import { type MBLiteral, parseUnknownToLiteral } from '../../../utils/Utils';
 import { type InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
 import { type SvelteComponent } from 'svelte';
 import SelectComponent from './SelectComponent.svelte';
 import { type OptionInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
-import { InputFieldArgumentType } from '../../../parsers/inputFieldParser/InputFieldConfigs';
+
+import { InputFieldArgumentType } from '../../../parsers/GeneralConfigs';
+import { MBLiteral, parseUnknownToLiteral } from '../../../utils/Literal';
 
 export class SelectIPF extends AbstractInputField<MBLiteral, MBLiteral> {
 	options: OptionInputFieldArgument[];

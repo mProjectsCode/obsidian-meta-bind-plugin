@@ -1,12 +1,12 @@
 import { AbstractInputField } from '../../AbstractInputField';
 import { type OptionInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 import { type InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
-import { InputFieldArgumentType } from '../../../parsers/inputFieldParser/InputFieldConfigs';
 import { type SvelteComponent } from 'svelte';
 import { type moment } from 'obsidian';
 import DatePickerComponent from './DatePickerComponent.svelte';
 import { DateParser } from '../../../parsers/DateParser';
 import { DatePickerInputModal } from './DatePickerInputModal';
+import { InputFieldArgumentType } from '../../../parsers/GeneralConfigs';
 
 export class DatePickerIPF extends AbstractInputField<string | null, moment.Moment | null> {
 	options: OptionInputFieldArgument[];

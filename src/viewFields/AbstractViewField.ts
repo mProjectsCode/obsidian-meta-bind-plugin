@@ -1,6 +1,7 @@
 import { type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
 import { type ViewFieldMDRC, type ViewFieldVariable } from '../renderChildren/ViewFieldMDRC';
-import { ViewFieldArgumentType } from '../parsers/viewFieldParser/ViewFieldConfigs';
+
+import { ViewFieldArgumentType } from '../parsers/GeneralConfigs';
 
 export abstract class AbstractViewField {
 	protected renderChild: ViewFieldMDRC;

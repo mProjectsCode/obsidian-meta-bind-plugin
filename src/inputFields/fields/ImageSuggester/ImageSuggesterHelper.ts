@@ -3,11 +3,11 @@ import { type OptionInputFieldArgument } from '../../../fieldArguments/inputFiel
 import { type OptionQueryInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionQueryInputFieldArgument';
 import { ErrorLevel, MetaBindArgumentError } from '../../../utils/errors/MetaBindErrors';
 import { Notice, TFile, TFolder } from 'obsidian';
-import { stringifyLiteral } from '../../../utils/Utils';
-import { InputFieldArgumentType } from '../../../parsers/inputFieldParser/InputFieldConfigs';
 import type MetaBindPlugin from '../../../main';
 import { ImageSuggesterInputModal } from './ImageSuggesterInputModal';
 import { type ImageSuggesterIPF } from './ImageSuggesterIPF';
+import { InputFieldArgumentType } from '../../../parsers/GeneralConfigs';
+import { stringifyLiteral } from '../../../utils/Literal';
 
 export function getImageSuggesterOptions(
 	optionArgs: OptionInputFieldArgument[],

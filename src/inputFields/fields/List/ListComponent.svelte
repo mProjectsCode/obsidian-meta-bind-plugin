@@ -1,10 +1,10 @@
 <script lang='ts'>
-	import { MBLiteral } from '../../../utils/Utils';
 	import {
 		OptionInputFieldArgument
 	} from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 	import { Button, TextInput } from 'obsidian-svelte';
 	import Icon from '../../../utils/Icon.svelte';
+	import { MBLiteral } from '../../../utils/Literal';
 
 	export let value: MBLiteral[];
 	export let limit: number | undefined;

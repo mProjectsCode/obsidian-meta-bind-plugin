@@ -5,11 +5,11 @@ import { type BindTargetScope } from '../../metadata/BindTargetScope';
 import { type BindTargetDeclaration } from '../inputFieldParser/InputFieldDeclaration';
 import { ParsingValidationError } from '../ParsingError';
 import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
-import { ViewFieldArgumentType, ViewFieldType } from './ViewFieldConfigs';
 import { type ParsingResultNode } from '../nomParsers/GeneralParsers';
 import { ViewFieldArgumentContainer } from '../../fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
 import { ViewFieldArgumentFactory } from '../../fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
 import { type AbstractViewFieldArgument } from '../../fieldArguments/viewFieldArguments/AbstractViewFieldArgument';
+import { ViewFieldArgumentType, ViewFieldType } from '../GeneralConfigs';
 
 export class ViewFieldDeclarationValidator {
 	unvalidatedDeclaration: UnvalidatedViewFieldDeclaration;

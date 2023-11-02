@@ -1,5 +1,4 @@
 <script lang='ts'>
-	import { MBLiteral } from '../../../utils/Utils';
 	import {
 		OptionInputFieldArgument
 	} from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
@@ -7,6 +6,7 @@
 	import Icon from '../../../utils/Icon.svelte';
 	import { isMdLink, parseMdLink } from '../../../parsers/MarkdownLinkParser';
 	import LinkComponent from '../../../utils/LinkComponent.svelte';
+	import { MBLiteral } from '../../../utils/Literal';
 
 	export let value: MBLiteral[];
 	export let showSuggester: () => void;

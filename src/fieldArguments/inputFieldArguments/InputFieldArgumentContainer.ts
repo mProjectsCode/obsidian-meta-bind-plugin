@@ -1,6 +1,6 @@
-import { type InputFieldArgumentConfig, type InputFieldArgumentType, type InputFieldType } from '../../parsers/inputFieldParser/InputFieldConfigs';
 import { AbstractFieldArgumentContainer } from '../AbstractFieldArgumentContainer';
 import { type InputFieldArgumentMapType } from './InputFieldArgumentFactory';
+import { InputFieldArgumentConfig, InputFieldArgumentType, InputFieldType } from '../../parsers/GeneralConfigs';
 
 export class InputFieldArgumentContainer extends AbstractFieldArgumentContainer<InputFieldType, InputFieldArgumentType, InputFieldArgumentConfig> {
 	getAll<T extends InputFieldArgumentType>(name: T): NonNullable<InputFieldArgumentMapType<T>>[] {

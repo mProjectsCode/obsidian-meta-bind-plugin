@@ -1,6 +1,5 @@
-import { InputFieldArgumentType } from '../parsers/inputFieldParser/InputFieldConfigs';
 import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
-import { type FieldArgumentConfig } from '../parsers/GeneralConfigs';
+import { type FieldArgumentConfig, InputFieldArgumentType } from '../parsers/GeneralConfigs';
 import { type AbstractFieldArgument } from './AbstractFieldArgument';
 
 export abstract class AbstractFieldArgumentContainer<

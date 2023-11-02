@@ -8,13 +8,14 @@ import { InputFieldMDRC, RenderChildType } from '../renderChildren/InputFieldMDR
 import type MetaBindPlugin from '../main';
 import { BindTargetScope } from '../metadata/BindTargetScope';
 import { type Listener, Signal } from '../utils/Signal';
-import { getUUID, type MBExtendedLiteral } from '../utils/Utils';
+import { getUUID } from '../utils/Utils';
 import MetaBindTableComponent from './MetaBindTableComponent.svelte';
 import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
 import { type Component } from 'obsidian';
 import { type UnvalidatedViewFieldDeclaration, type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
 
 import { type MetadataSubscription } from '../metadata/MetadataSubscription';
+import { MBExtendedLiteral } from '../utils/Literal';
 
 export type MetaBindTableCell = InputFieldDeclaration | ViewFieldDeclaration;
 

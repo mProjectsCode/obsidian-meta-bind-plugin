@@ -11,10 +11,10 @@ import { OffValueInputFieldArgument } from './arguments/OffValueInputFieldArgume
 import { OnValueInputFieldArgument } from './arguments/OnValueInputFieldArgument';
 import { DefaultValueInputFieldArgument } from './arguments/DefaultValueInputFieldArgument';
 import { PlaceholderInputFieldArgument } from './arguments/PlaceholderInputFieldArgument';
-import { InputFieldArgumentType } from '../../parsers/inputFieldParser/InputFieldConfigs';
 import { UseLinksInputFieldArgument } from './arguments/UseLinksInputFieldArgument';
 import { StepSizeValueInputFieldArgument } from './arguments/StepSizeValueInputFieldArgument';
 import { LimitInputFieldArgument } from './arguments/LimitInputFieldArgument';
+import { InputFieldArgumentType } from '../../parsers/GeneralConfigs';
 
 export const INPUT_FIELD_ARGUMENT_MAP = {
 	[InputFieldArgumentType.CLASS]: ClassInputFieldArgument,

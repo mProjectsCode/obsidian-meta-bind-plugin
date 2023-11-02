@@ -4,6 +4,12 @@ number2: 200
 unit: km
 distance: 12
 computed: "**12**"
+list:
+  - 1
+  - 2
+  - 3
+object:
+  key: value
 ---
 
 `INPUT[number:number1]`
@@ -39,3 +45,13 @@ Self Loop Error: `VIEW[**{computed}**][text():computed]`
 
 
 `VIEW['[[{file}|link]]'][text(renderMarkdown)]`
+
+## Arrays and Objects
+
+Plain Text:
+`VIEW[{list}][text]`
+`VIEW[{object}][text]`
+
+Markdown:
+`VIEW[**{list}**][text(renderMarkdown)]`
+`VIEW[**{object}**][text(renderMarkdown)]`

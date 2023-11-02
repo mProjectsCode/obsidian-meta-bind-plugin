@@ -1,4 +1,3 @@
-import { type InputFieldConfig, InputFieldConfigs, InputFieldType } from '../parsers/inputFieldParser/InputFieldConfigs';
 import { type InputFieldMDRC, RenderChildType } from '../renderChildren/InputFieldMDRC';
 import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
 import { type IPlugin } from '../IPlugin';
@@ -19,6 +18,7 @@ import { ListIPF } from './fields/List/ListIPF';
 import { ListSuggesterIPF } from './fields/ListSuggester/ListSuggesterIPF';
 import { DateIPF } from './fields/Date/DateIPF';
 import { TimeIPF } from './fields/Time/TimeIPF';
+import { InputFieldConfig, InputFieldConfigs, InputFieldType } from '../parsers/GeneralConfigs';
 
 export type NewInputField =
 	| ToggleIPF

@@ -9,8 +9,8 @@ import { INPUT_FIELD_FULL_DECLARATION, TEMPLATE_INPUT_FIELD_FULL_DECLARATION } f
 import { ParsingValidationError } from '../ParsingError';
 import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
 import { type InputFieldDeclaration, type UnvalidatedInputFieldDeclaration } from './InputFieldDeclaration';
-import { InputFieldType } from './InputFieldConfigs';
 import { type BindTargetScope } from '../../metadata/BindTargetScope';
+import { InputFieldType } from '../GeneralConfigs';
 
 export type InputFieldDeclarationTemplate = TemplateSupplierTemplate<UnvalidatedInputFieldDeclaration>;
 

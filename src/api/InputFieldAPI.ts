@@ -6,7 +6,7 @@ import {
 	type UnvalidatedFieldArgument,
 	type UnvalidatedInputFieldDeclaration,
 } from '../parsers/inputFieldParser/InputFieldDeclaration';
-import { type InputFieldArgumentType, type InputFieldType } from '../parsers/inputFieldParser/InputFieldConfigs';
+import { InputFieldArgumentType, InputFieldType } from '../parsers/GeneralConfigs';
 
 export class InputFieldAPI {
 	private readonly api: IAPI;

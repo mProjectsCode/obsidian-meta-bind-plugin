@@ -1,7 +1,7 @@
 import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
-import { type InputFieldArgumentConfig, InputFieldArgumentConfigs } from '../../../parsers/inputFieldParser/InputFieldConfigs';
 import { type ParsingResultNode } from '../../../parsers/nomParsers/GeneralParsers';
 import { ErrorLevel, MetaBindParsingError } from '../../../utils/errors/MetaBindErrors';
+import { InputFieldArgumentConfig, InputFieldArgumentConfigs } from '../../../parsers/GeneralConfigs';
 
 export class LimitInputFieldArgument extends AbstractInputFieldArgument {
 	value: number | undefined = undefined;

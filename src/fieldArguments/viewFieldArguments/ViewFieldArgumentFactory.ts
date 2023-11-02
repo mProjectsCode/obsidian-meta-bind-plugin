@@ -1,7 +1,7 @@
-import { ViewFieldArgumentType } from '../../parsers/viewFieldParser/ViewFieldConfigs';
 import { RenderMarkdownViewFieldArgument } from './argumnets/RenderMarkdownViewFieldArgument';
 import { HiddenViewFieldArgument } from './argumnets/HiddenViewFieldArgument';
 import { ErrorLevel, MetaBindParsingError } from '../../utils/errors/MetaBindErrors';
+import { ViewFieldArgumentType } from '../../parsers/GeneralConfigs';
 
 /**
  * Maps the view field argument types to the view field constructors.

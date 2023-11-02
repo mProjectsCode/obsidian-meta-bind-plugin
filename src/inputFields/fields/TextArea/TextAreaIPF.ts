@@ -1,9 +1,10 @@
 import { AbstractInputField } from '../../AbstractInputField';
 import { type InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
-import { parseUnknownToString } from '../../../utils/Utils';
 import { type SvelteComponent } from 'svelte';
 import TextAreaComponent from './TextAreaComponent.svelte';
-import { InputFieldArgumentType } from '../../../parsers/inputFieldParser/InputFieldConfigs';
+
+import { InputFieldArgumentType } from '../../../parsers/GeneralConfigs';
+import { parseUnknownToString } from '../../../utils/Literal';
 
 export class TextAreaIPF extends AbstractInputField<string, string> {
 	constructor(renderChild: InputFieldMDRC) {

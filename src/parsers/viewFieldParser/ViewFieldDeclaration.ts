@@ -1,8 +1,8 @@
 import { type BindTargetDeclaration, type UnvalidatedBindTargetDeclaration, type UnvalidatedFieldArgument } from '../inputFieldParser/InputFieldDeclaration';
 import { type ErrorCollection } from '../../utils/errors/ErrorCollection';
-import { type ViewFieldType } from './ViewFieldConfigs';
 import { type ParsingResultNode } from '../nomParsers/GeneralParsers';
 import { type ViewFieldArgumentContainer } from '../../fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
+import { ViewFieldType } from '../GeneralConfigs';
 
 export interface PartialUnvalidatedViewFieldDeclaration {
 	/**

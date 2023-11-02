@@ -1,12 +1,12 @@
 import { type OptionInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 import { type OptionQueryInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionQueryInputFieldArgument';
-import { type MBLiteral } from '../../../utils/Utils';
 import { type DataArray, type DataviewApi, getAPI, type Literal } from 'obsidian-dataview';
 import { Notice } from 'obsidian';
-import { InputFieldArgumentType } from '../../../parsers/inputFieldParser/InputFieldConfigs';
 import { SuggesterInputModal } from './SuggesterInputModal';
 import { type SuggesterIPF } from './SuggesterIPF';
 import { type ListSuggesterIPF } from '../ListSuggester/ListSuggesterIPF';
+import { InputFieldArgumentType } from '../../../parsers/GeneralConfigs';
+import { MBLiteral } from '../../../utils/Literal';
 
 export class SuggesterOption<T> {
 	value: T;

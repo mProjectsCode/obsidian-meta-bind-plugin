@@ -1,6 +1,6 @@
 import { AbstractInputFieldArgument } from '../AbstractInputFieldArgument';
-import { type InputFieldArgumentConfig, InputFieldArgumentConfigs } from '../../../parsers/inputFieldParser/InputFieldConfigs';
 import { type ParsingResultNode } from '../../../parsers/nomParsers/GeneralParsers';
+import { InputFieldArgumentConfig, InputFieldArgumentConfigs } from '../../../parsers/GeneralConfigs';
 
 export class ClassInputFieldArgument extends AbstractInputFieldArgument {
 	value: string[] = [];

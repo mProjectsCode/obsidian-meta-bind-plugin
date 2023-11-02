@@ -3,9 +3,10 @@ import { type ViewFieldDeclaration } from '../../parsers/viewFieldParser/ViewFie
 import { type ViewFieldMDRC, type ViewFieldVariable } from '../../renderChildren/ViewFieldMDRC';
 import { Signal } from '../../utils/Signal';
 import { ErrorLevel, MetaBindExpressionError } from '../../utils/errors/MetaBindErrors';
-import { ViewFieldArgumentType } from '../../parsers/viewFieldParser/ViewFieldConfigs';
 import { Component, MarkdownRenderer } from 'obsidian';
 import { getUUID } from '../../utils/Utils';
+import { ViewFieldArgumentType } from '../../parsers/GeneralConfigs';
+import { stringifyUnknown } from '../../utils/Literal';
 
 export class TextVF extends AbstractViewField {
 	textParts?: (string | number)[];
@@ -77,9 +78,9 @@ export class TextVF extends AbstractViewField {
 		}
 
 		return this.textParts
-			.map(x => {
+			.map<string>(x => {
 				if (typeof x === 'number') {
-					return variables[x].inputSignal.get();
+					return stringifyUnknown(variables[x].inputSignal.get());
 				} else {
 					return x;
 				}

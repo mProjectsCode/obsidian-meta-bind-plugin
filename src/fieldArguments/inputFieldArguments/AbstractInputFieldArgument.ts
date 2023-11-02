@@ -1,4 +1,4 @@
 import { AbstractFieldArgument } from '../AbstractFieldArgument';
-import { type InputFieldArgumentConfig, type InputFieldArgumentType, type InputFieldType } from '../../parsers/inputFieldParser/InputFieldConfigs';
+import { InputFieldArgumentConfig, InputFieldArgumentType, InputFieldType } from '../../parsers/GeneralConfigs';
 
 export abstract class AbstractInputFieldArgument extends AbstractFieldArgument<InputFieldType, InputFieldArgumentType, InputFieldArgumentConfig> {}
