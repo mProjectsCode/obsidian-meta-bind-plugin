@@ -11,9 +11,10 @@
 		"moduleResolution": "node",
 		"importHelpers": true,
 		"isolatedModules": true,
-		"lib": ["DOM", "ES5", "ES6", "ES7", "Es2021"],
-		"types": ["svelte", "node", "jest"],
+		"lib": ["DOM", "ESNext"],
+		// the web stuff is a workaround until https://github.com/oven-sh/bun/issues/5674 gets fixed
+		"types": ["svelte", "bun-types", "web"],
 		"allowSyntheticDefaultImports": true
 	},
-	"include": ["**/*.ts", "node_modules/obsidian/publish.d.ts"]
+	"include": ["src/**/*.ts", "node_modules/obsidian/publish.d.ts"]
 }

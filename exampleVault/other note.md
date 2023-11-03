@@ -7,6 +7,7 @@ time: 19:20
 multi-select:
   - option a
   - option b
+text: this is some text
 ---
 
 ## This is another note

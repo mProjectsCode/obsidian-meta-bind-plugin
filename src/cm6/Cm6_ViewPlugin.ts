@@ -1,6 +1,6 @@
 import { Decoration, type DecorationSet, type EditorView, ViewPlugin, type ViewUpdate } from '@codemirror/view';
 import { type Range, type RangeSet } from '@codemirror/state';
-import { syntaxTree, tokenClassNodeProp } from '@codemirror/language';
+import { syntaxTree } from '@codemirror/language';
 import { type SyntaxNode } from '@lezer/common';
 import { Component, editorLivePreviewField, type TFile } from 'obsidian';
 import type MetaBindPlugin from '../main';
@@ -22,6 +22,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 
 			update(update: ViewUpdate): void {
 				// only activate in LP and not source mode
+				// @ts-ignore some strange private field not being assignable
 				if (!update.state.field(editorLivePreviewField)) {
 					this.decorations = Decoration.none;
 					return;
@@ -111,8 +112,9 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			 */
 			getRenderInfo(view: EditorView, node: SyntaxNode): { shouldRender: boolean; content: string | undefined; widgetType: MBWidgetType | undefined } {
 				// get the node props
-				const propsString: string | undefined = node.type.prop<string>(tokenClassNodeProp);
-				const props: Set<string> = new Set<string>(propsString?.split(' '));
+				// const propsString: string | undefined = node.type.prop<string>(tokenClassNodeProp);
+				// workaround until bun installs https://github.com/lishid/cm-language/ correctly
+				const props: Set<string> = new Set<string>(node.type.name?.split('_'));
 
 				// node is inline code
 				if (props.has('inline-code') && !props.has('formatting')) {

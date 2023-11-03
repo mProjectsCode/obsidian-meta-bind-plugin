@@ -1,4 +1,5 @@
 import { Time, TimeParser } from '../../src/parsers/TimeParser';
+import { describe, test, expect } from 'bun:test';
 
 test('stringify time', () => {
 	const time = new Time();

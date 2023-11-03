@@ -79,6 +79,7 @@ export class Cm6_Util {
 	}
 
 	static getCurrentFile(view: EditorView): TFile | null {
+		// @ts-ignore some strange private field not being assignable
 		return view.state.field(editorInfoField).file;
 	}
 
