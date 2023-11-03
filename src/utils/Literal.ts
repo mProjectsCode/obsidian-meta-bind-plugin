@@ -4,6 +4,7 @@ import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 
 export type MBLiteral = string | number | boolean | null;
 export type MBExtendedLiteral = MBLiteral | MBLiteral[];
+
 const floatParser: Parser<number> = P.sequenceMap(
 	(sign, number) => (sign === undefined ? number : -number),
 	P.string('-').optional(),
@@ -12,6 +13,7 @@ const floatParser: Parser<number> = P.sequenceMap(
 		P_UTILS.digits().map(x => Number(x)),
 	),
 ).thenEof();
+
 const intParser: Parser<number> = P.sequenceMap(
 	(sign, number) => (sign === undefined ? number : -number),
 	P.string('-').optional(),
@@ -59,22 +61,32 @@ export function isLiteral(literal: unknown): literal is MBLiteral {
 	return literal === null || typeof literal === 'string' || typeof literal === 'boolean' || typeof literal === 'number';
 }
 
-export function parseUnknownToLiteralArray(value: unknown): MBLiteral[] | undefined {
-	if (value === undefined || value === null) {
+/**
+ * Turns a value into an array of literals. If it can't convert, it returns undefined.
+ *
+ * @param literal
+ */
+export function parseUnknownToLiteralArray(literal: unknown): MBLiteral[] | undefined {
+	if (literal === undefined || literal === null) {
 		return undefined;
 	}
 
-	if (isLiteral(value)) {
-		return [value];
+	if (isLiteral(literal)) {
+		return [literal];
 	}
 
-	if (typeof value === 'object' && Array.isArray(value)) {
-		return value.filter(x => isLiteral(x)) as MBLiteral[];
+	if (typeof literal === 'object' && Array.isArray(literal)) {
+		return literal.filter(x => isLiteral(x)) as MBLiteral[];
 	}
 
 	return undefined;
 }
 
+/**
+ * Turns a value into a float. If it can't convert, it returns undefined.
+ *
+ * @param literal
+ */
 export function parseUnknownToFloat(literal: unknown): number | undefined {
 	if (typeof literal === 'number') {
 		return literal;
@@ -88,6 +100,11 @@ export function parseUnknownToFloat(literal: unknown): number | undefined {
 	return undefined;
 }
 
+/**
+ * Turns a value into an int. If it can't convert, it returns undefined.
+ *
+ * @param literal
+ */
 export function parseUnknownToInt(literal: unknown): number | undefined {
 	if (typeof literal === 'number') {
 		return literal;
@@ -101,14 +118,29 @@ export function parseUnknownToInt(literal: unknown): number | undefined {
 	return undefined;
 }
 
+/**
+ * Turns a value into a string. If it can't convert, it returns undefined.
+ *
+ * @param literal
+ */
 export function parseUnknownToString(literal: unknown): string | undefined {
 	return isLiteral(literal) ? literal?.toString() : undefined;
 }
 
+/**
+ * Turns a value into a literal. If it can't convert, it returns undefined.
+ *
+ * @param literal
+ */
 export function parseUnknownToLiteral(literal: unknown): MBLiteral | undefined {
 	return isLiteral(literal) ? literal : undefined;
 }
 
+/**
+ * Turns a value into a pretty string. Objects get turned to JSON.
+ *
+ * @param literal
+ */
 export function stringifyUnknown(literal: unknown): string {
 	if (Array.isArray(literal)) {
 		return literal.map(x => recStringifyUnknown(x)).join(', ');
