@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 	import { InputFieldTemplate } from '../Settings';
 	import { Button, ModalButtonGroup } from 'obsidian-svelte';
 	import InputFieldTemplateSettingComponent from './InputFieldTemplateSettingComponent.svelte';
@@ -18,7 +18,7 @@
 	function addTemplate(): void {
 		inputFieldTemplates.push({
 			name: '',
-			declaration: ''
+			declaration: '',
 		});
 
 		inputFieldTemplates = inputFieldTemplates;
@@ -40,40 +40,32 @@
 <div>
 	<table>
 		<thead>
-		<tr>
-			<th>
-				Template Name
-			</th>
-			<th>
-				Template Declaration
-			</th>
-			<th>
-
-			</th>
-		</tr>
+			<tr>
+				<th> Template Name </th>
+				<th> Template Declaration </th>
+				<th> </th>
+			</tr>
 		</thead>
 		<tbody>
-		{#each inputFieldTemplates as template}
-			<InputFieldTemplateSettingComponent template={template}
-												on:delete-template={(evt) => deleteTemplate(evt.detail.name)}></InputFieldTemplateSettingComponent>
-		{/each}
+			{#each inputFieldTemplates as template}
+				<InputFieldTemplateSettingComponent template={template} on:delete-template={evt => deleteTemplate(evt.detail.name)}
+				></InputFieldTemplateSettingComponent>
+			{/each}
 		</tbody>
 	</table>
 
-	<Button on:click={() => addTemplate()} variant='primary' tooltip='Create New Template'>Add Template</Button>
+	<Button on:click={() => addTemplate()} variant="primary" tooltip="Create New Template">Add Template</Button>
 
 	{#if errorCollection}
 		<div>
-			<h3 class='mod-error'>Some Templates Failed to Parse</h3>
+			<h3 class="mod-error">Some Templates Failed to Parse</h3>
 
-			<ErrorCollectionComponent errorCollection={errorCollection}
-									  declaration={undefined}></ErrorCollectionComponent>
+			<ErrorCollectionComponent errorCollection={errorCollection} declaration={undefined}></ErrorCollectionComponent>
 		</div>
 	{/if}
 
-
 	<ModalButtonGroup>
-		<Button on:click={() => save()} variant='primary' tooltip='Save Changes'>Save</Button>
-		<Button on:click={() => cancel()} tooltip='Revert Changes'>Cancel</Button>
+		<Button on:click={() => save()} variant="primary" tooltip="Save Changes">Save</Button>
+		<Button on:click={() => cancel()} tooltip="Revert Changes">Cancel</Button>
 	</ModalButtonGroup>
 </div>

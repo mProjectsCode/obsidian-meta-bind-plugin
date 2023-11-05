@@ -28,7 +28,7 @@
 			'9': 'October',
 			'10': 'November',
 			'11': 'December',
-		}
+		};
 
 		for (let i = 1; i <= 31; i++) {
 			days[i.toString()] = i.toString();
@@ -37,7 +37,7 @@
 		year = value.year().toString();
 		month = value.month().toString();
 		day = value.date().toString();
-	})
+	});
 
 	export function setValue(v: moment.Moment): void {
 		value = v;
@@ -90,34 +90,40 @@
 	}
 </script>
 
-<div class='mb-input-element-group'>
+<div class="mb-input-element-group">
 	{#if useUsInputOrder}
-		<select class='dropdown mb-input-element-group-element' bind:value={month} on:change={() => onMonthChange()}>
+		<select class="dropdown mb-input-element-group-element" bind:value={month} on:change={() => onMonthChange()}>
 			{#each Object.entries(months) as [_month, _monthName]}
 				<option value={_month}>{_monthName}</option>
 			{/each}
 		</select>
 
-		<select class='dropdown mb-input-element-group-element' bind:value={day} on:change={() => onDayChange()}>
+		<select class="dropdown mb-input-element-group-element" bind:value={day} on:change={() => onDayChange()}>
 			{#each Object.values(days) as _day}
 				<option value={_day}>{_day}</option>
 			{/each}
 		</select>
 	{:else}
-		<select class='dropdown mb-input-element-group-element' bind:value={day} on:change={() => onDayChange()}>
+		<select class="dropdown mb-input-element-group-element" bind:value={day} on:change={() => onDayChange()}>
 			{#each Object.values(days) as _day}
 				<option value={_day}>{_day}</option>
 			{/each}
 		</select>
 
-		<select class='dropdown mb-input-element-group-element' bind:value={month} on:change={() => onMonthChange()}>
+		<select class="dropdown mb-input-element-group-element" bind:value={month} on:change={() => onMonthChange()}>
 			{#each Object.entries(months) as [_month, _monthName]}
 				<option value={_month}>{_monthName}</option>
 			{/each}
 		</select>
 	{/if}
 
-	<input class='mb-date-input-year-input mb-input-element-group-element' type='number' tabindex='0' bind:value={year} on:input={() => onYearChange()} max=9999 min=0>
+	<input
+		class="mb-date-input-year-input mb-input-element-group-element"
+		type="number"
+		tabindex="0"
+		bind:value={year}
+		on:input={() => onYearChange()}
+		max="9999"
+		min="0"
+	/>
 </div>
-
-

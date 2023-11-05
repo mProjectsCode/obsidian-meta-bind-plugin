@@ -1,7 +1,11 @@
 {
+	"plugins": ["prettier-plugin-svelte"],
+
 	"printWidth": 160,
 	"useTabs": true,
 	"semi": true,
 	"singleQuote": true,
-	"arrowParens": "avoid"
+	"arrowParens": "avoid",
+
+	"svelteAllowShorthand": false
 }

@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 	import Icon from '../../../utils/Icon.svelte';
 	import LinkComponent from '../../../utils/LinkComponent.svelte';
 	import { isMdLink, MarkdownLink, parseMdLink } from '../../../parsers/MarkdownLinkParser';
@@ -46,18 +46,13 @@
 	}
 </script>
 
-<div
-	class='mb-suggest-input'
-	on:click={openSuggester}
-	on:keydown={openSuggesterOnKey}
-	role='button'
-	tabindex='0'>
-	<div class='mb-suggest-text'>
+<div class="mb-suggest-input" on:click={openSuggester} on:keydown={openSuggesterOnKey} role="button" tabindex="0">
+	<div class="mb-suggest-text">
 		{#if isLink}
 			<LinkComponent bind:mdLink={mdLink}></LinkComponent>
 		{:else}
 			<span>{str}</span>
 		{/if}
 	</div>
-	<Icon iconName='list' />
+	<Icon iconName="list" />
 </div>

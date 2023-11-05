@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 	import Calender from './Calender.svelte';
 	import { getMonthName } from '../../../utils/DatePickerUtils.js';
 	import { moment } from 'obsidian';
@@ -60,72 +60,65 @@
 	}
 </script>
 
-<style>
-
-    .date-picker {
-        display: block;
-        padding: var(--size-4-4);
-    }
-
-    .date-picker-header {
-        display:         flex;
-        gap:             var(--size-4-2);
-        align-items:     center;
-        justify-content: space-around;
-    }
-
-    .date-picker-header-text {
-        flex:            1;
-        text-align:      center;
-        display:         flex;
-        gap:             var(--size-4-2);
-        align-items:     center;
-        justify-content: center;
-        width:           min-content;
-    }
-
-    .date-picker-header-text-year {
-        width:   60px;
-        padding: var(--size-4-2);
-    }
-
-    .date-picker-header-text-month {
-        height: min-content;
-    }
-
-    .month-switch-button {
-        margin: 0;
-    }
-
-    .date-picker-footer {
-        display:         flex;
-        gap:             var(--size-4-2);
-        align-items:     center;
-        justify-content: center;
-    }
-
-    .none-button {
-        margin: 0;
-    }
-</style>
-
-<div class='date-picker'>
-	<div class='date-picker-header'>
-		<button class='month-switch-button' on:click={prevMonth}>Prev</button>
-		<div class='date-picker-header-text'>
-			<span class='date-picker-header-text-month'>{getMonthName(month)}</span>
-			<input class='date-picker-header-text-year' type='number' value='{year.toString()}'
-				   on:input='{changeYear}'>
+<div class="date-picker">
+	<div class="date-picker-header">
+		<button class="month-switch-button" on:click={prevMonth}>Prev</button>
+		<div class="date-picker-header-text">
+			<span class="date-picker-header-text-month">{getMonthName(month)}</span>
+			<input class="date-picker-header-text-year" type="number" value={year.toString()} on:input={changeYear} />
 		</div>
-		<button class='month-switch-button' on:click={nextMonth}>Next</button>
+		<button class="month-switch-button" on:click={nextMonth}>Next</button>
 	</div>
-	<Calender
-		on:dateChange={onDateChange}
-		month={month}
-		year={year}
-		selectedDate={selectedDate}>
-	</Calender>
-	<div class='date-picker-footer'>
-		<button class='none-button' on:click={setDateToNull}>Set no Date</button>
+	<Calender on:dateChange={onDateChange} month={month} year={year} selectedDate={selectedDate}></Calender>
+	<div class="date-picker-footer">
+		<button class="none-button" on:click={setDateToNull}>Set no Date</button>
 	</div>
 </div>
+
+<style>
+	.date-picker {
+		display: block;
+		padding: var(--size-4-4);
+	}
+
+	.date-picker-header {
+		display: flex;
+		gap: var(--size-4-2);
+		align-items: center;
+		justify-content: space-around;
+	}
+
+	.date-picker-header-text {
+		flex: 1;
+		text-align: center;
+		display: flex;
+		gap: var(--size-4-2);
+		align-items: center;
+		justify-content: center;
+		width: min-content;
+	}
+
+	.date-picker-header-text-year {
+		width: 60px;
+		padding: var(--size-4-2);
+	}
+
+	.date-picker-header-text-month {
+		height: min-content;
+	}
+
+	.month-switch-button {
+		margin: 0;
+	}
+
+	.date-picker-footer {
+		display: flex;
+		gap: var(--size-4-2);
+		align-items: center;
+		justify-content: center;
+	}
+
+	.none-button {
+		margin: 0;
+	}
+</style>

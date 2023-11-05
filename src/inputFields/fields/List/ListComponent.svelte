@@ -1,7 +1,5 @@
-<script lang='ts'>
-	import {
-		OptionInputFieldArgument
-	} from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
+<script lang="ts">
+	import { OptionInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 	import { Button, TextInput } from 'obsidian-svelte';
 	import Icon from '../../../utils/Icon.svelte';
 	import { MBLiteral } from '../../../utils/Literal';
@@ -41,25 +39,26 @@
 	}
 </script>
 
-<div class='mb-list-items'>
+<div class="mb-list-items">
 	{#each value as entry, i}
-		<div class='mb-list-item'>
+		<div class="mb-list-item">
 			<span>{entry}</span>
 			<Button on:click={() => remove(i)}>
-				<Icon iconName='x' />
+				<Icon iconName="x" />
 			</Button>
 		</div>
 	{:else}
-		<span class='mb-list-empty'>Empty</span>
+		<span class="mb-list-empty">Empty</span>
 	{/each}
 </div>
-<div class='mb-list-input'>
-	<input type='text' tabindex='0' placeholder={placeholder} bind:value={addValue} maxlength={limit}>
+<div class="mb-list-input">
+	<input type="text" tabindex="0" placeholder={placeholder} bind:value={addValue} maxlength={limit} />
 	{#if limit !== undefined}
-		<span class={`mb-content-limit-indicator ${value.length > limit ? 'mb-content-limit-indicator-overflow' : ''}`} >{getLimitString(value.length, limit)}</span>
+		<span class={`mb-content-limit-indicator ${value.length > limit ? 'mb-content-limit-indicator-overflow' : ''}`}
+			>{getLimitString(value.length, limit)}</span
+		>
 	{/if}
 	<Button on:click={() => add()} disabled={!addValue}>
-		<Icon iconName='plus' />
+		<Icon iconName="plus" />
 	</Button>
 </div>
-

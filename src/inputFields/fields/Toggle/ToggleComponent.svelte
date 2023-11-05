@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 	export let value: boolean;
 	export let onValueChange: (value: boolean) => void;
 
@@ -19,7 +19,14 @@
 	}
 </script>
 
-<div class='checkbox-container' class:is-enabled={value} role='switch' tabindex='0' aria-checked={value}
-	 on:click={() => toggleValue()} on:keypress={(event) => toggleValueOnKey(event)}>
-	<input type='checkbox' tabindex='-1' checked={value}>
+<div
+	class="checkbox-container"
+	class:is-enabled={value}
+	role="switch"
+	tabindex="0"
+	aria-checked={value}
+	on:click={() => toggleValue()}
+	on:keypress={event => toggleValueOnKey(event)}
+>
+	<input type="checkbox" tabindex="-1" checked={value} />
 </div>

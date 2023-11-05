@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 	import { MarkdownLink } from '../parsers/MarkdownLinkParser';
 
 	export let mdLink: MarkdownLink;
@@ -7,24 +7,11 @@
 </script>
 
 {#if mdLink.alias}
-	<!-- svelte-ignore a11y-unknown-aria-attribute -->
-	<a
-		data-href={linkHref}
-		href={linkHref}
-		class='internal-link'
-		target='_blank'
-		rel='noopener'
-		aria-label={linkHref}
-		aria-label-position='top'>
+	<a data-href={linkHref} href={linkHref} class="internal-link" target="_blank" rel="noopener" aria-label={linkHref}>
 		{mdLink.alias}
 	</a>
 {:else}
-	<a
-		data-href={linkHref}
-		href={linkHref}
-		class='internal-link'
-		target='_blank'
-		rel='noopener'>
+	<a data-href={linkHref} href={linkHref} class="internal-link" target="_blank" rel="noopener">
 		{linkHref}
 	</a>
 {/if}

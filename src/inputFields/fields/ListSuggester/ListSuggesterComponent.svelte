@@ -1,7 +1,5 @@
-<script lang='ts'>
-	import {
-		OptionInputFieldArgument
-	} from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
+<script lang="ts">
+	import { OptionInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 	import { Button, TextInput } from 'obsidian-svelte';
 	import Icon from '../../../utils/Icon.svelte';
 	import { isMdLink, parseMdLink } from '../../../parsers/MarkdownLinkParser';
@@ -44,35 +42,29 @@
 	}
 </script>
 
-<div class='mb-list-items'>
+<div class="mb-list-items">
 	{#each value as entry, i}
-		<div class='mb-list-item'>
+		<div class="mb-list-item">
 			{#if isMdLink(`${entry}`)}
-                <span>
-                    <LinkComponent mdLink={parseMdLink(`${entry}`)}></LinkComponent>
-                </span>
+				<span>
+					<LinkComponent mdLink={parseMdLink(`${entry}`)}></LinkComponent>
+				</span>
 			{:else}
 				<span>{entry}</span>
 			{/if}
 			<Button on:click={() => remove(i)}>
-				<Icon iconName='x' />
+				<Icon iconName="x" />
 			</Button>
 		</div>
 	{:else}
-		<span class='mb-list-empty'>Empty</span>
+		<span class="mb-list-empty">Empty</span>
 	{/each}
 </div>
-<div class='mb-list-input'>
-	<div
-		class='mb-suggest-input'
-		on:click={suggest}
-		on:keydown={suggestKey}
-		role='button'
-		tabindex='0'>
-		<div class='mb-suggest-text'>
+<div class="mb-list-input">
+	<div class="mb-suggest-input" on:click={suggest} on:keydown={suggestKey} role="button" tabindex="0">
+		<div class="mb-suggest-text">
 			<span>Add Element...</span>
 		</div>
-		<Icon iconName='list' />
+		<Icon iconName="list" />
 	</div>
 </div>
-

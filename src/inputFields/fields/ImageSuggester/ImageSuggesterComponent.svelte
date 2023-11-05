@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 	import { imagePathToUri } from '../../../utils/Utils';
 
 	export let value: string;
@@ -20,43 +20,38 @@
 	}
 </script>
 
-<style>
-    .mb-image-suggest-input {
-        background:    var(--background-secondary);
-        border-radius: var(--mb-border-radius);
-        border:        var(--mb-border-width) solid var(--background-modifier-border);
-        padding:       var(--size-4-2);
-        width:         100%;
-    }
-
-    .mb-image-suggest-image {
-        width: 100%;
-    }
-
-    .mb-image-suggest-footer {
-        display:        flex;
-        flex-direction: row;
-        color:          var(--text-normal);
-        align-items:    baseline;
-    }
-
-    .mb-image-suggest-footer-text {
-        flex:        1;
-        margin-left: var(--size-4-2);
-    }
-</style>
-
-<div class='mb-image-suggest-input'>
+<div class="mb-image-suggest-input">
 	{#if value}
-		<img class='mb-image-suggest-image' src={imagePathToUri(value)} alt={value} />
+		<img class="mb-image-suggest-image" src={imagePathToUri(value)} alt={value} />
 	{/if}
-	<div class='mb-image-suggest-footer'>
-		<span class='mb-image-suggest-footer-text'>{value || 'no image selected'}</span>
-		<button
-			class='btn btn-active'
-			on:click={openSuggester}
-			on:keydown={openSuggesterOnKey}>
-			Change Image
-		</button>
+	<div class="mb-image-suggest-footer">
+		<span class="mb-image-suggest-footer-text">{value || 'no image selected'}</span>
+		<button class="btn btn-active" on:click={openSuggester} on:keydown={openSuggesterOnKey}> Change Image </button>
 	</div>
 </div>
+
+<style>
+	.mb-image-suggest-input {
+		background: var(--background-secondary);
+		border-radius: var(--mb-border-radius);
+		border: var(--mb-border-width) solid var(--background-modifier-border);
+		padding: var(--size-4-2);
+		width: 100%;
+	}
+
+	.mb-image-suggest-image {
+		width: 100%;
+	}
+
+	.mb-image-suggest-footer {
+		display: flex;
+		flex-direction: row;
+		color: var(--text-normal);
+		align-items: baseline;
+	}
+
+	.mb-image-suggest-footer-text {
+		flex: 1;
+		margin-left: var(--size-4-2);
+	}
+</style>

@@ -165,6 +165,48 @@ div.mb-view-wrapper {
 	display: inline-block;
 }
 
+/* Progress Bar Input */
+
+.mb-progress-bar-input {
+	height: 32px;
+	width: 100%;
+	border-radius: var(--mb-border-radius);
+	border: var(--mb-border-width) solid var(--background-modifier-border);
+	position: relative;
+	cursor: col-resize;
+}
+
+.mb-progress-bar-input:focus-visible {
+	box-shadow: 0 0 0 3px var(--background-modifier-border-focus);
+}
+
+.mb-progress-bar-progress {
+	height: 32px;
+	background: var(--color-accent);
+	border-radius: var(--mb-border-radius);
+}
+
+.mb-progress-bar-value {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.mb-progress-bar-label-left {
+	position: absolute;
+	top: 50%;
+	transform: translate(0, -50%);
+	left: var(--size-4-2);
+}
+
+.mb-progress-bar-label-right {
+	position: absolute;
+	top: 50%;
+	transform: translate(0, -50%);
+	right: var(--size-4-2);
+}
+
 /* Card */
 .mb-card {
 	padding: var(--size-4-2);
@@ -258,6 +300,23 @@ code.mb-error {
 
 .mb-error-collection-modal {
 	width: 80%;
+}
+
+/* --- Misc --- */
+
+.mb-icon-wrapper {
+	display: inline-block;
+	position: relative;
+	width: 18px;
+	height: 18px;
+}
+
+.mb-icon-wrapper > svg {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
 }
 
 /* --- UTIL CLASSES --- */

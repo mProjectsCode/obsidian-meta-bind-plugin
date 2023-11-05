@@ -1,7 +1,5 @@
-<script lang='ts'>
-	import {
-		OptionInputFieldArgument
-	} from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
+<script lang="ts">
+	import { OptionInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 	import { MBLiteral } from '../../../utils/Literal';
 
 	export let value: MBLiteral;
@@ -17,7 +15,7 @@
 	}
 </script>
 
-<select class='dropdown' bind:value={value} on:change={() => selectOption()}>
+<select class="dropdown" bind:value={value} on:change={() => selectOption()}>
 	{#each options as option}
 		<option value={option.value}>{option.name}</option>
 	{/each}

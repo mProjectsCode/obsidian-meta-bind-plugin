@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 	import { clamp, remapRange } from '../../../utils/Utils';
 
 	export let onValueChange: (value: any) => void;
@@ -6,7 +6,6 @@
 	export let minValue: number;
 	export let maxValue: number;
 	export let stepSize: number;
-
 
 	let drag: boolean = false;
 	let progressBarEl: HTMLDivElement;
@@ -72,7 +71,7 @@
 
 	function round(number: number, increment: number) {
 		// the parsing is done to fix floating point errors
-		return Number.parseFloat((Math.round(number / increment ) * increment).toFixed(15));
+		return Number.parseFloat((Math.round(number / increment) * increment).toFixed(15));
 	}
 
 	function onKeyPress(e: KeyboardEvent) {
@@ -95,53 +94,7 @@
 		window.clearTimeout(accelerationTimer);
 		accelerationTimer = window.setTimeout(() => (keydownAcceleration = 1), 100);
 	}
-
-
 </script>
-
-<style>
-    .mb-progress-bar-input {
-        height:        32px;
-        width:         100%;
-        border-radius: var(--mb-border-radius);
-        border:        var(--mb-border-width) solid var(--background-modifier-border);
-        position:      relative;
-        cursor:        col-resize;
-    }
-
-    .mb-progress-bar-input:focus-visible {
-        box-shadow: 0 0 0 3px var(--background-modifier-border-focus);
-    }
-
-    .mb-progress-bar-progress {
-        height:        32px;
-        background:    var(--color-accent);
-        border-radius: var(--mb-border-radius);
-    }
-
-    .mb-progress-bar-value {
-        position:  absolute;
-        top:       50%;
-        left:      50%;
-        transform: translate(-50%, -50%);
-    }
-
-    .mb-progress-bar-label-left {
-        position:  absolute;
-        top:       50%;
-        transform: translate(0, -50%);
-        left:      var(--size-4-2);
-    }
-
-    .mb-progress-bar-label-right {
-        position:  absolute;
-        top:       50%;
-        transform: translate(0, -50%);
-        right:     var(--size-4-2);
-    }
-
-
-</style>
 
 <svelte:window
 	on:touchmove|nonpassive={updateValueOnEvent}
@@ -152,19 +105,25 @@
 />
 
 <div
-	class='mb-progress-bar-input'
-	tabindex='0'
+	class="mb-progress-bar-input"
+	tabindex="0"
 	bind:this={progressBarEl}
-	role='slider'
-	aria-valuemin={minValue}
-	aria-valuemax={maxValue}
-	aria-valuenow={value}
+	role="button"
 	on:keydown={onKeyPress}
 	on:mousedown={onTrackEvent}
-	on:touchstart={onTrackEvent}>
-	<div class='mb-progress-bar-progress' style={`width: ${getProgressPercent(value)}%`}
-		 on:dragstart={() => drag = true}></div>
-	<span class='mb-progress-bar-value'>{value}</span>
-	<span class='mb-progress-bar-label-left'>{minValue}</span>
-	<span class='mb-progress-bar-label-right'>{maxValue}</span>
+	on:touchstart={onTrackEvent}
+>
+	<div
+		class="mb-progress-bar-progress"
+		style={`width: ${getProgressPercent(value)}%`}
+		on:dragstart={() => (drag = true)}
+		role="slider"
+		aria-valuemin={minValue}
+		aria-valuemax={maxValue}
+		aria-valuenow={value}
+		tabindex="0"
+	></div>
+	<span class="mb-progress-bar-value">{value}</span>
+	<span class="mb-progress-bar-label-left">{minValue}</span>
+	<span class="mb-progress-bar-label-right">{maxValue}</span>
 </div>

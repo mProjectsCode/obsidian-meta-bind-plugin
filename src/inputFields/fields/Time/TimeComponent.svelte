@@ -22,7 +22,7 @@
 
 		minute = value.getMinute().toString();
 		hour = value.getHour().toString();
-	})
+	});
 
 	export function setValue(v: Time): void {
 		value = v;
@@ -44,14 +44,14 @@
 	}
 </script>
 
-<div class='mb-input-element-group'>
-	<select class='dropdown mb-input-element-group-element' bind:value={hour} on:change={() => onHourChange()}>
+<div class="mb-input-element-group">
+	<select class="dropdown mb-input-element-group-element" bind:value={hour} on:change={() => onHourChange()}>
 		{#each Object.entries(hours) as [_hour, _hourName]}
 			<option value={_hour}>{_hourName}</option>
 		{/each}
 	</select>
 
-	<select class='dropdown mb-input-element-group-element' bind:value={minute} on:change={() => onMinuteChange()}>
+	<select class="dropdown mb-input-element-group-element" bind:value={minute} on:change={() => onMinuteChange()}>
 		{#each Object.entries(minutes) as [_minute, _minuteName]}
 			<option value={_minute}>{_minuteName}</option>
 		{/each}
