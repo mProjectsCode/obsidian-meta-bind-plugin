@@ -20,13 +20,14 @@ export abstract class AbstractFieldArgument<
 
 	validateValues(value: ParsingResultNode[], allowedValues: FieldArgumentValueConfig[][]): void {
 		if (allowedValues.find(x => x.length === value.length) === undefined) {
-			throw new MetaBindArgumentError(
-				ErrorLevel.WARNING,
-				`Failed to parse argument value for argument '${this.getConfig().type}'.`,
-				`Expected argument values to follow the form ${allowedValues
+			throw new MetaBindArgumentError({
+				errorLevel: ErrorLevel.WARNING,
+				effect: `Failed to parse argument value for argument '${this.getConfig().type}'.`,
+				cause: `Expected argument values to follow the form ${allowedValues
 					.map(x => (x.length === 0 ? 'none' : x.map(y => `'${y.name}'`).join(', ')))
 					.join(' or ')}. Received arguments of length ${value.length}.`,
-			);
+				// TODO: link to docs of the argument somehow
+			});
 		}
 	}
 

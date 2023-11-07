@@ -36,8 +36,8 @@
 	<table>
 		<thead>
 			<tr>
-				<th> Folder Path </th>
-				<th> </th>
+				<th> Folder Path</th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>

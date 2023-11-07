@@ -7,7 +7,7 @@ export class ParsingError extends MetaBindError {
 	source: string;
 
 	constructor(errorLevel: ErrorLevel, source: string, str: string, parseFailure: ParseFailure) {
-		super(errorLevel, 'failed to parse', 'expected' + parseFailure.expected.join(' or '), {});
+		super({ errorLevel: errorLevel, effect: 'failed to parse', cause: 'expected' + parseFailure.expected.join(' or '), context: {} });
 
 		this.str = str;
 		this.parseFailure = parseFailure;
@@ -42,7 +42,7 @@ export class ParsingValidationError extends MetaBindError {
 	source: string;
 
 	constructor(errorLevel: ErrorLevel, source: string, cause: string, str?: string, position?: ParsingRange) {
-		super(errorLevel, 'failed to parse', cause, {});
+		super({ errorLevel: errorLevel, effect: 'failed to validate parser result', cause: cause });
 
 		this.str = str;
 		this.position = position;
@@ -52,7 +52,7 @@ export class ParsingValidationError extends MetaBindError {
 	}
 
 	public getErrorType(): ErrorType {
-		return ErrorType.PARSING;
+		return ErrorType.VALIDATION;
 	}
 
 	protected updateMessage2(): void {
@@ -67,8 +67,10 @@ export class ParsingValidationError extends MetaBindError {
 			const failedLine = lines[this.position.from.line - 1]; // line is a one based index
 
 			const linePrefix = `${this.position.from.line} |   `;
-			this.message += `\n${linePrefix}${failedLine}`;
-			this.message += `\n${this.getUnderline(linePrefix.length, failedLine.length)} (${this.cause})\n`;
+			this.positionContext = `${linePrefix}${failedLine}`;
+			this.positionContext += `\n${this.getUnderline(linePrefix.length, failedLine.length)}\n`;
+
+			this.message += '\n' + this.positionContext;
 		}
 	}
 

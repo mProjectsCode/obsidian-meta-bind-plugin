@@ -50,25 +50,15 @@ export class InputFieldDeclarationValidator {
 			}
 		}
 
-		if (inputFieldType?.position) {
-			this.errorCollection.add(
-				new ParsingValidationError(
-					ErrorLevel.ERROR,
-					'Declaration Validator',
-					`Encountered invalid identifier. Expected token to be an input field type but received '${inputFieldType.value}'.`,
-					this.unvalidatedDeclaration.fullDeclaration,
-					inputFieldType.position,
-				),
-			);
-		} else {
-			this.errorCollection.add(
-				new ParsingValidationError(
-					ErrorLevel.ERROR,
-					'Declaration Validator',
-					`Encountered invalid identifier. Expected token to be an input field type but received '${inputFieldType?.value}'.`,
-				),
-			);
-		}
+		this.errorCollection.add(
+			new ParsingValidationError(
+				ErrorLevel.ERROR,
+				'Declaration Validator',
+				`Encountered invalid identifier. Expected token to be an input field type but received '${inputFieldType?.value}'.`,
+				this.unvalidatedDeclaration.fullDeclaration,
+				inputFieldType?.position,
+			),
+		);
 
 		return InputFieldType.INVALID;
 	}
@@ -79,25 +69,15 @@ export class InputFieldDeclarationValidator {
 			declaration.inputFieldType === InputFieldType.TEXT_AREA_DEPRECATED ||
 			declaration.inputFieldType === InputFieldType.MULTI_SELECT_DEPRECATED
 		) {
-			if (this.unvalidatedDeclaration.inputFieldType?.position) {
-				this.errorCollection.add(
-					new ParsingValidationError(
-						ErrorLevel.WARNING,
-						'Declaration Validator',
-						`'${declaration.inputFieldType}' is deprecated, as it has been renamed to be in camel case ('input_field_type' => 'inputFieldType').`,
-						this.unvalidatedDeclaration.fullDeclaration,
-						this.unvalidatedDeclaration.inputFieldType.position,
-					),
-				);
-			} else {
-				this.errorCollection.add(
-					new ParsingValidationError(
-						ErrorLevel.WARNING,
-						'Declaration Validator',
-						`'${declaration.inputFieldType}' is deprecated, as it has been renamed to be in camel case ('input_field_type' => 'inputFieldType').`,
-					),
-				);
-			}
+			this.errorCollection.add(
+				new ParsingValidationError(
+					ErrorLevel.WARNING,
+					'Declaration Validator',
+					`'${declaration.inputFieldType}' is deprecated, as it has been renamed to be in camel case ('input_field_type' => 'inputFieldType').`,
+					this.unvalidatedDeclaration.fullDeclaration,
+					this.unvalidatedDeclaration.inputFieldType?.position,
+				),
+			);
 		}
 	}
 
@@ -125,29 +105,17 @@ export class InputFieldDeclarationValidator {
 			const inputFieldArgument: AbstractInputFieldArgument = InputFieldArgumentFactory.createInputFieldArgument(argumentType);
 
 			if (!inputFieldArgument.isAllowed(inputFieldType)) {
-				if (argument.name.position) {
-					this.errorCollection.add(
-						new ParsingValidationError(
-							ErrorLevel.WARNING,
-							'Declaration Validator',
-							`Failed to parse input field arguments. Argument "${
-								argument.name.value
-							}" is only applicable to "${inputFieldArgument.getAllowedFieldsAsString()}" input fields.`,
-							this.unvalidatedDeclaration.fullDeclaration,
-							argument.name.position,
-						),
-					);
-				} else {
-					this.errorCollection.add(
-						new ParsingValidationError(
-							ErrorLevel.WARNING,
-							'Declaration Validator',
-							`Failed to parse input field arguments. Argument "${
-								argument.name.value
-							}" is only applicable to "${inputFieldArgument.getAllowedFieldsAsString()}" input fields.`,
-						),
-					);
-				}
+				this.errorCollection.add(
+					new ParsingValidationError(
+						ErrorLevel.WARNING,
+						'Declaration Validator',
+						`Failed to parse input field arguments. Argument "${
+							argument.name.value
+						}" is only applicable to "${inputFieldArgument.getAllowedFieldsAsString()}" input fields.`,
+						this.unvalidatedDeclaration.fullDeclaration,
+						argument.name.position,
+					),
+				);
 
 				continue;
 			}
@@ -179,25 +147,15 @@ export class InputFieldDeclarationValidator {
 			}
 		}
 
-		if (argumentType.position) {
-			this.errorCollection.add(
-				new ParsingValidationError(
-					ErrorLevel.WARNING,
-					'Declaration Validator',
-					`Encountered invalid identifier. Expected identifier to be an input field argument type but received '${argumentType.value}'.`,
-					this.unvalidatedDeclaration.fullDeclaration,
-					argumentType.position,
-				),
-			);
-		} else {
-			this.errorCollection.add(
-				new ParsingValidationError(
-					ErrorLevel.WARNING,
-					'Declaration Validator',
-					`Encountered invalid identifier. Expected identifier to be an input field argument type but received '${argumentType.value}'.`,
-				),
-			);
-		}
+		this.errorCollection.add(
+			new ParsingValidationError(
+				ErrorLevel.WARNING,
+				'Declaration Validator',
+				`Encountered invalid identifier. Expected identifier to be an input field argument type but received '${argumentType.value}'.`,
+				this.unvalidatedDeclaration.fullDeclaration,
+				argumentType.position,
+			),
+		);
 
 		return InputFieldArgumentType.INVALID;
 	}

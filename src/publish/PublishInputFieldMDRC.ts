@@ -36,13 +36,19 @@ export class PublishInputFieldMDRC extends MarkdownRenderChild {
 
 	getValue(): unknown {
 		if (!this.declaration.bindTarget) {
-			this.errorCollection.add(new MetaBindBindTargetError(ErrorLevel.WARNING, 'populated with default data', 'input field not bound'));
+			this.errorCollection.add(
+				new MetaBindBindTargetError({ errorLevel: ErrorLevel.WARNING, effect: 'populated with default data', cause: 'input field not bound' }),
+			);
 			return getPublishDefaultValue(this.declaration);
 		}
 
 		if (this.declaration.bindTarget.filePath !== undefined && this.declaration.bindTarget.filePath !== this.filePath) {
 			this.errorCollection.add(
-				new MetaBindBindTargetError(ErrorLevel.WARNING, 'populated with default data', 'can not load metadata of another file in obsidian publish'),
+				new MetaBindBindTargetError({
+					errorLevel: ErrorLevel.WARNING,
+					effect: 'populated with default data',
+					cause: 'can not load metadata of another file in obsidian publish',
+				}),
 			);
 			return getPublishDefaultValue(this.declaration);
 		}
@@ -50,7 +56,9 @@ export class PublishInputFieldMDRC extends MarkdownRenderChild {
 		const value: unknown = traverseObjectByPath(this.declaration.bindTarget.metadataPath, this.metadata);
 
 		if (value === undefined) {
-			this.errorCollection.add(new MetaBindBindTargetError(ErrorLevel.WARNING, 'populated with default data', 'value in metadata is undefined'));
+			this.errorCollection.add(
+				new MetaBindBindTargetError({ errorLevel: ErrorLevel.WARNING, effect: 'populated with default data', cause: 'value in metadata is undefined' }),
+			);
 			return getPublishDefaultValue(this.declaration);
 		}
 

@@ -26,7 +26,7 @@
 	{/if}
 	<div class="mb-image-suggest-footer">
 		<span class="mb-image-suggest-footer-text">{value || 'no image selected'}</span>
-		<button class="btn btn-active" on:click={openSuggester} on:keydown={openSuggesterOnKey}> Change Image </button>
+		<button class="btn btn-active" on:click={openSuggester} on:keydown={openSuggesterOnKey}> Change Image</button>
 	</div>
 </div>
 

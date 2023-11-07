@@ -85,7 +85,7 @@ export class ErrorCollection {
 		return this.otherError ? errors.concat([this.otherError]) : errors;
 	}
 
-	getWarnings(): (MetaBindError | Error)[] {
+	getWarnings(): MetaBindError[] {
 		return this.errors.filter(x => x.errorLevel === ErrorLevel.WARNING);
 	}
 }

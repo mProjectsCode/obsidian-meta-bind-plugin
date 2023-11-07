@@ -32,6 +32,10 @@ export class ViewFieldArgumentFactory {
 			}
 		}
 
-		throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not crate view field argument', `unknown argument '${argumentIdentifier}'`);
+		throw new MetaBindParsingError({
+			errorLevel: ErrorLevel.WARNING,
+			effect: 'can not crate view field argument',
+			cause: `unknown argument '${argumentIdentifier}'`,
+		});
 	}
 }

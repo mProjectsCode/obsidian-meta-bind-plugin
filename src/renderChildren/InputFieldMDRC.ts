@@ -104,7 +104,11 @@ export class InputFieldMDRC extends AbstractMDRC {
 
 	getArguments<T extends InputFieldArgumentType>(name: T): InputFieldArgumentMapType<T>[] {
 		if (this.inputFieldDeclaration.errorCollection.hasErrors()) {
-			throw new MetaBindInternalError(ErrorLevel.ERROR, 'can not retrieve arguments', 'inputFieldDeclaration has errors');
+			throw new MetaBindInternalError({
+				errorLevel: ErrorLevel.CRITICAL,
+				effect: 'can not retrieve arguments',
+				cause: 'inputFieldDeclaration has errors',
+			});
 		}
 
 		return this.inputFieldDeclaration.argumentContainer.getAll(name);
@@ -137,7 +141,13 @@ export class InputFieldMDRC extends AbstractMDRC {
 		this.containerEl.empty();
 
 		if (!this.errorCollection.hasErrors() && !this.inputField) {
-			this.errorCollection.add(new MetaBindInternalError(ErrorLevel.CRITICAL, "can't render input field", 'input field is undefined'));
+			this.errorCollection.add(
+				new MetaBindInternalError({
+					errorLevel: ErrorLevel.CRITICAL,
+					effect: "can't render input field",
+					cause: 'input field is undefined',
+				}),
+			);
 		}
 
 		// if there is an error, render error then quit

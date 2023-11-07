@@ -20,11 +20,11 @@ export class ProgressBarIPF extends AbstractInputField<number, number> {
 		this.stepSize = this.renderChild.getArgument(InputFieldArgumentType.STEP_SIZE)?.value ?? 1;
 
 		if (this.minValue >= this.maxValue) {
-			throw new MetaBindArgumentError(
-				ErrorLevel.ERROR,
-				'can not create progress bar input field',
-				`minValue (${this.maxValue}) must be less than maxValue (${this.maxValue})`,
-			);
+			throw new MetaBindArgumentError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'can not create progress bar input field',
+				cause: `minValue (${this.maxValue}) must be less than maxValue (${this.maxValue})`,
+			});
 		}
 	}
 

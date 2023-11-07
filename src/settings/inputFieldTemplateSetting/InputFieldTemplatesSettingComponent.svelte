@@ -41,9 +41,9 @@
 	<table>
 		<thead>
 			<tr>
-				<th> Template Name </th>
-				<th> Template Declaration </th>
-				<th> </th>
+				<th> Template Name</th>
+				<th> Template Declaration</th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>

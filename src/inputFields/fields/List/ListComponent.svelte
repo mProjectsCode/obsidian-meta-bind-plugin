@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { OptionInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
-	import { Button, TextInput } from 'obsidian-svelte';
+	import { Button } from 'obsidian-svelte';
 	import Icon from '../../../utils/Icon.svelte';
 	import { MBLiteral } from '../../../utils/Literal';
 

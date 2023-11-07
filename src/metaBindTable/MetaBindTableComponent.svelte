@@ -31,7 +31,7 @@
 						<MetaBindTableCellComponent table={table} bind:cell={tableCell}></MetaBindTableCellComponent>
 					{/each}
 				{:else}
-					<td class="meta-bind-error" colspan={tableHead.length}> invalid data </td>
+					<td class="meta-bind-error" colspan={tableHead.length}> invalid data</td>
 				{/if}
 
 				<td>

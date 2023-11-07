@@ -5,17 +5,27 @@ export enum ErrorLevel {
 }
 
 export enum ErrorType {
-	INTERNAL = 'MB_INTERNAL_ERROR',
-	PARSING = 'MB_PARSING_ERROR',
-	BIND_TARGET = 'MB_BIND_TARGET_ERROR',
-	VALUE = 'MB_VALUE_ERROR',
-	ARGUMENT = 'MB_ARGUMENT_ERROR',
-	JS = 'MB_JS_ERROR',
-	EXPRESSION = 'MB_EXPRESSION_ERROR',
-	PUBLISH = 'MB_PUBLISH_ERROR',
-	VALIDATION = 'MB_VALIDATION_ERROR',
+	INTERNAL = 'MB_INTERNAL',
+	PARSING = 'MB_PARSING',
+	BIND_TARGET = 'MB_BIND_TARGET',
+	VALUE = 'MB_VALUE',
+	ARGUMENT = 'MB_ARGUMENT',
+	JS = 'MB_JS',
+	EXPRESSION = 'MB_EXPRESSION',
+	PUBLISH = 'MB_PUBLISH',
+	VALIDATION = 'MB_VALIDATION',
 
 	OTHER = 'OTHER',
+}
+
+interface MetaBindErrorParams {
+	errorLevel: ErrorLevel;
+	effect: string;
+	cause: string | Error;
+	tip?: string;
+	docs?: string[];
+	context?: Record<string, unknown>;
+	positionContext?: string;
 }
 
 export abstract class MetaBindError extends Error {
@@ -24,15 +34,21 @@ export abstract class MetaBindError extends Error {
 	errorLevel: ErrorLevel;
 	effect: string;
 	cause: string | Error;
-	context: Record<string, unknown>;
+	tip?: string;
+	docs?: string[];
+	context?: Record<string, unknown>;
+	positionContext?: string;
 
-	constructor(errorLevel: ErrorLevel, effect: string, cause: string | Error, context: Record<string, unknown> = {}) {
+	constructor(params: MetaBindErrorParams) {
 		super('');
 
-		this.errorLevel = errorLevel;
-		this.effect = effect;
-		this.cause = cause;
-		this.context = context;
+		this.errorLevel = params.errorLevel;
+		this.effect = params.effect;
+		this.cause = params.cause;
+		this.tip = params.tip;
+		this.docs = params.docs;
+		this.context = params.context;
+		this.positionContext = params.positionContext;
 
 		this.updateMessage();
 	}

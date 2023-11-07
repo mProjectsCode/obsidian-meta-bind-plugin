@@ -32,39 +32,23 @@ export class BindTargetParser {
 			const filePaths: string[] = this.plugin.getFilePathsByName(filePath);
 
 			if (filePaths.length === 0) {
-				if (unvalidatedBindTargetDeclaration.file?.position) {
-					throw new ParsingValidationError(
-						ErrorLevel.CRITICAL,
-						'Bind Target Validator',
-						`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file.value}' not found.`,
-						fullDeclaration,
-						unvalidatedBindTargetDeclaration.file.position,
-					);
-				} else {
-					throw new ParsingValidationError(
-						ErrorLevel.CRITICAL,
-						'Bind Target Validator',
-						`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file?.value}' not found.`,
-					);
-				}
+				throw new ParsingValidationError(
+					ErrorLevel.ERROR,
+					'Bind Target Validator',
+					`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file?.value}' not found.`,
+					fullDeclaration,
+					unvalidatedBindTargetDeclaration.file?.position,
+				);
 			} else if (filePaths.length === 1) {
 				bindTargetDeclaration.filePath = filePaths[0];
 			} else {
-				if (unvalidatedBindTargetDeclaration.file?.position) {
-					throw new ParsingValidationError(
-						ErrorLevel.CRITICAL,
-						'Bind Target Validator',
-						`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file.value}' resolves to multiple files, please also specify the file path.`,
-						fullDeclaration,
-						unvalidatedBindTargetDeclaration.file.position,
-					);
-				} else {
-					throw new ParsingValidationError(
-						ErrorLevel.CRITICAL,
-						'Bind Target Validator',
-						`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file?.value}' resolves to multiple files, please also specify the file path.`,
-					);
-				}
+				throw new ParsingValidationError(
+					ErrorLevel.ERROR,
+					'Bind Target Validator',
+					`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file?.value}' resolves to multiple files, please also specify the file path.`,
+					fullDeclaration,
+					unvalidatedBindTargetDeclaration.file?.position,
+				);
 			}
 		}
 
@@ -78,7 +62,7 @@ export class BindTargetParser {
 	public resolveScope(bindTarget: BindTargetDeclaration, scope?: BindTargetScope | undefined): BindTargetDeclaration {
 		if (bindTarget.boundToLocalScope) {
 			if (scope === undefined) {
-				throw new ParsingValidationError(ErrorLevel.CRITICAL, 'Bind Target Scope Validator', 'Failed to resolve bind target scope, no scope provided');
+				throw new ParsingValidationError(ErrorLevel.ERROR, 'Bind Target Scope Validator', 'Failed to resolve bind target scope, no scope provided');
 			} else {
 				bindTarget.filePath = scope.scope.filePath;
 				bindTarget.metadataPath = scope.scope.metadataPath.concat(bindTarget.metadataPath);

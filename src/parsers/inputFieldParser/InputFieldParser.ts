@@ -132,25 +132,15 @@ export class InputFieldDeclarationParser implements ITemplateSupplier<Unvalidate
 		const template = this.getTemplate(declaration.templateName.value);
 
 		if (template === undefined) {
-			if (declaration.templateName.position) {
-				declaration.errorCollection.add(
-					new ParsingValidationError(
-						ErrorLevel.WARNING,
-						'Input Field Parser',
-						`Invalid template name. Could not find template with name '${declaration.templateName.value}'`,
-						declaration.fullDeclaration,
-						declaration.templateName.position,
-					),
-				);
-			} else {
-				declaration.errorCollection.add(
-					new ParsingValidationError(
-						ErrorLevel.WARNING,
-						'Input Field Parser',
-						`Invalid template name. Could not find template with name '${declaration.templateName.value}'`,
-					),
-				);
-			}
+			declaration.errorCollection.add(
+				new ParsingValidationError(
+					ErrorLevel.WARNING,
+					'Input Field Parser',
+					`Invalid template name. Could not find template with name '${declaration.templateName.value}'`,
+					declaration.fullDeclaration,
+					declaration.templateName.position,
+				),
+			);
 
 			return declaration;
 		}

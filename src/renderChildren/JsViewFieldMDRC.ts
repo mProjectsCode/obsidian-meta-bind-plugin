@@ -79,10 +79,18 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 
 	async evaluateExpression(): Promise<string> {
 		if (!this.expression) {
-			throw new MetaBindJsError(ErrorLevel.CRITICAL, "Can't evaluate expression.", 'Expression is undefined.');
+			throw new MetaBindJsError({
+				errorLevel: ErrorLevel.CRITICAL,
+				effect: "Can't evaluate expression.",
+				cause: 'Expression is undefined.',
+			});
 		}
 		if (!this.plugin.settings.enableJs) {
-			throw new MetaBindJsError(ErrorLevel.CRITICAL, "Can't evaluate expression.", 'JS expressions are disabled in the plugin settings.');
+			throw new MetaBindJsError({
+				errorLevel: ErrorLevel.CRITICAL,
+				effect: "Can't evaluate expression.",
+				cause: 'JS expressions are disabled in the plugin settings.',
+			});
 		}
 
 		const context = this.buildContext();
@@ -91,9 +99,14 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 			return retValue?.toString() ?? 'null';
 		} catch (e) {
 			if (e instanceof Error) {
-				throw new MetaBindExpressionError(ErrorLevel.ERROR, `failed to evaluate js expression`, e, {
-					declaration: this.viewFieldDeclaration.code,
-					context: context,
+				throw new MetaBindExpressionError({
+					errorLevel: ErrorLevel.ERROR,
+					effect: `failed to evaluate js expression`,
+					cause: e,
+					context: {
+						declaration: this.viewFieldDeclaration.code,
+						context: context,
+					},
 				});
 			} else {
 				throw new Error('failed to evaluate js expression because of: unexpected thrown value');

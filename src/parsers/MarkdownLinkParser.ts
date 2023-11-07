@@ -10,7 +10,7 @@ export interface MarkdownLink {
 
 export function parseMdLink(link: string): MarkdownLink {
 	if (!link) {
-		throw new MetaBindParsingError(ErrorLevel.ERROR, 'failed to parse md link', 'invalid link, link is empty');
+		throw new MetaBindParsingError({ errorLevel: ErrorLevel.ERROR, effect: 'failed to parse md link', cause: 'invalid link, link is empty' });
 	}
 
 	const mdLink: MarkdownLink = {} as MarkdownLink;
@@ -18,18 +18,22 @@ export function parseMdLink(link: string): MarkdownLink {
 	const linkContent = ParserUtils.getInBetween(link, new EnclosingPair('[[', ']]'));
 
 	if (!linkContent) {
-		throw new MetaBindParsingError(ErrorLevel.ERROR, 'failed to parse md link', 'invalid link, link is empty');
+		throw new MetaBindParsingError({ errorLevel: ErrorLevel.ERROR, effect: 'failed to parse md link', cause: 'invalid link, link is empty' });
 	}
 
 	if (typeof linkContent !== 'string') {
-		throw new MetaBindParsingError(ErrorLevel.ERROR, 'failed to parse md link', 'invalid link, link format is invalid');
+		throw new MetaBindParsingError({ errorLevel: ErrorLevel.ERROR, effect: 'failed to parse md link', cause: 'invalid link, link format is invalid' });
 	}
 
 	const linkParts = linkContent.split('|');
 	if (linkParts.length === 2) {
 		mdLink.alias = linkParts[1];
 	} else if (linkParts.length > 2) {
-		throw new MetaBindParsingError(ErrorLevel.ERROR, 'failed to parse md link', "invalid link, link may only contain a maximum of one '|'");
+		throw new MetaBindParsingError({
+			errorLevel: ErrorLevel.ERROR,
+			effect: 'failed to parse md link',
+			cause: "invalid link, link may only contain a maximum of one '|'",
+		});
 	}
 
 	const targetParts = linkParts[0].split('#');
@@ -39,7 +43,11 @@ export function parseMdLink(link: string): MarkdownLink {
 		mdLink.target = targetParts[0];
 		mdLink.block = targetParts[1];
 	} else {
-		throw new MetaBindParsingError(ErrorLevel.ERROR, 'failed to parse md link', "invalid link, link target may only contain a maximum of one '#'");
+		throw new MetaBindParsingError({
+			errorLevel: ErrorLevel.ERROR,
+			effect: 'failed to parse md link',
+			cause: "invalid link, link target may only contain a maximum of one '#'",
+		});
 	}
 
 	return mdLink;

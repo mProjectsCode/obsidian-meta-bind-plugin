@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { OptionInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
-	import { Button, TextInput } from 'obsidian-svelte';
+	import { Button } from 'obsidian-svelte';
 	import Icon from '../../../utils/Icon.svelte';
 	import { isMdLink, parseMdLink } from '../../../parsers/MarkdownLinkParser';
 	import LinkComponent from '../../../utils/LinkComponent.svelte';

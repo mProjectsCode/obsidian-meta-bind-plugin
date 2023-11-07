@@ -72,7 +72,7 @@ export class MathVF extends AbstractViewField {
 
 	async computeValue(variables: ViewFieldVariable[]): Promise<string> {
 		if (!this.expression) {
-			throw new MetaBindExpressionError(ErrorLevel.ERROR, 'failed to evaluate expression', 'expression is undefined');
+			throw new MetaBindExpressionError({ errorLevel: ErrorLevel.ERROR, effect: 'failed to evaluate expression', cause: 'expression is undefined' });
 		}
 
 		const context = this.buildContext(variables);
@@ -80,9 +80,14 @@ export class MathVF extends AbstractViewField {
 			return this.expression.evaluate(context) as Promise<string>;
 		} catch (e) {
 			if (e instanceof Error) {
-				throw new MetaBindExpressionError(ErrorLevel.ERROR, `failed to evaluate expression`, e, {
-					expression: this.expressionStr,
-					context: context,
+				throw new MetaBindExpressionError({
+					errorLevel: ErrorLevel.ERROR,
+					effect: `failed to evaluate expression`,
+					cause: e,
+					context: {
+						expression: this.expressionStr,
+						context: context,
+					},
 				});
 			} else {
 				throw new Error('failed to evaluate js expression because of: unexpected thrown value');

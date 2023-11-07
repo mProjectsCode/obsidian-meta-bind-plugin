@@ -108,7 +108,11 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 
 	getArguments<T extends ViewFieldArgumentType>(name: T): ViewFieldArgumentMapType<T>[] {
 		if (this.viewFieldDeclaration.errorCollection.hasErrors()) {
-			throw new MetaBindInternalError(ErrorLevel.ERROR, 'can not retrieve arguments', 'inputFieldDeclaration has errors');
+			throw new MetaBindInternalError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'an not retrieve arguments',
+				cause: 'inputFieldDeclaration has errors',
+			});
 		}
 
 		return this.viewFieldDeclaration.argumentContainer.getAll(name);

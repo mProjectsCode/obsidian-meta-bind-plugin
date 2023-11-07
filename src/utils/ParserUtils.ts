@@ -8,7 +8,11 @@ export class EnclosingPair {
 
 	constructor(openingString: string, closingString?: string) {
 		if (isFalsy(openingString)) {
-			throw new MetaBindInternalError(ErrorLevel.ERROR, 'failed to create enclosing pair', 'opening string must not be empty');
+			throw new MetaBindInternalError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'failed to create enclosing pair',
+				cause: 'opening string must not be empty',
+			});
 		}
 
 		this.openingEqualsClosing = isFalsy(closingString) || openingString === closingString;
@@ -56,10 +60,10 @@ export class ParserUtils {
 	// TODO: rename stuff
 	static split(str: string, separator: string, ignore?: EnclosingPair): string[] {
 		if (!str) {
-			throw new MetaBindInternalError(ErrorLevel.ERROR, 'failed to split string', 'string must not be empty');
+			throw new MetaBindInternalError({ errorLevel: ErrorLevel.ERROR, effect: 'failed to split string', cause: 'string must not be empty' });
 		}
 		if (!separator) {
-			throw new MetaBindInternalError(ErrorLevel.ERROR, 'failed to split string', 'separator must not be empty');
+			throw new MetaBindInternalError({ errorLevel: ErrorLevel.ERROR, effect: 'failed to split string', cause: 'separator must not be empty' });
 		}
 
 		let subStr: string = '';
@@ -173,7 +177,7 @@ export class ParserUtils {
 
 	static removeInBetween(str: string, enclosingPair: EnclosingPair): string {
 		if (!str) {
-			throw new MetaBindInternalError(ErrorLevel.ERROR, 'failed remove in between in string', 'string must not be empty');
+			throw new MetaBindInternalError({ errorLevel: ErrorLevel.ERROR, effect: 'failed remove in between in string', cause: 'string must not be empty' });
 		}
 
 		let remainingOpeningStringCount = ParserUtils.numberOfOccurrences(str, enclosingPair.openingString);
@@ -249,7 +253,7 @@ export class ParserUtils {
 
 	static getInBetween(str: string, enclosingPair: EnclosingPair): string | string[] {
 		if (!str) {
-			throw new MetaBindInternalError(ErrorLevel.ERROR, 'failed to get in between in string', 'string must not be empty');
+			throw new MetaBindInternalError({ errorLevel: ErrorLevel.ERROR, effect: 'failed to get in between in string', cause: 'string must not be empty' });
 		}
 
 		let remainingOpeningStringCount = ParserUtils.numberOfOccurrences(str, enclosingPair.openingString);
@@ -364,16 +368,32 @@ export class ParserUtils {
 
 	static isStringAt(str: string, subStr: string, index: number): boolean {
 		if (index < 0) {
-			throw new MetaBindInternalError(ErrorLevel.ERROR, 'failed to check is string is at index', 'index must be greater than 0');
+			throw new MetaBindInternalError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'failed to check is string is at index',
+				cause: 'index must be greater than 0',
+			});
 		}
 		if (index >= str.length) {
-			throw new MetaBindInternalError(ErrorLevel.ERROR, 'failed to check is string is at index', 'index out of bounds of string');
+			throw new MetaBindInternalError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'failed to check is string is at index',
+				cause: 'index out of bounds of string',
+			});
 		}
 		if (!str) {
-			throw new MetaBindInternalError(ErrorLevel.ERROR, 'failed to check is string is at index', 'string must not be empty');
+			throw new MetaBindInternalError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'failed to check is string is at index',
+				cause: 'string must not be empty',
+			});
 		}
 		if (!subStr) {
-			throw new MetaBindInternalError(ErrorLevel.ERROR, 'failed to check is string is at index', 'sub string must not be empty');
+			throw new MetaBindInternalError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'failed to check is string is at index',
+				cause: 'sub string must not be empty',
+			});
 		}
 
 		for (let i = 0; i < subStr.length; i++) {
@@ -391,10 +411,14 @@ export class ParserUtils {
 
 	static numberOfOccurrences(str: string, subStr: string): number {
 		if (!str) {
-			throw new MetaBindInternalError(ErrorLevel.ERROR, 'failed count number of occurrences', 'string must not be empty');
+			throw new MetaBindInternalError({ errorLevel: ErrorLevel.ERROR, effect: 'failed count number of occurrences', cause: 'string must not be empty' });
 		}
 		if (!subStr) {
-			throw new MetaBindInternalError(ErrorLevel.ERROR, 'failed count number of occurrences', 'sub string must not be empty');
+			throw new MetaBindInternalError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'failed count number of occurrences',
+				cause: 'sub string must not be empty',
+			});
 		}
 
 		let occurrences = 0;

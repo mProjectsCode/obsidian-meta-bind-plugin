@@ -54,6 +54,10 @@ export class InputFieldArgumentFactory {
 			}
 		}
 
-		throw new MetaBindParsingError(ErrorLevel.ERROR, 'can not crate input field argument', `unknown argument '${argumentIdentifier}'`);
+		throw new MetaBindParsingError({
+			errorLevel: ErrorLevel.WARNING,
+			effect: 'can not crate input field argument',
+			cause: `unknown argument '${argumentIdentifier}'`,
+		});
 	}
 }

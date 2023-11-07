@@ -24,12 +24,20 @@ export class ObsidianMetadataAdapter implements IMetadataAdapter {
 
 	public getMetadataAndExtraCache(subscription: IMetadataSubscription): { extraCache: { file: TFile }; metadata: Metadata } {
 		if (subscription.bindTarget === undefined) {
-			throw new MetaBindBindTargetError(ErrorLevel.CRITICAL, 'can not get metadata and extra cache', 'subscription bind target undefined');
+			throw new MetaBindBindTargetError({
+				errorLevel: ErrorLevel.CRITICAL,
+				effect: 'can not get metadata and extra cache',
+				cause: 'subscription bind target undefined',
+			});
 		}
 
 		const file = this.plugin.app.vault.getAbstractFileByPath(subscription.bindTarget.filePath);
 		if (!(file instanceof TFile)) {
-			throw new MetaBindBindTargetError(ErrorLevel.CRITICAL, 'can not get metadata and extra cache', 'bind target file path does not point to a tFile');
+			throw new MetaBindBindTargetError({
+				errorLevel: ErrorLevel.CRITICAL,
+				effect: 'can not get metadata and extra cache',
+				cause: 'bind target file path does not point to a tFile',
+			});
 		}
 
 		const frontmatter = this.plugin.app.metadataCache.getFileCache(file)?.frontmatter;

@@ -57,25 +57,15 @@ export class ViewFieldDeclarationValidator {
 			}
 		}
 
-		if (viewFieldType?.position) {
-			this.errorCollection.add(
-				new ParsingValidationError(
-					ErrorLevel.ERROR,
-					'Declaration Validator',
-					`Encountered invalid identifier. Expected token to be a view field type but received '${viewFieldType.value}'.`,
-					this.unvalidatedDeclaration.fullDeclaration,
-					viewFieldType.position,
-				),
-			);
-		} else {
-			this.errorCollection.add(
-				new ParsingValidationError(
-					ErrorLevel.ERROR,
-					'Declaration Validator',
-					`Encountered invalid identifier. Expected token to be a view field type but received '${viewFieldType?.value}'.`,
-				),
-			);
-		}
+		this.errorCollection.add(
+			new ParsingValidationError(
+				ErrorLevel.ERROR,
+				'Declaration Validator',
+				`Encountered invalid identifier. Expected token to be a view field type but received '${viewFieldType.value}'.`,
+				this.unvalidatedDeclaration.fullDeclaration,
+				viewFieldType.position,
+			),
+		);
 
 		return ViewFieldType.INVALID;
 	}
@@ -106,29 +96,17 @@ export class ViewFieldDeclarationValidator {
 			const viewFieldArgument: AbstractViewFieldArgument = ViewFieldArgumentFactory.createViewFieldArgument(argumentType);
 
 			if (!viewFieldArgument.isAllowed(viewFieldType)) {
-				if (argument.name.position) {
-					this.errorCollection.add(
-						new ParsingValidationError(
-							ErrorLevel.WARNING,
-							'Declaration Validator',
-							`Failed to parse view field arguments. Argument "${
-								argument.name.value
-							}" is only applicable to "${viewFieldArgument.getAllowedFieldsAsString()}" view fields.`,
-							this.unvalidatedDeclaration.fullDeclaration,
-							argument.name.position,
-						),
-					);
-				} else {
-					this.errorCollection.add(
-						new ParsingValidationError(
-							ErrorLevel.WARNING,
-							'Declaration Validator',
-							`Failed to parse view field arguments. Argument "${
-								argument.name.value
-							}" is only applicable to "${viewFieldArgument.getAllowedFieldsAsString()}" view fields.`,
-						),
-					);
-				}
+				this.errorCollection.add(
+					new ParsingValidationError(
+						ErrorLevel.WARNING,
+						'Declaration Validator',
+						`Failed to parse view field arguments. Argument "${
+							argument.name.value
+						}" is only applicable to "${viewFieldArgument.getAllowedFieldsAsString()}" view fields.`,
+						this.unvalidatedDeclaration.fullDeclaration,
+						argument.name.position,
+					),
+				);
 
 				continue;
 			}
@@ -160,25 +138,15 @@ export class ViewFieldDeclarationValidator {
 			}
 		}
 
-		if (argumentType.position) {
-			this.errorCollection.add(
-				new ParsingValidationError(
-					ErrorLevel.WARNING,
-					'Declaration Validator',
-					`Encountered invalid identifier. Expected identifier to be a view field argument type but received '${argumentType.value}'.`,
-					this.unvalidatedDeclaration.fullDeclaration,
-					argumentType.position,
-				),
-			);
-		} else {
-			this.errorCollection.add(
-				new ParsingValidationError(
-					ErrorLevel.WARNING,
-					'Declaration Validator',
-					`Encountered invalid identifier. Expected identifier to be a view field argument type but received '${argumentType.value}'.`,
-				),
-			);
-		}
+		this.errorCollection.add(
+			new ParsingValidationError(
+				ErrorLevel.WARNING,
+				'Declaration Validator',
+				`Encountered invalid identifier. Expected identifier to be a view field argument type but received '${argumentType.value}'.`,
+				this.unvalidatedDeclaration.fullDeclaration,
+				argumentType.position,
+			),
+		);
 
 		return ViewFieldArgumentType.INVALID;
 	}

@@ -21,11 +21,11 @@ export function getImageSuggesterOptions(
 		if (folderPathString.startsWith('"') && folderPathString.endsWith('"')) {
 			folderPathString = folderPathString.substring(1, folderPathString.length - 1);
 		} else {
-			const error = new MetaBindArgumentError(
-				ErrorLevel.ERROR,
-				'failed to get suggest options',
-				`expected suggest option query for image suggester to start and end with double quotation marks`,
-			);
+			const error = new MetaBindArgumentError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'failed to get suggest options',
+				cause: `expected suggest option query for image suggester to start and end with double quotation marks`,
+			});
 			new Notice(`meta-bind | ${error.message}`);
 			console.warn(error);
 			continue;
@@ -33,22 +33,22 @@ export function getImageSuggesterOptions(
 
 		const folder = plugin.app.vault.getAbstractFileByPath(folderPathString);
 		if (folder == null) {
-			const error = new MetaBindArgumentError(
-				ErrorLevel.ERROR,
-				'failed to get suggest options',
-				`expected suggest option query ${folderPathString} for image suggester to exist`,
-			);
+			const error = new MetaBindArgumentError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'failed to get suggest options',
+				cause: `expected suggest option query ${folderPathString} for image suggester to exist`,
+			});
 			new Notice(`meta-bind | ${error.message}`);
 			console.warn(error);
 			continue;
 		}
 
 		if (!(folder instanceof TFolder)) {
-			const error = new MetaBindArgumentError(
-				ErrorLevel.ERROR,
-				'failed to get suggest options',
-				`expected suggest option query ${optionQueryArg.value} for image suggester to be a folder`,
-			);
+			const error = new MetaBindArgumentError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'failed to get suggest options',
+				cause: `expected suggest option query ${optionQueryArg.value} for image suggester to be a folder`,
+			});
 			new Notice(`meta-bind | ${error.message}`);
 			console.warn(error);
 			continue;
@@ -65,11 +65,11 @@ export function getImageSuggesterOptions(
 		const imagePathString = stringifyLiteral(optionArg.value);
 
 		if (!imagePathString) {
-			const error = new MetaBindArgumentError(
-				ErrorLevel.ERROR,
-				'failed to get suggest options',
-				`expected suggest option ${optionArg.value} to be truthy`,
-			);
+			const error = new MetaBindArgumentError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'failed to get suggest options',
+				cause: `expected suggest option ${optionArg.value} to be truthy`,
+			});
 			new Notice(`meta-bind | ${error.message}`);
 			console.warn(error);
 			continue;
@@ -78,33 +78,33 @@ export function getImageSuggesterOptions(
 		const imageFile = plugin.app.vault.getAbstractFileByPath(imagePathString);
 
 		if (!imageFile) {
-			const error = new MetaBindArgumentError(
-				ErrorLevel.ERROR,
-				'failed to get suggest options',
-				`expected suggest option ${optionArg.value} for image suggester to exist`,
-			);
+			const error = new MetaBindArgumentError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'failed to get suggest options',
+				cause: `expected suggest option ${optionArg.value} for image suggester to exist`,
+			});
 			new Notice(`meta-bind | ${error.message}`);
 			console.warn(error);
 			continue;
 		}
 
 		if (!(imageFile instanceof TFile)) {
-			const error = new MetaBindArgumentError(
-				ErrorLevel.ERROR,
-				'failed to get suggest options',
-				`expected suggest option ${optionArg.value} for image suggester to be a file`,
-			);
+			const error = new MetaBindArgumentError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'failed to get suggest options',
+				cause: `expected suggest option ${optionArg.value} for image suggester to be a file`,
+			});
 			new Notice(`meta-bind | ${error.message}`);
 			console.warn(error);
 			continue;
 		}
 
 		if (!isImageExtension(imageFile.extension)) {
-			const error = new MetaBindArgumentError(
-				ErrorLevel.ERROR,
-				'failed to get suggest options',
-				`expected suggest option ${optionArg.value} for image suggester to be an image file`,
-			);
+			const error = new MetaBindArgumentError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'failed to get suggest options',
+				cause: `expected suggest option ${optionArg.value} for image suggester to be an image file`,
+			});
 			new Notice(`meta-bind | ${error.message}`);
 			console.warn(error);
 			continue;

@@ -19,6 +19,7 @@ import { ListSuggesterIPF } from './fields/ListSuggester/ListSuggesterIPF';
 import { DateIPF } from './fields/Date/DateIPF';
 import { TimeIPF } from './fields/Time/TimeIPF';
 import { type InputFieldConfig, InputFieldConfigs, InputFieldType } from '../parsers/GeneralConfigs';
+import { DocsHelper } from '../utils/DocsHelper';
 
 export type NewInputField =
 	| ToggleIPF
@@ -105,10 +106,20 @@ export class InputFieldFactory {
 
 		const inputFieldConfig: InputFieldConfig = InputFieldConfigs[type];
 		if (renderChildType === RenderChildType.BLOCK && !inputFieldConfig.allowInBlock) {
-			throw new MetaBindParsingError(ErrorLevel.CRITICAL, 'can not create input field', `'${type}' is not allowed as code block`);
+			throw new MetaBindParsingError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'can not create input field',
+				cause: `input fields of type '${type}' are not allowed inside of code blocks`,
+				docs: [DocsHelper.linkToInputField(type)],
+			});
 		}
 		if (renderChildType === RenderChildType.INLINE && !inputFieldConfig.allowInline) {
-			throw new MetaBindParsingError(ErrorLevel.CRITICAL, 'can not create input field', `'${type}' is not allowed as inline code block`);
+			throw new MetaBindParsingError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'can not create input field',
+				cause: `input fields of type '${type}' are not allowed inside of inline code blocks`,
+				docs: [DocsHelper.linkToInputField(type)],
+			});
 		}
 	}
 }

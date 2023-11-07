@@ -201,11 +201,11 @@ export class MetadataManager {
 		}
 
 		if (hasUpdateOverlap(firstDependency.bindTarget, lastDependency.bindTarget)) {
-			throw new MetaBindBindTargetError(
-				ErrorLevel.ERROR,
-				'bind target dependency loop detected',
-				`the loop is as follows: ${dependencyPath.map(x => `"${bindTargetToString(x.bindTarget)}"`).join(' -> ')}`,
-			);
+			throw new MetaBindBindTargetError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'bind target dependency loop detected',
+				cause: `the loop is as follows: ${dependencyPath.map(x => `"${bindTargetToString(x.bindTarget)}"`).join(' -> ')}`,
+			});
 		}
 
 		// console.warn('next step dependencies', this.getAllSubscriptionsToDependencies(lastDependency));
@@ -292,7 +292,11 @@ export class MetadataManager {
 	 */
 	createCacheForFile(filePath: string, cache: MetadataManagerCacheItem): void {
 		if (this.cache.has(filePath)) {
-			throw new MetaBindInternalError(ErrorLevel.CRITICAL, 'can not create metadata file cache', 'cache for file already exists');
+			throw new MetaBindInternalError({
+				errorLevel: ErrorLevel.CRITICAL,
+				effect: 'can not create metadata file cache',
+				cause: 'cache for file already exists',
+			});
 		}
 		this.cache.set(filePath, cache);
 	}

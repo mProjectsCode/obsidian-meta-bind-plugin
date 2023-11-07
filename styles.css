@@ -222,6 +222,14 @@ div.mb-view-wrapper {
 	display: flex;
 }
 
+.mb-card > :first-child {
+	margin-top: 0;
+}
+
+.mb-card > :last-child {
+	margin-bottom: 0;
+}
+
 .mb-card > code {
 	display: block;
 }
@@ -232,6 +240,10 @@ div.mb-view-wrapper {
 
 .mb-card > h3 {
 	margin-top: 0;
+}
+
+.mb-card.mb-card-full-width {
+	width: 100%;
 }
 
 /* Error */
@@ -300,6 +312,14 @@ code.mb-error {
 
 .mb-error-collection-modal {
 	width: 80%;
+}
+
+.mb-error-text {
+	color: var(--color-red) !important;
+}
+
+.mb-warning-text {
+	color: var(--color-orange) !important;
 }
 
 /* --- Misc --- */

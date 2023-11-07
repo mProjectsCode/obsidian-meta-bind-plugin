@@ -48,7 +48,11 @@ export class Cm6_Util {
 			return 'VIEW';
 		}
 
-		throw new MetaBindInternalError(ErrorLevel.ERROR, 'failed to get declaration prefix', `Invalid widget type "${widgetType}"`);
+		throw new MetaBindInternalError({
+			errorLevel: ErrorLevel.CRITICAL,
+			effect: 'failed to get declaration prefix',
+			cause: `Invalid widget type "${widgetType}"`,
+		});
 	}
 
 	static isDeclaration(widgetType: MBWidgetType, str: string): boolean {

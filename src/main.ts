@@ -184,7 +184,11 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 					templateDeclarationParts = templateDeclarationParts.map(x => x.trim());
 
 					if (templateDeclarationParts.length === 1) {
-						throw new MetaBindParsingError(ErrorLevel.CRITICAL, 'failed to parse template declaration', `template must include one "->"`);
+						throw new MetaBindParsingError({
+							errorLevel: ErrorLevel.CRITICAL,
+							effect: 'failed to parse template declaration',
+							cause: `template must include one "->"`,
+						});
 					} else if (templateDeclarationParts.length === 2) {
 						newTemplates.push({
 							name: templateDeclarationParts[0],

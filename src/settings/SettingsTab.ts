@@ -20,6 +20,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName('Quick access')
 			.addButton(cb => {
+				cb.setCta();
 				cb.setButtonText('Docs');
 				cb.onClick(() => {
 					window.open('https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/', '_blank');

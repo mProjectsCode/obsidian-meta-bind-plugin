@@ -1,4 +1,4 @@
-import { ErrorLevel, MetaBindParsingError } from '../utils/errors/MetaBindErrors';
+import { ErrorLevel, MetaBindArgumentError } from '../utils/errors/MetaBindErrors';
 import { type FieldArgumentConfig, InputFieldArgumentType } from '../parsers/GeneralConfigs';
 import { type AbstractFieldArgument } from './AbstractFieldArgument';
 
@@ -24,11 +24,12 @@ export abstract class AbstractFieldArgumentContainer<
 
 			map[argumentConfig.type] += 1;
 			if (map[argumentConfig.type] > 1 && !argumentConfig.allowMultiple) {
-				throw new MetaBindParsingError(
-					ErrorLevel.CRITICAL,
-					'failed to validate argument container',
-					`argument '${argumentConfig.type}' does not allow duplicates`,
-				);
+				throw new MetaBindArgumentError({
+					errorLevel: ErrorLevel.ERROR,
+					effect: 'failed to validate argument container',
+					cause: `argument '${argumentConfig.type}' does not allow duplicates`,
+					// TODO: link to docs
+				});
 			}
 		}
 	}
@@ -69,11 +70,11 @@ export abstract class AbstractFieldArgumentContainer<
 			const argumentConfig = argument.getConfig();
 			if (!argumentConfig.allowMultiple) {
 				if (this.arguments.filter(x => x.getConfig().type === argumentConfig.type).length > 0) {
-					throw new MetaBindParsingError(
-						ErrorLevel.ERROR,
-						'failed to merge argument container',
-						'can not merge FieldArgumentContainers, since arguments overlap',
-					);
+					throw new MetaBindArgumentError({
+						errorLevel: ErrorLevel.ERROR,
+						effect: 'failed to merge argument container',
+						cause: 'can not merge FieldArgumentContainers, since arguments overlap',
+					});
 				}
 			}
 			this.arguments.push(argument);

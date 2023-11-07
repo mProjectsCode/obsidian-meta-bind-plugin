@@ -92,7 +92,7 @@ export class PublishViewFieldMDRC extends MarkdownRenderChild {
 
 	async evaluateExpression(): Promise<string> {
 		if (!this.expression) {
-			throw new MetaBindExpressionError(ErrorLevel.ERROR, 'failed to evaluate expression', 'expression is undefined');
+			throw new MetaBindExpressionError({ errorLevel: ErrorLevel.ERROR, effect: 'failed to evaluate expression', cause: 'expression is undefined' });
 		}
 
 		const context = this.buildContext();
@@ -100,10 +100,15 @@ export class PublishViewFieldMDRC extends MarkdownRenderChild {
 			return this.expression.evaluate(context) as Promise<string>;
 		} catch (e) {
 			if (e instanceof Error) {
-				throw new MetaBindExpressionError(ErrorLevel.ERROR, `failed to evaluate expression`, e, {
-					declaration: this.viewFieldDeclaration.templateDeclaration,
-					expression: this.expressionStr,
-					context: context,
+				throw new MetaBindExpressionError({
+					errorLevel: ErrorLevel.ERROR,
+					effect: `failed to evaluate expression`,
+					cause: e,
+					context: {
+						declaration: this.viewFieldDeclaration.templateDeclaration,
+						expression: this.expressionStr,
+						context: context,
+					},
 				});
 			} else {
 				throw new Error('encountered non thrown error that does not inherit from Error');
@@ -113,7 +118,11 @@ export class PublishViewFieldMDRC extends MarkdownRenderChild {
 
 	getValue(bindTarget: BindTargetDeclaration): unknown {
 		if (bindTarget.filePath !== this.filePath) {
-			throw new MetaBindBindTargetError(ErrorLevel.ERROR, 'failed to render view field', 'can not load metadata of another file in obsidian publish');
+			throw new MetaBindBindTargetError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'failed to render view field',
+				cause: 'can not load metadata of another file in obsidian publish',
+			});
 		}
 
 		return traverseObjectByPath(bindTarget.metadataPath, this.metadata);
