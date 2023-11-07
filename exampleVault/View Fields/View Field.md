@@ -11,7 +11,7 @@ list:
 object:
   key: value
 file: Example Note with Embeds
-image: Other/Images/img_frozen_branch.jpg
+image: Other/Images/img_butterfly.webp
 ---
 
 `INPUT[number:number1]`

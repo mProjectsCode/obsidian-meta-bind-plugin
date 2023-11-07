@@ -4,14 +4,13 @@ import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { type ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
 import { type UnvalidatedFieldArgument } from '../inputFieldParser/InputFieldDeclaration';
 
-export const ident = P.regexp(/^[a-z][a-z0-9_-]*/i)
+export const ident: Parser<string> = P.sequence(P_UTILS.unicodeLetter(), P.or(P_UTILS.unicodeAlphanumeric(), P.oneOf('-_')).many())
 	.map(x => {
-		// console.log('ident', x);
-		return x;
+		return x[0] + x[1].join('');
 	})
 	.describe('identifier');
 
-export const identWithSpaces = P.sequenceMap(
+export const identWithSpaces: Parser<string> = P.sequenceMap(
 	(a, b) => {
 		return a + b.map(x => x[0] + x[1]).join('');
 	},
@@ -19,7 +18,7 @@ export const identWithSpaces = P.sequenceMap(
 	P.sequence(P_UTILS.optionalWhitespace(), ident).many(),
 ).describe('identifier with spaces');
 
-export const escapeCharacter = P.string('\\')
+export const escapeCharacter: Parser<string> = P.string('\\')
 	.then(P_UTILS.any())
 	.map(escaped => {
 		if (escaped === "'") {
@@ -31,15 +30,15 @@ export const escapeCharacter = P.string('\\')
 		}
 	});
 
-function stringFactory(quotes: string): Parser<string> {
+function stringParserFactory(quotes: string): Parser<string> {
 	return P.or(escapeCharacter, P.noneOf(quotes + '\\'))
 		.many()
 		.map(x => x.join(''))
 		.trim(P.string(quotes));
 }
 
-export const singleQuotedString = stringFactory("'");
-export const doubleQuotedString = stringFactory('"');
+export const singleQuotedString: Parser<string> = stringParserFactory("'");
+export const doubleQuotedString: Parser<string> = stringParserFactory('"');
 
 export interface ParsingResultNode {
 	value: string;

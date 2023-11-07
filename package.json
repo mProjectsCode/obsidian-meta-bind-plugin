@@ -8,11 +8,15 @@
 		"build": "tsc -noEmit -skipLibCheck && bun run esbuild.config.mjs production",
 		"dev-publish": "bun run esbuild.publish.config.mjs",
 		"build-publish": "tsc -noEmit -skipLibCheck && node esbuild.publish.config.mjs production",
+		"tsc": "tsc -noEmit -skipLibCheck",
 		"test": "bun test",
 		"format": "prettier --write --plugin prettier-plugin-svelte .",
+		"format:check": "prettier --check --plugin prettier-plugin-svelte .",
 		"lint": "eslint --max-warnings=0 src/**",
 		"lint:fix": "eslint --max-warnings=0 --fix src/**",
-		"types": "tsc -p \"./tsconfig.types.json\""
+		"types": "tsc -p \"./tsconfig.types.json\"",
+		"check": "bun run format:check && bun run lint && bun run tsc && bun run test",
+		"check:fix": "bun run format && bun run lint:fix && bun run tsc && bun run test"
 	},
 	"keywords": [],
 	"author": "Moritz Jung",
@@ -47,7 +51,7 @@
 		"typescript": "^5.2.2"
 	},
 	"dependencies": {
-		"@lemons_dev/parsinom": "^0.0.10",
+		"@lemons_dev/parsinom": "^0.0.11",
 		"@opd-libs/opd-metadata-lib": "0.0.4",
 		"@opd-libs/opd-utils-lib": "0.0.2",
 		"@popperjs/core": "^2.11.8",

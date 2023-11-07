@@ -17,7 +17,26 @@ export class MetaBindSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', { text: 'Meta Bind Plugin Settings' });
+		new Setting(containerEl)
+			.setName('Quick access')
+			.addButton(cb => {
+				cb.setButtonText('Docs');
+				cb.onClick(() => {
+					window.open('https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/', '_blank');
+				});
+			})
+			.addButton(cb => {
+				cb.setButtonText('GitHub');
+				cb.onClick(() => {
+					window.open('https://github.com/mProjectsCode/obsidian-meta-bind-plugin', '_blank');
+				});
+			})
+			.addButton(cb => {
+				cb.setButtonText('Report Issue');
+				cb.onClick(() => {
+					window.open('https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues', '_blank');
+				});
+			});
 
 		new Setting(containerEl)
 			.setName('Sync interval')
@@ -110,7 +129,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				});
 			});
 
-		containerEl.createEl('h3', { text: 'Advanced Settings' });
+		containerEl.createEl('h2', { text: 'Advanced Settings' });
 
 		new Setting(containerEl)
 			.setName('Dev Mode')

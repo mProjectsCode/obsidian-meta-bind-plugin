@@ -11,6 +11,7 @@ toggle: false
 nested:
   object: asd
 inlineSelect: 0
+こんにちは: hello
 ---
 
 ## In callouts
@@ -31,6 +32,10 @@ inlineSelect: 0
 ## String Escaping
 
 `INPUT[inlineSelect(option(0, 'don\'t do this'), option(1, 'do this \\')):inlineSelect]`
+
+## Unicode
+
+`INPUT[text:こんにちは]`
 
 ## Linking to a different note
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. Curabitur sed rhoncus nisl.

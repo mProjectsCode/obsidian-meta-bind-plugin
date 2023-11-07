@@ -87,12 +87,20 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		this.registerEditorExtension(createMarkdownRenderChildWidgetEditorPlugin(this));
 
+		// this.addCommand({
+		// 	id: 'mb-debugger-command',
+		// 	name: 'debugger',
+		// 	callback: () => {
+		// 		// eslint-disable-next-line no-debugger
+		// 		debugger;
+		// 	},
+		// });
+
 		this.addCommand({
-			id: 'mb-debugger-command',
-			name: 'debugger',
+			id: 'mb-open-docs',
+			name: 'Open Meta Bind Docs',
 			callback: () => {
-				// eslint-disable-next-line no-debugger
-				debugger;
+				window.open('https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/', '_blank');
 			},
 		});
 
