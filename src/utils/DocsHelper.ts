@@ -16,4 +16,8 @@ export class DocsHelper {
 	static linkToViewFieldArgument(type: ViewFieldArgumentType): string {
 		return `https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/reference/viewfieldarguments/${type.toLowerCase()}/`;
 	}
+
+	static linkToSearch(search: string): string {
+		return `https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/?s=${encodeURIComponent(search)}`;
+	}
 }

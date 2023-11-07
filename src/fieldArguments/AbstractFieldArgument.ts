@@ -1,6 +1,7 @@
 import { type ParsingResultNode } from '../parsers/nomParsers/GeneralParsers';
 import { ErrorLevel, MetaBindArgumentError } from '../utils/errors/MetaBindErrors';
 import { type FieldArgumentConfig, type FieldArgumentValueConfig } from '../parsers/GeneralConfigs';
+import { DocsHelper } from '../utils/DocsHelper';
 
 export abstract class AbstractFieldArgument<
 	FieldType extends string,
@@ -26,7 +27,7 @@ export abstract class AbstractFieldArgument<
 				cause: `Expected argument values to follow the form ${allowedValues
 					.map(x => (x.length === 0 ? 'none' : x.map(y => `'${y.name}'`).join(', ')))
 					.join(' or ')}. Received arguments of length ${value.length}.`,
-				// TODO: link to docs of the argument somehow
+				docs: [DocsHelper.linkToSearch(this.getConfig().type)],
 			});
 		}
 	}

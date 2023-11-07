@@ -1,7 +1,7 @@
 import { ErrorLevel } from '../utils/errors/MetaBindErrors';
 import { type IPlugin } from '../IPlugin';
 import { BIND_TARGET } from './nomParsers/BindTargetParsers';
-import { ParsingValidationError } from './ParsingError';
+import { ParsingValidationError, runParser } from './ParsingError';
 import { type BindTargetDeclaration, type FullBindTarget, type UnvalidatedBindTargetDeclaration } from './inputFieldParser/InputFieldDeclaration';
 import { type BindTargetScope } from '../metadata/BindTargetScope';
 
@@ -17,7 +17,7 @@ export class BindTargetParser {
 	}
 
 	parseBindTarget(bindTargetString: string): UnvalidatedBindTargetDeclaration {
-		return BIND_TARGET.parse(bindTargetString);
+		return runParser(BIND_TARGET, bindTargetString);
 	}
 
 	validateBindTarget(

@@ -23,9 +23,7 @@
 </script>
 
 <div class="date-picker-input" on:click={datePicker} on:keydown={datePickerKey} role="button" tabindex="0">
-	<div class="date-picker-text">
-		<span>{value ? value.format(dateFormat) : 'none'}</span>
-	</div>
+	<span class="date-picker-text">{value ? value.format(dateFormat) : 'none'}</span>
 	<Icon iconName="calendar" />
 </div>
 
@@ -41,6 +39,7 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 5px;
+		font-size: var(--font-ui-small);
 	}
 
 	.date-picker-text {

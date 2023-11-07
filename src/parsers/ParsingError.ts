@@ -1,5 +1,15 @@
-import { type ErrorLevel, ErrorType, MetaBindError } from '../utils/errors/MetaBindErrors';
+import { ErrorLevel, ErrorType, MetaBindError } from '../utils/errors/MetaBindErrors';
 import { type ParseFailure, type ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
+import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
+
+export function runParser<T>(parser: Parser<T>, str: string): T {
+	const result = parser.tryParse(str);
+	if (result.success) {
+		return result.value;
+	} else {
+		throw new ParsingError(ErrorLevel.ERROR, 'parsiNOM parser', str, result);
+	}
+}
 
 export class ParsingError extends MetaBindError {
 	str: string;
@@ -7,7 +17,11 @@ export class ParsingError extends MetaBindError {
 	source: string;
 
 	constructor(errorLevel: ErrorLevel, source: string, str: string, parseFailure: ParseFailure) {
-		super({ errorLevel: errorLevel, effect: 'failed to parse', cause: 'expected' + parseFailure.expected.join(' or '), context: {} });
+		super({
+			errorLevel: errorLevel,
+			effect: 'failed to parse',
+			cause: `expected ${parseFailure.expected.sort().join(' or ')}`,
+		});
 
 		this.str = str;
 		this.parseFailure = parseFailure;
@@ -17,7 +31,7 @@ export class ParsingError extends MetaBindError {
 	}
 
 	public getErrorType(): ErrorType {
-		return ErrorType.PARSING;
+		return ErrorType.PARSINOM;
 	}
 
 	protected updateMessage2(): void {
@@ -31,8 +45,17 @@ export class ParsingError extends MetaBindError {
 		const failedLine = lines[this.parseFailure.furthest.line - 1]; // line is a one based index
 
 		const linePrefix = `${this.parseFailure.furthest.line} |   `;
-		this.message += `\n${linePrefix}${failedLine}`;
-		this.message += `\n${' '.repeat(this.parseFailure.furthest.column - 1 + linePrefix.length)}^ (${this.cause})\n`;
+		this.positionContext = `${linePrefix}${failedLine}`;
+		this.positionContext += `\n${this.getUnderline(linePrefix.length)}\n`;
+
+		this.message += '\n' + this.positionContext;
+	}
+
+	private getUnderline(offset: number): string {
+		const spacing = ' '.repeat(this.parseFailure.furthest.column + offset - 1);
+		const underline = `^ (${this.cause})`;
+
+		return spacing + underline;
 	}
 }
 
@@ -41,8 +64,8 @@ export class ParsingValidationError extends MetaBindError {
 	position?: ParsingRange;
 	source: string;
 
-	constructor(errorLevel: ErrorLevel, source: string, cause: string, str?: string, position?: ParsingRange) {
-		super({ errorLevel: errorLevel, effect: 'failed to validate parser result', cause: cause });
+	constructor(errorLevel: ErrorLevel, source: string, cause: string, str?: string, position?: ParsingRange, docs?: string[]) {
+		super({ errorLevel: errorLevel, effect: 'failed to validate parser result', cause: cause, docs: docs });
 
 		this.str = str;
 		this.position = position;

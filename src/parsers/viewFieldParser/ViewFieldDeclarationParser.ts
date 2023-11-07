@@ -6,6 +6,7 @@ import { type JsViewFieldDeclaration, type UnvalidatedViewFieldDeclaration, type
 import { ViewFieldDeclarationValidator } from './ViewFieldDeclarationValidator';
 import { ViewFieldArgumentContainer } from '../../fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
 import { ViewFieldType } from '../GeneralConfigs';
+import { runParser } from '../ParsingError';
 
 export class ViewFieldDeclarationParser {
 	plugin: IPlugin;
@@ -18,7 +19,7 @@ export class ViewFieldDeclarationParser {
 		const errorCollection = new ErrorCollection('ViewFieldDeclaration');
 
 		try {
-			const parserResult = VIEW_FIELD_FULL_DECLARATION.parse(fullDeclaration) as UnvalidatedViewFieldDeclaration;
+			const parserResult = runParser(VIEW_FIELD_FULL_DECLARATION, fullDeclaration) as UnvalidatedViewFieldDeclaration;
 			parserResult.fullDeclaration = fullDeclaration;
 			parserResult.errorCollection = errorCollection;
 
@@ -41,7 +42,7 @@ export class ViewFieldDeclarationParser {
 		const errorCollection = new ErrorCollection('ViewFieldDeclaration');
 
 		try {
-			const parserResult = VIEW_FIELD_FULL_DECLARATION.parse(fullDeclaration) as UnvalidatedViewFieldDeclaration;
+			const parserResult = runParser(VIEW_FIELD_FULL_DECLARATION, fullDeclaration) as UnvalidatedViewFieldDeclaration;
 			parserResult.fullDeclaration = fullDeclaration;
 			parserResult.errorCollection = errorCollection;
 
@@ -73,7 +74,7 @@ export class ViewFieldDeclarationParser {
 		declaration.fullDeclaration = fullDeclaration;
 
 		try {
-			const unvalidatedDeclaration = JS_VIEW_FIELD_DECLARATION.parse(fullDeclaration);
+			const unvalidatedDeclaration = runParser(JS_VIEW_FIELD_DECLARATION, fullDeclaration);
 			declaration.bindTargetMappings = unvalidatedDeclaration.bindTargetMappings.map(x => {
 				return {
 					bindTarget: this.plugin.api.bindTargetParser.validateBindTarget(fullDeclaration, x.bindTarget),

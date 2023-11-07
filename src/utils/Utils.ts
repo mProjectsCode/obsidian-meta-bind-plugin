@@ -309,6 +309,5 @@ export function deepCopy<T extends object>(object: T): T {
 }
 
 export function getUUID(): string {
-	// TODO: figure out a way that works everywhere and in jest
 	return window.crypto.randomUUID();
 }

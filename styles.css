@@ -7,9 +7,11 @@ body {
 }
 
 /* Input Wrappers */
-.mb-input {
-	background-color: transparent !important;
-	border: none !important;
+:root .mb-input {
+	all: revert;
+	/*padding-block: 0;*/
+	/*display: inline-flex;*/
+	/*vertical-align: middle;*/
 }
 
 .mb-input-wrapper {
@@ -56,6 +58,7 @@ div.mb-view-wrapper {
 
 .mb-slider-input-label {
 	color: var(--text-muted);
+	font-size: var(--font-ui-small);
 }
 
 /* Text Input */
@@ -117,6 +120,17 @@ div.mb-view-wrapper {
 .mb-input-element-group .mb-input-element-group-element:last-child {
 	border-radius: 0 var(--mb-border-radius) var(--mb-border-radius) 0;
 }
+
+/* SailKite small input fields so that line height is consistent */
+/* https://discord.com/channels/1171444840257572935/1171444840257572939/1171562547212726403 */
+/*.mb-input-element-group {*/
+/*	& > .mb-date-input-year-input[type='number'] {*/
+/*		padding-block: 0;*/
+/*	}*/
+/*	& > .mb-input-element-group-element {*/
+/*		height: 100%;*/
+/*	}*/
+/*}*/
 
 /* List Input */
 .mb-list-input {

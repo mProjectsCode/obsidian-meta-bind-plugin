@@ -6,7 +6,7 @@ import { deepFreeze } from '../../utils/Utils';
 import { InputFieldDeclarationValidator } from './InputFieldDeclarationValidator';
 import { type ITemplateSupplier, type TemplateSupplierTemplate } from './ITemplateSupplier';
 import { INPUT_FIELD_FULL_DECLARATION, TEMPLATE_INPUT_FIELD_FULL_DECLARATION } from '../nomParsers/InputFieldParsers';
-import { ParsingValidationError } from '../ParsingError';
+import { ParsingValidationError, runParser } from '../ParsingError';
 import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
 import { type InputFieldDeclaration, type UnvalidatedInputFieldDeclaration } from './InputFieldDeclaration';
 import { type BindTargetScope } from '../../metadata/BindTargetScope';
@@ -27,7 +27,7 @@ export class InputFieldDeclarationParser implements ITemplateSupplier<Unvalidate
 		const errorCollection = new ErrorCollection('InputFieldParser');
 
 		try {
-			let parserResult = INPUT_FIELD_FULL_DECLARATION.parse(fullDeclaration) as UnvalidatedInputFieldDeclaration;
+			let parserResult = runParser(INPUT_FIELD_FULL_DECLARATION, fullDeclaration) as UnvalidatedInputFieldDeclaration;
 			parserResult.fullDeclaration = fullDeclaration;
 			parserResult.errorCollection = errorCollection;
 
@@ -54,7 +54,7 @@ export class InputFieldDeclarationParser implements ITemplateSupplier<Unvalidate
 		const errorCollection = new ErrorCollection('InputFieldParser');
 
 		try {
-			const parserResult = INPUT_FIELD_FULL_DECLARATION.parse(fullDeclaration) as UnvalidatedInputFieldDeclaration;
+			const parserResult = runParser(INPUT_FIELD_FULL_DECLARATION, fullDeclaration) as UnvalidatedInputFieldDeclaration;
 			parserResult.fullDeclaration = fullDeclaration;
 			parserResult.errorCollection = errorCollection;
 
@@ -82,7 +82,7 @@ export class InputFieldDeclarationParser implements ITemplateSupplier<Unvalidate
 		const errorCollection = new ErrorCollection('InputFieldParser');
 
 		try {
-			const parserResult = TEMPLATE_INPUT_FIELD_FULL_DECLARATION.parse(template) as UnvalidatedInputFieldDeclaration;
+			const parserResult = runParser(TEMPLATE_INPUT_FIELD_FULL_DECLARATION, template) as UnvalidatedInputFieldDeclaration;
 			parserResult.fullDeclaration = template;
 			parserResult.errorCollection = errorCollection;
 
@@ -139,6 +139,7 @@ export class InputFieldDeclarationParser implements ITemplateSupplier<Unvalidate
 					`Invalid template name. Could not find template with name '${declaration.templateName.value}'`,
 					declaration.fullDeclaration,
 					declaration.templateName.position,
+					['https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/guides/templates/'],
 				),
 			);
 

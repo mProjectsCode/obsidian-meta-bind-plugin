@@ -1,6 +1,9 @@
 import { equalOrIncludes, isFalsy } from './Utils';
 import { ErrorLevel, MetaBindInternalError } from './errors/MetaBindErrors';
 
+/**
+ * @deprecated
+ */
 export class EnclosingPair {
 	readonly openingEqualsClosing: boolean;
 	private readonly _openingString: string;
@@ -56,8 +59,13 @@ export class EnclosingPair {
 	}
 }
 
+/**
+ * @deprecated
+ */
 export class ParserUtils {
-	// TODO: rename stuff
+	/**
+	 * @deprecated
+	 */
 	static split(str: string, separator: string, ignore?: EnclosingPair): string[] {
 		if (!str) {
 			throw new MetaBindInternalError({ errorLevel: ErrorLevel.ERROR, effect: 'failed to split string', cause: 'string must not be empty' });
@@ -175,6 +183,9 @@ export class ParserUtils {
 		return subStrings;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	static removeInBetween(str: string, enclosingPair: EnclosingPair): string {
 		if (!str) {
 			throw new MetaBindInternalError({ errorLevel: ErrorLevel.ERROR, effect: 'failed remove in between in string', cause: 'string must not be empty' });
@@ -251,6 +262,9 @@ export class ParserUtils {
 		return subStr;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	static getInBetween(str: string, enclosingPair: EnclosingPair): string | string[] {
 		if (!str) {
 			throw new MetaBindInternalError({ errorLevel: ErrorLevel.ERROR, effect: 'failed to get in between in string', cause: 'string must not be empty' });
@@ -366,6 +380,9 @@ export class ParserUtils {
 		}
 	}
 
+	/**
+	 * @deprecated
+	 */
 	static isStringAt(str: string, subStr: string, index: number): boolean {
 		if (index < 0) {
 			throw new MetaBindInternalError({
@@ -405,10 +422,16 @@ export class ParserUtils {
 		return true;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	static contains(str: string, subStr: string): boolean {
 		return ParserUtils.numberOfOccurrences(str, subStr) > 0;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	static numberOfOccurrences(str: string, subStr: string): number {
 		if (!str) {
 			throw new MetaBindInternalError({ errorLevel: ErrorLevel.ERROR, effect: 'failed count number of occurrences', cause: 'string must not be empty' });

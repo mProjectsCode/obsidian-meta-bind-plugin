@@ -25,3 +25,8 @@ INPUT[listSuggester(optionQuery(#example-note), option(something, other), showca
 ```meta-bind
 INPUT[listSuggester(optionQuery(#example-note), option(something, other), useLinks(false), showcase):list3]
 ```
+
+
+```meta-bind
+INPUT[listsuggester(optionQuery(#example-note), option(something, other), useLinks(false), showcase):list3]
+```

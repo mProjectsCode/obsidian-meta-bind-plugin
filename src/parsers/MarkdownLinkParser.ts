@@ -8,6 +8,7 @@ export interface MarkdownLink {
 	alias: string;
 }
 
+// TODO: rebuild this with parsinom
 export function parseMdLink(link: string): MarkdownLink {
 	if (!link) {
 		throw new MetaBindParsingError({ errorLevel: ErrorLevel.ERROR, effect: 'failed to parse md link', cause: 'invalid link, link is empty' });

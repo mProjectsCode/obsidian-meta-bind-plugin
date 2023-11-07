@@ -212,6 +212,13 @@ export class InputFieldMDRC extends AbstractMDRC {
 			container.addClasses(classArguments.map(x => x.value).flat());
 		}
 
+		// --- Apply Block or Inline Class ---
+		if (this.renderChildType === RenderChildType.BLOCK) {
+			this.containerEl.addClass('mb-input-block');
+		} else {
+			this.containerEl.addClass('mb-input-inline');
+		}
+
 		// --- Append Container Element to Wrapper ---
 		wrapperContainer.appendChild(container);
 

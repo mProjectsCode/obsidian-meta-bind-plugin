@@ -1,6 +1,7 @@
 import { ErrorLevel, MetaBindArgumentError } from '../utils/errors/MetaBindErrors';
 import { type FieldArgumentConfig, InputFieldArgumentType } from '../parsers/GeneralConfigs';
 import { type AbstractFieldArgument } from './AbstractFieldArgument';
+import { DocsHelper } from '../utils/DocsHelper';
 
 export abstract class AbstractFieldArgumentContainer<
 	FieldType extends string,
@@ -28,7 +29,7 @@ export abstract class AbstractFieldArgumentContainer<
 					errorLevel: ErrorLevel.ERROR,
 					effect: 'failed to validate argument container',
 					cause: `argument '${argumentConfig.type}' does not allow duplicates`,
-					// TODO: link to docs
+					docs: [DocsHelper.linkToSearch(argumentConfig.type)],
 				});
 			}
 		}
