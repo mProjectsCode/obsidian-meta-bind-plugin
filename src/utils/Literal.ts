@@ -140,17 +140,18 @@ export function parseUnknownToLiteral(literal: unknown): MBLiteral | undefined {
  * Turns a value into a pretty string. Objects get turned to JSON.
  *
  * @param literal
+ * @param nullAsEmpty
  */
-export function stringifyUnknown(literal: unknown): string {
+export function stringifyUnknown(literal: unknown, nullAsEmpty: boolean): string {
 	if (Array.isArray(literal)) {
-		return literal.map(x => recStringifyUnknown(x)).join(', ');
+		return literal.map(x => recStringifyUnknown(x, nullAsEmpty)).join(', ');
 	}
-	return recStringifyUnknown(literal);
+	return recStringifyUnknown(literal, nullAsEmpty);
 }
 
-function recStringifyUnknown(literal: unknown): string {
+function recStringifyUnknown(literal: unknown, nullAsEmpty: boolean): string {
 	if (typeof literal === 'object') {
 		return JSON.stringify(literal);
 	}
-	return literal?.toString() ?? 'null';
+	return literal?.toString() ?? (nullAsEmpty ? '' : 'null');
 }

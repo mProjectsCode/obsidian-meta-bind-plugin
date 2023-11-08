@@ -29,7 +29,7 @@
 
 <style>
 	.date-picker-input {
-		background: var(--background-secondary);
+		background: var(--background-modifier-form-field);
 		border-radius: var(--mb-border-radius);
 		border: var(--mb-border-width) solid var(--background-modifier-border);
 		padding: 5px 5px 5px 7px;

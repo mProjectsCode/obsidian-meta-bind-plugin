@@ -17,7 +17,31 @@ export class DocsHelper {
 		return `https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/reference/viewfieldarguments/${type.toLowerCase()}/`;
 	}
 
+	static linkToInputFields(): string {
+		return `https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/guides/inputfields/`;
+	}
+
+	static linkToViewFields(): string {
+		return `https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/guides/viewfields/`;
+	}
+
 	static linkToSearch(search: string): string {
 		return `https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/?s=${encodeURIComponent(search)}`;
+	}
+
+	static linkToHome(): string {
+		return `https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/`;
+	}
+
+	static linkToGithub(): string {
+		return `https://github.com/mProjectsCode/obsidian-meta-bind-plugin`;
+	}
+
+	static linkToIssues(): string {
+		return `https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues`;
+	}
+
+	static open(link: string): void {
+		window.open(link, '_blank');
 	}
 }

@@ -1,4 +1,4 @@
-import { type MarkdownPostProcessorContext, Plugin } from 'obsidian';
+import { type MarkdownPostProcessorContext, Plugin, type WorkspaceLeaf } from 'obsidian';
 import { MetaBindSettingTab } from './settings/SettingsTab';
 import { RenderChildType } from './renderChildren/InputFieldMDRC';
 import { DateParser } from './parsers/DateParser';
@@ -12,6 +12,7 @@ import { type IPlugin } from './IPlugin';
 import { EnclosingPair, ParserUtils } from './utils/ParserUtils';
 import { ErrorLevel, MetaBindParsingError } from './utils/errors/MetaBindErrors';
 import { ObsidianMetadataAdapter } from './metadata/ObsidianMetadataAdapter';
+import { FaqView, MB_FAQ_VIEW_TYPE } from './utils/faq/FaqView';
 
 export default class MetaBindPlugin extends Plugin implements IPlugin {
 	// @ts-ignore defined in `onload`
@@ -103,6 +104,16 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				window.open('https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/', '_blank');
 			},
 		});
+
+		this.addCommand({
+			id: 'mb-open-faq',
+			name: 'Open Meta Bind FAQ',
+			callback: () => {
+				void this.activateView(MB_FAQ_VIEW_TYPE);
+			},
+		});
+
+		this.registerView(MB_FAQ_VIEW_TYPE, leaf => new FaqView(leaf));
 
 		this.addSettingTab(new MetaBindSettingTab(this.app, this));
 	}
@@ -205,5 +216,25 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		}
 
 		return oldSettings;
+	}
+
+	async activateView(viewType: string): Promise<void> {
+		const { workspace } = this.app;
+
+		let leaf: WorkspaceLeaf | null = null;
+		const leaves = workspace.getLeavesOfType(viewType);
+
+		if (leaves.length > 0) {
+			// A leaf with our view already exists, use that
+			leaf = leaves[0];
+		} else {
+			// Our view could not be found in the workspace, create a new leaf
+			// in the right sidebar for it
+			leaf = workspace.getLeaf('tab');
+			await leaf.setViewState({ type: viewType, active: true });
+		}
+
+		// "Reveal" the leaf in case it is in a collapsed sidebar
+		workspace.revealLeaf(leaf);
 	}
 }

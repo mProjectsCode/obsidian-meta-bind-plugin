@@ -205,6 +205,7 @@ export class MetadataManager {
 				errorLevel: ErrorLevel.ERROR,
 				effect: 'bind target dependency loop detected',
 				cause: `the loop is as follows: ${dependencyPath.map(x => `"${bindTargetToString(x.bindTarget)}"`).join(' -> ')}`,
+				docs: ['https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/guides/viewfields/#circular-dependencies'],
 			});
 		}
 

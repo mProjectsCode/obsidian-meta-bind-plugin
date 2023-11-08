@@ -3,6 +3,8 @@ import type MetaBindPlugin from '../main';
 import { DEFAULT_SETTINGS, weekdays } from './Settings';
 import { ExcludedFoldersSettingModal } from './excludedFoldersSetting/ExcludedFoldersSettingModal';
 import { InputFieldTemplatesSettingModal } from './inputFieldTemplateSetting/InputFieldTemplatesSettingModal';
+import { DocsHelper } from '../utils/DocsHelper';
+import { MB_FAQ_VIEW_TYPE } from '../utils/faq/FaqView';
 
 export class MetaBindSettingTab extends PluginSettingTab {
 	plugin: MetaBindPlugin;
@@ -23,19 +25,25 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				cb.setCta();
 				cb.setButtonText('Docs');
 				cb.onClick(() => {
-					window.open('https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/', '_blank');
+					DocsHelper.open(DocsHelper.linkToHome());
+				});
+			})
+			.addButton(cb => {
+				cb.setButtonText('Open FAQ');
+				cb.onClick(() => {
+					void this.plugin.activateView(MB_FAQ_VIEW_TYPE);
 				});
 			})
 			.addButton(cb => {
 				cb.setButtonText('GitHub');
 				cb.onClick(() => {
-					window.open('https://github.com/mProjectsCode/obsidian-meta-bind-plugin', '_blank');
+					DocsHelper.open(DocsHelper.linkToGithub());
 				});
 			})
 			.addButton(cb => {
 				cb.setButtonText('Report Issue');
 				cb.onClick(() => {
-					window.open('https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues', '_blank');
+					DocsHelper.open(DocsHelper.linkToIssues());
 				});
 			});
 
@@ -116,6 +124,17 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				cb.setButtonText('Edit Excluded Folders');
 				cb.onClick(() => {
 					new ExcludedFoldersSettingModal(this.app, this.plugin).open();
+				});
+			});
+
+		new Setting(containerEl)
+			.setName('View Fields display null as empty')
+			.setDesc('Display nothing instead of null, if the frontmatter value is empty, in text view fields.')
+			.addToggle(cb => {
+				cb.setValue(this.plugin.settings.viewFieldDisplayNullAsEmpty);
+				cb.onChange(data => {
+					this.plugin.settings.viewFieldDisplayNullAsEmpty = data;
+					void this.plugin.saveSettings();
 				});
 			});
 

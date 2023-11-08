@@ -10,6 +10,13 @@
 	<p><code class="language-none meta-bind-none">{declaration}</code></p>
 {/if}
 
+{#if errorCollection.hasErrors()}
+	<h6>Errors</h6>
+	<p>Errors caused the creation of the field to fail. Sometimes one error only occurs because of another.</p>
+	{#each errorCollection.getErrors() as error}
+		<MetaBindErrorComponent error={error}></MetaBindErrorComponent>
+	{/each}
+{/if}
 {#if errorCollection.hasWarnings()}
 	<h6>Warnings</h6>
 	<p>
@@ -17,12 +24,5 @@
 	</p>
 	{#each errorCollection.getWarnings() as warning}
 		<MetaBindErrorComponent error={warning}></MetaBindErrorComponent>
-	{/each}
-{/if}
-{#if errorCollection.hasErrors()}
-	<h6>Errors</h6>
-	<p>Errors caused the creation of the field to fail. Sometimes one error only occurs because of another.</p>
-	{#each errorCollection.getErrors() as error}
-		<MetaBindErrorComponent error={error}></MetaBindErrorComponent>
 	{/each}
 {/if}

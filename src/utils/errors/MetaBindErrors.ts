@@ -15,6 +15,7 @@ export enum ErrorType {
 	PUBLISH = 'MB_PUBLISH',
 	VALIDATION = 'MB_VALIDATION',
 	PARSINOM = 'MB_PARSINOM',
+	EXAMPLE = 'MB_EXAMPLE',
 
 	OTHER = 'OTHER',
 }
@@ -118,5 +119,11 @@ export class MetaBindExpressionError extends MetaBindError {
 export class MetaBindPublishError extends MetaBindError {
 	public getErrorType(): ErrorType {
 		return ErrorType.PUBLISH;
+	}
+}
+
+export class MetaBindExampleError extends MetaBindError {
+	public getErrorType(): ErrorType {
+		return ErrorType.EXAMPLE;
 	}
 }

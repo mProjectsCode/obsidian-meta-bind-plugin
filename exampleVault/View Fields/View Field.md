@@ -50,7 +50,9 @@ Self Loop Error: `VIEW[**{computed}**][text():computed]`
 `INPUT[suggester(optionQuery(#example-note), useLinks(false)):file]`
 `VIEW[\[\[{file}|link\]\]][text(renderMarkdown)]`
 
-`INPUT[imageSuggester(optionQuery("Other/Images")):image]`
+```meta-bind
+INPUT[imageSuggester(optionQuery("Other/Images")):image]
+```
 `VIEW[!\[\[{image}\]\]][text(renderMarkdown)]`
 
 ## Arrays and Objects
@@ -62,3 +64,7 @@ Plain Text:
 Markdown:
 `VIEW[**{list}**][text(renderMarkdown)]`
 `VIEW[**{object}**][text(renderMarkdown)]`
+
+Null:
+`VIEW[{someUnknownValue}][text]`
+some text
