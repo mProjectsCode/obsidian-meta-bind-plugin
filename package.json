@@ -16,7 +16,8 @@
 		"lint:fix": "eslint --max-warnings=0 --fix src/**",
 		"types": "tsc -p \"./tsconfig.types.json\"",
 		"check": "bun run format:check && bun run lint && bun run tsc && bun run test",
-		"check:fix": "bun run format && bun run lint:fix && bun run tsc && bun run test"
+		"check:fix": "bun run format && bun run lint:fix && bun run tsc && bun run test",
+		"release": "bun run automation/release.ts"
 	},
 	"keywords": [],
 	"author": "Moritz Jung",
@@ -45,6 +46,7 @@
 		"obsidian-dataview": "0.5.56",
 		"prettier": "^3.0.3",
 		"prettier-plugin-svelte": "^3.0.3",
+		"string-argv": "^0.3.2",
 		"svelte": "^4.2.0",
 		"svelte-preprocess": "^5.0.4",
 		"tslib": "2.6.2",
