@@ -424,7 +424,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 				{
 					name: 'value',
 					allowed: ['number'],
-					description: 'character limit for text fields',
+					description: 'a character limit for text fields',
 				},
 			],
 		],
