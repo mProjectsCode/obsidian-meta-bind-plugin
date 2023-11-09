@@ -1,5 +1,22 @@
 # Obsidian Meta Bind Changelog
 
+# 0.7.1
+
+New Features
+
+- new command to open the docs
+- new command to open an offline in plugin FAQ
+
+Changes
+
+- made error messages more readable and added links to documentation in some places
+
+Bug Fixes
+
+- fixed: Square brackets are not allowed in view fields [#136](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/136)
+- fixed: Lists don't display correctly inside of text view fields [#132](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/132) 
+- fixed: bind target frontmatter ident parser fails to parse ident with non ascii letters [#119](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/119)
+
 # 0.7.0
 
 Breaking Changes
