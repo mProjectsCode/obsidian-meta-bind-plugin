@@ -1,4 +1,4 @@
-import { App, Modal, Setting } from 'obsidian';
+import { type App, Modal, Setting } from 'obsidian';
 
 export class TextPromptModal extends Modal {
 	value: string;

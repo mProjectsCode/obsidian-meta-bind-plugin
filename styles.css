@@ -166,7 +166,6 @@ div.mb-view-wrapper {
 	display: inline;
 	font-size: 0;
 
-
 	& > .mb-inline-list-item {
 		border: var(--mb-border-width) solid var(--background-modifier-border);
 		border-radius: var(--mb-border-radius);
@@ -203,7 +202,6 @@ div.mb-view-wrapper {
 		font-size: var(--font-ui-small);
 	}
 }
-
 
 /* Suggester Input */
 .mb-suggest-input {

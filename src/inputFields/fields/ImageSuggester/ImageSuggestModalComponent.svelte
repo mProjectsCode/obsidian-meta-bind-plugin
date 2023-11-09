@@ -1,8 +1,8 @@
 <script lang="ts">
 	import ImageSuggesterCard from './ImageSuggesterCard.svelte';
 	import { SuggesterOption } from '../Suggester/SuggesterHelper';
-	import {TextInput} from 'obsidian-svelte';
-	import {prepareFuzzySearch} from 'obsidian';
+	import { TextInput } from 'obsidian-svelte';
+	import { prepareFuzzySearch } from 'obsidian';
 
 	export let options: SuggesterOption<string>[];
 	export let onSelect: (item: string) => void;
@@ -20,7 +20,7 @@
 
 		const searchFn = prepareFuzzySearch(search);
 
-		let x: SuggesterOption<string>[] = []
+		let x: SuggesterOption<string>[] = [];
 		for (const option of options) {
 			if (searchFn(option.value)?.score !== undefined) {
 				x.push(option);
@@ -41,5 +41,4 @@
 </div>
 
 <style>
-
 </style>

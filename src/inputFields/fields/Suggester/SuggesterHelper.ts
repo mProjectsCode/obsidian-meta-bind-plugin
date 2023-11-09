@@ -7,7 +7,7 @@ import { type SuggesterIPF } from './SuggesterIPF';
 import { type ListSuggesterIPF } from '../ListSuggester/ListSuggesterIPF';
 import { InputFieldArgumentType } from '../../../parsers/GeneralConfigs';
 import { type MBLiteral } from '../../../utils/Literal';
-import { InlineListSuggesterIPF } from '../InlineListSuggester/InlineListSuggesterIPF';
+import { type InlineListSuggesterIPF } from '../InlineListSuggester/InlineListSuggesterIPF';
 
 type SuggesterLikeIFP = SuggesterIPF | ListSuggesterIPF | InlineListSuggesterIPF;
 

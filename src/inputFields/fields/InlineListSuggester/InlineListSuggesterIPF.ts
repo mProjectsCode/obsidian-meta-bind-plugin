@@ -1,7 +1,7 @@
 import { AbstractInputField } from '../../AbstractInputField';
-import { MBLiteral, parseUnknownToLiteralArray } from '../../../utils/Literal';
-import { InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
-import { SvelteComponent } from 'svelte';
+import { type MBLiteral, parseUnknownToLiteralArray } from '../../../utils/Literal';
+import { type InputFieldMDRC } from '../../../renderChildren/InputFieldMDRC';
+import { type SvelteComponent } from 'svelte';
 import InlineListSuggesterComponent from './InlineListSuggesterComponent.svelte';
 import { openSuggesterModalForInputField } from '../Suggester/SuggesterHelper';
 
