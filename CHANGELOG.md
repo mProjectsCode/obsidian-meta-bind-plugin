@@ -1,11 +1,22 @@
 # Obsidian Meta Bind Changelog
 
+# 0.7.2
+
+Changes
+
+-   some style tweaks to the image suggester
+-   image suggester now finds images in sub folder
+-   image suggester modal is now searchable
+-   new input field type `inlineListSuggester`
+-   new input field type `inlineList`
+
 # 0.7.1
 
 New Features
 
 -   new command to open the docs
 -   new command to open an offline in plugin FAQ
+-   new setting to display null as empty in text view fields
 
 Changes
 
