@@ -7,6 +7,9 @@ import { type SuggesterIPF } from './SuggesterIPF';
 import { type ListSuggesterIPF } from '../ListSuggester/ListSuggesterIPF';
 import { InputFieldArgumentType } from '../../../parsers/GeneralConfigs';
 import { type MBLiteral } from '../../../utils/Literal';
+import { InlineListSuggesterIPF } from '../InlineListSuggester/InlineListSuggesterIPF';
+
+type SuggesterLikeIFP = SuggesterIPF | ListSuggesterIPF | InlineListSuggesterIPF;
 
 export class SuggesterOption<T> {
 	value: T;
@@ -65,7 +68,7 @@ export function getSuggesterOptions(
 	return options;
 }
 
-export function getSuggesterOptionsForInputField(inputField: SuggesterIPF | ListSuggesterIPF): SuggesterOption<MBLiteral>[] {
+export function getSuggesterOptionsForInputField(inputField: SuggesterLikeIFP): SuggesterOption<MBLiteral>[] {
 	const app = inputField.renderChild.plugin.app;
 	const dv = getAPI(app);
 	const optionArgs = inputField.renderChild.getArguments(InputFieldArgumentType.OPTION);
@@ -75,9 +78,6 @@ export function getSuggesterOptionsForInputField(inputField: SuggesterIPF | List
 	return getSuggesterOptions(dv, inputField.renderChild.filePath, optionArgs, optionQueryArgs, useLinksArgs === undefined || useLinksArgs.value);
 }
 
-export function openSuggesterModalForInputField(
-	inputField: SuggesterIPF | ListSuggesterIPF,
-	selectCallback: (selected: SuggesterOption<MBLiteral>) => void,
-): void {
+export function openSuggesterModalForInputField(inputField: SuggesterLikeIFP, selectCallback: (selected: SuggesterOption<MBLiteral>) => void): void {
 	new SuggesterInputModal(inputField.renderChild.plugin.app, getSuggesterOptionsForInputField(inputField), selectCallback).open();
 }

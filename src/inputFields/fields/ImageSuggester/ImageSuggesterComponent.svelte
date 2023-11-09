@@ -41,6 +41,9 @@
 
 	.mb-image-suggest-image {
 		width: 100%;
+		height: fit-content;
+		max-height: 500px;
+		object-fit: contain;
 	}
 
 	.mb-image-suggest-footer {

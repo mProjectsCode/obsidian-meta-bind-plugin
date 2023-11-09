@@ -9,6 +9,19 @@ import { type ImageSuggesterIPF } from './ImageSuggesterIPF';
 import { InputFieldArgumentType } from '../../../parsers/GeneralConfigs';
 import { stringifyLiteral } from '../../../utils/Literal';
 
+function recSearchFolder(folder: TFolder): SuggesterOption<string>[] {
+	const ret = [];
+	for (const child of folder.children) {
+		if (child instanceof TFile && isImageExtension(child.extension)) {
+			ret.push(new SuggesterOption(child.path, child.name));
+		}
+		if (child instanceof TFolder) {
+			ret.push(...recSearchFolder(child));
+		}
+	}
+	return ret;
+}
+
 export function getImageSuggesterOptions(
 	optionArgs: OptionInputFieldArgument[],
 	optionQueryArgs: OptionQueryInputFieldArgument[],
@@ -54,11 +67,7 @@ export function getImageSuggesterOptions(
 			continue;
 		}
 
-		for (const child of folder.children) {
-			if (child instanceof TFile && isImageExtension(child.extension)) {
-				options.push(new SuggesterOption(child.path, child.name));
-			}
-		}
+		options.push(...recSearchFolder(folder));
 	}
 
 	for (const optionArg of optionArgs) {

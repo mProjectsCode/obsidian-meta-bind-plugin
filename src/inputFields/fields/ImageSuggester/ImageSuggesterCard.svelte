@@ -22,6 +22,9 @@
 
 	.image-card-image {
 		width: 100%;
+		height: fit-content;
+		max-height: 500px;
+		object-fit: contain;
 	}
 
 	.image-card-text {

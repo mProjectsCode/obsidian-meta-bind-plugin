@@ -161,6 +161,50 @@ div.mb-view-wrapper {
 	flex-grow: 1;
 }
 
+/* Inline List */
+.mb-inline-list {
+	display: inline;
+	font-size: 0;
+
+
+	& > .mb-inline-list-item {
+		border: var(--mb-border-width) solid var(--background-modifier-border);
+		border-radius: var(--mb-border-radius);
+		display: inline-flex;
+		align-items: center;
+		gap: var(--size-4-2);
+		padding-inline: var(--size-4-2);
+		padding-block: var(--size-4-1);
+		font-size: var(--font-ui-small);
+
+		&:not(:last-child) {
+			margin-right: var(--size-4-2);
+		}
+
+		& > .mb-inline-list-item-button {
+			border: none;
+			background: none;
+			padding: initial;
+			height: unset;
+
+			&:hover {
+				color: var(--text-error);
+			}
+		}
+	}
+
+	& > .mb-inline-list-add {
+		border: var(--mb-border-width) solid var(--background-modifier-border);
+		border-radius: var(--mb-border-radius);
+		display: inline-flex;
+		align-items: center;
+		padding-inline: var(--size-4-2);
+		padding-block: var(--size-4-1);
+		font-size: var(--font-ui-small);
+	}
+}
+
+
 /* Suggester Input */
 .mb-suggest-input {
 	background: var(--background-modifier-form-field);
@@ -260,6 +304,17 @@ div.mb-view-wrapper {
 	width: 100%;
 }
 
+/* Image */
+.mb-image-search-container {
+	margin-bottom: var(--size-4-4);
+}
+
+.mb-image-card-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+	gap: var(--size-4-4);
+}
+
 /* Error */
 .mb-error {
 	color: var(--text-error) !important;
@@ -305,11 +360,11 @@ code.mb-error {
 }
 
 .mb-error-collection > svg.lucide-alert-circle {
-	color: var(--color-red);
+	color: var(--text-error);
 }
 
 .mb-error-collection > svg.lucide-alert-triangle {
-	color: var(--color-orange);
+	color: var(--text-warning);
 }
 
 .mb-error-collection > svg.lucide-info {
@@ -329,11 +384,11 @@ code.mb-error {
 }
 
 .mb-error-text {
-	color: var(--color-red) !important;
+	color: var(--text-error) !important;
 }
 
 .mb-warning-text {
-	color: var(--color-orange) !important;
+	color: var(--text-warning) !important;
 }
 
 /* --- Misc --- */

@@ -20,6 +20,8 @@ import { DateIPF } from './fields/Date/DateIPF';
 import { TimeIPF } from './fields/Time/TimeIPF';
 import { type InputFieldConfig, InputFieldConfigs, InputFieldType } from '../parsers/GeneralConfigs';
 import { DocsHelper } from '../utils/DocsHelper';
+import { InlineListSuggesterIPF } from './fields/InlineListSuggester/InlineListSuggesterIPF';
+import { InlineListIPF } from './fields/InlineList/InlineListIPF';
 
 export type NewInputField =
 	| ToggleIPF
@@ -38,7 +40,9 @@ export type NewInputField =
 	| ListIPF
 	| ListSuggesterIPF
 	| DateIPF
-	| TimeIPF;
+	| TimeIPF
+	| InlineListSuggesterIPF
+	| InlineListIPF;
 
 export class InputFieldFactory {
 	plugin: IPlugin;
@@ -94,6 +98,10 @@ export class InputFieldFactory {
 			return new DateIPF(renderChild);
 		} else if (type === InputFieldType.TIME) {
 			return new TimeIPF(renderChild);
+		} else if (type === InputFieldType.INLINE_LIST_SUGGESTER) {
+			return new InlineListSuggesterIPF(renderChild);
+		} else if (type === InputFieldType.INLINE_LIST) {
+			return new InlineListIPF(renderChild);
 		}
 
 		return undefined;

@@ -35,6 +35,8 @@ export enum InputFieldType {
 	INLINE_SELECT = 'inlineSelect',
 	LIST = 'list',
 	LIST_SUGGESTER = 'listSuggester',
+	INLINE_LIST_SUGGESTER = 'inlineListSuggester',
+	INLINE_LIST = 'inlineList',
 
 	INVALID = 'invalid',
 }
@@ -165,6 +167,16 @@ export const InputFieldConfigs: Record<InputFieldType, InputFieldConfig> = {
 		type: InputFieldType.LIST_SUGGESTER,
 		allowInBlock: true,
 		allowInline: false,
+	},
+	[InputFieldType.INLINE_LIST_SUGGESTER]: {
+		type: InputFieldType.INLINE_LIST_SUGGESTER,
+		allowInBlock: true,
+		allowInline: true,
+	},
+	[InputFieldType.INLINE_LIST]: {
+		type: InputFieldType.INLINE_LIST,
+		allowInBlock: true,
+		allowInline: true,
 	},
 	[InputFieldType.INVALID]: {
 		type: InputFieldType.INVALID,
@@ -299,6 +311,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 			InputFieldType.IMAGE_SUGGESTER,
 			InputFieldType.INLINE_SELECT,
 			InputFieldType.LIST_SUGGESTER,
+			InputFieldType.INLINE_LIST_SUGGESTER,
 		],
 		values: [
 			[
@@ -325,7 +338,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	},
 	[InputFieldArgumentType.OPTION_QUERY]: {
 		type: InputFieldArgumentType.OPTION_QUERY,
-		allowedFieldTypes: [InputFieldType.SUGGESTER, InputFieldType.IMAGE_SUGGESTER, InputFieldType.LIST_SUGGESTER],
+		allowedFieldTypes: [InputFieldType.SUGGESTER, InputFieldType.IMAGE_SUGGESTER, InputFieldType.LIST_SUGGESTER, InputFieldType.INLINE_LIST_SUGGESTER],
 		values: [
 			[
 				{
@@ -339,7 +352,14 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	},
 	[InputFieldArgumentType.PLACEHOLDER]: {
 		type: InputFieldArgumentType.PLACEHOLDER,
-		allowedFieldTypes: [InputFieldType.TEXT, InputFieldType.TEXT_AREA, InputFieldType.TEXT_AREA_DEPRECATED, InputFieldType.NUMBER, InputFieldType.LIST],
+		allowedFieldTypes: [
+			InputFieldType.TEXT,
+			InputFieldType.TEXT_AREA,
+			InputFieldType.TEXT_AREA_DEPRECATED,
+			InputFieldType.NUMBER,
+			InputFieldType.LIST,
+			InputFieldType.INLINE_LIST,
+		],
 		values: [
 			[
 				{
@@ -383,7 +403,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	},
 	[InputFieldArgumentType.USE_LINKS]: {
 		type: InputFieldArgumentType.USE_LINKS,
-		allowedFieldTypes: [InputFieldType.SUGGESTER, InputFieldType.LIST_SUGGESTER],
+		allowedFieldTypes: [InputFieldType.SUGGESTER, InputFieldType.LIST_SUGGESTER, InputFieldType.INLINE_LIST_SUGGESTER],
 		values: [
 			[],
 			[
@@ -398,8 +418,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	},
 	[InputFieldArgumentType.LIMIT]: {
 		type: InputFieldArgumentType.LIMIT,
-		// FIXME: LIST is not yet converted to the newer version, so should still implement the LIMIT argument
-		allowedFieldTypes: [InputFieldType.TEXT, InputFieldType.TEXT_AREA, InputFieldType.LIST],
+		allowedFieldTypes: [InputFieldType.TEXT, InputFieldType.TEXT_AREA, InputFieldType.LIST, InputFieldType.INLINE_LIST],
 		values: [
 			[
 				{
