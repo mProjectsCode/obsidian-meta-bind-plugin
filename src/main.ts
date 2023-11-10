@@ -7,10 +7,8 @@ import { API } from './api/API';
 import { setFirstWeekday } from './utils/DatePickerUtils';
 import { createMarkdownRenderChildWidgetEditorPlugin } from './cm6/Cm6_ViewPlugin';
 import { MDRCManager } from './MDRCManager';
-import { DEFAULT_SETTINGS, type InputFieldTemplate, type MetaBindPluginSettings } from './settings/Settings';
+import { DEFAULT_SETTINGS, type MetaBindPluginSettings } from './settings/Settings';
 import { type IPlugin } from './IPlugin';
-import { EnclosingPair, ParserUtils } from './utils/ParserUtils';
-import { ErrorLevel, MetaBindParsingError } from './utils/errors/MetaBindErrors';
 import { ObsidianMetadataAdapter } from './metadata/ObsidianMetadataAdapter';
 import { FaqView, MB_FAQ_VIEW_TYPE } from './utils/faq/FaqView';
 
@@ -128,26 +126,6 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		const bestLinkPath = this.app.metadataCache.getFirstLinkpathDest(name, '');
 
 		return bestLinkPath === null ? [] : [bestLinkPath.path];
-
-		// const fileNameIsPath = isPath(name);
-		// const processedFileName = fileNameIsPath ? removeFileEnding(name) : getFileName(removeFileEnding(name));
-		//
-		// const allFiles = this.app.vault.getMarkdownFiles();
-		// const filePaths: string[] = [];
-		// for (const file of allFiles) {
-		// 	// console.log(removeFileEnding(file.path));
-		// 	if (fileNameIsPath) {
-		// 		if (removeFileEnding(file.path) === processedFileName) {
-		// 			filePaths.push(file.path);
-		// 		}
-		// 	} else {
-		// 		if (getFileName(removeFileEnding(file.name)) === processedFileName) {
-		// 			filePaths.push(file.path);
-		// 		}
-		// 	}
-		// }
-		//
-		// return filePaths;
 	}
 
 	isFilePathExcluded(path: string): boolean {
@@ -176,45 +154,11 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		console.log(`meta-bind | Main >> settings save`);
 
 		DateParser.dateFormat = this.settings.preferredDateFormat;
-		// this.api.inputFieldParser.parseTemplates(this.settings.inputTemplates);
 		setFirstWeekday(this.settings.firstWeekday);
 		await this.saveData(this.settings);
 	}
 
 	applyTemplatesMigration(oldSettings: MetaBindPluginSettings): MetaBindPluginSettings {
-		if (oldSettings.inputTemplates !== undefined) {
-			const templates = oldSettings.inputTemplates;
-			const newTemplates: InputFieldTemplate[] = [];
-
-			try {
-				let templateDeclarations = templates ? ParserUtils.split(templates, '\n', new EnclosingPair('[', ']')) : [];
-				templateDeclarations = templateDeclarations.map(x => x.trim()).filter(x => x.length > 0);
-
-				for (const templateDeclaration of templateDeclarations) {
-					let templateDeclarationParts: string[] = ParserUtils.split(templateDeclaration, '->', new EnclosingPair('[', ']'));
-					templateDeclarationParts = templateDeclarationParts.map(x => x.trim());
-
-					if (templateDeclarationParts.length === 1) {
-						throw new MetaBindParsingError({
-							errorLevel: ErrorLevel.CRITICAL,
-							effect: 'failed to parse template declaration',
-							cause: `template must include one "->"`,
-						});
-					} else if (templateDeclarationParts.length === 2) {
-						newTemplates.push({
-							name: templateDeclarationParts[0],
-							declaration: templateDeclarationParts[1],
-						});
-					}
-				}
-			} catch (e) {
-				console.warn('failed to migrate templates', e);
-			}
-
-			delete oldSettings.inputTemplates;
-			oldSettings.inputFieldTemplates = newTemplates;
-		}
-
 		return oldSettings;
 	}
 

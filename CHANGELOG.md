@@ -1,5 +1,11 @@
 # Obsidian Meta Bind Changelog
 
+# Unreleased
+
+Breaking Changes
+
+-   removed setting migrations for settings from plugin versions earlier than `0.6.0`
+
 # 0.7.2
 
 Changes

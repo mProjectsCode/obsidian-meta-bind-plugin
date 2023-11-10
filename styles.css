@@ -185,6 +185,7 @@ div.mb-view-wrapper {
 			background: none;
 			padding: initial;
 			height: unset;
+			box-shadow: none;
 
 			&:hover {
 				color: var(--text-error);
@@ -200,6 +201,10 @@ div.mb-view-wrapper {
 		padding-inline: var(--size-4-2);
 		padding-block: var(--size-4-1);
 		font-size: var(--font-ui-small);
+
+		&:hover {
+			color: var(--text-accent);
+		}
 	}
 }
 

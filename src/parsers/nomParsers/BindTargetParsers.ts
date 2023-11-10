@@ -4,7 +4,7 @@ import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { type UnvalidatedBindTargetDeclaration } from '../inputFieldParser/InputFieldDeclaration';
 import { createResultNode, doubleQuotedString, ident, type ParsingResultNode } from './GeneralParsers';
 
-const filePath: Parser<string> = P.manyNotOf('{}[]#^|:?').box('file path');
+export const filePath: Parser<string> = P.manyNotOf('{}[]#^|:?').box('file path');
 
 const metadataPathPartIdent: Parser<ParsingResultNode> = ident.node(createResultNode);
 
