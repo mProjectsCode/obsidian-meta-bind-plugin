@@ -11,7 +11,9 @@
 	<LinkComponent mdLink={mdLinkList[0]}></LinkComponent>
 {:else}
 	{#each mdLinkList.slice(0, mdLinkList.length - 1) as link}
-		<LinkComponent mdLink={link}></LinkComponent>,
+		<LinkComponent mdLink={link}></LinkComponent><span>,</span>
+		<span></span>
+		<!-- some strange line breaks to get the comma seperated spacing to work -->
 	{/each}
 	<LinkComponent mdLink={mdLinkList[mdLinkList.length - 1]}></LinkComponent>
 {/if}

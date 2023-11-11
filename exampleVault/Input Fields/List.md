@@ -7,11 +7,10 @@ list:
 list2:
   - "[[Other/Example Notes/Example Note with Image.md|Example Note with Image]]"
   - "[[Other/Example Notes/Example Note with Callouts.md|Example Note with Callouts]]"
-  - something
 list3:
   - Example Note with Image
   - Example Note with Callouts
-  - something
+  - Example Note with Embeds
 list4:
   - Example Note with Callouts
   - Example Note with Embeds
@@ -26,12 +25,16 @@ INPUT[list(showcase):list]
 ```
 
 ```meta-bind
-INPUT[listSuggester(optionQuery(#example-note), option(something, other), showcase):list2]
+INPUT[listSuggester(optionQuery(#example-note), showcase):list2]
 ```
 
+`VIEW[{list2}][link]`
+
 ```meta-bind
-INPUT[listSuggester(optionQuery(#example-note), option(something, other), useLinks(false), showcase):list3]
+INPUT[listSuggester(optionQuery(#example-note), useLinks(false), showcase):list3]
 ```
+
+`VIEW[{list3}][link]`
 
 ```meta-bind
 INPUT[inlineListSuggester(optionQuery(#example-note), option(something, other), useLinks(false), showcase):list4]
