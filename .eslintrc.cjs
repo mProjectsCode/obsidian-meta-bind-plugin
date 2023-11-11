@@ -32,6 +32,7 @@ const config = {
 		'@typescript-eslint/no-empty-function': 'off',
 		'@typescript-eslint/no-inferrable-types': 'off',
 		'@typescript-eslint/explicit-function-return-type': ['warn'],
+		'@typescript-eslint/require-await': 'off',
 	},
 };
 

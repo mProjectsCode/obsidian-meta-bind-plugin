@@ -4,6 +4,7 @@ import { type AbstractViewField } from './AbstractViewField';
 import { MathVF } from './fields/MathVF';
 import { TextVF } from './fields/TextVF';
 import { ViewFieldType } from '../parsers/GeneralConfigs';
+import { LinkVF } from './fields/LinkVF';
 
 export class ViewFieldFactory {
 	plugin: IPlugin;
@@ -19,6 +20,8 @@ export class ViewFieldFactory {
 			return new MathVF(renderChild);
 		} else if (type === ViewFieldType.TEXT) {
 			return new TextVF(renderChild);
+		} else if (type === ViewFieldType.LINK) {
+			return new LinkVF(renderChild);
 		}
 
 		return undefined;

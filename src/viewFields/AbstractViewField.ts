@@ -52,6 +52,7 @@ export abstract class AbstractViewField {
 			this.container.removeClass('mb-error');
 		} catch (e) {
 			if (e instanceof Error) {
+				console.error(e);
 				this.container.innerText = e.message;
 				this.container.addClass('mb-error');
 			}

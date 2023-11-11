@@ -73,37 +73,10 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 		} catch (e) {
 			this.errorCollection.add(e);
 		}
-
-		// for (const variable of this.variables) {
-		// 	variable.writeSignalListener = variable.writeSignal.registerListener({
-		// 		callback: () => {
-		// 			this.viewField?.update(this.variables);
-		// 		},
-		// 	});
-		//
-		// 	this.plugin.metadataManager.register(
-		// 		variable.bindTargetDeclaration.filePath ?? this.filePath,
-		// 		variable.writeSignal,
-		// 		variable.bindTargetDeclaration.metadataPath,
-		// 		variable.listenToChildren,
-		// 		this.uuid + '/' + variable.uuid
-		// 	);
-		// }
 	}
 
 	unregisterSelfFromMetadataManager(): void {
 		this.metadataSubscription?.unsubscribe();
-
-		// for (const variable of this.variables) {
-		// 	if (variable.writeSignalListener) {
-		// 		variable.writeSignal.unregisterListener(variable.writeSignalListener);
-		// 	}
-		// 	this.plugin.metadataManager.unregister(variable.bindTargetDeclaration.filePath ?? this.filePath, this.uuid + '/' + variable.uuid);
-		// }
-	}
-
-	getInitialValue(): string {
-		return '';
 	}
 
 	getArguments<T extends ViewFieldArgumentType>(name: T): ViewFieldArgumentMapType<T>[] {

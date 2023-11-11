@@ -75,7 +75,7 @@ export class TextVF extends AbstractViewField {
 	computeValue(variables: ViewFieldVariable[]): string {
 		if (!this.textParts) {
 			throw new MetaBindExpressionError({
-				errorLevel: ErrorLevel.ERROR,
+				errorLevel: ErrorLevel.CRITICAL,
 				effect: 'failed to evaluate text view field',
 				cause: 'content parts is undefined',
 			});

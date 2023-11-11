@@ -26,7 +26,7 @@ describe('notifier', () => {
 		notifier.notifyListeners(9);
 
 		expect(spy1).toHaveBeenCalledTimes(1);
-		// expect(spy1).toHaveBeenCalledWith(9);
+		expect(spy1.mock.calls).toEqual([[9]]);
 	});
 
 	test('should notify multiple listeners', () => {
@@ -35,10 +35,10 @@ describe('notifier', () => {
 		notifier.notifyListeners(9);
 
 		expect(spy1).toHaveBeenCalledTimes(1);
-		// expect(spy1).toHaveBeenCalledWith(9);
+		expect(spy1.mock.calls).toEqual([[9]]);
 
 		expect(spy2).toHaveBeenCalledTimes(1);
-		// expect(spy2).toHaveBeenCalledWith(9);
+		expect(spy2.mock.calls).toEqual([[9]]);
 	});
 
 	test('should not notify unregistered listener', () => {
@@ -48,7 +48,7 @@ describe('notifier', () => {
 		notifier.notifyListeners(9);
 
 		expect(spy1).toHaveBeenCalledTimes(1);
-		// expect(spy1).toHaveBeenCalledWith(9);
+		expect(spy1.mock.calls).toEqual([[9]]);
 
 		expect(spy2).toHaveBeenCalledTimes(0);
 	});
@@ -61,11 +61,10 @@ describe('notifier', () => {
 		notifier.notifyListeners(9);
 
 		expect(spy1).toHaveBeenCalledTimes(2);
-		// expect(spy1).toHaveBeenCalledWith(8);
-		// expect(spy1).toHaveBeenCalledWith(9);
+		expect(spy1.mock.calls).toEqual([[8], [9]]);
 
 		expect(spy2).toHaveBeenCalledTimes(1);
-		// expect(spy2).toHaveBeenCalledWith(9);
+		expect(spy2.mock.calls).toEqual([[9]]);
 	});
 });
 
@@ -101,7 +100,7 @@ describe('signal', () => {
 		expect(signal.get()).toBe(9);
 
 		expect(spy1).toHaveBeenCalledTimes(1);
-		// expect(spy1).toHaveBeenCalledWith(9);
+		expect(spy1.mock.calls).toEqual([[9]]);
 
 		expect(spy2).toHaveBeenCalledTimes(0);
 	});
@@ -118,11 +117,10 @@ describe('signal', () => {
 		expect(signal.get()).toBe(9);
 
 		expect(spy1).toHaveBeenCalledTimes(2);
-		// expect(spy1).toHaveBeenCalledWith(8);
-		// expect(spy1).toHaveBeenCalledWith(9);
+		expect(spy1.mock.calls).toEqual([[8], [9]]);
 
 		expect(spy2).toHaveBeenCalledTimes(1);
-		// expect(spy2).toHaveBeenCalledWith(9);
+		expect(spy2.mock.calls).toEqual([[9]]);
 	});
 
 	test('should not notify unregistered listeners times', () => {
@@ -139,9 +137,9 @@ describe('signal', () => {
 		expect(signal.get()).toBe(9);
 
 		expect(spy1).toHaveBeenCalledTimes(1);
-		// expect(spy1).toHaveBeenCalledWith(8);
+		expect(spy1.mock.calls).toEqual([[8]]);
 
 		expect(spy2).toHaveBeenCalledTimes(1);
-		// expect(spy2).toHaveBeenCalledWith(9);
+		expect(spy2.mock.calls).toEqual([[9]]);
 	});
 });

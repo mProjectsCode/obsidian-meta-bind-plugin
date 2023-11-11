@@ -110,18 +110,16 @@ export class MetadataManager {
 			// const frontmatter = this.plugin.app.metadataCache.getFileCache(file)?.frontmatter;
 			const { metadata, extraCache } = this.metadataAdapter.getMetadataAndExtraCache(subscription);
 
-			const newCache: MetadataManagerCacheItem = Object.assign(
-				{},
-				{
-					extraCache: extraCache,
-					metadata: metadata,
-					listeners: [subscription],
-					cyclesSinceLastChange: metadataCacheUpdateCycleThreshold + 1, // +1, so that is it bigger than the threshold
-					cyclesSinceInactive: 0,
-					inactive: false,
-					changed: false,
-				},
-			);
+			const newCache: MetadataManagerCacheItem = {
+				extraCache: extraCache,
+				metadata: metadata,
+				listeners: [subscription],
+				cyclesSinceLastChange: metadataCacheUpdateCycleThreshold + 1, // +1, so that is it bigger than the threshold
+				cyclesSinceInactive: 0,
+				inactive: false,
+				changed: false,
+			};
+
 			console.log(`meta-bind | MetadataManager >> loaded metadata for file ${subscription.bindTarget.filePath}`, newCache.metadata);
 
 			subscription.notify(traverseObjectByPath(subscription.bindTarget.metadataPath, newCache.metadata));

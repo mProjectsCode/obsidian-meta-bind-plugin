@@ -443,6 +443,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 export enum ViewFieldType {
 	MATH = 'math',
 	TEXT = 'text',
+	LINK = 'link',
 
 	INVALID = 'invalid',
 }
