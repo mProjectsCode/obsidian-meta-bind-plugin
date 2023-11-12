@@ -3,7 +3,7 @@ list:
   - apple
   - banana
   - berries
-  - "[[file]]"
+  - https://github.com/
 list2:
   - "[[Other/Example Notes/Example Note with Image.md|Example Note with Image]]"
   - "[[Other/Example Notes/Example Note with Callouts.md|Example Note with Callouts]]"
@@ -23,6 +23,8 @@ list5:
 ```meta-bind
 INPUT[list(showcase):list]
 ```
+
+`VIEW[{list}][link]`
 
 ```meta-bind
 INPUT[listSuggester(optionQuery(#example-note), showcase):list2]

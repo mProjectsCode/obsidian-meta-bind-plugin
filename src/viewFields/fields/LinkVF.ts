@@ -81,10 +81,15 @@ export class LinkVF extends AbstractViewField {
 		const variable = variables[0];
 		const content = variable.inputSignal.get();
 
+		// we want the return value to be a human-readable string, since someone could save this to the frontmatter
 		if (typeof content === 'string') {
 			return this.convertToLink(content);
 		} else if (Array.isArray(content)) {
-			return (content.filter(x => typeof x === 'string') as string[]).map(x => this.convertToLink(x)).join(', ');
+			let strings = content.filter(x => typeof x === 'string') as string[];
+			return strings
+				.map(x => this.convertToLink(x))
+				.filter(x => x !== '')
+				.join(', ');
 		} else {
 			return '';
 		}
@@ -93,8 +98,21 @@ export class LinkVF extends AbstractViewField {
 	convertToLink(str: string): string {
 		if (isMdLink(str)) {
 			return str;
-		} else {
+		} else if (isMdLink(`[[${str}]]`)) {
 			return `[[${str}]]`;
+		} else if (this.getUrl(str)) {
+			const url = this.getUrl(str) as URL;
+			return `[${url.hostname}](${str})`;
+		} else {
+			return '';
+		}
+	}
+
+	getUrl(str: string): URL | undefined {
+		try {
+			return new URL(str);
+		} catch (_) {
+			return undefined;
 		}
 	}
 
