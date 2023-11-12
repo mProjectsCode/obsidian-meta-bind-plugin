@@ -1,3 +1,6 @@
+import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
+import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
+
 export class Time {
 	private _hour: number;
 	private _minute: number;
@@ -50,6 +53,20 @@ export class Time {
 	}
 }
 
+const timeParser = P.sequenceMap(
+	(a, b, _, c, d) => {
+		return {
+			hour: Number.parseInt(a + b),
+			minute: Number.parseInt(c + d),
+		};
+	},
+	P_UTILS.digit(),
+	P_UTILS.digit(),
+	P.string(':'),
+	P_UTILS.digit(),
+	P_UTILS.digit(),
+);
+
 export class TimeParser {
 	public static parse(timeString: string | null | undefined): Time | undefined {
 		if (!timeString) {
@@ -58,13 +75,23 @@ export class TimeParser {
 
 		const time: Time = TimeParser.getDefaultTime();
 
-		const timeParts = timeString.split(':');
-		if (timeParts.length !== 2) {
+		const parsedTime = timeParser.tryParse(timeString);
+
+		if (!parsedTime.success) {
+			return undefined;
+		}
+		if (Number.isNaN(parsedTime.value.hour) || Number.isNaN(parsedTime.value.minute)) {
+			return undefined;
+		}
+		if (parsedTime.value.hour < 0 || parsedTime.value.hour >= 24) {
+			return undefined;
+		}
+		if (parsedTime.value.minute < 0 || parsedTime.value.minute >= 60) {
 			return undefined;
 		}
 
-		time.setHourFromString(timeParts[0]);
-		time.setMinuteFromString(timeParts[1]);
+		time.setHour(parsedTime.value.hour);
+		time.setMinute(parsedTime.value.minute);
 
 		return time;
 	}
