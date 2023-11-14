@@ -33,15 +33,13 @@ describe('time parser', () => {
 
 	describe('should fail on invalid time format', () => {
 		test.each([['00:0'], ['0:05'], ['304:25'], ['25a'], [''], ['23h:15m'], ['23#15']])('%s', time => {
-			// @ts-ignore
-			expect(TimeParser.parse(time)).toBe(undefined);
+			expect<Time | undefined>(TimeParser.parse(time)).toBe(undefined);
 		});
 	});
 
 	describe('should fail on time out of bounds', () => {
 		test.each([['-01:00'], ['24:05'], ['26:05'], ['05:60'], ['05:99']])('%s', time => {
-			// @ts-ignore
-			expect(TimeParser.parse(time)).toBe(undefined);
+			expect<Time | undefined>(TimeParser.parse(time)).toBe(undefined);
 		});
 	});
 });

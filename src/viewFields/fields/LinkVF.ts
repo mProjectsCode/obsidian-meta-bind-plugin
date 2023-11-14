@@ -85,7 +85,7 @@ export class LinkVF extends AbstractViewField {
 		if (typeof content === 'string') {
 			return this.convertToLink(content);
 		} else if (Array.isArray(content)) {
-			let strings = content.filter(x => typeof x === 'string') as string[];
+			const strings = content.filter(x => typeof x === 'string') as string[];
 			return strings
 				.map(x => this.convertToLink(x))
 				.filter(x => x !== '')
@@ -101,7 +101,7 @@ export class LinkVF extends AbstractViewField {
 		} else if (isMdLink(`[[${str}]]`)) {
 			return `[[${str}]]`;
 		} else if (this.getUrl(str)) {
-			const url = this.getUrl(str) as URL;
+			const url = this.getUrl(str)!;
 			return `[${url.hostname}](${str})`;
 		} else {
 			return '';
@@ -111,7 +111,7 @@ export class LinkVF extends AbstractViewField {
 	getUrl(str: string): URL | undefined {
 		try {
 			return new URL(str);
-		} catch (_) {
+		} catch (e) {
 			return undefined;
 		}
 	}

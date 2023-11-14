@@ -1,5 +1,5 @@
 ---
-number1: 23
+number1: 123
 number2: 5
 ---
 `INPUT[number:number1]`
@@ -9,6 +9,6 @@ number2: 5
 {number1} as n1
 {number2} as n2
 ---
-return `${context.n1 * context.n2} km`;
+return engine.markdown.create(`**${context.bound.n1 * context.bound.n2}** km`);
 ```
 

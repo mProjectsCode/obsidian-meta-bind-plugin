@@ -1,23 +1,29 @@
 import type MetaBindPlugin from '../main';
-import { ErrorLevel, MetaBindExpressionError, MetaBindJsError } from '../utils/errors/MetaBindErrors';
+import { ErrorLevel, MetaBindJsError } from '../utils/errors/MetaBindErrors';
 import { Signal } from '../utils/Signal';
 import { type RenderChildType } from './InputFieldMDRC';
 import { type ViewFieldVariable } from './ViewFieldMDRC';
-import { getAPI } from 'obsidian-dataview';
 import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
 import { type JsViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
 import { type ComputedMetadataSubscription, type ComputedSubscriptionDependency } from '../metadata/ComputedMetadataSubscription';
 import { getUUID } from '../utils/Utils';
+import { type App, type TFile } from 'obsidian';
+import { type API as JsEngineAPI } from 'jsEngine/api/API';
+import type JsEnginePlugin from 'jsEngine/main';
+import { type JsExecution } from 'jsEngine/engine/JsExecution';
+
+function getJsEngineAPI(app: App): JsEngineAPI | undefined {
+	return (app.plugins.getPlugin('js-engine') as JsEnginePlugin | undefined)?.api;
+}
 
 export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 	fullDeclaration?: string;
-	// user code function
-	expression?: (...args: unknown[]) => unknown;
 	viewFieldDeclaration: JsViewFieldDeclaration;
 	variables: ViewFieldVariable[];
 	renderContainer?: HTMLElement;
 	metadataSubscription?: ComputedMetadataSubscription;
+	file: TFile;
 
 	constructor(
 		containerEl: HTMLElement,
@@ -34,6 +40,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 		this.fullDeclaration = declaration.fullDeclaration;
 		this.viewFieldDeclaration = declaration;
 		this.variables = [];
+		this.file = this.plugin.app.vault.getAbstractFileByPath(this.filePath) as TFile;
 
 		if (this.errorCollection.isEmpty()) {
 			try {
@@ -45,23 +52,10 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 						contextName: bindTargetMapping.name,
 					});
 				}
-
-				this.parseExpression();
 			} catch (e) {
 				this.errorCollection.add(e);
 			}
 		}
-	}
-
-	parseExpression(): void {
-		if (!this.viewFieldDeclaration.code) {
-			return;
-		}
-
-		const isAsync = this.viewFieldDeclaration.code.contains('await');
-		const funcConstructor = isAsync ? async function (): Promise<void> {}.constructor : Function;
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-		this.expression = funcConstructor('app', 'mb', 'dv', 'filePath', 'context', this.viewFieldDeclaration.code);
 	}
 
 	buildContext(): Record<string, unknown> {
@@ -77,14 +71,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 		return context;
 	}
 
-	async evaluateExpression(): Promise<string> {
-		if (!this.expression) {
-			throw new MetaBindJsError({
-				errorLevel: ErrorLevel.CRITICAL,
-				effect: "Can't evaluate expression.",
-				cause: 'Expression is undefined.',
-			});
-		}
+	async evaluateExpression(): Promise<JsExecution> {
 		if (!this.plugin.settings.enableJs) {
 			throw new MetaBindJsError({
 				errorLevel: ErrorLevel.CRITICAL,
@@ -93,25 +80,30 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 			});
 		}
 
-		const context = this.buildContext();
-		try {
-			const retValue = await Promise.resolve<unknown>(this.expression(this.plugin.app, this.plugin.api, getAPI(this.plugin.app), this.filePath, context));
-			return retValue?.toString() ?? 'null';
-		} catch (e) {
-			if (e instanceof Error) {
-				throw new MetaBindExpressionError({
-					errorLevel: ErrorLevel.ERROR,
-					effect: `failed to evaluate js expression`,
-					cause: e,
-					context: {
-						declaration: this.viewFieldDeclaration.code,
-						context: context,
-					},
-				});
-			} else {
-				throw new Error('failed to evaluate js expression because of: unexpected thrown value');
-			}
+		const jsEngine = getJsEngineAPI(this.plugin.app);
+		if (jsEngine === undefined) {
+			throw new MetaBindJsError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'can not evaluate js view field',
+				cause: 'js view fields need the JS Engine plugin to be installed',
+			});
 		}
+
+		const executionPromise = jsEngine.internal.excute({
+			code: this.viewFieldDeclaration.code,
+			context: {
+				file: this.file,
+				line: 0,
+				metadata: this.plugin.app.metadataCache.getFileCache(this.file),
+			},
+			container: this.renderContainer,
+			component: this,
+			contextOverrides: {
+				bound: this.buildContext(),
+			},
+		});
+
+		return await executionPromise;
 	}
 
 	registerSelfToMetadataManager(): void {
@@ -135,15 +127,21 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 		this.metadataSubscription?.unsubscribe();
 	}
 
-	getInitialValue(): string {
-		return '';
-	}
-
 	async onload(): Promise<void> {
 		console.log('meta-bind | ViewFieldMarkdownRenderChild >> load', this);
 
 		this.containerEl.addClass('mb-view');
 		this.containerEl.empty();
+
+		if (getJsEngineAPI(this.plugin.app) === undefined) {
+			this.errorCollection.add(
+				new MetaBindJsError({
+					errorLevel: ErrorLevel.ERROR,
+					effect: 'can not create js view field',
+					cause: 'js view fields need the JS Engine plugin to be installed',
+				}),
+			);
+		}
 
 		new ErrorIndicatorComponent({
 			target: this.containerEl,
@@ -187,8 +185,18 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 		}
 
 		try {
-			this.renderContainer.innerText = await this.evaluateExpression();
-			this.renderContainer.removeClass('mb-error');
+			const jsEngine = getJsEngineAPI(this.plugin.app);
+			if (jsEngine === undefined) {
+				throw new MetaBindJsError({
+					errorLevel: ErrorLevel.ERROR,
+					effect: 'can not evaluate js view field',
+					cause: 'js view fields need the JS Engine plugin to be installed',
+				});
+			}
+
+			const execution = await this.evaluateExpression();
+			const renderer = jsEngine.internal.createRenderer(this.renderContainer, this.filePath, this);
+			await renderer.render(execution.result);
 		} catch (e) {
 			if (e instanceof Error) {
 				this.renderContainer.innerText = e.message;
