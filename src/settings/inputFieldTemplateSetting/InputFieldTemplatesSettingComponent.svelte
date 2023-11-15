@@ -48,7 +48,9 @@
 		</thead>
 		<tbody>
 			{#each inputFieldTemplates as template}
-				<InputFieldTemplateSettingComponent template={template} on:delete-template={evt => deleteTemplate(evt.detail.name)}
+				<InputFieldTemplateSettingComponent
+					template={template}
+					on:delete-template={evt => deleteTemplate(evt.detail.name)}
 				></InputFieldTemplateSettingComponent>
 			{/each}
 		</tbody>
@@ -60,7 +62,8 @@
 		<div>
 			<h3 class="mod-error">Some Templates Failed to Parse</h3>
 
-			<ErrorCollectionComponent errorCollection={errorCollection} declaration={undefined}></ErrorCollectionComponent>
+			<ErrorCollectionComponent errorCollection={errorCollection} declaration={undefined}
+			></ErrorCollectionComponent>
 		</div>
 	{/if}
 

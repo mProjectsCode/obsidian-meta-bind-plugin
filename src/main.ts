@@ -33,7 +33,9 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		this.api = new API(this);
 
-		const templateParseErrorCollection = this.api.inputFieldParser.parseTemplates(this.settings.inputFieldTemplates);
+		const templateParseErrorCollection = this.api.inputFieldParser.parseTemplates(
+			this.settings.inputFieldTemplates,
+		);
 		if (templateParseErrorCollection.hasErrors()) {
 			console.warn('meta-bind | failed to parse templates', templateParseErrorCollection);
 		}
@@ -58,7 +60,14 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				const isViewField = content.startsWith('VIEW[') && content.endsWith(']');
 
 				if (isInputField) {
-					this.api.createInputFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock, ctx, undefined);
+					this.api.createInputFieldFromString(
+						content,
+						RenderChildType.INLINE,
+						ctx.sourcePath,
+						codeBlock,
+						ctx,
+						undefined,
+					);
 				}
 				if (isViewField) {
 					this.api.createViewFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock, ctx);
@@ -73,7 +82,14 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			const isViewField = content.startsWith('VIEW[') && content.endsWith(']');
 
 			if (isInputField) {
-				this.api.createInputFieldFromString(content, RenderChildType.BLOCK, ctx.sourcePath, codeBlock, ctx, undefined);
+				this.api.createInputFieldFromString(
+					content,
+					RenderChildType.BLOCK,
+					ctx.sourcePath,
+					codeBlock,
+					ctx,
+					undefined,
+				);
 			}
 			if (isViewField) {
 				this.api.createViewFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock, ctx);
@@ -111,7 +127,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			},
 		});
 
-		this.registerView(MB_FAQ_VIEW_TYPE, leaf => new FaqView(leaf));
+		this.registerView(MB_FAQ_VIEW_TYPE, leaf => new FaqView(leaf, this));
 
 		this.addSettingTab(new MetaBindSettingTab(this.app, this));
 	}
@@ -165,7 +181,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	async activateView(viewType: string): Promise<void> {
 		const { workspace } = this.app;
 
-		let leaf: WorkspaceLeaf | null = null;
+		let leaf: WorkspaceLeaf | null;
 		const leaves = workspace.getLeavesOfType(viewType);
 
 		if (leaves.length > 0) {

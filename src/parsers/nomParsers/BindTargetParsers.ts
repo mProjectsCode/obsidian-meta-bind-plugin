@@ -8,7 +8,9 @@ export const filePath: Parser<string> = P.manyNotOf('{}[]#^|:?').box('file path'
 
 const metadataPathPartIdent: Parser<ParsingResultNode> = ident.node(createResultNode);
 
-const bracketMetadataPathPart: Parser<ParsingResultNode> = P.or(P_UTILS.digits(), doubleQuotedString).wrap(P.string('['), P.string(']')).node(createResultNode);
+const bracketMetadataPathPart: Parser<ParsingResultNode> = P.or(P_UTILS.digits(), doubleQuotedString)
+	.wrap(P.string('['), P.string(']'))
+	.node(createResultNode);
 
 const firstMetadataPathPart: Parser<UnvalidatedBindTargetDeclaration> = P.or(
 	P.sequenceMap(

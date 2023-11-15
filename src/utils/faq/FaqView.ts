@@ -1,13 +1,16 @@
 import { ItemView, type WorkspaceLeaf } from 'obsidian';
 import FaqComponent from './FaqComponent.svelte';
+import type MetaBindPlugin from '../../main';
 
 export const MB_FAQ_VIEW_TYPE = 'mb-faq-view-type';
 
 export class FaqView extends ItemView {
 	component: FaqComponent | undefined;
+	plugin: MetaBindPlugin;
 
-	constructor(leaf: WorkspaceLeaf) {
+	constructor(leaf: WorkspaceLeaf, plugin: MetaBindPlugin) {
 		super(leaf);
+		this.plugin = plugin;
 	}
 
 	getViewType(): string {
@@ -27,6 +30,7 @@ export class FaqView extends ItemView {
 			target: container,
 			props: {
 				app: this.app,
+				plugin: this.plugin,
 			},
 		});
 	}

@@ -62,7 +62,13 @@ export class TextVF extends AbstractViewField {
 			this.markdownComponent.unload();
 			this.markdownComponent.load();
 
-			await MarkdownRenderer.render(this.renderChild.plugin.app, text, container, this.renderChild.filePath, this.markdownComponent);
+			await MarkdownRenderer.render(
+				this.renderChild.plugin.app,
+				text,
+				container,
+				this.renderChild.filePath,
+				this.markdownComponent,
+			);
 		} else {
 			container.innerText = text;
 		}
@@ -84,7 +90,10 @@ export class TextVF extends AbstractViewField {
 		return this.textParts
 			.map<string>(x => {
 				if (typeof x === 'number') {
-					return stringifyUnknown(variables[x].inputSignal.get(), this.renderChild.plugin.settings.viewFieldDisplayNullAsEmpty);
+					return stringifyUnknown(
+						variables[x].inputSignal.get(),
+						this.renderChild.plugin.settings.viewFieldDisplayNullAsEmpty,
+					);
 				} else {
 					return x;
 				}

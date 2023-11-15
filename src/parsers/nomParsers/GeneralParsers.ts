@@ -4,7 +4,10 @@ import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { type ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
 import { type UnvalidatedFieldArgument } from '../inputFieldParser/InputFieldDeclaration';
 
-export const ident: Parser<string> = P.sequence(P_UTILS.unicodeLetter(), P.or(P_UTILS.unicodeAlphanumeric(), P.oneOf('-_')).many())
+export const ident: Parser<string> = P.sequence(
+	P_UTILS.unicodeLetter(),
+	P.or(P_UTILS.unicodeAlphanumeric(), P.oneOf('-_')).many(),
+)
 	.map(x => {
 		return x[0] + x[1].join('');
 	})
@@ -52,11 +55,18 @@ export function createResultNode(value: string, range: ParsingRange): ParsingRes
 	};
 }
 
-export const nonStringArgumentValue: Parser<string> = P.regexp(/^[^()',]+/).describe('any character except parentheses, single quotation marks and commas');
+export const nonStringArgumentValue: Parser<string> = P.regexp(/^[^()',]+/).describe(
+	'any character except parentheses, single quotation marks and commas',
+);
 
-export const argumentValue: Parser<ParsingResultNode> = P.or(singleQuotedString, nonStringArgumentValue).node(createResultNode);
+export const argumentValue: Parser<ParsingResultNode> = P.or(singleQuotedString, nonStringArgumentValue).node(
+	createResultNode,
+);
 
-export const argumentValues: Parser<ParsingResultNode[]> = P.separateBy(argumentValue, P.string(',').trim(P_UTILS.optionalWhitespace()));
+export const argumentValues: Parser<ParsingResultNode[]> = P.separateBy(
+	argumentValue,
+	P.string(',').trim(P_UTILS.optionalWhitespace()),
+);
 
 export const fieldArgument: Parser<UnvalidatedFieldArgument> = P.sequenceMap(
 	(name, value): UnvalidatedFieldArgument => {
@@ -72,4 +82,7 @@ export const fieldArgument: Parser<UnvalidatedFieldArgument> = P.sequenceMap(
 		.optional([] as ParsingResultNode[]),
 );
 
-export const fieldArguments: Parser<UnvalidatedFieldArgument[]> = P.separateBy(fieldArgument, P.string(',').trim(P_UTILS.optionalWhitespace()));
+export const fieldArguments: Parser<UnvalidatedFieldArgument[]> = P.separateBy(
+	fieldArgument,
+	P.string(',').trim(P_UTILS.optionalWhitespace()),
+);

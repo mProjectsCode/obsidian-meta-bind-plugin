@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { imagePathToUri } from '../../../utils/Utils';
+	import { imagePathToUri } from '../../../utils/ObsUtils';
 
 	export let value: string;
 	export let showSuggester: () => void;

@@ -27,6 +27,9 @@ export class ComputedMetadataSubscription implements IMetadataSubscription {
 
 	readonly computeFunction: ComputeFunction;
 
+	deleted: boolean;
+	readonly onDelete: () => void;
+
 	constructor(
 		uuid: string,
 		callbackSignal: Signal<unknown>,
@@ -34,6 +37,7 @@ export class ComputedMetadataSubscription implements IMetadataSubscription {
 		bindTarget: FullBindTarget | undefined,
 		dependencies: ComputedSubscriptionDependency[],
 		computeFunction: ComputeFunction,
+		onDelete: () => void,
 	) {
 		this.uuid = uuid;
 		this.callbackSignal = callbackSignal;
@@ -42,6 +46,9 @@ export class ComputedMetadataSubscription implements IMetadataSubscription {
 		this.dependencies = dependencies;
 		this.dependencySubscriptions = [];
 		this.computeFunction = computeFunction;
+		this.onDelete = onDelete;
+
+		this.deleted = false;
 	}
 
 	/**
@@ -53,7 +60,11 @@ export class ComputedMetadataSubscription implements IMetadataSubscription {
 		for (const dependency of this.dependencies) {
 			const dependencyId = this.uuid + '/' + getUUID();
 
-			this.dependencySubscriptions.push(this.metadataManager.subscribe(dependencyId, dependency.callbackSignal, dependency.bindTarget));
+			this.dependencySubscriptions.push(
+				this.metadataManager.subscribe(dependencyId, dependency.callbackSignal, dependency.bindTarget, () =>
+					this.delete(),
+				),
+			);
 
 			dependency.callbackSignal.registerListener({ callback: () => void this.computeValue() });
 		}
@@ -88,5 +99,22 @@ export class ComputedMetadataSubscription implements IMetadataSubscription {
 
 	public getDependencies(): ComputedSubscriptionDependency[] {
 		return this.dependencies;
+	}
+
+	/**
+	 * DO NOT CALL!
+	 *
+	 * Called by the metadata manager when it wants to delete the subscription.
+	 */
+	public delete(): void {
+		this.deleted = true;
+		for (const dependencySubscription of this.dependencySubscriptions) {
+			if (!dependencySubscription.deleted) {
+				dependencySubscription.delete();
+			}
+		}
+
+		this.onDelete();
+		this.unsubscribe();
 	}
 }

@@ -39,8 +39,19 @@
 	}
 </script>
 
-<div class="editor-input card" on:click={() => focusIn()} on:keypress={event => focusInOnKey(event)} role="button" tabindex="0">
-	<textarea bind:this={inputEl} bind:value={value} on:focusout={() => focusOut()} on:input={() => onValueChange(value)}></textarea>
+<div
+	class="editor-input card"
+	on:click={() => focusIn()}
+	on:keypress={event => focusInOnKey(event)}
+	role="button"
+	tabindex="0"
+>
+	<textarea
+		bind:this={inputEl}
+		bind:value={value}
+		on:focusout={() => focusOut()}
+		on:input={() => onValueChange(value)}
+	></textarea>
 	<div bind:this={renderEl}></div>
 </div>
 

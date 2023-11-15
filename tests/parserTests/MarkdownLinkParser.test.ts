@@ -96,7 +96,9 @@ describe('markdown link parser', () => {
 
 	describe('parse markdown link list', () => {
 		test('should parse link list', () => {
-			expect(() => parseMdLinkList('[[test]], [github](https://github.com), [[test#123|something]]')).not.toThrow();
+			expect(() =>
+				parseMdLinkList('[[test]], [github](https://github.com), [[test#123|something]]'),
+			).not.toThrow();
 		});
 
 		test('should fail on non markdown link in list', () => {

@@ -51,7 +51,11 @@ export class InputFieldFactory {
 		this.plugin = plugin;
 	}
 
-	createInputField(type: InputFieldType, renderChildType: RenderChildType, renderChild: InputFieldMDRC): NewInputField | undefined {
+	createInputField(
+		type: InputFieldType,
+		renderChildType: RenderChildType,
+		renderChild: InputFieldMDRC,
+	): NewInputField | undefined {
 		if (type !== InputFieldType.INVALID) {
 			this.checkRenderChildTypeAllowed(type, renderChildType);
 		}

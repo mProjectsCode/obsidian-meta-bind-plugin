@@ -17,7 +17,14 @@ export class PublishInputFieldMDRC extends MarkdownRenderChild {
 
 	errorCollection: ErrorCollection;
 
-	constructor(containerEl: HTMLElement, api: PublishAPI, declaration: InputFieldDeclaration, filePath: string, metadata: unknown, uuid: string) {
+	constructor(
+		containerEl: HTMLElement,
+		api: PublishAPI,
+		declaration: InputFieldDeclaration,
+		filePath: string,
+		metadata: unknown,
+		uuid: string,
+	) {
 		super(containerEl);
 
 		//console.log(this);
@@ -37,12 +44,19 @@ export class PublishInputFieldMDRC extends MarkdownRenderChild {
 	getValue(): unknown {
 		if (!this.declaration.bindTarget) {
 			this.errorCollection.add(
-				new MetaBindBindTargetError({ errorLevel: ErrorLevel.WARNING, effect: 'populated with default data', cause: 'input field not bound' }),
+				new MetaBindBindTargetError({
+					errorLevel: ErrorLevel.WARNING,
+					effect: 'populated with default data',
+					cause: 'input field not bound',
+				}),
 			);
 			return getPublishDefaultValue(this.declaration);
 		}
 
-		if (this.declaration.bindTarget.filePath !== undefined && this.declaration.bindTarget.filePath !== this.filePath) {
+		if (
+			this.declaration.bindTarget.filePath !== undefined &&
+			this.declaration.bindTarget.filePath !== this.filePath
+		) {
 			this.errorCollection.add(
 				new MetaBindBindTargetError({
 					errorLevel: ErrorLevel.WARNING,
@@ -57,7 +71,11 @@ export class PublishInputFieldMDRC extends MarkdownRenderChild {
 
 		if (value === undefined) {
 			this.errorCollection.add(
-				new MetaBindBindTargetError({ errorLevel: ErrorLevel.WARNING, effect: 'populated with default data', cause: 'value in metadata is undefined' }),
+				new MetaBindBindTargetError({
+					errorLevel: ErrorLevel.WARNING,
+					effect: 'populated with default data',
+					cause: 'value in metadata is undefined',
+				}),
 			);
 			return getPublishDefaultValue(this.declaration);
 		}

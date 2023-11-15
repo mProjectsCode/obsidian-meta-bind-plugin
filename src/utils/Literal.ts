@@ -58,7 +58,9 @@ export function stringifyLiteral(literal: MBExtendedLiteral | undefined): string
 }
 
 export function isLiteral(literal: unknown): literal is MBLiteral {
-	return literal === null || typeof literal === 'string' || typeof literal === 'boolean' || typeof literal === 'number';
+	return (
+		literal === null || typeof literal === 'string' || typeof literal === 'boolean' || typeof literal === 'number'
+	);
 }
 
 /**

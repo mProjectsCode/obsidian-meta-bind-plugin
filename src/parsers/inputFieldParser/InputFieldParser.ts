@@ -27,9 +27,13 @@ export class InputFieldDeclarationParser implements ITemplateSupplier<Unvalidate
 		const errorCollection = new ErrorCollection('InputFieldParser');
 
 		try {
-			let parserResult = runParser(INPUT_FIELD_FULL_DECLARATION, fullDeclaration) as UnvalidatedInputFieldDeclaration;
+			let parserResult = runParser(
+				INPUT_FIELD_FULL_DECLARATION,
+				fullDeclaration,
+			) as UnvalidatedInputFieldDeclaration;
 			parserResult.fullDeclaration = fullDeclaration;
 			parserResult.errorCollection = errorCollection;
+			parserResult.arguments = [...parserResult.arguments]; // copy argument array to avoid modifying the original
 
 			parserResult = this.applyTemplate(parserResult);
 
@@ -54,9 +58,13 @@ export class InputFieldDeclarationParser implements ITemplateSupplier<Unvalidate
 		const errorCollection = new ErrorCollection('InputFieldParser');
 
 		try {
-			const parserResult = runParser(INPUT_FIELD_FULL_DECLARATION, fullDeclaration) as UnvalidatedInputFieldDeclaration;
+			const parserResult = runParser(
+				INPUT_FIELD_FULL_DECLARATION,
+				fullDeclaration,
+			) as UnvalidatedInputFieldDeclaration;
 			parserResult.fullDeclaration = fullDeclaration;
 			parserResult.errorCollection = errorCollection;
+			parserResult.arguments = [...parserResult.arguments]; // copy argument array to avoid modifying the original
 
 			return parserResult;
 		} catch (e) {
@@ -72,7 +80,10 @@ export class InputFieldDeclarationParser implements ITemplateSupplier<Unvalidate
 		};
 	}
 
-	public validateDeclaration(unvalidatedDeclaration: UnvalidatedInputFieldDeclaration, scope?: BindTargetScope | undefined): InputFieldDeclaration {
+	public validateDeclaration(
+		unvalidatedDeclaration: UnvalidatedInputFieldDeclaration,
+		scope?: BindTargetScope | undefined,
+	): InputFieldDeclaration {
 		const declarationValidator = new InputFieldDeclarationValidator(this.plugin, unvalidatedDeclaration);
 
 		return declarationValidator.validate(scope);
@@ -82,9 +93,13 @@ export class InputFieldDeclarationParser implements ITemplateSupplier<Unvalidate
 		const errorCollection = new ErrorCollection('InputFieldParser');
 
 		try {
-			const parserResult = runParser(TEMPLATE_INPUT_FIELD_FULL_DECLARATION, template) as UnvalidatedInputFieldDeclaration;
+			const parserResult = runParser(
+				TEMPLATE_INPUT_FIELD_FULL_DECLARATION,
+				template,
+			) as UnvalidatedInputFieldDeclaration;
 			parserResult.fullDeclaration = template;
 			parserResult.errorCollection = errorCollection;
+			parserResult.arguments = [...parserResult.arguments]; // copy argument array to avoid modifying the original
 
 			return parserResult;
 		} catch (e) {

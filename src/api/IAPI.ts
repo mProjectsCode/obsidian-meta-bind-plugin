@@ -6,9 +6,21 @@ import { type InputFieldAPI } from './InputFieldAPI';
 
 export interface IAPI {
 	readonly plugin: IPlugin;
+	/*
+	 * The API for creating and modifying input field declarations.
+	 */
 	readonly inputField: InputFieldAPI;
 
+	/**
+	 * Parser for input field declarations.
+	 */
 	readonly inputFieldParser: InputFieldDeclarationParser;
+	/**
+	 * Parser for view field declarations.
+	 */
 	readonly viewFieldParser: ViewFieldDeclarationParser;
+	/**
+	 * Parser for bind target declarations.
+	 */
 	readonly bindTargetParser: BindTargetParser;
 }

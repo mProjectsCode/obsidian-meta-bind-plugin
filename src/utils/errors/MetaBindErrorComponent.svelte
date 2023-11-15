@@ -46,7 +46,9 @@
 					<tr>
 						<td>Context</td>
 						<td>
-							<pre class="mb-pre"><code class="language-none mb-none">{JSON.stringify(error.context, null, 4)}</code></pre>
+							<pre class="mb-pre"><code class="language-none mb-none"
+									>{JSON.stringify(error.context, null, 4)}</code
+								></pre>
 						</td>
 					</tr>
 				{/if}

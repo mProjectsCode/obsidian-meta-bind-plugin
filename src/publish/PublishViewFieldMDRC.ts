@@ -92,7 +92,11 @@ export class PublishViewFieldMDRC extends MarkdownRenderChild {
 
 	async evaluateExpression(): Promise<string> {
 		if (!this.expression) {
-			throw new MetaBindExpressionError({ errorLevel: ErrorLevel.ERROR, effect: 'failed to evaluate expression', cause: 'expression is undefined' });
+			throw new MetaBindExpressionError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'failed to evaluate expression',
+				cause: 'expression is undefined',
+			});
 		}
 
 		const context = this.buildContext();

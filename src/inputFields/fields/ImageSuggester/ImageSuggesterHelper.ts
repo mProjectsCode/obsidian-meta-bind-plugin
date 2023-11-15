@@ -136,6 +136,13 @@ export function getImageSuggesterOptionsForInputField(inputField: ImageSuggester
 	return getImageSuggesterOptions(optionArgs, optionQueryArgs, inputField.renderChild.plugin);
 }
 
-export function openImageSuggesterModalForInputField(inputField: ImageSuggesterIPF, selectCallback: (selected: string) => void): void {
-	new ImageSuggesterInputModal(inputField.renderChild.plugin.app, getImageSuggesterOptionsForInputField(inputField), selectCallback).open();
+export function openImageSuggesterModalForInputField(
+	inputField: ImageSuggesterIPF,
+	selectCallback: (selected: string) => void,
+): void {
+	new ImageSuggesterInputModal(
+		inputField.renderChild.plugin.app,
+		getImageSuggesterOptionsForInputField(inputField),
+		selectCallback,
+	).open();
 }

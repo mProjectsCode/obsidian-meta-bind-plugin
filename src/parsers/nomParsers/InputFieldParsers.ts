@@ -2,7 +2,10 @@ import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { createResultNode, fieldArguments, ident, identWithSpaces } from './GeneralParsers';
 import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
-import { type PartialUnvalidatedInputFieldDeclaration, type UnvalidatedFieldArgument } from '../inputFieldParser/InputFieldDeclaration';
+import {
+	type PartialUnvalidatedInputFieldDeclaration,
+	type UnvalidatedFieldArgument,
+} from '../inputFieldParser/InputFieldDeclaration';
 import { BIND_TARGET } from './BindTargetParsers';
 
 export const INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclaration> = P.sequenceMap(
@@ -46,7 +49,12 @@ export const INPUT_FIELD_FULL_DECLARATION: Parser<PartialUnvalidatedInputFieldDe
 			return declaration;
 		},
 		P.string('INPUT'),
-		P.sequenceMap((_1, templateName, _2) => templateName, P.string('['), identWithSpaces.node(createResultNode).describe('template name'), P.string(']')),
+		P.sequenceMap(
+			(_1, templateName, _2) => templateName,
+			P.string('['),
+			identWithSpaces.node(createResultNode).describe('template name'),
+			P.string(']'),
+		),
 		PARTIAL_INPUT_FIELD_DECLARATION.wrap(P.string('['), P.string(']')),
 		P_UTILS.eof(),
 	),

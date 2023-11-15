@@ -51,7 +51,10 @@ const mdLinkParser: Parser<MarkdownLink> = P.or(
 	),
 );
 
-const mdLinkListParser: Parser<MarkdownLink[]> = P.separateBy(mdLinkParser, P.string(',').trim(P_UTILS.optionalWhitespace()));
+const mdLinkListParser: Parser<MarkdownLink[]> = P.separateBy(
+	mdLinkParser,
+	P.string(',').trim(P_UTILS.optionalWhitespace()),
+);
 
 export interface MarkdownLink {
 	isEmbed: boolean;

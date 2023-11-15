@@ -1,4 +1,9 @@
-import { type InputFieldArgumentType, type InputFieldType, type ViewFieldArgumentType, type ViewFieldType } from '../parsers/GeneralConfigs';
+import {
+	type InputFieldArgumentType,
+	type InputFieldType,
+	type ViewFieldArgumentType,
+	type ViewFieldType,
+} from '../parsers/GeneralConfigs';
 
 export class DocsHelper {
 	static linkToInputField(type: InputFieldType): string {

@@ -14,6 +14,9 @@ export abstract class AbstractFieldArgumentContainer<
 		this.arguments.push(argument);
 	}
 
+	/**
+	 * Validates the argument container. Throws if the container is invalid.
+	 */
 	validate(): void {
 		const map: Record<string, number> = {};
 		for (const inputFieldArgumentType of Object.values(InputFieldArgumentType)) {

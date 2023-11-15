@@ -5,7 +5,10 @@ import { ComputedSignal, type Listener, Notifier } from '../utils/Signal';
 
 import { InputFieldArgumentType } from '../parsers/GeneralConfigs';
 
-export abstract class AbstractInputField<MetadataValueType, ComponentValueType> extends Notifier<MetadataValueType, Listener<MetadataValueType>> {
+export abstract class AbstractInputField<MetadataValueType, ComponentValueType> extends Notifier<
+	MetadataValueType,
+	Listener<MetadataValueType>
+> {
 	readonly renderChild: InputFieldMDRC;
 	readonly inputFieldComponent: InputFieldComponent<ComponentValueType>;
 	readonly signal: ComputedSignal<unknown, MetadataValueType>;
@@ -16,10 +19,13 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 		this.renderChild = renderChild;
 		this.inputFieldComponent = new InputFieldComponent<ComponentValueType>(this.getSvelteComponent());
 
-		this.signal = new ComputedSignal<unknown, MetadataValueType>(this.renderChild.inputSignal, (value: unknown): MetadataValueType => {
-			const filteredValue = this.filterValue(value);
-			return filteredValue ?? this.getDefaultValue();
-		});
+		this.signal = new ComputedSignal<unknown, MetadataValueType>(
+			this.renderChild.inputSignal,
+			(value: unknown): MetadataValueType => {
+				const filteredValue = this.filterValue(value);
+				return filteredValue ?? this.getDefaultValue();
+			},
+		);
 
 		this.signal.registerListener({
 			callback: value => this.inputFieldComponent.setValue(this.reverseMapValue(value)),

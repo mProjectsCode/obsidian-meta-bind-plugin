@@ -94,7 +94,8 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 					return;
 				}
 
-				const newDecoration: Decoration | undefined = this.renderWidget(node, widgetType, content, currentFile)?.value;
+				const newDecoration: Decoration | undefined = this.renderWidget(node, widgetType, content, currentFile)
+					?.value;
 				if (!newDecoration) {
 					return;
 				}
@@ -110,7 +111,10 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			 * @param view
 			 * @param node
 			 */
-			getRenderInfo(view: EditorView, node: SyntaxNode): { shouldRender: boolean; content: string | undefined; widgetType: MBWidgetType | undefined } {
+			getRenderInfo(
+				view: EditorView,
+				node: SyntaxNode,
+			): { shouldRender: boolean; content: string | undefined; widgetType: MBWidgetType | undefined } {
 				// get the node props
 				// const propsString: string | undefined = node.type.prop<string>(tokenClassNodeProp);
 				// workaround until bun installs https://github.com/lishid/cm-language/ correctly
@@ -139,7 +143,11 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			 * @param from
 			 * @param to
 			 */
-			readNode(view: EditorView, from: number, to: number): { content: string; widgetType: MBWidgetType | undefined } {
+			readNode(
+				view: EditorView,
+				from: number,
+				to: number,
+			): { content: string; widgetType: MBWidgetType | undefined } {
 				const content = Cm6_Util.getContent(view.state, from, to);
 				return {
 					content: content,
@@ -168,7 +176,12 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 								return;
 							}
 
-							const widget = this.renderWidget(node, renderInfo.widgetType, renderInfo.content, currentFile);
+							const widget = this.renderWidget(
+								node,
+								renderInfo.widgetType,
+								renderInfo.content,
+								currentFile,
+							);
 							if (widget) {
 								widgets.push(widget);
 							}
@@ -179,8 +192,19 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				return Decoration.set(widgets, true);
 			}
 
-			renderWidget(node: SyntaxNode, widgetType: MBWidgetType, content: string, currentFile: TFile): Range<Decoration> | undefined {
-				const widget = Cm6_Util.constructMarkdownRenderChildWidget(widgetType, content, currentFile.path, this.component, plugin);
+			renderWidget(
+				node: SyntaxNode,
+				widgetType: MBWidgetType,
+				content: string,
+				currentFile: TFile,
+			): Range<Decoration> | undefined {
+				const widget = Cm6_Util.constructMarkdownRenderChildWidget(
+					widgetType,
+					content,
+					currentFile.path,
+					this.component,
+					plugin,
+				);
 				if (!widget) {
 					return;
 				}

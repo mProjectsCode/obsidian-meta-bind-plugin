@@ -9,7 +9,15 @@ export class TextPromptModal extends Modal {
 	onSubmit: (value: string) => void;
 	onCancel: () => void;
 
-	constructor(app: App, value: string, title: string, subTitle: string, description: string, onSubmit: (value: string) => void, onCancel: () => void) {
+	constructor(
+		app: App,
+		value: string,
+		title: string,
+		subTitle: string,
+		description: string,
+		onSubmit: (value: string) => void,
+		onCancel: () => void,
+	) {
 		super(app);
 
 		this.value = value;

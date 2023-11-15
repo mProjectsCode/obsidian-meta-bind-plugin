@@ -81,7 +81,9 @@ export class ErrorCollection {
 	}
 
 	getErrors(): (MetaBindError | Error)[] {
-		const errors: (MetaBindError | Error)[] = this.errors.filter(x => x.errorLevel === ErrorLevel.ERROR || x.errorLevel === ErrorLevel.CRITICAL);
+		const errors: (MetaBindError | Error)[] = this.errors.filter(
+			x => x.errorLevel === ErrorLevel.ERROR || x.errorLevel === ErrorLevel.CRITICAL,
+		);
 		return this.otherError ? errors.concat([this.otherError]) : errors;
 	}
 

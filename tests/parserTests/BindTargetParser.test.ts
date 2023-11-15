@@ -140,7 +140,9 @@ describe('bind target parser', () => {
 			});
 
 			test(testCase.local.str, () => {
-				expect(parser.parseAndValidateBindTarget(testCase.local.str, localScope)).toEqual(testCase.local.expected);
+				expect(parser.parseAndValidateBindTarget(testCase.local.str, localScope)).toEqual(
+					testCase.local.expected,
+				);
 			});
 		}
 	});

@@ -109,7 +109,9 @@ export class MetaBindSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Templates')
-			.setDesc(`You can specify templates here, and access them using \`INPUT[template_name][overrides (optional)]\` in your notes.`)
+			.setDesc(
+				`You can specify templates here, and access them using \`INPUT[template_name][overrides (optional)]\` in your notes.`,
+			)
 			.addButton(cb => {
 				cb.setButtonText('Edit Templates');
 				cb.onClick(() => {
@@ -140,7 +142,9 @@ export class MetaBindSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Enable JS Input Fields')
-			.setDesc("Enable the processing of JavaScript input fields. This is potentially DANGEROUS, thus it's disabled by default. RESTART REQUIRED.")
+			.setDesc(
+				"Enable the processing of JavaScript input fields. This is potentially DANGEROUS, thus it's disabled by default. RESTART REQUIRED.",
+			)
 			.addToggle(cb => {
 				cb.setValue(this.plugin.settings.enableJs);
 				cb.onChange(data => {
@@ -164,7 +168,9 @@ export class MetaBindSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Disable Code Block Restrictions')
-			.setDesc('Disable restrictions on which input fields can be created in which code blocks. Not recommended unless you know what you are doing.')
+			.setDesc(
+				'Disable restrictions on which input fields can be created in which code blocks. Not recommended unless you know what you are doing.',
+			)
 			.addToggle(cb => {
 				cb.setValue(this.plugin.settings.ignoreCodeBlockRestrictions);
 				cb.onChange(data => {

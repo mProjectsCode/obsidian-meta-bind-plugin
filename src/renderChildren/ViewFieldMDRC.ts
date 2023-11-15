@@ -8,7 +8,10 @@ import { type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldD
 import { type AbstractViewField } from '../viewFields/AbstractViewField';
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
 import { type ViewFieldArgumentMapType } from '../fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
-import { type ComputedMetadataSubscription, type ComputedSubscriptionDependency } from '../metadata/ComputedMetadataSubscription';
+import {
+	type ComputedMetadataSubscription,
+	type ComputedSubscriptionDependency,
+} from '../metadata/ComputedMetadataSubscription';
 import { type ViewFieldArgumentType } from '../parsers/GeneralConfigs';
 
 export interface ViewFieldVariable {
@@ -59,14 +62,21 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 			this.metadataSubscription = this.plugin.metadataManager.subscribeComputed(
 				this.uuid,
 				this.inputSignal,
-				this.plugin.api.bindTargetParser.toFullDeclaration(this.viewFieldDeclaration.writeToBindTarget, this.filePath),
+				this.plugin.api.bindTargetParser.toFullDeclaration(
+					this.viewFieldDeclaration.writeToBindTarget,
+					this.filePath,
+				),
 				this.variables.map((x): ComputedSubscriptionDependency => {
 					return {
-						bindTarget: this.plugin.api.bindTargetParser.toFullDeclaration(x.bindTargetDeclaration, this.filePath),
+						bindTarget: this.plugin.api.bindTargetParser.toFullDeclaration(
+							x.bindTargetDeclaration,
+							this.filePath,
+						),
 						callbackSignal: x.inputSignal,
 					};
 				}),
 				async () => await this.viewField?.computeValue(this.variables),
+				() => this.unload(),
 			);
 
 			this.inputSignal.registerListener({ callback: value => void this.viewField?.update(value) });

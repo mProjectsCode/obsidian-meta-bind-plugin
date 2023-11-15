@@ -22,8 +22,14 @@ const config = {
 	rules: {
 		'@typescript-eslint/no-explicit-any': ['warn'],
 
-		'@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', destructuredArrayIgnorePattern: '^_' }],
-		'@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports', fixStyle: 'inline-type-imports' }],
+		'@typescript-eslint/no-unused-vars': [
+			'error',
+			{ argsIgnorePattern: '^_', destructuredArrayIgnorePattern: '^_' },
+		],
+		'@typescript-eslint/consistent-type-imports': [
+			'error',
+			{ prefer: 'type-imports', fixStyle: 'inline-type-imports' },
+		],
 
 		'@typescript-eslint/no-confusing-void-expression': ['error', { ignoreArrowShorthand: true }],
 		'@typescript-eslint/restrict-template-expressions': 'off',

@@ -12,6 +12,7 @@ import { type NewInputField } from '../inputFields/InputFieldFactory';
 import { type InputFieldArgumentMapType } from '../fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
 import { type MetadataSubscription } from '../metadata/MetadataSubscription';
 import { InputFieldArgumentType, InputFieldType } from '../parsers/GeneralConfigs';
+import { DocsHelper } from '../utils/DocsHelper';
 
 export enum RenderChildType {
 	INLINE = 'inline',
@@ -57,7 +58,11 @@ export class InputFieldMDRC extends AbstractMDRC {
 
 		if (!this.errorCollection.hasErrors()) {
 			try {
-				this.inputField = this.plugin.api.inputFieldFactory.createInputField(this.inputFieldDeclaration.inputFieldType, renderChildType, this);
+				this.inputField = this.plugin.api.inputFieldFactory.createInputField(
+					this.inputFieldDeclaration.inputFieldType,
+					renderChildType,
+					this,
+				);
 				this.inputField?.registerListener({ callback: value => this.outputSignal.set(value) });
 			} catch (e) {
 				this.errorCollection.add(e);
@@ -75,9 +80,12 @@ export class InputFieldMDRC extends AbstractMDRC {
 			this.uuid,
 			this.inputSignal,
 			this.plugin.api.bindTargetParser.toFullDeclaration(this.inputFieldDeclaration.bindTarget, this.filePath),
+			() => this.unload(),
 		);
 
-		this.metadataManagerOutputSignalListener = this.outputSignal.registerListener({ callback: value => this.updateMetadataManager(value) });
+		this.metadataManagerOutputSignalListener = this.outputSignal.registerListener({
+			callback: value => this.updateMetadataManager(value),
+		});
 	}
 
 	unregisterSelfFromMetadataManager(): void {
@@ -125,7 +133,9 @@ export class InputFieldMDRC extends AbstractMDRC {
 			this.inputFieldDeclaration.inputFieldType === InputFieldType.MULTI_SELECT ||
 			this.inputFieldDeclaration.inputFieldType === InputFieldType.LIST;
 
-		const hasContainerArgument = isTruthy(this.getArgument(InputFieldArgumentType.SHOWCASE)) || isTruthy(this.getArgument(InputFieldArgumentType.TITLE));
+		const hasContainerArgument =
+			isTruthy(this.getArgument(InputFieldArgumentType.SHOWCASE)) ||
+			isTruthy(this.getArgument(InputFieldArgumentType.TITLE));
 
 		return this.renderChildType === RenderChildType.BLOCK && (containerInputFieldType || hasContainerArgument);
 	}
@@ -166,7 +176,9 @@ export class InputFieldMDRC extends AbstractMDRC {
 		// if card container this points to the container.
 		let wrapperContainer: HTMLElement;
 
-		const showcaseArgument: ShowcaseInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.SHOWCASE);
+		const showcaseArgument: ShowcaseInputFieldArgument | undefined = this.getArgument(
+			InputFieldArgumentType.SHOWCASE,
+		);
 		const titleArgument: TitleInputFieldArgument | undefined = this.getArgument(InputFieldArgumentType.TITLE);
 
 		// --- Determine Wrapper Element ---
@@ -224,7 +236,12 @@ export class InputFieldMDRC extends AbstractMDRC {
 
 		// --- Add Showcase Argument ---
 		if (this.shouldAddCardContainer() && showcaseArgument) {
-			wrapperContainer.createEl('code', { text: this.fullDeclaration, cls: 'mb-none' });
+			const codeEl = wrapperContainer.createEl('code', { cls: 'mb-none' });
+			codeEl.createEl('a', {
+				text: this.fullDeclaration,
+				href: DocsHelper.linkToInputField(this.inputFieldDeclaration.inputFieldType),
+				cls: 'mb-no-link',
+			});
 		}
 	}
 

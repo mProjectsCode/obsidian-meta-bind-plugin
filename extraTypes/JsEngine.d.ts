@@ -1,3 +1,5 @@
+// js engine 0.0.7 types
+
 declare module 'jsEngine/ArgumentManager' {
 	import { type CachedMetadata, type TFile } from 'obsidian';
 	export interface ExecutionContext {
@@ -570,7 +572,12 @@ declare module 'jsEngine/JsMDRC' {
 		content: string;
 		ctx: MarkdownPostProcessorContext;
 		jsExecution: JsExecution | undefined;
-		constructor(containerEl: HTMLElement, plugin: JsEnginePlugin, content: string, ctx: MarkdownPostProcessorContext);
+		constructor(
+			containerEl: HTMLElement,
+			plugin: JsEnginePlugin,
+			content: string,
+			ctx: MarkdownPostProcessorContext,
+		);
 		getExecutionFile(): TFile | undefined;
 		buildExecutionContext(): ExecutionContext;
 		tryRun(context: ExecutionContext): Promise<JsExecution>;

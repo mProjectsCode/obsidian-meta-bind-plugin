@@ -12,7 +12,10 @@ import { getUUID } from '../utils/Utils';
 import MetaBindTableComponent from './MetaBindTableComponent.svelte';
 import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
 import { type Component } from 'obsidian';
-import { type UnvalidatedViewFieldDeclaration, type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
+import {
+	type UnvalidatedViewFieldDeclaration,
+	type ViewFieldDeclaration,
+} from '../parsers/viewFieldParser/ViewFieldDeclaration';
 
 import { type MetadataSubscription } from '../metadata/MetadataSubscription';
 import { type MBExtendedLiteral } from '../utils/Literal';
@@ -69,12 +72,15 @@ export class MetaBindTable extends AbstractMDRC {
 	}
 
 	registerSelfToMetadataManager(): undefined {
-		this.metadataManagerOutputSignalListener = this.outputSignal.registerListener({ callback: this.updateMetadataManager.bind(this) });
+		this.metadataManagerOutputSignalListener = this.outputSignal.registerListener({
+			callback: this.updateMetadataManager.bind(this),
+		});
 
 		this.metadataSubscription = this.plugin.metadataManager.subscribe(
 			this.uuid,
 			this.inputSignal,
 			this.plugin.api.bindTargetParser.toFullDeclaration(this.bindTarget, this.filePath),
+			() => this.unload(),
 		);
 	}
 
@@ -139,10 +145,24 @@ export class MetaBindTable extends AbstractMDRC {
 	createCell(cell: MetaBindTableCell, element: HTMLElement, cellComponent: Component): void {
 		const uuid = getUUID();
 		if ('inputFieldType' in cell) {
-			const field = new InputFieldMDRC(element, RenderChildType.INLINE, cell, this.plugin, this.filePath, `${this.uuid}/${uuid}`);
+			const field = new InputFieldMDRC(
+				element,
+				RenderChildType.INLINE,
+				cell,
+				this.plugin,
+				this.filePath,
+				`${this.uuid}/${uuid}`,
+			);
 			cellComponent.addChild(field);
 		} else {
-			const field = new ViewFieldMDRC(element, RenderChildType.INLINE, cell, this.plugin, this.filePath, `${this.uuid}/${uuid}`);
+			const field = new ViewFieldMDRC(
+				element,
+				RenderChildType.INLINE,
+				cell,
+				this.plugin,
+				this.filePath,
+				`${this.uuid}/${uuid}`,
+			);
 			cellComponent.addChild(field);
 		}
 	}

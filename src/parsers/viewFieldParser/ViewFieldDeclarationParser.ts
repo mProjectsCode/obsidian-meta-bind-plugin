@@ -2,7 +2,11 @@ import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { JS_VIEW_FIELD_DECLARATION, VIEW_FIELD_FULL_DECLARATION } from '../nomParsers/ViewFieldParsers';
 import { type IPlugin } from '../../IPlugin';
 import { type BindTargetScope } from '../../metadata/BindTargetScope';
-import { type JsViewFieldDeclaration, type UnvalidatedViewFieldDeclaration, type ViewFieldDeclaration } from './ViewFieldDeclaration';
+import {
+	type JsViewFieldDeclaration,
+	type UnvalidatedViewFieldDeclaration,
+	type ViewFieldDeclaration,
+} from './ViewFieldDeclaration';
 import { ViewFieldDeclarationValidator } from './ViewFieldDeclarationValidator';
 import { ViewFieldArgumentContainer } from '../../fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
 import { ViewFieldType } from '../GeneralConfigs';
@@ -19,9 +23,13 @@ export class ViewFieldDeclarationParser {
 		const errorCollection = new ErrorCollection('ViewFieldDeclaration');
 
 		try {
-			const parserResult = runParser(VIEW_FIELD_FULL_DECLARATION, fullDeclaration) as UnvalidatedViewFieldDeclaration;
+			const parserResult = runParser(
+				VIEW_FIELD_FULL_DECLARATION,
+				fullDeclaration,
+			) as UnvalidatedViewFieldDeclaration;
 			parserResult.fullDeclaration = fullDeclaration;
 			parserResult.errorCollection = errorCollection;
+			parserResult.arguments = [...parserResult.arguments]; // copy argument array to avoid modifying the original
 
 			return this.validateDeclaration(parserResult, scope);
 		} catch (e) {
@@ -42,9 +50,13 @@ export class ViewFieldDeclarationParser {
 		const errorCollection = new ErrorCollection('ViewFieldDeclaration');
 
 		try {
-			const parserResult = runParser(VIEW_FIELD_FULL_DECLARATION, fullDeclaration) as UnvalidatedViewFieldDeclaration;
+			const parserResult = runParser(
+				VIEW_FIELD_FULL_DECLARATION,
+				fullDeclaration,
+			) as UnvalidatedViewFieldDeclaration;
 			parserResult.fullDeclaration = fullDeclaration;
 			parserResult.errorCollection = errorCollection;
+			parserResult.arguments = [...parserResult.arguments]; // copy argument array to avoid modifying the original
 
 			return parserResult;
 		} catch (e) {
@@ -61,7 +73,10 @@ export class ViewFieldDeclarationParser {
 		};
 	}
 
-	validateDeclaration(unvalidatedDeclaration: UnvalidatedViewFieldDeclaration, scope?: BindTargetScope | undefined): ViewFieldDeclaration {
+	validateDeclaration(
+		unvalidatedDeclaration: UnvalidatedViewFieldDeclaration,
+		scope?: BindTargetScope | undefined,
+	): ViewFieldDeclaration {
 		const validator = new ViewFieldDeclarationValidator(unvalidatedDeclaration, this.plugin);
 
 		return validator.validate(scope);

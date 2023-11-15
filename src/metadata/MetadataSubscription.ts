@@ -13,11 +13,23 @@ export class MetadataSubscription implements IMetadataSubscription {
 
 	readonly bindTarget: FullBindTarget;
 
-	constructor(uuid: string, callbackSignal: Signal<unknown>, metadataManager: MetadataManager, bindTarget: FullBindTarget) {
+	deleted: boolean;
+	readonly onDelete: () => void;
+
+	constructor(
+		uuid: string,
+		callbackSignal: Signal<unknown>,
+		metadataManager: MetadataManager,
+		bindTarget: FullBindTarget,
+		onDelete: () => void,
+	) {
 		this.uuid = uuid;
 		this.callbackSignal = callbackSignal;
 		this.metadataManager = metadataManager;
 		this.bindTarget = bindTarget;
+		this.onDelete = onDelete;
+
+		this.deleted = false;
 	}
 
 	/**
@@ -49,5 +61,15 @@ export class MetadataSubscription implements IMetadataSubscription {
 
 	public getDependencies(): ComputedSubscriptionDependency[] {
 		return [];
+	}
+
+	/**
+	 * DO NOT CALL!
+	 *
+	 * Called by the metadata manager when it wants to delete the subscription.
+	 */
+	public delete(): void {
+		this.deleted = true;
+		this.onDelete();
 	}
 }

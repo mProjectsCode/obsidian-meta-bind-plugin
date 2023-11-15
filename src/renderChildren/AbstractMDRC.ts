@@ -5,12 +5,21 @@ import type MetaBindPlugin from '../main';
 
 export class AbstractMDRC extends MarkdownRenderChild {
 	plugin: MetaBindPlugin;
+	/**
+	 * The path of the file that this MDRC is in. This can be wrong if the file was renamed.
+	 */
 	filePath: string;
 	uuid: string;
 	renderChildType: RenderChildType;
 	errorCollection: ErrorCollection;
 
-	constructor(containerEl: HTMLElement, renderChildType: RenderChildType, plugin: MetaBindPlugin, filePath: string, uuid: string) {
+	constructor(
+		containerEl: HTMLElement,
+		renderChildType: RenderChildType,
+		plugin: MetaBindPlugin,
+		filePath: string,
+		uuid: string,
+	) {
 		super(containerEl);
 
 		this.renderChildType = renderChildType;

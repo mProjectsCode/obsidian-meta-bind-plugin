@@ -53,7 +53,9 @@
 				tabindex="0"
 				class:highlight={value}
 				class:content-cell={value}
-				class:selected={selectedDate?.year() === year && selectedDate?.month() === month && selectedDate?.date() === value}
+				class:selected={selectedDate?.year() === year &&
+					selectedDate?.month() === month &&
+					selectedDate?.date() === value}
 			>
 				<span class="cell-text">{value || ''}</span>
 			</div>

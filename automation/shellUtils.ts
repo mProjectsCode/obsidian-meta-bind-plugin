@@ -11,7 +11,10 @@ function exec(c: string): Subprocess<'ignore', 'pipe', 'inherit'> {
 	return Bun.spawn(stringArgv(c));
 }
 
-export async function $(cmd: string, verboseness: Verboseness = Verboseness.NORMAL): Promise<{ stdout: string; stderr: string; exit: number }> {
+export async function $(
+	cmd: string,
+	verboseness: Verboseness = Verboseness.NORMAL,
+): Promise<{ stdout: string; stderr: string; exit: number }> {
 	if (verboseness === Verboseness.NORMAL || verboseness === Verboseness.VERBOSE) {
 		console.log(`\n${CMD_FMT.Bright}running${CMD_FMT.Reset} - ${cmd}\n`);
 	}

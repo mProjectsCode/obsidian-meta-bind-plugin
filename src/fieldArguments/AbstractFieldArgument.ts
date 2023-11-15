@@ -12,6 +12,11 @@ export abstract class AbstractFieldArgument<
 
 	abstract getConfig(): FieldConfig;
 
+	/**
+	 * Parses the values of the argument from an array of ParsingResultNodes that represent the comma separated values.
+	 *
+	 * @param value
+	 */
 	parseValue(value: ParsingResultNode[]): void {
 		this.validateValues(value, this.getConfig().values);
 		this._parseValue(value);
@@ -19,6 +24,13 @@ export abstract class AbstractFieldArgument<
 
 	protected abstract _parseValue(value: ParsingResultNode[]): void;
 
+	/**
+	 * Validates that the values are correct.
+	 * Currently, this only checks if a configuration with the supplied number of values exists.
+	 *
+	 * @param value
+	 * @param allowedValues
+	 */
 	validateValues(value: ParsingResultNode[], allowedValues: FieldArgumentValueConfig[][]): void {
 		if (allowedValues.find(x => x.length === value.length) === undefined) {
 			throw new MetaBindArgumentError({
@@ -32,6 +44,11 @@ export abstract class AbstractFieldArgument<
 		}
 	}
 
+	/**
+	 * Checks if the argument is allowed for the supplied field type.
+	 *
+	 * @param fieldType
+	 */
 	isAllowed(fieldType: FieldType): boolean {
 		if (this.getConfig().allowedFieldTypes.length === 0) {
 			return true;
@@ -40,6 +57,9 @@ export abstract class AbstractFieldArgument<
 		return this.getConfig().allowedFieldTypes.includes(fieldType);
 	}
 
+	/**
+	 * Returns a list of all field types, where this argument is allowed, as a string.
+	 */
 	getAllowedFieldsAsString(): string {
 		return this.getConfig().allowedFieldTypes.length === 0 ? 'all' : this.getConfig().allowedFieldTypes.join(', ');
 	}

@@ -93,7 +93,8 @@ export class ViewFieldDeclarationValidator {
 				continue;
 			}
 
-			const viewFieldArgument: AbstractViewFieldArgument = ViewFieldArgumentFactory.createViewFieldArgument(argumentType);
+			const viewFieldArgument: AbstractViewFieldArgument =
+				ViewFieldArgumentFactory.createViewFieldArgument(argumentType);
 
 			if (!viewFieldArgument.isAllowed(viewFieldType)) {
 				this.errorCollection.add(
@@ -158,7 +159,11 @@ export class ViewFieldDeclarationValidator {
 					if (typeof x === 'string') {
 						return x;
 					} else {
-						return this.plugin.api.bindTargetParser.validateBindTarget(this.unvalidatedDeclaration.fullDeclaration, x, scope);
+						return this.plugin.api.bindTargetParser.validateBindTarget(
+							this.unvalidatedDeclaration.fullDeclaration,
+							x,
+							scope,
+						);
 					}
 				}) ?? []
 			);

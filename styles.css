@@ -274,8 +274,9 @@ div.mb-view-wrapper {
 	margin: var(--size-4-2) 0;
 	border-radius: var(--mb-border-radius);
 	border: var(--mb-border-width) solid var(--background-modifier-border);
-	display: inline-flex;
+	display: flex;
 	flex-direction: column;
+	width: 100%;
 	gap: var(--size-4-2);
 }
 
@@ -415,6 +416,11 @@ code.mb-error {
 	max-width: var(--file-line-width);
 	margin-left: auto;
 	margin-right: auto;
+}
+
+a.mb-no-link {
+	color: var(--code-normal);
+	text-decoration: none;
 }
 
 /* --- UTIL CLASSES --- */

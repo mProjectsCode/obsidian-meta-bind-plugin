@@ -15,7 +15,16 @@
 	}
 </script>
 
-<input type="text" tabindex="0" placeholder={placeholder} bind:value={value} maxlength={limit} on:input={() => onValueChange(value)} />
+<input
+	type="text"
+	tabindex="0"
+	placeholder={placeholder}
+	bind:value={value}
+	maxlength={limit}
+	on:input={() => onValueChange(value)}
+/>
 {#if limit !== undefined}
-	<span class={`mb-content-limit-indicator ${value.length > limit ? 'mb-content-limit-indicator-overflow' : ''}`}>{getLimitString(value.length, limit)}</span>
+	<span class={`mb-content-limit-indicator ${value.length > limit ? 'mb-content-limit-indicator-overflow' : ''}`}
+		>{getLimitString(value.length, limit)}</span
+	>
 {/if}

@@ -64,7 +64,14 @@ export class ParsingValidationError extends MetaBindError {
 	position?: ParsingRange;
 	source: string;
 
-	constructor(errorLevel: ErrorLevel, source: string, cause: string, str?: string, position?: ParsingRange, docs?: string[]) {
+	constructor(
+		errorLevel: ErrorLevel,
+		source: string,
+		cause: string,
+		str?: string,
+		position?: ParsingRange,
+		docs?: string[],
+	) {
 		super({ errorLevel: errorLevel, effect: 'failed to validate parser result', cause: cause, docs: docs });
 
 		this.str = str;

@@ -338,7 +338,12 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	},
 	[InputFieldArgumentType.OPTION_QUERY]: {
 		type: InputFieldArgumentType.OPTION_QUERY,
-		allowedFieldTypes: [InputFieldType.SUGGESTER, InputFieldType.IMAGE_SUGGESTER, InputFieldType.LIST_SUGGESTER, InputFieldType.INLINE_LIST_SUGGESTER],
+		allowedFieldTypes: [
+			InputFieldType.SUGGESTER,
+			InputFieldType.IMAGE_SUGGESTER,
+			InputFieldType.LIST_SUGGESTER,
+			InputFieldType.INLINE_LIST_SUGGESTER,
+		],
 		values: [
 			[
 				{
@@ -403,7 +408,11 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	},
 	[InputFieldArgumentType.USE_LINKS]: {
 		type: InputFieldArgumentType.USE_LINKS,
-		allowedFieldTypes: [InputFieldType.SUGGESTER, InputFieldType.LIST_SUGGESTER, InputFieldType.INLINE_LIST_SUGGESTER],
+		allowedFieldTypes: [
+			InputFieldType.SUGGESTER,
+			InputFieldType.LIST_SUGGESTER,
+			InputFieldType.INLINE_LIST_SUGGESTER,
+		],
 		values: [
 			[],
 			[
@@ -418,7 +427,12 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	},
 	[InputFieldArgumentType.LIMIT]: {
 		type: InputFieldArgumentType.LIMIT,
-		allowedFieldTypes: [InputFieldType.TEXT, InputFieldType.TEXT_AREA, InputFieldType.LIST, InputFieldType.INLINE_LIST],
+		allowedFieldTypes: [
+			InputFieldType.TEXT,
+			InputFieldType.TEXT_AREA,
+			InputFieldType.LIST,
+			InputFieldType.INLINE_LIST,
+		],
 		values: [
 			[
 				{

@@ -22,7 +22,10 @@ export class ObsidianMetadataAdapter implements IMetadataAdapter {
 		this.plugin = plugin;
 	}
 
-	public getMetadataAndExtraCache(subscription: IMetadataSubscription): { extraCache: { file: TFile }; metadata: Metadata } {
+	public getMetadataAndExtraCache(subscription: IMetadataSubscription): {
+		extraCache: { file: TFile };
+		metadata: Metadata;
+	} {
 		if (subscription.bindTarget === undefined) {
 			throw new MetaBindBindTargetError({
 				errorLevel: ErrorLevel.CRITICAL,
@@ -42,7 +45,10 @@ export class ObsidianMetadataAdapter implements IMetadataAdapter {
 
 		const frontmatter = this.plugin.app.metadataCache.getFileCache(file)?.frontmatter;
 
-		return { extraCache: { file: file } satisfies ObsidianMetadataAdapterExtraCache, metadata: structuredClone(frontmatter) ?? {} };
+		return {
+			extraCache: { file: file } satisfies ObsidianMetadataAdapterExtraCache,
+			metadata: structuredClone(frontmatter) ?? {},
+		};
 	}
 
 	public setManagerInstance(manager: MetadataManager): void {
@@ -62,6 +68,19 @@ export class ObsidianMetadataAdapter implements IMetadataAdapter {
 		this.plugin.registerEvent(
 			this.plugin.app.metadataCache.on('changed', (file, _, cache) => {
 				this.manager?.updateCacheOnExternalUpdate(file.path, cache.frontmatter ?? {});
+			}),
+		);
+
+		this.plugin.registerEvent(
+			this.plugin.app.vault.on('delete', file => {
+				this.manager?.deleteCacheInstant(file.path);
+			}),
+		);
+
+		this.plugin.registerEvent(
+			this.plugin.app.vault.on('rename', (_, oldPath) => {
+				console.log('rename');
+				this.manager?.deleteCacheInstant(oldPath);
 			}),
 		);
 

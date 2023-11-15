@@ -38,6 +38,12 @@ export class EditorIPF extends AbstractInputField<string, string> {
 
 	renderInElement(el: HTMLElement, value: string): void {
 		el.empty();
-		void MarkdownRenderer.render(this.renderChild.plugin.app, value, el, this.renderChild.filePath, this.renderChild);
+		void MarkdownRenderer.render(
+			this.renderChild.plugin.app,
+			value,
+			el,
+			this.renderChild.filePath,
+			this.renderChild,
+		);
 	}
 }

@@ -34,20 +34,21 @@ export const INPUT_FIELD_ARGUMENT_MAP = {
 	[InputFieldArgumentType.LIMIT]: LimitInputFieldArgument,
 } as const;
 
-export type InputFieldArgumentMapType<T extends InputFieldArgumentType> = T extends keyof typeof INPUT_FIELD_ARGUMENT_MAP
-	? InstanceType<(typeof INPUT_FIELD_ARGUMENT_MAP)[T]>
-	: undefined;
+export type InputFieldArgumentMapType<T extends InputFieldArgumentType> =
+	T extends keyof typeof INPUT_FIELD_ARGUMENT_MAP ? InstanceType<(typeof INPUT_FIELD_ARGUMENT_MAP)[T]> : undefined;
 
-export type InputFieldArgumentConstructorMapType<T extends InputFieldArgumentType> = T extends keyof typeof INPUT_FIELD_ARGUMENT_MAP
-	? (typeof INPUT_FIELD_ARGUMENT_MAP)[T]
-	: undefined;
+export type InputFieldArgumentConstructorMapType<T extends InputFieldArgumentType> =
+	T extends keyof typeof INPUT_FIELD_ARGUMENT_MAP ? (typeof INPUT_FIELD_ARGUMENT_MAP)[T] : undefined;
 
 export class InputFieldArgumentFactory {
-	static createInputFieldArgument(argumentIdentifier: InputFieldArgumentType): NonNullable<InputFieldArgumentMapType<typeof argumentIdentifier>> {
+	static createInputFieldArgument(
+		argumentIdentifier: InputFieldArgumentType,
+	): NonNullable<InputFieldArgumentMapType<typeof argumentIdentifier>> {
 		if (argumentIdentifier in INPUT_FIELD_ARGUMENT_MAP) {
-			// @ts-ignore Thanks to the `if` we know that the object has the property
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-			const inputFieldConstructor: InputFieldArgumentConstructorMapType<typeof argumentIdentifier> = INPUT_FIELD_ARGUMENT_MAP[argumentIdentifier];
+			const inputFieldConstructor: InputFieldArgumentConstructorMapType<typeof argumentIdentifier> =
+				// @ts-ignore Thanks to the `if` we know that the object has the property
+				INPUT_FIELD_ARGUMENT_MAP[argumentIdentifier];
 
 			if (inputFieldConstructor) {
 				return new inputFieldConstructor();

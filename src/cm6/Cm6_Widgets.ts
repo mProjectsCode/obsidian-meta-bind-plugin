@@ -44,13 +44,26 @@ export abstract class MarkdownRenderChildWidget<T extends AbstractMDRC> extends 
 
 export class ViewFieldWidget extends MarkdownRenderChildWidget<ViewFieldMDRC> {
 	public createRenderChild(container: HTMLElement, component: Component): ViewFieldMDRC | ExcludedMDRC {
-		return this.plugin.api.createViewFieldFromString(this.content, RenderChildType.INLINE, this.filePath, container, component);
+		return this.plugin.api.createViewFieldFromString(
+			this.content,
+			RenderChildType.INLINE,
+			this.filePath,
+			container,
+			component,
+		);
 	}
 }
 
 export class InputFieldWidget extends MarkdownRenderChildWidget<InputFieldMDRC> {
 	public createRenderChild(container: HTMLElement, component: Component): InputFieldMDRC | ExcludedMDRC {
-		return this.plugin.api.createInputFieldFromString(this.content, RenderChildType.INLINE, this.filePath, container, component, undefined);
+		return this.plugin.api.createInputFieldFromString(
+			this.content,
+			RenderChildType.INLINE,
+			this.filePath,
+			container,
+			component,
+			undefined,
+		);
 	}
 }
 

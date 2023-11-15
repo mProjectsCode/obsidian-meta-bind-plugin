@@ -16,16 +16,18 @@ export type ViewFieldArgumentMapType<T extends ViewFieldArgumentType> = T extend
 	? InstanceType<(typeof VIEW_FIELD_ARGUMENT_MAP)[T]>
 	: undefined;
 
-export type ViewFieldArgumentConstructorMapType<T extends ViewFieldArgumentType> = T extends keyof typeof VIEW_FIELD_ARGUMENT_MAP
-	? (typeof VIEW_FIELD_ARGUMENT_MAP)[T]
-	: undefined;
+export type ViewFieldArgumentConstructorMapType<T extends ViewFieldArgumentType> =
+	T extends keyof typeof VIEW_FIELD_ARGUMENT_MAP ? (typeof VIEW_FIELD_ARGUMENT_MAP)[T] : undefined;
 
 export class ViewFieldArgumentFactory {
-	static createViewFieldArgument(argumentIdentifier: ViewFieldArgumentType): NonNullable<ViewFieldArgumentMapType<typeof argumentIdentifier>> {
+	static createViewFieldArgument(
+		argumentIdentifier: ViewFieldArgumentType,
+	): NonNullable<ViewFieldArgumentMapType<typeof argumentIdentifier>> {
 		if (argumentIdentifier in VIEW_FIELD_ARGUMENT_MAP) {
-			// @ts-ignore Thanks to the `if` we know that the object has the property
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-			const viewFieldConstructor: ViewFieldArgumentConstructorMapType<typeof argumentIdentifier> = VIEW_FIELD_ARGUMENT_MAP[argumentIdentifier];
+			const viewFieldConstructor: ViewFieldArgumentConstructorMapType<typeof argumentIdentifier> =
+				// @ts-ignore Thanks to the `if` we know that the object has the property
+				VIEW_FIELD_ARGUMENT_MAP[argumentIdentifier];
 
 			if (viewFieldConstructor) {
 				return new viewFieldConstructor();

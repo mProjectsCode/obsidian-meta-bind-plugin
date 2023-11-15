@@ -6,6 +6,9 @@ export class ExcludedMDRC extends AbstractMDRC {
 
 		this.containerEl.empty();
 
-		this.containerEl.createEl('span', { text: 'this folder has been excluded in the meta bind plugin settings', cls: 'meta-bind-plugin-error' });
+		this.containerEl.createEl('span', {
+			text: 'this folder has been excluded in the meta bind plugin settings',
+			cls: 'meta-bind-plugin-error',
+		});
 	}
 }

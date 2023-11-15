@@ -6,7 +6,10 @@ import { type ViewFieldVariable } from './ViewFieldMDRC';
 import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
 import { type JsViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
-import { type ComputedMetadataSubscription, type ComputedSubscriptionDependency } from '../metadata/ComputedMetadataSubscription';
+import {
+	type ComputedMetadataSubscription,
+	type ComputedSubscriptionDependency,
+} from '../metadata/ComputedMetadataSubscription';
 import { getUUID } from '../utils/Utils';
 import { type App, type TFile } from 'obsidian';
 import { type API as JsEngineAPI } from 'jsEngine/api/API';
@@ -115,11 +118,15 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 			undefined,
 			this.variables.map((x): ComputedSubscriptionDependency => {
 				return {
-					bindTarget: this.plugin.api.bindTargetParser.toFullDeclaration(x.bindTargetDeclaration, this.filePath),
+					bindTarget: this.plugin.api.bindTargetParser.toFullDeclaration(
+						x.bindTargetDeclaration,
+						this.filePath,
+					),
 					callbackSignal: x.inputSignal,
 				};
 			}),
 			() => this.update(),
+			() => this.unload(),
 		);
 	}
 

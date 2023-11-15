@@ -60,7 +60,8 @@
 		<div>
 			<h3 class="mod-error">Some Folder Paths are invalid</h3>
 
-			<ErrorCollectionComponent errorCollection={errorCollection} declaration={undefined}></ErrorCollectionComponent>
+			<ErrorCollectionComponent errorCollection={errorCollection} declaration={undefined}
+			></ErrorCollectionComponent>
 		</div>
 	{/if}
 

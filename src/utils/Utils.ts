@@ -1,47 +1,5 @@
 import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { type KeyValuePair } from '@opd-libs/opd-utils-lib/lib/Utils';
-import structuredClone from '@ungap/structured-clone';
-
-if (!('structuredClone' in globalThis)) {
-	// @ts-ignore
-	globalThis.structuredClone = structuredClone;
-}
-
-/**
- * Gets the file name from a path
- *
- * @param path
- */
-export function getFileName(path: string): string {
-	return path.split('/').at(-1) ?? path;
-}
-
-/**
- * Checks if a path is a path or a file name
- *
- * @param path
- */
-export function isPath(path: string): boolean {
-	return path.split('/').length > 1;
-}
-
-/**
- * Removes the file ending of a file name
- *
- * @param fileName
- */
-export function removeFileEnding(fileName: string): string {
-	const fileNameParts = fileName.split('.');
-	if (fileNameParts.length === 1) {
-		return fileName;
-	} else {
-		let newFileName = fileNameParts[0];
-		for (let i = 1; i < fileNameParts.length - 1; i++) {
-			newFileName += '.' + fileNameParts[i];
-		}
-		return newFileName;
-	}
-}
 
 /**
  * Clamp
@@ -65,7 +23,13 @@ export function optClamp(num: number | undefined, min: number, max: number): num
 	return num !== undefined ? Math.min(Math.max(num, min), max) : undefined;
 }
 
-export function remapRange(old_value: number, old_min: number, old_max: number, new_min: number, new_max: number): number {
+export function remapRange(
+	old_value: number,
+	old_min: number,
+	old_max: number,
+	new_min: number,
+	new_max: number,
+): number {
 	return ((old_value - old_min) / (old_max - old_min)) * (new_max - new_min) + new_min;
 }
 
@@ -107,28 +71,6 @@ export function areArraysEqual<T>(arr1: T[] | undefined, arr2: T[] | undefined):
 }
 
 /**
- * Checks if 2 arrays are equal, the arrays should have the same datatype
- *
- * @param arr1
- * @param arr2
- *
- * @returns true if the two arrays are equal
- */
-export function arrayEquals<T>(arr1: T[], arr2: T[]): boolean {
-	if (arr1.length !== arr2.length) {
-		return false;
-	}
-
-	for (let i = 0; i < arr1.length; i++) {
-		if (arr1[i] !== arr2[i]) {
-			return false;
-		}
-	}
-
-	return true;
-}
-
-/**
  * Checks if arr starts with base.
  *
  * @param arr
@@ -152,14 +94,6 @@ export function isFalsy(value: unknown): boolean {
 	return !value;
 }
 
-export function equalOrIncludes(str1: string, str2: string): boolean {
-	return str1 === str2 || str1.includes(str2) || str2.includes(str1);
-}
-
-export function numberToString(n: number | string): string {
-	return n + '';
-}
-
 export function traverseObjectToParentByPath(
 	pathParts: string[],
 	o: unknown,
@@ -178,113 +112,6 @@ export function traverseObjectToParentByPath(
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 		child: { key: childKey, value: parentObject[childKey] },
 	};
-}
-
-export function pathJoin(path1: string, path2: string): string {
-	if (path1 == null) {
-		throw new Error('path1 must not be null');
-	}
-
-	if (path2 == null) {
-		throw new Error('path2 must not be null');
-	}
-
-	path1 = path1.replaceAll('\\', '/');
-	path2 = path2.replaceAll('\\', '/');
-
-	let result: string;
-
-	if (path1.endsWith('/') && path2.startsWith('/')) {
-		result = path1 + path2.substring(1);
-	} else if (path1.endsWith('/') && !path2.startsWith('/')) {
-		result = path1 + path2;
-	} else if (!path1.endsWith('/') && path2.startsWith('/')) {
-		result = path1 + path2;
-	} else {
-		result = path1 + '/' + path2;
-	}
-
-	if (result.startsWith('/') && result.endsWith('/')) {
-		return result.substring(1, result.length - 1);
-	} else if (result.startsWith('/')) {
-		return result.substring(1);
-	} else if (result.endsWith('/')) {
-		return result.substring(0, result.length - 1);
-	} else {
-		return result;
-	}
-}
-
-export function imagePathToUri(imagePath: string): string {
-	// return `app://local/${pathJoin(getVaultBasePath() ?? '', imagePath)}`;
-	return app.vault.adapter.getResourcePath(imagePath);
-}
-
-export function isObject(object: unknown): boolean {
-	return object != null && typeof object === 'object';
-}
-
-export function deepEquals(any1: unknown, any2: unknown): boolean {
-	// undefined check
-	if (any1 === undefined && any2 === undefined) {
-		return true;
-	} else if (any1 === undefined) {
-		return false;
-	} else if (any2 === undefined) {
-		return false;
-	}
-
-	// null check
-	if (any1 === null && any2 === null) {
-		return true;
-	} else if (any1 === null) {
-		return false;
-	} else if (any2 === null) {
-		return false;
-	}
-
-	if (typeof any1 === 'object' && typeof any2 === 'object') {
-		// array check
-		if (Array.isArray(any1) && Array.isArray(any2)) {
-			if (any1.length !== any2.length) {
-				return false;
-			}
-
-			for (let i = 0; i < any1.length; i++) {
-				if (!deepEquals(any1[i], any2[i])) {
-					return false;
-				}
-			}
-
-			return true;
-		} else if (Array.isArray(any1)) {
-			return false;
-		} else if (Array.isArray(any2)) {
-			return false;
-		}
-
-		const objKeys1 = Object.keys(any1);
-		const objKeys2 = Object.keys(any2);
-
-		if (objKeys1.length !== objKeys2.length) {
-			return false;
-		}
-
-		for (const key of objKeys1) {
-			// @ts-ignore
-			if (!deepEquals(any1[key], any2[key])) {
-				return false;
-			}
-		}
-
-		return true;
-	} else if (typeof any1 === 'object') {
-		return false;
-	} else if (typeof any2 === 'object') {
-		return false;
-	}
-
-	return any1 === any2;
 }
 
 export function deepFreeze<T extends object>(object: T): Readonly<T> {

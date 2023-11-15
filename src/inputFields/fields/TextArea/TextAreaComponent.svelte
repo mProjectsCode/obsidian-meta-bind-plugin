@@ -10,4 +10,10 @@
 	}
 </script>
 
-<textarea tabindex="0" placeholder={placeholder} bind:value={value} maxlength={limit} on:input={() => onValueChange(value)}></textarea>
+<textarea
+	tabindex="0"
+	placeholder={placeholder}
+	bind:value={value}
+	maxlength={limit}
+	on:input={() => onValueChange(value)}
+></textarea>

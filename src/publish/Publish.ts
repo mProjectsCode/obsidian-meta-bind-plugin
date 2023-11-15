@@ -30,11 +30,23 @@ export class MetaBindPublishPlugin implements IPlugin {
 
 				if (isInputField) {
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-					this.api.createInputFieldFromString(fullDeclaration, ctx.sourcePath, ctx.frontmatter, codeBlock, ctx);
+					this.api.createInputFieldFromString(
+						fullDeclaration,
+						ctx.sourcePath,
+						ctx.frontmatter as Record<string, unknown> | undefined,
+						codeBlock,
+						ctx,
+					);
 				}
 				if (isViewField) {
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-					this.api.createViewFieldFromString(fullDeclaration, ctx.sourcePath, ctx.frontmatter, codeBlock, ctx);
+					this.api.createViewFieldFromString(
+						fullDeclaration,
+						ctx.sourcePath,
+						ctx.frontmatter as Record<string, unknown> | undefined,
+						codeBlock,
+						ctx,
+					);
 				}
 			}
 		}, 100);

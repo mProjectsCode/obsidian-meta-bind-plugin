@@ -17,7 +17,9 @@ export class LinkVF extends AbstractViewField {
 
 	public buildVariables(declaration: ViewFieldDeclaration): ViewFieldVariable[] {
 		// filter out empty strings
-		const entries: (string | BindTargetDeclaration)[] = declaration.templateDeclaration.filter(x => (typeof x === 'string' ? x : true));
+		const entries: (string | BindTargetDeclaration)[] = declaration.templateDeclaration.filter(x =>
+			typeof x === 'string' ? x : true,
+		);
 
 		if (entries.length !== 1) {
 			throw new MetaBindValidationError({

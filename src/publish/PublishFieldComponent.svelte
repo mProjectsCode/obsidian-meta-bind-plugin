@@ -81,6 +81,7 @@
 	<div class="meta-bind-error-collection-card">
 		<h5>Meta Bind Field</h5>
 
-		<ErrorCollectionComponent errorCollection={errorCollection} declaration={declaration}></ErrorCollectionComponent>
+		<ErrorCollectionComponent errorCollection={errorCollection} declaration={declaration}
+		></ErrorCollectionComponent>
 	</div>
 {/if}

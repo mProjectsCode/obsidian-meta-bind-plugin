@@ -1,6 +1,9 @@
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
-import { type UnvalidatedBindTargetDeclaration, type UnvalidatedFieldArgument } from '../inputFieldParser/InputFieldDeclaration';
+import {
+	type UnvalidatedBindTargetDeclaration,
+	type UnvalidatedFieldArgument,
+} from '../inputFieldParser/InputFieldDeclaration';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { BIND_TARGET } from './BindTargetParsers';
 import { createResultNode, fieldArguments, ident } from './GeneralParsers';

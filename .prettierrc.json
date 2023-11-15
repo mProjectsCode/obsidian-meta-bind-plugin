@@ -1,7 +1,7 @@
 {
 	"plugins": ["prettier-plugin-svelte"],
 
-	"printWidth": 160,
+	"printWidth": 120,
 	"useTabs": true,
 	"semi": true,
 	"singleQuote": true,

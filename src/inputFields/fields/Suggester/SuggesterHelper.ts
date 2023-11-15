@@ -53,7 +53,12 @@ export function getSuggesterOptions(
 					const dvFile = file.file as { name: string; path: string };
 
 					if (useLinks) {
-						options.push(new SuggesterOption<MBLiteral>(`[[${dvFile.path}|${dvFile.name}]]`, `file-link: ${dvFile.name}`));
+						options.push(
+							new SuggesterOption<MBLiteral>(
+								`[[${dvFile.path}|${dvFile.name}]]`,
+								`file-link: ${dvFile.name}`,
+							),
+						);
 					} else {
 						// console.log(tFile);
 						options.push(new SuggesterOption<MBLiteral>(dvFile.name, `file: ${dvFile.name}`));
@@ -75,9 +80,22 @@ export function getSuggesterOptionsForInputField(inputField: SuggesterLikeIFP): 
 	const optionQueryArgs = inputField.renderChild.getArguments(InputFieldArgumentType.OPTION_QUERY);
 	const useLinksArgs = inputField.renderChild.getArgument(InputFieldArgumentType.USE_LINKS);
 	// in not present, we treat the use links argument as true
-	return getSuggesterOptions(dv, inputField.renderChild.filePath, optionArgs, optionQueryArgs, useLinksArgs === undefined || useLinksArgs.value);
+	return getSuggesterOptions(
+		dv,
+		inputField.renderChild.filePath,
+		optionArgs,
+		optionQueryArgs,
+		useLinksArgs === undefined || useLinksArgs.value,
+	);
 }
 
-export function openSuggesterModalForInputField(inputField: SuggesterLikeIFP, selectCallback: (selected: SuggesterOption<MBLiteral>) => void): void {
-	new SuggesterInputModal(inputField.renderChild.plugin.app, getSuggesterOptionsForInputField(inputField), selectCallback).open();
+export function openSuggesterModalForInputField(
+	inputField: SuggesterLikeIFP,
+	selectCallback: (selected: SuggesterOption<MBLiteral>) => void,
+): void {
+	new SuggesterInputModal(
+		inputField.renderChild.plugin.app,
+		getSuggesterOptionsForInputField(inputField),
+		selectCallback,
+	).open();
 }

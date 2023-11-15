@@ -7,7 +7,11 @@ import { ErrorLevel, MetaBindBindTargetError, MetaBindInternalError } from '../u
 import { type IMetadataAdapter } from './IMetadataAdapter';
 import { type IMetadataSubscription } from './IMetadataSubscription';
 import { MetadataSubscription } from './MetadataSubscription';
-import { ComputedMetadataSubscription, type ComputedSubscriptionDependency, type ComputeFunction } from './ComputedMetadataSubscription';
+import {
+	ComputedMetadataSubscription,
+	type ComputedSubscriptionDependency,
+	type ComputeFunction,
+} from './ComputedMetadataSubscription';
 
 export const metadataCacheUpdateCycleThreshold = 5; // {syncInterval (200)} * 5 = 1s
 export const metadataCacheInactiveCycleThreshold = 5 * 60; // {syncInterval (200)} * 5 * 60 = 1 minute
@@ -120,7 +124,10 @@ export class MetadataManager {
 				changed: false,
 			};
 
-			console.log(`meta-bind | MetadataManager >> loaded metadata for file ${subscription.bindTarget.filePath}`, newCache.metadata);
+			console.log(
+				`meta-bind | MetadataManager >> loaded metadata for file ${subscription.bindTarget.filePath}`,
+				newCache.metadata,
+			);
 
 			subscription.notify(traverseObjectByPath(subscription.bindTarget.metadataPath, newCache.metadata));
 
@@ -134,9 +141,21 @@ export class MetadataManager {
 	 * @param uuid
 	 * @param callbackSignal
 	 * @param bindTarget
+	 * @param onDelete
 	 */
-	public subscribe(uuid: string, callbackSignal: Signal<unknown>, bindTarget: FullBindTarget): MetadataSubscription {
-		const subscription: MetadataSubscription = new MetadataSubscription(uuid, callbackSignal, this, bindTarget);
+	public subscribe(
+		uuid: string,
+		callbackSignal: Signal<unknown>,
+		bindTarget: FullBindTarget,
+		onDelete: () => void,
+	): MetadataSubscription {
+		const subscription: MetadataSubscription = new MetadataSubscription(
+			uuid,
+			callbackSignal,
+			this,
+			bindTarget,
+			onDelete,
+		);
 
 		this.subscribeSubscription(subscription);
 
@@ -151,6 +170,7 @@ export class MetadataManager {
 	 * @param bindTarget
 	 * @param dependencies
 	 * @param computeFunction
+	 * @param onDelete
 	 */
 	public subscribeComputed(
 		uuid: string,
@@ -158,6 +178,7 @@ export class MetadataManager {
 		bindTarget: FullBindTarget | undefined,
 		dependencies: ComputedSubscriptionDependency[],
 		computeFunction: ComputeFunction,
+		onDelete: () => void,
 	): ComputedMetadataSubscription {
 		const subscription: ComputedMetadataSubscription = new ComputedMetadataSubscription(
 			uuid,
@@ -166,6 +187,7 @@ export class MetadataManager {
 			bindTarget,
 			dependencies,
 			computeFunction,
+			onDelete,
 		);
 
 		this.checkForLoops(subscription);
@@ -202,8 +224,12 @@ export class MetadataManager {
 			throw new MetaBindBindTargetError({
 				errorLevel: ErrorLevel.ERROR,
 				effect: 'bind target dependency loop detected',
-				cause: `the loop is as follows: ${dependencyPath.map(x => `"${bindTargetToString(x.bindTarget)}"`).join(' -> ')}`,
-				docs: ['https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/guides/viewfields/#circular-dependencies'],
+				cause: `the loop is as follows: ${dependencyPath
+					.map(x => `"${bindTargetToString(x.bindTarget)}"`)
+					.join(' -> ')}`,
+				docs: [
+					'https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/guides/viewfields/#circular-dependencies',
+				],
 			});
 		}
 
@@ -270,7 +296,9 @@ export class MetadataManager {
 			return;
 		}
 
-		console.debug(`meta-bind | MetadataManager >> unregistered ${subscription.uuid} to from file cache ${filePath}`);
+		console.debug(
+			`meta-bind | MetadataManager >> unregistered ${subscription.uuid} to from file cache ${filePath}`,
+		);
 
 		fileCache.listeners = fileCache.listeners.filter(x => x.uuid !== subscription.uuid);
 		if (fileCache.listeners.length === 0) {
@@ -333,6 +361,7 @@ export class MetadataManager {
 	/**
 	 * Updates the external cached source.
 	 *
+	 * @param filePath
 	 * @param fileCache
 	 */
 	async updateExternal(filePath: string, fileCache: MetadataManagerCacheItem): Promise<void> {
@@ -359,7 +388,12 @@ export class MetadataManager {
 		const metadataPath = subscription.bindTarget.metadataPath;
 		const filePath = subscription.bindTarget.filePath;
 
-		console.debug(`meta-bind | MetadataManager >> updating "${JSON.stringify(metadataPath)}" in "${filePath}" metadata cache to`, value);
+		console.debug(
+			`meta-bind | MetadataManager >> updating "${JSON.stringify(
+				metadataPath,
+			)}" in "${filePath}" metadata cache to`,
+			value,
+		);
 
 		const fileCache = this.getCacheForFile(filePath);
 		if (!fileCache) {
@@ -369,7 +403,11 @@ export class MetadataManager {
 		const { parent, child } = traverseObjectToParentByPath(metadataPath, fileCache.metadata);
 
 		if (parent.value == null) {
-			throw Error(`The parent of "${JSON.stringify(metadataPath)}" does not exist in Object, please create the parent first`);
+			throw Error(
+				`The parent of "${JSON.stringify(
+					metadataPath,
+				)}" does not exist in Object, please create the parent first`,
+			);
 		}
 
 		// @ts-ignore
@@ -414,7 +452,11 @@ export class MetadataManager {
 	 * @param metadataPath
 	 * @param exceptUuid
 	 */
-	notifyListeners(fileCache: MetadataManagerCacheItem, metadataPath?: string[] | undefined, exceptUuid?: string | undefined): void {
+	notifyListeners(
+		fileCache: MetadataManagerCacheItem,
+		metadataPath?: string[] | undefined,
+		exceptUuid?: string | undefined,
+	): void {
 		// console.log(fileCache);
 
 		for (const listener of fileCache.listeners) {
@@ -427,9 +469,18 @@ export class MetadataManager {
 			}
 
 			if (metadataPath) {
-				if (metadataPathHasUpdateOverlap(metadataPath, listener.bindTarget.metadataPath, listener.bindTarget.listenToChildren)) {
+				if (
+					metadataPathHasUpdateOverlap(
+						metadataPath,
+						listener.bindTarget.metadataPath,
+						listener.bindTarget.listenToChildren,
+					)
+				) {
 					const value: unknown = traverseObjectByPath(listener.bindTarget.metadataPath, fileCache.metadata);
-					console.debug(`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata value`, value);
+					console.debug(
+						`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata value`,
+						value,
+					);
 					listener.notify(value);
 				}
 			} else {
@@ -443,5 +494,18 @@ export class MetadataManager {
 				listener.notify(value);
 			}
 		}
+	}
+
+	deleteCacheInstant(filePath: string): void {
+		const cacheItem = this.getCacheForFile(filePath);
+		if (cacheItem === undefined) {
+			return;
+		}
+
+		for (const subscription of cacheItem.listeners) {
+			subscription.delete();
+		}
+
+		this.cache.delete(filePath);
 	}
 }

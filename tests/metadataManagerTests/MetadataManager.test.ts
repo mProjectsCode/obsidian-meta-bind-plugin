@@ -22,7 +22,12 @@ function subscribe(
 	};
 }
 
-function createBindTarget(file: string, path: string[], listenToChildren: boolean = false, boundToLocalScope: boolean = false): FullBindTarget {
+function createBindTarget(
+	file: string,
+	path: string[],
+	listenToChildren: boolean = false,
+	boundToLocalScope: boolean = false,
+): FullBindTarget {
 	return {
 		filePath: file,
 		metadataPath: path,

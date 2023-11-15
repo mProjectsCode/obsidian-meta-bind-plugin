@@ -20,7 +20,8 @@
 {#if errorCollection.hasWarnings()}
 	<h6>Warnings</h6>
 	<p>
-		Warnings will not cause the creation of a field to fail, but they indicate that a part of the declaration was invalid or uses deprecated functionality.
+		Warnings will not cause the creation of a field to fail, but they indicate that a part of the declaration was
+		invalid or uses deprecated functionality.
 	</p>
 	{#each errorCollection.getWarnings() as warning}
 		<MetaBindErrorComponent error={warning}></MetaBindErrorComponent>

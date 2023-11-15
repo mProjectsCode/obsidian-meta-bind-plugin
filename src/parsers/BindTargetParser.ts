@@ -2,7 +2,11 @@ import { ErrorLevel } from '../utils/errors/MetaBindErrors';
 import { type IPlugin } from '../IPlugin';
 import { BIND_TARGET } from './nomParsers/BindTargetParsers';
 import { ParsingValidationError, runParser } from './ParsingError';
-import { type BindTargetDeclaration, type FullBindTarget, type UnvalidatedBindTargetDeclaration } from './inputFieldParser/InputFieldDeclaration';
+import {
+	type BindTargetDeclaration,
+	type FullBindTarget,
+	type UnvalidatedBindTargetDeclaration,
+} from './inputFieldParser/InputFieldDeclaration';
 import { type BindTargetScope } from '../metadata/BindTargetScope';
 
 export class BindTargetParser {
@@ -62,7 +66,11 @@ export class BindTargetParser {
 	public resolveScope(bindTarget: BindTargetDeclaration, scope?: BindTargetScope | undefined): BindTargetDeclaration {
 		if (bindTarget.boundToLocalScope) {
 			if (scope === undefined) {
-				throw new ParsingValidationError(ErrorLevel.ERROR, 'Bind Target Scope Validator', 'Failed to resolve bind target scope, no scope provided');
+				throw new ParsingValidationError(
+					ErrorLevel.ERROR,
+					'Bind Target Scope Validator',
+					'Failed to resolve bind target scope, no scope provided',
+				);
 			} else {
 				bindTarget.filePath = scope.scope.filePath;
 				bindTarget.metadataPath = scope.scope.metadataPath.concat(bindTarget.metadataPath);
@@ -75,8 +83,14 @@ export class BindTargetParser {
 
 	public toFullDeclaration(bindTarget: undefined, filePath: string): undefined;
 	public toFullDeclaration(bindTarget: BindTargetDeclaration, filePath: string): FullBindTarget;
-	public toFullDeclaration(bindTarget: BindTargetDeclaration | undefined, filePath: string): FullBindTarget | undefined;
-	public toFullDeclaration(bindTarget: BindTargetDeclaration | undefined, filePath: string): FullBindTarget | undefined {
+	public toFullDeclaration(
+		bindTarget: BindTargetDeclaration | undefined,
+		filePath: string,
+	): FullBindTarget | undefined;
+	public toFullDeclaration(
+		bindTarget: BindTargetDeclaration | undefined,
+		filePath: string,
+	): FullBindTarget | undefined {
 		if (bindTarget === undefined) {
 			return undefined;
 		}
