@@ -69,7 +69,7 @@ export function isLiteral(literal: unknown): literal is MBLiteral {
  * @param literal
  */
 export function parseUnknownToLiteralArray(literal: unknown): MBLiteral[] | undefined {
-	if (literal === undefined || literal === null) {
+	if (literal === undefined) {
 		return undefined;
 	}
 
@@ -109,7 +109,7 @@ export function parseUnknownToFloat(literal: unknown): number | undefined {
  */
 export function parseUnknownToInt(literal: unknown): number | undefined {
 	if (typeof literal === 'number') {
-		return literal;
+		return Number.isInteger(literal) ? literal : undefined;
 	} else if (typeof literal === 'string') {
 		const v = intParser.tryParse(literal);
 		if (v.success) {
@@ -126,7 +126,7 @@ export function parseUnknownToInt(literal: unknown): number | undefined {
  * @param literal
  */
 export function parseUnknownToString(literal: unknown): string | undefined {
-	return isLiteral(literal) ? literal?.toString() : undefined;
+	return isLiteral(literal) ? stringifyLiteral(literal) : undefined;
 }
 
 /**
@@ -146,14 +146,26 @@ export function parseUnknownToLiteral(literal: unknown): MBLiteral | undefined {
  */
 export function stringifyUnknown(literal: unknown, nullAsEmpty: boolean): string {
 	if (Array.isArray(literal)) {
-		return literal.map(x => recStringifyUnknown(x, nullAsEmpty)).join(', ');
+		return literal
+			.map(x => recStringifyUnknown(x, nullAsEmpty))
+			.filter(x => x !== '')
+			.join(', ');
 	}
 	return recStringifyUnknown(literal, nullAsEmpty);
 }
 
 function recStringifyUnknown(literal: unknown, nullAsEmpty: boolean): string {
-	if (typeof literal === 'object') {
+	if (literal === null || literal === undefined) {
+		return nullAsEmpty ? '' : 'null';
+	}
+	if (typeof literal === 'function') {
+		return '<function>';
+	}
+
+	if (typeof literal === 'object' || Array.isArray(literal)) {
 		return JSON.stringify(literal);
 	}
-	return literal?.toString() ?? (nullAsEmpty ? '' : 'null');
+
+	// eslint-disable-next-line @typescript-eslint/no-base-to-string
+	return literal.toString();
 }

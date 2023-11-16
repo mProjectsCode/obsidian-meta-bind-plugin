@@ -16,5 +16,5 @@
 		"types": ["svelte", "bun-types", "web"],
 		"allowSyntheticDefaultImports": true
 	},
-	"include": ["src/**/*.ts", "node_modules/obsidian/publish.d.ts", "extraTypes/**/*.ts"]
+	"include": ["src/**/*.ts", "tests/**/*.ts", "node_modules/obsidian/publish.d.ts", "extraTypes/**/*.ts"]
 }

@@ -14,7 +14,7 @@ function subscribe(
 ): { subscription: MetadataSubscription; signal: Signal<unknown>; spy: Mock<ListenerCallback<unknown>> } {
 	const signal = new Signal<unknown>(undefined);
 	const spy = spyOn(signal, 'set');
-	const subscription = manager.subscribe(getUUID(), signal, bindTarget);
+	const subscription = manager.subscribe(getUUID(), signal, bindTarget, () => {});
 	return {
 		subscription: subscription,
 		signal: signal,
