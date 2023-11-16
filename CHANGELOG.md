@@ -1,6 +1,6 @@
 # Obsidian Meta Bind Changelog
 
-# Unreleased
+# 0.8.0
 
 New Features
 
@@ -9,6 +9,7 @@ New Features
     -   displays a link to the note specified in the metadata
     -   works with lists of notes
     -   works with external URLs
+-   The `imageSuggester` will now find all images in your vault if the string passed to `optionQuery` is empty like this `optionQuery("")`
 
 Breaking Changes
 
@@ -18,7 +19,7 @@ Breaking Changes
 
 Bug Fixes
 
--   Fixed Metadata cache does not update on file rename or delete [#142](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/142)
+-   Fixed metadata cache does not update on file rename or delete [#142](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/142)
     -   now all Input and View Fields bound to the renamed or deleted note will unload
 
 # 0.7.2
