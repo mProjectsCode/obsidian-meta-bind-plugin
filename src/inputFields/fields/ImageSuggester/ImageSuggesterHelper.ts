@@ -2,7 +2,7 @@ import { SuggesterOption } from '../Suggester/SuggesterHelper';
 import { type OptionInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 import { type OptionQueryInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionQueryInputFieldArgument';
 import { ErrorLevel, MetaBindArgumentError } from '../../../utils/errors/MetaBindErrors';
-import { Notice, TFile, TFolder } from 'obsidian';
+import { Notice, type TAbstractFile, TFile, TFolder } from 'obsidian';
 import type MetaBindPlugin from '../../../main';
 import { ImageSuggesterInputModal } from './ImageSuggesterInputModal';
 import { type ImageSuggesterIPF } from './ImageSuggesterIPF';
@@ -44,7 +44,13 @@ export function getImageSuggesterOptions(
 			continue;
 		}
 
-		const folder = plugin.app.vault.getAbstractFileByPath(folderPathString);
+		let folder: TAbstractFile | null;
+		if (folderPathString === '' || folderPathString === '.') {
+			folder = plugin.app.vault.getRoot();
+		} else {
+			folder = plugin.app.vault.getAbstractFileByPath(folderPathString);
+		}
+
 		if (folder == null) {
 			const error = new MetaBindArgumentError({
 				errorLevel: ErrorLevel.ERROR,
