@@ -2,11 +2,12 @@ import { InputFieldArgumentType, type InputFieldType } from '../../parsers/Gener
 import { type UnvalidatedInputFieldDeclaration } from '../../parsers/inputFieldParser/InputFieldDeclaration';
 import type MetaBindPlugin from '../../main';
 
+// TODO: fix image suggester not working with "" to search entire vault
 export const INPUT_FIELD_EXAMPLE_DECLARATIONS: Record<InputFieldType, string> = {
 	date: 'date',
 	datePicker: 'datePicker',
 	editor: 'editor',
-	imageSuggester: 'imageSuggester',
+	imageSuggester: 'imageSuggester(optionQuery(""))',
 	inlineList: 'inlineList',
 	inlineListSuggester: 'inlineListSuggester(option(apple), option(banana), option(lemon))',
 	inlineSelect: 'inlineSelect(option(apple), option(banana), option(lemon))',

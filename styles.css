@@ -7,11 +7,9 @@ body {
 }
 
 /* Input Wrappers */
-:root .mb-input {
-	all: revert;
-	/*padding-block: 0;*/
-	/*display: inline-flex;*/
-	/*vertical-align: middle;*/
+.mb-input {
+	background-color: transparent !important;
+	border: none !important;
 }
 
 .mb-input-wrapper {

@@ -24,53 +24,12 @@ test:
   - c
 ---
 
-
-
 ### Party Info
 
 Players: `INPUT[number:playerCount]`
 Player Level: `INPUT[number:playerLevel]`
 
 ### Enemies
-
-%% 
-| Name                        | Level                        | Count                        |
-| --------------------------- | ---------------------------- | ---------------------------- |
-| `INPUT[text:enemy[0].name]` | `INPUT[number:enemy[0].level]` | `INPUT[number:enemy[0].count]` |
-| `INPUT[text:enemy[1].name]` | `INPUT[number:enemy[1].level]` | `INPUT[number:enemy[1].count]` |
-| `INPUT[text:enemy[2].name]` | `INPUT[number:enemy[2].level]` | `INPUT[number:enemy[2].count]` |
-| `INPUT[text:enemy[3].name]` | `INPUT[number:enemy[3].level]` | `INPUT[number:enemy[3].count]` |
-| `INPUT[text:enemy[4].name]` | `INPUT[number:enemy[4].level]` | `INPUT[number:enemy[4].count]` |
-
-```js
-const mb = engine.getPlugin('obsidian-meta-bind-plugin').api;
-
-function render(enemies) {
-	const md = engine.markdown.createBuilder();
-	md.createTable(
-		['Name', 'Level', 'Count'], 
-		enemies.map((x, i) => {
-			return [
-				`\`INPUT[text:enemy[${i}].name]\``,
-				`\`INPUT[text:enemy[${i}].level]\``,
-				`\`INPUT[text:enemy[${i}].count]\``
-			]
-		})
-	);
-	return md;
-}
-
-const signal = mb.createSignal([]);
-const unregisterCb = mb.listenToMetadata(signal, context.file.path, ['enemy'], false);
-
-const reactive = engine.reactive(render, signal.get());
-
-component.register(unregisterCb);
-
-return reactive;
-``` 
-%%
-
 
 ```js-engine
 const mb = engine.getPlugin('obsidian-meta-bind-plugin').api;
@@ -86,7 +45,6 @@ const columns = [
 
 mb.createTable(container, context.file.path, component, bindTarget, tableHead, columns);
 ```
-
 
 ### Encounter Stats
 

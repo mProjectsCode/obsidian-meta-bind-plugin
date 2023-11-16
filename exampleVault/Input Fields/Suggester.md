@@ -5,6 +5,7 @@ suggest: option 2
 ---
 
 ### Simple Suggester
+
 ```meta-bind
 INPUT[suggester(
 option(option 1),

@@ -2,9 +2,24 @@
 
 # Unreleased
 
+New Features
+
+-   The in plugin offline FAQ/Help Page now includes a preview of all available input fields
+-   New view field type `link`
+    -   displays a link to the note specified in the metadata
+    -   works with lists of notes
+    -   works with external URLs
+
 Breaking Changes
 
 -   removed setting migrations for settings from plugin versions earlier than `0.6.0`
+-   migrated the JS View Field to use JS Engine
+    -   the docs will include a migration guide soon
+
+Bug Fixes
+
+-   Fixed Metadata cache does not update on file rename or delete [#142](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/142)
+    -   now all Input and View Fields bound to the renamed or deleted note will unload
 
 # 0.7.2
 

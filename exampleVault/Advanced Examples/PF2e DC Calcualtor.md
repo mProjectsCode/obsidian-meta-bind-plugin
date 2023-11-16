@@ -5,7 +5,6 @@ baseDC: 15
 baseSpellDC: 15
 ---
 
-
 ### DC by Proficiency
 
 | Proficiency | DC  |

@@ -1,8 +1,7 @@
 ---
 toggle2: 1
-toggle1: false
+toggle1: true
 ---
-
 
 ```meta-bind
 INPUT[toggle(showcase):toggle1]

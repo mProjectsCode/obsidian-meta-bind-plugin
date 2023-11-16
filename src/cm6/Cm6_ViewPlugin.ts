@@ -12,6 +12,9 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 	return ViewPlugin.fromClass(
 		class {
 			decorations: DecorationSet;
+			/**
+			 * Component for unloading the widgets if the view plugin is destroyed.
+			 */
 			component: Component;
 
 			constructor(view: EditorView) {
@@ -20,6 +23,12 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				this.decorations = this.renderWidgets(view) ?? Decoration.none;
 			}
 
+			/**
+			 * Triggered by codemirror when the view updates.
+			 * Depending on the update type, the decorations are either updated or recreated.
+			 *
+			 * @param update
+			 */
 			update(update: ViewUpdate): void {
 				// only activate in LP and not source mode
 				// @ts-ignore some strange private field not being assignable
@@ -41,6 +50,11 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				}
 			}
 
+			/**
+			 * Updates all the widgets by traversing the syntax tree.
+			 *
+			 * @param view
+			 */
 			updateTree(view: EditorView): void {
 				for (const { from, to } of view.visibleRanges) {
 					syntaxTree(view.state).iterate({
@@ -70,6 +84,11 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				}
 			}
 
+			/**
+			 * Removes all decorations at a given node.
+			 *
+			 * @param node
+			 */
 			removeDecoration(node: SyntaxNode): void {
 				this.decorations.between(node.from - 1, node.to + 1, (from, to, _) => {
 					this.decorations = this.decorations.update({
@@ -80,6 +99,14 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				});
 			}
 
+			/**
+			 * Adds a widget at a given node if it does not exist yet.
+			 *
+			 * @param node the note where to add the widget
+			 * @param view
+			 * @param content the content of the node
+			 * @param widgetType the type of the widget to add
+			 */
 			addDecoration(node: SyntaxNode, view: EditorView, content: string, widgetType: MBWidgetType): void {
 				const from = node.from - 1;
 				const to = node.to + 1;
@@ -106,7 +133,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			}
 
 			/**
-			 * return weather to render the widget and the type of the widget to render.
+			 * Checks whether to render a widget at a given node and the type of the widget to render.
 			 *
 			 * @param view
 			 * @param node
@@ -137,7 +164,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			}
 
 			/**
-			 * reads the node, returning its content and widgetType.
+			 * Reads the content of an editor range and checks if it is a declaration if so also returning the widget type.
 			 *
 			 * @param view
 			 * @param from
@@ -155,6 +182,11 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				};
 			}
 
+			/**
+			 * Completely re-renders all widgets.
+			 *
+			 * @param view
+			 */
 			renderWidgets(view: EditorView): RangeSet<Decoration> | undefined {
 				const currentFile = Cm6_Util.getCurrentFile(view);
 				if (!currentFile) {
@@ -192,6 +224,14 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				return Decoration.set(widgets, true);
 			}
 
+			/**
+			 * Renders a singe widget of the given widget type at a given node.
+			 *
+			 * @param node
+			 * @param widgetType
+			 * @param content
+			 * @param currentFile
+			 */
 			renderWidget(
 				node: SyntaxNode,
 				widgetType: MBWidgetType,
@@ -214,6 +254,10 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				}).range(node.from - 1, node.to + 1);
 			}
 
+			/**
+			 * Triggered by codemirror when the view plugin is destroyed.
+			 * Unloads all widgets.
+			 */
 			destroy(): void {
 				this.component.unload();
 			}

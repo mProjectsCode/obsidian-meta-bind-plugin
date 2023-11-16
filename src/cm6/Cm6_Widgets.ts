@@ -28,12 +28,12 @@ export abstract class MarkdownRenderChildWidget<T extends AbstractMDRC> extends 
 	abstract createRenderChild(container: HTMLElement, component: Component): T | ExcludedMDRC;
 
 	public toDOM(_: EditorView): HTMLElement {
-		const div = document.createElement('span');
-		div.addClass('cm-inline-code');
+		const span = document.createElement('span');
+		span.addClass('cm-inline-code');
 
-		this.renderChild = this.createRenderChild(div, this.parentComponent);
+		this.renderChild = this.createRenderChild(span, this.parentComponent);
 
-		return div;
+		return span;
 	}
 
 	public destroy(dom: HTMLElement): void {
@@ -62,7 +62,6 @@ export class InputFieldWidget extends MarkdownRenderChildWidget<InputFieldMDRC> 
 			this.filePath,
 			container,
 			component,
-			undefined,
 		);
 	}
 }

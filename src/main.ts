@@ -28,11 +28,14 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	async onload(): Promise<void> {
 		console.log(`meta-bind | Main >> load`);
 
+		// load and immediately save settings to apply migrations
 		await this.loadSettings();
 		await this.saveSettings();
 
+		// create API instance
 		this.api = new API(this);
 
+		// parse templates
 		const templateParseErrorCollection = this.api.inputFieldParser.parseTemplates(
 			this.settings.inputFieldTemplates,
 		);
@@ -40,11 +43,14 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			console.warn('meta-bind | failed to parse templates', templateParseErrorCollection);
 		}
 
+		// create MDRC manager
 		this.mdrcManager = new MDRCManager();
 
+		// create metadata manager
 		const metadataAdapter = new ObsidianMetadataAdapter(this);
 		this.metadataManager = new MetadataManager(metadataAdapter);
 
+		// markdown post processors
 		this.registerMarkdownPostProcessor((el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
 			const codeBlocks = el.querySelectorAll('code');
 
@@ -100,6 +106,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			this.api.createJsViewFieldFromString(source, RenderChildType.BLOCK, ctx.sourcePath, el, ctx);
 		});
 
+		// LP editor extension
 		this.registerEditorExtension(createMarkdownRenderChildWidgetEditorPlugin(this));
 
 		// this.addCommand({
@@ -111,6 +118,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		// 	},
 		// });
 
+		// register commands
 		this.addCommand({
 			id: 'mb-open-docs',
 			name: 'Open Meta Bind Docs',
@@ -127,8 +135,18 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			},
 		});
 
+		this.addCommand({
+			id: 'mb-open-help',
+			name: 'Open Meta Bind Help',
+			callback: () => {
+				void this.activateView(MB_FAQ_VIEW_TYPE);
+			},
+		});
+
+		// register FAQ view
 		this.registerView(MB_FAQ_VIEW_TYPE, leaf => new FaqView(leaf, this));
 
+		// register settings tab
 		this.addSettingTab(new MetaBindSettingTab(this.app, this));
 	}
 
@@ -169,8 +187,10 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	async saveSettings(): Promise<void> {
 		console.log(`meta-bind | Main >> settings save`);
 
+		// update all the things
 		DateParser.dateFormat = this.settings.preferredDateFormat;
 		setFirstWeekday(this.settings.firstWeekday);
+
 		await this.saveData(this.settings);
 	}
 
