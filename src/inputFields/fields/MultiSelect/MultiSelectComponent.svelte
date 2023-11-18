@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { OptionInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 	import { MBLiteral } from '../../../utils/Literal';
+	import LiteralRenderComponent from '../../../utils/components/LiteralRenderComponent.svelte';
 
 	export let value: MBLiteral[];
 	export let options: OptionInputFieldArgument[];
@@ -37,6 +38,6 @@
 		on:click={() => selectOption(option.value)}
 		on:keypress={event => selectOptionOnKey(event, option.value)}
 	>
-		{option.name}
+		<LiteralRenderComponent value={option.name}></LiteralRenderComponent>
 	</div>
 {/each}

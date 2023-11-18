@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Icon from '../../../utils/Icon.svelte';
-	import LinkComponent from '../../../utils/LinkComponent.svelte';
+	import Icon from '../../../utils/components/Icon.svelte';
+	import LinkComponent from '../../../utils/components/LinkComponent.svelte';
 	import { isMdLink, MarkdownLink, parseMdLink } from '../../../parsers/MarkdownLinkParser';
 	import { onMount } from 'svelte';
 	import { MBLiteral } from '../../../utils/Literal';

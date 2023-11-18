@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { MarkdownLink } from '../parsers/MarkdownLinkParser';
+	import { MarkdownLink } from '../../parsers/MarkdownLinkParser';
 
 	export let mdLink: MarkdownLink;
 

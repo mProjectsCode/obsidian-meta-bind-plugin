@@ -28,14 +28,7 @@ const mdLinkParser: Parser<MarkdownLink> = P.or(
 	// standard markdown links
 	P.sequenceMap(
 		(a, b, c): MarkdownLink => {
-			let internal: boolean;
-			// if it's a URL, it's external
-			try {
-				new URL(c);
-				internal = false;
-			} catch (_) {
-				internal = true;
-			}
+			const internal = !isUrl(c);
 
 			return {
 				isEmbed: a !== undefined,
@@ -74,4 +67,23 @@ export function parseMdLinkList(link: string): MarkdownLink[] {
 
 export function isMdLink(str: string): boolean {
 	return mdLinkParser.thenEof().tryParse(str).success;
+}
+
+export function isUrl(str: string): boolean {
+	try {
+		new URL(str);
+		return true;
+	} catch (_) {
+		return false;
+	}
+}
+
+export function urlToMdLink(url: URL): MarkdownLink {
+	return {
+		isEmbed: false,
+		target: url.href,
+		block: undefined,
+		alias: url.hostname,
+		internal: false,
+	};
 }

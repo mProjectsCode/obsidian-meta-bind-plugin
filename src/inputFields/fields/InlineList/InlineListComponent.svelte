@@ -1,8 +1,9 @@
 <script lang="ts">
-	import Icon from '../../../utils/Icon.svelte';
+	import Icon from '../../../utils/components/Icon.svelte';
 	import { isMdLink, parseMdLink } from '../../../parsers/MarkdownLinkParser';
-	import LinkComponent from '../../../utils/LinkComponent.svelte';
+	import LinkComponent from '../../../utils/components/LinkComponent.svelte';
 	import { MBLiteral } from '../../../utils/Literal';
+	import LiteralRenderComponent from '../../../utils/components/LiteralRenderComponent.svelte';
 
 	export let value: MBLiteral[];
 	export let showInput: () => void;
@@ -43,13 +44,7 @@
 <div class="mb-inline-list">
 	{#each value as entry, i}
 		<div class="mb-inline-list-item">
-			{#if isMdLink(`${entry}`)}
-				<span>
-					<LinkComponent mdLink={parseMdLink(`${entry}`)}></LinkComponent>
-				</span>
-			{:else}
-				<span>{entry}</span>
-			{/if}
+			<LiteralRenderComponent value={entry}></LiteralRenderComponent>
 			<button class="mb-inline-list-item-button" on:click={() => remove(i)}>
 				<Icon iconName="x" />
 			</button>

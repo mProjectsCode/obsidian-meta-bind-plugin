@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { Button } from 'obsidian-svelte';
-	import Icon from '../../../utils/Icon.svelte';
+	import Icon from '../../../utils/components/Icon.svelte';
 	import { MBLiteral } from '../../../utils/Literal';
+	import LiteralRenderComponent from '../../../utils/components/LiteralRenderComponent.svelte';
 
 	export let value: MBLiteral[];
 	export let limit: number | undefined;
@@ -41,7 +42,7 @@
 <div class="mb-list-items">
 	{#each value as entry, i}
 		<div class="mb-list-item">
-			<span>{entry}</span>
+			<LiteralRenderComponent value={entry}></LiteralRenderComponent>
 			<Button on:click={() => remove(i)}>
 				<Icon iconName="x" />
 			</Button>

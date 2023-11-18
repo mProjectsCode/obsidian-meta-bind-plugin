@@ -1,6 +1,7 @@
 import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
+import { isMdLink, isUrl, type MarkdownLink, parseMdLink, urlToMdLink } from '../parsers/MarkdownLinkParser';
 
 export type MBLiteral = string | number | boolean | null;
 export type MBExtendedLiteral = MBLiteral | MBLiteral[];
@@ -147,14 +148,14 @@ export function parseUnknownToLiteral(literal: unknown): MBLiteral | undefined {
 export function stringifyUnknown(literal: unknown, nullAsEmpty: boolean): string {
 	if (Array.isArray(literal)) {
 		return literal
-			.map(x => recStringifyUnknown(x, nullAsEmpty))
+			.map(x => internalStringifyUnknown(x, nullAsEmpty))
 			.filter(x => x !== '')
 			.join(', ');
 	}
-	return recStringifyUnknown(literal, nullAsEmpty);
+	return internalStringifyUnknown(literal, nullAsEmpty);
 }
 
-function recStringifyUnknown(literal: unknown, nullAsEmpty: boolean): string {
+function internalStringifyUnknown(literal: unknown, nullAsEmpty: boolean): string {
 	if (literal === null || literal === undefined) {
 		return nullAsEmpty ? '' : 'null';
 	}
@@ -168,4 +169,28 @@ function recStringifyUnknown(literal: unknown, nullAsEmpty: boolean): string {
 
 	// eslint-disable-next-line @typescript-eslint/no-base-to-string
 	return literal.toString();
+}
+
+export function stringifyAndLinkUnknown(
+	literal: unknown,
+	nullAsEmpty: boolean,
+): string | MarkdownLink | (string | MarkdownLink)[] {
+	if (Array.isArray(literal)) {
+		return literal.map(x => internalStringifyAndLinkUnknown(x, nullAsEmpty)).filter(x => x !== '');
+	}
+	return internalStringifyAndLinkUnknown(literal, nullAsEmpty);
+}
+
+function internalStringifyAndLinkUnknown(literal: unknown, nullAsEmpty: boolean): string | MarkdownLink {
+	if (typeof literal === 'string') {
+		if (isMdLink(literal)) {
+			return parseMdLink(literal);
+		} else if (isUrl(literal)) {
+			return urlToMdLink(new URL(literal));
+		}
+
+		return literal;
+	}
+
+	return internalStringifyUnknown(literal, nullAsEmpty);
 }

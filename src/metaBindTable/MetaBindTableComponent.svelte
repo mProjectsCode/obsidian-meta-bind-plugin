@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { MetaBindTable, MetaBindTableRow } from './MetaBindTable';
 	import MetaBindTableCellComponent from './MetaBindTableCellComponent.svelte';
-	import Icon from '../utils/Icon.svelte';
+	import Icon from '../utils/components/Icon.svelte';
 	import { Button } from 'obsidian-svelte';
 
 	export let table: MetaBindTable;

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { moment } from 'obsidian';
-	import Icon from '../../../utils/Icon.svelte';
+	import Icon from '../../../utils/components/Icon.svelte';
 
 	export let value: moment.Moment | null;
 	export let dateFormat: string;
