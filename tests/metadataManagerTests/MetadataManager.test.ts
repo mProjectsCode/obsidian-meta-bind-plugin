@@ -5,6 +5,8 @@ import { ListenerCallback, Signal } from '../../src/utils/Signal';
 import { FullBindTarget } from '../../src/parsers/inputFieldParser/InputFieldDeclaration';
 import { TestMetadataAdapter } from './mocks/TestMetadataAdapter';
 import { describe, test, expect, beforeEach, spyOn, Mock } from 'bun:test';
+import { PropPath } from '../../src/utils/prop/PropPath';
+import { parsePropPath } from '../../src/utils/prop/PropParser';
 
 const testFilePath = 'testFile';
 
@@ -30,7 +32,7 @@ function createBindTarget(
 ): FullBindTarget {
 	return {
 		filePath: file,
-		metadataPath: path,
+		metadataPath: parsePropPath(path),
 		listenToChildren: listenToChildren,
 		boundToLocalScope: boundToLocalScope,
 	};

@@ -1,5 +1,4 @@
-import { areArraysEqual, arrayStartsWith, traverseObjectToParentByPath } from '../utils/Utils';
-import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
+import { areArraysEqual, arrayStartsWith } from '../utils/Utils';
 import { type Signal } from '../utils/Signal';
 import { type Metadata, type MetadataManagerCacheItem } from './MetadataManagerCacheItem';
 import { type FullBindTarget } from '../parsers/inputFieldParser/InputFieldDeclaration';
@@ -12,6 +11,8 @@ import {
 	type ComputedSubscriptionDependency,
 	type ComputeFunction,
 } from './ComputedMetadataSubscription';
+import { PropUtils } from '../utils/prop/PropUtils';
+import { type PropPath } from '../utils/prop/PropPath';
 
 export const metadataCacheUpdateCycleThreshold = 5; // {syncInterval (200)} * 5 = 1s
 export const metadataCacheInactiveCycleThreshold = 5 * 60; // {syncInterval (200)} * 5 * 60 = 1 minute
@@ -31,7 +32,11 @@ function hasUpdateOverlap(a: FullBindTarget | undefined, b: FullBindTarget | und
 		return false;
 	}
 
-	return metadataPathHasUpdateOverlap(a.metadataPath, b.metadataPath, b.listenToChildren);
+	return metadataPathHasUpdateOverlap(
+		a.metadataPath.toStringArray(),
+		b.metadataPath.toStringArray(),
+		b.listenToChildren,
+	);
 }
 
 /**
@@ -62,7 +67,7 @@ function bindTargetToString(a: FullBindTarget | undefined): string {
 		return 'undefined';
 	}
 
-	return `${a.filePath}#${a.metadataPath}`;
+	return `${a.filePath}#${a.metadataPath.toString()}`;
 }
 
 export class MetadataManager {
@@ -97,17 +102,21 @@ export class MetadataManager {
 
 		if (fileCache) {
 			console.debug(
-				`meta-bind | MetadataManager >> registered ${subscription.uuid} to existing file cache ${subscription.bindTarget.filePath} -> ${subscription.bindTarget.metadataPath}`,
+				`meta-bind | MetadataManager >> registered ${subscription.uuid} to existing file cache ${
+					subscription.bindTarget.filePath
+				} -> ${subscription.bindTarget.metadataPath.toString()}`,
 			);
 
 			fileCache.inactive = false;
 			fileCache.cyclesSinceInactive = 0;
 			fileCache.listeners.push(subscription);
 
-			subscription.notify(traverseObjectByPath(subscription.bindTarget.metadataPath, fileCache.metadata));
+			subscription.notify(PropUtils.tryGet(fileCache.metadata, subscription.bindTarget.metadataPath));
 		} else {
 			console.debug(
-				`meta-bind | MetadataManager >> registered ${subscription.uuid} to newly created file cache ${subscription.bindTarget.filePath} -> ${subscription.bindTarget.metadataPath}`,
+				`meta-bind | MetadataManager >> registered ${subscription.uuid} to newly created file cache ${
+					subscription.bindTarget.filePath
+				} -> ${subscription.bindTarget.metadataPath.toString()}`,
 			);
 
 			// const file = this.plugin.app.vault.getAbstractFileByPath(subscription.bindTarget.filePath) as TFile;
@@ -129,7 +138,7 @@ export class MetadataManager {
 				newCache.metadata,
 			);
 
-			subscription.notify(traverseObjectByPath(subscription.bindTarget.metadataPath, newCache.metadata));
+			subscription.notify(PropUtils.tryGet(newCache.metadata, subscription.bindTarget.metadataPath));
 
 			this.createCacheForFile(subscription.bindTarget.filePath, newCache);
 		}
@@ -400,18 +409,8 @@ export class MetadataManager {
 			return;
 		}
 
-		const { parent, child } = traverseObjectToParentByPath(metadataPath, fileCache.metadata);
+		PropUtils.setAndCreate(fileCache.metadata, metadataPath, value);
 
-		if (parent.value == null) {
-			throw Error(
-				`The parent of "${JSON.stringify(
-					metadataPath,
-				)}" does not exist in Object, please create the parent first`,
-			);
-		}
-
-		// @ts-ignore
-		parent.value[child.key] = value;
 		fileCache.cyclesSinceLastChange = 0;
 		fileCache.changed = true;
 
@@ -454,7 +453,7 @@ export class MetadataManager {
 	 */
 	notifyListeners(
 		fileCache: MetadataManagerCacheItem,
-		metadataPath?: string[] | undefined,
+		metadataPath?: PropPath | undefined,
 		exceptUuid?: string | undefined,
 	): void {
 		// console.log(fileCache);
@@ -471,12 +470,12 @@ export class MetadataManager {
 			if (metadataPath) {
 				if (
 					metadataPathHasUpdateOverlap(
-						metadataPath,
-						listener.bindTarget.metadataPath,
+						metadataPath.toStringArray(),
+						listener.bindTarget.metadataPath.toStringArray(),
 						listener.bindTarget.listenToChildren,
 					)
 				) {
-					const value: unknown = traverseObjectByPath(listener.bindTarget.metadataPath, fileCache.metadata);
+					const value: unknown = PropUtils.tryGet(fileCache.metadata, listener.bindTarget.metadataPath);
 					console.debug(
 						`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata value`,
 						value,
@@ -484,7 +483,7 @@ export class MetadataManager {
 					listener.notify(value);
 				}
 			} else {
-				const value: unknown = traverseObjectByPath(listener.bindTarget.metadataPath, fileCache.metadata);
+				const value: unknown = PropUtils.tryGet(fileCache.metadata, listener.bindTarget.metadataPath);
 				console.debug(
 					`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata`,
 					listener.bindTarget.metadataPath,

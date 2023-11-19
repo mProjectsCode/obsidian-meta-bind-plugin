@@ -25,6 +25,7 @@ import {
 } from '../parsers/viewFieldParser/ViewFieldDeclaration';
 import { ViewFieldFactory } from '../viewFields/ViewFieldFactory';
 import { getUUID } from '../utils/Utils';
+import { parsePropPath } from '../utils/prop/PropParser';
 
 export class API implements IAPI {
 	public plugin: MetaBindPlugin;
@@ -216,7 +217,7 @@ export class API implements IAPI {
 			signal,
 			{
 				filePath: filePath,
-				metadataPath: metadataPath,
+				metadataPath: parsePropPath(metadataPath),
 				listenToChildren: listenToChildren,
 				boundToLocalScope: false,
 			},

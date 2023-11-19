@@ -2,7 +2,6 @@
 	import { InputFieldType } from '../../parsers/GeneralConfigs';
 	import { UnvalidatedInputFieldDeclaration } from '../../parsers/inputFieldParser/InputFieldDeclaration';
 	import { onDestroy, onMount } from 'svelte';
-	import { DocsHelper } from '../DocsHelper';
 	import MetaBindPlugin from '../../main';
 	import { Component } from 'obsidian';
 	import { RenderChildType } from '../../renderChildren/InputFieldMDRC';

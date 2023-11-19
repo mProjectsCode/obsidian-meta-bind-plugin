@@ -2,6 +2,8 @@ import { type InputFieldArgumentContainer } from '../../fieldArguments/inputFiel
 import { type ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { type ParsingResultNode } from '../nomParsers/GeneralParsers';
 import { type InputFieldType } from '../GeneralConfigs';
+import { type PropPath } from '../../utils/prop/PropPath';
+import { type PROP_ACCESS_TYPE } from '../../utils/prop/PropAccess';
 
 export interface InputFieldDeclaration {
 	/**
@@ -40,21 +42,26 @@ export interface UnvalidatedBindTargetDeclaration {
 	file?: ParsingResultNode;
 	boundToLocalScope: boolean;
 	listenToChildren: boolean;
-	path: ParsingResultNode[];
+	path: UnvalidatedPropAccess[];
+}
+
+export interface UnvalidatedPropAccess {
+	type: PROP_ACCESS_TYPE;
+	prop: ParsingResultNode;
 }
 
 export interface BindTargetDeclaration {
 	filePath: string | undefined;
 	boundToLocalScope: boolean;
 	listenToChildren: boolean;
-	metadataPath: string[];
+	metadataPath: PropPath;
 }
 
 export interface FullBindTarget {
 	filePath: string;
 	boundToLocalScope: boolean;
 	listenToChildren: boolean;
-	metadataPath: string[];
+	metadataPath: PropPath;
 }
 
 export interface UnvalidatedFieldArgument {

@@ -1,4 +1,4 @@
-import { PropAccess, PropAccessResult } from './PropAccess';
+import { PROP_ACCESS_TYPE, type PropAccess, type PropAccessResult } from './PropAccess';
 
 export class PropPath {
 	path: PropAccess[];
@@ -14,7 +14,7 @@ export class PropPath {
 
 		let result = this.path[0].get(obj);
 
-		for (let access of this.path.slice(1)) {
+		for (const access of this.path.slice(1)) {
 			result = access.get(result.child);
 		}
 
@@ -37,7 +37,7 @@ export class PropPath {
 
 		let result = this.path[0].get(obj);
 
-		for (let access of this.path.slice(1)) {
+		for (const access of this.path.slice(1)) {
 			result = access.get(result.child);
 		}
 
@@ -57,7 +57,7 @@ export class PropPath {
 		}
 
 		for (let i = 1; i < this.path.length; i++) {
-			let access = this.path[i];
+			const access = this.path[i];
 			result = access.get(result.child);
 
 			if (result.child === undefined) {
@@ -69,17 +69,29 @@ export class PropPath {
 		result.access.set(result.parent, value);
 	}
 
-	getNextPathElement(index: number): PropAccess | undefined {
+	private getNextPathElement(index: number): PropAccess | undefined {
 		return this.path[index + 1];
 	}
 
-	getNextPathElementValue(index: number, value: unknown): unknown {
+	private getNextPathElementValue(index: number, value: unknown): unknown {
 		const nextPathElement = this.getNextPathElement(index);
 
 		if (nextPathElement === undefined) {
 			return value;
 		}
 
-		return nextPathElement.type === 'object' ? {} : [];
+		return nextPathElement.type === PROP_ACCESS_TYPE.OBJECT ? {} : [];
+	}
+
+	toStringArray(): string[] {
+		return this.path.map(access => access.prop);
+	}
+
+	toString(): string {
+		return this.toStringArray().join('.');
+	}
+
+	concat(path: PropPath): PropPath {
+		return new PropPath(this.path.concat(path.path));
 	}
 }

@@ -8,6 +8,8 @@ import {
 	type UnvalidatedBindTargetDeclaration,
 } from './inputFieldParser/InputFieldDeclaration';
 import { type BindTargetScope } from '../metadata/BindTargetScope';
+import { PropAccess } from '../utils/prop/PropAccess';
+import { PropPath } from '../utils/prop/PropPath';
 
 export class BindTargetParser {
 	plugin: IPlugin;
@@ -56,7 +58,9 @@ export class BindTargetParser {
 			}
 		}
 
-		bindTargetDeclaration.metadataPath = unvalidatedBindTargetDeclaration.path.map(x => x.value);
+		bindTargetDeclaration.metadataPath = new PropPath(
+			unvalidatedBindTargetDeclaration.path.map(x => new PropAccess(x.type, x.prop.value)),
+		);
 		bindTargetDeclaration.boundToLocalScope = unvalidatedBindTargetDeclaration.boundToLocalScope;
 		bindTargetDeclaration.listenToChildren = unvalidatedBindTargetDeclaration.listenToChildren;
 

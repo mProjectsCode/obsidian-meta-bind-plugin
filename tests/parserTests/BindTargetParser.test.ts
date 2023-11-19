@@ -2,6 +2,8 @@ import { describe, test, expect } from 'bun:test';
 import { BindTargetDeclaration } from '../../src/parsers/inputFieldParser/InputFieldDeclaration';
 import { TestPlugin } from './mocks/TestAPI';
 import { BindTargetScope } from '../../src/metadata/BindTargetScope';
+import { parsePropPath } from '../../src/utils/prop/PropParser';
+import { PropPath } from '../../src/utils/prop/PropPath';
 
 const plugin = new TestPlugin();
 const parser = plugin.api.bindTargetParser;
@@ -33,7 +35,7 @@ const validBindTargetPaths: [string, string[]][] = [
 
 const localScopeBindTarget: BindTargetDeclaration = {
 	filePath: 'scope_test_file',
-	metadataPath: ['scope_test_metadata'],
+	metadataPath: parsePropPath(['scope_test_metadata']),
 	boundToLocalScope: false,
 	listenToChildren: false,
 };
@@ -42,7 +44,7 @@ const localScope = new BindTargetScope(localScopeBindTarget);
 
 interface BindTargetCombination {
 	filePath: string | undefined;
-	metadataPath: string[];
+	metadataPath: PropPath;
 	metadataPathString: string;
 }
 
@@ -53,7 +55,7 @@ function generateValidBindTargets(): BindTargetCombination[] {
 			testCases.push({
 				filePath: validBindTargetFile,
 				metadataPathString: validBindTargetPath[0],
-				metadataPath: validBindTargetPath[1],
+				metadataPath: parsePropPath(validBindTargetPath[1]),
 			});
 		}
 	}
@@ -136,6 +138,8 @@ describe('bind target parser', () => {
 			const testCase = generateTestCase(bindTarget);
 
 			test(testCase.normal.str, () => {
+				// console.log(JSON.stringify(testCase.normal.expected, null, 2));
+				// console.log(JSON.stringify(parser.parseAndValidateBindTarget(testCase.normal.str), null, 2));
 				expect(parser.parseAndValidateBindTarget(testCase.normal.str)).toEqual(testCase.normal.expected);
 			});
 

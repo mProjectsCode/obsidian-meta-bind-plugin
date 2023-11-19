@@ -1,5 +1,5 @@
 ---
-slider1: 6
+slider1: 3
 suggest: test
 toggle1: false
 Domestic_tasks:
@@ -8,10 +8,10 @@ Meditate: 100
 Slept: 00:00
 select: option d
 toggle: false
-nested:
-  object: asd
 inlineSelect: 0
 こんにちは: hello
+nested:
+  object: test
 ---
 
 ## In callouts

@@ -19,6 +19,7 @@ import {
 
 import { type MetadataSubscription } from '../metadata/MetadataSubscription';
 import { type MBExtendedLiteral } from '../utils/Literal';
+import { parsePropPath } from '../utils/prop/PropParser';
 
 export type MetaBindTableCell = InputFieldDeclaration | ViewFieldDeclaration;
 
@@ -108,7 +109,7 @@ export class MetaBindTable extends AbstractMDRC {
 		for (let i = 0; i < values.length; i++) {
 			if (typeof values[i] === 'object') {
 				const scope = new BindTargetScope({
-					metadataPath: [...this.bindTarget.metadataPath, i.toString()],
+					metadataPath: this.bindTarget.metadataPath.concat(parsePropPath([i.toString()])),
 					filePath: this.bindTarget.filePath,
 					listenToChildren: false,
 					boundToLocalScope: false,

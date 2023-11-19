@@ -2,12 +2,10 @@ import { MarkdownRenderChild } from 'obsidian/publish';
 import { type PublishAPI } from './PublishAPI';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
 import * as MathJs from 'mathjs';
-import { ErrorLevel, MetaBindBindTargetError, MetaBindExpressionError } from '../utils/errors/MetaBindErrors';
+import { ErrorLevel, MetaBindExpressionError } from '../utils/errors/MetaBindErrors';
 import { type ViewFieldVariable } from '../renderChildren/ViewFieldMDRC';
 import { Signal } from '../utils/Signal';
-import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import PublishFieldComponent from './PublishFieldComponent.svelte';
-import { type BindTargetDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
 import { getUUID } from '../utils/Utils';
 
@@ -120,17 +118,17 @@ export class PublishViewFieldMDRC extends MarkdownRenderChild {
 		}
 	}
 
-	getValue(bindTarget: BindTargetDeclaration): unknown {
-		if (bindTarget.filePath !== this.filePath) {
-			throw new MetaBindBindTargetError({
-				errorLevel: ErrorLevel.ERROR,
-				effect: 'failed to render view field',
-				cause: 'can not load metadata of another file in obsidian publish',
-			});
-		}
-
-		return traverseObjectByPath(bindTarget.metadataPath, this.metadata);
-	}
+	// getValue(bindTarget: BindTargetDeclaration): unknown {
+	// 	if (bindTarget.filePath !== this.filePath) {
+	// 		throw new MetaBindBindTargetError({
+	// 			errorLevel: ErrorLevel.ERROR,
+	// 			effect: 'failed to render view field',
+	// 			cause: 'can not load metadata of another file in obsidian publish',
+	// 		});
+	// 	}
+	//
+	// 	return traverseObjectByPath(bindTarget.metadataPath, this.metadata);
+	// }
 
 	async onload(): Promise<void> {
 		console.log('meta-bind | InputFieldMarkdownRenderChild >> load', this);

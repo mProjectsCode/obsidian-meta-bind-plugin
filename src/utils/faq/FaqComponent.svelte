@@ -49,20 +49,23 @@
 			variant="primary"
 			on:click={() => {
 				DocsHelper.open(DocsHelper.linkToHome());
-			}}>Docs</Button
-		>
+			}}
+			>Docs
+		</Button>
 		<Button
 			variant="default"
 			on:click={() => {
 				DocsHelper.open(DocsHelper.linkToGithub());
-			}}>GitHub</Button
-		>
+			}}
+			>GitHub
+		</Button>
 		<Button
 			variant="default"
 			on:click={() => {
 				DocsHelper.open(DocsHelper.linkToIssues());
-			}}>Report Issue</Button
-		>
+			}}
+			>Report Issue
+		</Button>
 	</p>
 
 	<h2>Error Messages</h2>
@@ -70,17 +73,21 @@
 		When creating <a href={DocsHelper.linkToInputFields()}>Input Fields</a> or
 		<a href={DocsHelper.linkToViewFields()}>View Fields</a>
 		<strong>warnings</strong>
-		(<ErrorIndicatorComponent
+		(
+		<ErrorIndicatorComponent
 			app={app}
 			declaration={exampleWarningDeclaration}
 			errorCollection={exampleWarningErrorCollection}
-		></ErrorIndicatorComponent>) and <strong>errors</strong>
-		(<ErrorIndicatorComponent
+		></ErrorIndicatorComponent>
+		) and <strong>errors</strong>
+		(
+		<ErrorIndicatorComponent
 			app={app}
 			declaration={exampleErrorDeclaration}
 			errorCollection={exampleErrorErrorCollection}
-		></ErrorIndicatorComponent>) can occur. These are <strong>clickable</strong> and will show a modal with detailed
-		information about the error when clicked.
+		></ErrorIndicatorComponent>
+		) can occur. These are <strong>clickable</strong> and will show a modal with detailed information about the error
+		when clicked.
 	</p>
 
 	<h2>Input Fields</h2>

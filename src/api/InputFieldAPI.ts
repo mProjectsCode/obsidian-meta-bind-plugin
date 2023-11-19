@@ -7,6 +7,7 @@ import {
 	type UnvalidatedInputFieldDeclaration,
 } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { type InputFieldArgumentType, type InputFieldType } from '../parsers/GeneralConfigs';
+import { PROP_ACCESS_TYPE } from '../utils/prop/PropAccess';
 
 export class InputFieldAPI {
 	private readonly api: IAPI;
@@ -151,11 +152,17 @@ export class InputFieldAPI {
 		}
 
 		if (unvalidatedDeclaration.bindTarget) {
-			unvalidatedDeclaration.bindTarget.path = bindTargetMetadataField.map(x => ({ value: x }));
+			unvalidatedDeclaration.bindTarget.path = bindTargetMetadataField.map(x => ({
+				type: PROP_ACCESS_TYPE.OBJECT,
+				prop: { value: x },
+			}));
 		} else {
 			unvalidatedDeclaration.bindTarget = {
 				file: undefined,
-				path: bindTargetMetadataField.map(x => ({ value: x })),
+				path: bindTargetMetadataField.map(x => ({
+					type: PROP_ACCESS_TYPE.OBJECT,
+					prop: { value: x },
+				})),
 				boundToLocalScope: false,
 				listenToChildren: false,
 			};

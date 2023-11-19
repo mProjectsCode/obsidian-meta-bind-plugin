@@ -6,7 +6,7 @@ import { isMdLink, isUrl, type MarkdownLink, parseMdLink, urlToMdLink } from '..
 export type MBLiteral = string | number | boolean | null;
 export type MBExtendedLiteral = MBLiteral | MBLiteral[];
 
-const floatParser: Parser<number> = P.sequenceMap(
+export const floatParser: Parser<number> = P.sequenceMap(
 	(sign, number) => (sign === undefined ? number : -number),
 	P.string('-').optional(),
 	P.or(
@@ -15,7 +15,7 @@ const floatParser: Parser<number> = P.sequenceMap(
 	),
 ).thenEof();
 
-const intParser: Parser<number> = P.sequenceMap(
+export const intParser: Parser<number> = P.sequenceMap(
 	(sign, number) => (sign === undefined ? number : -number),
 	P.string('-').optional(),
 	P_UTILS.digits().map(x => Number(x)),

@@ -1,11 +1,11 @@
 import { MarkdownRenderChild } from 'obsidian/publish';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
 import { type PublishAPI } from './PublishAPI';
-import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
 import { ErrorLevel, MetaBindBindTargetError } from '../utils/errors/MetaBindErrors';
 import PublishFieldComponent from './PublishFieldComponent.svelte';
 import { type InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { getPublishDefaultValue } from './PublishUtils';
+import { PropUtils } from '../utils/prop/PropUtils';
 
 export class PublishInputFieldMDRC extends MarkdownRenderChild {
 	api: PublishAPI;
@@ -67,7 +67,7 @@ export class PublishInputFieldMDRC extends MarkdownRenderChild {
 			return getPublishDefaultValue(this.declaration);
 		}
 
-		const value: unknown = traverseObjectByPath(this.declaration.bindTarget.metadataPath, this.metadata);
+		const value: unknown = PropUtils.get(this.metadata, this.declaration.bindTarget.metadataPath);
 
 		if (value === undefined) {
 			this.errorCollection.add(
