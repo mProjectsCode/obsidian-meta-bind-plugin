@@ -54,8 +54,6 @@
 	},
 	"dependencies": {
 		"@lemons_dev/parsinom": "^0.0.11",
-		"@opd-libs/opd-metadata-lib": "0.0.4",
-		"@opd-libs/opd-utils-lib": "0.0.2",
 		"@popperjs/core": "^2.11.8",
 		"@ungap/structured-clone": "^1.2.0",
 		"mathjs": "^12.0.0",
