@@ -12,7 +12,11 @@
 	}
 
 	function selectOption(option: MBLiteral) {
-		value = option;
+		if (value === option) {
+			value = null;
+		} else {
+			value = option;
+		}
 		onValueChange(value);
 	}
 

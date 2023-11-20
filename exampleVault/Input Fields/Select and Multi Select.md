@@ -1,5 +1,5 @@
 ---
-select: 1
+select: 
 select2: false
 select3: 2
 multiSelect:
