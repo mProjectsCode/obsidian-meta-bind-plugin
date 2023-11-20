@@ -14,34 +14,37 @@
 	}
 </script>
 
-<table>
-	<thead>
-		<tr>
-			{#each tableHead as headCell}
-				<th>{headCell}</th>
-			{/each}
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		{#each tableCells as tableRow (tableRow.index)}
+<div class="mb-table-wrapper">
+	<table class="mb-html-table">
+		<thead>
 			<tr>
-				{#if tableRow.isValid}
-					{#each tableRow.cells as tableCell}
-						<MetaBindTableCellComponent table={table} bind:cell={tableCell}></MetaBindTableCellComponent>
-					{/each}
-				{:else}
-					<td class="meta-bind-error" colspan={tableHead.length}> invalid data</td>
-				{/if}
-
-				<td>
-					<Button on:click={() => table.removeColumn(tableRow.index)}>
-						<Icon iconName="x" />
-					</Button>
-				</td>
+				{#each tableHead as headCell}
+					<th>{headCell}</th>
+				{/each}
+				<th></th>
 			</tr>
-		{/each}
-	</tbody>
-</table>
+		</thead>
+		<tbody>
+			{#each tableCells as tableRow (tableRow.index)}
+				<tr>
+					{#if tableRow.isValid}
+						{#each tableRow.cells as tableCell}
+							<MetaBindTableCellComponent table={table} bind:cell={tableCell}
+							></MetaBindTableCellComponent>
+						{/each}
+					{:else}
+						<td class="meta-bind-error" colspan={tableHead.length}> invalid data</td>
+					{/if}
+
+					<td>
+						<Button on:click={() => table.removeColumn(tableRow.index)}>
+							<Icon iconName="x" />
+						</Button>
+					</td>
+				</tr>
+			{/each}
+		</tbody>
+	</table>
+</div>
 
 <Button on:click={() => table.addColumn()}>Add Column</Button>

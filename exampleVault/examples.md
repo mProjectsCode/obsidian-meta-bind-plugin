@@ -1,5 +1,5 @@
 ---
-slider1: 3
+slider1: 8
 suggest: test
 toggle1: false
 Domestic_tasks:
@@ -15,10 +15,10 @@ nested:
 ---
 
 ## In callouts
-> quote
+
 > `INPUT[slider(addLabels, minValue(1), maxValue(10)):slider1]`
 
-> [!INFO]
+> [!info]
 > `INPUT[slider(addLabels, minValue(1), maxValue(10)):slider1]`
 
 > [!INFO]

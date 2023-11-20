@@ -38,9 +38,9 @@ const bindTarget = mb.createBindTarget('enemy');
 const tableHead = ['Name', 'Level', 'Variant', 'Count'];
 const columns = [
 	mb.inputField.createInputFieldDeclarationFromString('INPUT[text:^.name]'),
-	mb.inputField.createInputFieldDeclarationFromString('INPUT[number:^.level]'),
+	mb.inputField.createInputFieldDeclarationFromString('INPUT[number(class(meta-bind-small-width)):^.level]'),
 	mb.inputField.createInputFieldDeclarationFromString('INPUT[inlineSelect(option(-1, weak), option(0, normal), option(1, elite)):^.variant]'),
-	mb.inputField.createInputFieldDeclarationFromString('INPUT[number:^.count]')
+	mb.inputField.createInputFieldDeclarationFromString('INPUT[number(class(meta-bind-small-width)):^.count]')
 ];
 
 mb.createTable(container, context.file.path, component, bindTarget, tableHead, columns);
@@ -50,12 +50,11 @@ mb.createTable(container, context.file.path, component, bindTarget, tableHead, c
 
 ```meta-bind-js-view
 {enemy} and children as enemies
-{playerCount} as playerCount
 {playerLevel} as playerLevel
 ---
 
 function getXP(enemyLevel) {
-	const diff = enemyLevel - context.playerLevel;
+	const diff = enemyLevel - context.bound.playerLevel;
 	if (diff === -4) {
 		return 10;
 	}
@@ -88,7 +87,7 @@ function getXP(enemyLevel) {
 
 function calculateTotalXP() {
 	let acc = 0;
-	for (const enemy of context.enemies) {
+	for (const enemy of context.bound.enemies) {
 		const xp = getXP((enemy.level ?? 0) + (enemy.variant ?? 0));
 		if (xp === -1) {
 			return -1;
@@ -98,7 +97,7 @@ function calculateTotalXP() {
 	return acc;
 }
 
-return "Encounter XP: " + calculateTotalXP()
+return engine.markdown.create(`Encounter XP: **${calculateTotalXP()}**`);
 ```
 
 > [!info] XP Reference

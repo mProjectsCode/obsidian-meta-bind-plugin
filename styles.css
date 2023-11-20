@@ -14,6 +14,7 @@ body {
 
 .mb-input-wrapper {
 	display: inline;
+	white-space: normal;
 }
 
 /* View Wrappers */
@@ -421,6 +422,14 @@ a.mb-no-link {
 	text-decoration: none;
 }
 
+table.mb-html-table {
+	--table-column-min-width: 10px;
+}
+
+.mb-table-wrapper {
+	overflow-x: auto;
+}
+
 /* --- UTIL CLASSES --- */
 
 .meta-bind-full-width > * {
@@ -429,4 +438,8 @@ a.mb-no-link {
 
 .meta-bind-high > * {
 	height: 200px;
+}
+
+.meta-bind-small-width > * {
+	width: 80px;
 }
