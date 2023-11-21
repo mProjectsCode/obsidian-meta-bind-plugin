@@ -17,6 +17,14 @@ body {
 	white-space: normal;
 }
 
+.mb-input-inline {
+	display: inline !important;
+}
+
+.mb-input-block {
+	display: block !important;
+}
+
 /* View Wrappers */
 /* For higher specificity */
 :is(code, span).mb-view:has(> div.mb-view-wrapper) {

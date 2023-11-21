@@ -11,6 +11,8 @@ import { DEFAULT_SETTINGS, type MetaBindPluginSettings } from './settings/Settin
 import { type IPlugin } from './IPlugin';
 import { ObsidianMetadataAdapter } from './metadata/ObsidianMetadataAdapter';
 import { FaqView, MB_FAQ_VIEW_TYPE } from './utils/faq/FaqView';
+import { EMBED_MAX_DEPTH, EmbedMDRC } from './renderChildren/EmbedMDRC';
+import { getUUID } from './utils/Utils';
 
 export default class MetaBindPlugin extends Plugin implements IPlugin {
 	// @ts-ignore defined in `onload`
@@ -105,6 +107,20 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		this.registerMarkdownCodeBlockProcessor('meta-bind-js-view', (source, el, ctx) => {
 			this.api.createJsViewFieldFromString(source, RenderChildType.BLOCK, ctx.sourcePath, el, ctx);
 		});
+
+		this.registerMarkdownCodeBlockProcessor('meta-bind-embed', (source, el, ctx) => {
+			const embed = new EmbedMDRC(el, source, this, ctx.sourcePath, getUUID(), 0);
+			ctx.addChild(embed);
+			console.warn(ctx);
+		});
+
+		for (let i = 1; i <= EMBED_MAX_DEPTH; i++) {
+			this.registerMarkdownCodeBlockProcessor(`meta-bind-embed-internal-${i}`, (source, el, ctx) => {
+				const embed = new EmbedMDRC(el, source, this, ctx.sourcePath, getUUID(), i);
+				ctx.addChild(embed);
+				console.warn(ctx);
+			});
+		}
 
 		// LP editor extension
 		this.registerEditorExtension(createMarkdownRenderChildWidgetEditorPlugin(this));
