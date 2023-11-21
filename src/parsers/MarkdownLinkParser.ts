@@ -1,8 +1,9 @@
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
-import { filePath } from './nomParsers/BindTargetParsers';
+import { filePath } from './nomParsers/BindTargetNomParsers';
 import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { runParser } from './ParsingError';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
+import { isUrl } from '../utils/Utils';
 
 const mdWikiLinkInnerParser: Parser<[string, string | undefined, string | undefined]> = P.sequence(
 	filePath, // the file path
@@ -57,33 +58,26 @@ export interface MarkdownLink {
 	internal: boolean;
 }
 
-export function parseMdLink(link: string): MarkdownLink {
-	return runParser(mdLinkParser.thenEof(), link);
-}
-
-export function parseMdLinkList(link: string): MarkdownLink[] {
-	return runParser(mdLinkListParser.thenEof(), link);
-}
-
-export function isMdLink(str: string): boolean {
-	return mdLinkParser.thenEof().tryParse(str).success;
-}
-
-export function isUrl(str: string): boolean {
-	try {
-		new URL(str);
-		return true;
-	} catch (_) {
-		return false;
+export class MDLinkParser {
+	static parseLink(link: string): MarkdownLink {
+		return runParser(mdLinkParser.thenEof(), link);
 	}
-}
 
-export function urlToMdLink(url: URL): MarkdownLink {
-	return {
-		isEmbed: false,
-		target: url.href,
-		block: undefined,
-		alias: url.hostname,
-		internal: false,
-	};
+	static parseLinkList(link: string): MarkdownLink[] {
+		return runParser(mdLinkListParser.thenEof(), link);
+	}
+
+	static isLink(str: string): boolean {
+		return mdLinkParser.thenEof().tryParse(str).success;
+	}
+
+	static urlToLink(url: URL): MarkdownLink {
+		return {
+			isEmbed: false,
+			target: url.href,
+			block: undefined,
+			alias: url.hostname,
+			internal: false,
+		};
+	}
 }

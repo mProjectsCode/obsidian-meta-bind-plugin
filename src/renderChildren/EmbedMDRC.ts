@@ -2,7 +2,7 @@ import { AbstractMDRC } from './AbstractMDRC';
 import type MetaBindPlugin from '../main';
 import { RenderChildType } from './InputFieldMDRC';
 import { MarkdownRenderer } from 'obsidian';
-import { parseMdLink } from '../parsers/MarkdownLinkParser';
+import { MDLinkParser } from '../parsers/MarkdownLinkParser';
 import { ErrorLevel, MetaBindEmbedError } from '../utils/errors/MetaBindErrors';
 
 export const EMBED_MAX_DEPTH = 8;
@@ -41,7 +41,7 @@ export class EmbedMDRC extends AbstractMDRC {
 			});
 		}
 		const firstLine = lines[0];
-		const link = parseMdLink(firstLine);
+		const link = MDLinkParser.parseLink(firstLine);
 		if (!link.internal) {
 			throw new MetaBindEmbedError({
 				errorLevel: ErrorLevel.ERROR,

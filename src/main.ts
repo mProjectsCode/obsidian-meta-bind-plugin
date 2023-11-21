@@ -10,7 +10,7 @@ import { MDRCManager } from './MDRCManager';
 import { DEFAULT_SETTINGS, type MetaBindPluginSettings } from './settings/Settings';
 import { type IPlugin } from './IPlugin';
 import { ObsidianMetadataAdapter } from './metadata/ObsidianMetadataAdapter';
-import { FaqView, MB_FAQ_VIEW_TYPE } from './utils/faq/FaqView';
+import { FaqView, MB_FAQ_VIEW_TYPE } from './faq/FaqView';
 import { EMBED_MAX_DEPTH, EmbedMDRC } from './renderChildren/EmbedMDRC';
 import { getUUID } from './utils/Utils';
 
@@ -111,14 +111,12 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		this.registerMarkdownCodeBlockProcessor('meta-bind-embed', (source, el, ctx) => {
 			const embed = new EmbedMDRC(el, source, this, ctx.sourcePath, getUUID(), 0);
 			ctx.addChild(embed);
-			console.warn(ctx);
 		});
 
 		for (let i = 1; i <= EMBED_MAX_DEPTH; i++) {
 			this.registerMarkdownCodeBlockProcessor(`meta-bind-embed-internal-${i}`, (source, el, ctx) => {
 				const embed = new EmbedMDRC(el, source, this, ctx.sourcePath, getUUID(), i);
 				ctx.addChild(embed);
-				console.warn(ctx);
 			});
 		}
 

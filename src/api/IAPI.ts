@@ -1,5 +1,5 @@
 import { type InputFieldDeclarationParser } from '../parsers/inputFieldParser/InputFieldParser';
-import { type ViewFieldDeclarationParser } from '../parsers/viewFieldParser/ViewFieldDeclarationParser';
+import { type ViewFieldParser } from '../parsers/viewFieldParser/ViewFieldParser';
 import { type BindTargetParser } from '../parsers/BindTargetParser';
 import { type IPlugin } from '../IPlugin';
 import { type InputFieldAPI } from './InputFieldAPI';
@@ -18,7 +18,7 @@ export interface IAPI {
 	/**
 	 * Parser for view field declarations.
 	 */
-	readonly viewFieldParser: ViewFieldDeclarationParser;
+	readonly viewFieldParser: ViewFieldParser;
 	/**
 	 * Parser for bind target declarations.
 	 */

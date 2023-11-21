@@ -1,7 +1,8 @@
 import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
-import { isMdLink, isUrl, type MarkdownLink, parseMdLink, urlToMdLink } from '../parsers/MarkdownLinkParser';
+import { MDLinkParser, type MarkdownLink } from '../parsers/MarkdownLinkParser';
+import { isUrl } from './Utils';
 
 export type MBLiteral = string | number | boolean | null;
 export type MBExtendedLiteral = MBLiteral | MBLiteral[];
@@ -183,10 +184,10 @@ export function stringifyAndLinkUnknown(
 
 function internalStringifyAndLinkUnknown(literal: unknown, nullAsEmpty: boolean): string | MarkdownLink {
 	if (typeof literal === 'string') {
-		if (isMdLink(literal)) {
-			return parseMdLink(literal);
+		if (MDLinkParser.isLink(literal)) {
+			return MDLinkParser.parseLink(literal);
 		} else if (isUrl(literal)) {
-			return urlToMdLink(new URL(literal));
+			return MDLinkParser.urlToLink(new URL(literal));
 		}
 
 		return literal;

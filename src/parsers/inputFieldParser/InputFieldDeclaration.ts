@@ -1,7 +1,7 @@
-import { type InputFieldArgumentContainer } from '../../fieldArguments/inputFieldArguments/InputFieldArgumentContainer';
+import { type InputFieldArgumentContainer } from '../../fields/fieldArguments/inputFieldArguments/InputFieldArgumentContainer';
 import { type ErrorCollection } from '../../utils/errors/ErrorCollection';
-import { type ParsingResultNode } from '../nomParsers/GeneralParsers';
-import { type InputFieldType } from '../GeneralConfigs';
+import { type ParsingResultNode } from '../nomParsers/GeneralNomParsers';
+import { type InputFieldType } from '../../config/FieldConfigs';
 import { type PropPath } from '../../utils/prop/PropPath';
 import { type PROP_ACCESS_TYPE } from '../../utils/prop/PropAccess';
 

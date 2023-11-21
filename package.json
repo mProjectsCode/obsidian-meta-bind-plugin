@@ -10,6 +10,7 @@
 		"build-publish": "tsc -noEmit -skipLibCheck && node esbuild.publish.config.mjs production",
 		"tsc": "tsc -noEmit -skipLibCheck",
 		"test": "bun test",
+		"test:log": "LOG_TESTS=true bun test",
 		"format": "prettier --write --plugin prettier-plugin-svelte .",
 		"format:check": "prettier --check --plugin prettier-plugin-svelte .",
 		"lint": "eslint --max-warnings=0 src/**",

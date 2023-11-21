@@ -1,5 +1,5 @@
 import { InputFieldMDRC, RenderChildType } from '../renderChildren/InputFieldMDRC';
-import { ViewFieldDeclarationParser } from '../parsers/viewFieldParser/ViewFieldDeclarationParser';
+import { ViewFieldParser } from '../parsers/viewFieldParser/ViewFieldParser';
 import { BindTargetParser } from '../parsers/BindTargetParser';
 import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
 import { JsViewFieldMDRC } from '../renderChildren/JsViewFieldMDRC';
@@ -16,14 +16,14 @@ import {
 } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { Signal } from '../utils/Signal';
 import { type BindTargetScope } from '../metadata/BindTargetScope';
-import { MetaBindTable } from '../metaBindTable/MetaBindTable';
-import { InputFieldFactory } from '../inputFields/InputFieldFactory';
+import { MetaBindTable } from '../fields/metaBindTable/MetaBindTable';
+import { InputFieldFactory } from '../fields/inputFields/InputFieldFactory';
 import {
 	type JsViewFieldDeclaration,
 	type UnvalidatedViewFieldDeclaration,
 	type ViewFieldDeclaration,
 } from '../parsers/viewFieldParser/ViewFieldDeclaration';
-import { ViewFieldFactory } from '../viewFields/ViewFieldFactory';
+import { ViewFieldFactory } from '../fields/viewFields/ViewFieldFactory';
 import { getUUID } from '../utils/Utils';
 import { parsePropPath } from '../utils/prop/PropParser';
 
@@ -32,7 +32,7 @@ export class API implements IAPI {
 	public readonly inputField: InputFieldAPI;
 
 	public readonly inputFieldParser: InputFieldDeclarationParser;
-	public readonly viewFieldParser: ViewFieldDeclarationParser;
+	public readonly viewFieldParser: ViewFieldParser;
 	public readonly bindTargetParser: BindTargetParser;
 
 	public readonly inputFieldFactory: InputFieldFactory;
@@ -44,7 +44,7 @@ export class API implements IAPI {
 
 		// this.inputFieldParser = new InputFieldDeclarationParser();
 		this.inputFieldParser = new InputFieldDeclarationParser(this.plugin);
-		this.viewFieldParser = new ViewFieldDeclarationParser(this.plugin);
+		this.viewFieldParser = new ViewFieldParser(this.plugin);
 		this.bindTargetParser = new BindTargetParser(this.plugin);
 
 		this.inputFieldFactory = new InputFieldFactory(this.plugin);

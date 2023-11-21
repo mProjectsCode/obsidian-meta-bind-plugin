@@ -1,4 +1,4 @@
-import { ViewFieldDeclarationParser } from '../parsers/viewFieldParser/ViewFieldDeclarationParser';
+import { ViewFieldParser } from '../parsers/viewFieldParser/ViewFieldParser';
 import { BindTargetParser } from '../parsers/BindTargetParser';
 import { type IPlugin } from '../IPlugin';
 import { PublishInputFieldMDRC } from './PublishInputFieldMDRC';
@@ -14,7 +14,7 @@ import { getUUID } from '../utils/Utils';
 export class PublishAPI implements IAPI {
 	public readonly plugin: IPlugin;
 	public readonly inputFieldParser: InputFieldDeclarationParser;
-	public readonly viewFieldParser: ViewFieldDeclarationParser;
+	public readonly viewFieldParser: ViewFieldParser;
 	public readonly bindTargetParser: BindTargetParser;
 	public readonly inputField: InputFieldAPI;
 
@@ -22,7 +22,7 @@ export class PublishAPI implements IAPI {
 		this.plugin = plugin;
 
 		this.inputFieldParser = new InputFieldDeclarationParser(this.plugin);
-		this.viewFieldParser = new ViewFieldDeclarationParser(this.plugin);
+		this.viewFieldParser = new ViewFieldParser(this.plugin);
 		this.bindTargetParser = new BindTargetParser(this.plugin);
 
 		this.inputField = new InputFieldAPI(this);

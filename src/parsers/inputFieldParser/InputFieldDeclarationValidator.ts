@@ -1,9 +1,9 @@
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { ParsingValidationError } from '../ParsingError';
 import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
-import { InputFieldArgumentContainer } from '../../fieldArguments/inputFieldArguments/InputFieldArgumentContainer';
-import { type AbstractInputFieldArgument } from '../../fieldArguments/inputFieldArguments/AbstractInputFieldArgument';
-import { InputFieldArgumentFactory } from '../../fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
+import { InputFieldArgumentContainer } from '../../fields/fieldArguments/inputFieldArguments/InputFieldArgumentContainer';
+import { type AbstractInputFieldArgument } from '../../fields/fieldArguments/inputFieldArguments/AbstractInputFieldArgument';
+import { InputFieldArgumentFactory } from '../../fields/fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
 import { type IPlugin } from '../../IPlugin';
 import {
 	type BindTargetDeclaration,
@@ -11,8 +11,8 @@ import {
 	type UnvalidatedInputFieldDeclaration,
 } from './InputFieldDeclaration';
 import { type BindTargetScope } from '../../metadata/BindTargetScope';
-import { type ParsingResultNode } from '../nomParsers/GeneralParsers';
-import { InputFieldArgumentType, InputFieldType } from '../GeneralConfigs';
+import { type ParsingResultNode } from '../nomParsers/GeneralNomParsers';
+import { InputFieldArgumentType, InputFieldType } from '../../config/FieldConfigs';
 
 export class InputFieldDeclarationValidator {
 	unvalidatedDeclaration: UnvalidatedInputFieldDeclaration;

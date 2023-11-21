@@ -1,12 +1,12 @@
 import { describe, test, expect, beforeEach, spyOn, Mock } from 'bun:test';
-import { parseMdLink, parseMdLinkList } from '../../src/parsers/MarkdownLinkParser';
+import { MDLinkParser } from '../../src/parsers/MarkdownLinkParser';
 
 describe('markdown link parser', () => {
 	describe('parse markdown link', () => {
 		// --- wiki links ---
 
 		test('should parse wiki link', () => {
-			expect(parseMdLink('[[test]]')).toEqual({
+			expect(MDLinkParser.parseLink('[[test]]')).toEqual({
 				isEmbed: false,
 				target: 'test',
 				block: undefined,
@@ -16,7 +16,7 @@ describe('markdown link parser', () => {
 		});
 
 		test('should parse wiki link embed', () => {
-			expect(parseMdLink('![[test]]')).toEqual({
+			expect(MDLinkParser.parseLink('![[test]]')).toEqual({
 				isEmbed: true,
 				target: 'test',
 				block: undefined,
@@ -26,7 +26,7 @@ describe('markdown link parser', () => {
 		});
 
 		test('should parse wiki with block', () => {
-			expect(parseMdLink('[[test#123]]')).toEqual({
+			expect(MDLinkParser.parseLink('[[test#123]]')).toEqual({
 				isEmbed: false,
 				target: 'test',
 				block: '123',
@@ -36,7 +36,7 @@ describe('markdown link parser', () => {
 		});
 
 		test('should parse wiki with alias', () => {
-			expect(parseMdLink('[[test|something]]')).toEqual({
+			expect(MDLinkParser.parseLink('[[test|something]]')).toEqual({
 				isEmbed: false,
 				target: 'test',
 				block: undefined,
@@ -46,7 +46,7 @@ describe('markdown link parser', () => {
 		});
 
 		test('should parse wiki with block and alias', () => {
-			expect(parseMdLink('[[test#123|something]]')).toEqual({
+			expect(MDLinkParser.parseLink('[[test#123|something]]')).toEqual({
 				isEmbed: false,
 				target: 'test',
 				block: '123',
@@ -58,7 +58,7 @@ describe('markdown link parser', () => {
 		// --- markdown links ---
 
 		test('should parse markdown link', () => {
-			expect(parseMdLink('[something](test)')).toEqual({
+			expect(MDLinkParser.parseLink('[something](test)')).toEqual({
 				isEmbed: false,
 				target: 'test',
 				block: undefined,
@@ -68,7 +68,7 @@ describe('markdown link parser', () => {
 		});
 
 		test('should parse markdown link embed', () => {
-			expect(parseMdLink('![something](test)')).toEqual({
+			expect(MDLinkParser.parseLink('![something](test)')).toEqual({
 				isEmbed: true,
 				target: 'test',
 				block: undefined,
@@ -78,7 +78,7 @@ describe('markdown link parser', () => {
 		});
 
 		test('should parse external markdown link', () => {
-			expect(parseMdLink('[github](https://github.com)')).toEqual({
+			expect(MDLinkParser.parseLink('[github](https://github.com)')).toEqual({
 				isEmbed: false,
 				target: 'https://github.com',
 				block: undefined,
@@ -90,23 +90,27 @@ describe('markdown link parser', () => {
 		// --- errors ---
 
 		test('should fail on non markdown link', () => {
-			expect(() => parseMdLink('something else')).toThrow();
+			expect(() => MDLinkParser.parseLink('something else')).toThrow();
 		});
 	});
 
 	describe('parse markdown link list', () => {
 		test('should parse link list', () => {
 			expect(() =>
-				parseMdLinkList('[[test]], [github](https://github.com), [[test#123|something]]'),
+				MDLinkParser.parseLinkList('[[test]], [github](https://github.com), [[test#123|something]]'),
 			).not.toThrow();
 		});
 
 		test('should fail on non markdown link in list', () => {
-			expect(() => parseMdLinkList('[[test]], [github](https://github.com), something else')).toThrow();
+			expect(() =>
+				MDLinkParser.parseLinkList('[[test]], [github](https://github.com), something else'),
+			).toThrow();
 		});
 
 		test('should fail on missing comma', () => {
-			expect(() => parseMdLinkList('[[test]] [github](https://github.com), [[test#123|something]]')).toThrow();
+			expect(() =>
+				MDLinkParser.parseLinkList('[[test]] [github](https://github.com), [[test#123|something]]'),
+			).toThrow();
 		});
 	});
 });

@@ -1,6 +1,6 @@
 import { ErrorLevel } from '../utils/errors/MetaBindErrors';
 import { type IPlugin } from '../IPlugin';
-import { BIND_TARGET } from './nomParsers/BindTargetParsers';
+import { BIND_TARGET } from './nomParsers/BindTargetNomParsers';
 import { ParsingValidationError, runParser } from './ParsingError';
 import {
 	type BindTargetDeclaration,

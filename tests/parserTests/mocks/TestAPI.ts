@@ -3,7 +3,7 @@ import { IPlugin } from '../../../src/IPlugin';
 import { BindTargetParser } from '../../../src/parsers/BindTargetParser';
 import { InputFieldAPI } from '../../../src/api/InputFieldAPI';
 import { InputFieldDeclarationParser } from '../../../src/parsers/inputFieldParser/InputFieldParser';
-import { ViewFieldDeclarationParser } from '../../../src/parsers/viewFieldParser/ViewFieldDeclarationParser';
+import { ViewFieldParser } from '../../../src/parsers/viewFieldParser/ViewFieldParser';
 import { DEFAULT_SETTINGS, MetaBindPluginSettings } from '../../../src/settings/Settings';
 
 export class TestPlugin implements IPlugin {
@@ -27,7 +27,7 @@ export class TestAPI implements IAPI {
 
 	public readonly bindTargetParser: BindTargetParser;
 	public readonly inputFieldParser: InputFieldDeclarationParser;
-	public readonly viewFieldParser: ViewFieldDeclarationParser;
+	public readonly viewFieldParser: ViewFieldParser;
 
 	constructor(plugin: TestPlugin) {
 		this.plugin = plugin;
@@ -35,7 +35,7 @@ export class TestAPI implements IAPI {
 		this.inputField = new InputFieldAPI(this);
 
 		this.inputFieldParser = new InputFieldDeclarationParser(this.plugin);
-		this.viewFieldParser = new ViewFieldDeclarationParser(this.plugin);
+		this.viewFieldParser = new ViewFieldParser(this.plugin);
 		this.bindTargetParser = new BindTargetParser(this.plugin);
 	}
 }

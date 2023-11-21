@@ -1,17 +1,17 @@
-import { type ClassInputFieldArgument } from '../fieldArguments/inputFieldArguments/arguments/ClassInputFieldArgument';
+import { type ClassInputFieldArgument } from '../fields/fieldArguments/inputFieldArguments/arguments/ClassInputFieldArgument';
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
-import { type ShowcaseInputFieldArgument } from '../fieldArguments/inputFieldArguments/arguments/ShowcaseInputFieldArgument';
-import { type TitleInputFieldArgument } from '../fieldArguments/inputFieldArguments/arguments/TitleInputFieldArgument';
+import { type ShowcaseInputFieldArgument } from '../fields/fieldArguments/inputFieldArguments/arguments/ShowcaseInputFieldArgument';
+import { type TitleInputFieldArgument } from '../fields/fieldArguments/inputFieldArguments/arguments/TitleInputFieldArgument';
 import { isTruthy } from '../utils/Utils';
 import { type Listener, Signal } from '../utils/Signal';
 import { AbstractMDRC } from './AbstractMDRC';
 import type MetaBindPlugin from '../main';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
 import { type InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
-import { type NewInputField } from '../inputFields/InputFieldFactory';
-import { type InputFieldArgumentMapType } from '../fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
+import { type NewInputField } from '../fields/inputFields/InputFieldFactory';
+import { type InputFieldArgumentMapType } from '../fields/fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
 import { type MetadataSubscription } from '../metadata/MetadataSubscription';
-import { InputFieldArgumentType, InputFieldType } from '../parsers/GeneralConfigs';
+import { InputFieldArgumentType, InputFieldType } from '../config/FieldConfigs';
 import { DocsHelper } from '../utils/DocsHelper';
 
 export enum RenderChildType {

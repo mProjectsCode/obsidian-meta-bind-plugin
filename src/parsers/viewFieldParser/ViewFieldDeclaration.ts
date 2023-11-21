@@ -4,9 +4,9 @@ import {
 	type UnvalidatedFieldArgument,
 } from '../inputFieldParser/InputFieldDeclaration';
 import { type ErrorCollection } from '../../utils/errors/ErrorCollection';
-import { type ParsingResultNode } from '../nomParsers/GeneralParsers';
-import { type ViewFieldArgumentContainer } from '../../fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
-import { type ViewFieldType } from '../GeneralConfigs';
+import { type ParsingResultNode } from '../nomParsers/GeneralNomParsers';
+import { type ViewFieldArgumentContainer } from '../../fields/fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
+import { type ViewFieldType } from '../../config/FieldConfigs';
 
 export interface PartialUnvalidatedViewFieldDeclaration {
 	/**

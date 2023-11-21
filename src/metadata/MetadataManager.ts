@@ -109,7 +109,7 @@ export class MetadataManager {
 
 			fileCache.inactive = false;
 			fileCache.cyclesSinceInactive = 0;
-			fileCache.listeners.push(subscription);
+			fileCache.subscriptions.push(subscription);
 
 			subscription.notify(PropUtils.tryGet(fileCache.metadata, subscription.bindTarget.metadataPath));
 		} else {
@@ -126,7 +126,7 @@ export class MetadataManager {
 			const newCache: MetadataManagerCacheItem = {
 				extraCache: extraCache,
 				metadata: metadata,
-				listeners: [subscription],
+				subscriptions: [subscription],
 				cyclesSinceLastChange: metadataCacheUpdateCycleThreshold + 1, // +1, so that is it bigger than the threshold
 				cyclesSinceInactive: 0,
 				inactive: false,
@@ -279,13 +279,13 @@ export class MetadataManager {
 		}
 
 		const ret = [];
-		for (const subscription of fileCache.listeners) {
+		for (const subscription of fileCache.subscriptions) {
 			if (hasUpdateOverlap(subscription.bindTarget, bindTarget)) {
 				ret.push(subscription);
 			}
 		}
 
-		return fileCache.listeners.filter(x => hasUpdateOverlap(x.bindTarget, bindTarget));
+		return fileCache.subscriptions.filter(x => hasUpdateOverlap(x.bindTarget, bindTarget));
 	}
 
 	/**
@@ -309,8 +309,8 @@ export class MetadataManager {
 			`meta-bind | MetadataManager >> unregistered ${subscription.uuid} to from file cache ${filePath}`,
 		);
 
-		fileCache.listeners = fileCache.listeners.filter(x => x.uuid !== subscription.uuid);
-		if (fileCache.listeners.length === 0) {
+		fileCache.subscriptions = fileCache.subscriptions.filter(x => x.uuid !== subscription.uuid);
+		if (fileCache.subscriptions.length === 0) {
 			console.debug(`meta-bind | MetadataManager >> marked unused file cache as inactive ${filePath}`);
 			fileCache.inactive = true;
 		}
@@ -458,12 +458,12 @@ export class MetadataManager {
 	): void {
 		// console.log(fileCache);
 
-		for (const listener of fileCache.listeners) {
-			if (exceptUuid && exceptUuid === listener.uuid) {
+		for (const subscription of fileCache.subscriptions) {
+			if (exceptUuid && exceptUuid === subscription.uuid) {
 				continue;
 			}
 
-			if (listener.bindTarget === undefined) {
+			if (subscription.bindTarget === undefined) {
 				continue;
 			}
 
@@ -471,26 +471,26 @@ export class MetadataManager {
 				if (
 					metadataPathHasUpdateOverlap(
 						metadataPath.toStringArray(),
-						listener.bindTarget.metadataPath.toStringArray(),
-						listener.bindTarget.listenToChildren,
+						subscription.bindTarget.metadataPath.toStringArray(),
+						subscription.bindTarget.listenToChildren,
 					)
 				) {
-					const value: unknown = PropUtils.tryGet(fileCache.metadata, listener.bindTarget.metadataPath);
+					const value: unknown = PropUtils.tryGet(fileCache.metadata, subscription.bindTarget.metadataPath);
 					console.debug(
-						`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata value`,
+						`meta-bind | MetadataManager >> notifying input field ${subscription.uuid} of updated metadata value`,
 						value,
 					);
-					listener.notify(value);
+					subscription.notify(value);
 				}
 			} else {
-				const value: unknown = PropUtils.tryGet(fileCache.metadata, listener.bindTarget.metadataPath);
+				const value: unknown = PropUtils.tryGet(fileCache.metadata, subscription.bindTarget.metadataPath);
 				console.debug(
-					`meta-bind | MetadataManager >> notifying input field ${listener.uuid} of updated metadata`,
-					listener.bindTarget.metadataPath,
+					`meta-bind | MetadataManager >> notifying input field ${subscription.uuid} of updated metadata`,
+					subscription.bindTarget.metadataPath,
 					fileCache.metadata,
 					value,
 				);
-				listener.notify(value);
+				subscription.notify(value);
 			}
 		}
 	}
@@ -501,7 +501,7 @@ export class MetadataManager {
 			return;
 		}
 
-		for (const subscription of cacheItem.listeners) {
+		for (const subscription of cacheItem.subscriptions) {
 			subscription.delete();
 		}
 

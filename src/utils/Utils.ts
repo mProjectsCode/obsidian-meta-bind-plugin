@@ -146,3 +146,12 @@ export function deepCopy<T extends object>(object: T): T {
 export function getUUID(): string {
 	return window.crypto.randomUUID();
 }
+
+export function isUrl(str: string): boolean {
+	try {
+		new URL(str);
+		return true;
+	} catch (_) {
+		return false;
+	}
+}

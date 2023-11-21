@@ -4,7 +4,7 @@ import { DEFAULT_SETTINGS, weekdays } from './Settings';
 import { ExcludedFoldersSettingModal } from './excludedFoldersSetting/ExcludedFoldersSettingModal';
 import { InputFieldTemplatesSettingModal } from './inputFieldTemplateSetting/InputFieldTemplatesSettingModal';
 import { DocsHelper } from '../utils/DocsHelper';
-import { MB_FAQ_VIEW_TYPE } from '../utils/faq/FaqView';
+import { MB_FAQ_VIEW_TYPE } from '../faq/FaqView';
 
 export class MetaBindSettingTab extends PluginSettingTab {
 	plugin: MetaBindPlugin;

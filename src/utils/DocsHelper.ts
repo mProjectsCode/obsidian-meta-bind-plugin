@@ -3,7 +3,7 @@ import {
 	type InputFieldType,
 	type ViewFieldArgumentType,
 	type ViewFieldType,
-} from '../parsers/GeneralConfigs';
+} from '../config/FieldConfigs';
 
 export class DocsHelper {
 	static linkToInputField(type: InputFieldType): string {

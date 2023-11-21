@@ -5,14 +5,14 @@ import type MetaBindPlugin from '../main';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
 import { type BindTargetDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
-import { type AbstractViewField } from '../viewFields/AbstractViewField';
+import { type AbstractViewField } from '../fields/viewFields/AbstractViewField';
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
-import { type ViewFieldArgumentMapType } from '../fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
+import { type ViewFieldArgumentMapType } from '../fields/fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
 import {
 	type ComputedMetadataSubscription,
 	type ComputedSubscriptionDependency,
 } from '../metadata/ComputedMetadataSubscription';
-import { type ViewFieldArgumentType } from '../parsers/GeneralConfigs';
+import { type ViewFieldArgumentType } from '../config/FieldConfigs';
 
 export interface ViewFieldVariable {
 	bindTargetDeclaration: BindTargetDeclaration;

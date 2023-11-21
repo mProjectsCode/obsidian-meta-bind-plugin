@@ -6,7 +6,7 @@ import {
 	type UnvalidatedFieldArgument,
 	type UnvalidatedInputFieldDeclaration,
 } from '../parsers/inputFieldParser/InputFieldDeclaration';
-import { type InputFieldArgumentType, type InputFieldType } from '../parsers/GeneralConfigs';
+import { type InputFieldArgumentType, type InputFieldType } from '../config/FieldConfigs';
 import { PROP_ACCESS_TYPE } from '../utils/prop/PropAccess';
 
 export class InputFieldAPI {

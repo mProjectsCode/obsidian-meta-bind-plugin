@@ -1,6 +1,6 @@
 # Obsidian Meta Bind Plugin
 
-Meta Bind allows you to create input and view fields inside your notes. 
+Meta Bind allows you to create input and view fields inside your notes.
 Those input and view fields can then be bound to frontmatter properties, which keeps them in sync those frontmatter properties.
 Allowing you to edit and view your frontmatter properties inside your notes.
 
@@ -38,10 +38,10 @@ Contributions are always welcome. If you have an idea, feel free to open a featu
 The plugin uses [Bun](https://bun.sh/) instead of Node.js/NPM to manage dependencies.
 To install the dependencies, run `bun install` in the root directory of the project.
 
-- `bun run dev` will build the plugin in dev mode and watch for changes. The plugin builds directly into the example vault inside of this repo.
-- `bun run build` will build the plugin in production mode. The plugin builds into the root of this repo.
-- `bun run test` will run the tests.
-- `bun run check` will check for formatting, linting, type errors and run the tests.
-- `bun run check:fix` will fix formatting and linting errors, check for type errors and run the tests.
+-   `bun run dev` will build the plugin in dev mode and watch for changes. The plugin builds directly into the example vault inside of this repo.
+-   `bun run build` will build the plugin in production mode. The plugin builds into the root of this repo.
+-   `bun run test` will run the tests.
+-   `bun run check` will check for formatting, linting, type errors and run the tests.
+-   `bun run check:fix` will fix formatting and linting errors, check for type errors and run the tests.
 
 `bun run check` should run successfully before creating a pull request.

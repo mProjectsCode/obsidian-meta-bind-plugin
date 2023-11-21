@@ -5,11 +5,11 @@ import { type BindTargetScope } from '../../metadata/BindTargetScope';
 import { type BindTargetDeclaration } from '../inputFieldParser/InputFieldDeclaration';
 import { ParsingValidationError } from '../ParsingError';
 import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
-import { type ParsingResultNode } from '../nomParsers/GeneralParsers';
-import { ViewFieldArgumentContainer } from '../../fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
-import { ViewFieldArgumentFactory } from '../../fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
-import { type AbstractViewFieldArgument } from '../../fieldArguments/viewFieldArguments/AbstractViewFieldArgument';
-import { ViewFieldArgumentType, ViewFieldType } from '../GeneralConfigs';
+import { type ParsingResultNode } from '../nomParsers/GeneralNomParsers';
+import { ViewFieldArgumentContainer } from '../../fields/fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
+import { ViewFieldArgumentFactory } from '../../fields/fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
+import { type AbstractViewFieldArgument } from '../../fields/fieldArguments/viewFieldArguments/AbstractViewFieldArgument';
+import { ViewFieldArgumentType, ViewFieldType } from '../../config/FieldConfigs';
 
 export class ViewFieldDeclarationValidator {
 	unvalidatedDeclaration: UnvalidatedViewFieldDeclaration;

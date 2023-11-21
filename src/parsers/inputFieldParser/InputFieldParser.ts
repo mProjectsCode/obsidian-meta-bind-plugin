@@ -1,16 +1,19 @@
-import { InputFieldArgumentContainer } from '../../fieldArguments/inputFieldArguments/InputFieldArgumentContainer';
+import { InputFieldArgumentContainer } from '../../fields/fieldArguments/inputFieldArguments/InputFieldArgumentContainer';
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { type IPlugin } from '../../IPlugin';
 import { type InputFieldTemplate } from '../../settings/Settings';
 import { deepFreeze } from '../../utils/Utils';
 import { InputFieldDeclarationValidator } from './InputFieldDeclarationValidator';
 import { type ITemplateSupplier, type TemplateSupplierTemplate } from './ITemplateSupplier';
-import { INPUT_FIELD_FULL_DECLARATION, TEMPLATE_INPUT_FIELD_FULL_DECLARATION } from '../nomParsers/InputFieldParsers';
+import {
+	INPUT_FIELD_FULL_DECLARATION,
+	TEMPLATE_INPUT_FIELD_FULL_DECLARATION,
+} from '../nomParsers/InputFieldNomParsers';
 import { ParsingValidationError, runParser } from '../ParsingError';
 import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
 import { type InputFieldDeclaration, type UnvalidatedInputFieldDeclaration } from './InputFieldDeclaration';
 import { type BindTargetScope } from '../../metadata/BindTargetScope';
-import { InputFieldType } from '../GeneralConfigs';
+import { InputFieldType } from '../../config/FieldConfigs';
 
 export type InputFieldDeclarationTemplate = TemplateSupplierTemplate<UnvalidatedInputFieldDeclaration>;
 
