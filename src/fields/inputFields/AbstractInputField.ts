@@ -10,7 +10,7 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 	readonly base: IInputFieldBase;
 	readonly inputFieldComponent: InputFieldComponent<ComponentValueType>;
 	readonly inputSignal: Signal<unknown>;
-	readonly signal: ComputedSignal<unknown, MetadataValueType>;
+	readonly computedSignal: ComputedSignal<unknown, MetadataValueType>;
 
 	private metadataSubscription?: MetadataSubscription;
 
@@ -19,45 +19,20 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 		this.inputSignal = new Signal<unknown>(undefined);
 		this.inputFieldComponent = new InputFieldComponent<ComponentValueType>(this.getSvelteComponent());
 
-		this.signal = new ComputedSignal<unknown, MetadataValueType>(
+		this.computedSignal = new ComputedSignal<unknown, MetadataValueType>(
 			this.inputSignal,
 			(value: unknown): MetadataValueType => {
 				const filteredValue = this.filterValue(value);
 				return filteredValue ?? this.getDefaultValue();
 			},
 		);
-
-		this.signal.registerListener({
-			callback: value => this.inputFieldComponent.setValue(this.reverseMapValue(value)),
-		});
-
-		const fullBindTarget = this.base.getFullBindTarget();
-
-		if (fullBindTarget) {
-			this.inputFieldComponent.registerListener({
-				callback: value => {
-					// console.log('input field component change', value);
-					this.notifySubscription(this.mapValue(value));
-				},
-			});
-
-			this.metadataSubscription = this.base.plugin.metadataManager.subscribe(
-				this.base.getUuid(),
-				this.inputSignal,
-				fullBindTarget,
-				() => this.base.unload(),
-			);
-		}
 	}
 
 	public destroy(): void {
 		// we don't need to unregister the listener because the component will destroy all listeners on unmount
-
 		if (this.inputFieldComponent.isMounted()) {
 			this.unmount();
 		}
-
-		this.metadataSubscription?.unsubscribe();
 	}
 
 	protected abstract getSvelteComponent(): typeof SvelteComponent;
@@ -100,7 +75,7 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 	 * Get the metadata value that the input field currently has.
 	 */
 	public getValue(): MetadataValueType {
-		return this.signal.get();
+		return this.computedSignal.get();
 	}
 
 	/**
@@ -116,7 +91,7 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 	 * @param value
 	 */
 	public setValue(value: MetadataValueType): void {
-		this.signal.set(value);
+		this.computedSignal.set(value);
 		this.notifySubscription(value);
 	}
 
@@ -133,7 +108,7 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 		this.metadataSubscription?.update(value);
 	}
 
-	private getDefaultValue(): MetadataValueType {
+	public getDefaultValue(): MetadataValueType {
 		const defaultValueArgument = this.base.getArgument(InputFieldArgumentType.DEFAULT_VALUE);
 		if (!defaultValueArgument) {
 			return this.mapValue(this.getFallbackDefaultValue());
@@ -147,10 +122,35 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 	}
 
 	public mount(container: HTMLElement): void {
+		this.computedSignal.registerListener({
+			callback: value => this.inputFieldComponent.setValue(this.reverseMapValue(value)),
+		});
+
+		const fullBindTarget = this.base.getFullBindTarget();
+
+		if (fullBindTarget) {
+			this.inputFieldComponent.registerListener({
+				callback: value => {
+					// console.log('input field component change', value);
+					this.notifySubscription(this.mapValue(value));
+				},
+			});
+
+			this.metadataSubscription = this.base.plugin.metadataManager.subscribe(
+				this.base.getUuid(),
+				this.inputSignal,
+				fullBindTarget,
+				() => this.base.unload(),
+			);
+		}
+
 		this.inputFieldComponent.mount(container, this.reverseMapValue(this.getValue()), this.getMountArgs());
 	}
 
 	public unmount(): void {
+		this.computedSignal.listeners = [];
+		this.metadataSubscription?.unsubscribe();
+
 		this.inputFieldComponent.unmount();
 	}
 

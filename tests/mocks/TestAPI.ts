@@ -14,6 +14,8 @@ import { BindTargetScope } from '../../src/metadata/BindTargetScope';
 import { InputFieldDeclaration } from '../../src/parsers/inputFieldParser/InputFieldDeclaration';
 import { getUUID } from '../../src/utils/Utils';
 import { TestIPFBase } from './TestIPFBase';
+import { DateParser } from '../../src/parsers/DateParser';
+import { setFirstWeekday } from '../../src/utils/DatePickerUtils';
 
 export class TestPlugin implements IPlugin {
 	public api: TestAPI;
@@ -29,6 +31,9 @@ export class TestPlugin implements IPlugin {
 		this.metadataManager = new MetadataManager(metadataAdapter);
 
 		this.settings = DEFAULT_SETTINGS;
+
+		DateParser.dateFormat = this.settings.preferredDateFormat;
+		setFirstWeekday(this.settings.firstWeekday);
 	}
 
 	public getFilePathsByName(name: string): string[] {
