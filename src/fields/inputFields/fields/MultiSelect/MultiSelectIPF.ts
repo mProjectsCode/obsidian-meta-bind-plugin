@@ -12,7 +12,7 @@ export class MultiSelectIPF extends AbstractInputField<MBLiteral[], MBLiteral[]>
 	constructor(renderChild: IInputFieldBase) {
 		super(renderChild);
 
-		this.options = this.renderChild.getArguments(InputFieldArgumentType.OPTION);
+		this.options = this.base.getArguments(InputFieldArgumentType.OPTION);
 	}
 
 	protected filterValue(value: unknown): MBLiteral[] | undefined {

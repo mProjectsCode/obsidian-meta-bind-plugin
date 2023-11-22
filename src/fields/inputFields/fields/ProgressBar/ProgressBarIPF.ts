@@ -15,9 +15,9 @@ export class ProgressBarIPF extends AbstractInputField<number, number> {
 	constructor(renderChild: IInputFieldBase) {
 		super(renderChild);
 
-		this.minValue = this.renderChild.getArgument(InputFieldArgumentType.MIN_VALUE)?.value ?? 0;
-		this.maxValue = this.renderChild.getArgument(InputFieldArgumentType.MAX_VALUE)?.value ?? 100;
-		this.stepSize = this.renderChild.getArgument(InputFieldArgumentType.STEP_SIZE)?.value ?? 1;
+		this.minValue = this.base.getArgument(InputFieldArgumentType.MIN_VALUE)?.value ?? 0;
+		this.maxValue = this.base.getArgument(InputFieldArgumentType.MAX_VALUE)?.value ?? 100;
+		this.stepSize = this.base.getArgument(InputFieldArgumentType.STEP_SIZE)?.value ?? 1;
 
 		if (this.minValue >= this.maxValue) {
 			throw new MetaBindArgumentError({

@@ -1,6 +1,3 @@
-import { traverseObjectByPath } from '@opd-libs/opd-utils-lib/lib/ObjectTraversalUtils';
-import { type KeyValuePair } from '@opd-libs/opd-utils-lib/lib/Utils';
-
 /**
  * Clamp
  *
@@ -92,34 +89,6 @@ export function isTruthy(value: unknown): boolean {
 
 export function isFalsy(value: unknown): boolean {
 	return !value;
-}
-
-export function traverseObjectToParentByPath(
-	pathParts: string[],
-	o: unknown,
-): { parent: KeyValuePair<string[], unknown>; child: KeyValuePair<string, unknown> } {
-	if (pathParts.length === 0) {
-		throw new Error('can not traverse to parent on self reference');
-	}
-
-	const parentPath = pathParts.slice(0, -1);
-	const childKey: string = pathParts.at(-1)!;
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-	const parentObject = traverseObjectByPath(parentPath, o);
-
-	if (parentObject == null) {
-		throw new Error('can not traverse to parent, parent does not exist');
-	}
-
-	if (!(typeof parentObject === 'object')) {
-		throw new Error('can not traverse to parent, parent is not an object');
-	}
-
-	return {
-		parent: { key: parentPath, value: parentObject },
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-		child: { key: childKey, value: parentObject[childKey] },
-	};
 }
 
 export function deepFreeze<T extends object>(object: T): Readonly<T> {

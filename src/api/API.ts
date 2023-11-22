@@ -1,4 +1,4 @@
-import { InputFieldMDRC, RenderChildType } from '../renderChildren/InputFieldMDRC';
+import { InputFieldMDRC } from '../renderChildren/InputFieldMDRC';
 import { ViewFieldParser } from '../parsers/viewFieldParser/ViewFieldParser';
 import { BindTargetParser } from '../parsers/BindTargetParser';
 import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
@@ -26,6 +26,7 @@ import {
 import { ViewFieldFactory } from '../fields/viewFields/ViewFieldFactory';
 import { getUUID } from '../utils/Utils';
 import { parsePropPath } from '../utils/prop/PropParser';
+import { RenderChildType } from '../config/FieldConfigs';
 
 export class API implements IAPI {
 	public plugin: MetaBindPlugin;

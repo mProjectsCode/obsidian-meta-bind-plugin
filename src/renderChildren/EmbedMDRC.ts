@@ -1,9 +1,9 @@
 import { AbstractMDRC } from './AbstractMDRC';
 import type MetaBindPlugin from '../main';
-import { RenderChildType } from './InputFieldMDRC';
 import { MarkdownRenderer } from 'obsidian';
 import { MDLinkParser } from '../parsers/MarkdownLinkParser';
 import { ErrorLevel, MetaBindEmbedError } from '../utils/errors/MetaBindErrors';
+import { RenderChildType } from '../config/FieldConfigs';
 
 export const EMBED_MAX_DEPTH = 8;
 

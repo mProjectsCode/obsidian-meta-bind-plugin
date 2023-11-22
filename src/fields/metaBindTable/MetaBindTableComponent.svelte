@@ -2,7 +2,7 @@
 	import { MetaBindTable, MetaBindTableRow } from './MetaBindTable';
 	import MetaBindTableCellComponent from './MetaBindTableCellComponent.svelte';
 	import Icon from '../../utils/components/Icon.svelte';
-	import { Button } from 'obsidian-svelte';
+	import Button from '../../utils/components/Button.svelte';
 
 	export let table: MetaBindTable;
 	export let tableHead: string[] = [];

@@ -7,15 +7,15 @@ import { type IInputFieldBase } from './IInputFieldBase';
 import { type MetadataSubscription } from '../../metadata/MetadataSubscription';
 
 export abstract class AbstractInputField<MetadataValueType, ComponentValueType> {
-	readonly renderChild: IInputFieldBase;
+	readonly base: IInputFieldBase;
 	readonly inputFieldComponent: InputFieldComponent<ComponentValueType>;
 	readonly inputSignal: Signal<unknown>;
 	readonly signal: ComputedSignal<unknown, MetadataValueType>;
 
 	private metadataSubscription?: MetadataSubscription;
 
-	protected constructor(renderChild: IInputFieldBase) {
-		this.renderChild = renderChild;
+	protected constructor(base: IInputFieldBase) {
+		this.base = base;
 		this.inputSignal = new Signal<unknown>(undefined);
 		this.inputFieldComponent = new InputFieldComponent<ComponentValueType>(this.getSvelteComponent());
 
@@ -31,7 +31,7 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 			callback: value => this.inputFieldComponent.setValue(this.reverseMapValue(value)),
 		});
 
-		const fullBindTarget = this.renderChild.getFullBindTarget();
+		const fullBindTarget = this.base.getFullBindTarget();
 
 		if (fullBindTarget) {
 			this.inputFieldComponent.registerListener({
@@ -41,11 +41,11 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 				},
 			});
 
-			this.metadataSubscription = this.renderChild.plugin.metadataManager.subscribe(
-				this.renderChild.getUuid(),
+			this.metadataSubscription = this.base.plugin.metadataManager.subscribe(
+				this.base.getUuid(),
 				this.inputSignal,
 				fullBindTarget,
-				() => this.renderChild.unload(),
+				() => this.base.unload(),
 			);
 		}
 	}
@@ -134,7 +134,7 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 	}
 
 	private getDefaultValue(): MetadataValueType {
-		const defaultValueArgument = this.renderChild.getArgument(InputFieldArgumentType.DEFAULT_VALUE);
+		const defaultValueArgument = this.base.getArgument(InputFieldArgumentType.DEFAULT_VALUE);
 		if (!defaultValueArgument) {
 			return this.mapValue(this.getFallbackDefaultValue());
 		}

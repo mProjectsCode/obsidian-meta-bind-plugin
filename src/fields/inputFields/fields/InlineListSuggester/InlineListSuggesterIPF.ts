@@ -36,7 +36,7 @@ export class InlineListSuggesterIPF extends AbstractInputField<MBLiteral[], MBLi
 	}
 
 	openModal(): void {
-		this.renderChild.plugin.internal.openSuggesterModal(this, selected => {
+		this.base.plugin.internal.openSuggesterModal(this, selected => {
 			const value = this.getInternalValue();
 			value.push(selected.value);
 			this.setInternalValue(value);

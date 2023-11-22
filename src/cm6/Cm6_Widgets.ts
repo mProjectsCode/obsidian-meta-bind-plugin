@@ -2,9 +2,10 @@ import { type EditorView, WidgetType } from '@codemirror/view';
 import type MetaBindPlugin from '../main';
 import { type AbstractMDRC } from '../renderChildren/AbstractMDRC';
 import { type ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
-import { type InputFieldMDRC, RenderChildType } from '../renderChildren/InputFieldMDRC';
+import { type InputFieldMDRC } from '../renderChildren/InputFieldMDRC';
 import { type Component } from 'obsidian';
 import { type ExcludedMDRC } from '../renderChildren/ExcludedMDRC';
+import { RenderChildType } from '../config/FieldConfigs';
 
 export abstract class MarkdownRenderChildWidget<T extends AbstractMDRC> extends WidgetType {
 	content: string;

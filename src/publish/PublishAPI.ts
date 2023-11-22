@@ -10,12 +10,17 @@ import { InputFieldAPI } from '../api/InputFieldAPI';
 import { type InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
 import { getUUID } from '../utils/Utils';
+import { InputFieldFactory } from '../fields/inputFields/InputFieldFactory';
 
 export class PublishAPI implements IAPI {
 	public readonly plugin: IPlugin;
+
 	public readonly inputFieldParser: InputFieldDeclarationParser;
 	public readonly viewFieldParser: ViewFieldParser;
 	public readonly bindTargetParser: BindTargetParser;
+
+	public readonly inputFieldFactory: InputFieldFactory;
+
 	public readonly inputField: InputFieldAPI;
 
 	constructor(plugin: IPlugin) {
@@ -24,6 +29,8 @@ export class PublishAPI implements IAPI {
 		this.inputFieldParser = new InputFieldDeclarationParser(this.plugin);
 		this.viewFieldParser = new ViewFieldParser(this.plugin);
 		this.bindTargetParser = new BindTargetParser(this.plugin);
+
+		this.inputFieldFactory = new InputFieldFactory(this.plugin);
 
 		this.inputField = new InputFieldAPI(this);
 	}

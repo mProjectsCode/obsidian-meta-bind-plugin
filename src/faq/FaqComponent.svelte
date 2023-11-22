@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Button } from 'obsidian-svelte';
 	import { DocsHelper } from '../utils/DocsHelper';
 	import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
 	import { App } from 'obsidian';
@@ -9,6 +8,7 @@
 	import { createInputFieldExamples } from './InputFieldExamples';
 	import MetaBindPlugin from '../main';
 	import InputFieldExampleComponent from './InputFieldExampleComponent.svelte';
+	import Button from '../utils/components/Button.svelte';
 
 	export let app: App;
 	export let plugin: MetaBindPlugin;

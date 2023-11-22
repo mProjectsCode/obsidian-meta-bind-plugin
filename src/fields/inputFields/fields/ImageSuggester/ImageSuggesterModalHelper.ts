@@ -140,8 +140,8 @@ export function getImageSuggesterOptionsForInputField(
 	inputField: ImageSuggesterIPF,
 	plugin: MetaBindPlugin,
 ): SuggesterOption<string>[] {
-	const optionArgs = inputField.renderChild.getArguments(InputFieldArgumentType.OPTION);
-	const optionQueryArgs = inputField.renderChild.getArguments(InputFieldArgumentType.OPTION_QUERY);
+	const optionArgs = inputField.base.getArguments(InputFieldArgumentType.OPTION);
+	const optionQueryArgs = inputField.base.getArguments(InputFieldArgumentType.OPTION_QUERY);
 	return getImageSuggesterOptions(optionArgs, optionQueryArgs, plugin);
 }
 

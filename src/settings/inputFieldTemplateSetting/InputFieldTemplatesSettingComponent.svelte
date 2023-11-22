@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { InputFieldTemplate } from '../Settings';
-	import { Button, ModalButtonGroup } from 'obsidian-svelte';
 	import InputFieldTemplateSettingComponent from './InputFieldTemplateSettingComponent.svelte';
 	import { InputFieldTemplatesSettingModal } from './InputFieldTemplatesSettingModal';
 	import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 	import ErrorCollectionComponent from '../../utils/errors/ErrorCollectionComponent.svelte';
+	import ModalButtonGroup from '../../utils/components/ModalButtonGroup.svelte';
+	import Button from '../../utils/components/Button.svelte';
 
 	export let inputFieldTemplates: InputFieldTemplate[];
 	export let modal: InputFieldTemplatesSettingModal;

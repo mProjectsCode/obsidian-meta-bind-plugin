@@ -3,6 +3,7 @@ import { type ViewFieldParser } from '../parsers/viewFieldParser/ViewFieldParser
 import { type BindTargetParser } from '../parsers/BindTargetParser';
 import { type IPlugin } from '../IPlugin';
 import { type InputFieldAPI } from './InputFieldAPI';
+import { type InputFieldFactory } from '../fields/inputFields/InputFieldFactory';
 
 export interface IAPI {
 	readonly plugin: IPlugin;
@@ -23,4 +24,6 @@ export interface IAPI {
 	 * Parser for bind target declarations.
 	 */
 	readonly bindTargetParser: BindTargetParser;
+
+	readonly inputFieldFactory: InputFieldFactory;
 }

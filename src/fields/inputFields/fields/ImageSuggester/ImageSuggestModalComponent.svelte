@@ -1,7 +1,6 @@
 <script lang="ts">
 	import ImageSuggesterCard from './ImageSuggesterCard.svelte';
 	import { SuggesterOption } from '../Suggester/SuggesterHelper';
-	import { TextInput } from 'obsidian-svelte';
 	import { prepareFuzzySearch } from 'obsidian';
 
 	export let options: SuggesterOption<string>[];
@@ -32,7 +31,7 @@
 </script>
 
 <div class="mb-image-search-container">
-	<TextInput bind:value={search} placeholder="Search Images..."></TextInput>
+	<input type="text" bind:value={search} placeholder="Search Images..." />
 </div>
 <div class="mb-image-card-grid">
 	{#each filteredOptions as option}

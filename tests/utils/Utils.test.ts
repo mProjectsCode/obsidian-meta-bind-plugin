@@ -1,12 +1,5 @@
 import { describe, test, expect } from 'bun:test';
-import {
-	areArraysEqual,
-	arrayStartsWith,
-	clamp,
-	mod,
-	optClamp,
-	traverseObjectToParentByPath,
-} from '../../src/utils/Utils';
+import { areArraysEqual, arrayStartsWith, clamp, mod, optClamp } from '../../src/utils/Utils';
 import { remapRange } from '../../src/utils/Utils';
 
 describe('clamp function', () => {
@@ -174,72 +167,5 @@ describe('arrayStartsWith function', () => {
 
 	test('should return true when both arrays are empty', () => {
 		expect(arrayStartsWith([], [])).toBe(true);
-	});
-});
-
-describe('traverseObjectToParentByPath function', () => {
-	const obj = {
-		a: {
-			b: {
-				c: 1,
-				d: 2,
-			},
-			e: {
-				f: 3,
-				g: 4,
-			},
-		},
-		h: {
-			i: {
-				j: 5,
-				k: 6,
-			},
-			l: {
-				m: 7,
-				n: 8,
-			},
-		},
-	};
-
-	describe('should return the parent and child objects when given a valid path', () => {
-		test('a.b.c', () => {
-			const result = traverseObjectToParentByPath(['a', 'b', 'c'], obj);
-			expect(result.parent.key).toEqual(['a', 'b']);
-			expect(result.parent.value).toEqual(obj.a.b);
-			expect(result.child.key).toEqual('c');
-			expect(result.child.value).toEqual(obj.a.b.c);
-		});
-
-		test('h.l.m', () => {
-			const result = traverseObjectToParentByPath(['h', 'l', 'm'], obj);
-			expect(result.parent.key).toEqual(['h', 'l']);
-			expect(result.parent.value).toEqual(obj.h.l);
-			expect(result.child.key).toEqual('m');
-			expect(result.child.value).toEqual(obj.h.l.m);
-		});
-
-		test('a', () => {
-			const result = traverseObjectToParentByPath(['a'], obj);
-			expect(result.parent.key).toEqual([]);
-			expect(result.parent.value).toEqual(obj);
-			expect(result.child.key).toEqual('a');
-			expect(result.child.value).toEqual(obj.a);
-		});
-	});
-
-	test('should throw an error when given an empty path', () => {
-		expect(() => traverseObjectToParentByPath([], obj)).toThrow('can not traverse to parent on self reference');
-	});
-
-	test('should throw an error when given a path that does not exist in the object', () => {
-		expect(() => traverseObjectToParentByPath(['a', 'd', 'e'], obj)).toThrow(
-			'can not traverse to parent, parent does not exist',
-		);
-	});
-
-	test("should throw an error when given a path where the parent isn't an object", () => {
-		expect(() => traverseObjectToParentByPath(['a', 'b', 'c', 'd'], obj)).toThrow(
-			'can not traverse to parent, parent is not an object',
-		);
 	});
 });

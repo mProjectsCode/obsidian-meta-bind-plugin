@@ -1,5 +1,4 @@
 import { Signal } from '../utils/Signal';
-import { type RenderChildType } from './InputFieldMDRC';
 import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
 import type MetaBindPlugin from '../main';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
@@ -12,7 +11,7 @@ import {
 	type ComputedMetadataSubscription,
 	type ComputedSubscriptionDependency,
 } from '../metadata/ComputedMetadataSubscription';
-import { type ViewFieldArgumentType } from '../config/FieldConfigs';
+import { type RenderChildType, type ViewFieldArgumentType } from '../config/FieldConfigs';
 
 export interface ViewFieldVariable {
 	bindTargetDeclaration: BindTargetDeclaration;

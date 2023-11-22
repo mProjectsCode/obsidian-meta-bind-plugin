@@ -1,7 +1,6 @@
 import type MetaBindPlugin from '../main';
 import { ErrorLevel, MetaBindJsError } from '../utils/errors/MetaBindErrors';
 import { Signal } from '../utils/Signal';
-import { type RenderChildType } from './InputFieldMDRC';
 import { type ViewFieldVariable } from './ViewFieldMDRC';
 import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
@@ -15,6 +14,7 @@ import { type App, type TFile } from 'obsidian';
 import { type API as JsEngineAPI } from 'jsEngine/api/API';
 import type JsEnginePlugin from 'jsEngine/main';
 import { type JsExecution } from 'jsEngine/engine/JsExecution';
+import { type RenderChildType } from '../config/FieldConfigs';
 
 function getJsEngineAPI(app: App): JsEngineAPI | undefined {
 	return (app.plugins.getPlugin('js-engine') as JsEnginePlugin | undefined)?.api;

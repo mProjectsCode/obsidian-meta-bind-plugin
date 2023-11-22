@@ -32,8 +32,8 @@ export class ListIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> {
 
 	protected getMountArgs(): Record<string, unknown> {
 		return {
-			placeholder: this.renderChild.getArgument(InputFieldArgumentType.PLACEHOLDER)?.value ?? 'New Entry...',
-			limit: this.renderChild.getArgument(InputFieldArgumentType.LIMIT)?.value,
+			placeholder: this.base.getArgument(InputFieldArgumentType.PLACEHOLDER)?.value ?? 'New Entry...',
+			limit: this.base.getArgument(InputFieldArgumentType.LIMIT)?.value,
 		};
 	}
 }

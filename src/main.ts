@@ -1,6 +1,5 @@
 import { type MarkdownPostProcessorContext, Plugin, type WorkspaceLeaf } from 'obsidian';
 import { MetaBindSettingTab } from './settings/SettingsTab';
-import { RenderChildType } from './renderChildren/InputFieldMDRC';
 import { DateParser } from './parsers/DateParser';
 import { MetadataManager } from './metadata/MetadataManager';
 import { API } from './api/API';
@@ -14,6 +13,7 @@ import { FaqView, MB_FAQ_VIEW_TYPE } from './faq/FaqView';
 import { EMBED_MAX_DEPTH, EmbedMDRC } from './renderChildren/EmbedMDRC';
 import { getUUID } from './utils/Utils';
 import { ObsidianAPIAdapter } from './internalApi/ObsidianAPIAdapter';
+import { RenderChildType } from './config/FieldConfigs';
 
 export default class MetaBindPlugin extends Plugin implements IPlugin {
 	// @ts-ignore defined in `onload`

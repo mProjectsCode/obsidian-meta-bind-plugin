@@ -8,6 +8,12 @@ import { DEFAULT_SETTINGS, MetaBindPluginSettings } from '../../src/settings/Set
 import { MetadataManager } from '../../src/metadata/MetadataManager';
 import { TestAPIAdapter } from './TestAPIAdapter';
 import { TestMetadataAdapter } from './TestMetadataAdapter';
+import { InputFieldFactory } from '../../src/fields/inputFields/InputFieldFactory';
+import { RenderChildType } from '../../src/config/FieldConfigs';
+import { BindTargetScope } from '../../src/metadata/BindTargetScope';
+import { InputFieldDeclaration } from '../../src/parsers/inputFieldParser/InputFieldDeclaration';
+import { getUUID } from '../../src/utils/Utils';
+import { TestIPFBase } from './TestIPFBase';
 
 export class TestPlugin implements IPlugin {
 	public api: TestAPI;
@@ -32,19 +38,36 @@ export class TestPlugin implements IPlugin {
 
 export class TestAPI implements IAPI {
 	public readonly plugin: TestPlugin;
-	public readonly inputField: InputFieldAPI;
 
 	public readonly bindTargetParser: BindTargetParser;
 	public readonly inputFieldParser: InputFieldDeclarationParser;
 	public readonly viewFieldParser: ViewFieldParser;
 
+	public readonly inputFieldFactory: InputFieldFactory;
+
+	public readonly inputField: InputFieldAPI;
+
 	constructor(plugin: TestPlugin) {
 		this.plugin = plugin;
-
-		this.inputField = new InputFieldAPI(this);
 
 		this.inputFieldParser = new InputFieldDeclarationParser(this.plugin);
 		this.viewFieldParser = new ViewFieldParser(this.plugin);
 		this.bindTargetParser = new BindTargetParser(this.plugin);
+
+		this.inputFieldFactory = new InputFieldFactory(this.plugin);
+
+		this.inputField = new InputFieldAPI(this);
+	}
+
+	public createInputFieldFromString(
+		fullDeclaration: string,
+		renderType: RenderChildType,
+		filePath: string,
+		containerEl: HTMLElement,
+		scope?: BindTargetScope | undefined,
+	): TestIPFBase {
+		const declaration: InputFieldDeclaration = this.inputFieldParser.parseString(fullDeclaration, scope);
+
+		return new TestIPFBase(containerEl, renderType, declaration, this.plugin, filePath, getUUID());
 	}
 }

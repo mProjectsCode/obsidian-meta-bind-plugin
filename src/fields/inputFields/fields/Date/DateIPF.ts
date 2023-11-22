@@ -33,7 +33,7 @@ export class DateIPF extends AbstractInputField<string, moment.Moment> {
 
 	protected getMountArgs(): Record<string, unknown> {
 		return {
-			useUsInputOrder: this.renderChild.plugin.settings.useUsDateInputOrder,
+			useUsInputOrder: this.base.plugin.settings.useUsDateInputOrder,
 		};
 	}
 }

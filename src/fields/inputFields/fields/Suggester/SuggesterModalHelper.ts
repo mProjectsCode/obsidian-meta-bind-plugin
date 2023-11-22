@@ -62,13 +62,13 @@ export function getSuggesterOptionsForInputField(
 ): SuggesterOption<MBLiteral>[] {
 	const app = plugin.app;
 	const dv = getAPI(app);
-	const optionArgs = inputField.renderChild.getArguments(InputFieldArgumentType.OPTION);
-	const optionQueryArgs = inputField.renderChild.getArguments(InputFieldArgumentType.OPTION_QUERY);
-	const useLinksArgs = inputField.renderChild.getArgument(InputFieldArgumentType.USE_LINKS);
+	const optionArgs = inputField.base.getArguments(InputFieldArgumentType.OPTION);
+	const optionQueryArgs = inputField.base.getArguments(InputFieldArgumentType.OPTION_QUERY);
+	const useLinksArgs = inputField.base.getArgument(InputFieldArgumentType.USE_LINKS);
 	// in not present, we treat the use links argument as true
 	return getSuggesterOptions(
 		dv,
-		inputField.renderChild.getFilePath(),
+		inputField.base.getFilePath(),
 		optionArgs,
 		optionQueryArgs,
 		useLinksArgs === undefined || useLinksArgs.value,

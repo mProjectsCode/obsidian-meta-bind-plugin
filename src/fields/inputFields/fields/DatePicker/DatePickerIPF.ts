@@ -13,7 +13,7 @@ export class DatePickerIPF extends AbstractInputField<string | null, moment.Mome
 	constructor(renderChild: IInputFieldBase) {
 		super(renderChild);
 
-		this.options = this.renderChild.getArguments(InputFieldArgumentType.OPTION);
+		this.options = this.base.getArguments(InputFieldArgumentType.OPTION);
 	}
 
 	protected filterValue(value: unknown): string | null | undefined {
@@ -60,9 +60,9 @@ export class DatePickerIPF extends AbstractInputField<string | null, moment.Mome
 
 	protected getMountArgs(): Record<string, unknown> {
 		return {
-			dateFormat: this.renderChild.plugin.settings.preferredDateFormat,
+			dateFormat: this.base.plugin.settings.preferredDateFormat,
 			showDatePicker: (): void => {
-				this.renderChild.plugin.internal.openDatePickerModal(this);
+				this.base.plugin.internal.openDatePickerModal(this);
 			},
 		};
 	}

@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { Button } from 'obsidian-svelte';
 	import Icon from '../../../../utils/components/Icon.svelte';
 	import { MBLiteral } from '../../../../utils/Literal';
 	import LiteralRenderComponent from '../../../../utils/components/LiteralRenderComponent.svelte';
+	import Button from '../../../../utils/components/Button.svelte';
 
 	export let value: MBLiteral[];
 	export let showSuggester: () => void;

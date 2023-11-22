@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { InputFieldTemplate } from '../Settings';
-	import { IconButton, TextInput } from 'obsidian-svelte';
 	import { createEventDispatcher } from 'svelte';
+	import Button from '../../utils/components/Button.svelte';
+	import Icon from '../../utils/components/Icon.svelte';
 
 	export let template: InputFieldTemplate;
 
@@ -17,12 +18,19 @@
 
 <tr>
 	<td>
-		<TextInput bind:value={template.name} placeholder="template-name"></TextInput>
+		<input type="text" bind:value={template.name} placeholder="template-name" />
 	</td>
 	<td style="width: 100%">
-		<TextInput bind:value={template.declaration} placeholder="INPUT[slider(addLabels)]" width="100%"></TextInput>
+		<input
+			type="text"
+			bind:value={template.declaration}
+			placeholder="INPUT[slider(addLabels)]"
+			style="width: 100%"
+		/>
 	</td>
 	<td>
-		<IconButton icon="x" onClick={() => dispatchDeleteEvent()} tooltip="Delete Template"></IconButton>
+		<Button on:click={() => dispatchDeleteEvent()} tooltip="Delete Template">
+			<Icon iconName="x" />
+		</Button>
 	</td>
 </tr>

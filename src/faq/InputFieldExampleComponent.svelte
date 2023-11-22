@@ -1,10 +1,9 @@
 <script lang="ts">
-	import { InputFieldType } from '../config/FieldConfigs';
+	import { InputFieldType, RenderChildType } from '../config/FieldConfigs';
 	import { UnvalidatedInputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 	import { onDestroy, onMount } from 'svelte';
 	import MetaBindPlugin from '../main';
 	import { Component } from 'obsidian';
-	import { RenderChildType } from '../renderChildren/InputFieldMDRC';
 
 	export let type: InputFieldType;
 	export let declaration: UnvalidatedInputFieldDeclaration;

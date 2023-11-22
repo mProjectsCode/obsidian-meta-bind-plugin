@@ -12,8 +12,8 @@ export class ToggleIPF extends AbstractInputField<MBLiteral, boolean> {
 	constructor(renderChild: IInputFieldBase) {
 		super(renderChild);
 
-		this.onValue = this.renderChild.getArgument(InputFieldArgumentType.ON_VALUE)?.value ?? true;
-		this.offValue = this.renderChild.getArgument(InputFieldArgumentType.OFF_VALUE)?.value ?? false;
+		this.onValue = this.base.getArgument(InputFieldArgumentType.ON_VALUE)?.value ?? true;
+		this.offValue = this.base.getArgument(InputFieldArgumentType.OFF_VALUE)?.value ?? false;
 	}
 
 	protected filterValue(value: unknown): MBLiteral | undefined {

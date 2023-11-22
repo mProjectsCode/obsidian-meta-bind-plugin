@@ -13,14 +13,9 @@ import {
 } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { type InputField } from '../fields/inputFields/InputFieldFactory';
 import { type InputFieldArgumentMapType } from '../fields/fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
-import { InputFieldArgumentType, InputFieldType } from '../config/FieldConfigs';
+import { InputFieldArgumentType, InputFieldType, RenderChildType } from '../config/FieldConfigs';
 import { DocsHelper } from '../utils/DocsHelper';
 import { type IInputFieldBase } from '../fields/inputFields/IInputFieldBase';
-
-export enum RenderChildType {
-	INLINE = 'inline',
-	BLOCK = 'block',
-}
 
 export class InputFieldMDRC extends AbstractMDRC implements IInputFieldBase {
 	inputField: InputField | undefined;
@@ -61,7 +56,7 @@ export class InputFieldMDRC extends AbstractMDRC implements IInputFieldBase {
 	}
 
 	public isBound(): boolean {
-		return isTruthy(this.inputFieldDeclaration?.isBound);
+		return this.inputFieldDeclaration.isBound;
 	}
 
 	public getBindTarget(): BindTargetDeclaration | undefined {

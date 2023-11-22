@@ -4,7 +4,7 @@ import {
 	type UnvalidatedInputFieldDeclaration,
 } from '../../parsers/inputFieldParser/InputFieldDeclaration';
 import { AbstractMDRC } from '../../renderChildren/AbstractMDRC';
-import { InputFieldMDRC, RenderChildType } from '../../renderChildren/InputFieldMDRC';
+import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 import type MetaBindPlugin from '../../main';
 import { BindTargetScope } from '../../metadata/BindTargetScope';
 import { type Listener, Signal } from '../../utils/Signal';
@@ -20,6 +20,7 @@ import {
 import { type MetadataSubscription } from '../../metadata/MetadataSubscription';
 import { type MBExtendedLiteral } from '../../utils/Literal';
 import { parsePropPath } from '../../utils/prop/PropParser';
+import { RenderChildType } from '../../config/FieldConfigs';
 
 export type MetaBindTableCell = InputFieldDeclaration | ViewFieldDeclaration;
 

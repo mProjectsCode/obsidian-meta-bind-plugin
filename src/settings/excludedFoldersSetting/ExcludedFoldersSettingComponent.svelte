@@ -1,8 +1,10 @@
 <script lang="ts">
-	import { Button, IconButton, ModalButtonGroup, TextInput } from 'obsidian-svelte';
 	import { ExcludedFoldersSettingModal } from './ExcludedFoldersSettingModal';
 	import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 	import ErrorCollectionComponent from '../../utils/errors/ErrorCollectionComponent.svelte';
+	import ModalButtonGroup from '../../utils/components/ModalButtonGroup.svelte';
+	import Button from '../../utils/components/Button.svelte';
+	import Icon from '../../utils/components/Icon.svelte';
 
 	export let excludedFolders: string[];
 	export let modal: ExcludedFoldersSettingModal;
@@ -44,10 +46,12 @@
 			{#each excludedFolders as folder}
 				<tr>
 					<td style="width: 100%">
-						<TextInput bind:value={folder} placeholder="INPUT[slider(addLabels)]" width="100%"></TextInput>
+						<input type="text" bind:value={folder} placeholder="path/to/folder" style="width: 100%" />
 					</td>
 					<td>
-						<IconButton icon="x" onClick={() => deleteFolder(folder)} tooltip="Delete"></IconButton>
+						<Button on:click={() => deleteFolder(folder)} tooltip="Delete">
+							<Icon iconName="x"></Icon>
+						</Button>
 					</td>
 				</tr>
 			{/each}

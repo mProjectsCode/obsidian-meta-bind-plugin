@@ -1,4 +1,3 @@
-import { RenderChildType } from '../../renderChildren/InputFieldMDRC';
 import { ErrorLevel, MetaBindParsingError } from '../../utils/errors/MetaBindErrors';
 import { type IPlugin } from '../../IPlugin';
 import { ToggleIPF } from './fields/Toggle/ToggleIPF';
@@ -18,7 +17,7 @@ import { ListIPF } from './fields/List/ListIPF';
 import { ListSuggesterIPF } from './fields/ListSuggester/ListSuggesterIPF';
 import { DateIPF } from './fields/Date/DateIPF';
 import { TimeIPF } from './fields/Time/TimeIPF';
-import { type InputFieldConfig, InputFieldConfigs, InputFieldType } from '../../config/FieldConfigs';
+import { type InputFieldConfig, InputFieldConfigs, InputFieldType, RenderChildType } from '../../config/FieldConfigs';
 import { DocsHelper } from '../../utils/DocsHelper';
 import { InlineListSuggesterIPF } from './fields/InlineListSuggester/InlineListSuggesterIPF';
 import { InlineListIPF } from './fields/InlineList/InlineListIPF';
@@ -55,7 +54,7 @@ export class InputFieldFactory {
 	createInputField(
 		type: InputFieldType,
 		renderChildType: RenderChildType,
-		renderChild: IInputFieldBase,
+		base: IInputFieldBase,
 	): InputField | undefined {
 		if (type !== InputFieldType.INVALID) {
 			this.checkRenderChildTypeAllowed(type, renderChildType);
@@ -64,49 +63,49 @@ export class InputFieldFactory {
 		// Skipped: Date, Time
 
 		if (type === InputFieldType.TOGGLE) {
-			return new ToggleIPF(renderChild);
+			return new ToggleIPF(base);
 		} else if (type === InputFieldType.SLIDER) {
-			return new SliderIPF(renderChild);
+			return new SliderIPF(base);
 		} else if (type === InputFieldType.TEXT) {
-			return new TextIPF(renderChild);
+			return new TextIPF(base);
 		} else if (type === InputFieldType.TEXT_AREA) {
-			return new TextAreaIPF(renderChild);
+			return new TextAreaIPF(base);
 		} else if (type === InputFieldType.TEXT_AREA_DEPRECATED) {
-			return new TextAreaIPF(renderChild);
+			return new TextAreaIPF(base);
 		} else if (type === InputFieldType.SELECT) {
-			return new SelectIPF(renderChild);
+			return new SelectIPF(base);
 		} else if (type === InputFieldType.MULTI_SELECT) {
-			return new MultiSelectIPF(renderChild);
+			return new MultiSelectIPF(base);
 		} else if (type === InputFieldType.MULTI_SELECT_DEPRECATED) {
-			return new MultiSelectIPF(renderChild);
+			return new MultiSelectIPF(base);
 		} else if (type === InputFieldType.DATE_PICKER) {
-			return new DatePickerIPF(renderChild);
+			return new DatePickerIPF(base);
 		} else if (type === InputFieldType.DATE_PICKER_DEPRECATED) {
-			return new DatePickerIPF(renderChild);
+			return new DatePickerIPF(base);
 		} else if (type === InputFieldType.NUMBER) {
-			return new NumberIPF(renderChild);
+			return new NumberIPF(base);
 		} else if (type === InputFieldType.SUGGESTER) {
-			return new SuggesterIPF(renderChild);
+			return new SuggesterIPF(base);
 		} else if (type === InputFieldType.EDITOR) {
-			return new EditorIPF(renderChild);
+			return new EditorIPF(base);
 		} else if (type === InputFieldType.PROGRESS_BAR) {
-			return new ProgressBarIPF(renderChild);
+			return new ProgressBarIPF(base);
 		} else if (type === InputFieldType.INLINE_SELECT) {
-			return new InlineSelectIPF(renderChild);
+			return new InlineSelectIPF(base);
 		} else if (type === InputFieldType.IMAGE_SUGGESTER) {
-			return new ImageSuggesterIPF(renderChild);
+			return new ImageSuggesterIPF(base);
 		} else if (type === InputFieldType.LIST) {
-			return new ListIPF(renderChild);
+			return new ListIPF(base);
 		} else if (type === InputFieldType.LIST_SUGGESTER) {
-			return new ListSuggesterIPF(renderChild);
+			return new ListSuggesterIPF(base);
 		} else if (type === InputFieldType.DATE) {
-			return new DateIPF(renderChild);
+			return new DateIPF(base);
 		} else if (type === InputFieldType.TIME) {
-			return new TimeIPF(renderChild);
+			return new TimeIPF(base);
 		} else if (type === InputFieldType.INLINE_LIST_SUGGESTER) {
-			return new InlineListSuggesterIPF(renderChild);
+			return new InlineListSuggesterIPF(base);
 		} else if (type === InputFieldType.INLINE_LIST) {
-			return new InlineListIPF(renderChild);
+			return new InlineListIPF(base);
 		}
 
 		return undefined;

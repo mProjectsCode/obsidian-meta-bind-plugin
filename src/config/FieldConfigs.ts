@@ -509,3 +509,8 @@ export const ViewFieldArgumentConfigs: Record<ViewFieldArgumentType, ViewFieldAr
 		allowMultiple: true,
 	},
 };
+
+export enum RenderChildType {
+	INLINE = 'inline',
+	BLOCK = 'block',
+}

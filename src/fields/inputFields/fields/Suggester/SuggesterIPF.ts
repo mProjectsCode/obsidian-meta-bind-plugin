@@ -36,6 +36,6 @@ export class SuggesterIPF extends AbstractInputField<MBLiteral, MBLiteral> {
 	}
 
 	openModal(): void {
-		this.renderChild.plugin.internal.openSuggesterModal(this, selected => this.setInternalValue(selected.value));
+		this.base.plugin.internal.openSuggesterModal(this, selected => this.setInternalValue(selected.value));
 	}
 }

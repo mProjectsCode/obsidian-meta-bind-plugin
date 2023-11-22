@@ -32,7 +32,7 @@ export class NumberIPF extends AbstractInputField<number, number> {
 
 	protected getMountArgs(): Record<string, unknown> {
 		return {
-			placeholder: this.renderChild.getArgument(InputFieldArgumentType.PLACEHOLDER) ?? 'Number',
+			placeholder: this.base.getArgument(InputFieldArgumentType.PLACEHOLDER) ?? 'Number',
 		};
 	}
 }

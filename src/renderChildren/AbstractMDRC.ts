@@ -1,7 +1,7 @@
 import { MarkdownRenderChild } from 'obsidian';
-import { type RenderChildType } from './InputFieldMDRC';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
 import type MetaBindPlugin from '../main';
+import { type RenderChildType } from '../config/FieldConfigs';
 
 export class AbstractMDRC extends MarkdownRenderChild {
 	plugin: MetaBindPlugin;
