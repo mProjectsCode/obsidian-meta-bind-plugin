@@ -1,17 +1,16 @@
 import { AbstractInputField } from '../../AbstractInputField';
 import { type OptionInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
-import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { type SvelteComponent } from 'svelte';
 import { type moment } from 'obsidian';
 import DatePickerComponent from './DatePickerComponent.svelte';
 import { DateParser } from '../../../../parsers/DateParser';
-import { DatePickerInputModal } from './DatePickerInputModal';
 import { InputFieldArgumentType } from '../../../../config/FieldConfigs';
+import { type IInputFieldBase } from '../../IInputFieldBase';
 
 export class DatePickerIPF extends AbstractInputField<string | null, moment.Moment | null> {
 	options: OptionInputFieldArgument[];
 
-	constructor(renderChild: InputFieldMDRC) {
+	constructor(renderChild: IInputFieldBase) {
 		super(renderChild);
 
 		this.options = this.renderChild.getArguments(InputFieldArgumentType.OPTION);
@@ -63,7 +62,7 @@ export class DatePickerIPF extends AbstractInputField<string | null, moment.Mome
 		return {
 			dateFormat: this.renderChild.plugin.settings.preferredDateFormat,
 			showDatePicker: (): void => {
-				new DatePickerInputModal(this.renderChild.plugin.app, this).open();
+				this.renderChild.plugin.internal.openDatePickerModal(this);
 			},
 		};
 	}

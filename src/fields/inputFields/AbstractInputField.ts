@@ -1,26 +1,26 @@
-import { type InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 import { InputFieldComponent } from './InputFieldComponent';
 import { type SvelteComponent } from 'svelte';
-import { ComputedSignal, type Listener, Notifier } from '../../utils/Signal';
+import { ComputedSignal, Signal } from '../../utils/Signal';
 
 import { InputFieldArgumentType } from '../../config/FieldConfigs';
+import { type IInputFieldBase } from './IInputFieldBase';
+import { type MetadataSubscription } from '../../metadata/MetadataSubscription';
 
-export abstract class AbstractInputField<MetadataValueType, ComponentValueType> extends Notifier<
-	MetadataValueType,
-	Listener<MetadataValueType>
-> {
-	readonly renderChild: InputFieldMDRC;
+export abstract class AbstractInputField<MetadataValueType, ComponentValueType> {
+	readonly renderChild: IInputFieldBase;
 	readonly inputFieldComponent: InputFieldComponent<ComponentValueType>;
+	readonly inputSignal: Signal<unknown>;
 	readonly signal: ComputedSignal<unknown, MetadataValueType>;
 
-	protected constructor(renderChild: InputFieldMDRC) {
-		super();
+	private metadataSubscription?: MetadataSubscription;
 
+	protected constructor(renderChild: IInputFieldBase) {
 		this.renderChild = renderChild;
+		this.inputSignal = new Signal<unknown>(undefined);
 		this.inputFieldComponent = new InputFieldComponent<ComponentValueType>(this.getSvelteComponent());
 
 		this.signal = new ComputedSignal<unknown, MetadataValueType>(
-			this.renderChild.inputSignal,
+			this.inputSignal,
 			(value: unknown): MetadataValueType => {
 				const filteredValue = this.filterValue(value);
 				return filteredValue ?? this.getDefaultValue();
@@ -31,12 +31,33 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 			callback: value => this.inputFieldComponent.setValue(this.reverseMapValue(value)),
 		});
 
-		this.inputFieldComponent.registerListener({
-			callback: value => {
-				// console.log('input field component change', value);
-				this.notifyListeners(this.mapValue(value));
-			},
-		});
+		const fullBindTarget = this.renderChild.getFullBindTarget();
+
+		if (fullBindTarget) {
+			this.inputFieldComponent.registerListener({
+				callback: value => {
+					// console.log('input field component change', value);
+					this.notifySubscription(this.mapValue(value));
+				},
+			});
+
+			this.metadataSubscription = this.renderChild.plugin.metadataManager.subscribe(
+				this.renderChild.getUuid(),
+				this.inputSignal,
+				fullBindTarget,
+				() => this.renderChild.unload(),
+			);
+		}
+	}
+
+	public destroy(): void {
+		// we don't need to unregister the listener because the component will destroy all listeners on unmount
+
+		if (this.inputFieldComponent.isMounted()) {
+			this.unmount();
+		}
+
+		this.metadataSubscription?.unsubscribe();
 	}
 
 	protected abstract getSvelteComponent(): typeof SvelteComponent;
@@ -96,7 +117,7 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 	 */
 	public setValue(value: MetadataValueType): void {
 		this.signal.set(value);
-		this.notifyListeners(value);
+		this.notifySubscription(value);
 	}
 
 	/**
@@ -106,6 +127,10 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 	 */
 	public setInternalValue(value: ComponentValueType): void {
 		this.setValue(this.mapValue(value));
+	}
+
+	private notifySubscription(value: MetadataValueType): void {
+		this.metadataSubscription?.update(value);
 	}
 
 	private getDefaultValue(): MetadataValueType {
@@ -128,4 +153,8 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 	public unmount(): void {
 		this.inputFieldComponent.unmount();
 	}
+
+	protected onmount(): void {}
+
+	protected onunmount(): void {}
 }

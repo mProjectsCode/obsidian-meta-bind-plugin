@@ -1,4 +1,4 @@
-import { TestPlugin } from './mocks/TestAPI';
+import { TestPlugin } from '../mocks/TestAPI';
 import { describe, test, expect } from 'bun:test';
 
 const plugin = new TestPlugin();

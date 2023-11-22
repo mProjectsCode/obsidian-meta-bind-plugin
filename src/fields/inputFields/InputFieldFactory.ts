@@ -1,4 +1,4 @@
-import { type InputFieldMDRC, RenderChildType } from '../../renderChildren/InputFieldMDRC';
+import { RenderChildType } from '../../renderChildren/InputFieldMDRC';
 import { ErrorLevel, MetaBindParsingError } from '../../utils/errors/MetaBindErrors';
 import { type IPlugin } from '../../IPlugin';
 import { ToggleIPF } from './fields/Toggle/ToggleIPF';
@@ -22,8 +22,9 @@ import { type InputFieldConfig, InputFieldConfigs, InputFieldType } from '../../
 import { DocsHelper } from '../../utils/DocsHelper';
 import { InlineListSuggesterIPF } from './fields/InlineListSuggester/InlineListSuggesterIPF';
 import { InlineListIPF } from './fields/InlineList/InlineListIPF';
+import { type IInputFieldBase } from './IInputFieldBase';
 
-export type NewInputField =
+export type InputField =
 	| ToggleIPF
 	| SliderIPF
 	| TextIPF
@@ -54,8 +55,8 @@ export class InputFieldFactory {
 	createInputField(
 		type: InputFieldType,
 		renderChildType: RenderChildType,
-		renderChild: InputFieldMDRC,
-	): NewInputField | undefined {
+		renderChild: IInputFieldBase,
+	): InputField | undefined {
 		if (type !== InputFieldType.INVALID) {
 			this.checkRenderChildTypeAllowed(type, renderChildType);
 		}

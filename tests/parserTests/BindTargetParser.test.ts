@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'bun:test';
 import { BindTargetDeclaration } from '../../src/parsers/inputFieldParser/InputFieldDeclaration';
-import { TestPlugin } from './mocks/TestAPI';
+import { TestPlugin } from '../mocks/TestAPI';
 import { BindTargetScope } from '../../src/metadata/BindTargetScope';
 import { parsePropPath } from '../../src/utils/prop/PropParser';
 import { PropPath } from '../../src/utils/prop/PropPath';

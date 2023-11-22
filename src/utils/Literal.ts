@@ -1,7 +1,7 @@
 import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
-import { MDLinkParser, type MarkdownLink } from '../parsers/MarkdownLinkParser';
+import { type MarkdownLink, MDLinkParser } from '../parsers/MarkdownLinkParser';
 import { isUrl } from './Utils';
 
 export type MBLiteral = string | number | boolean | null;

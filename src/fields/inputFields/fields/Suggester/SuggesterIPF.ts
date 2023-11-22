@@ -1,12 +1,11 @@
 import { AbstractInputField } from '../../AbstractInputField';
-import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { type SvelteComponent } from 'svelte';
 import SuggesterComponent from './SuggesterComponent.svelte';
-import { openSuggesterModalForInputField } from './SuggesterHelper';
 import { type MBLiteral, parseUnknownToLiteral } from '../../../../utils/Literal';
+import { type IInputFieldBase } from '../../IInputFieldBase';
 
 export class SuggesterIPF extends AbstractInputField<MBLiteral, MBLiteral> {
-	constructor(renderChild: InputFieldMDRC) {
+	constructor(renderChild: IInputFieldBase) {
 		super(renderChild);
 	}
 
@@ -37,6 +36,6 @@ export class SuggesterIPF extends AbstractInputField<MBLiteral, MBLiteral> {
 	}
 
 	openModal(): void {
-		openSuggesterModalForInputField(this, selected => this.setInternalValue(selected.value));
+		this.renderChild.plugin.internal.openSuggesterModal(this, selected => this.setInternalValue(selected.value));
 	}
 }

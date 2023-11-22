@@ -1,18 +1,18 @@
 import { AbstractInputField } from '../../AbstractInputField';
-import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { optClamp } from '../../../../utils/Utils';
 import { type SvelteComponent } from 'svelte';
 import ProgressBarComponent from './ProgressBarComponent.svelte';
 import { ErrorLevel, MetaBindArgumentError } from '../../../../utils/errors/MetaBindErrors';
 import { InputFieldArgumentType } from '../../../../config/FieldConfigs';
 import { parseUnknownToFloat } from '../../../../utils/Literal';
+import { type IInputFieldBase } from '../../IInputFieldBase';
 
 export class ProgressBarIPF extends AbstractInputField<number, number> {
 	minValue: number;
 	maxValue: number;
 	stepSize: number;
 
-	constructor(renderChild: InputFieldMDRC) {
+	constructor(renderChild: IInputFieldBase) {
 		super(renderChild);
 
 		this.minValue = this.renderChild.getArgument(InputFieldArgumentType.MIN_VALUE)?.value ?? 0;

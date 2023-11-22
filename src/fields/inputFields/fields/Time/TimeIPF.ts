@@ -1,12 +1,12 @@
 import { AbstractInputField } from '../../AbstractInputField';
 import { type Time, TimeParser } from '../../../../parsers/TimeParser';
 import { type SvelteComponent } from 'svelte';
-import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import TimeComponent from './TimeComponent.svelte';
 import { parseUnknownToString } from '../../../../utils/Literal';
+import { type IInputFieldBase } from '../../IInputFieldBase';
 
 export class TimeIPF extends AbstractInputField<string, Time> {
-	constructor(renderChild: InputFieldMDRC) {
+	constructor(renderChild: IInputFieldBase) {
 		super(renderChild);
 	}
 

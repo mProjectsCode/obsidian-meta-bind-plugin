@@ -136,19 +136,23 @@ function isImageExtension(extension: string): boolean {
 	return extensions.contains(extension);
 }
 
-export function getImageSuggesterOptionsForInputField(inputField: ImageSuggesterIPF): SuggesterOption<string>[] {
+export function getImageSuggesterOptionsForInputField(
+	inputField: ImageSuggesterIPF,
+	plugin: MetaBindPlugin,
+): SuggesterOption<string>[] {
 	const optionArgs = inputField.renderChild.getArguments(InputFieldArgumentType.OPTION);
 	const optionQueryArgs = inputField.renderChild.getArguments(InputFieldArgumentType.OPTION_QUERY);
-	return getImageSuggesterOptions(optionArgs, optionQueryArgs, inputField.renderChild.plugin);
+	return getImageSuggesterOptions(optionArgs, optionQueryArgs, plugin);
 }
 
 export function openImageSuggesterModalForInputField(
 	inputField: ImageSuggesterIPF,
 	selectCallback: (selected: string) => void,
+	plugin: MetaBindPlugin,
 ): void {
 	new ImageSuggesterInputModal(
-		inputField.renderChild.plugin.app,
-		getImageSuggesterOptionsForInputField(inputField),
+		plugin.app,
+		getImageSuggesterOptionsForInputField(inputField, plugin),
 		selectCallback,
 	).open();
 }

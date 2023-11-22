@@ -1,12 +1,13 @@
 import { AbstractInputField } from '../../AbstractInputField';
-import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { type SvelteComponent } from 'svelte';
 import EditorComponent from './EditorComponent.svelte';
-import { MarkdownRenderer } from 'obsidian';
 import { isLiteral } from '../../../../utils/Literal';
+import { type IInputFieldBase } from '../../IInputFieldBase';
 
 export class EditorIPF extends AbstractInputField<string, string> {
-	constructor(renderChild: InputFieldMDRC) {
+	mdUnloadCallback: (() => void) | undefined;
+
+	constructor(renderChild: IInputFieldBase) {
 		super(renderChild);
 	}
 
@@ -32,18 +33,22 @@ export class EditorIPF extends AbstractInputField<string, string> {
 
 	protected getMountArgs(): Record<string, unknown> {
 		return {
-			render: (el: HTMLElement, value: string) => this.renderInElement(el, value),
+			render: (el: HTMLElement, value: string) => void this.renderInElement(el, value),
 		};
 	}
 
-	renderInElement(el: HTMLElement, value: string): void {
+	async renderInElement(el: HTMLElement, value: string): Promise<void> {
+		this.mdUnloadCallback?.();
 		el.empty();
-		void MarkdownRenderer.render(
-			this.renderChild.plugin.app,
+		this.mdUnloadCallback = await this.renderChild.plugin.internal.renderMarkdown(
 			value,
 			el,
-			this.renderChild.filePath,
-			this.renderChild,
+			this.renderChild.getFilePath(),
 		);
+	}
+
+	protected onunmount(): void {
+		super.onunmount();
+		this.mdUnloadCallback?.();
 	}
 }

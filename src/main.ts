@@ -13,6 +13,7 @@ import { ObsidianMetadataAdapter } from './metadata/ObsidianMetadataAdapter';
 import { FaqView, MB_FAQ_VIEW_TYPE } from './faq/FaqView';
 import { EMBED_MAX_DEPTH, EmbedMDRC } from './renderChildren/EmbedMDRC';
 import { getUUID } from './utils/Utils';
+import { ObsidianAPIAdapter } from './internalApi/ObsidianAPIAdapter';
 
 export default class MetaBindPlugin extends Plugin implements IPlugin {
 	// @ts-ignore defined in `onload`
@@ -27,6 +28,9 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	// @ts-ignore defined in `onload`
 	api: API;
 
+	// @ts-ignore defined in `onload`
+	internal: ObsidianAPIAdapter;
+
 	async onload(): Promise<void> {
 		console.log(`meta-bind | Main >> load`);
 
@@ -36,6 +40,8 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		// create API instance
 		this.api = new API(this);
+
+		this.internal = new ObsidianAPIAdapter(this);
 
 		// parse templates
 		const templateParseErrorCollection = this.api.inputFieldParser.parseTemplates(

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Icon from '../../../../utils/components/Icon.svelte';
 	import LinkComponent from '../../../../utils/components/LinkComponent.svelte';
-	import { MDLinkParser, MarkdownLink } from '../../../../parsers/MarkdownLinkParser';
+	import { MarkdownLink, MDLinkParser } from '../../../../parsers/MarkdownLinkParser';
 	import { onMount } from 'svelte';
 	import { MBLiteral } from '../../../../utils/Literal';
 

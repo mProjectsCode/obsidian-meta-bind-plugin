@@ -1,12 +1,12 @@
 import { AbstractInputField } from '../../AbstractInputField';
-import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { type SvelteComponent } from 'svelte';
 import NumberComponent from './NumberComponent.svelte';
 import { InputFieldArgumentType } from '../../../../config/FieldConfigs';
 import { parseUnknownToFloat } from '../../../../utils/Literal';
+import { type IInputFieldBase } from '../../IInputFieldBase';
 
 export class NumberIPF extends AbstractInputField<number, number> {
-	constructor(renderChild: InputFieldMDRC) {
+	constructor(renderChild: IInputFieldBase) {
 		super(renderChild);
 	}
 

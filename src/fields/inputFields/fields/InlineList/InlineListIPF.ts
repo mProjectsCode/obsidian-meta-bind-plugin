@@ -1,12 +1,11 @@
 import { AbstractInputField } from '../../AbstractInputField';
 import { type MBLiteral, parseUnknownToLiteralArray } from '../../../../utils/Literal';
-import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { type SvelteComponent } from 'svelte';
 import InlineListComponent from './InlineListComponent.svelte';
-import { TextPromptModal } from '../../../../utils/TextPromptModal';
+import { type IInputFieldBase } from '../../IInputFieldBase';
 
 export class InlineListIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> {
-	constructor(renderChild: InputFieldMDRC) {
+	constructor(renderChild: IInputFieldBase) {
 		super(renderChild);
 	}
 
@@ -37,8 +36,7 @@ export class InlineListIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> 
 	}
 
 	openModal(): void {
-		new TextPromptModal(
-			this.renderChild.plugin.app,
+		this.renderChild.plugin.internal.openTextPromptModal(
 			'',
 			'Meta Bind List',
 			'New List Element',
@@ -49,6 +47,6 @@ export class InlineListIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> 
 				this.setInternalValue(value);
 			},
 			() => {},
-		).open();
+		);
 	}
 }

@@ -3,7 +3,7 @@ import { MetadataSubscription } from '../../src/metadata/MetadataSubscription';
 import { getUUID } from '../../src/utils/Utils';
 import { ListenerCallback, Signal } from '../../src/utils/Signal';
 import { FullBindTarget } from '../../src/parsers/inputFieldParser/InputFieldDeclaration';
-import { TestMetadataAdapter } from './mocks/TestMetadataAdapter';
+import { TestMetadataAdapter } from '../mocks/TestMetadataAdapter';
 import { describe, test, expect, beforeEach, spyOn, Mock } from 'bun:test';
 import { PropPath } from '../../src/utils/prop/PropPath';
 import { parsePropPath } from '../../src/utils/prop/PropParser';

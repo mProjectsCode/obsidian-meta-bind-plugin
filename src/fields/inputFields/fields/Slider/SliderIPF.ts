@@ -1,18 +1,18 @@
 import { AbstractInputField } from '../../AbstractInputField';
 import { optClamp } from '../../../../utils/Utils';
-import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { type SvelteComponent } from 'svelte';
 import SliderComponent from './SliderComponent.svelte';
 import { ErrorLevel, MetaBindArgumentError } from '../../../../utils/errors/MetaBindErrors';
 import { InputFieldArgumentType } from '../../../../config/FieldConfigs';
 import { parseUnknownToFloat } from '../../../../utils/Literal';
+import { type IInputFieldBase } from '../../IInputFieldBase';
 
 export class SliderIPF extends AbstractInputField<number, number> {
 	minValue: number;
 	maxValue: number;
 	stepSize: number;
 
-	constructor(renderChild: InputFieldMDRC) {
+	constructor(renderChild: IInputFieldBase) {
 		super(renderChild);
 
 		// FIXME: Check that minvalue < maxvalue.

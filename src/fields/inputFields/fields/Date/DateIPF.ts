@@ -1,13 +1,13 @@
 import { AbstractInputField } from '../../AbstractInputField';
 import { type moment } from 'obsidian';
 import { type SvelteComponent } from 'svelte';
-import { type InputFieldMDRC } from '../../../../renderChildren/InputFieldMDRC';
 import { DateParser } from '../../../../parsers/DateParser';
 import DateComponent from './DateComponent.svelte';
 import { parseUnknownToString } from '../../../../utils/Literal';
+import { type IInputFieldBase } from '../../IInputFieldBase';
 
 export class DateIPF extends AbstractInputField<string, moment.Moment> {
-	constructor(renderChild: InputFieldMDRC) {
+	constructor(renderChild: IInputFieldBase) {
 		super(renderChild);
 	}
 

@@ -1,8 +1,14 @@
 import { type IAPI } from './api/IAPI';
 import { type MetaBindPluginSettings } from './settings/Settings';
+import { type MetadataManager } from './metadata/MetadataManager';
+import { type IInternalAPI } from './internalApi/IInternalAPI';
 
 export interface IPlugin {
-	api: IAPI;
+	readonly api: IAPI;
+	readonly internal: IInternalAPI;
+	readonly metadataManager: MetadataManager;
+
 	settings: MetaBindPluginSettings;
+
 	getFilePathsByName: (name: string) => string[];
 }

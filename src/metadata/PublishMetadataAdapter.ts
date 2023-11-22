@@ -1,16 +1,16 @@
-import { type IMetadataAdapter } from '../../../src/metadata/IMetadataAdapter';
-import { type IMetadataSubscription } from '../../../src/metadata/IMetadataSubscription';
-import { type Metadata, type MetadataManagerCacheItem } from '../../../src/metadata/MetadataManagerCacheItem';
-import { type MetadataManager } from '../../../src/metadata/MetadataManager';
+import { type IMetadataAdapter } from './IMetadataAdapter';
+import { type MetadataManager } from './MetadataManager';
+import { type Metadata, type MetadataManagerCacheItem } from './MetadataManagerCacheItem';
+import { type IMetadataSubscription } from './IMetadataSubscription';
 import structuredClone from '@ungap/structured-clone';
 
-export class TestMetadataAdapter implements IMetadataAdapter {
+export class PublishMetadataAdapter implements IMetadataAdapter {
 	manager: MetadataManager | undefined;
 	metadata: Map<string, Metadata>;
 	updatedMetadata: Map<string, Metadata>;
 
-	constructor(metadata: Map<string, Metadata>) {
-		this.metadata = metadata;
+	constructor() {
+		this.metadata = new Map<string, Record<string, unknown>>();
 		this.updatedMetadata = new Map<string, Metadata>();
 	}
 

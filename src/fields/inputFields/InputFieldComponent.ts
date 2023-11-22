@@ -4,10 +4,12 @@ import { type Listener, Notifier } from '../../utils/Signal';
 export class InputFieldComponent<Value> extends Notifier<Value, Listener<Value>> {
 	private readonly svelteComponent: typeof SvelteComponent;
 	private svelteComponentInstance?: SvelteComponent;
+	private mounted: boolean;
 
 	constructor(svelteComponent: typeof SvelteComponent) {
 		super();
 
+		this.mounted = false;
 		this.svelteComponent = svelteComponent;
 	}
 
@@ -45,6 +47,8 @@ export class InputFieldComponent<Value> extends Notifier<Value, Listener<Value>>
 			target: container,
 			props: props,
 		});
+
+		this.mounted = true;
 	}
 
 	/**
@@ -53,5 +57,11 @@ export class InputFieldComponent<Value> extends Notifier<Value, Listener<Value>>
 	public unmount(): void {
 		this.listeners = [];
 		this.svelteComponentInstance?.$destroy();
+
+		this.mounted = false;
+	}
+
+	public isMounted(): boolean {
+		return this.mounted;
 	}
 }
