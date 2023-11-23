@@ -17,7 +17,7 @@ export class ToggleIPF extends AbstractInputField<MBLiteral, boolean> {
 	}
 
 	protected filterValue(value: unknown): MBLiteral | undefined {
-		return parseUnknownToLiteral(value);
+		return value === this.onValue || value === this.offValue ? parseUnknownToLiteral(value) : undefined;
 	}
 
 	protected getFallbackDefaultValue(): boolean {

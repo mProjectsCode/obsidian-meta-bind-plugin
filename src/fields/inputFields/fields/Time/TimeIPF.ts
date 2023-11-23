@@ -11,7 +11,8 @@ export class TimeIPF extends AbstractInputField<string, Time> {
 	}
 
 	protected filterValue(value: unknown): string | undefined {
-		return parseUnknownToString(value);
+		const strValue = parseUnknownToString(value);
+		return TimeParser.parse(strValue) ? strValue : undefined;
 	}
 
 	protected getFallbackDefaultValue(): Time {

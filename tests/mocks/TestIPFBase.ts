@@ -34,6 +34,12 @@ export class TestIPFBase implements IInputFieldBase {
 		this.filePath = filePath;
 		this.uuid = uuid;
 		this.declaration = declaration;
+
+		this.inputField = this.plugin.api.inputFieldFactory.createInputField(
+			this.declaration.inputFieldType,
+			this.renderChildType,
+			this,
+		);
 	}
 
 	public getArgument<T extends InputFieldArgumentType>(name: T): InputFieldArgumentMapType<T> | undefined {
@@ -72,12 +78,6 @@ export class TestIPFBase implements IInputFieldBase {
 	public load(): void {
 		this.containerEl.classList.add('mb-input');
 		this.containerEl.innerHTML = '';
-
-		this.inputField = this.plugin.api.inputFieldFactory.createInputField(
-			this.declaration.inputFieldType,
-			this.renderChildType,
-			this,
-		);
 
 		const container: HTMLDivElement = document.createElement('div');
 		this.containerEl.appendChild(container);

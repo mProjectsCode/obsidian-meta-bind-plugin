@@ -3,7 +3,6 @@ import { type moment } from 'obsidian';
 import { type SvelteComponent } from 'svelte';
 import { DateParser } from '../../../../parsers/DateParser';
 import DateComponent from './DateComponent.svelte';
-import { parseUnknownToString } from '../../../../utils/Literal';
 import { type IInputFieldBase } from '../../IInputFieldBase';
 
 export class DateIPF extends AbstractInputField<string, moment.Moment> {
@@ -12,7 +11,15 @@ export class DateIPF extends AbstractInputField<string, moment.Moment> {
 	}
 
 	protected filterValue(value: unknown): string | undefined {
-		return parseUnknownToString(value);
+		if (value === null || value === undefined || typeof value !== 'string') {
+			return undefined;
+		}
+		const date = DateParser.parse(value);
+		if (date.isValid()) {
+			return DateParser.stringify(date);
+		} else {
+			return undefined;
+		}
 	}
 
 	protected getFallbackDefaultValue(): moment.Moment {

@@ -42,8 +42,8 @@ describe('stringifyLiteral function', () => {
 		expect(stringifyLiteral(undefined)).toBe('');
 	});
 
-	test('should return "null" when given null', () => {
-		expect(stringifyLiteral(null)).toBe('null');
+	test('should return empty string when given null', () => {
+		expect(stringifyLiteral(null)).toBe('');
 	});
 
 	test('should return the input string when given a string', () => {
@@ -276,8 +276,8 @@ describe('parseUnknownToString function', () => {
 		expect(parseUnknownToString(0)).toBe('0');
 	});
 
-	test('should return "null" when given null', () => {
-		expect(parseUnknownToString(null)).toBe('null');
+	test('should return empty string when given null', () => {
+		expect(parseUnknownToString(null)).toBe('');
 	});
 
 	test('should return undefined when given an object', () => {

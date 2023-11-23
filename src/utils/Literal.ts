@@ -46,7 +46,7 @@ export function stringifyLiteral(literal: MBExtendedLiteral | undefined): string
 	}
 
 	if (literal === null) {
-		return 'null';
+		return '';
 	}
 
 	if (typeof literal === 'string') {
