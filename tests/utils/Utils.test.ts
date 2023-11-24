@@ -1,6 +1,5 @@
-import { describe, test, expect } from 'bun:test';
-import { areArraysEqual, arrayStartsWith, clamp, mod, optClamp } from '../../src/utils/Utils';
-import { remapRange } from '../../src/utils/Utils';
+import { describe, expect, test } from 'bun:test';
+import { areArraysEqual, arrayStartsWith, clamp, mod, optClamp, remapRange } from '../../src/utils/Utils';
 
 describe('clamp function', () => {
 	test('should return the number if it is within the range', () => {

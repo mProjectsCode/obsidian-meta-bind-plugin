@@ -1,4 +1,4 @@
-import { describe, test, expect } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 import { BindTargetDeclaration } from '../../src/parsers/inputFieldParser/InputFieldDeclaration';
 import { TestPlugin } from '../mocks/TestAPI';
 import { BindTargetScope } from '../../src/metadata/BindTargetScope';

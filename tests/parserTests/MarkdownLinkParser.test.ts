@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach, spyOn, Mock } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 import { MDLinkParser } from '../../src/parsers/MarkdownLinkParser';
 
 describe('markdown link parser', () => {

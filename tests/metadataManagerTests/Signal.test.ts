@@ -1,5 +1,6 @@
 import { type Listener, ListenerCallback, Notifier, Signal } from '../../src/utils/Signal';
-import { describe, test, expect, beforeEach, spyOn, Mock } from 'bun:test';
+import { beforeEach, describe, expect, Mock, spyOn, test } from 'bun:test';
+
 describe('notifier', () => {
 	let notifier: Notifier<number, Listener<number>>;
 	let listener1: Omit<Listener<number>, 'uuid'>;

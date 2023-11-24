@@ -14,8 +14,8 @@ import {
 import { PropUtils } from '../utils/prop/PropUtils';
 import { type PropPath } from '../utils/prop/PropPath';
 
-export const metadataCacheUpdateCycleThreshold = 5; // {syncInterval (200)} * 5 = 1s
-export const metadataCacheInactiveCycleThreshold = 5 * 60; // {syncInterval (200)} * 5 * 60 = 1 minute
+export const METADATA_CACHE_UPDATE_CYCLE_THRESHOLD = 5; // {syncInterval (200)} * 5 = 1s
+export const METADATA_CACHE_INACTIVE_CYCLE_THRESHOLD = 5 * 60; // {syncInterval (200)} * 5 * 60 = 1 minute
 
 /**
  * Checks if bind target `b` should receive an update when bind target `a` changes.
@@ -127,7 +127,7 @@ export class MetadataManager {
 				extraCache: extraCache,
 				metadata: metadata,
 				subscriptions: [subscription],
-				cyclesSinceLastChange: metadataCacheUpdateCycleThreshold + 1, // +1, so that is it bigger than the threshold
+				cyclesSinceLastChange: METADATA_CACHE_UPDATE_CYCLE_THRESHOLD + 1, // +1, so that is it bigger than the threshold
 				cyclesSinceInactive: 0,
 				inactive: false,
 				changed: false,
@@ -357,7 +357,7 @@ export class MetadataManager {
 			if (cacheEntry.inactive) {
 				cacheEntry.cyclesSinceInactive += 1;
 			}
-			if (cacheEntry.cyclesSinceInactive > metadataCacheInactiveCycleThreshold) {
+			if (cacheEntry.cyclesSinceInactive > METADATA_CACHE_INACTIVE_CYCLE_THRESHOLD) {
 				markedForDelete.push(filePath);
 			}
 		}
@@ -430,7 +430,7 @@ export class MetadataManager {
 		}
 
 		// don't update if the user recently changed the cache
-		if (fileCache.cyclesSinceLastChange < metadataCacheUpdateCycleThreshold) {
+		if (fileCache.cyclesSinceLastChange < METADATA_CACHE_UPDATE_CYCLE_THRESHOLD) {
 			return;
 		}
 

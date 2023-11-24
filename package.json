@@ -55,6 +55,7 @@
 	},
 	"dependencies": {
 		"@lemons_dev/parsinom": "^0.0.11",
+		"itertools-ts": "^1.27.0",
 		"mathjs": "^12.0.0"
 	}
 }

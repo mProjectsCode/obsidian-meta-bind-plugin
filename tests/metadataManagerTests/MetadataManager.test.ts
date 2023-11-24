@@ -4,8 +4,7 @@ import { getUUID } from '../../src/utils/Utils';
 import { ListenerCallback, Signal } from '../../src/utils/Signal';
 import { FullBindTarget } from '../../src/parsers/inputFieldParser/InputFieldDeclaration';
 import { TestMetadataAdapter } from '../mocks/TestMetadataAdapter';
-import { describe, test, expect, beforeEach, spyOn, Mock } from 'bun:test';
-import { PropPath } from '../../src/utils/prop/PropPath';
+import { beforeEach, describe, expect, Mock, spyOn, test } from 'bun:test';
 import { parsePropPath } from '../../src/utils/prop/PropParser';
 
 const testFilePath = 'testFile';

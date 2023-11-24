@@ -1,5 +1,5 @@
 import { Time, TimeParser } from '../../src/parsers/TimeParser';
-import { describe, test, expect, beforeEach } from 'bun:test';
+import { beforeEach, describe, expect, test } from 'bun:test';
 
 describe('time stringify', () => {
 	describe('should stringify time', () => {
