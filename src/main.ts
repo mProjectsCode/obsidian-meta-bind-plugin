@@ -127,10 +127,12 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			});
 		}
 
-		this.registerMarkdownCodeBlockProcessor('meta-bind-button', (source, el, ctx) => {
-			const button = new ButtonMDRC(el, source, this, ctx.sourcePath, getUUID());
-			ctx.addChild(button);
-		});
+		if (this.settings.devMode) {
+			this.registerMarkdownCodeBlockProcessor('meta-bind-button', (source, el, ctx) => {
+				const button = new ButtonMDRC(el, source, this, ctx.sourcePath, getUUID());
+				ctx.addChild(button);
+			});
+		}
 
 		// LP editor extension
 		this.registerEditorExtension(createMarkdownRenderChildWidgetEditorPlugin(this));
