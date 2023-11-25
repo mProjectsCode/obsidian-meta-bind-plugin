@@ -1,5 +1,23 @@
 # Obsidian Meta Bind Changelog
 
+# 0.9.0
+
+New Features
+
+-   Meta Bind Embed, a way to embed a note (Note B) in another note (Note A) and have all the input fields think they are part of note A
+
+Changes
+
+-   Improved the handling of nested metadata a lot, fixing [#52](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/52) in the process
+-   A lot more input fields will now recognize links and render them as links [#141](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/141)
+-   You can now unselect an element in the `select` input field by clicking on it again [#145](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/145)
+
+Bug Fixes
+
+-   Style fixes for Obsidian 1.5.0
+-   Fixed a bug with the meta bind table
+-   Fixed a multitude of bugs relating to how input fields handle frontmatter values that are invalid for that input field, thanks to a lot of new automated tests
+
 # 0.8.0
 
 New Features
