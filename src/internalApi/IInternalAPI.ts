@@ -23,4 +23,9 @@ export interface IInternalAPI {
 	openDatePickerModal(inputField: DatePickerIPF): void;
 
 	renderMarkdown(markdown: string, element: HTMLElement, filePath: string): Promise<() => void>;
+
+	executeCommandById(id: string): boolean;
+
+	jsEngineRunFile(filePath: string, callingFilePath: string, container?: HTMLElement): Promise<() => void>;
+	jsEngineRunCode(code: string, callingFilePath: string, container?: HTMLElement): Promise<() => void>;
 }

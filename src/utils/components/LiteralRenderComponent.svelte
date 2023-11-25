@@ -6,7 +6,6 @@
 	export let value = undefined;
 
 	$: parsedValue = stringifyAndLinkUnknown(value);
-	$: console.log(parsedValue);
 </script>
 
 {#if typeof parsedValue === 'string'}

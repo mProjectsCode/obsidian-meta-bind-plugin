@@ -92,7 +92,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 			});
 		}
 
-		const executionPromise = jsEngine.internal.excute({
+		const executionPromise = jsEngine.internal.execute({
 			code: this.viewFieldDeclaration.code,
 			context: {
 				file: this.file,

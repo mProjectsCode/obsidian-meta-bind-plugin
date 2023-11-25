@@ -34,4 +34,16 @@ export class PublishAPIAdapter implements IInternalAPI {
 	public renderMarkdown(_markdown: string, _element: HTMLElement, _filePath: string): Promise<() => void> {
 		return Promise.resolve(function () {});
 	}
+
+	public executeCommandById(_id: string): boolean {
+		throw new Error('not implemented');
+	}
+
+	public jsEngineRunFile(_filePath: string, _callingFilePath: string, _container?: HTMLElement): Promise<() => void> {
+		return Promise.reject(new Error('not implemented'));
+	}
+
+	public jsEngineRunCode(_code: string, _callingFilePath: string, _container?: HTMLElement): Promise<() => void> {
+		return Promise.reject(new Error('not implemented'));
+	}
 }

@@ -6,6 +6,21 @@
 	export let variant: ButtonStyleType = ButtonStyleType.DEFUALT;
 	export let disabled: boolean = false;
 	export let tooltip: string = '';
+	export let label: string = '';
+	export let onClick: () => Promise<void> = async () => {};
+
+	async function click() {
+		if (!disabled) {
+			disabled = true;
+			try {
+				await onClick();
+			} catch (e) {
+				console.log('failed to run button component on click', e);
+			} finally {
+				disabled = false;
+			}
+		}
+	}
 </script>
 
 <button
@@ -14,10 +29,10 @@
 	class:mod-plain={variant === 'plain'}
 	class:disabled={disabled}
 	aria-label={tooltip}
-	on:click
+	on:click={() => click()}
 	disabled={disabled}
 >
-	<slot />
+	{label}
 </button>
 
 <style>

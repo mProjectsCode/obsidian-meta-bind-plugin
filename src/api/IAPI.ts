@@ -4,6 +4,7 @@ import { type BindTargetParser } from '../parsers/BindTargetParser';
 import { type IPlugin } from '../IPlugin';
 import { type InputFieldAPI } from './InputFieldAPI';
 import { type InputFieldFactory } from '../fields/inputFields/InputFieldFactory';
+import { type ButtonActionRunner } from '../button/ButtonActionRunner';
 
 export interface IAPI {
 	readonly plugin: IPlugin;
@@ -26,4 +27,6 @@ export interface IAPI {
 	readonly bindTargetParser: BindTargetParser;
 
 	readonly inputFieldFactory: InputFieldFactory;
+
+	readonly buttonActionRunner: ButtonActionRunner;
 }

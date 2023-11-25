@@ -16,6 +16,7 @@ import { getUUID } from '../../src/utils/Utils';
 import { TestIPFBase } from './TestIPFBase';
 import { DateParser } from '../../src/parsers/DateParser';
 import { setFirstWeekday } from '../../src/utils/DatePickerUtils';
+import { ButtonActionRunner } from '../../src/button/ButtonActionRunner';
 
 export class TestPlugin implements IPlugin {
 	public api: TestAPI;
@@ -52,6 +53,8 @@ export class TestAPI implements IAPI {
 
 	public readonly inputField: InputFieldAPI;
 
+	public readonly buttonActionRunner: ButtonActionRunner;
+
 	constructor(plugin: TestPlugin) {
 		this.plugin = plugin;
 
@@ -62,6 +65,8 @@ export class TestAPI implements IAPI {
 		this.inputFieldFactory = new InputFieldFactory(this.plugin);
 
 		this.inputField = new InputFieldAPI(this);
+
+		this.buttonActionRunner = new ButtonActionRunner(this.plugin);
 	}
 
 	public createInputFieldFromString(

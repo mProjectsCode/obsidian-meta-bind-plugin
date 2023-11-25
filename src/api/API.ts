@@ -27,6 +27,7 @@ import { ViewFieldFactory } from '../fields/viewFields/ViewFieldFactory';
 import { getUUID } from '../utils/Utils';
 import { parsePropPath } from '../utils/prop/PropParser';
 import { RenderChildType } from '../config/FieldConfigs';
+import { ButtonActionRunner } from '../button/ButtonActionRunner';
 
 export class API implements IAPI {
 	public plugin: MetaBindPlugin;
@@ -39,6 +40,8 @@ export class API implements IAPI {
 	public readonly inputFieldFactory: InputFieldFactory;
 	public readonly viewFieldFactory: ViewFieldFactory;
 
+	public readonly buttonActionRunner: ButtonActionRunner;
+
 	constructor(plugin: MetaBindPlugin) {
 		this.plugin = plugin;
 		this.inputField = new InputFieldAPI(this);
@@ -50,6 +53,8 @@ export class API implements IAPI {
 
 		this.inputFieldFactory = new InputFieldFactory(this.plugin);
 		this.viewFieldFactory = new ViewFieldFactory(this.plugin);
+
+		this.buttonActionRunner = new ButtonActionRunner(this.plugin);
 	}
 
 	/**

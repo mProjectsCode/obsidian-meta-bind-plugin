@@ -14,6 +14,7 @@ import { EMBED_MAX_DEPTH, EmbedMDRC } from './renderChildren/EmbedMDRC';
 import { getUUID } from './utils/Utils';
 import { ObsidianAPIAdapter } from './internalApi/ObsidianAPIAdapter';
 import { RenderChildType } from './config/FieldConfigs';
+import { ButtonMDRC } from './renderChildren/ButtonMDRC';
 
 export default class MetaBindPlugin extends Plugin implements IPlugin {
 	// @ts-ignore defined in `onload`
@@ -125,6 +126,11 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				ctx.addChild(embed);
 			});
 		}
+
+		this.registerMarkdownCodeBlockProcessor('meta-bind-button', (source, el, ctx) => {
+			const button = new ButtonMDRC(el, source, this, ctx.sourcePath, getUUID());
+			ctx.addChild(button);
+		});
 
 		// LP editor extension
 		this.registerEditorExtension(createMarkdownRenderChildWidgetEditorPlugin(this));

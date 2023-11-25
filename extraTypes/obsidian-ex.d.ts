@@ -8,6 +8,10 @@ declare module 'obsidian' {
 			plugins: Record<string, Plugin>;
 			getPlugin: (plugin: string) => Plugin;
 		};
+
+		commands: {
+			executeCommandById: (id: string) => boolean;
+		};
 	}
 }
 

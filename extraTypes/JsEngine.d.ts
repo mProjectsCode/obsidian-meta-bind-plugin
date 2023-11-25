@@ -1,4 +1,4 @@
-// js engine 0.0.7 types
+// js engine 0.0.8 types
 
 declare module 'jsEngine/ArgumentManager' {
 	import { type CachedMetadata, type TFile } from 'obsidian';
@@ -484,8 +484,9 @@ declare module 'jsEngine/api/Internal' {
 	export class InternalAPI {
 		private readonly apiInstance;
 		constructor(apiInstance: API);
-		excute(params: EngineExecutionParams): Promise<JsExecution>;
+		execute(params: EngineExecutionParams): Promise<JsExecution>;
 		createRenderer(container: HTMLElement, sourcePath: string, component: Component): ResultRenderer;
+		executeFile(path: string, params: Omit<EngineExecutionParams, 'code'>): Promise<JsExecution>;
 	}
 }
 declare module 'jsEngine/api/API' {

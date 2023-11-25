@@ -17,6 +17,7 @@ export enum ErrorType {
 	PARSINOM = 'MB_PARSINOM',
 	EXAMPLE = 'MB_EXAMPLE',
 	EMBED = 'MB_EMBED',
+	BUTTON = 'MB_BUTTON',
 
 	OTHER = 'OTHER',
 }
@@ -132,5 +133,11 @@ export class MetaBindExampleError extends MetaBindError {
 export class MetaBindEmbedError extends MetaBindError {
 	public getErrorType(): ErrorType {
 		return ErrorType.EMBED;
+	}
+}
+
+export class MetaBindButtonError extends MetaBindError {
+	public getErrorType(): ErrorType {
+		return ErrorType.BUTTON;
 	}
 }
