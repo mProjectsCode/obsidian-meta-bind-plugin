@@ -1,5 +1,8 @@
 Meta Bind is getting Buttons
 
+text `BUTTON[docs-button]` text
+text `BUTTON[docs-button, docs, open-button]` text
+
 ```meta-bind-button
 style: primary
 label: Open Meta Bind FAQ
@@ -21,7 +24,9 @@ action:
 And open internal and external links
 
 ```meta-bind-button
-style: default
+style: primary
+id: open-button
+hidden: true
 label: Open File
 action:
   type: open
@@ -30,8 +35,16 @@ action:
 
 ```meta-bind-button
 style: default
+id: docs-button
+hidden: true
 label: Open External Link
 action:
   type: open
   link: https://www.moritzjung.dev/obsidian-meta-bind-plugin-docs/
 ```
+
+text `BUTTON[docs-button, open-button]` text
+
+##### 1. The
+##### 2. The 
+##### 3. Refusal

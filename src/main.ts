@@ -15,6 +15,7 @@ import { getUUID } from './utils/Utils';
 import { ObsidianAPIAdapter } from './internalApi/ObsidianAPIAdapter';
 import { RenderChildType } from './config/FieldConfigs';
 import { ButtonMDRC } from './renderChildren/ButtonMDRC';
+import { InlineButtonMDRC } from './renderChildren/InlineButtonMDRC';
 
 export default class MetaBindPlugin extends Plugin implements IPlugin {
 	// @ts-ignore defined in `onload`
@@ -73,6 +74,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				const content = codeBlock.innerText;
 				const isInputField = content.startsWith('INPUT[') && content.endsWith(']');
 				const isViewField = content.startsWith('VIEW[') && content.endsWith(']');
+				const isButton = content.startsWith('BUTTON[') && content.endsWith(']');
 
 				if (isInputField) {
 					this.api.createInputFieldFromString(
@@ -86,6 +88,10 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				}
 				if (isViewField) {
 					this.api.createViewFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock, ctx);
+				}
+				if (isButton) {
+					const button = new InlineButtonMDRC(codeBlock, content, this, ctx.sourcePath, getUUID());
+					ctx.addChild(button);
 				}
 			}
 		}, 100);

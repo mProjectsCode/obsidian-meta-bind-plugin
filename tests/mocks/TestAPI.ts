@@ -11,6 +11,7 @@ import { getUUID } from '../../src/utils/Utils';
 import { TestIPFBase } from './TestIPFBase';
 import { ButtonActionRunner } from '../../src/button/ButtonActionRunner';
 import { TestPlugin } from './TestPlugin';
+import { ButtonManager } from '../../src/button/ButtonManager';
 
 export class TestAPI implements IAPI {
 	public readonly plugin: TestPlugin;
@@ -24,6 +25,7 @@ export class TestAPI implements IAPI {
 	public readonly inputField: InputFieldAPI;
 
 	public readonly buttonActionRunner: ButtonActionRunner;
+	public readonly buttonManager: ButtonManager;
 
 	constructor(plugin: TestPlugin) {
 		this.plugin = plugin;
@@ -37,6 +39,7 @@ export class TestAPI implements IAPI {
 		this.inputField = new InputFieldAPI(this);
 
 		this.buttonActionRunner = new ButtonActionRunner(this.plugin);
+		this.buttonManager = new ButtonManager();
 	}
 
 	public createInputFieldFromString(

@@ -66,6 +66,8 @@ export const ButtonActionValidator = schemaForType<ButtonAction>()(
 export interface ButtonConfig {
 	label: string;
 	style: ButtonStyleType;
+	id?: string;
+	hidden?: boolean;
 	action?: ButtonAction;
 	actions?: ButtonAction[];
 }
@@ -97,6 +99,8 @@ export const ButtonConfigValidator = schemaForType<ButtonConfig>()(
 		.object({
 			label: z.string(),
 			style: ButtonStyleValidator,
+			id: z.string().optional(),
+			hidden: z.boolean().optional(),
 			action: ButtonActionValidator.optional(),
 			actions: ButtonActionValidator.array().optional(),
 		})

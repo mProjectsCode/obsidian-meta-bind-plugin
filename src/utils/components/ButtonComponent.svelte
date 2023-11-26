@@ -7,6 +7,7 @@
 	export let disabled: boolean = false;
 	export let tooltip: string = '';
 	export let label: string = '';
+	export let error: boolean = false;
 	export let onClick: () => Promise<void> = async () => {};
 
 	async function click() {
@@ -24,10 +25,12 @@
 </script>
 
 <button
+	class="mb-button-inner"
 	class:mod-cta={variant === 'primary'}
 	class:mod-warning={variant === 'destructive'}
 	class:mod-plain={variant === 'plain'}
 	class:disabled={disabled}
+	class:mb-error={error}
 	aria-label={tooltip}
 	on:click={() => click()}
 	disabled={disabled}

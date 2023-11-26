@@ -12,6 +12,7 @@ import { type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldD
 import { getUUID } from '../utils/Utils';
 import { InputFieldFactory } from '../fields/inputFields/InputFieldFactory';
 import { ButtonActionRunner } from '../button/ButtonActionRunner';
+import { ButtonManager } from '../button/ButtonManager';
 
 export class PublishAPI implements IAPI {
 	public readonly plugin: IPlugin;
@@ -25,6 +26,7 @@ export class PublishAPI implements IAPI {
 	public readonly inputField: InputFieldAPI;
 
 	public readonly buttonActionRunner: ButtonActionRunner;
+	public readonly buttonManager: ButtonManager;
 
 	constructor(plugin: IPlugin) {
 		this.plugin = plugin;
@@ -38,6 +40,7 @@ export class PublishAPI implements IAPI {
 		this.inputField = new InputFieldAPI(this);
 
 		this.buttonActionRunner = new ButtonActionRunner(this.plugin);
+		this.buttonManager = new ButtonManager();
 	}
 
 	public createInputFieldFromString(

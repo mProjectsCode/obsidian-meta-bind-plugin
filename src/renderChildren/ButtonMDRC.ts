@@ -10,6 +10,7 @@ import ButtonComponent from '../utils/components/ButtonComponent.svelte';
 export class ButtonMDRC extends AbstractMDRC {
 	content: string;
 	buttonComponent?: ButtonComponent;
+	buttonConfig?: ButtonConfig;
 
 	constructor(containerEl: HTMLElement, content: string, plugin: MetaBindPlugin, filePath: string, uuid: string) {
 		super(containerEl, RenderChildType.BLOCK, plugin, filePath, uuid);
@@ -35,12 +36,13 @@ export class ButtonMDRC extends AbstractMDRC {
 				await this.plugin.api.buttonActionRunner.runAction(action, this.filePath);
 			}
 		} else {
-			console.error('ButtonMDRC | no action defined');
+			console.error('meta-bind | ButtonMDRC >> no action defined');
 		}
 	}
 
 	public onload(): void {
-		console.log('ButtonMDRC | onload');
+		console.log('meta-bind | ButtonMDRC >> onload');
+		this.containerEl.addClass('mb-button', 'mb-button-block');
 
 		const yamlContent = parseYaml(this.content) as unknown;
 		const validationResult = ButtonConfigValidator.safeParse(yamlContent);
@@ -57,22 +59,32 @@ export class ButtonMDRC extends AbstractMDRC {
 			return;
 		}
 
-		const buttonConfig: ButtonConfig = validationResult.data;
+		this.buttonConfig = validationResult.data;
+
+		if (this.buttonConfig.id) {
+			this.plugin.api.buttonManager.addButton(this.filePath, this.buttonConfig);
+		}
+		if (this.buttonConfig.hidden) {
+			return;
+		}
 
 		this.buttonComponent = new ButtonComponent({
 			target: this.containerEl,
 			props: {
-				variant: buttonConfig.style,
-				label: buttonConfig.label,
+				variant: this.buttonConfig.style,
+				label: this.buttonConfig.label,
 				onClick: async (): Promise<void> => {
-					await this.runAction(buttonConfig);
+					await this.runAction(this.buttonConfig!);
 				},
 			},
 		});
 	}
 
 	public onunload(): void {
-		console.log('ButtonMDRC | onunload');
+		console.log('meta-bind | ButtonMDRC >> onunload');
+		if (this.buttonConfig?.id) {
+			this.plugin.api.buttonManager.removeButton(this.filePath, this.buttonConfig.id);
+		}
 		this.buttonComponent?.$destroy();
 	}
 }

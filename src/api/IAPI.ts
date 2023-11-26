@@ -5,6 +5,7 @@ import { type IPlugin } from '../IPlugin';
 import { type InputFieldAPI } from './InputFieldAPI';
 import { type InputFieldFactory } from '../fields/inputFields/InputFieldFactory';
 import { type ButtonActionRunner } from '../button/ButtonActionRunner';
+import { type ButtonManager } from '../button/ButtonManager';
 
 export interface IAPI {
 	readonly plugin: IPlugin;
@@ -29,4 +30,5 @@ export interface IAPI {
 	readonly inputFieldFactory: InputFieldFactory;
 
 	readonly buttonActionRunner: ButtonActionRunner;
+	readonly buttonManager: ButtonManager;
 }
