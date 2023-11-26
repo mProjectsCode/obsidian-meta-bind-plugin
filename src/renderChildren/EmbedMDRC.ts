@@ -59,14 +59,7 @@ export class EmbedMDRC extends AbstractMDRC {
 		}
 
 		const fileContent = await this.plugin.app.vault.cachedRead(file);
-		const fileContentLines = fileContent.split('\n');
-		for (let i = 0; i < fileContentLines.length; i++) {
-			const line = fileContentLines[i];
-			if (line.startsWith('```meta-bind-embed')) {
-				fileContentLines[i] = `\`\`\`meta-bind-embed-internal-${this.depth + 1}`;
-			}
-		}
-		return fileContentLines.join('\n');
+		return fileContent.replace(/(```+|~~~+)meta-bind-embed.*/g, `$1meta-bind-embed-internal-${this.depth + 1}`);
 	}
 
 	public async onload(): Promise<void> {

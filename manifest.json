@@ -6,5 +6,6 @@
 	"description": "This plugin can create input fields inside your notes and bind them to metadata fields.",
 	"author": "Moritz Jung",
 	"authorUrl": "https://mprojectscode.github.io/",
+	"helpUrl": "https://www.moritzjung.dev/obsidian-meta-bind-plugin-docs/",
 	"isDesktopOnly": false
 }

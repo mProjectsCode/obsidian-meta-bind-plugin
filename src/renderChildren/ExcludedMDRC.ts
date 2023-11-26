@@ -11,4 +11,8 @@ export class ExcludedMDRC extends AbstractMDRC {
 			cls: 'mb-error',
 		});
 	}
+
+	public onunload(): void {
+		console.log('meta-bind | ExcludedMDRC >> unload', this);
+	}
 }

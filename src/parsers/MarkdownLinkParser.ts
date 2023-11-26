@@ -80,4 +80,12 @@ export class MDLinkParser {
 			internal: false,
 		};
 	}
+
+	static parseLinkOrUrl(str: string): MarkdownLink {
+		if (isUrl(str)) {
+			return MDLinkParser.urlToLink(new URL(str));
+		} else {
+			return MDLinkParser.parseLink(str);
+		}
+	}
 }

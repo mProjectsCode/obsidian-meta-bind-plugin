@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'bun:test';
 import { BindTargetDeclaration } from '../../src/parsers/inputFieldParser/InputFieldDeclaration';
-import { TestPlugin } from '../mocks/TestAPI';
 import { BindTargetScope } from '../../src/metadata/BindTargetScope';
 import { parsePropPath } from '../../src/utils/prop/PropParser';
 import { PropPath } from '../../src/utils/prop/PropPath';
+import { TestPlugin } from '../mocks/TestPlugin';
 
 const plugin = new TestPlugin();
 const parser = plugin.api.bindTargetParser;

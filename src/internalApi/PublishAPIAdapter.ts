@@ -46,4 +46,8 @@ export class PublishAPIAdapter implements IInternalAPI {
 	public jsEngineRunCode(_code: string, _callingFilePath: string, _container?: HTMLElement): Promise<() => void> {
 		return Promise.reject(new Error('not implemented'));
 	}
+
+	public openFile(_filePath: string, _callingFilePath: string): void {
+		throw new Error('not implemented');
+	}
 }

@@ -9,7 +9,7 @@ function schemaForType<T>(): <S extends z.ZodType<T, any, any>>(arg: S) => S {
 }
 
 export enum ButtonStyleType {
-	DEFUALT = 'default',
+	DEFAULT = 'default',
 	PRIMARY = 'primary',
 	DESTRUCTIVE = 'destructive',
 	PLAIN = 'plain',
@@ -18,6 +18,7 @@ export enum ButtonStyleType {
 export enum ButtonActionType {
 	COMMAND = 'command',
 	JS = 'js',
+	OPEN = 'open',
 }
 
 export interface CommandButtonAction {
@@ -44,10 +45,22 @@ export const JSButtonActionValidator = schemaForType<JSButtonAction>()(
 	}),
 );
 
-export type ButtonAction = CommandButtonAction | JSButtonAction;
+export interface OpenButtonAction {
+	type: ButtonActionType.OPEN;
+	link: string;
+}
+
+export const OpenButtonActionValidator = schemaForType<OpenButtonAction>()(
+	z.object({
+		type: z.literal(ButtonActionType.OPEN),
+		link: z.string(),
+	}),
+);
+
+export type ButtonAction = CommandButtonAction | JSButtonAction | OpenButtonAction;
 
 export const ButtonActionValidator = schemaForType<ButtonAction>()(
-	z.union([CommandButtonActionValidator, JSButtonActionValidator]),
+	z.union([CommandButtonActionValidator, JSButtonActionValidator, OpenButtonActionValidator]),
 );
 
 export interface ButtonConfig {

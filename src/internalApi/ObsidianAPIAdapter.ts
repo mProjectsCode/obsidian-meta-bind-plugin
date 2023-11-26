@@ -117,4 +117,8 @@ export class ObsidianAPIAdapter implements IInternalAPI {
 
 		return () => component.unload();
 	}
+
+	public openFile(filePath: string, callingFilePath: string): void {
+		void this.app.workspace.openLinkText(filePath, callingFilePath, true);
+	}
 }

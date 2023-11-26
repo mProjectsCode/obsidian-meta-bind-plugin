@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, spyOn, test } from 'bun:test';
-import { TestPlugin } from '../mocks/TestAPI';
 import { InputFieldType, RenderChildType } from '../../src/config/FieldConfigs';
 import { TestIPFBase } from '../mocks/TestIPFBase';
 import { Metadata } from '../../src/metadata/MetadataManagerCacheItem';
@@ -11,6 +10,7 @@ import { stringifyLiteral } from '../../src/utils/Literal';
 import { Stream } from 'itertools-ts';
 import { multi } from 'itertools-ts/es';
 import { METADATA_CACHE_UPDATE_CYCLE_THRESHOLD } from '../../src/metadata/MetadataManager';
+import { TestPlugin } from '../mocks/TestPlugin';
 
 const TEST_FILE_PATH = 'testFile';
 const TEST_PROP = 'testProp';

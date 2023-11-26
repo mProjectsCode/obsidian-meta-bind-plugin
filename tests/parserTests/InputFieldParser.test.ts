@@ -1,5 +1,5 @@
-import { TestPlugin } from '../mocks/TestAPI';
 import { describe, expect, test } from 'bun:test';
+import { TestPlugin } from '../mocks/TestPlugin';
 
 const plugin = new TestPlugin();
 const parser = plugin.api.inputFieldParser;

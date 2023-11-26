@@ -3,7 +3,7 @@
 <script lang="ts">
 	import { ButtonStyleType } from '../../config/ButtonConfig';
 
-	export let variant: ButtonStyleType = ButtonStyleType.DEFUALT;
+	export let variant: ButtonStyleType = ButtonStyleType.DEFAULT;
 	export let disabled: boolean = false;
 	export let tooltip: string = '';
 </script>

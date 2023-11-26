@@ -6,8 +6,8 @@ import {
 	FullBindTarget,
 	InputFieldDeclaration,
 } from '../../src/parsers/inputFieldParser/InputFieldDeclaration';
-import { TestPlugin } from './TestAPI';
 import { InputField } from '../../src/fields/inputFields/InputFieldFactory';
+import { TestPlugin } from './TestPlugin';
 
 export class TestIPFBase implements IInputFieldBase {
 	public readonly plugin: TestPlugin;

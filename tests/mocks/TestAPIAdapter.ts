@@ -3,7 +3,8 @@ import { DatePickerIPF } from '../../src/fields/inputFields/fields/DatePicker/Da
 import { ImageSuggesterIPF } from '../../src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
 import { SuggesterLikeIFP, SuggesterOption } from '../../src/fields/inputFields/fields/Suggester/SuggesterHelper';
 import { MBLiteral } from '../../src/utils/Literal';
-import { TestPlugin } from './TestAPI';
+
+import { TestPlugin } from './TestPlugin';
 
 export class TestAPIAdapter implements IInternalAPI {
 	plugin: TestPlugin;
@@ -44,5 +45,9 @@ export class TestAPIAdapter implements IInternalAPI {
 
 	public jsEngineRunCode(_code: string, _callingFilePath: string, _container?: HTMLElement): Promise<() => void> {
 		return Promise.reject(new Error('not implemented'));
+	}
+
+	public openFile(_filePath: string, _callingFilePath: string): void {
+		throw new Error('not implemented');
 	}
 }
