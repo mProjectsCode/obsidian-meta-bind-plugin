@@ -1,13 +1,10 @@
 import { IInputFieldBase } from '../../src/fields/inputFields/IInputFieldBase';
 import { InputFieldArgumentType, RenderChildType } from '../../src/config/FieldConfigs';
 import { InputFieldArgumentMapType } from '../../src/fields/fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
-import {
-	BindTargetDeclaration,
-	FullBindTarget,
-	InputFieldDeclaration,
-} from '../../src/parsers/inputFieldParser/InputFieldDeclaration';
+import { InputFieldDeclaration } from '../../src/parsers/inputFieldParser/InputFieldDeclaration';
 import { InputField } from '../../src/fields/inputFields/InputFieldFactory';
 import { TestPlugin } from './TestPlugin';
+import { BindTargetDeclaration } from '../../src/parsers/BindTargetDeclaration';
 
 export class TestIPFBase implements IInputFieldBase {
 	public readonly plugin: TestPlugin;
@@ -51,28 +48,15 @@ export class TestIPFBase implements IInputFieldBase {
 	}
 
 	public getBindTarget(): BindTargetDeclaration | undefined {
-		return this.isBound() ? this.declaration.bindTarget : undefined;
+		return this.declaration.bindTarget;
 	}
 
 	public getFilePath(): string {
 		return '';
 	}
 
-	public getFullBindTarget(): FullBindTarget | undefined {
-		const bindTarget = this.getBindTarget();
-		if (!bindTarget) {
-			return undefined;
-		}
-
-		return this.plugin.api.bindTargetParser.toFullDeclaration(bindTarget, this.filePath);
-	}
-
 	public getUuid(): string {
 		return this.uuid;
-	}
-
-	public isBound(): boolean {
-		return this.declaration.isBound;
 	}
 
 	public load(): void {

@@ -2,7 +2,6 @@ import { Signal } from '../utils/Signal';
 import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
 import type MetaBindPlugin from '../main';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
-import { type BindTargetDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
 import { type AbstractViewField } from '../fields/viewFields/AbstractViewField';
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
@@ -12,6 +11,7 @@ import {
 	type ComputedSubscriptionDependency,
 } from '../metadata/ComputedMetadataSubscription';
 import { type RenderChildType, type ViewFieldArgumentType } from '../config/FieldConfigs';
+import { type BindTargetDeclaration } from '../parsers/BindTargetDeclaration';
 
 export interface ViewFieldVariable {
 	bindTargetDeclaration: BindTargetDeclaration;
@@ -61,16 +61,10 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 			this.metadataSubscription = this.plugin.metadataManager.subscribeComputed(
 				this.uuid,
 				this.inputSignal,
-				this.plugin.api.bindTargetParser.toFullDeclaration(
-					this.viewFieldDeclaration.writeToBindTarget,
-					this.filePath,
-				),
+				this.viewFieldDeclaration.writeToBindTarget,
 				this.variables.map((x): ComputedSubscriptionDependency => {
 					return {
-						bindTarget: this.plugin.api.bindTargetParser.toFullDeclaration(
-							x.bindTargetDeclaration,
-							this.filePath,
-						),
+						bindTarget: x.bindTargetDeclaration,
 						callbackSignal: x.inputSignal,
 					};
 				}),

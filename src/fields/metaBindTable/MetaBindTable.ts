@@ -1,5 +1,4 @@
 import {
-	type BindTargetDeclaration,
 	type InputFieldDeclaration,
 	type UnvalidatedInputFieldDeclaration,
 } from '../../parsers/inputFieldParser/InputFieldDeclaration';
@@ -21,6 +20,7 @@ import { type MetadataSubscription } from '../../metadata/MetadataSubscription';
 import { type MBExtendedLiteral } from '../../utils/Literal';
 import { parsePropPath } from '../../utils/prop/PropParser';
 import { RenderChildType } from '../../config/FieldConfigs';
+import { type BindTargetDeclaration } from '../../parsers/BindTargetDeclaration';
 
 export type MetaBindTableCell = InputFieldDeclaration | ViewFieldDeclaration;
 
@@ -85,7 +85,7 @@ export class MetaBindTable extends AbstractMDRC {
 		this.metadataSubscription = this.plugin.metadataManager.subscribe(
 			this.uuid,
 			this.inputSignal,
-			this.plugin.api.bindTargetParser.toFullDeclaration(this.bindTarget, this.filePath),
+			this.bindTarget,
 			() => this.unload(),
 		);
 	}
@@ -109,17 +109,17 @@ export class MetaBindTable extends AbstractMDRC {
 		for (let i = 0; i < values.length; i++) {
 			if (typeof values[i] === 'object') {
 				const scope = new BindTargetScope({
-					metadataPath: this.bindTarget.metadataPath.concat(parsePropPath([i.toString()])),
-					filePath: this.bindTarget.filePath,
+					storageType: this.bindTarget.storageType,
+					storageProp: this.bindTarget.storageProp.concat(parsePropPath([i.toString()])),
+					storagePath: this.bindTarget.storagePath,
 					listenToChildren: false,
-					boundToLocalScope: false,
 				});
 
 				const cells = this.columns.map(x => {
 					if ('inputFieldType' in x) {
-						return this.plugin.api.inputFieldParser.validateDeclaration(x, scope);
+						return this.plugin.api.inputFieldParser.validateDeclaration(x, this.filePath, scope);
 					} else {
-						return this.plugin.api.viewFieldParser.validateDeclaration(x, scope);
+						return this.plugin.api.viewFieldParser.validateDeclaration(x, this.filePath, scope);
 					}
 				});
 

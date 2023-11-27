@@ -4,9 +4,9 @@ import { type ViewFieldDeclaration } from '../../../parsers/viewFieldParser/View
 import { Signal } from '../../../utils/Signal';
 import { getUUID } from '../../../utils/Utils';
 import { ErrorLevel, MetaBindExpressionError, MetaBindValidationError } from '../../../utils/errors/MetaBindErrors';
-import { type BindTargetDeclaration } from '../../../parsers/inputFieldParser/InputFieldDeclaration';
 import LinkListComponent from '../../../utils/components/LinkListComponent.svelte';
 import { MDLinkParser } from '../../../parsers/MarkdownLinkParser';
+import { type BindTargetDeclaration } from '../../../parsers/BindTargetDeclaration';
 
 export class LinkVF extends AbstractViewField {
 	component?: LinkListComponent;

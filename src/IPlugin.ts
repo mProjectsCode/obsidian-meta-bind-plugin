@@ -9,6 +9,4 @@ export interface IPlugin {
 	readonly metadataManager: MetadataManager;
 
 	settings: MetaBindPluginSettings;
-
-	getFilePathsByName: (name: string) => string[];
 }

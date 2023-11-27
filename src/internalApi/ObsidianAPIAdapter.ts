@@ -121,4 +121,8 @@ export class ObsidianAPIAdapter implements IInternalAPI {
 	public openFile(filePath: string, callingFilePath: string): void {
 		void this.app.workspace.openLinkText(filePath, callingFilePath, true);
 	}
+
+	public getFilePathByName(name: string): string | undefined {
+		return this.app.metadataCache.getFirstLinkpathDest(name, '')?.path;
+	}
 }

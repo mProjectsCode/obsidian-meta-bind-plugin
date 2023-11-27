@@ -2,14 +2,15 @@ import { ErrorLevel } from '../utils/errors/MetaBindErrors';
 import { type IPlugin } from '../IPlugin';
 import { BIND_TARGET } from './nomParsers/BindTargetNomParsers';
 import { ParsingValidationError, runParser } from './ParsingError';
-import {
-	type BindTargetDeclaration,
-	type FullBindTarget,
-	type UnvalidatedBindTargetDeclaration,
-} from './inputFieldParser/InputFieldDeclaration';
 import { type BindTargetScope } from '../metadata/BindTargetScope';
 import { PropAccess } from '../utils/prop/PropAccess';
 import { PropPath } from '../utils/prop/PropPath';
+import {
+	type BindTargetDeclaration,
+	BindTargetStorageType,
+	type UnvalidatedBindTargetDeclaration,
+} from './BindTargetDeclaration';
+import { type ParsingResultNode } from './nomParsers/GeneralNomParsers';
 
 export class BindTargetParser {
 	plugin: IPlugin;
@@ -18,8 +19,12 @@ export class BindTargetParser {
 		this.plugin = plugin;
 	}
 
-	parseAndValidateBindTarget(bindTargetString: string, scope?: BindTargetScope | undefined): BindTargetDeclaration {
-		return this.validateBindTarget(bindTargetString, this.parseBindTarget(bindTargetString), scope);
+	parseAndValidateBindTarget(
+		bindTargetString: string,
+		filePath: string,
+		scope?: BindTargetScope | undefined,
+	): BindTargetDeclaration {
+		return this.validateBindTarget(bindTargetString, this.parseBindTarget(bindTargetString), filePath, scope);
 	}
 
 	parseBindTarget(bindTargetString: string): UnvalidatedBindTargetDeclaration {
@@ -29,79 +34,138 @@ export class BindTargetParser {
 	validateBindTarget(
 		fullDeclaration: string,
 		unvalidatedBindTargetDeclaration: UnvalidatedBindTargetDeclaration,
+		filePath: string,
 		scope?: BindTargetScope | undefined,
 	): BindTargetDeclaration {
 		const bindTargetDeclaration: BindTargetDeclaration = {} as BindTargetDeclaration;
 
-		const filePath = unvalidatedBindTargetDeclaration.file?.value;
-		if (filePath !== undefined) {
-			const filePaths: string[] = this.plugin.getFilePathsByName(filePath);
-
-			if (filePaths.length === 0) {
-				throw new ParsingValidationError(
-					ErrorLevel.ERROR,
-					'Bind Target Validator',
-					`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file?.value}' not found.`,
-					fullDeclaration,
-					unvalidatedBindTargetDeclaration.file?.position,
-				);
-			} else if (filePaths.length === 1) {
-				bindTargetDeclaration.filePath = filePaths[0];
-			} else {
-				throw new ParsingValidationError(
-					ErrorLevel.ERROR,
-					'Bind Target Validator',
-					`Failed to parse bind target. Bind target file path '${unvalidatedBindTargetDeclaration.file?.value}' resolves to multiple files, please also specify the file path.`,
-					fullDeclaration,
-					unvalidatedBindTargetDeclaration.file?.position,
-				);
-			}
+		if (unvalidatedBindTargetDeclaration.storageType === undefined) {
+			bindTargetDeclaration.storageType = BindTargetStorageType.METADATA;
+		} else {
+			bindTargetDeclaration.storageType = this.validateStorageType(
+				unvalidatedBindTargetDeclaration.storageType,
+				fullDeclaration,
+			);
 		}
 
-		bindTargetDeclaration.metadataPath = new PropPath(
-			unvalidatedBindTargetDeclaration.path.map(x => new PropAccess(x.type, x.prop.value)),
-		);
-		bindTargetDeclaration.boundToLocalScope = unvalidatedBindTargetDeclaration.boundToLocalScope;
-		bindTargetDeclaration.listenToChildren = unvalidatedBindTargetDeclaration.listenToChildren;
-
-		return this.resolveScope(bindTargetDeclaration, scope);
-	}
-
-	public resolveScope(bindTarget: BindTargetDeclaration, scope?: BindTargetScope | undefined): BindTargetDeclaration {
-		if (bindTarget.boundToLocalScope) {
-			if (scope === undefined) {
-				throw new ParsingValidationError(
-					ErrorLevel.ERROR,
-					'Bind Target Scope Validator',
-					'Failed to resolve bind target scope, no scope provided',
+		if (bindTargetDeclaration.storageType === BindTargetStorageType.METADATA) {
+			if (unvalidatedBindTargetDeclaration.storagePath === undefined) {
+				bindTargetDeclaration.storagePath = this.validateStoragePathAsFilePath(
+					{ value: filePath },
+					fullDeclaration,
 				);
 			} else {
-				bindTarget.filePath = scope.scope.filePath;
-				bindTarget.metadataPath = scope.scope.metadataPath.concat(bindTarget.metadataPath);
-				return bindTarget;
+				bindTargetDeclaration.storagePath = this.validateStoragePathAsFilePath(
+					unvalidatedBindTargetDeclaration.storagePath,
+					fullDeclaration,
+				);
 			}
+		} else if (bindTargetDeclaration.storageType === BindTargetStorageType.MEMORY) {
+			if (unvalidatedBindTargetDeclaration.storagePath === undefined) {
+				bindTargetDeclaration.storagePath = this.validateStoragePathAsFilePath(
+					{ value: filePath },
+					fullDeclaration,
+				);
+			} else {
+				bindTargetDeclaration.storagePath = this.validateStoragePathAsFilePath(
+					unvalidatedBindTargetDeclaration.storagePath,
+					fullDeclaration,
+				);
+			}
+		} else if (bindTargetDeclaration.storageType === BindTargetStorageType.GLOBAL_MEMORY) {
+			if (unvalidatedBindTargetDeclaration.storagePath !== undefined) {
+				throw new ParsingValidationError(
+					ErrorLevel.ERROR,
+					'Bind Target Validator',
+					`Failed to parse bind target. Bind target storage type GLOBAL_MEMORY does not support a storage path.`,
+					fullDeclaration,
+					unvalidatedBindTargetDeclaration.storagePath.position,
+				);
+			}
+			bindTargetDeclaration.storagePath = '';
+		} else if (bindTargetDeclaration.storageType === BindTargetStorageType.LOCAL) {
+			if (unvalidatedBindTargetDeclaration.storagePath !== undefined) {
+				throw new ParsingValidationError(
+					ErrorLevel.ERROR,
+					'Bind Target Validator',
+					`Failed to parse bind target. Bind target storage type LOCAL does not support a storage path.`,
+					fullDeclaration,
+					unvalidatedBindTargetDeclaration.storagePath.position,
+				);
+			}
+			this.resolveScope(bindTargetDeclaration, scope);
+		}
+
+		bindTargetDeclaration.storageProp = new PropPath(
+			unvalidatedBindTargetDeclaration.storageProp.map(x => new PropAccess(x.type, x.prop.value)),
+		);
+		bindTargetDeclaration.listenToChildren = unvalidatedBindTargetDeclaration.listenToChildren;
+
+		return bindTargetDeclaration;
+	}
+
+	private resolveScope(
+		bindTarget: BindTargetDeclaration,
+		scope?: BindTargetScope | undefined,
+	): BindTargetDeclaration {
+		if (scope === undefined) {
+			throw new ParsingValidationError(
+				ErrorLevel.ERROR,
+				'Bind Target Scope Validator',
+				'Failed to resolve bind target scope, no scope provided',
+			);
 		} else {
+			bindTarget.storageType = scope.scope.storageType;
+			bindTarget.storagePath = scope.scope.storagePath;
+			bindTarget.storageProp = scope.scope.storageProp.concat(bindTarget.storageProp);
 			return bindTarget;
 		}
 	}
 
-	public toFullDeclaration(bindTarget: undefined, filePath: string): undefined;
-	public toFullDeclaration(bindTarget: BindTargetDeclaration, filePath: string): FullBindTarget;
-	public toFullDeclaration(
-		bindTarget: BindTargetDeclaration | undefined,
-		filePath: string,
-	): FullBindTarget | undefined;
-	public toFullDeclaration(
-		bindTarget: BindTargetDeclaration | undefined,
-		filePath: string,
-	): FullBindTarget | undefined {
-		if (bindTarget === undefined) {
-			return undefined;
+	private validateStorageType(storageType: ParsingResultNode, fullDeclaration: string): BindTargetStorageType {
+		for (const entry of Object.entries(BindTargetStorageType)) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+			if (entry[1] === storageType?.value) {
+				return entry[1];
+			}
 		}
 
-		if (bindTarget.filePath === undefined) {
-			bindTarget.filePath = filePath;
+		throw new ParsingValidationError(
+			ErrorLevel.ERROR,
+			'Bind Target Validator',
+			`Encountered invalid identifier. Expected token to be a storage type but received '${storageType?.value}'.`,
+			fullDeclaration,
+			storageType?.position,
+		);
+	}
+
+	private validateStoragePathAsFilePath(
+		storagePathResultNode: ParsingResultNode | undefined,
+		fullDeclaration: string,
+	): string {
+		const storagePath = storagePathResultNode?.value;
+		if (storagePath === undefined) {
+			throw new ParsingValidationError(
+				ErrorLevel.ERROR,
+				'Bind Target Validator',
+				`Failed to parse bind target. Bind target storage path is undefined.`,
+				fullDeclaration,
+				storagePathResultNode?.position,
+			);
 		}
-		return bindTarget as FullBindTarget;
+
+		const filePath: string | undefined = this.plugin.internal.getFilePathByName(storagePath);
+
+		if (filePath === undefined) {
+			throw new ParsingValidationError(
+				ErrorLevel.ERROR,
+				'Bind Target Validator',
+				`Failed to parse bind target. Bind target file path '${storagePath}' not found.`,
+				fullDeclaration,
+				storagePathResultNode?.position,
+			);
+		} else {
+			return filePath;
+		}
 	}
 }

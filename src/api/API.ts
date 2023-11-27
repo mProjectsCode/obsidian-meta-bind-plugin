@@ -10,7 +10,6 @@ import { InputFieldAPI } from './InputFieldAPI';
 import { type IAPI } from './IAPI';
 import { ExcludedMDRC } from '../renderChildren/ExcludedMDRC';
 import {
-	type BindTargetDeclaration,
 	type InputFieldDeclaration,
 	type UnvalidatedInputFieldDeclaration,
 } from '../parsers/inputFieldParser/InputFieldDeclaration';
@@ -29,6 +28,7 @@ import { parsePropPath } from '../utils/prop/PropParser';
 import { RenderChildType } from '../config/FieldConfigs';
 import { ButtonActionRunner } from '../button/ButtonActionRunner';
 import { ButtonManager } from '../button/ButtonManager';
+import { type BindTargetDeclaration, BindTargetStorageType } from '../parsers/BindTargetDeclaration';
 
 export class API implements IAPI {
 	public plugin: MetaBindPlugin;
@@ -82,7 +82,7 @@ export class API implements IAPI {
 			return this.createExcludedField(containerEl, filePath, component);
 		}
 
-		const declaration = this.inputFieldParser.validateDeclaration(unvalidatedDeclaration, scope);
+		const declaration = this.inputFieldParser.validateDeclaration(unvalidatedDeclaration, filePath, scope);
 
 		const inputField = new InputFieldMDRC(containerEl, renderType, declaration, this.plugin, filePath, getUUID());
 		component.addChild(inputField);
@@ -113,7 +113,7 @@ export class API implements IAPI {
 			return this.createExcludedField(containerEl, filePath, component);
 		}
 
-		const declaration: InputFieldDeclaration = this.inputFieldParser.parseString(fullDeclaration, scope);
+		const declaration: InputFieldDeclaration = this.inputFieldParser.parseString(fullDeclaration, filePath, scope);
 
 		const inputField = new InputFieldMDRC(containerEl, renderType, declaration, this.plugin, filePath, getUUID());
 		component.addChild(inputField);
@@ -144,7 +144,7 @@ export class API implements IAPI {
 			return this.createExcludedField(containerEl, filePath, component);
 		}
 
-		const declaration: ViewFieldDeclaration = this.viewFieldParser.parseString(fullDeclaration, scope);
+		const declaration: ViewFieldDeclaration = this.viewFieldParser.parseString(fullDeclaration, filePath, scope);
 
 		const viewField = new ViewFieldMDRC(containerEl, renderType, declaration, this.plugin, filePath, getUUID());
 		component.addChild(viewField);
@@ -173,7 +173,7 @@ export class API implements IAPI {
 			return this.createExcludedField(containerEl, filePath, component);
 		}
 
-		const declaration: JsViewFieldDeclaration = this.viewFieldParser.parseJsString(fullDeclaration);
+		const declaration: JsViewFieldDeclaration = this.viewFieldParser.parseJsString(fullDeclaration, filePath);
 
 		const viewField = new JsViewFieldMDRC(containerEl, renderType, declaration, this.plugin, filePath, getUUID());
 		component.addChild(viewField);
@@ -225,10 +225,10 @@ export class API implements IAPI {
 			uuid,
 			signal,
 			{
-				filePath: filePath,
-				metadataPath: parsePropPath(metadataPath),
+				storageType: BindTargetStorageType.METADATA,
+				storagePath: filePath,
+				storageProp: parsePropPath(metadataPath),
 				listenToChildren: listenToChildren,
-				boundToLocalScope: false,
 			},
 			onDelete ?? ((): void => {}),
 		);
@@ -271,7 +271,7 @@ export class API implements IAPI {
 		return table;
 	}
 
-	public createBindTarget(fullDeclaration: string): BindTargetDeclaration {
-		return this.bindTargetParser.parseAndValidateBindTarget(fullDeclaration);
+	public createBindTarget(fullDeclaration: string, currentFilePath: string): BindTargetDeclaration {
+		return this.bindTargetParser.parseAndValidateBindTarget(fullDeclaration, currentFilePath);
 	}
 }

@@ -126,9 +126,9 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 			callback: value => this.inputFieldComponent.setValue(this.reverseMapValue(value)),
 		});
 
-		const fullBindTarget = this.base.getFullBindTarget();
+		const bindTarget = this.base.getBindTarget();
 
-		if (fullBindTarget) {
+		if (bindTarget) {
 			this.inputFieldComponent.registerListener({
 				callback: value => {
 					// console.log('input field component change', value);
@@ -139,7 +139,7 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 			this.metadataSubscription = this.base.plugin.metadataManager.subscribe(
 				this.base.getUuid(),
 				this.inputSignal,
-				fullBindTarget,
+				bindTarget,
 				() => this.base.unload(),
 			);
 		}

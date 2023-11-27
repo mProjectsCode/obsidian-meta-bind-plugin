@@ -5,6 +5,8 @@ import { SuggesterLikeIFP, SuggesterOption } from '../../src/fields/inputFields/
 import { MBLiteral } from '../../src/utils/Literal';
 
 import { TestPlugin } from './TestPlugin';
+import { plugin } from 'bun';
+import { undefined } from 'zod';
 
 export class TestAPIAdapter implements IInternalAPI {
 	plugin: TestPlugin;
@@ -49,5 +51,9 @@ export class TestAPIAdapter implements IInternalAPI {
 
 	public openFile(_filePath: string, _callingFilePath: string): void {
 		throw new Error('not implemented');
+	}
+
+	public getFilePathByName(name: string): string | undefined {
+		return name;
 	}
 }

@@ -94,7 +94,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 					ctx.addChild(button);
 				}
 			}
-		}, 100);
+		}, 1);
 
 		this.registerMarkdownCodeBlockProcessor('meta-bind', (source, el, ctx) => {
 			const codeBlock = el;
@@ -188,12 +188,6 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		console.log(`meta-bind | Main >> unload`);
 		this.mdrcManager.unload();
 		this.metadataManager.unload();
-	}
-
-	getFilePathsByName(name: string): string[] {
-		const bestLinkPath = this.app.metadataCache.getFirstLinkpathDest(name, '');
-
-		return bestLinkPath === null ? [] : [bestLinkPath.path];
 	}
 
 	isFilePathExcluded(path: string): boolean {

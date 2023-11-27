@@ -2,7 +2,6 @@ import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { type IPlugin } from '../../IPlugin';
 import { type UnvalidatedViewFieldDeclaration, type ViewFieldDeclaration } from './ViewFieldDeclaration';
 import { type BindTargetScope } from '../../metadata/BindTargetScope';
-import { type BindTargetDeclaration } from '../inputFieldParser/InputFieldDeclaration';
 import { ParsingValidationError } from '../ParsingError';
 import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
 import { type ParsingResultNode } from '../nomParsers/GeneralNomParsers';
@@ -10,15 +9,18 @@ import { ViewFieldArgumentContainer } from '../../fields/fieldArguments/viewFiel
 import { ViewFieldArgumentFactory } from '../../fields/fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
 import { type AbstractViewFieldArgument } from '../../fields/fieldArguments/viewFieldArguments/AbstractViewFieldArgument';
 import { ViewFieldArgumentType, ViewFieldType } from '../../config/FieldConfigs';
+import { type BindTargetDeclaration } from '../BindTargetDeclaration';
 
 export class ViewFieldDeclarationValidator {
 	unvalidatedDeclaration: UnvalidatedViewFieldDeclaration;
 	errorCollection: ErrorCollection;
+	filePath: string;
 	plugin: IPlugin;
 
-	constructor(unvalidatedDeclaration: UnvalidatedViewFieldDeclaration, plugin: IPlugin) {
+	constructor(unvalidatedDeclaration: UnvalidatedViewFieldDeclaration, filePath: string, plugin: IPlugin) {
 		this.unvalidatedDeclaration = unvalidatedDeclaration;
 		this.plugin = plugin;
+		this.filePath = filePath;
 
 		this.errorCollection = new ErrorCollection('view field declaration');
 	}
@@ -77,6 +79,7 @@ export class ViewFieldDeclarationValidator {
 			return this.plugin.api.bindTargetParser.validateBindTarget(
 				this.unvalidatedDeclaration.fullDeclaration,
 				this.unvalidatedDeclaration.writeToBindTarget,
+				this.filePath,
 				scope,
 			);
 		} else {
@@ -162,6 +165,7 @@ export class ViewFieldDeclarationValidator {
 						return this.plugin.api.bindTargetParser.validateBindTarget(
 							this.unvalidatedDeclaration.fullDeclaration,
 							x,
+							this.filePath,
 							scope,
 						);
 					}

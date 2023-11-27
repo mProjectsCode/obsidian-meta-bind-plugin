@@ -1,12 +1,9 @@
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
-import {
-	type UnvalidatedBindTargetDeclaration,
-	type UnvalidatedPropAccess,
-} from '../inputFieldParser/InputFieldDeclaration';
 import { createResultNode, doubleQuotedString, ident } from './GeneralNomParsers';
 import { PROP_ACCESS_TYPE } from '../../utils/prop/PropAccess';
+import { type UnvalidatedBindTargetDeclaration, type UnvalidatedPropAccess } from '../BindTargetDeclaration';
 
 export const filePath: Parser<string> = P.manyNotOf('{}[]#^|:?').box('file path');
 
@@ -35,28 +32,21 @@ const bracketMetadataPathPart: Parser<UnvalidatedPropAccess> = P.or(
 );
 
 const firstMetadataPathPart: Parser<UnvalidatedBindTargetDeclaration> = P.or(
+	P.sequenceMap(firstPart => {
+		return {
+			storagePath: undefined,
+			listenToChildren: false,
+			storageProp: firstPart,
+		} satisfies UnvalidatedBindTargetDeclaration;
+	}, bracketMetadataPathPart.atLeast(1)),
 	P.sequenceMap(
-		(prefix, firstPart) => {
+		(firstPart, bracketPath) => {
 			return {
-				file: undefined,
-				boundToLocalScope: prefix === '^',
+				storagePath: undefined,
 				listenToChildren: false,
-				path: firstPart,
+				storageProp: [firstPart, ...bracketPath],
 			} satisfies UnvalidatedBindTargetDeclaration;
 		},
-		P.string('^').optional(),
-		bracketMetadataPathPart.atLeast(1),
-	),
-	P.sequenceMap(
-		(prefix, firstPart, bracketPath) => {
-			return {
-				file: undefined,
-				boundToLocalScope: prefix === '^',
-				listenToChildren: false,
-				path: [firstPart, ...bracketPath],
-			} satisfies UnvalidatedBindTargetDeclaration;
-		},
-		P.string('^').skip(P.string('.')).optional(),
 		metadataPathPartIdent,
 		bracketMetadataPathPart.many(),
 	),
@@ -72,7 +62,7 @@ const metadataPathPart: Parser<UnvalidatedPropAccess[]> = P.sequenceMap(
 
 const metadataPath: Parser<UnvalidatedBindTargetDeclaration> = P.sequenceMap(
 	(declaration, others) => {
-		declaration.path = declaration.path.concat(others.flat());
+		declaration.storageProp = declaration.storageProp.concat(others.flat());
 		return declaration;
 	},
 	firstMetadataPathPart,
@@ -80,10 +70,11 @@ const metadataPath: Parser<UnvalidatedBindTargetDeclaration> = P.sequenceMap(
 );
 
 export const BIND_TARGET: Parser<UnvalidatedBindTargetDeclaration> = P.sequenceMap(
-	(a, b) => {
-		b.file = a?.[0];
-		return b;
+	(a, b, c) => {
+		c.storagePath = b;
+		return c;
 	},
-	P.sequence(filePath.node(createResultNode), P.string('#')).optional(),
+	P.manyNotOf('^').node(createResultNode).skip(P.string('^')).optional(),
+	filePath.node(createResultNode).skip(P.string('#')).optional(),
 	metadataPath,
 );

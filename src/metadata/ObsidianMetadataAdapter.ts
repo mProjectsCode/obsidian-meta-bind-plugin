@@ -34,7 +34,7 @@ export class ObsidianMetadataAdapter implements IMetadataAdapter {
 			});
 		}
 
-		const file = this.plugin.app.vault.getAbstractFileByPath(subscription.bindTarget.filePath);
+		const file = this.plugin.app.vault.getAbstractFileByPath(subscription.bindTarget.storagePath);
 		if (!(file instanceof TFile)) {
 			throw new MetaBindBindTargetError({
 				errorLevel: ErrorLevel.CRITICAL,
@@ -73,19 +73,19 @@ export class ObsidianMetadataAdapter implements IMetadataAdapter {
 
 		this.plugin.registerEvent(
 			this.plugin.app.vault.on('delete', file => {
-				this.manager?.deleteCacheInstant(file.path);
+				this.manager?.deleteCacheInstantly(file.path);
 			}),
 		);
 
 		this.plugin.registerEvent(
 			this.plugin.app.vault.on('rename', (_, oldPath) => {
 				console.log('rename');
-				this.manager?.deleteCacheInstant(oldPath);
+				this.manager?.deleteCacheInstantly(oldPath);
 			}),
 		);
 
 		if (this.manager !== undefined) {
-			this.interval = window.setInterval(() => this.manager?.update(), this.plugin.settings.syncInterval);
+			this.interval = window.setInterval(() => this.manager?.cycle(), this.plugin.settings.syncInterval);
 		}
 	}
 

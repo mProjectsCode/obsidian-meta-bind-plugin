@@ -26,7 +26,11 @@ export class InputFieldDeclarationParser implements ITemplateSupplier<Unvalidate
 		this.templates = [];
 	}
 
-	public parseString(fullDeclaration: string, scope: BindTargetScope | undefined): InputFieldDeclaration {
+	public parseString(
+		fullDeclaration: string,
+		filePath: string,
+		scope: BindTargetScope | undefined,
+	): InputFieldDeclaration {
 		const errorCollection = new ErrorCollection('InputFieldParser');
 
 		try {
@@ -40,7 +44,7 @@ export class InputFieldDeclarationParser implements ITemplateSupplier<Unvalidate
 
 			parserResult = this.applyTemplate(parserResult);
 
-			const declarationValidator = new InputFieldDeclarationValidator(this.plugin, parserResult);
+			const declarationValidator = new InputFieldDeclarationValidator(this.plugin, parserResult, filePath);
 
 			return declarationValidator.validate(scope);
 		} catch (e) {
@@ -50,7 +54,6 @@ export class InputFieldDeclarationParser implements ITemplateSupplier<Unvalidate
 		return {
 			fullDeclaration: fullDeclaration,
 			inputFieldType: InputFieldType.INVALID,
-			isBound: false,
 			bindTarget: undefined,
 			argumentContainer: new InputFieldArgumentContainer(),
 			errorCollection: errorCollection,
@@ -85,9 +88,10 @@ export class InputFieldDeclarationParser implements ITemplateSupplier<Unvalidate
 
 	public validateDeclaration(
 		unvalidatedDeclaration: UnvalidatedInputFieldDeclaration,
-		scope?: BindTargetScope | undefined,
+		filePath: string,
+		scope: BindTargetScope | undefined,
 	): InputFieldDeclaration {
-		const declarationValidator = new InputFieldDeclarationValidator(this.plugin, unvalidatedDeclaration);
+		const declarationValidator = new InputFieldDeclarationValidator(this.plugin, unvalidatedDeclaration, filePath);
 
 		return declarationValidator.validate(scope);
 	}

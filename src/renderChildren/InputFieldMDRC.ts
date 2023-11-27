@@ -6,16 +6,13 @@ import { isTruthy } from '../utils/Utils';
 import { AbstractMDRC } from './AbstractMDRC';
 import type MetaBindPlugin from '../main';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
-import {
-	type BindTargetDeclaration,
-	type FullBindTarget,
-	type InputFieldDeclaration,
-} from '../parsers/inputFieldParser/InputFieldDeclaration';
+import { type InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { type InputField } from '../fields/inputFields/InputFieldFactory';
 import { type InputFieldArgumentMapType } from '../fields/fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
 import { InputFieldArgumentType, InputFieldType, RenderChildType } from '../config/FieldConfigs';
 import { DocsHelper } from '../utils/DocsHelper';
 import { type IInputFieldBase } from '../fields/inputFields/IInputFieldBase';
+import { type BindTargetDeclaration } from '../parsers/BindTargetDeclaration';
 
 export class InputFieldMDRC extends AbstractMDRC implements IInputFieldBase {
 	inputField: InputField | undefined;
@@ -55,29 +52,12 @@ export class InputFieldMDRC extends AbstractMDRC implements IInputFieldBase {
 		return this.getArguments(name).at(0);
 	}
 
-	public isBound(): boolean {
-		return this.inputFieldDeclaration.isBound;
-	}
-
 	public getBindTarget(): BindTargetDeclaration | undefined {
-		return this.isBound() ? this.inputFieldDeclaration.bindTarget : undefined;
+		return this.inputFieldDeclaration.bindTarget;
 	}
 
 	public getUuid(): string {
 		return this.uuid;
-	}
-
-	public getFullBindTarget(): FullBindTarget | undefined {
-		const bindTarget = this.getBindTarget();
-		if (!bindTarget) {
-			return undefined;
-		}
-		try {
-			return this.plugin.api.bindTargetParser.toFullDeclaration(bindTarget, this.filePath);
-		} catch (e) {
-			this.errorCollection.add(e);
-			return undefined;
-		}
 	}
 
 	public getFilePath(): string {

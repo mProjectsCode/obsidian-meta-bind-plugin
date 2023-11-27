@@ -3,60 +3,61 @@ import { TestPlugin } from '../mocks/TestPlugin';
 
 const plugin = new TestPlugin();
 const parser = plugin.api.inputFieldParser;
+const TEST_FILE = 'test.md';
 
 describe('should not error or warn cases', () => {
 	describe('no templates, no local scope', () => {
 		test('INPUT[text]', () => {
-			const res = parser.parseString('INPUT[text]', undefined);
+			const res = parser.parseString('INPUT[text]', TEST_FILE, undefined);
 
 			expect(res.errorCollection.hasWarnings()).toBe(false);
 			expect(res.errorCollection.hasErrors()).toBe(false);
 		});
 
 		test('INPUT[select(option(a), option(b, c), showcase)]', () => {
-			const res = parser.parseString('INPUT[select(option(a), option(b, c), showcase)]', undefined);
+			const res = parser.parseString('INPUT[select(option(a), option(b, c), showcase)]', TEST_FILE, undefined);
 
 			expect(res.errorCollection.hasWarnings()).toBe(false);
 			expect(res.errorCollection.hasErrors()).toBe(false);
 		});
 
 		test('INPUT[text:text]', () => {
-			const res = parser.parseString('INPUT[text:text]', undefined);
+			const res = parser.parseString('INPUT[text:text]', TEST_FILE, undefined);
 
 			expect(res.errorCollection.hasWarnings()).toBe(false);
 			expect(res.errorCollection.hasErrors()).toBe(false);
 		});
 
 		test('INPUT[text:["test"]]', () => {
-			const res = parser.parseString('INPUT[text:["test"]]', undefined);
+			const res = parser.parseString('INPUT[text:["test"]]', TEST_FILE, undefined);
 
 			expect(res.errorCollection.hasWarnings()).toBe(false);
 			expect(res.errorCollection.hasErrors()).toBe(false);
 		});
 
 		test('INPUT[text:[0]]', () => {
-			const res = parser.parseString('INPUT[text:[0]]', undefined);
+			const res = parser.parseString('INPUT[text:[0]]', TEST_FILE, undefined);
 
 			expect(res.errorCollection.hasWarnings()).toBe(false);
 			expect(res.errorCollection.hasErrors()).toBe(false);
 		});
 
 		test('INPUT[text:file#text]', () => {
-			const res = parser.parseString('INPUT[text:file#text]', undefined);
+			const res = parser.parseString('INPUT[text:file#text]', TEST_FILE, undefined);
 
 			expect(res.errorCollection.hasWarnings()).toBe(false);
 			expect(res.errorCollection.hasErrors()).toBe(false);
 		});
 
 		test('INPUT[text:path/to/file#text]', () => {
-			const res = parser.parseString('INPUT[text:path/to/file#text]', undefined);
+			const res = parser.parseString('INPUT[text:path/to/file#text]', TEST_FILE, undefined);
 
 			expect(res.errorCollection.hasWarnings()).toBe(false);
 			expect(res.errorCollection.hasErrors()).toBe(false);
 		});
 
 		test('INPUT[text:path/to/other file#text]', () => {
-			const res = parser.parseString('INPUT[text:path/to/other file#text]', undefined);
+			const res = parser.parseString('INPUT[text:path/to/other file#text]', TEST_FILE, undefined);
 
 			expect(res.errorCollection.hasWarnings()).toBe(false);
 			expect(res.errorCollection.hasErrors()).toBe(false);
@@ -66,21 +67,21 @@ describe('should not error or warn cases', () => {
 
 describe('should warn on deprecation', () => {
 	test('INPUT[multi_select]', () => {
-		const res = parser.parseString('INPUT[multi_select]', undefined);
+		const res = parser.parseString('INPUT[multi_select]', TEST_FILE, undefined);
 
 		expect(res.errorCollection.hasWarnings()).toBe(true);
 		expect(res.errorCollection.hasErrors()).toBe(false);
 	});
 
 	test('INPUT[date_picker]', () => {
-		const res = parser.parseString('INPUT[date_picker]', undefined);
+		const res = parser.parseString('INPUT[date_picker]', TEST_FILE, undefined);
 
 		expect(res.errorCollection.hasWarnings()).toBe(true);
 		expect(res.errorCollection.hasErrors()).toBe(false);
 	});
 
 	test('INPUT[text_area]', () => {
-		const res = parser.parseString('INPUT[text_area]', undefined);
+		const res = parser.parseString('INPUT[text_area]', TEST_FILE, undefined);
 
 		expect(res.errorCollection.hasWarnings()).toBe(true);
 		expect(res.errorCollection.hasErrors()).toBe(false);
@@ -89,7 +90,7 @@ describe('should warn on deprecation', () => {
 
 describe('should warn on invalid argument', () => {
 	test('INPUT[text(invalidArgument)]', () => {
-		const res = parser.parseString('INPUT[text(invalidArgument)]', undefined);
+		const res = parser.parseString('INPUT[text(invalidArgument)]', TEST_FILE, undefined);
 
 		expect(res.errorCollection.hasWarnings()).toBe(true);
 		expect(res.errorCollection.hasErrors()).toBe(false);
@@ -98,7 +99,7 @@ describe('should warn on invalid argument', () => {
 
 describe('should error on invalid input field type', () => {
 	test('INPUT[invalidType]', () => {
-		const res = parser.parseString('INPUT[invalidType]', undefined);
+		const res = parser.parseString('INPUT[invalidType]', TEST_FILE, undefined);
 
 		expect(res.errorCollection.hasWarnings()).toBe(false);
 		expect(res.errorCollection.hasErrors()).toBe(true);

@@ -1,9 +1,9 @@
 import { type IMetadataSubscription } from './IMetadataSubscription';
 import { type Signal } from '../utils/Signal';
 import { type MetadataManager } from './MetadataManager';
-import { type FullBindTarget } from '../parsers/inputFieldParser/InputFieldDeclaration';
 
 import { type ComputedSubscriptionDependency } from './ComputedMetadataSubscription';
+import { type BindTargetDeclaration } from '../parsers/BindTargetDeclaration';
 
 export class MetadataSubscription implements IMetadataSubscription {
 	readonly uuid: string;
@@ -11,7 +11,7 @@ export class MetadataSubscription implements IMetadataSubscription {
 
 	readonly metadataManager: MetadataManager;
 
-	readonly bindTarget: FullBindTarget;
+	readonly bindTarget: BindTargetDeclaration;
 
 	deleted: boolean;
 	readonly onDelete: () => void;
@@ -20,7 +20,7 @@ export class MetadataSubscription implements IMetadataSubscription {
 		uuid: string,
 		callbackSignal: Signal<unknown>,
 		metadataManager: MetadataManager,
-		bindTarget: FullBindTarget,
+		bindTarget: BindTargetDeclaration,
 		onDelete: () => void,
 	) {
 		this.uuid = uuid;

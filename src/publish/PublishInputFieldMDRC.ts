@@ -54,8 +54,8 @@ export class PublishInputFieldMDRC extends MarkdownRenderChild {
 		}
 
 		if (
-			this.declaration.bindTarget.filePath !== undefined &&
-			this.declaration.bindTarget.filePath !== this.filePath
+			this.declaration.bindTarget.storagePath !== undefined &&
+			this.declaration.bindTarget.storagePath !== this.filePath
 		) {
 			this.errorCollection.add(
 				new MetaBindBindTargetError({
@@ -67,7 +67,7 @@ export class PublishInputFieldMDRC extends MarkdownRenderChild {
 			return getPublishDefaultValue(this.declaration);
 		}
 
-		const value: unknown = PropUtils.get(this.metadata, this.declaration.bindTarget.metadataPath);
+		const value: unknown = PropUtils.get(this.metadata, this.declaration.bindTarget.storageProp);
 
 		if (value === undefined) {
 			this.errorCollection.add(

@@ -2,8 +2,7 @@ import { type InputFieldArgumentContainer } from '../../fields/fieldArguments/in
 import { type ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { type ParsingResultNode } from '../nomParsers/GeneralNomParsers';
 import { type InputFieldType } from '../../config/FieldConfigs';
-import { type PropPath } from '../../utils/prop/PropPath';
-import { type PROP_ACCESS_TYPE } from '../../utils/prop/PropAccess';
+import { type BindTargetDeclaration, type UnvalidatedBindTargetDeclaration } from '../BindTargetDeclaration';
 
 export interface InputFieldDeclaration {
 	/**
@@ -19,12 +18,6 @@ export interface InputFieldDeclaration {
 	 */
 	readonly inputFieldType: InputFieldType;
 	/**
-	 * Whether the input field is bound.
-	 * e.g.
-	 * true
-	 */
-	readonly isBound: boolean;
-	/**
 	 * The frontmatter field the input field is bound to.
 	 * e.g.
 	 * `bind_target` or `file#bind.target`
@@ -36,32 +29,6 @@ export interface InputFieldDeclaration {
 	readonly argumentContainer: InputFieldArgumentContainer;
 
 	readonly errorCollection: ErrorCollection;
-}
-
-export interface UnvalidatedBindTargetDeclaration {
-	file?: ParsingResultNode;
-	boundToLocalScope: boolean;
-	listenToChildren: boolean;
-	path: UnvalidatedPropAccess[];
-}
-
-export interface UnvalidatedPropAccess {
-	type: PROP_ACCESS_TYPE;
-	prop: ParsingResultNode;
-}
-
-export interface BindTargetDeclaration {
-	filePath: string | undefined;
-	boundToLocalScope: boolean;
-	listenToChildren: boolean;
-	metadataPath: PropPath;
-}
-
-export interface FullBindTarget {
-	filePath: string;
-	boundToLocalScope: boolean;
-	listenToChildren: boolean;
-	metadataPath: PropPath;
 }
 
 export interface UnvalidatedFieldArgument {

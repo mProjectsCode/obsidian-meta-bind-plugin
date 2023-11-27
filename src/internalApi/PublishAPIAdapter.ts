@@ -50,4 +50,8 @@ export class PublishAPIAdapter implements IInternalAPI {
 	public openFile(_filePath: string, _callingFilePath: string): void {
 		throw new Error('not implemented');
 	}
+
+	public getFilePathByName(name: string): string | undefined {
+		return name;
+	}
 }

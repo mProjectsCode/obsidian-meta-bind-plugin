@@ -1,7 +1,6 @@
 import { areArraysEqual, arrayStartsWith } from '../utils/Utils';
 import { type Signal } from '../utils/Signal';
 import { type Metadata, type MetadataManagerCacheItem } from './MetadataManagerCacheItem';
-import { type FullBindTarget } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { ErrorLevel, MetaBindBindTargetError, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
 import { type IMetadataAdapter } from './IMetadataAdapter';
 import { type IMetadataSubscription } from './IMetadataSubscription';
@@ -13,6 +12,7 @@ import {
 } from './ComputedMetadataSubscription';
 import { PropUtils } from '../utils/prop/PropUtils';
 import { type PropPath } from '../utils/prop/PropPath';
+import { type BindTargetDeclaration, BindTargetStorageType } from '../parsers/BindTargetDeclaration';
 
 export const METADATA_CACHE_UPDATE_CYCLE_THRESHOLD = 5; // {syncInterval (200)} * 5 = 1s
 export const METADATA_CACHE_INACTIVE_CYCLE_THRESHOLD = 5 * 60; // {syncInterval (200)} * 5 * 60 = 1 minute
@@ -23,18 +23,22 @@ export const METADATA_CACHE_INACTIVE_CYCLE_THRESHOLD = 5 * 60; // {syncInterval 
  * @param a
  * @param b
  */
-function hasUpdateOverlap(a: FullBindTarget | undefined, b: FullBindTarget | undefined): boolean {
+function hasUpdateOverlap(a: BindTargetDeclaration | undefined, b: BindTargetDeclaration | undefined): boolean {
 	if (a === undefined || b === undefined) {
 		return false;
 	}
 
-	if (a.filePath !== b.filePath) {
+	if (a.storageType !== b.storageType) {
+		return false;
+	}
+
+	if (a.storagePath !== b.storagePath) {
 		return false;
 	}
 
 	return metadataPathHasUpdateOverlap(
-		a.metadataPath.toStringArray(),
-		b.metadataPath.toStringArray(),
+		a.storageProp.toStringArray(),
+		b.storageProp.toStringArray(),
 		b.listenToChildren,
 	);
 }
@@ -62,12 +66,12 @@ function metadataPathHasUpdateOverlap(a: string[], b: string[], listenToChildren
 	return listenToChildren && arrayStartsWith(a, b);
 }
 
-function bindTargetToString(a: FullBindTarget | undefined): string {
+function bindTargetToString(a: BindTargetDeclaration | undefined): string {
 	if (a === undefined) {
 		return 'undefined';
 	}
 
-	return `${a.filePath}#${a.metadataPath.toString()}`;
+	return `${a.storagePath}#${a.storageProp.toString()}`;
 }
 
 export class MetadataManager {
@@ -98,25 +102,36 @@ export class MetadataManager {
 			return;
 		}
 
-		const fileCache: MetadataManagerCacheItem | undefined = this.getCacheForFile(subscription.bindTarget.filePath);
+		if (subscription.bindTarget?.storageType === BindTargetStorageType.LOCAL) {
+			// local scope should be resolved by the time the subscription is created
+			throw new MetaBindInternalError({
+				errorLevel: ErrorLevel.CRITICAL,
+				effect: 'can not subscribe subscription',
+				cause: 'local scope should be resolved by the time the subscription is created',
+			});
+		}
+
+		const fileCache: MetadataManagerCacheItem | undefined = this.getCacheForFile(
+			subscription.bindTarget.storagePath,
+		);
 
 		if (fileCache) {
 			console.debug(
 				`meta-bind | MetadataManager >> registered ${subscription.uuid} to existing file cache ${
-					subscription.bindTarget.filePath
-				} -> ${subscription.bindTarget.metadataPath.toString()}`,
+					subscription.bindTarget.storagePath
+				} -> ${subscription.bindTarget.storageProp.toString()}`,
 			);
 
 			fileCache.inactive = false;
 			fileCache.cyclesSinceInactive = 0;
 			fileCache.subscriptions.push(subscription);
 
-			subscription.notify(PropUtils.tryGet(fileCache.metadata, subscription.bindTarget.metadataPath));
+			subscription.notify(PropUtils.tryGet(fileCache.metadata, subscription.bindTarget.storageProp));
 		} else {
 			console.debug(
 				`meta-bind | MetadataManager >> registered ${subscription.uuid} to newly created file cache ${
-					subscription.bindTarget.filePath
-				} -> ${subscription.bindTarget.metadataPath.toString()}`,
+					subscription.bindTarget.storagePath
+				} -> ${subscription.bindTarget.storageProp.toString()}`,
 			);
 
 			// const file = this.plugin.app.vault.getAbstractFileByPath(subscription.bindTarget.filePath) as TFile;
@@ -126,6 +141,7 @@ export class MetadataManager {
 			const newCache: MetadataManagerCacheItem = {
 				extraCache: extraCache,
 				metadata: metadata,
+				memory: {},
 				subscriptions: [subscription],
 				cyclesSinceLastChange: METADATA_CACHE_UPDATE_CYCLE_THRESHOLD + 1, // +1, so that is it bigger than the threshold
 				cyclesSinceInactive: 0,
@@ -134,13 +150,13 @@ export class MetadataManager {
 			};
 
 			console.log(
-				`meta-bind | MetadataManager >> loaded metadata for file ${subscription.bindTarget.filePath}`,
+				`meta-bind | MetadataManager >> loaded metadata for file ${subscription.bindTarget.storagePath}`,
 				newCache.metadata,
 			);
 
-			subscription.notify(PropUtils.tryGet(newCache.metadata, subscription.bindTarget.metadataPath));
+			subscription.notify(PropUtils.tryGet(newCache.metadata, subscription.bindTarget.storageProp));
 
-			this.createCacheForFile(subscription.bindTarget.filePath, newCache);
+			this.createCacheForFile(subscription.bindTarget.storagePath, newCache);
 		}
 	}
 
@@ -155,7 +171,7 @@ export class MetadataManager {
 	public subscribe(
 		uuid: string,
 		callbackSignal: Signal<unknown>,
-		bindTarget: FullBindTarget,
+		bindTarget: BindTargetDeclaration,
 		onDelete: () => void,
 	): MetadataSubscription {
 		const subscription: MetadataSubscription = new MetadataSubscription(
@@ -184,7 +200,7 @@ export class MetadataManager {
 	public subscribeComputed(
 		uuid: string,
 		callbackSignal: Signal<unknown>,
-		bindTarget: FullBindTarget | undefined,
+		bindTarget: BindTargetDeclaration | undefined,
 		dependencies: ComputedSubscriptionDependency[],
 		computeFunction: ComputeFunction,
 		onDelete: () => void,
@@ -268,12 +284,12 @@ export class MetadataManager {
 	 * @param bindTarget
 	 * @private
 	 */
-	private getAllSubscriptionsToBindTarget(bindTarget: FullBindTarget | undefined): IMetadataSubscription[] {
+	private getAllSubscriptionsToBindTarget(bindTarget: BindTargetDeclaration | undefined): IMetadataSubscription[] {
 		if (bindTarget === undefined) {
 			return [];
 		}
 
-		const fileCache = this.getCacheForFile(bindTarget.filePath);
+		const fileCache = this.getCacheForFile(bindTarget.storagePath);
 		if (!fileCache) {
 			return [];
 		}
@@ -298,7 +314,7 @@ export class MetadataManager {
 			return;
 		}
 
-		const filePath = subscription.bindTarget.filePath;
+		const filePath = subscription.bindTarget.storagePath;
 
 		const fileCache = this.getCacheForFile(filePath);
 		if (!fileCache) {
@@ -342,7 +358,7 @@ export class MetadataManager {
 	 *
 	 * @private
 	 */
-	public update(): void {
+	public cycle(): void {
 		// console.debug('meta-bind | updating metadata manager');
 		const markedForDelete: string[] = [];
 
@@ -394,8 +410,8 @@ export class MetadataManager {
 			return;
 		}
 
-		const metadataPath = subscription.bindTarget.metadataPath;
-		const filePath = subscription.bindTarget.filePath;
+		const metadataPath = subscription.bindTarget.storageProp;
+		const filePath = subscription.bindTarget.storagePath;
 
 		console.debug(
 			`meta-bind | MetadataManager >> updating "${JSON.stringify(
@@ -409,11 +425,13 @@ export class MetadataManager {
 			return;
 		}
 
+		// TODO: update the correct storage location
 		PropUtils.setAndCreate(fileCache.metadata, metadataPath, value);
 
 		fileCache.cyclesSinceLastChange = 0;
 		fileCache.changed = true;
 
+		// TODO: notify only the subscriptions that match the storage location
 		this.notifyListeners(fileCache, metadataPath, subscription.uuid);
 	}
 
@@ -441,6 +459,7 @@ export class MetadataManager {
 
 		fileCache.metadata = metadata;
 
+		// TODO: only update subscriptions that match the storage location
 		this.notifyListeners(fileCache);
 	}
 
@@ -471,11 +490,11 @@ export class MetadataManager {
 				if (
 					metadataPathHasUpdateOverlap(
 						metadataPath.toStringArray(),
-						subscription.bindTarget.metadataPath.toStringArray(),
+						subscription.bindTarget.storageProp.toStringArray(),
 						subscription.bindTarget.listenToChildren,
 					)
 				) {
-					const value: unknown = PropUtils.tryGet(fileCache.metadata, subscription.bindTarget.metadataPath);
+					const value: unknown = PropUtils.tryGet(fileCache.metadata, subscription.bindTarget.storageProp);
 					console.debug(
 						`meta-bind | MetadataManager >> notifying input field ${subscription.uuid} of updated metadata value`,
 						value,
@@ -483,10 +502,10 @@ export class MetadataManager {
 					subscription.notify(value);
 				}
 			} else {
-				const value: unknown = PropUtils.tryGet(fileCache.metadata, subscription.bindTarget.metadataPath);
+				const value: unknown = PropUtils.tryGet(fileCache.metadata, subscription.bindTarget.storageProp);
 				console.debug(
 					`meta-bind | MetadataManager >> notifying input field ${subscription.uuid} of updated metadata`,
-					subscription.bindTarget.metadataPath,
+					subscription.bindTarget.storageProp,
 					fileCache.metadata,
 					value,
 				);
@@ -495,7 +514,7 @@ export class MetadataManager {
 		}
 	}
 
-	deleteCacheInstant(filePath: string): void {
+	deleteCacheInstantly(filePath: string): void {
 		const cacheItem = this.getCacheForFile(filePath);
 		if (cacheItem === undefined) {
 			return;

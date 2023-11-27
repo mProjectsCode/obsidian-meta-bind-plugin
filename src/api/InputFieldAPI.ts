@@ -2,12 +2,12 @@ import { ErrorCollection } from '../utils/errors/ErrorCollection';
 
 import { type IAPI } from './IAPI';
 import {
-	type UnvalidatedBindTargetDeclaration,
 	type UnvalidatedFieldArgument,
 	type UnvalidatedInputFieldDeclaration,
 } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { type InputFieldArgumentType, type InputFieldType } from '../config/FieldConfigs';
 import { PROP_ACCESS_TYPE } from '../utils/prop/PropAccess';
+import { type UnvalidatedBindTargetDeclaration } from '../parsers/BindTargetDeclaration';
 
 export class InputFieldAPI {
 	private readonly api: IAPI;
@@ -124,12 +124,11 @@ export class InputFieldAPI {
 		bindTargetFile: string,
 	): UnvalidatedInputFieldDeclaration {
 		if (unvalidatedDeclaration.bindTarget) {
-			unvalidatedDeclaration.bindTarget.file = { value: bindTargetFile };
+			unvalidatedDeclaration.bindTarget.storagePath = { value: bindTargetFile };
 		} else {
 			unvalidatedDeclaration.bindTarget = {
-				file: { value: bindTargetFile },
-				path: [],
-				boundToLocalScope: false,
+				storagePath: { value: bindTargetFile },
+				storageProp: [],
 				listenToChildren: false,
 			};
 		}
@@ -152,18 +151,17 @@ export class InputFieldAPI {
 		}
 
 		if (unvalidatedDeclaration.bindTarget) {
-			unvalidatedDeclaration.bindTarget.path = bindTargetMetadataField.map(x => ({
+			unvalidatedDeclaration.bindTarget.storageProp = bindTargetMetadataField.map(x => ({
 				type: PROP_ACCESS_TYPE.OBJECT,
 				prop: { value: x },
 			}));
 		} else {
 			unvalidatedDeclaration.bindTarget = {
-				file: undefined,
-				path: bindTargetMetadataField.map(x => ({
+				storagePath: undefined,
+				storageProp: bindTargetMetadataField.map(x => ({
 					type: PROP_ACCESS_TYPE.OBJECT,
 					prop: { value: x },
 				})),
-				boundToLocalScope: false,
 				listenToChildren: false,
 			};
 		}
@@ -219,11 +217,11 @@ export class InputFieldAPI {
 			bindTarget = override.bindTarget;
 		} else {
 			bindTarget = unvalidatedDeclaration.bindTarget;
-			if (override.bindTarget?.file !== undefined) {
-				bindTarget.file = override.bindTarget.file;
+			if (override.bindTarget?.storagePath !== undefined) {
+				bindTarget.storagePath = override.bindTarget.storagePath;
 			}
-			if (override.bindTarget?.path !== undefined) {
-				bindTarget.path = override.bindTarget.path;
+			if (override.bindTarget?.storageProp !== undefined) {
+				bindTarget.storageProp = override.bindTarget.storageProp;
 			}
 		}
 

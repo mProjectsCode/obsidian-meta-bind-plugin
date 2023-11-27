@@ -1,6 +1,5 @@
-import { type FullBindTarget } from '../parsers/inputFieldParser/InputFieldDeclaration';
-
 import { type ComputedSubscriptionDependency } from './ComputedMetadataSubscription';
+import { type BindTargetDeclaration } from '../parsers/BindTargetDeclaration';
 
 /**
  * Interface for a metadata subscription.
@@ -17,7 +16,7 @@ export interface IMetadataSubscription {
 	/**
 	 * The property the subscription is bound to and thus watches.
 	 */
-	bindTarget: FullBindTarget | undefined;
+	bindTarget: BindTargetDeclaration | undefined;
 	/**
 	 * Unsubscribes from the cache.
 	 */

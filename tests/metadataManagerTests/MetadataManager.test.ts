@@ -2,16 +2,16 @@ import { MetadataManager } from '../../src/metadata/MetadataManager';
 import { MetadataSubscription } from '../../src/metadata/MetadataSubscription';
 import { getUUID } from '../../src/utils/Utils';
 import { ListenerCallback, Signal } from '../../src/utils/Signal';
-import { FullBindTarget } from '../../src/parsers/inputFieldParser/InputFieldDeclaration';
 import { TestMetadataAdapter } from '../mocks/TestMetadataAdapter';
 import { beforeEach, describe, expect, Mock, spyOn, test } from 'bun:test';
 import { parsePropPath } from '../../src/utils/prop/PropParser';
+import { BindTargetDeclaration, BindTargetStorageType } from '../../src/parsers/BindTargetDeclaration';
 
 const testFilePath = 'testFile';
 
 function subscribe(
 	manager: MetadataManager,
-	bindTarget: FullBindTarget,
+	bindTarget: BindTargetDeclaration,
 ): { subscription: MetadataSubscription; signal: Signal<unknown>; spy: Mock<ListenerCallback<unknown>> } {
 	const signal = new Signal<unknown>(undefined);
 	const spy = spyOn(signal, 'set');
@@ -23,17 +23,12 @@ function subscribe(
 	};
 }
 
-function createBindTarget(
-	file: string,
-	path: string[],
-	listenToChildren: boolean = false,
-	boundToLocalScope: boolean = false,
-): FullBindTarget {
+function createBindTarget(file: string, path: string[], listenToChildren: boolean = false): BindTargetDeclaration {
 	return {
-		filePath: file,
-		metadataPath: parsePropPath(path),
+		storageType: BindTargetStorageType.METADATA,
+		storagePath: file,
+		storageProp: parsePropPath(path),
 		listenToChildren: listenToChildren,
-		boundToLocalScope: boundToLocalScope,
 	};
 }
 

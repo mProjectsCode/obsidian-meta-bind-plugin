@@ -118,10 +118,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 			undefined,
 			this.variables.map((x): ComputedSubscriptionDependency => {
 				return {
-					bindTarget: this.plugin.api.bindTargetParser.toFullDeclaration(
-						x.bindTargetDeclaration,
-						this.filePath,
-					),
+					bindTarget: x.bindTargetDeclaration,
 					callbackSignal: x.inputSignal,
 				};
 			}),

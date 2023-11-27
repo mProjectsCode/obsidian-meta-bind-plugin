@@ -1,16 +1,16 @@
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-import { type FullBindTarget } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { type Signal } from '../utils/Signal';
 import { type IMetadataSubscription } from './IMetadataSubscription';
 import { type MetadataManager } from './MetadataManager';
 import { type MetadataSubscription } from './MetadataSubscription';
 import { getUUID } from '../utils/Utils';
+import { type BindTargetDeclaration } from '../parsers/BindTargetDeclaration';
 
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 export type ComputeFunction = (values: unknown[]) => Promise<unknown> | unknown;
 
 export interface ComputedSubscriptionDependency {
-	bindTarget: FullBindTarget;
+	bindTarget: BindTargetDeclaration;
 	callbackSignal: Signal<unknown>;
 }
 
@@ -20,7 +20,7 @@ export class ComputedMetadataSubscription implements IMetadataSubscription {
 
 	readonly metadataManager: MetadataManager;
 
-	readonly bindTarget: FullBindTarget | undefined;
+	readonly bindTarget: BindTargetDeclaration | undefined;
 	readonly dependencies: ComputedSubscriptionDependency[];
 
 	readonly dependencySubscriptions: MetadataSubscription[];
@@ -34,7 +34,7 @@ export class ComputedMetadataSubscription implements IMetadataSubscription {
 		uuid: string,
 		callbackSignal: Signal<unknown>,
 		metadataManager: MetadataManager,
-		bindTarget: FullBindTarget | undefined,
+		bindTarget: BindTargetDeclaration | undefined,
 		dependencies: ComputedSubscriptionDependency[],
 		computeFunction: ComputeFunction,
 		onDelete: () => void,

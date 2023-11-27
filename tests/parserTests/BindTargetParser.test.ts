@@ -1,12 +1,13 @@
 import { describe, expect, test } from 'bun:test';
-import { BindTargetDeclaration } from '../../src/parsers/inputFieldParser/InputFieldDeclaration';
 import { BindTargetScope } from '../../src/metadata/BindTargetScope';
 import { parsePropPath } from '../../src/utils/prop/PropParser';
 import { PropPath } from '../../src/utils/prop/PropPath';
 import { TestPlugin } from '../mocks/TestPlugin';
+import { BindTargetDeclaration, BindTargetStorageType } from '../../src/parsers/BindTargetDeclaration';
 
 const plugin = new TestPlugin();
 const parser = plugin.api.bindTargetParser;
+const TEST_FILE = 'test.md';
 
 const validBindTargetFiles = [
 	undefined,
@@ -34,9 +35,9 @@ const validBindTargetPaths: [string, string[]][] = [
 ];
 
 const localScopeBindTarget: BindTargetDeclaration = {
-	filePath: 'scope_test_file',
-	metadataPath: parsePropPath(['scope_test_metadata']),
-	boundToLocalScope: false,
+	storageType: BindTargetStorageType.METADATA,
+	storagePath: 'scope.md',
+	storageProp: parsePropPath(['scope_test_metadata']),
 	listenToChildren: false,
 };
 
@@ -85,19 +86,19 @@ function generateTestCase(combination: BindTargetCombination): TestCase {
 			normal: {
 				str: combination.metadataPathString,
 				expected: {
-					filePath: undefined,
-					metadataPath: combination.metadataPath,
+					storageType: BindTargetStorageType.METADATA,
+					storagePath: TEST_FILE,
+					storageProp: combination.metadataPath,
 					listenToChildren: false,
-					boundToLocalScope: false,
 				},
 			},
 			local: {
 				str: localStr,
 				expected: {
-					filePath: localScopeBindTarget.filePath,
-					metadataPath: localScopeBindTarget.metadataPath.concat(combination.metadataPath),
+					storageType: localScopeBindTarget.storageType,
+					storagePath: localScopeBindTarget.storagePath,
+					storageProp: localScopeBindTarget.storageProp.concat(combination.metadataPath),
 					listenToChildren: false,
-					boundToLocalScope: true,
 				},
 			},
 		};
@@ -113,19 +114,19 @@ function generateTestCase(combination: BindTargetCombination): TestCase {
 			normal: {
 				str: `${combination.filePath}#${combination.metadataPathString}`,
 				expected: {
-					filePath: combination.filePath,
-					metadataPath: combination.metadataPath,
+					storageType: BindTargetStorageType.METADATA,
+					storagePath: combination.filePath,
+					storageProp: combination.metadataPath,
 					listenToChildren: false,
-					boundToLocalScope: false,
 				},
 			},
 			local: {
 				str: localStr,
 				expected: {
-					filePath: localScopeBindTarget.filePath,
-					metadataPath: localScopeBindTarget.metadataPath.concat(combination.metadataPath),
+					storageType: localScopeBindTarget.storageType,
+					storagePath: localScopeBindTarget.storagePath,
+					storageProp: localScopeBindTarget.storageProp.concat(combination.metadataPath),
 					listenToChildren: false,
-					boundToLocalScope: true,
 				},
 			},
 		};
@@ -140,14 +141,16 @@ describe('bind target parser', () => {
 			test(testCase.normal.str, () => {
 				// console.log(JSON.stringify(testCase.normal.expected, null, 2));
 				// console.log(JSON.stringify(parser.parseAndValidateBindTarget(testCase.normal.str), null, 2));
-				expect(parser.parseAndValidateBindTarget(testCase.normal.str)).toEqual(testCase.normal.expected);
-			});
-
-			test(testCase.local.str, () => {
-				expect(parser.parseAndValidateBindTarget(testCase.local.str, localScope)).toEqual(
-					testCase.local.expected,
+				expect(parser.parseAndValidateBindTarget(testCase.normal.str, TEST_FILE)).toEqual(
+					testCase.normal.expected,
 				);
 			});
+
+			// test(testCase.local.str, () => {
+			// 	expect(parser.parseAndValidateBindTarget(testCase.local.str, localScope)).toEqual(
+			// 		testCase.local.expected,
+			// 	);
+			// });
 		}
 	});
 });

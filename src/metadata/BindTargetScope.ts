@@ -1,4 +1,4 @@
-import { type BindTargetDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
+import { type BindTargetDeclaration } from '../parsers/BindTargetDeclaration';
 
 export class BindTargetScope {
 	scope: BindTargetDeclaration;

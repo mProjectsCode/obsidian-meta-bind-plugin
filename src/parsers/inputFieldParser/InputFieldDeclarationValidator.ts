@@ -5,23 +5,22 @@ import { InputFieldArgumentContainer } from '../../fields/fieldArguments/inputFi
 import { type AbstractInputFieldArgument } from '../../fields/fieldArguments/inputFieldArguments/AbstractInputFieldArgument';
 import { InputFieldArgumentFactory } from '../../fields/fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
 import { type IPlugin } from '../../IPlugin';
-import {
-	type BindTargetDeclaration,
-	type InputFieldDeclaration,
-	type UnvalidatedInputFieldDeclaration,
-} from './InputFieldDeclaration';
+import { type InputFieldDeclaration, type UnvalidatedInputFieldDeclaration } from './InputFieldDeclaration';
 import { type BindTargetScope } from '../../metadata/BindTargetScope';
 import { type ParsingResultNode } from '../nomParsers/GeneralNomParsers';
 import { InputFieldArgumentType, InputFieldType } from '../../config/FieldConfigs';
+import { type BindTargetDeclaration } from '../BindTargetDeclaration';
 
 export class InputFieldDeclarationValidator {
 	unvalidatedDeclaration: UnvalidatedInputFieldDeclaration;
 	errorCollection: ErrorCollection;
+	filePath: string;
 	plugin: IPlugin;
 
-	constructor(plugin: IPlugin, unvalidatedDeclaration: UnvalidatedInputFieldDeclaration) {
+	constructor(plugin: IPlugin, unvalidatedDeclaration: UnvalidatedInputFieldDeclaration, filePath: string) {
 		this.plugin = plugin;
 		this.unvalidatedDeclaration = unvalidatedDeclaration;
+		this.filePath = filePath;
 
 		this.errorCollection = new ErrorCollection('input field declaration');
 	}
@@ -34,7 +33,6 @@ export class InputFieldDeclarationValidator {
 		const declaration: InputFieldDeclaration = {
 			fullDeclaration: this.unvalidatedDeclaration.fullDeclaration,
 			inputFieldType: inputFieldType,
-			isBound: bindTarget !== undefined,
 			bindTarget: bindTarget,
 			argumentContainer: argumentContainer,
 			errorCollection: this.errorCollection.merge(this.unvalidatedDeclaration.errorCollection),
@@ -49,6 +47,7 @@ export class InputFieldDeclarationValidator {
 		const inputFieldType = this.unvalidatedDeclaration.inputFieldType;
 
 		for (const entry of Object.entries(InputFieldType)) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
 			if (entry[1] === inputFieldType?.value) {
 				return entry[1];
 			}
@@ -90,6 +89,7 @@ export class InputFieldDeclarationValidator {
 			return this.plugin.api.bindTargetParser.validateBindTarget(
 				this.unvalidatedDeclaration.fullDeclaration,
 				this.unvalidatedDeclaration.bindTarget,
+				this.filePath,
 				scope,
 			);
 		} else {

@@ -1,9 +1,6 @@
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
-import {
-	type UnvalidatedBindTargetDeclaration,
-	type UnvalidatedFieldArgument,
-} from '../inputFieldParser/InputFieldDeclaration';
+import { type UnvalidatedFieldArgument } from '../inputFieldParser/InputFieldDeclaration';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { BIND_TARGET } from './BindTargetNomParsers';
 import { createResultNode, fieldArguments, ident } from './GeneralNomParsers';
@@ -12,6 +9,7 @@ import {
 	type UnvalidatedJsViewFieldBindTargetMapping,
 	type UnvalidatedJsViewFieldDeclaration,
 } from '../viewFieldParser/ViewFieldDeclaration';
+import { type UnvalidatedBindTargetDeclaration } from '../BindTargetDeclaration';
 
 export const viewFieldContentEscapeCharacter = P.string('\\')
 	.then(P_UTILS.any())

@@ -50,7 +50,11 @@ export class PublishAPI implements IAPI {
 		container: HTMLElement,
 		component: MarkdownPostProcessorContext,
 	): PublishInputFieldMDRC {
-		const declaration: InputFieldDeclaration = this.inputFieldParser.parseString(fullDeclaration, undefined);
+		const declaration: InputFieldDeclaration = this.inputFieldParser.parseString(
+			fullDeclaration,
+			filePath,
+			undefined,
+		);
 
 		const inputField = new PublishInputFieldMDRC(container, this, declaration, filePath, metadata, getUUID());
 		component.addChild(inputField);
@@ -65,7 +69,7 @@ export class PublishAPI implements IAPI {
 		container: HTMLElement,
 		component: MarkdownPostProcessorContext,
 	): PublishViewFieldMDRC {
-		const declaration: ViewFieldDeclaration = this.viewFieldParser.parseString(fullDeclaration);
+		const declaration: ViewFieldDeclaration = this.viewFieldParser.parseString(fullDeclaration, filePath);
 
 		const viewField = new PublishViewFieldMDRC(container, this, declaration, filePath, metadata, getUUID());
 		component.addChild(viewField);

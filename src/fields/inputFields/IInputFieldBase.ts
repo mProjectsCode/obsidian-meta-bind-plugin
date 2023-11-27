@@ -1,7 +1,7 @@
-import { type BindTargetDeclaration, type FullBindTarget } from '../../parsers/inputFieldParser/InputFieldDeclaration';
 import { type InputFieldArgumentType } from '../../config/FieldConfigs';
 import { type InputFieldArgumentMapType } from '../fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
 import { type IPlugin } from '../../IPlugin';
+import { type BindTargetDeclaration } from '../../parsers/BindTargetDeclaration';
 
 export interface IInputFieldBase {
 	readonly plugin: IPlugin;
@@ -10,11 +10,7 @@ export interface IInputFieldBase {
 
 	getFilePath(): string;
 
-	isBound(): boolean;
-
 	getBindTarget(): BindTargetDeclaration | undefined;
-
-	getFullBindTarget(): FullBindTarget | undefined;
 
 	getArguments<T extends InputFieldArgumentType>(name: T): InputFieldArgumentMapType<T>[];
 

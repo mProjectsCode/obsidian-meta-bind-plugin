@@ -49,7 +49,7 @@ export class TestAPI implements IAPI {
 		containerEl: HTMLElement,
 		scope?: BindTargetScope | undefined,
 	): TestIPFBase {
-		const declaration: InputFieldDeclaration = this.inputFieldParser.parseString(fullDeclaration, scope);
+		const declaration: InputFieldDeclaration = this.inputFieldParser.parseString(fullDeclaration, filePath, scope);
 
 		return new TestIPFBase(containerEl, renderType, declaration, this.plugin, filePath, getUUID());
 	}

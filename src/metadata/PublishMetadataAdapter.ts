@@ -17,7 +17,7 @@ export class PublishMetadataAdapter implements IMetadataAdapter {
 	public getMetadataAndExtraCache(subscription: IMetadataSubscription): { metadata: Metadata; extraCache: unknown } {
 		return {
 			extraCache: undefined,
-			metadata: structuredClone(this.metadata.get(subscription.bindTarget?.filePath ?? '') ?? {}),
+			metadata: structuredClone(this.metadata.get(subscription.bindTarget?.storagePath ?? '') ?? {}),
 		};
 	}
 

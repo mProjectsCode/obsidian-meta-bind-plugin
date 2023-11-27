@@ -5,6 +5,7 @@ export type Metadata = Record<string, unknown>;
 export interface MetadataManagerCacheItem {
 	extraCache: unknown;
 	metadata: Metadata;
+	memory: Metadata;
 	subscriptions: IMetadataSubscription[];
 	/**
 	 * The cycles since the last change to the cache by the plugin.

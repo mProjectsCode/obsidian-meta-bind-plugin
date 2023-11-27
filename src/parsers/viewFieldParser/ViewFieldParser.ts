@@ -19,7 +19,7 @@ export class ViewFieldParser {
 		this.plugin = plugin;
 	}
 
-	parseString(fullDeclaration: string, scope?: BindTargetScope | undefined): ViewFieldDeclaration {
+	parseString(fullDeclaration: string, filePath: string, scope?: BindTargetScope | undefined): ViewFieldDeclaration {
 		const errorCollection = new ErrorCollection('ViewFieldDeclaration');
 
 		try {
@@ -31,7 +31,7 @@ export class ViewFieldParser {
 			parserResult.errorCollection = errorCollection;
 			parserResult.arguments = [...parserResult.arguments]; // copy argument array to avoid modifying the original
 
-			return this.validateDeclaration(parserResult, scope);
+			return this.validateDeclaration(parserResult, filePath, scope);
 		} catch (e) {
 			errorCollection.add(e);
 		}
@@ -75,14 +75,15 @@ export class ViewFieldParser {
 
 	validateDeclaration(
 		unvalidatedDeclaration: UnvalidatedViewFieldDeclaration,
+		filePath: string,
 		scope?: BindTargetScope | undefined,
 	): ViewFieldDeclaration {
-		const validator = new ViewFieldDeclarationValidator(unvalidatedDeclaration, this.plugin);
+		const validator = new ViewFieldDeclarationValidator(unvalidatedDeclaration, filePath, this.plugin);
 
 		return validator.validate(scope);
 	}
 
-	parseJsString(fullDeclaration: string): JsViewFieldDeclaration {
+	parseJsString(fullDeclaration: string, filePath: string): JsViewFieldDeclaration {
 		const declaration: JsViewFieldDeclaration = {} as JsViewFieldDeclaration;
 		declaration.errorCollection = new ErrorCollection('JsViewFieldDeclaration');
 
@@ -92,7 +93,11 @@ export class ViewFieldParser {
 			const unvalidatedDeclaration = runParser(JS_VIEW_FIELD_DECLARATION, fullDeclaration);
 			declaration.bindTargetMappings = unvalidatedDeclaration.bindTargetMappings.map(x => {
 				return {
-					bindTarget: this.plugin.api.bindTargetParser.validateBindTarget(fullDeclaration, x.bindTarget),
+					bindTarget: this.plugin.api.bindTargetParser.validateBindTarget(
+						fullDeclaration,
+						x.bindTarget,
+						filePath,
+					),
 					name: x.name,
 				};
 			});

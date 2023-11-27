@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, spyOn, test } from 'bun:test';
+import { describe, expect, spyOn, test } from 'bun:test';
 import { InputFieldType, RenderChildType } from '../../src/config/FieldConfigs';
 import { TestIPFBase } from '../mocks/TestIPFBase';
 import { Metadata } from '../../src/metadata/MetadataManagerCacheItem';
@@ -11,6 +11,7 @@ import { Stream } from 'itertools-ts';
 import { multi } from 'itertools-ts/es';
 import { METADATA_CACHE_UPDATE_CYCLE_THRESHOLD } from '../../src/metadata/MetadataManager';
 import { TestPlugin } from '../mocks/TestPlugin';
+import { BindTargetStorageType } from '../../src/parsers/BindTargetDeclaration';
 
 const TEST_FILE_PATH = 'testFile';
 const TEST_PROP = 'testProp';
@@ -443,10 +444,10 @@ describe('IPF', () => {
 			getUUID(),
 			new Signal<unknown>(undefined),
 			{
-				filePath: TEST_FILE_PATH,
-				metadataPath: parsePropPath(['something_unused']),
+				storageType: BindTargetStorageType.METADATA,
+				storagePath: TEST_FILE_PATH,
+				storageProp: parsePropPath(['something_unused']),
 				listenToChildren: false,
-				boundToLocalScope: false,
 			},
 			() => {},
 		);
@@ -468,7 +469,7 @@ describe('IPF', () => {
 	}
 
 	function updateMetadataManager(): void {
-		testPlugin.metadataManager.update();
+		testPlugin.metadataManager.cycle();
 	}
 
 	function runTestCase(TEST_CONFIG: IPFTest, TEST_CASE: IPFTestCase): void {

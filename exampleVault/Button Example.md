@@ -44,7 +44,3 @@ action:
 ```
 
 text `BUTTON[docs-button, open-button]` text
-
-##### 1. The
-##### 2. The 
-##### 3. Refusal
