@@ -40,7 +40,7 @@ export class BindTargetParser {
 		const bindTargetDeclaration: BindTargetDeclaration = {} as BindTargetDeclaration;
 
 		if (unvalidatedBindTargetDeclaration.storageType === undefined) {
-			bindTargetDeclaration.storageType = BindTargetStorageType.METADATA;
+			bindTargetDeclaration.storageType = BindTargetStorageType.FRONTMATTER;
 		} else {
 			bindTargetDeclaration.storageType = this.validateStorageType(
 				unvalidatedBindTargetDeclaration.storageType,
@@ -48,7 +48,7 @@ export class BindTargetParser {
 			);
 		}
 
-		if (bindTargetDeclaration.storageType === BindTargetStorageType.METADATA) {
+		if (bindTargetDeclaration.storageType === BindTargetStorageType.FRONTMATTER) {
 			if (unvalidatedBindTargetDeclaration.storagePath === undefined) {
 				bindTargetDeclaration.storagePath = this.validateStoragePathAsFilePath(
 					{ value: filePath },

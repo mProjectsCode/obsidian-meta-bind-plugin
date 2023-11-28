@@ -22,7 +22,7 @@ export interface BindTargetDeclaration {
 }
 
 export enum BindTargetStorageType {
-	METADATA = 'metadata',
+	FRONTMATTER = 'frontmatter',
 	MEMORY = 'memory',
 	GLOBAL_MEMORY = 'globalMemory',
 	LOCAL = 'localScope',

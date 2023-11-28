@@ -35,7 +35,7 @@ const validBindTargetPaths: [string, string[]][] = [
 ];
 
 const localScopeBindTarget: BindTargetDeclaration = {
-	storageType: BindTargetStorageType.METADATA,
+	storageType: BindTargetStorageType.FRONTMATTER,
 	storagePath: 'scope.md',
 	storageProp: parsePropPath(['scope_test_metadata']),
 	listenToChildren: false,
@@ -86,7 +86,7 @@ function generateTestCase(combination: BindTargetCombination): TestCase {
 			normal: {
 				str: combination.metadataPathString,
 				expected: {
-					storageType: BindTargetStorageType.METADATA,
+					storageType: BindTargetStorageType.FRONTMATTER,
 					storagePath: TEST_FILE,
 					storageProp: combination.metadataPath,
 					listenToChildren: false,
@@ -114,7 +114,7 @@ function generateTestCase(combination: BindTargetCombination): TestCase {
 			normal: {
 				str: `${combination.filePath}#${combination.metadataPathString}`,
 				expected: {
-					storageType: BindTargetStorageType.METADATA,
+					storageType: BindTargetStorageType.FRONTMATTER,
 					storagePath: combination.filePath,
 					storageProp: combination.metadataPath,
 					listenToChildren: false,

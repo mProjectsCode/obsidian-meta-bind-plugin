@@ -25,7 +25,7 @@ function subscribe(
 
 function createBindTarget(file: string, path: string[], listenToChildren: boolean = false): BindTargetDeclaration {
 	return {
-		storageType: BindTargetStorageType.METADATA,
+		storageType: BindTargetStorageType.FRONTMATTER,
 		storagePath: file,
 		storageProp: parsePropPath(path),
 		listenToChildren: listenToChildren,
@@ -64,7 +64,7 @@ describe('metadata manager', () => {
 		expect(s1.spy).toHaveBeenCalledTimes(1);
 		expect(s1.spy.mock.calls).toEqual([[undefined]]);
 
-		manager.updateCacheOnExternalUpdate(testFilePath, { var1: 5 });
+		manager.updateCacheOnExternalFrontmatterUpdate(testFilePath, { var1: 5 });
 
 		expect(s1.signal.get()).toBe(5);
 		expect(s1.spy).toHaveBeenCalledTimes(2);
@@ -75,7 +75,7 @@ describe('metadata manager', () => {
 		const s1 = subscribe(manager, createBindTarget(testFilePath, ['var1']));
 		s1.subscription.unsubscribe();
 
-		manager.updateCacheOnExternalUpdate(testFilePath, { var1: 5 });
+		manager.updateCacheOnExternalFrontmatterUpdate(testFilePath, { var1: 5 });
 
 		expect(s1.signal.get()).toBe(undefined);
 		expect(s1.spy).toHaveBeenCalledTimes(1);
@@ -86,7 +86,7 @@ describe('metadata manager', () => {
 		const s1 = subscribe(manager, createBindTarget(testFilePath, ['var1']));
 		const s2 = subscribe(manager, createBindTarget(testFilePath, ['var2']));
 
-		manager.updateCacheOnExternalUpdate(testFilePath, { var1: 5, var2: 6 });
+		manager.updateCacheOnExternalFrontmatterUpdate(testFilePath, { var1: 5, var2: 6 });
 
 		expect(s1.signal.get()).toBe(5);
 		expect(s1.spy).toHaveBeenCalledTimes(2);
@@ -111,7 +111,7 @@ describe('metadata manager', () => {
 		const s1 = subscribe(manager, createBindTarget(testFilePath, ['var1']));
 		const s2 = subscribe(manager, createBindTarget('otherFile', ['var1']));
 
-		manager.updateCacheOnExternalUpdate(testFilePath, { var1: 5 });
+		manager.updateCacheOnExternalFrontmatterUpdate(testFilePath, { var1: 5 });
 
 		expect(s1.signal.get()).toBe(5);
 		expect(s1.spy).toHaveBeenCalledTimes(2);

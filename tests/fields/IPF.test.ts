@@ -444,7 +444,7 @@ describe('IPF', () => {
 			getUUID(),
 			new Signal<unknown>(undefined),
 			{
-				storageType: BindTargetStorageType.METADATA,
+				storageType: BindTargetStorageType.FRONTMATTER,
 				storagePath: TEST_FILE_PATH,
 				storageProp: parsePropPath(['something_unused']),
 				listenToChildren: false,
@@ -461,7 +461,7 @@ describe('IPF', () => {
 	}
 
 	function setCacheExternally(metadata: Metadata): void {
-		testPlugin.metadataManager.updateCacheOnExternalUpdate(TEST_FILE_PATH, metadata);
+		testPlugin.metadataManager.updateCacheOnExternalFrontmatterUpdate(TEST_FILE_PATH, metadata);
 	}
 
 	function getCacheMetadata(): Metadata | undefined {

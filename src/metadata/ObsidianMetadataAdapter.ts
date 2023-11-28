@@ -67,7 +67,7 @@ export class ObsidianMetadataAdapter implements IMetadataAdapter {
 	public load(): void {
 		this.plugin.registerEvent(
 			this.plugin.app.metadataCache.on('changed', (file, _, cache) => {
-				this.manager?.updateCacheOnExternalUpdate(file.path, cache.frontmatter ?? {});
+				this.manager?.updateCacheOnExternalFrontmatterUpdate(file.path, cache.frontmatter ?? {});
 			}),
 		);
 

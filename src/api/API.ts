@@ -225,7 +225,7 @@ export class API implements IAPI {
 			uuid,
 			signal,
 			{
-				storageType: BindTargetStorageType.METADATA,
+				storageType: BindTargetStorageType.FRONTMATTER,
 				storagePath: filePath,
 				storageProp: parsePropPath(metadataPath),
 				listenToChildren: listenToChildren,

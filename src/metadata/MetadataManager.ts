@@ -1,6 +1,11 @@
-import { areArraysEqual, arrayStartsWith } from '../utils/Utils';
+import { areArraysEqual, arrayStartsWith, deepFreeze } from '../utils/Utils';
 import { type Signal } from '../utils/Signal';
-import { type Metadata, type MetadataManagerCacheItem } from './MetadataManagerCacheItem';
+import {
+	type IMetadataManagerCache,
+	type Metadata,
+	type MetadataManagerCacheItem,
+	type MetadataManagerGlobalCache,
+} from './MetadataManagerCacheItem';
 import { ErrorLevel, MetaBindBindTargetError, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
 import { type IMetadataAdapter } from './IMetadataAdapter';
 import { type IMetadataSubscription } from './IMetadataSubscription';
@@ -76,11 +81,16 @@ function bindTargetToString(a: BindTargetDeclaration | undefined): string {
 
 export class MetadataManager {
 	cache: Map<string, MetadataManagerCacheItem>;
-	// interval: number | undefined;
+	globalCache: MetadataManagerGlobalCache;
 	metadataAdapter: IMetadataAdapter;
 
 	constructor(metadataAdapter: IMetadataAdapter) {
 		this.cache = new Map<string, MetadataManagerCacheItem>();
+		this.globalCache = {
+			metadata: deepFreeze({}),
+			memory: {},
+			subscriptions: [],
+		};
 
 		this.metadataAdapter = metadataAdapter;
 		this.metadataAdapter.setManagerInstance(this);
@@ -110,6 +120,22 @@ export class MetadataManager {
 				cause: 'local scope should be resolved by the time the subscription is created',
 			});
 		}
+		if (subscription.bindTarget?.storageType === BindTargetStorageType.GLOBAL_MEMORY) {
+			console.debug(
+				`meta-bind | MetadataManager >> registered ${
+					subscription.uuid
+				} to global memory cache -> ${subscription.bindTarget.storageProp.toString()}`,
+			);
+			this.globalCache.subscriptions.push(subscription);
+			subscription.notify(
+				this.getPropertyFromCache(
+					this.globalCache,
+					subscription.bindTarget.storageType,
+					subscription.bindTarget.storageProp,
+				),
+			);
+			return;
+		}
 
 		const fileCache: MetadataManagerCacheItem | undefined = this.getCacheForFile(
 			subscription.bindTarget.storagePath,
@@ -126,7 +152,13 @@ export class MetadataManager {
 			fileCache.cyclesSinceInactive = 0;
 			fileCache.subscriptions.push(subscription);
 
-			subscription.notify(PropUtils.tryGet(fileCache.metadata, subscription.bindTarget.storageProp));
+			subscription.notify(
+				this.getPropertyFromCache(
+					fileCache,
+					subscription.bindTarget.storageType,
+					subscription.bindTarget.storageProp,
+				),
+			);
 		} else {
 			console.debug(
 				`meta-bind | MetadataManager >> registered ${subscription.uuid} to newly created file cache ${
@@ -134,8 +166,6 @@ export class MetadataManager {
 				} -> ${subscription.bindTarget.storageProp.toString()}`,
 			);
 
-			// const file = this.plugin.app.vault.getAbstractFileByPath(subscription.bindTarget.filePath) as TFile;
-			// const frontmatter = this.plugin.app.metadataCache.getFileCache(file)?.frontmatter;
 			const { metadata, extraCache } = this.metadataAdapter.getMetadataAndExtraCache(subscription);
 
 			const newCache: MetadataManagerCacheItem = {
@@ -154,7 +184,13 @@ export class MetadataManager {
 				newCache.metadata,
 			);
 
-			subscription.notify(PropUtils.tryGet(newCache.metadata, subscription.bindTarget.storageProp));
+			subscription.notify(
+				this.getPropertyFromCache(
+					newCache,
+					subscription.bindTarget.storageType,
+					subscription.bindTarget.storageProp,
+				),
+			);
 
 			this.createCacheForFile(subscription.bindTarget.storagePath, newCache);
 		}
@@ -410,29 +446,46 @@ export class MetadataManager {
 			return;
 		}
 
-		const metadataPath = subscription.bindTarget.storageProp;
-		const filePath = subscription.bindTarget.storagePath;
+		const storageProp = subscription.bindTarget.storageProp;
+		const storagePath = subscription.bindTarget.storagePath;
+		const storageType = subscription.bindTarget.storageType;
 
 		console.debug(
 			`meta-bind | MetadataManager >> updating "${JSON.stringify(
-				metadataPath,
-			)}" in "${filePath}" metadata cache to`,
+				storageProp,
+			)}" in "${storagePath}" metadata cache to`,
 			value,
 		);
 
-		const fileCache = this.getCacheForFile(filePath);
-		if (!fileCache) {
-			return;
+		if (storageType === BindTargetStorageType.FRONTMATTER) {
+			const fileCache = this.getCacheForFile(storagePath);
+			if (!fileCache) {
+				return;
+			}
+			PropUtils.setAndCreate(fileCache.metadata, storageProp, value);
+
+			fileCache.cyclesSinceLastChange = 0;
+			fileCache.changed = true;
+
+			this.notifyFileCacheListeners(fileCache, BindTargetStorageType.FRONTMATTER, storageProp, subscription.uuid);
+		} else if (storageType === BindTargetStorageType.MEMORY) {
+			const fileCache = this.getCacheForFile(storagePath);
+			if (!fileCache) {
+				return;
+			}
+			PropUtils.setAndCreate(fileCache.memory, storageProp, value);
+
+			this.notifyFileCacheListeners(fileCache, BindTargetStorageType.MEMORY, storageProp, subscription.uuid);
+		} else if (storageType === BindTargetStorageType.GLOBAL_MEMORY) {
+			PropUtils.setAndCreate(this.globalCache.memory, storageProp, value);
+
+			this.notifyFileCacheListeners(
+				this.globalCache,
+				BindTargetStorageType.GLOBAL_MEMORY,
+				storageProp,
+				subscription.uuid,
+			);
 		}
-
-		// TODO: update the correct storage location
-		PropUtils.setAndCreate(fileCache.metadata, metadataPath, value);
-
-		fileCache.cyclesSinceLastChange = 0;
-		fileCache.changed = true;
-
-		// TODO: notify only the subscriptions that match the storage location
-		this.notifyListeners(fileCache, metadataPath, subscription.uuid);
 	}
 
 	/**
@@ -441,7 +494,7 @@ export class MetadataManager {
 	 * @param filePath
 	 * @param newMetadata
 	 */
-	updateCacheOnExternalUpdate(filePath: string, newMetadata: Metadata): void {
+	updateCacheOnExternalFrontmatterUpdate(filePath: string, newMetadata: Metadata): void {
 		const fileCache = this.getCacheForFile(filePath);
 		if (!fileCache) {
 			return;
@@ -452,27 +505,28 @@ export class MetadataManager {
 			return;
 		}
 
-		const metadata: Record<string, unknown> = Object.assign({}, newMetadata); // copy
+		const metadata: Record<string, unknown> = structuredClone(newMetadata); // copy
 		delete metadata.position;
 
 		console.debug(`meta-bind | MetadataManager >> updating "${filePath}" on frontmatter update`, metadata);
 
 		fileCache.metadata = metadata;
 
-		// TODO: only update subscriptions that match the storage location
-		this.notifyListeners(fileCache);
+		this.notifyFileCacheListeners(fileCache, BindTargetStorageType.FRONTMATTER);
 	}
 
 	/**
 	 * Notifies all subscriptions except a certain except id to prevent infinite loops.
 	 *
 	 * @param fileCache
-	 * @param metadataPath
+	 * @param storageType
+	 * @param storageProp if undefined, notifies all subscriptions
 	 * @param exceptUuid
 	 */
-	notifyListeners(
-		fileCache: MetadataManagerCacheItem,
-		metadataPath?: PropPath | undefined,
+	notifyFileCacheListeners(
+		fileCache: IMetadataManagerCache,
+		storageType: BindTargetStorageType,
+		storageProp?: PropPath | undefined,
 		exceptUuid?: string | undefined,
 	): void {
 		// console.log(fileCache);
@@ -486,15 +540,23 @@ export class MetadataManager {
 				continue;
 			}
 
-			if (metadataPath) {
+			if (subscription.bindTarget.storageType !== storageType) {
+				continue;
+			}
+
+			if (storageProp) {
 				if (
 					metadataPathHasUpdateOverlap(
-						metadataPath.toStringArray(),
+						storageProp.toStringArray(),
 						subscription.bindTarget.storageProp.toStringArray(),
 						subscription.bindTarget.listenToChildren,
 					)
 				) {
-					const value: unknown = PropUtils.tryGet(fileCache.metadata, subscription.bindTarget.storageProp);
+					const value: unknown = this.getPropertyFromCache(
+						fileCache,
+						subscription.bindTarget.storageType,
+						subscription.bindTarget.storageProp,
+					);
 					console.debug(
 						`meta-bind | MetadataManager >> notifying input field ${subscription.uuid} of updated metadata value`,
 						value,
@@ -502,7 +564,11 @@ export class MetadataManager {
 					subscription.notify(value);
 				}
 			} else {
-				const value: unknown = PropUtils.tryGet(fileCache.metadata, subscription.bindTarget.storageProp);
+				const value: unknown = this.getPropertyFromCache(
+					fileCache,
+					subscription.bindTarget.storageType,
+					subscription.bindTarget.storageProp,
+				);
 				console.debug(
 					`meta-bind | MetadataManager >> notifying input field ${subscription.uuid} of updated metadata`,
 					subscription.bindTarget.storageProp,
@@ -525,5 +591,33 @@ export class MetadataManager {
 		}
 
 		this.cache.delete(filePath);
+	}
+
+	private getPropertyFromCache(
+		cache: IMetadataManagerCache,
+		storageType: BindTargetStorageType,
+		storageProp: PropPath,
+	): unknown {
+		if (storageType === BindTargetStorageType.FRONTMATTER) {
+			return PropUtils.tryGet(cache.metadata, storageProp);
+		} else if (storageType === BindTargetStorageType.MEMORY) {
+			return PropUtils.tryGet(cache.memory, storageProp);
+		} else if (storageType === BindTargetStorageType.GLOBAL_MEMORY) {
+			if (this.globalCache !== cache) {
+				throw new MetaBindInternalError({
+					errorLevel: ErrorLevel.CRITICAL,
+					effect: 'can not get property from cache',
+					cause: 'cache is not the global cache',
+				});
+			}
+
+			return PropUtils.tryGet(cache.memory, storageProp);
+		}
+
+		throw new MetaBindInternalError({
+			errorLevel: ErrorLevel.CRITICAL,
+			effect: 'can not get property from cache',
+			cause: `bind target storage type "${storageType}" is not supported`,
+		});
 	}
 }

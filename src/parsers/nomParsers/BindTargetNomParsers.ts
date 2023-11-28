@@ -71,6 +71,7 @@ const metadataPath: Parser<UnvalidatedBindTargetDeclaration> = P.sequenceMap(
 
 export const BIND_TARGET: Parser<UnvalidatedBindTargetDeclaration> = P.sequenceMap(
 	(a, b, c) => {
+		c.storageType = a;
 		c.storagePath = b;
 		return c;
 	},

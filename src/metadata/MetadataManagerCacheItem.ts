@@ -2,7 +2,13 @@ import { type IMetadataSubscription } from './IMetadataSubscription';
 
 export type Metadata = Record<string, unknown>;
 
-export interface MetadataManagerCacheItem {
+export interface IMetadataManagerCache {
+	metadata: Metadata;
+	memory: Metadata;
+	subscriptions: IMetadataSubscription[];
+}
+
+export interface MetadataManagerCacheItem extends IMetadataManagerCache {
 	extraCache: unknown;
 	metadata: Metadata;
 	memory: Metadata;
@@ -23,4 +29,9 @@ export interface MetadataManagerCacheItem {
 	 * Whether the there are no subscribers to the cache.
 	 */
 	inactive: boolean;
+}
+
+export interface MetadataManagerGlobalCache extends IMetadataManagerCache {
+	memory: Metadata;
+	subscriptions: IMetadataSubscription[];
 }
