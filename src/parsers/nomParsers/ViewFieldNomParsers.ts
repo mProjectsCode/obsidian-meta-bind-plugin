@@ -42,7 +42,7 @@ export const VIEW_FIELD_DECLARATION: Parser<(string | UnvalidatedBindTargetDecla
 		return [first, ...other.flat()];
 	},
 	viewFieldContent,
-	P.sequence(BIND_TARGET.wrap(P.string('{'), P.string('}')), viewFieldContent).many(),
+	P.sequence(BIND_TARGET.wrapString('{', '}'), viewFieldContent).many(),
 );
 
 const viewFieldExtraDeclaration: Parser<PartialUnvalidatedViewFieldDeclaration> = P.sequenceMap(
@@ -58,7 +58,7 @@ const viewFieldExtraDeclaration: Parser<PartialUnvalidatedViewFieldDeclaration> 
 	ident.node(createResultNode).optional().describe('input field type'),
 	fieldArguments
 		.trim(P_UTILS.optionalWhitespace())
-		.wrap(P.string('('), P.string(')'))
+		.wrapString('(', ')')
 		.optional([] as UnvalidatedFieldArgument[]),
 	P.sequence(P.string(':'), BIND_TARGET).optional(),
 );
@@ -78,8 +78,8 @@ export const VIEW_FIELD_FULL_DECLARATION: Parser<PartialUnvalidatedViewFieldDecl
 		}
 	},
 	P.string('VIEW'),
-	VIEW_FIELD_DECLARATION.wrap(P.string('['), P.string(']')),
-	viewFieldExtraDeclaration.wrap(P.string('['), P.string(']')).optional(),
+	VIEW_FIELD_DECLARATION.wrapString('[', ']'),
+	viewFieldExtraDeclaration.wrapString('[', ']').optional(),
 	P_UTILS.eof(),
 );
 
@@ -94,21 +94,21 @@ const jsViewFieldBindTargetMapping: Parser<UnvalidatedJsViewFieldBindTargetMappi
 			name: name,
 		} satisfies UnvalidatedJsViewFieldBindTargetMapping;
 	},
-	BIND_TARGET.wrap(P.string('{'), P.string('}')),
+	BIND_TARGET.wrapString('{', '}'),
 	P.string(' and children').optional(),
 	P.string(' as '),
 	ident,
 );
 
 export const JS_VIEW_FIELD_DECLARATION: Parser<UnvalidatedJsViewFieldDeclaration> = P.sequenceMap(
-	(bindTargetMappings, _1, _2, code) => {
+	(bindTargetMappings, writeToBindTarget, code) => {
 		return {
 			bindTargetMappings: bindTargetMappings,
+			writeToBindTarget: writeToBindTarget,
 			code: code,
 		} satisfies UnvalidatedJsViewFieldDeclaration;
 	},
-	jsViewFieldBindTargetMapping.separateBy(P_UTILS.whitespace()),
-	P_UTILS.whitespace(),
-	P.string('---'),
-	P_UTILS.remaining(),
+	jsViewFieldBindTargetMapping.separateBy(P_UTILS.whitespace()).skip(P_UTILS.whitespace()),
+	P.string('save to ').then(BIND_TARGET.wrapString('{', '}')).skip(P_UTILS.whitespace()).optional(),
+	P.string('---').then(P_UTILS.remaining()),
 );

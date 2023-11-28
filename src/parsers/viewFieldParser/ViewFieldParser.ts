@@ -101,6 +101,15 @@ export class ViewFieldParser {
 					name: x.name,
 				};
 			});
+
+			if (unvalidatedDeclaration.writeToBindTarget !== undefined) {
+				declaration.writeToBindTarget = this.plugin.api.bindTargetParser.validateBindTarget(
+					fullDeclaration,
+					unvalidatedDeclaration.writeToBindTarget,
+					filePath,
+				);
+			}
+
 			declaration.code = unvalidatedDeclaration.code;
 		} catch (e) {
 			declaration.errorCollection.add(e);

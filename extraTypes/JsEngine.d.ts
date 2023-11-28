@@ -364,6 +364,7 @@ declare module 'jsEngine/ResultRenderer' {
 		readonly component: Component;
 		constructor(plugin: JsEnginePlugin, container: HTMLElement, sourcePath: string, component: Component);
 		render(content: unknown): Promise<void>;
+		renderToSimpleObject(content: unknown): unknown;
 	}
 }
 declare module 'jsEngine/engine/JsExecution' {
@@ -587,5 +588,17 @@ declare module 'jsEngine/JsMDRC' {
 		render(): Promise<void>;
 		onload(): Promise<void>;
 		onunload(): void;
+	}
+}
+declare module 'jsEngine/jsEditor/JsEditor' {
+	import { TextFileView } from 'obsidian';
+	import { EditorView } from '@codemirror/view';
+	export const JS_EDITOR_VIEW_TYPE = 'js-engine-js-editor';
+	export class JsEditor extends TextFileView {
+		editor?: EditorView;
+		clear(): void;
+		getViewData(): string;
+		getViewType(): string;
+		setViewData(data: string, _clear: boolean): void;
 	}
 }

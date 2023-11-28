@@ -115,14 +115,14 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 		this.metadataSubscription = this.plugin.metadataManager.subscribeComputed(
 			this.uuid,
 			updateSignal,
-			undefined,
+			this.viewFieldDeclaration.writeToBindTarget,
 			this.variables.map((x): ComputedSubscriptionDependency => {
 				return {
 					bindTarget: x.bindTargetDeclaration,
 					callbackSignal: x.inputSignal,
 				};
 			}),
-			() => this.update(),
+			async () => await this.update(),
 			() => this.unload(),
 		);
 	}
@@ -183,9 +183,9 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 		super.onunload();
 	}
 
-	async update(): Promise<void> {
+	async update(): Promise<unknown> {
 		if (!this.renderContainer) {
-			return;
+			return undefined;
 		}
 
 		try {
@@ -200,12 +200,16 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 
 			const execution = await this.evaluateExpression();
 			const renderer = jsEngine.internal.createRenderer(this.renderContainer, this.filePath, this);
+
 			await renderer.render(execution.result);
+
+			return renderer.renderToSimpleObject(execution.result);
 		} catch (e) {
 			if (e instanceof Error) {
 				this.renderContainer.innerText = e.message;
 				this.renderContainer.addClass('mb-error');
 			}
+			return undefined;
 		}
 	}
 }

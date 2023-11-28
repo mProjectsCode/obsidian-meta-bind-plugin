@@ -172,10 +172,9 @@ let TEST_CONFIG: IPFTest[] = [
 		testCases: [
 			{
 				declaration: `INPUT[${InputFieldType.DATE_PICKER}:${TEST_PROP}]`,
-				validValues: ['2021-01-01', '2021-01-02', '2021-01-03'],
+				validValues: ['2021-01-01', '2021-01-02', '2021-01-03', TEST_VALUES.NULL],
 				invalidValues: [
 					TEST_VALUES.UNDEFINED,
-					TEST_VALUES.NULL,
 					TEST_VALUES.OBJECT,
 					TEST_VALUES.ARRAY,
 					TEST_VALUES.EMPTY_STRING,

@@ -3,12 +3,10 @@ import { type PropAccessResult } from './PropAccess';
 
 export class PropUtils {
 	static get(obj: unknown, path: PropPath): unknown {
-		console.log('PropUtils.get', obj, path);
 		return path.get(obj).child;
 	}
 
 	static tryGet(obj: unknown, path: PropPath): unknown {
-		console.log('PropUtils.tryGet', obj, path);
 		return path.tryGet(obj)?.child;
 	}
 

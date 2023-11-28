@@ -51,6 +51,7 @@ export interface UnvalidatedJsViewFieldBindTargetMapping {
 
 export interface UnvalidatedJsViewFieldDeclaration {
 	bindTargetMappings: UnvalidatedJsViewFieldBindTargetMapping[];
+	writeToBindTarget: UnvalidatedBindTargetDeclaration | undefined;
 	code: string;
 }
 
@@ -63,6 +64,7 @@ export interface JsViewFieldDeclaration {
 	fullDeclaration: string;
 
 	bindTargetMappings: JsViewFieldBindTargetMapping[];
+	writeToBindTarget?: BindTargetDeclaration;
 	code: string;
 
 	errorCollection: ErrorCollection;

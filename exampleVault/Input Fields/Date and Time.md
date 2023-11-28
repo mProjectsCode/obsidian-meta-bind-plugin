@@ -18,6 +18,10 @@ INPUT[date_picker(showcase):date2]
 INPUT[datePicker(showcase):date2]
 ```
 
+```meta-bind
+INPUT[datePicker(showcase, defaultValue(null)):date3]
+```
+
 ### Time
 ```meta-bind
 INPUT[time(showcase):time]

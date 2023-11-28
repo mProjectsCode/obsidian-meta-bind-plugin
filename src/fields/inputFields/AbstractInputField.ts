@@ -23,7 +23,11 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 			this.inputSignal,
 			(value: unknown): MetadataValueType => {
 				const filteredValue = this.filterValue(value);
-				return filteredValue ?? this.getDefaultValue();
+				if (filteredValue !== undefined) {
+					return filteredValue;
+				} else {
+					return this.getDefaultValue();
+				}
 			},
 		);
 	}
@@ -110,11 +114,15 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 
 	public getDefaultValue(): MetadataValueType {
 		const defaultValueArgument = this.base.getArgument(InputFieldArgumentType.DEFAULT_VALUE);
-		if (!defaultValueArgument) {
+		if (defaultValueArgument === undefined) {
 			return this.mapValue(this.getFallbackDefaultValue());
 		}
 		const filteredValue = this.filterValue(defaultValueArgument.value);
-		return filteredValue ?? this.mapValue(this.getFallbackDefaultValue());
+		if (filteredValue !== undefined) {
+			return filteredValue;
+		} else {
+			return this.mapValue(this.getFallbackDefaultValue());
+		}
 	}
 
 	protected getMountArgs(): Record<string, unknown> {

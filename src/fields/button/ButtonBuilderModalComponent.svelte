@@ -164,5 +164,5 @@ Add action of type
 
 <ModalButtonGroup>
 	<Button variant="primary" on:click={() => modal.okay(buttonConfig)}>Ok</Button>
-	<Button variant="destructive" on:click={() => modal.cancel()}>Cancel</Button>
+	<Button variant="default" on:click={() => modal.cancel()}>Cancel</Button>
 </ModalButtonGroup>
