@@ -71,6 +71,7 @@ export class InlineButtonMDRC extends AbstractMDRC {
 		console.log('meta-bind | InlineButtonMDRC >> onload');
 		this.containerEl.empty();
 		this.containerEl.addClass('mb-button-group');
+		this.plugin.mdrcManager.registerMDRC(this);
 
 		this.callbackComponent.load();
 
@@ -103,5 +104,7 @@ export class InlineButtonMDRC extends AbstractMDRC {
 		console.log('meta-bind | InlineButtonMDRC >> onunload');
 		this.callbackComponent.unload();
 		this.buttonComponent?.$destroy();
+		this.containerEl.empty();
+		this.plugin.mdrcManager.unregisterMDRC(this);
 	}
 }

@@ -137,6 +137,8 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 		this.containerEl.addClass('mb-view');
 		this.containerEl.empty();
 
+		this.plugin.mdrcManager.registerMDRC(this);
+
 		if (getJsEngineAPI(this.plugin.app) === undefined) {
 			this.errorCollection.add(
 				new MetaBindJsError({
@@ -160,7 +162,6 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 		}
 
 		this.registerSelfToMetadataManager();
-		this.plugin.mdrcManager.registerMDRC(this);
 
 		const container: HTMLDivElement = createDiv();
 		container.addClass('mb-view-wrapper');

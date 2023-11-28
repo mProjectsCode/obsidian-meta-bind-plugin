@@ -75,7 +75,15 @@ export const BIND_TARGET: Parser<UnvalidatedBindTargetDeclaration> = P.sequenceM
 		c.storagePath = b;
 		return c;
 	},
-	P.manyNotOf('^').node(createResultNode).skip(P.string('^')).optional(),
-	filePath.node(createResultNode).skip(P.string('#')).optional(),
-	metadataPath,
-);
+	ident
+		.describe('storage type')
+		.node(createResultNode)
+		.skip(P.string('^').describe('storage type separator "^"'))
+		.optional(),
+	filePath
+		.describe('storage path')
+		.node(createResultNode)
+		.skip(P.string('#').describe('storage/file path separator "#"'))
+		.optional(),
+	metadataPath.describe('property path'),
+).box('bind target');

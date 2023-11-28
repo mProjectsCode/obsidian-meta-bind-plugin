@@ -79,7 +79,6 @@ export class ObsidianMetadataAdapter implements IMetadataAdapter {
 
 		this.plugin.registerEvent(
 			this.plugin.app.vault.on('rename', (_, oldPath) => {
-				console.log('rename');
 				this.manager?.deleteCacheInstantly(oldPath);
 			}),
 		);

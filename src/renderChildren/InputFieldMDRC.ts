@@ -149,6 +149,9 @@ export class InputFieldMDRC extends AbstractMDRC implements IInputFieldBase {
 		this.containerEl.addClass('mb-input');
 		this.containerEl.empty();
 
+		// --- Register to MDRC manager ---
+		this.plugin.mdrcManager.registerMDRC(this);
+
 		this.createInputField();
 
 		// if there is an error, render error then quit
@@ -156,9 +159,6 @@ export class InputFieldMDRC extends AbstractMDRC implements IInputFieldBase {
 			this.createErrorIndicator(this.containerEl);
 			return;
 		}
-
-		// --- Register to MDRC manager ---
-		this.plugin.mdrcManager.registerMDRC(this);
 
 		const wrapperContainer = this.createWrapper();
 

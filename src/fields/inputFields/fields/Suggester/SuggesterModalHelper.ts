@@ -37,10 +37,7 @@ export function getSuggesterOptions(
 
 					if (useLinks) {
 						options.push(
-							new SuggesterOption<MBLiteral>(
-								`[[${dvFile.path}|${dvFile.name}]]`,
-								`file-link: ${dvFile.name}`,
-							),
+							new SuggesterOption<MBLiteral>(`[[${dvFile.path}|${dvFile.name}]]`, `file: ${dvFile.name}`),
 						);
 					} else {
 						// console.log(tFile);

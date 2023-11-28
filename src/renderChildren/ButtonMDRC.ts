@@ -43,6 +43,7 @@ export class ButtonMDRC extends AbstractMDRC {
 	public onload(): void {
 		console.log('meta-bind | ButtonMDRC >> onload');
 		this.containerEl.addClass('mb-button', 'mb-button-block');
+		this.plugin.mdrcManager.registerMDRC(this);
 
 		const yamlContent = parseYaml(this.content) as unknown;
 		const validationResult = ButtonConfigValidator.safeParse(yamlContent);
@@ -87,5 +88,6 @@ export class ButtonMDRC extends AbstractMDRC {
 		}
 		this.buttonComponent?.$destroy();
 		this.containerEl.empty();
+		this.plugin.mdrcManager.unregisterMDRC(this);
 	}
 }

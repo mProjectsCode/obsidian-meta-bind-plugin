@@ -63,6 +63,8 @@ export class EmbedMDRC extends AbstractMDRC {
 	}
 
 	public async onload(): Promise<void> {
+		this.plugin.mdrcManager.registerMDRC(this);
+
 		if (this.depth >= EMBED_MAX_DEPTH) {
 			this.containerEl.empty();
 			this.containerEl.addClass('mb-error');
@@ -72,5 +74,9 @@ export class EmbedMDRC extends AbstractMDRC {
 
 			await MarkdownRenderer.render(this.plugin.app, fileContent, this.containerEl, this.filePath, this);
 		}
+	}
+
+	public onunload(): void {
+		this.plugin.mdrcManager.unregisterMDRC(this);
 	}
 }

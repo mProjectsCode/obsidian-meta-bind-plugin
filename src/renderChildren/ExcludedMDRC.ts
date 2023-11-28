@@ -3,6 +3,7 @@ import { AbstractMDRC } from './AbstractMDRC';
 export class ExcludedMDRC extends AbstractMDRC {
 	public onload(): void {
 		console.log('meta-bind | ExcludedMDRC >> load', this);
+		this.plugin.mdrcManager.registerMDRC(this);
 
 		this.containerEl.empty();
 
@@ -14,5 +15,6 @@ export class ExcludedMDRC extends AbstractMDRC {
 
 	public onunload(): void {
 		console.log('meta-bind | ExcludedMDRC >> unload', this);
+		this.plugin.mdrcManager.unregisterMDRC(this);
 	}
 }

@@ -66,3 +66,16 @@ actions:
     command: theme:use-dark
 
 ```
+
+```meta-bind-button
+label: This is a button
+hidden: false
+id: ""
+style: primary
+actions:
+  - type: command
+    command: workspace:new-tab
+  - type: js
+    jsFile: "testJsFile.js"
+
+```

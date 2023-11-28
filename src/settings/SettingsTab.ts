@@ -108,9 +108,9 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName('Templates')
+			.setName('Input Field Templates')
 			.setDesc(
-				`You can specify templates here, and access them using \`INPUT[template_name][overrides (optional)]\` in your notes.`,
+				`You can specify input field templates here, and access them using \`INPUT[template_name][overrides (optional)]\` in your notes.`,
 			)
 			.addButton(cb => {
 				cb.setButtonText('Edit Templates');

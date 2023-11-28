@@ -1,8 +1,6 @@
 ---
-playerLevel: 1
-spellLevel: 1
-baseDC: 15
-baseSpellDC: 15
+playerLevel: 5
+spellLevel: 12
 ---
 
 ### DC by Proficiency
@@ -33,21 +31,20 @@ DC Level: `INPUT[number:playerLevel]`
 
 | Difficulty               | DC                                                                                                        |
 | ------------------------ | --------------------------------------------------------------------------------------------------------- |
-| Incredibly Easy          | `VIEW[{baseDC} - 10]`                                                                                     |
-| Very Easy                | `VIEW[{baseDC} - 5]`                                                                                      |
-| Easy                     | `VIEW[{baseDC} - 2]`                                                                                      |
-| Normal                   | `VIEW[({playerLevel} < 20 ? {playerLevel} + 14 + floor({playerLevel} / 3) : {playerLevel} * 2)][:baseDC]` |
-| Hard (Uncommon)          | `VIEW[{baseDC} + 2]`                                                                                      |
-| Very Hard (Rare)         | `VIEW[{baseDC} + 5]`                                                                                      |
-| Incredibly Hard (Unique) | `VIEW[{baseDC} + 10]`                                                                                     |
+| Incredibly Easy          | `VIEW[{memory^baseDC} - 10]`                                                                                     |
+| Very Easy                | `VIEW[{memory^baseDC} - 5]`                                                                                      |
+| Easy                     | `VIEW[{memory^baseDC} - 2]`                                                                                      |
+| Normal                   | `VIEW[{playerLevel} < 20 ? {playerLevel} + 14 + floor({playerLevel} / 3) : {playerLevel} * 2][math():memory^baseDC]` |
+| Hard (Uncommon)          | `VIEW[{memory^baseDC} + 2]`                                                                                      |
+| Very Hard (Rare)         | `VIEW[{memory^baseDC} + 5]`                                                                                      |
+| Incredibly Hard (Unique) | `VIEW[{memory^baseDC} + 10]`                                                                                     |
 
 Spell Level: `INPUT[number:spellLevel]`
 
 | Spell Rarity | DC                                                                             |
 | ------------ | ------------------------------------------------------------------------------ |
-| Normal       | `VIEW[(({spellLevel} * 2 - 1) + 14 + floor(({spellLevel} * 2 - 1) / 3))][:baseSpellDC]`      |
-| Uncommon     | `VIEW[{baseSpellDC} + 2]`  |
-| Rare         | `VIEW[{baseSpellDC} + 5]`  |
-| Unique       | `VIEW[{baseSpellDC} + 10]` |
-
+| Normal       | `VIEW[(({spellLevel} * 2 - 1) + 14 + floor(({spellLevel} * 2 - 1) / 3))][:memory^baseSpellDC]`      |
+| Uncommon     | `VIEW[{memory^baseSpellDC} + 2]`  |
+| Rare         | `VIEW[{memory^baseSpellDC} + 5]`  |
+| Unique       | `VIEW[{memory^baseSpellDC} + 10]` |
 

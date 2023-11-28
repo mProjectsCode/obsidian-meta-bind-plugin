@@ -65,7 +65,7 @@ export const argumentValue: Parser<ParsingResultNode> = P.or(singleQuotedString,
 
 export const argumentValues: Parser<ParsingResultNode[]> = P.separateBy(
 	argumentValue,
-	P.string(',').trim(P_UTILS.optionalWhitespace()),
+	P.string(',').describe('argument value separator ","').trim(P_UTILS.optionalWhitespace()),
 );
 
 export const fieldArgument: Parser<UnvalidatedFieldArgument> = P.sequenceMap(
@@ -78,11 +78,11 @@ export const fieldArgument: Parser<UnvalidatedFieldArgument> = P.sequenceMap(
 	ident.node(createResultNode),
 	argumentValues
 		.trim(P_UTILS.optionalWhitespace())
-		.wrap(P.string('('), P.string(')'))
+		.wrap(P.string('(').describe('argument value paren "("'), P.string(')').describe('argument value paren ")"'))
 		.optional([] as ParsingResultNode[]),
 );
 
 export const fieldArguments: Parser<UnvalidatedFieldArgument[]> = P.separateBy(
 	fieldArgument,
-	P.string(',').trim(P_UTILS.optionalWhitespace()),
+	P.string(',').describe('argument separator ","').trim(P_UTILS.optionalWhitespace()),
 );

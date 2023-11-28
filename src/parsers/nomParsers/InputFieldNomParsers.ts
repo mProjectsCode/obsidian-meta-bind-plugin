@@ -20,9 +20,9 @@ export const INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclara
 	ident.node(createResultNode).describe('input field type'),
 	fieldArguments
 		.trim(P_UTILS.optionalWhitespace())
-		.wrap(P.string('('), P.string(')'))
+		.wrap(P.string('(').describe('arguments paren "("'), P.string(')').describe('arguments paren ")"'))
 		.optional([] as UnvalidatedFieldArgument[]),
-	P.sequence(P.string(':'), BIND_TARGET).optional(),
+	P.sequence(P.string(':').describe('bind target separator ":"'), BIND_TARGET).optional(),
 );
 
 export const PARTIAL_INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclaration> = P.sequenceMap(
@@ -37,9 +37,9 @@ export const PARTIAL_INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFiel
 	ident.node(createResultNode).optional().describe('input field type'),
 	fieldArguments
 		.trim(P_UTILS.optionalWhitespace())
-		.wrap(P.string('('), P.string(')'))
+		.wrap(P.string('(').describe('arguments paren "("'), P.string(')').describe('arguments paren ")"'))
 		.optional([] as UnvalidatedFieldArgument[]),
-	P.sequence(P.string(':'), BIND_TARGET).optional(),
+	P.sequence(P.string(':').describe('bind target separator ":"'), BIND_TARGET).optional(),
 );
 
 export const INPUT_FIELD_FULL_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclaration> = P.or(

@@ -104,6 +104,8 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 		this.containerEl.addClass('mb-view');
 		this.containerEl.empty();
 
+		this.plugin.mdrcManager.registerMDRC(this);
+
 		if (!this.errorCollection.hasErrors()) {
 			this.registerSelfToMetadataManager();
 		}
@@ -119,8 +121,6 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 		if (this.errorCollection.hasErrors()) {
 			return;
 		}
-
-		this.plugin.mdrcManager.registerMDRC(this);
 
 		const container: HTMLDivElement = createDiv();
 		container.addClass('mb-view-wrapper');

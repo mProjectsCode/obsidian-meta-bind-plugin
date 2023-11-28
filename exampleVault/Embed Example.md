@@ -5,6 +5,6 @@ select: a
 
 Test Hello
 
-```meta-bind-embed test
+```meta-bind-embed
 [[Test Template]]
 ```

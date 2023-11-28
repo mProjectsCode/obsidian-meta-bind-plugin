@@ -150,7 +150,7 @@ Add action of type
 
 	{#if action.type === ButtonActionType.JS}
 		<SettingComponent name="JS File" description="The JavaScript file to run when this button is clicked.">
-			<input type="text" bind:value={action.js} placeholder="someJsFile.js" />
+			<input type="text" bind:value={action.jsFile} placeholder="someJsFile.js" />
 			<Button variant="destructive" on:click={() => removeAction(i)}>
 				<Icon iconName="x"></Icon>
 			</Button>
@@ -163,6 +163,6 @@ Add action of type
 <div bind:this={buttonEl}></div>
 
 <ModalButtonGroup>
-	<Button variant="primary" on:click={() => modal.okay(buttonConfig)}>Ok</Button>
+	<Button variant="primary" on:click={() => modal.okay(buttonConfig)}>Copy to Clipboard</Button>
 	<Button variant="default" on:click={() => modal.cancel()}>Cancel</Button>
 </ModalButtonGroup>

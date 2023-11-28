@@ -183,6 +183,8 @@ export class MetaBindTable extends AbstractMDRC {
 	}
 
 	onload(): void {
+		this.plugin.mdrcManager.registerMDRC(this);
+
 		this.tableComponent = new MetaBindTableComponent({
 			target: this.containerEl,
 			props: {
@@ -202,6 +204,7 @@ export class MetaBindTable extends AbstractMDRC {
 	}
 
 	public onunload(): void {
+		this.plugin.mdrcManager.unregisterMDRC(this);
 		this.unregisterSelfFromMetadataManager();
 		this.tableComponent?.$destroy();
 	}
