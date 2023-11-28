@@ -9,9 +9,9 @@ import { BindTargetScope } from '../../src/metadata/BindTargetScope';
 import { InputFieldDeclaration } from '../../src/parsers/inputFieldParser/InputFieldDeclaration';
 import { getUUID } from '../../src/utils/Utils';
 import { TestIPFBase } from './TestIPFBase';
-import { ButtonActionRunner } from '../../src/button/ButtonActionRunner';
+import { ButtonActionRunner } from '../../src/fields/button/ButtonActionRunner';
 import { TestPlugin } from './TestPlugin';
-import { ButtonManager } from '../../src/button/ButtonManager';
+import { ButtonManager } from '../../src/fields/button/ButtonManager';
 
 export class TestAPI implements IAPI {
 	public readonly plugin: TestPlugin;

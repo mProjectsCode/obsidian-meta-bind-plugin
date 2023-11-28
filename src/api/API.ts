@@ -26,8 +26,8 @@ import { ViewFieldFactory } from '../fields/viewFields/ViewFieldFactory';
 import { getUUID } from '../utils/Utils';
 import { parsePropPath } from '../utils/prop/PropParser';
 import { RenderChildType } from '../config/FieldConfigs';
-import { ButtonActionRunner } from '../button/ButtonActionRunner';
-import { ButtonManager } from '../button/ButtonManager';
+import { ButtonActionRunner } from '../fields/button/ButtonActionRunner';
+import { ButtonManager } from '../fields/button/ButtonManager';
 import { type BindTargetDeclaration, BindTargetStorageType } from '../parsers/BindTargetDeclaration';
 
 export class API implements IAPI {

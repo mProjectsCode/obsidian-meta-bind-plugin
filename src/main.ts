@@ -1,4 +1,4 @@
-import { type MarkdownPostProcessorContext, Plugin, type WorkspaceLeaf } from 'obsidian';
+import { type MarkdownPostProcessorContext, Plugin, stringifyYaml, type WorkspaceLeaf } from 'obsidian';
 import { MetaBindSettingTab } from './settings/SettingsTab';
 import { DateParser } from './parsers/DateParser';
 import { MetadataManager } from './metadata/MetadataManager';
@@ -16,6 +16,7 @@ import { ObsidianAPIAdapter } from './internalApi/ObsidianAPIAdapter';
 import { RenderChildType } from './config/FieldConfigs';
 import { ButtonMDRC } from './renderChildren/ButtonMDRC';
 import { InlineButtonMDRC } from './renderChildren/InlineButtonMDRC';
+import { ButtonBuilderModal } from './fields/button/ButtonBuilderModal';
 
 export default class MetaBindPlugin extends Plugin implements IPlugin {
 	// @ts-ignore defined in `onload`
@@ -154,7 +155,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		// register commands
 		this.addCommand({
-			id: 'mb-open-docs',
+			id: 'open-docs',
 			name: 'Open Meta Bind Docs',
 			callback: () => {
 				window.open('https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/', '_blank');
@@ -162,7 +163,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		});
 
 		this.addCommand({
-			id: 'mb-open-faq',
+			id: 'open-faq',
 			name: 'Open Meta Bind FAQ',
 			callback: () => {
 				void this.activateView(MB_FAQ_VIEW_TYPE);
@@ -170,10 +171,22 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		});
 
 		this.addCommand({
-			id: 'mb-open-help',
+			id: 'open-help',
 			name: 'Open Meta Bind Help',
 			callback: () => {
 				void this.activateView(MB_FAQ_VIEW_TYPE);
+			},
+		});
+
+		this.addCommand({
+			id: 'open-button-builder',
+			name: 'Open Button Builder',
+			callback: () => {
+				new ButtonBuilderModal(this, config => {
+					void window.navigator.clipboard.writeText(
+						`\`\`\`meta-bind-button\n${stringifyYaml(config)}\n\`\`\``,
+					);
+				}).open();
 			},
 		});
 

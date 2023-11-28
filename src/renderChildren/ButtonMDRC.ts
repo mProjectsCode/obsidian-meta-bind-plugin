@@ -86,5 +86,6 @@ export class ButtonMDRC extends AbstractMDRC {
 			this.plugin.api.buttonManager.removeButton(this.filePath, this.buttonConfig.id);
 		}
 		this.buttonComponent?.$destroy();
+		this.containerEl.empty();
 	}
 }

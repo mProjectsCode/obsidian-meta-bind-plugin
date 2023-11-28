@@ -11,8 +11,8 @@ import { type InputFieldDeclaration } from '../parsers/inputFieldParser/InputFie
 import { type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
 import { getUUID } from '../utils/Utils';
 import { InputFieldFactory } from '../fields/inputFields/InputFieldFactory';
-import { ButtonActionRunner } from '../button/ButtonActionRunner';
-import { ButtonManager } from '../button/ButtonManager';
+import { ButtonActionRunner } from '../fields/button/ButtonActionRunner';
+import { ButtonManager } from '../fields/button/ButtonManager';
 
 export class PublishAPI implements IAPI {
 	public readonly plugin: IPlugin;

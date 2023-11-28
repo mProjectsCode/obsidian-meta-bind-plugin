@@ -1,5 +1,5 @@
-import { type ButtonConfig } from '../config/ButtonConfig';
-import { getUUID } from '../utils/Utils';
+import { type ButtonConfig } from '../../config/ButtonConfig';
+import { getUUID } from '../../utils/Utils';
 
 export class ButtonManager {
 	buttons: Map<string, Map<string, ButtonConfig>>;

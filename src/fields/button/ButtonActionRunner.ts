@@ -1,13 +1,13 @@
-import { type IPlugin } from '../IPlugin';
+import { type IPlugin } from '../../IPlugin';
 import {
 	type ButtonAction,
 	ButtonActionType,
 	type CommandButtonAction,
 	type JSButtonAction,
 	type OpenButtonAction,
-} from '../config/ButtonConfig';
-import { MDLinkParser } from '../parsers/MarkdownLinkParser';
-import { DocsHelper } from '../utils/DocsHelper';
+} from '../../config/ButtonConfig';
+import { MDLinkParser } from '../../parsers/MarkdownLinkParser';
+import { DocsHelper } from '../../utils/DocsHelper';
 
 export class ButtonActionRunner {
 	plugin: IPlugin;

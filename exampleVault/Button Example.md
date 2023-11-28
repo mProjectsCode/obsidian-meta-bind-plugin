@@ -44,3 +44,25 @@ action:
 ```
 
 text `BUTTON[docs-button, open-button]` text
+
+```meta-bind-button
+label: Switch to Light Mode
+hidden: false
+id: ""
+style: destructive
+actions:
+  - type: command
+    command: theme:use-light
+
+```
+
+```meta-bind-button
+label: Switch to Dark Mode
+hidden: false
+id: ""
+style: primary
+actions:
+  - type: command
+    command: theme:use-dark
+
+```
