@@ -2,7 +2,6 @@ import { type IMetadataAdapter } from '../../src/metadata/IMetadataAdapter';
 import { type IMetadataSubscription } from '../../src/metadata/IMetadataSubscription';
 import { type Metadata, type MetadataManagerCacheItem } from '../../src/metadata/MetadataManagerCacheItem';
 import { type MetadataManager } from '../../src/metadata/MetadataManager';
-import structuredClone from '@ungap/structured-clone';
 
 export class TestMetadataAdapter implements IMetadataAdapter {
 	manager: MetadataManager | undefined;
