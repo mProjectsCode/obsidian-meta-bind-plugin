@@ -1,0 +1,11 @@
+{
+	"id": "obsidian-meta-bind-plugin",
+	"name": "Meta Bind Plugin",
+	"version": "0.9.0-canary.20231129T131053",
+	"minAppVersion": "1.4.0",
+	"description": "This plugin can create input fields inside your notes and bind them to metadata fields.",
+	"author": "Moritz Jung",
+	"authorUrl": "https://mprojectscode.github.io/",
+	"helpUrl": "https://www.moritzjung.dev/obsidian-meta-bind-plugin-docs/",
+	"isDesktopOnly": false
+}
