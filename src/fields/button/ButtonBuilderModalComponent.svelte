@@ -114,13 +114,13 @@
 			return 'Open a Link';
 		} else if (actionType === ButtonActionType.JS) {
 			return 'Run a JavaScript File';
-		}else if (actionType === ButtonActionType.INPUT) {
+		} else if (actionType === ButtonActionType.INPUT) {
 			return 'Insert Text at Cursor';
-		}else if (actionType === ButtonActionType.SLEEP) {
+		} else if (actionType === ButtonActionType.SLEEP) {
 			return 'Sleep for Some Time';
-		}else if (actionType === ButtonActionType.TEMPLATER_CREATE_NOTE) {
+		} else if (actionType === ButtonActionType.TEMPLATER_CREATE_NOTE) {
 			return 'Create a New Note Using Templater';
-		}else if (actionType === ButtonActionType.QUICK_SWITCHER) {
+		} else if (actionType === ButtonActionType.QUICK_SWITCHER) {
 			return 'Open the Quick Switcher';
 		}
 	}
