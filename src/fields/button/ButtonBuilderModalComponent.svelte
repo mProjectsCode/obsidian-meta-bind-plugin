@@ -114,6 +114,14 @@
 			return 'Open a Link';
 		} else if (actionType === ButtonActionType.JS) {
 			return 'Run a JavaScript File';
+		}else if (actionType === ButtonActionType.INPUT) {
+			return 'Insert Text at Cursor';
+		}else if (actionType === ButtonActionType.SLEEP) {
+			return 'Sleep for Some Time';
+		}else if (actionType === ButtonActionType.TEMPLATER_CREATE_NOTE) {
+			return 'Create a New Note Using Templater';
+		}else if (actionType === ButtonActionType.QUICK_SWITCHER) {
+			return 'Open the Quick Switcher';
 		}
 	}
 </script>
@@ -228,7 +236,7 @@ Add action of type
 		</SettingComponent>
 
 		<SettingComponent name="File Name: {action.fileName || 'default'}" description="The file name of the new note.">
-			<Button variant="primary" on:click={() => changeTemplateFile(action)}>Change</Button>
+			<input type="text" bind:value={action.fileName} placeholder="some name" />
 		</SettingComponent>
 
 		<SettingComponent name="Open Note" description="Whether to open the new note after this action ran.">
