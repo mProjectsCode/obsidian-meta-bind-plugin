@@ -18,7 +18,7 @@ style: default
 label: Run Custom JS
 action:
   type: js
-  jsFile: testJsFile.js
+  file: testJsFile.js
 ```
 
 And open internal and external links
@@ -76,6 +76,65 @@ actions:
   - type: command
     command: workspace:new-tab
   - type: js
-    jsFile: "testJsFile.js"
+    file: "testJsFile.js"
+
+```
+
+
+## Button Types
+
+```meta-bind-button
+label: Input
+hidden: false
+id: ""
+style: default
+actions:
+  - type: command
+    command: command-palette:open
+  - type: input
+    str: help
+
+```
+
+```meta-bind-button
+label: Templater
+hidden: false
+id: ""
+style: default
+actions:
+  - type: templaterCreateNote
+    templateFile: "templates/templater/Templater Template.md"
+    fileName: Button Templater Test
+
+```
+
+```meta-bind-button
+label: Sleep
+hidden: false
+id: ""
+style: default
+actions:
+  - type: command
+    command: command-palette:open
+  - type: sleep
+    ms: 1000
+  - type: input
+    str: help
+
+```
+
+
+```meta-bind-button
+label: Show PF2e Examples with Delay
+hidden: false
+id: ""
+style: default
+actions:
+  - type: command
+    command: switcher:open
+  - type: sleep
+    ms: 500
+  - type: input
+    str: PF2e
 
 ```

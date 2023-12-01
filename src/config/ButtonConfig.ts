@@ -1,12 +1,5 @@
-import { type RefinementCtx, z } from 'zod';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function schemaForType<T>(): <S extends z.ZodType<T, any, any>>(arg: S) => S {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	return function <S extends z.ZodType<T, any, any>>(arg: S): S {
-		return arg;
-	};
-}
+import { z } from 'zod';
+import { oneOf, schemaForType } from '../utils/ZodHelpers';
 
 export enum ButtonStyleType {
 	DEFAULT = 'default',
@@ -19,6 +12,10 @@ export enum ButtonActionType {
 	COMMAND = 'command',
 	JS = 'js',
 	OPEN = 'open',
+	INPUT = 'input',
+	SLEEP = 'sleep',
+	TEMPLATER_CREATE_NOTE = 'templaterCreateNote',
+	QUICK_SWITCHER = 'quickSwitcher',
 }
 
 export interface CommandButtonAction {
@@ -35,13 +32,13 @@ export const CommandButtonActionValidator = schemaForType<CommandButtonAction>()
 
 export interface JSButtonAction {
 	type: ButtonActionType.JS;
-	jsFile: string;
+	file: string;
 }
 
 export const JSButtonActionValidator = schemaForType<JSButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.JS),
-		jsFile: z.string(),
+		file: z.string(),
 	}),
 );
 
@@ -57,10 +54,79 @@ export const OpenButtonActionValidator = schemaForType<OpenButtonAction>()(
 	}),
 );
 
-export type ButtonAction = CommandButtonAction | JSButtonAction | OpenButtonAction;
+export interface InputButtonAction {
+	type: ButtonActionType.INPUT;
+	str: string;
+}
+
+export const InputButtonActionValidator = schemaForType<InputButtonAction>()(
+	z.object({
+		type: z.literal(ButtonActionType.INPUT),
+		str: z.string(),
+	}),
+);
+
+export interface SleepButtonAction {
+	type: ButtonActionType.SLEEP;
+	ms: number;
+}
+
+export const SleepButtonActionValidator = schemaForType<SleepButtonAction>()(
+	z.object({
+		type: z.literal(ButtonActionType.SLEEP),
+		ms: z.number(),
+	}),
+);
+
+export interface TemplaterCreateNoteButtonAction {
+	type: ButtonActionType.TEMPLATER_CREATE_NOTE;
+	templateFile: string;
+	folderPath?: string;
+	fileName?: string;
+	openNote?: boolean;
+}
+
+export const TemplaterCreateNoteButtonActionValidator = schemaForType<TemplaterCreateNoteButtonAction>()(
+	z.object({
+		type: z.literal(ButtonActionType.TEMPLATER_CREATE_NOTE),
+		templateFile: z.string(),
+		folderPath: z.string().optional(),
+		fileName: z.string().optional(),
+		openNote: z.boolean().optional(),
+	}),
+);
+
+export interface QuickSwitcherButtonAction {
+	type: ButtonActionType.QUICK_SWITCHER;
+	filter: string;
+}
+
+export const QuickSwitcherButtonActionValidator = schemaForType<QuickSwitcherButtonAction>()(
+	z.object({
+		type: z.literal(ButtonActionType.QUICK_SWITCHER),
+		filter: z.string(),
+	}),
+);
+
+export type ButtonAction =
+	| CommandButtonAction
+	| JSButtonAction
+	| OpenButtonAction
+	| InputButtonAction
+	| SleepButtonAction
+	| TemplaterCreateNoteButtonAction
+	| QuickSwitcherButtonAction;
 
 export const ButtonActionValidator = schemaForType<ButtonAction>()(
-	z.union([CommandButtonActionValidator, JSButtonActionValidator, OpenButtonActionValidator]),
+	z.union([
+		CommandButtonActionValidator,
+		JSButtonActionValidator,
+		OpenButtonActionValidator,
+		InputButtonActionValidator,
+		SleepButtonActionValidator,
+		TemplaterCreateNoteButtonActionValidator,
+		QuickSwitcherButtonActionValidator,
+	]),
 );
 
 export interface ButtonConfig {
@@ -74,25 +140,6 @@ export interface ButtonConfig {
 
 type Tuple<T> = [T, ...T[]];
 export const ButtonStyleValidator = z.enum(Object.values(ButtonStyleType) as Tuple<ButtonStyleType>);
-
-function oneOf<
-	A,
-	K1 extends Extract<keyof A, string>,
-	K2 extends Extract<keyof A, string>,
-	R extends A &
-		((Required<Pick<A, K1>> & { [P in K2]: undefined }) | (Required<Pick<A, K2>> & { [P in K1]: undefined })),
->(key1: K1, key2: K2): (arg: A, ctx: RefinementCtx) => arg is R {
-	return (arg, ctx): arg is R => {
-		if ((arg[key1] === undefined) === (arg[key2] === undefined)) {
-			ctx.addIssue({
-				code: z.ZodIssueCode.custom,
-				message: `Either ${key1} or ${key2} must be filled, but not both`,
-			});
-			return false;
-		}
-		return true;
-	};
-}
 
 export const ButtonConfigValidator = schemaForType<ButtonConfig>()(
 	z

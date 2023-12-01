@@ -5,18 +5,25 @@
 		ButtonConfig,
 		ButtonStyleType,
 		CommandButtonAction,
+		InputButtonAction,
 		JSButtonAction,
 		OpenButtonAction,
+		QuickSwitcherButtonAction,
+		SleepButtonAction,
+		TemplaterCreateNoteButtonAction,
 	} from '../../config/ButtonConfig';
 	import SettingComponent from '../../utils/components/SettingComponent.svelte';
 	import { onDestroy } from 'svelte';
 	import { ButtonMDRC } from '../../renderChildren/ButtonMDRC';
-	import { Command, stringifyYaml } from 'obsidian';
+	import { Command, stringifyYaml, TFile, TFolder } from 'obsidian';
 	import { getUUID } from '../../utils/Utils';
 	import Button from '../../utils/components/Button.svelte';
 	import Icon from '../../utils/components/Icon.svelte';
 	import { CommandSelectModal } from './CommandSelectModal';
 	import ModalButtonGroup from '../../utils/components/ModalButtonGroup.svelte';
+	import { FolderSelectModal } from './FolderSelectModal';
+	import { FileSelectModal } from './FileSelectModal';
+	import Toggle from '../../utils/components/Toggle.svelte';
 
 	export let modal: ButtonBuilderModal;
 	let buttonConfig: ButtonConfig = {
@@ -39,6 +46,7 @@
 	function updateButton(config: ButtonConfig, el: HTMLElement) {
 		buttonMDRC?.unload();
 		if (el) {
+			el.empty();
 			buttonMDRC = new ButtonMDRC(el, stringifyYaml(config), modal.plugin, '', getUUID());
 			buttonMDRC.load();
 		}
@@ -50,7 +58,24 @@
 		} else if (addActionType === ButtonActionType.OPEN) {
 			buttonConfig.actions.push({ type: ButtonActionType.OPEN, link: '' } satisfies OpenButtonAction);
 		} else if (addActionType === ButtonActionType.JS) {
-			buttonConfig.actions.push({ type: ButtonActionType.JS, jsFile: '' } satisfies JSButtonAction);
+			buttonConfig.actions.push({ type: ButtonActionType.JS, file: '' } satisfies JSButtonAction);
+		} else if (addActionType === ButtonActionType.INPUT) {
+			buttonConfig.actions.push({ type: ButtonActionType.INPUT, str: '' } satisfies InputButtonAction);
+		} else if (addActionType === ButtonActionType.SLEEP) {
+			buttonConfig.actions.push({ type: ButtonActionType.SLEEP, ms: 0 } satisfies SleepButtonAction);
+		} else if (addActionType === ButtonActionType.TEMPLATER_CREATE_NOTE) {
+			buttonConfig.actions.push({
+				type: ButtonActionType.TEMPLATER_CREATE_NOTE,
+				templateFile: '',
+				folderPath: '',
+				fileName: '',
+				openNote: true,
+			} satisfies TemplaterCreateNoteButtonAction);
+		} else if (addActionType === ButtonActionType.QUICK_SWITCHER) {
+			buttonConfig.actions.push({
+				type: ButtonActionType.QUICK_SWITCHER,
+				filter: '',
+			} satisfies QuickSwitcherButtonAction);
 		}
 
 		buttonConfig.actions = buttonConfig.actions;
@@ -64,6 +89,20 @@
 	function changeCommand(action: CommandButtonAction) {
 		new CommandSelectModal(modal.plugin, (command: Command) => {
 			action.command = command.id;
+			buttonConfig.actions = buttonConfig.actions;
+		}).open();
+	}
+
+	function changeTemplateFile(action: TemplaterCreateNoteButtonAction) {
+		new FileSelectModal(modal.plugin, (file: TFile) => {
+			action.templateFile = file.path;
+			buttonConfig.actions = buttonConfig.actions;
+		}).open();
+	}
+
+	function changeFolderPath(action: TemplaterCreateNoteButtonAction) {
+		new FolderSelectModal(modal.plugin, (folder: TFolder) => {
+			action.folderPath = folder.path;
 			buttonConfig.actions = buttonConfig.actions;
 		}).open();
 	}
@@ -101,16 +140,7 @@
 	name="Hidden"
 	description="Whether to not render this button. This can be useful when using inline buttons."
 >
-	<div
-		class="checkbox-container"
-		class:is-enabled={buttonConfig.hidden}
-		role="switch"
-		tabindex="0"
-		aria-checked={buttonConfig.hidden}
-		on:click={() => (buttonConfig.hidden = !buttonConfig.hidden)}
-	>
-		<input type="checkbox" tabindex="-1" checked={buttonConfig.hidden} />
-	</div>
+	<Toggle bind:checked={buttonConfig.hidden}></Toggle>
 </SettingComponent>
 
 <h4>Actions</h4>
@@ -130,7 +160,7 @@ Add action of type
 	{#if action.type === ButtonActionType.COMMAND}
 		<SettingComponent
 			name="Command: {action.command || 'none'}"
-			description="The command to execute when the button is clicked."
+			description="The command to execute when this action runs."
 		>
 			<Button variant="primary" on:click={() => changeCommand(action)}>Change</Button>
 			<Button variant="destructive" on:click={() => removeAction(i)}>
@@ -140,7 +170,7 @@ Add action of type
 	{/if}
 
 	{#if action.type === ButtonActionType.OPEN}
-		<SettingComponent name="Link" description="The link to open when the button is clicked.">
+		<SettingComponent name="Link" description="The link to open.">
 			<input type="text" bind:value={action.link} placeholder="[[Some Note]] or https://www.example.com" />
 			<Button variant="destructive" on:click={() => removeAction(i)}>
 				<Icon iconName="x"></Icon>
@@ -149,12 +179,70 @@ Add action of type
 	{/if}
 
 	{#if action.type === ButtonActionType.JS}
-		<SettingComponent name="JS File" description="The JavaScript file to run when this button is clicked.">
-			<input type="text" bind:value={action.jsFile} placeholder="someJsFile.js" />
+		<SettingComponent name="JS File" description="The JavaScript file to run.">
+			<input type="text" bind:value={action.file} placeholder="someJsFile.js" />
 			<Button variant="destructive" on:click={() => removeAction(i)}>
 				<Icon iconName="x"></Icon>
 			</Button>
 		</SettingComponent>
+	{/if}
+
+	{#if action.type === ButtonActionType.INPUT}
+		<SettingComponent name="Text" description="The text to input at the cursor.">
+			<input type="text" bind:value={action.str} placeholder="some text" />
+			<Button variant="destructive" on:click={() => removeAction(i)}>
+				<Icon iconName="x"></Icon>
+			</Button>
+		</SettingComponent>
+	{/if}
+
+	{#if action.type === ButtonActionType.SLEEP}
+		<SettingComponent name="Sleep Time" description="The time to sleep in milliseconds.">
+			<input type="number" bind:value={action.ms} placeholder="100 ms" />
+			<Button variant="destructive" on:click={() => removeAction(i)}>
+				<Icon iconName="x"></Icon>
+			</Button>
+		</SettingComponent>
+	{/if}
+
+	{#if action.type === ButtonActionType.TEMPLATER_CREATE_NOTE}
+		<p>
+			Remove Action
+			<Button variant="destructive" on:click={() => removeAction(i)}>
+				<Icon iconName="x"></Icon>
+			</Button>
+		</p>
+
+		<SettingComponent
+			name="Template File: {action.templateFile || 'none'}"
+			description="The template file to create a new note of."
+		>
+			<Button variant="primary" on:click={() => changeTemplateFile(action)}>Change</Button>
+		</SettingComponent>
+
+		<SettingComponent
+			name="Folder: {action.folderPath || 'none'}"
+			description="The folder to create a new note in."
+		>
+			<Button variant="primary" on:click={() => changeFolderPath(action)}>Change</Button>
+		</SettingComponent>
+
+		<SettingComponent name="File Name: {action.fileName || 'default'}" description="The file name of the new note.">
+			<Button variant="primary" on:click={() => changeTemplateFile(action)}>Change</Button>
+		</SettingComponent>
+
+		<SettingComponent name="Open Note" description="Whether to open the new note after this action ran.">
+			<Toggle bind:checked={action.openNote}></Toggle>
+		</SettingComponent>
+	{/if}
+
+	{#if action.type === ButtonActionType.QUICK_SWITCHER}
+		<p>
+			Not Implemented Yet
+			<Button variant="destructive" on:click={() => removeAction(i)}>
+				<Icon iconName="x"></Icon>
+			</Button>
+		</p>
 	{/if}
 {/each}
 

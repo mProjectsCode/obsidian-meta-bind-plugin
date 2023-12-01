@@ -26,9 +26,10 @@ import { ViewFieldFactory } from '../fields/viewFields/ViewFieldFactory';
 import { getUUID } from '../utils/Utils';
 import { parsePropPath } from '../utils/prop/PropParser';
 import { RenderChildType } from '../config/FieldConfigs';
-import { ButtonActionRunner } from '../fields/button/ButtonActionRunner';
+import { type ButtonActionRunner } from '../fields/button/ButtonActionRunner';
 import { ButtonManager } from '../fields/button/ButtonManager';
 import { type BindTargetDeclaration, BindTargetStorageType } from '../parsers/BindTargetDeclaration';
+import { ObsidianButtonActionRunner } from '../fields/button/ObsidianButtonActionRunner';
 
 export class API implements IAPI {
 	public plugin: MetaBindPlugin;
@@ -56,7 +57,7 @@ export class API implements IAPI {
 		this.inputFieldFactory = new InputFieldFactory(this.plugin);
 		this.viewFieldFactory = new ViewFieldFactory(this.plugin);
 
-		this.buttonActionRunner = new ButtonActionRunner(this.plugin);
+		this.buttonActionRunner = new ObsidianButtonActionRunner(this.plugin);
 		this.buttonManager = new ButtonManager();
 	}
 

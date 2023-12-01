@@ -88,6 +88,8 @@ export class ButtonMDRC extends AbstractMDRC {
 		}
 		this.buttonComponent?.$destroy();
 		this.containerEl.empty();
+		this.containerEl.addClass('mb-error');
+		this.containerEl.innerText = 'unloaded meta bind button';
 		this.plugin.mdrcManager.unregisterMDRC(this);
 	}
 }
