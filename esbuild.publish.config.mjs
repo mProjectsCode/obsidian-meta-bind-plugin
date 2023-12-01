@@ -58,6 +58,9 @@ esbuild
 		sourcemap: false,
 		treeShaking: true,
 		outfile: './Publish.js',
+		define: {
+			MB_GLOBAL_CONFIG_DEV_BUILD: 'false',
+		},
 		plugins: [
 			esbuildSvelte({
 				compilerOptions: { css: 'injected' },

@@ -18,24 +18,35 @@ import { ButtonMDRC } from './renderChildren/ButtonMDRC';
 import { InlineButtonMDRC } from './renderChildren/InlineButtonMDRC';
 import { ButtonBuilderModal } from './fields/button/ButtonBuilderModal';
 
+export enum MetaBindBuild {
+	DEV = 'dev',
+	CANARY = 'canary',
+	RELEASE = 'release',
+}
+
 export default class MetaBindPlugin extends Plugin implements IPlugin {
-	// @ts-ignore defined in `onload`
+	// @ts-expect-error TS2564
 	settings: MetaBindPluginSettings;
 
-	// @ts-ignore defined in `onload`
+	// @ts-expect-error TS2564
 	mdrcManager: MDRCManager;
 
-	// @ts-ignore defined in `onload`
+	// @ts-expect-error TS2564
 	metadataManager: MetadataManager;
 
-	// @ts-ignore defined in `onload`
+	// @ts-expect-error TS2564
 	api: API;
 
-	// @ts-ignore defined in `onload`
+	// @ts-expect-error TS2564
 	internal: ObsidianAPIAdapter;
+
+	// @ts-expect-error TS2564
+	build: MetaBindBuild;
 
 	async onload(): Promise<void> {
 		console.log(`meta-bind | Main >> load`);
+
+		this.build = this.determineBuild();
 
 		// load and immediately save settings to apply migrations
 		await this.loadSettings();
@@ -144,15 +155,6 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		// LP editor extension
 		this.registerEditorExtension(createMarkdownRenderChildWidgetEditorPlugin(this));
 
-		// this.addCommand({
-		// 	id: 'mb-debugger-command',
-		// 	name: 'debugger',
-		// 	callback: () => {
-		// 		// eslint-disable-next-line no-debugger
-		// 		debugger;
-		// 	},
-		// });
-
 		// register commands
 		this.addCommand({
 			id: 'open-docs',
@@ -195,12 +197,41 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		// register settings tab
 		this.addSettingTab(new MetaBindSettingTab(this.app, this));
+
+		// add indicator for dev and canary builds
+		this.addStatusBarBuildIndicator();
 	}
 
 	onunload(): void {
 		console.log(`meta-bind | Main >> unload`);
 		this.mdrcManager.unload();
 		this.metadataManager.unload();
+	}
+
+	determineBuild(): MetaBindBuild {
+		if (MB_GLOBAL_CONFIG_DEV_BUILD) {
+			return MetaBindBuild.DEV;
+		} else if (this.manifest.version.includes('canary')) {
+			return MetaBindBuild.CANARY;
+		} else {
+			return MetaBindBuild.RELEASE;
+		}
+	}
+
+	addStatusBarBuildIndicator(): void {
+		if (this.build === MetaBindBuild.DEV) {
+			const item = this.addStatusBarItem();
+			item.setText('Meta Bind Dev Build');
+			item.addClass('mb-error');
+			this.register(() => item.remove());
+		}
+
+		if (this.build === MetaBindBuild.CANARY) {
+			const item = this.addStatusBarItem();
+			item.setText(`Meta Bind Canary Build (${this.manifest.version})`);
+			item.addClass('mb-error');
+			this.register(() => item.remove());
+		}
 	}
 
 	isFilePathExcluded(path: string): boolean {

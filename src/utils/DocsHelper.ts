@@ -7,35 +7,35 @@ import {
 
 export class DocsHelper {
 	static linkToInputField(type: InputFieldType): string {
-		return `https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/reference/inputfields/${type.toLowerCase()}/`;
+		return `https://www.moritzjung.dev/obsidian-meta-bind-plugin-docs/reference/inputfields/${type.toLowerCase()}/`;
 	}
 
 	static linkToInputFieldArgument(type: InputFieldArgumentType): string {
-		return `https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/reference/inputfieldarguments/${type.toLowerCase()}/`;
+		return `https://www.moritzjung.dev/obsidian-meta-bind-plugin-docs/reference/inputfieldarguments/${type.toLowerCase()}/`;
 	}
 
 	static linkToViewField(type: ViewFieldType): string {
-		return `https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/reference/viewfields/${type.toLowerCase()}/`;
+		return `https://www.moritzjung.dev/obsidian-meta-bind-plugin-docs/reference/viewfields/${type.toLowerCase()}/`;
 	}
 
 	static linkToViewFieldArgument(type: ViewFieldArgumentType): string {
-		return `https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/reference/viewfieldarguments/${type.toLowerCase()}/`;
+		return `https://www.moritzjung.dev/obsidian-meta-bind-plugin-docs/reference/viewfieldarguments/${type.toLowerCase()}/`;
 	}
 
 	static linkToInputFields(): string {
-		return `https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/guides/inputfields/`;
+		return `https://www.moritzjung.dev/obsidian-meta-bind-plugin-docs/guides/inputfields/`;
 	}
 
 	static linkToViewFields(): string {
-		return `https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/guides/viewfields/`;
+		return `https://www.moritzjung.dev/obsidian-meta-bind-plugin-docs/guides/viewfields/`;
 	}
 
 	static linkToSearch(search: string): string {
-		return `https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/?s=${encodeURIComponent(search)}`;
+		return `https://www.moritzjung.dev/obsidian-meta-bind-plugin-docs/?s=${encodeURIComponent(search)}`;
 	}
 
 	static linkToHome(): string {
-		return `https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/`;
+		return `https://www.moritzjung.dev/obsidian-meta-bind-plugin-docs/`;
 	}
 
 	static linkToGithub(): string {
@@ -44,6 +44,10 @@ export class DocsHelper {
 
 	static linkToIssues(): string {
 		return `https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues`;
+	}
+
+	static linkToCanaryBuilds(): string {
+		return `https://www.moritzjung.dev/obsidian-meta-bind-plugin-docs/guides/installation/#canary-builds`;
 	}
 
 	static open(link: string): void {

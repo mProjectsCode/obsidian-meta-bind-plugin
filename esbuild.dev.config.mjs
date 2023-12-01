@@ -49,6 +49,9 @@ const context = await esbuild
 		treeShaking: true,
 		outdir: `exampleVault/.obsidian/plugins/${manifest.id}/`,
 		outbase: 'src',
+		define: {
+			MB_GLOBAL_CONFIG_DEV_BUILD: 'true',
+		},
 		plugins: [
 			copy({
 				paths: [

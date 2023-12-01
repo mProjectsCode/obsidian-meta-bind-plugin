@@ -1,4 +1,5 @@
 import { type Plugin, type PluginManifest } from 'obsidian';
+import { getUUID } from '../src/utils/Utils';
 
 declare module 'obsidian' {
 	interface App {
@@ -56,6 +57,10 @@ declare module 'obsidian' {
 			removeCommand: (commandId: string) => void;
 		};
 	}
+}
+
+declare global {
+	const MB_GLOBAL_CONFIG_DEV_BUILD: boolean;
 }
 
 export {};

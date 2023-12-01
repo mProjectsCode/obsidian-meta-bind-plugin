@@ -1,10 +1,11 @@
-import { type App, PluginSettingTab, Setting } from 'obsidian';
+import { type App, ButtonComponent, PluginSettingTab, Setting } from 'obsidian';
 import type MetaBindPlugin from '../main';
 import { DEFAULT_SETTINGS, weekdays } from './Settings';
 import { ExcludedFoldersSettingModal } from './excludedFoldersSetting/ExcludedFoldersSettingModal';
 import { InputFieldTemplatesSettingModal } from './inputFieldTemplateSetting/InputFieldTemplatesSettingModal';
 import { DocsHelper } from '../utils/DocsHelper';
 import { MB_FAQ_VIEW_TYPE } from '../faq/FaqView';
+import { MetaBindBuild } from '../main';
 
 export class MetaBindSettingTab extends PluginSettingTab {
 	plugin: MetaBindPlugin;
@@ -18,6 +19,19 @@ export class MetaBindSettingTab extends PluginSettingTab {
 		const { containerEl } = this;
 
 		containerEl.empty();
+
+		if (this.plugin.build === MetaBindBuild.DEV || this.plugin.build === MetaBindBuild.CANARY) {
+			containerEl.createEl('p', {
+				text: `You are using a ${this.plugin.build} build (${this.plugin.manifest.version}). This build is not intended for production use. Use at your own risk.`,
+				cls: 'mb-error',
+			});
+			const button = new ButtonComponent(containerEl);
+			button.setButtonText('Learn About Canary Builds');
+			button.setCta();
+			button.onClick(() => {
+				DocsHelper.open(DocsHelper.linkToCanaryBuilds());
+			});
+		}
 
 		new Setting(containerEl)
 			.setName('Quick access')

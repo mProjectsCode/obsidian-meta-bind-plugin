@@ -48,6 +48,9 @@ esbuild
 		treeShaking: true,
 		outfile: 'main.js',
 		minify: true,
+		define: {
+			MB_GLOBAL_CONFIG_DEV_BUILD: 'false',
+		},
 		plugins: [
 			esbuildSvelte({
 				compilerOptions: { css: 'injected' },
