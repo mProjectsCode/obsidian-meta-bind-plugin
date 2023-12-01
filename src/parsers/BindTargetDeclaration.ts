@@ -25,5 +25,5 @@ export enum BindTargetStorageType {
 	FRONTMATTER = 'frontmatter',
 	MEMORY = 'memory',
 	GLOBAL_MEMORY = 'globalMemory',
-	LOCAL = 'localScope',
+	SCOPE = 'scope',
 }

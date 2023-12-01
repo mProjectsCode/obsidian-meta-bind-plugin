@@ -117,6 +117,7 @@ export class MetaBindTable extends AbstractMDRC {
 
 				const cells = this.columns.map(x => {
 					if ('inputFieldType' in x) {
+						console.log('validate', x, this.filePath, scope);
 						return this.plugin.api.inputFieldParser.validateDeclaration(x, this.filePath, scope);
 					} else {
 						return this.plugin.api.viewFieldParser.validateDeclaration(x, this.filePath, scope);

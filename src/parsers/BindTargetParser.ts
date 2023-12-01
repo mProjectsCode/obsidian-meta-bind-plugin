@@ -39,6 +39,10 @@ export class BindTargetParser {
 	): BindTargetDeclaration {
 		const bindTargetDeclaration: BindTargetDeclaration = {} as BindTargetDeclaration;
 
+		bindTargetDeclaration.storageProp = new PropPath(
+			unvalidatedBindTargetDeclaration.storageProp.map(x => new PropAccess(x.type, x.prop.value)),
+		);
+
 		if (unvalidatedBindTargetDeclaration.storageType === undefined) {
 			bindTargetDeclaration.storageType = BindTargetStorageType.FRONTMATTER;
 		} else {
@@ -83,22 +87,20 @@ export class BindTargetParser {
 				);
 			}
 			bindTargetDeclaration.storagePath = '';
-		} else if (bindTargetDeclaration.storageType === BindTargetStorageType.LOCAL) {
+		} else if (bindTargetDeclaration.storageType === BindTargetStorageType.SCOPE) {
 			if (unvalidatedBindTargetDeclaration.storagePath !== undefined) {
 				throw new ParsingValidationError(
 					ErrorLevel.ERROR,
 					'Bind Target Validator',
-					`Failed to parse bind target. Bind target storage type LOCAL does not support a storage path.`,
+					`Failed to parse bind target. Bind target storage type SCOPE does not support a storage path.`,
 					fullDeclaration,
 					unvalidatedBindTargetDeclaration.storagePath.position,
 				);
 			}
+			bindTargetDeclaration.storagePath = '';
 			this.resolveScope(bindTargetDeclaration, scope);
 		}
 
-		bindTargetDeclaration.storageProp = new PropPath(
-			unvalidatedBindTargetDeclaration.storageProp.map(x => new PropAccess(x.type, x.prop.value)),
-		);
 		bindTargetDeclaration.listenToChildren = unvalidatedBindTargetDeclaration.listenToChildren;
 
 		return bindTargetDeclaration;
@@ -115,6 +117,8 @@ export class BindTargetParser {
 				'Failed to resolve bind target scope, no scope provided',
 			);
 		} else {
+			console.log('resolve scope', bindTarget, scope.scope);
+
 			bindTarget.storageType = scope.scope.storageType;
 			bindTarget.storagePath = scope.scope.storagePath;
 			bindTarget.storageProp = scope.scope.storageProp.concat(bindTarget.storageProp);

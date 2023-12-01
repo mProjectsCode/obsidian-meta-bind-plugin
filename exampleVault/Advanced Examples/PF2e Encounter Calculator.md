@@ -34,13 +34,13 @@ Player Level: `INPUT[number:playerLevel]`
 ```js-engine
 const mb = engine.getPlugin('obsidian-meta-bind-plugin').api;
 
-const bindTarget = mb.createBindTarget('enemy');
+const bindTarget = mb.createBindTarget('enemy', context.file.path);
 const tableHead = ['Name', 'Level', 'Variant', 'Count'];
 const columns = [
-	mb.inputField.createInputFieldDeclarationFromString('INPUT[text:^.name]'),
-	mb.inputField.createInputFieldDeclarationFromString('INPUT[number(class(meta-bind-small-width)):^.level]'),
-	mb.inputField.createInputFieldDeclarationFromString('INPUT[inlineSelect(option(-1, weak), option(0, normal), option(1, elite)):^.variant]'),
-	mb.inputField.createInputFieldDeclarationFromString('INPUT[number(class(meta-bind-small-width)):^.count]')
+	mb.inputField.createInputFieldDeclarationFromString('INPUT[text:scope^name]'),
+	mb.inputField.createInputFieldDeclarationFromString('INPUT[number(class(meta-bind-small-width)):scope^level]'),
+	mb.inputField.createInputFieldDeclarationFromString('INPUT[inlineSelect(option(-1, weak), option(0, normal), option(1, elite)):scope^variant]'),
+	mb.inputField.createInputFieldDeclarationFromString('INPUT[number(class(meta-bind-small-width)):scope^count]')
 ];
 
 mb.createTable(container, context.file.path, component, bindTarget, tableHead, columns);

@@ -25,7 +25,6 @@ export class PropPath {
 		try {
 			return this.get(obj);
 		} catch (e) {
-			console.error(e);
 			return undefined;
 		}
 	}

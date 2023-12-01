@@ -112,7 +112,7 @@ export class MetadataManager {
 			return;
 		}
 
-		if (subscription.bindTarget?.storageType === BindTargetStorageType.LOCAL) {
+		if (subscription.bindTarget?.storageType === BindTargetStorageType.SCOPE) {
 			// local scope should be resolved by the time the subscription is created
 			throw new MetaBindInternalError({
 				errorLevel: ErrorLevel.CRITICAL,
