@@ -1,6 +1,6 @@
 ---
 playerCount: 6
-playerLevel: 4
+playerLevel: 6
 enemy:
   - name: Somthing
     level: 2
@@ -11,11 +11,11 @@ enemy:
     count: 1
     variant: 0
   - name: dragon
-    level: 2
+    level: 3
     count: 2
     variant: -1
   - name: test
-    level: 1
+    level: 5
     count: 1
     variant: 0
 test:

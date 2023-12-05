@@ -10,7 +10,7 @@ import { type InputFieldDeclaration } from '../parsers/inputFieldParser/InputFie
 import { type InputField } from '../fields/inputFields/InputFieldFactory';
 import { type InputFieldArgumentMapType } from '../fields/fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
 import { InputFieldArgumentType, InputFieldType, RenderChildType } from '../config/FieldConfigs';
-import { DocsHelper } from '../utils/DocsHelper';
+import { DocsUtils } from '../utils/DocsUtils';
 import { type IInputFieldBase } from '../fields/inputFields/IInputFieldBase';
 import { type BindTargetDeclaration } from '../parsers/BindTargetDeclaration';
 
@@ -113,7 +113,7 @@ export class InputFieldMDRC extends AbstractMDRC implements IInputFieldBase {
 			const codeEl = container.createEl('code', { cls: 'mb-none' });
 			codeEl.createEl('a', {
 				text: this.fullDeclaration,
-				href: DocsHelper.linkToInputField(this.inputFieldDeclaration.inputFieldType),
+				href: DocsUtils.linkToInputField(this.inputFieldDeclaration.inputFieldType),
 				cls: 'mb-no-link',
 			});
 		}

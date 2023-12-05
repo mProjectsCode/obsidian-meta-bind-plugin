@@ -5,7 +5,7 @@ import { type ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
 import { type InputFieldMDRC } from '../renderChildren/InputFieldMDRC';
 import { type Component } from 'obsidian';
 import { type ExcludedMDRC } from '../renderChildren/ExcludedMDRC';
-import { RenderChildType } from '../config/FieldConfigs';
+import { InlineMDRCUtils } from '../utils/InlineMDRCUtils';
 
 export abstract class MarkdownRenderChildWidget<T extends AbstractMDRC> extends WidgetType {
 	content: string;
@@ -22,7 +22,8 @@ export abstract class MarkdownRenderChildWidget<T extends AbstractMDRC> extends 
 		this.plugin = plugin;
 	}
 
-	eq(other: ViewFieldWidget): boolean {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	eq(other: MarkdownRenderChildWidget<any>): boolean {
 		return other.content === this.content;
 	}
 
@@ -43,31 +44,32 @@ export abstract class MarkdownRenderChildWidget<T extends AbstractMDRC> extends 
 	}
 }
 
-export class ViewFieldWidget extends MarkdownRenderChildWidget<ViewFieldMDRC> {
-	public createRenderChild(container: HTMLElement, component: Component): ViewFieldMDRC | ExcludedMDRC {
-		return this.plugin.api.createViewFieldFromString(
-			this.content,
-			RenderChildType.INLINE,
-			this.filePath,
-			container,
-			component,
-		);
-	}
-}
-
 export class InputFieldWidget extends MarkdownRenderChildWidget<InputFieldMDRC> {
 	public createRenderChild(container: HTMLElement, component: Component): InputFieldMDRC | ExcludedMDRC {
-		return this.plugin.api.createInputFieldFromString(
+		return InlineMDRCUtils.createInlineInputFieldMDRC(
 			this.content,
-			RenderChildType.INLINE,
 			this.filePath,
 			container,
 			component,
+			this.plugin,
 		);
 	}
 }
 
-export enum MBWidgetType {
-	INPUT_FIELD_WIDGET = 'INPUT_FIELD_WIDGET',
-	VIEW_FIELD_WIDGET = 'VIEW_FIELD_WIDGET',
+export class ViewFieldWidget extends MarkdownRenderChildWidget<ViewFieldMDRC> {
+	public createRenderChild(container: HTMLElement, component: Component): ViewFieldMDRC | ExcludedMDRC {
+		return InlineMDRCUtils.createInlineViewFieldMDRC(
+			this.content,
+			this.filePath,
+			container,
+			component,
+			this.plugin,
+		);
+	}
+}
+
+export class ButtonWidget extends MarkdownRenderChildWidget<InputFieldMDRC> {
+	public createRenderChild(container: HTMLElement, component: Component): InputFieldMDRC | ExcludedMDRC {
+		return InlineMDRCUtils.createInlineButtonMDRC(this.content, this.filePath, container, component, this.plugin);
+	}
 }

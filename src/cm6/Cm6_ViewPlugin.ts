@@ -4,8 +4,8 @@ import { syntaxTree } from '@codemirror/language';
 import { type SyntaxNode } from '@lezer/common';
 import { Component, editorLivePreviewField, type TFile } from 'obsidian';
 import type MetaBindPlugin from '../main';
-import { type MBWidgetType } from './Cm6_Widgets';
 import { Cm6_Util } from './Cm6_Util';
+import { InlineMDRCUtils, type InlineMDRCType } from '../utils/InlineMDRCUtils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlugin): ViewPlugin<any> {
@@ -107,7 +107,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			 * @param content the content of the node
 			 * @param widgetType the type of the widget to add
 			 */
-			addDecoration(node: SyntaxNode, view: EditorView, content: string, widgetType: MBWidgetType): void {
+			addDecoration(node: SyntaxNode, view: EditorView, content: string, widgetType: InlineMDRCType): void {
 				const from = node.from - 1;
 				const to = node.to + 1;
 
@@ -141,7 +141,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			getRenderInfo(
 				view: EditorView,
 				node: SyntaxNode,
-			): { shouldRender: boolean; content: string | undefined; widgetType: MBWidgetType | undefined } {
+			): { shouldRender: boolean; content: string | undefined; widgetType: InlineMDRCType | undefined } {
 				// get the node props
 				// const propsString: string | undefined = node.type.prop<string>(tokenClassNodeProp);
 				// workaround until bun installs https://github.com/lishid/cm-language/ correctly
@@ -174,11 +174,11 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				view: EditorView,
 				from: number,
 				to: number,
-			): { content: string; widgetType: MBWidgetType | undefined } {
+			): { content: string; widgetType: InlineMDRCType | undefined } {
 				const content = Cm6_Util.getContent(view.state, from, to);
 				return {
 					content: content,
-					widgetType: Cm6_Util.isDeclarationAndGetWidgetType(content),
+					widgetType: InlineMDRCUtils.isDeclarationAndGetMDRCType(content),
 				};
 			}
 
@@ -234,20 +234,17 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			 */
 			renderWidget(
 				node: SyntaxNode,
-				widgetType: MBWidgetType,
+				widgetType: InlineMDRCType,
 				content: string,
 				currentFile: TFile,
 			): Range<Decoration> | undefined {
-				const widget = Cm6_Util.constructMarkdownRenderChildWidget(
+				const widget = InlineMDRCUtils.constructMDRCWidget(
 					widgetType,
 					content,
 					currentFile.path,
 					this.component,
 					plugin,
 				);
-				if (!widget) {
-					return;
-				}
 
 				return Decoration.replace({
 					widget: widget,

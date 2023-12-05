@@ -138,3 +138,16 @@ actions:
     str: PF2e
 
 ```
+
+```meta-bind-button
+label: Test
+hidden: false
+id: ""
+style: default
+actions:
+  - type: sleep
+    ms: 1000
+  - type: command
+    command: obsidian-meta-bind-plugin:open-help
+
+```

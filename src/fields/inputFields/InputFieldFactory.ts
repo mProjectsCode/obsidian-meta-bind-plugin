@@ -18,7 +18,7 @@ import { ListSuggesterIPF } from './fields/ListSuggester/ListSuggesterIPF';
 import { DateIPF } from './fields/Date/DateIPF';
 import { TimeIPF } from './fields/Time/TimeIPF';
 import { type InputFieldConfig, InputFieldConfigs, InputFieldType, RenderChildType } from '../../config/FieldConfigs';
-import { DocsHelper } from '../../utils/DocsHelper';
+import { DocsUtils } from '../../utils/DocsUtils';
 import { InlineListSuggesterIPF } from './fields/InlineListSuggester/InlineListSuggesterIPF';
 import { InlineListIPF } from './fields/InlineList/InlineListIPF';
 import { type IInputFieldBase } from './IInputFieldBase';
@@ -122,7 +122,7 @@ export class InputFieldFactory {
 				errorLevel: ErrorLevel.ERROR,
 				effect: 'can not create input field',
 				cause: `input fields of type '${type}' are not allowed inside of code blocks`,
-				docs: [DocsHelper.linkToInputField(type)],
+				docs: [DocsUtils.linkToInputField(type)],
 			});
 		}
 		if (renderChildType === RenderChildType.INLINE && !inputFieldConfig.allowInline) {
@@ -130,7 +130,7 @@ export class InputFieldFactory {
 				errorLevel: ErrorLevel.ERROR,
 				effect: 'can not create input field',
 				cause: `input fields of type '${type}' are not allowed inside of inline code blocks`,
-				docs: [DocsHelper.linkToInputField(type)],
+				docs: [DocsUtils.linkToInputField(type)],
 			});
 		}
 	}

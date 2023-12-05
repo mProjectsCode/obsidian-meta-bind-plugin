@@ -5,7 +5,7 @@ import {
 	type ViewFieldType,
 } from '../config/FieldConfigs';
 
-export class DocsHelper {
+export class DocsUtils {
 	static linkToInputField(type: InputFieldType): string {
 		return `https://www.moritzjung.dev/obsidian-meta-bind-plugin-docs/reference/inputfields/${type.toLowerCase()}/`;
 	}

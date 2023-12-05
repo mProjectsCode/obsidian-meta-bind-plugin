@@ -1,5 +1,5 @@
 import { ButtonActionRunner } from './ButtonActionRunner';
-import { type TemplaterCreateNoteButtonAction } from '../../config/ButtonConfig';
+import { type QuickSwitcherButtonAction, type TemplaterCreateNoteButtonAction } from '../../config/ButtonConfig';
 import { TFile, TFolder } from 'obsidian';
 import type MetaBindPlugin from '../../main';
 
@@ -53,4 +53,6 @@ export class ObsidianButtonActionRunner extends ButtonActionRunner {
 			);
 		}
 	}
+
+	public async runQuickSwitcherAction(_action: QuickSwitcherButtonAction): Promise<void> {}
 }

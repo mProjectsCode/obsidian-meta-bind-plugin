@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { DocsHelper } from '../utils/DocsHelper';
+	import { DocsUtils } from '../utils/DocsUtils';
 	import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
 	import { App } from 'obsidian';
 	import { ErrorCollection } from '../utils/errors/ErrorCollection';
@@ -48,21 +48,21 @@
 		<Button
 			variant="primary"
 			on:click={() => {
-				DocsHelper.open(DocsHelper.linkToHome());
+				DocsUtils.open(DocsUtils.linkToHome());
 			}}
 			>Docs
 		</Button>
 		<Button
 			variant="default"
 			on:click={() => {
-				DocsHelper.open(DocsHelper.linkToGithub());
+				DocsUtils.open(DocsUtils.linkToGithub());
 			}}
 			>GitHub
 		</Button>
 		<Button
 			variant="default"
 			on:click={() => {
-				DocsHelper.open(DocsHelper.linkToIssues());
+				DocsUtils.open(DocsUtils.linkToIssues());
 			}}
 			>Report Issue
 		</Button>
@@ -70,8 +70,8 @@
 
 	<h2>Error Messages</h2>
 	<p>
-		When creating <a href={DocsHelper.linkToInputFields()}>Input Fields</a> or
-		<a href={DocsHelper.linkToViewFields()}>View Fields</a>
+		When creating <a href={DocsUtils.linkToInputFields()}>Input Fields</a> or
+		<a href={DocsUtils.linkToViewFields()}>View Fields</a>
 		<strong>warnings</strong>
 		(
 		<ErrorIndicatorComponent
@@ -92,7 +92,7 @@
 
 	<h2>Input Fields</h2>
 	<p>
-		<a href={DocsHelper.linkToInputFields()}>Input Fields</a> let you change the frontmatter of your notes from inside
+		<a href={DocsUtils.linkToInputFields()}>Input Fields</a> let you change the frontmatter of your notes from inside
 		of notes.
 	</p>
 
@@ -103,7 +103,7 @@
 
 	<h2>View Fields</h2>
 	<p>
-		<a href={DocsHelper.linkToViewFields()}>View Fields</a> let you view and perform calculations using the frontmatter
+		<a href={DocsUtils.linkToViewFields()}>View Fields</a> let you view and perform calculations using the frontmatter
 		of your notes from inside of notes. They will update instantly to reflect changes to the frontmatter made by input
 		fields and as fast as obsidian allows it for changes from other sources.
 	</p>
@@ -114,8 +114,8 @@
 			>Bind Targets</a
 		>
 		let the plugin know what frontmatter properties to bind
-		<a href={DocsHelper.linkToInputFields()}>Input Fields</a>
+		<a href={DocsUtils.linkToInputFields()}>Input Fields</a>
 		and
-		<a href={DocsHelper.linkToViewFields()}>View Fields</a> to.
+		<a href={DocsUtils.linkToViewFields()}>View Fields</a> to.
 	</p>
 </div>

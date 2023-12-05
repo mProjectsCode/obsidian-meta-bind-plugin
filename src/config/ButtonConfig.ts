@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { oneOf, schemaForType } from '../utils/ZodHelpers';
+import { oneOf, schemaForType } from '../utils/ZodUtils';
 
 export enum ButtonStyleType {
 	DEFAULT = 'default',

@@ -5,7 +5,7 @@ import { type DatePickerIPF } from '../fields/inputFields/fields/DatePicker/Date
 import { type ImageSuggesterIPF } from '../fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
 import { type SuggesterLikeIFP, type SuggesterOption } from '../fields/inputFields/fields/Suggester/SuggesterHelper';
 import { type MBLiteral } from '../utils/Literal';
-import { TextPromptModal } from '../utils/TextPromptModal';
+import { TextPromptModal } from '../utils/modals/TextPromptModal';
 import { openSuggesterModalForInputField } from '../fields/inputFields/fields/Suggester/SuggesterModalHelper';
 import { openImageSuggesterModalForInputField } from '../fields/inputFields/fields/ImageSuggester/ImageSuggesterModalHelper';
 import { DatePickerInputModal } from '../fields/inputFields/fields/DatePicker/DatePickerInputModal';

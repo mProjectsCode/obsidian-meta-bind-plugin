@@ -15,8 +15,8 @@ import { getUUID } from './utils/Utils';
 import { ObsidianAPIAdapter } from './internalApi/ObsidianAPIAdapter';
 import { RenderChildType } from './config/FieldConfigs';
 import { ButtonMDRC } from './renderChildren/ButtonMDRC';
-import { InlineButtonMDRC } from './renderChildren/InlineButtonMDRC';
 import { ButtonBuilderModal } from './fields/button/ButtonBuilderModal';
+import { InlineMDRCType, InlineMDRCUtils } from './utils/InlineMDRCUtils';
 
 export enum MetaBindBuild {
 	DEV = 'dev',
@@ -48,31 +48,49 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		this.build = this.determineBuild();
 
-		// load and immediately save settings to apply migrations
+		// settings
 		await this.loadSettings();
 		await this.saveSettings();
+		this.addSettingTab(new MetaBindSettingTab(this.app, this));
 
-		// create API instance
+		// create all APIs and managers
 		this.api = new API(this);
-
 		this.internal = new ObsidianAPIAdapter(this);
-
-		// parse templates
-		const templateParseErrorCollection = this.api.inputFieldParser.parseTemplates(
-			this.settings.inputFieldTemplates,
-		);
-		if (templateParseErrorCollection.hasErrors()) {
-			console.warn('meta-bind | failed to parse templates', templateParseErrorCollection);
-		}
-
-		// create MDRC manager
 		this.mdrcManager = new MDRCManager();
-
-		// create metadata manager
 		const metadataAdapter = new ObsidianMetadataAdapter(this);
 		this.metadataManager = new MetadataManager(metadataAdapter);
 
-		// markdown post processors
+		this.loadTemplates();
+
+		// register all post processors for MDRCs
+		this.addPostProcessors();
+		this.registerEditorExtension(createMarkdownRenderChildWidgetEditorPlugin(this));
+
+		this.addCommands();
+
+		// misc
+		this.registerView(MB_FAQ_VIEW_TYPE, leaf => new FaqView(leaf, this));
+		this.addStatusBarBuildIndicator();
+	}
+
+	onunload(): void {
+		console.log(`meta-bind | Main >> unload`);
+		this.mdrcManager.unload();
+		this.metadataManager.unload();
+	}
+
+	// TODO: move to internal API
+	determineBuild(): MetaBindBuild {
+		if (MB_GLOBAL_CONFIG_DEV_BUILD) {
+			return MetaBindBuild.DEV;
+		} else if (this.manifest.version.includes('canary')) {
+			return MetaBindBuild.CANARY;
+		} else {
+			return MetaBindBuild.RELEASE;
+		}
+	}
+
+	addPostProcessors(): void {
 		this.registerMarkdownPostProcessor((el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
 			const codeBlocks = el.querySelectorAll('code');
 
@@ -84,37 +102,21 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				}
 
 				const content = codeBlock.innerText;
-				const isInputField = content.startsWith('INPUT[') && content.endsWith(']');
-				const isViewField = content.startsWith('VIEW[') && content.endsWith(']');
-				const isButton = content.startsWith('BUTTON[') && content.endsWith(']');
 
-				if (isInputField) {
-					this.api.createInputFieldFromString(
-						content,
-						RenderChildType.INLINE,
-						ctx.sourcePath,
-						codeBlock,
-						ctx,
-						undefined,
-					);
+				const mdrcType = InlineMDRCUtils.isDeclarationAndGetMDRCType(content);
+				if (mdrcType === undefined) {
+					continue;
 				}
-				if (isViewField) {
-					this.api.createViewFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock, ctx);
-				}
-				if (isButton) {
-					const button = new InlineButtonMDRC(codeBlock, content, this, ctx.sourcePath, getUUID());
-					ctx.addChild(button);
-				}
+				InlineMDRCUtils.constructMDRC(mdrcType, content, ctx.sourcePath, codeBlock, ctx, this);
 			}
 		}, 1);
 
 		this.registerMarkdownCodeBlockProcessor('meta-bind', (source, el, ctx) => {
 			const codeBlock = el;
 			const content = source.trim();
-			const isInputField = content.startsWith('INPUT[') && content.endsWith(']');
-			const isViewField = content.startsWith('VIEW[') && content.endsWith(']');
+			const mdrcType = InlineMDRCUtils.isDeclarationAndGetMDRCType(content);
 
-			if (isInputField) {
+			if (mdrcType === InlineMDRCType.INPUT_FIELD) {
 				this.api.createInputFieldFromString(
 					content,
 					RenderChildType.BLOCK,
@@ -124,7 +126,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 					undefined,
 				);
 			}
-			if (isViewField) {
+			if (mdrcType === InlineMDRCType.VIEW_FIELD) {
 				this.api.createViewFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock, ctx);
 			}
 		});
@@ -151,11 +153,9 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				ctx.addChild(button);
 			});
 		}
+	}
 
-		// LP editor extension
-		this.registerEditorExtension(createMarkdownRenderChildWidgetEditorPlugin(this));
-
-		// register commands
+	addCommands(): void {
 		this.addCommand({
 			id: 'open-docs',
 			name: 'Open Meta Bind Docs',
@@ -191,31 +191,6 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				}).open();
 			},
 		});
-
-		// register FAQ view
-		this.registerView(MB_FAQ_VIEW_TYPE, leaf => new FaqView(leaf, this));
-
-		// register settings tab
-		this.addSettingTab(new MetaBindSettingTab(this.app, this));
-
-		// add indicator for dev and canary builds
-		this.addStatusBarBuildIndicator();
-	}
-
-	onunload(): void {
-		console.log(`meta-bind | Main >> unload`);
-		this.mdrcManager.unload();
-		this.metadataManager.unload();
-	}
-
-	determineBuild(): MetaBindBuild {
-		if (MB_GLOBAL_CONFIG_DEV_BUILD) {
-			return MetaBindBuild.DEV;
-		} else if (this.manifest.version.includes('canary')) {
-			return MetaBindBuild.CANARY;
-		} else {
-			return MetaBindBuild.RELEASE;
-		}
 	}
 
 	addStatusBarBuildIndicator(): void {
@@ -234,6 +209,16 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		}
 	}
 
+	loadTemplates(): void {
+		const templateParseErrorCollection = this.api.inputFieldParser.parseTemplates(
+			this.settings.inputFieldTemplates,
+		);
+		if (templateParseErrorCollection.hasErrors()) {
+			console.warn('meta-bind | failed to parse templates', templateParseErrorCollection);
+		}
+	}
+
+	// TODO: move to internal API
 	isFilePathExcluded(path: string): boolean {
 		for (const excludedFolder of this.settings.excludedFolders) {
 			if (path.startsWith(excludedFolder)) {
@@ -266,10 +251,12 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		await this.saveData(this.settings);
 	}
 
+	// TODO: move to internal API
 	applyTemplatesMigration(oldSettings: MetaBindPluginSettings): MetaBindPluginSettings {
 		return oldSettings;
 	}
 
+	// TODO: move to internal API
 	async activateView(viewType: string): Promise<void> {
 		const { workspace } = this.app;
 

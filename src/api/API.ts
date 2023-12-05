@@ -30,6 +30,8 @@ import { type ButtonActionRunner } from '../fields/button/ButtonActionRunner';
 import { ButtonManager } from '../fields/button/ButtonManager';
 import { type BindTargetDeclaration, BindTargetStorageType } from '../parsers/BindTargetDeclaration';
 import { ObsidianButtonActionRunner } from '../fields/button/ObsidianButtonActionRunner';
+import { ButtonMDRC } from '../renderChildren/ButtonMDRC';
+import { InlineButtonMDRC } from '../renderChildren/InlineButtonMDRC';
 
 export class API implements IAPI {
 	public plugin: MetaBindPlugin;
@@ -274,5 +276,37 @@ export class API implements IAPI {
 
 	public createBindTarget(fullDeclaration: string, currentFilePath: string): BindTargetDeclaration {
 		return this.bindTargetParser.parseAndValidateBindTarget(fullDeclaration, currentFilePath);
+	}
+
+	public createButtonFromString(
+		fullDeclaration: string,
+		filePath: string,
+		containerEl: HTMLElement,
+		component: Component | MarkdownPostProcessorContext,
+	): ButtonMDRC | ExcludedMDRC {
+		if (this.plugin.isFilePathExcluded(filePath)) {
+			return this.createExcludedField(containerEl, filePath, component);
+		}
+
+		const button = new ButtonMDRC(containerEl, fullDeclaration, this.plugin, filePath, getUUID());
+		component.addChild(button);
+
+		return button;
+	}
+
+	public createInlineButtonFromString(
+		fullDeclaration: string,
+		filePath: string,
+		containerEl: HTMLElement,
+		component: Component | MarkdownPostProcessorContext,
+	): InlineButtonMDRC | ExcludedMDRC {
+		if (this.plugin.isFilePathExcluded(filePath)) {
+			return this.createExcludedField(containerEl, filePath, component);
+		}
+
+		const button = new InlineButtonMDRC(containerEl, fullDeclaration, this.plugin, filePath, getUUID());
+		component.addChild(button);
+
+		return button;
 	}
 }

@@ -1,7 +1,7 @@
 import { ErrorLevel, MetaBindArgumentError } from '../../utils/errors/MetaBindErrors';
 import { type FieldArgumentConfig, InputFieldArgumentType } from '../../config/FieldConfigs';
 import { type AbstractFieldArgument } from './AbstractFieldArgument';
-import { DocsHelper } from '../../utils/DocsHelper';
+import { DocsUtils } from '../../utils/DocsUtils';
 
 export abstract class AbstractFieldArgumentContainer<
 	FieldType extends string,
@@ -32,7 +32,7 @@ export abstract class AbstractFieldArgumentContainer<
 					errorLevel: ErrorLevel.ERROR,
 					effect: 'failed to validate argument container',
 					cause: `argument '${argumentConfig.type}' does not allow duplicates`,
-					docs: [DocsHelper.linkToSearch(argumentConfig.type)],
+					docs: [DocsUtils.linkToSearch(argumentConfig.type)],
 				});
 			}
 		}

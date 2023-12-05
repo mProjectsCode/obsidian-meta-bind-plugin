@@ -5,11 +5,6 @@
 		ButtonConfig,
 		ButtonStyleType,
 		CommandButtonAction,
-		InputButtonAction,
-		JSButtonAction,
-		OpenButtonAction,
-		QuickSwitcherButtonAction,
-		SleepButtonAction,
 		TemplaterCreateNoteButtonAction,
 	} from '../../config/ButtonConfig';
 	import SettingComponent from '../../utils/components/SettingComponent.svelte';
@@ -19,10 +14,10 @@
 	import { getUUID } from '../../utils/Utils';
 	import Button from '../../utils/components/Button.svelte';
 	import Icon from '../../utils/components/Icon.svelte';
-	import { CommandSelectModal } from './CommandSelectModal';
+	import { CommandSelectModal } from '../../utils/modals/CommandSelectModal';
 	import ModalButtonGroup from '../../utils/components/ModalButtonGroup.svelte';
-	import { FolderSelectModal } from './FolderSelectModal';
-	import { FileSelectModal } from './FileSelectModal';
+	import { FolderSelectModal } from '../../utils/modals/FolderSelectModal';
+	import { FileSelectModal } from '../../utils/modals/FileSelectModal';
 	import Toggle from '../../utils/components/Toggle.svelte';
 
 	export let modal: ButtonBuilderModal;
@@ -37,13 +32,13 @@
 	let buttonMDRC: ButtonMDRC;
 	let addActionType: ButtonActionType;
 
-	$: updateButton(buttonConfig, buttonEl);
+	$: updatePreviewButton(buttonConfig, buttonEl);
 
 	onDestroy(() => {
 		buttonMDRC?.unload();
 	});
 
-	function updateButton(config: ButtonConfig, el: HTMLElement) {
+	function updatePreviewButton(config: ButtonConfig, el: HTMLElement) {
 		buttonMDRC?.unload();
 		if (el) {
 			el.empty();
@@ -53,30 +48,7 @@
 	}
 
 	function addAction() {
-		if (addActionType === ButtonActionType.COMMAND) {
-			buttonConfig.actions.push({ type: ButtonActionType.COMMAND, command: '' } satisfies CommandButtonAction);
-		} else if (addActionType === ButtonActionType.OPEN) {
-			buttonConfig.actions.push({ type: ButtonActionType.OPEN, link: '' } satisfies OpenButtonAction);
-		} else if (addActionType === ButtonActionType.JS) {
-			buttonConfig.actions.push({ type: ButtonActionType.JS, file: '' } satisfies JSButtonAction);
-		} else if (addActionType === ButtonActionType.INPUT) {
-			buttonConfig.actions.push({ type: ButtonActionType.INPUT, str: '' } satisfies InputButtonAction);
-		} else if (addActionType === ButtonActionType.SLEEP) {
-			buttonConfig.actions.push({ type: ButtonActionType.SLEEP, ms: 0 } satisfies SleepButtonAction);
-		} else if (addActionType === ButtonActionType.TEMPLATER_CREATE_NOTE) {
-			buttonConfig.actions.push({
-				type: ButtonActionType.TEMPLATER_CREATE_NOTE,
-				templateFile: '',
-				folderPath: '',
-				fileName: '',
-				openNote: true,
-			} satisfies TemplaterCreateNoteButtonAction);
-		} else if (addActionType === ButtonActionType.QUICK_SWITCHER) {
-			buttonConfig.actions.push({
-				type: ButtonActionType.QUICK_SWITCHER,
-				filter: '',
-			} satisfies QuickSwitcherButtonAction);
-		}
+		buttonConfig.actions?.push(modal.plugin.api.buttonActionRunner.createDefaultAction(addActionType));
 
 		buttonConfig.actions = buttonConfig.actions;
 	}
@@ -86,28 +58,28 @@
 		buttonConfig.actions = buttonConfig.actions;
 	}
 
-	function changeCommand(action: CommandButtonAction) {
+	function commandActionChangeCommand(action: CommandButtonAction) {
 		new CommandSelectModal(modal.plugin, (command: Command) => {
 			action.command = command.id;
 			buttonConfig.actions = buttonConfig.actions;
 		}).open();
 	}
 
-	function changeTemplateFile(action: TemplaterCreateNoteButtonAction) {
+	function templaterCreateNoteActionChangeTemplateFile(action: TemplaterCreateNoteButtonAction) {
 		new FileSelectModal(modal.plugin, (file: TFile) => {
 			action.templateFile = file.path;
 			buttonConfig.actions = buttonConfig.actions;
 		}).open();
 	}
 
-	function changeFolderPath(action: TemplaterCreateNoteButtonAction) {
+	function templaterCreateNoteActionChangeFolderPath(action: TemplaterCreateNoteButtonAction) {
 		new FolderSelectModal(modal.plugin, (folder: TFolder) => {
 			action.folderPath = folder.path;
 			buttonConfig.actions = buttonConfig.actions;
 		}).open();
 	}
 
-	function getActionHeader(actionType: ButtonActionType): string {
+	function getActionLabel(actionType: ButtonActionType): string {
 		if (actionType === ButtonActionType.COMMAND) {
 			return 'Run a Command';
 		} else if (actionType === ButtonActionType.OPEN) {
@@ -123,6 +95,8 @@
 		} else if (actionType === ButtonActionType.QUICK_SWITCHER) {
 			return 'Open the Quick Switcher';
 		}
+
+		return 'CHANGE ME';
 	}
 </script>
 
@@ -163,14 +137,14 @@ Add action of type
 <Button variant="primary" on:click={() => addAction()}>Add Action</Button>
 
 {#each buttonConfig.actions as action, i (i)}
-	<h5>{getActionHeader(action.type)}</h5>
+	<h5>{getActionLabel(action.type)}</h5>
 
 	{#if action.type === ButtonActionType.COMMAND}
 		<SettingComponent
 			name="Command: {action.command || 'none'}"
 			description="The command to execute when this action runs."
 		>
-			<Button variant="primary" on:click={() => changeCommand(action)}>Change</Button>
+			<Button variant="primary" on:click={() => commandActionChangeCommand(action)}>Change</Button>
 			<Button variant="destructive" on:click={() => removeAction(i)}>
 				<Icon iconName="x"></Icon>
 			</Button>
@@ -225,14 +199,16 @@ Add action of type
 			name="Template File: {action.templateFile || 'none'}"
 			description="The template file to create a new note of."
 		>
-			<Button variant="primary" on:click={() => changeTemplateFile(action)}>Change</Button>
+			<Button variant="primary" on:click={() => templaterCreateNoteActionChangeTemplateFile(action)}
+				>Change</Button
+			>
 		</SettingComponent>
 
 		<SettingComponent
 			name="Folder: {action.folderPath || 'none'}"
 			description="The folder to create a new note in."
 		>
-			<Button variant="primary" on:click={() => changeFolderPath(action)}>Change</Button>
+			<Button variant="primary" on:click={() => templaterCreateNoteActionChangeFolderPath(action)}>Change</Button>
 		</SettingComponent>
 
 		<SettingComponent name="File Name: {action.fileName || 'default'}" description="The file name of the new note.">

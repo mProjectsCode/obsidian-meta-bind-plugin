@@ -3,7 +3,7 @@ import type MetaBindPlugin from '../main';
 import { DEFAULT_SETTINGS, weekdays } from './Settings';
 import { ExcludedFoldersSettingModal } from './excludedFoldersSetting/ExcludedFoldersSettingModal';
 import { InputFieldTemplatesSettingModal } from './inputFieldTemplateSetting/InputFieldTemplatesSettingModal';
-import { DocsHelper } from '../utils/DocsHelper';
+import { DocsUtils } from '../utils/DocsUtils';
 import { MB_FAQ_VIEW_TYPE } from '../faq/FaqView';
 import { MetaBindBuild } from '../main';
 
@@ -29,7 +29,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			button.setButtonText('Learn About Canary Builds');
 			button.setCta();
 			button.onClick(() => {
-				DocsHelper.open(DocsHelper.linkToCanaryBuilds());
+				DocsUtils.open(DocsUtils.linkToCanaryBuilds());
 			});
 		}
 
@@ -39,7 +39,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				cb.setCta();
 				cb.setButtonText('Docs');
 				cb.onClick(() => {
-					DocsHelper.open(DocsHelper.linkToHome());
+					DocsUtils.open(DocsUtils.linkToHome());
 				});
 			})
 			.addButton(cb => {
@@ -51,13 +51,13 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			.addButton(cb => {
 				cb.setButtonText('GitHub');
 				cb.onClick(() => {
-					DocsHelper.open(DocsHelper.linkToGithub());
+					DocsUtils.open(DocsUtils.linkToGithub());
 				});
 			})
 			.addButton(cb => {
 				cb.setButtonText('Report Issue');
 				cb.onClick(() => {
-					DocsHelper.open(DocsHelper.linkToIssues());
+					DocsUtils.open(DocsUtils.linkToIssues());
 				});
 			});
 
