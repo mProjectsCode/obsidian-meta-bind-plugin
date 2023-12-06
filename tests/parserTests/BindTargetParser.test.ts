@@ -2,7 +2,7 @@ import { describe, expect, test } from 'bun:test';
 import { BindTargetScope } from '../../src/metadata/BindTargetScope';
 import { parsePropPath } from '../../src/utils/prop/PropParser';
 import { PropPath } from '../../src/utils/prop/PropPath';
-import { TestPlugin } from '../mocks/TestPlugin';
+import { TestPlugin } from '../__mocks__/TestPlugin';
 import { BindTargetDeclaration, BindTargetStorageType } from '../../src/parsers/BindTargetDeclaration';
 
 const plugin = new TestPlugin();

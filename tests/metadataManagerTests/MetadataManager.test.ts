@@ -2,7 +2,7 @@ import { MetadataManager } from '../../src/metadata/MetadataManager';
 import { MetadataSubscription } from '../../src/metadata/MetadataSubscription';
 import { getUUID } from '../../src/utils/Utils';
 import { ListenerCallback, Signal } from '../../src/utils/Signal';
-import { TestMetadataAdapter } from '../mocks/TestMetadataAdapter';
+import { TestMetadataAdapter } from '../__mocks__/TestMetadataAdapter';
 import { beforeEach, describe, expect, Mock, spyOn, test } from 'bun:test';
 import { parsePropPath } from '../../src/utils/prop/PropParser';
 import { BindTargetDeclaration, BindTargetStorageType } from '../../src/parsers/BindTargetDeclaration';

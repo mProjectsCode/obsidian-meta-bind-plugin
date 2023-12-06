@@ -1,6 +1,6 @@
 import { describe, expect, spyOn, test } from 'bun:test';
 import { InputFieldType, RenderChildType } from '../../src/config/FieldConfigs';
-import { TestIPFBase } from '../mocks/TestIPFBase';
+import { TestIPFBase } from '../__mocks__/TestIPFBase';
 import { Metadata } from '../../src/metadata/MetadataManagerCacheItem';
 import { Signal } from '../../src/utils/Signal';
 import { getUUID } from '../../src/utils/Utils';
@@ -10,7 +10,7 @@ import { stringifyLiteral } from '../../src/utils/Literal';
 import { Stream } from 'itertools-ts';
 import { multi } from 'itertools-ts/es';
 import { METADATA_CACHE_UPDATE_CYCLE_THRESHOLD } from '../../src/metadata/MetadataManager';
-import { TestPlugin } from '../mocks/TestPlugin';
+import { TestPlugin } from '../__mocks__/TestPlugin';
 import { BindTargetStorageType } from '../../src/parsers/BindTargetDeclaration';
 
 const TEST_FILE_PATH = 'testFile';
