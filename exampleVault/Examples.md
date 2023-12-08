@@ -1,5 +1,5 @@
 ---
-slider1: 7
+slider1: 3
 suggest: test
 toggle1: false
 Domestic_tasks:
@@ -32,9 +32,9 @@ Input and view fields work in the top level and in
 
 Input fields work with nested front-matter.
 
-```meta-bind
-INPUT[text(showcase):nested["object"]]
-```
+`INPUT[text(showcase):nested["object"]]`
+
+`INPUT[inlineSelect(option(0, 'don\'t do this'), option(1, 'do this \\'), showcase):inlineSelect]`
 
 ## String Escaping
 
@@ -90,7 +90,7 @@ option(option d)
 
 Inline input fields should not cause line breaks.
 
-Lorem ipsum dolor sit amet, `INPUT[date():other note#date]` consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. `INPUT[date():other note#date]` Curabitur sed rhoncus nisl. Maecenas nisi justo, viverra vel tempus vel, hendrerit at metus. `INPUT[datePicker():other note#date]`  asdasd asdasdasd
+Lorem ipsum dolor sit amet, `INPUT[date():other note#date]` consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. `INPUT[date():other note#date]` Curabitur sed rhoncus nisl. Maecenas nisi justo, viverra vel tempus vel, hendrerit at metus. `INPUT[datePicker():other note#date]` asdasd asdasdasd
 
 ## Templates
 
@@ -98,7 +98,7 @@ For input fields, templates can be set in the plugin settings
 
 - `INPUT[][toggle:toggle1]` empty template
 - `INPUT[nonExistantTemplate][toggle:toggle1]` unknown template
-- `INPUT[toggleTemplate][]` 
+- `INPUT[toggleTemplate][]`
 
 ## Error Messages
 
@@ -110,7 +110,7 @@ There are a lot of different error messages and they are clickable
 - `INPUT[inlineSelect(option(option a),option(option b),option(option c),option(option d):select]`
 - `INPUT[inlineSelect(option(option a),option(option b),option(option c),option(option d)):select#]`
 - `INPUT[inlineSelect(option(option a),option(option b),option(option c),option(option d)):select#:]`
-- `INPUT[toggle:Bible Reading]`
+- `INPUT[toggle:Bible Reading]` 
 
 Lorem ipsum dolor sit amet, `INPUT[text():meta bind/nonExistantFile#title]` consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. `INPUT[slider(nonExistantArgument)]` Curabitur sed rhoncus nisl. Maecenas nisi justo, viverra vel tempus vel, hendrerit at metus. `INPUT[select(option(option a),option(option b),option(option c),option(option d)):select]` asdasd asdasdasd
 

@@ -1,11 +1,11 @@
 import { type App, ButtonComponent, PluginSettingTab, Setting } from 'obsidian';
 import type MetaBindPlugin from '../main';
+import { MetaBindBuild } from '../main';
 import { DEFAULT_SETTINGS, weekdays } from './Settings';
 import { ExcludedFoldersSettingModal } from './excludedFoldersSetting/ExcludedFoldersSettingModal';
 import { InputFieldTemplatesSettingModal } from './inputFieldTemplateSetting/InputFieldTemplatesSettingModal';
 import { DocsUtils } from '../utils/DocsUtils';
 import { MB_FAQ_VIEW_TYPE } from '../faq/FaqView';
-import { MetaBindBuild } from '../main';
 
 export class MetaBindSettingTab extends PluginSettingTab {
 	plugin: MetaBindPlugin;

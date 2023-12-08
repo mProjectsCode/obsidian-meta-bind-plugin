@@ -29,7 +29,7 @@ export const viewFieldContentEscapeCharacter = P.string('\\')
 		}
 	});
 
-const viewFieldContent: Parser<string> = P.sequenceMap(
+export const viewFieldContent: Parser<string> = P.sequenceMap(
 	(first, other) => {
 		return first + other.flat().join('');
 	},

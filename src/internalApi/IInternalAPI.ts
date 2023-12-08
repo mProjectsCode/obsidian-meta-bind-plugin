@@ -27,8 +27,10 @@ export interface IInternalAPI {
 	executeCommandById(id: string): boolean;
 
 	jsEngineRunFile(filePath: string, callingFilePath: string, container?: HTMLElement): Promise<() => void>;
+
 	jsEngineRunCode(code: string, callingFilePath: string, container?: HTMLElement): Promise<() => void>;
 
 	openFile(filePath: string, callingFilePath: string): void;
+
 	getFilePathByName(name: string): string | undefined;
 }

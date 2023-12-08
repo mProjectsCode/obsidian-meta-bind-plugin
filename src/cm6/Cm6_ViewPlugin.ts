@@ -1,11 +1,12 @@
 import { Decoration, type DecorationSet, type EditorView, ViewPlugin, type ViewUpdate } from '@codemirror/view';
-import { type Range, type RangeSet } from '@codemirror/state';
+import { type EditorState, type Range, type RangeSet } from '@codemirror/state';
 import { syntaxTree } from '@codemirror/language';
 import { type SyntaxNode } from '@lezer/common';
 import { Component, editorLivePreviewField, type TFile } from 'obsidian';
 import type MetaBindPlugin from '../main';
-import { Cm6_Util } from './Cm6_Util';
-import { InlineMDRCUtils, type InlineMDRCType } from '../utils/InlineMDRCUtils';
+import { Cm6_Util, MB_WidgetType } from './Cm6_Util';
+import { type InlineMDRCType, InlineMDRCUtils } from '../utils/InlineMDRCUtils';
+import { summary } from 'itertools-ts/es';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlugin): ViewPlugin<any> {
@@ -23,6 +24,11 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				this.decorations = this.renderWidgets(view) ?? Decoration.none;
 			}
 
+			isLivePreview(state: EditorState): boolean {
+				// @ts-ignore some strange private field not being assignable
+				return state.field(editorLivePreviewField);
+			}
+
 			/**
 			 * Triggered by codemirror when the view updates.
 			 * Depending on the update type, the decorations are either updated or recreated.
@@ -30,24 +36,9 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			 * @param update
 			 */
 			update(update: ViewUpdate): void {
-				// only activate in LP and not source mode
-				// @ts-ignore some strange private field not being assignable
-				if (!update.state.field(editorLivePreviewField)) {
-					this.decorations = Decoration.none;
-					return;
-				}
+				this.decorations = this.decorations.map(update.changes);
 
-				if (update.docChanged) {
-					// map the changes to the decorations
-					this.decorations = this.decorations.map(update.changes);
-
-					this.updateTree(update.view);
-				} else if (update.selectionSet) {
-					this.updateTree(update.view);
-				} else if (update.viewportChanged) {
-					// if the viewport changed rerender all widgets
-					this.decorations = this.renderWidgets(update.view) ?? Decoration.none;
-				}
+				this.updateWidgets(update.view);
 			}
 
 			/**
@@ -55,29 +46,55 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			 *
 			 * @param view
 			 */
-			updateTree(view: EditorView): void {
+			updateWidgets(view: EditorView): void {
+				// remove all decorations that are not in the viewport and call unload manually
+				this.decorations = this.decorations.update({
+					filter: (fromA, toA, decoration) => {
+						const inVisibleRange = summary.anyMatch(view.visibleRanges, range =>
+							Cm6_Util.checkRangeOverlap(fromA, toA, range.from, range.to),
+						);
+
+						if (!inVisibleRange) {
+							// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+							decoration.spec.mb_unload?.();
+						}
+						return inVisibleRange;
+					},
+				});
+
 				for (const { from, to } of view.visibleRanges) {
 					syntaxTree(view.state).iterate({
 						from,
 						to,
 						enter: nodeRef => {
 							const node = nodeRef.node;
-							const { shouldRender, content, widgetType } = this.getRenderInfo(view, node);
+							const renderInfo = this.getRenderInfo(view, node);
 
-							if (shouldRender) {
-								if (widgetType !== undefined && content !== undefined) {
-									// render our decoration
-									this.addDecoration(node, view, content, widgetType);
-								} else {
-									// don't render our decoration
-								}
+							if (renderInfo.widgetType === undefined || renderInfo.content === undefined) {
+								// not our decoration
+								return;
+							}
+
+							if (renderInfo.shouldRender) {
+								this.removeDecoration(node, MB_WidgetType.FIELD);
+								this.addDecoration(
+									node,
+									view,
+									MB_WidgetType.FIELD,
+									renderInfo.content,
+									renderInfo.widgetType,
+								);
+							} else if (renderInfo.shouldHighlight) {
+								this.removeDecoration(node, MB_WidgetType.HIGHLIGHT);
+								this.addDecoration(
+									node,
+									view,
+									MB_WidgetType.HIGHLIGHT,
+									renderInfo.content,
+									renderInfo.widgetType,
+								);
 							} else {
-								if (widgetType !== undefined && content !== undefined) {
-									// remove our decoration
-									this.removeDecoration(node);
-								} else {
-									// this is not our decoration
-								}
+								this.removeDecoration(node);
 							}
 						},
 					});
@@ -88,13 +105,21 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			 * Removes all decorations at a given node.
 			 *
 			 * @param node
+			 * @param widgetType if specified, decorations of this type are kept
 			 */
-			removeDecoration(node: SyntaxNode): void {
+			removeDecoration(node: SyntaxNode, widgetType?: MB_WidgetType): void {
 				this.decorations.between(node.from - 1, node.to + 1, (from, to, _) => {
 					this.decorations = this.decorations.update({
 						filterFrom: from,
 						filterTo: to,
-						filter: () => false,
+						filter: (_from, _to, decoration) => {
+							if (widgetType) {
+								// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+								return decoration.spec.mb_widgetType === widgetType;
+							}
+
+							return false;
+						},
 					});
 				});
 			}
@@ -105,14 +130,21 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			 * @param node the note where to add the widget
 			 * @param view
 			 * @param content the content of the node
-			 * @param widgetType the type of the widget to add
+			 * @param widgetType
+			 * @param mdrcType
 			 */
-			addDecoration(node: SyntaxNode, view: EditorView, content: string, widgetType: InlineMDRCType): void {
+			addDecoration(
+				node: SyntaxNode,
+				view: EditorView,
+				widgetType: MB_WidgetType,
+				content: string,
+				mdrcType: InlineMDRCType,
+			): void {
 				const from = node.from - 1;
 				const to = node.to + 1;
 
 				// check if the decoration already exists and only add it if it does not exist
-				if (Cm6_Util.existsDecorationBetween(this.decorations, from, to)) {
+				if (Cm6_Util.existsDecorationOfTypeBetween(this.decorations, widgetType, from, to)) {
 					return;
 				}
 
@@ -121,14 +153,20 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 					return;
 				}
 
-				const newDecoration: Decoration | undefined = this.renderWidget(node, widgetType, content, currentFile)
-					?.value;
-				if (!newDecoration) {
+				const newDecoration: Range<Decoration> | Range<Decoration>[] = this.renderWidget(
+					node,
+					mdrcType,
+					widgetType,
+					content,
+					currentFile,
+				);
+				const newDecorations = Array.isArray(newDecoration) ? newDecoration : [newDecoration];
+				if (newDecorations.length === 0) {
 					return;
 				}
 
 				this.decorations = this.decorations.update({
-					add: [{ from: from, to: to, value: newDecoration }],
+					add: newDecorations,
 				});
 			}
 
@@ -141,11 +179,18 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			getRenderInfo(
 				view: EditorView,
 				node: SyntaxNode,
-			): { shouldRender: boolean; content: string | undefined; widgetType: InlineMDRCType | undefined } {
+			): {
+				shouldRender: boolean;
+				shouldHighlight: boolean;
+				content: string | undefined;
+				widgetType: InlineMDRCType | undefined;
+			} {
 				// get the node props
 				// const propsString: string | undefined = node.type.prop<string>(tokenClassNodeProp);
 				// workaround until bun installs https://github.com/lishid/cm-language/ correctly
 				const props: Set<string> = new Set<string>(node.type.name?.split('_'));
+
+				// console.log(props, this.readNode(view, node.from, node.to));
 
 				// node is inline code
 				if (props.has('inline-code') && !props.has('formatting')) {
@@ -153,14 +198,16 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 					const selection = view.state.selection;
 					const hasSelectionOverlap = Cm6_Util.checkSelectionOverlap(selection, node.from - 1, node.to + 1);
 					const content = this.readNode(view, node.from, node.to);
+					const isLivePreview = this.isLivePreview(view.state);
 
 					return {
-						shouldRender: !hasSelectionOverlap,
+						shouldRender: !hasSelectionOverlap && isLivePreview,
+						shouldHighlight: hasSelectionOverlap || !isLivePreview,
 						content: content.content,
 						widgetType: content.widgetType,
 					};
 				}
-				return { shouldRender: false, content: undefined, widgetType: undefined };
+				return { shouldRender: false, shouldHighlight: false, content: undefined, widgetType: undefined };
 			}
 
 			/**
@@ -204,18 +251,38 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 
 							const renderInfo = this.getRenderInfo(view, node);
 
-							if (!renderInfo.shouldRender || !renderInfo.widgetType || !renderInfo.content) {
+							if (!renderInfo.widgetType || !renderInfo.content) {
 								return;
 							}
 
-							const widget = this.renderWidget(
-								node,
-								renderInfo.widgetType,
-								renderInfo.content,
-								currentFile,
-							);
+							let widget: Range<Decoration> | Range<Decoration>[] | undefined = undefined;
+
+							if (renderInfo.shouldRender) {
+								widget = this.renderWidget(
+									node,
+									renderInfo.widgetType,
+									MB_WidgetType.FIELD,
+									renderInfo.content,
+									currentFile,
+								);
+							}
+
+							if (renderInfo.shouldHighlight) {
+								widget = this.renderWidget(
+									node,
+									renderInfo.widgetType,
+									MB_WidgetType.HIGHLIGHT,
+									renderInfo.content,
+									currentFile,
+								);
+							}
+
 							if (widget) {
-								widgets.push(widget);
+								if (Array.isArray(widget)) {
+									widgets.push(...widget);
+								} else {
+									widgets.push(widget);
+								}
 							}
 						},
 					});
@@ -228,27 +295,44 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			 * Renders a singe widget of the given widget type at a given node.
 			 *
 			 * @param node
+			 * @param mdrcType
 			 * @param widgetType
 			 * @param content
 			 * @param currentFile
 			 */
 			renderWidget(
 				node: SyntaxNode,
-				widgetType: InlineMDRCType,
+				mdrcType: InlineMDRCType,
+				widgetType: MB_WidgetType,
 				content: string,
 				currentFile: TFile,
-			): Range<Decoration> | undefined {
-				const widget = InlineMDRCUtils.constructMDRCWidget(
-					widgetType,
-					content,
-					currentFile.path,
-					this.component,
-					plugin,
-				);
+			): Range<Decoration> | Range<Decoration>[] {
+				if (widgetType === MB_WidgetType.FIELD) {
+					const widget = InlineMDRCUtils.constructMDRCWidget(
+						mdrcType,
+						content,
+						currentFile.path,
+						this.component,
+						plugin,
+					);
 
-				return Decoration.replace({
-					widget: widget,
-				}).range(node.from - 1, node.to + 1);
+					return Decoration.replace({
+						widget: widget,
+						mb_widgetType: MB_WidgetType.FIELD,
+						mb_unload: () => {
+							widget.renderChild?.unload();
+						},
+					}).range(node.from - 1, node.to + 1);
+				} else {
+					const highlight = plugin.api.syntaxHighlighting.highlight(content, mdrcType);
+
+					return highlight.getHighlights().map(h => {
+						// console.log(h);
+						return Decoration.mark({
+							class: `mb-highlight-${h.tokenClass}`,
+						}).range(node.from + h.range.from.index, node.from + h.range.to.index);
+					});
+				}
 			}
 
 			/**

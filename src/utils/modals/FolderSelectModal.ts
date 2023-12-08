@@ -4,6 +4,7 @@ import type MetaBindPlugin from '../../main';
 export class FolderSelectModal extends FuzzySuggestModal<TFolder> {
 	plugin: MetaBindPlugin;
 	selectCallback: (selected: TFolder) => void;
+
 	constructor(plugin: MetaBindPlugin, selectCallback: (selected: TFolder) => void) {
 		super(plugin.app);
 

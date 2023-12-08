@@ -2,6 +2,11 @@ import { type EditorSelection, type EditorState } from '@codemirror/state';
 import { editorInfoField, type TFile } from 'obsidian';
 import { type DecorationSet, type EditorView } from '@codemirror/view';
 
+export enum MB_WidgetType {
+	FIELD = 'field',
+	HIGHLIGHT = 'highlight',
+}
+
 export class Cm6_Util {
 	/**
 	 * Checks if a selection overlaps with a given range.
@@ -22,6 +27,18 @@ export class Cm6_Util {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Checks if two ranges overlap.
+	 *
+	 * @param fromA
+	 * @param toA
+	 * @param fromB
+	 * @param toB
+	 */
+	static checkRangeOverlap(fromA: number, toA: number, fromB: number, toB: number): boolean {
+		return fromA <= toB && fromB <= toA;
 	}
 
 	/**
@@ -56,6 +73,22 @@ export class Cm6_Util {
 		let exists = false;
 		decorations.between(from, to, () => {
 			exists = true;
+		});
+		return exists;
+	}
+
+	static existsDecorationOfTypeBetween(
+		decorations: DecorationSet,
+		widgetType: MB_WidgetType,
+		from: number,
+		to: number,
+	): boolean {
+		let exists = false;
+		decorations.between(from, to, (_from, _to, decoration) => {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+			if (decoration.spec.mb_widgetType === widgetType) {
+				exists = true;
+			}
 		});
 		return exists;
 	}

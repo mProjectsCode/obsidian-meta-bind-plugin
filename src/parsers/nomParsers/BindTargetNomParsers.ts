@@ -60,7 +60,7 @@ const metadataPathPart: Parser<UnvalidatedPropAccess[]> = P.sequenceMap(
 	bracketMetadataPathPart.many(),
 );
 
-const metadataPath: Parser<UnvalidatedBindTargetDeclaration> = P.sequenceMap(
+export const metadataPath: Parser<UnvalidatedBindTargetDeclaration> = P.sequenceMap(
 	(declaration, others) => {
 		declaration.storageProp = declaration.storageProp.concat(others.flat());
 		return declaration;

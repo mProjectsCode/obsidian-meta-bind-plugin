@@ -32,6 +32,7 @@ import { type BindTargetDeclaration, BindTargetStorageType } from '../parsers/Bi
 import { ObsidianButtonActionRunner } from '../fields/button/ObsidianButtonActionRunner';
 import { ButtonMDRC } from '../renderChildren/ButtonMDRC';
 import { InlineButtonMDRC } from '../renderChildren/InlineButtonMDRC';
+import { SyntaxHighlightingAPI } from './SyntaxHighlightingAPI';
 
 export class API implements IAPI {
 	public plugin: MetaBindPlugin;
@@ -47,6 +48,8 @@ export class API implements IAPI {
 	public readonly buttonActionRunner: ButtonActionRunner;
 	public readonly buttonManager: ButtonManager;
 
+	public readonly syntaxHighlighting: SyntaxHighlightingAPI;
+
 	constructor(plugin: MetaBindPlugin) {
 		this.plugin = plugin;
 		this.inputField = new InputFieldAPI(this);
@@ -61,6 +64,8 @@ export class API implements IAPI {
 
 		this.buttonActionRunner = new ObsidianButtonActionRunner(this.plugin);
 		this.buttonManager = new ButtonManager();
+
+		this.syntaxHighlighting = new SyntaxHighlightingAPI(this.plugin);
 	}
 
 	/**

@@ -482,6 +482,36 @@ table.mb-html-table {
 	overflow-x: auto;
 }
 
+/* --- HIGHLIGHTING CLASSES --- */
+.mb-highlight-test {
+	color: #00bfbc;
+}
+
+.mb-highlight-ident,
+.cm-mb-highlight-ident {
+	color: var(--code-normal);
+}
+
+.mb-highlight-control,
+.cm-mb-highlight-control {
+	color: var(--code-keyword);
+}
+
+.mb-highlight-string,
+.cm-mb-highlight-string {
+	color: var(--code-string);
+}
+
+.mb-highlight-keyword,
+.cm-mb-highlight-keyword {
+	color: var(--code-property);
+}
+
+.mb-highlight-error,
+.cm-mb-highlight-error {
+	color: var(--text-error);
+}
+
 /* --- UTIL CLASSES --- */
 
 .meta-bind-full-width > * {

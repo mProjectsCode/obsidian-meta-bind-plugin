@@ -200,8 +200,8 @@ Add action of type
 			description="The template file to create a new note of."
 		>
 			<Button variant="primary" on:click={() => templaterCreateNoteActionChangeTemplateFile(action)}
-				>Change</Button
-			>
+				>Change
+			</Button>
 		</SettingComponent>
 
 		<SettingComponent

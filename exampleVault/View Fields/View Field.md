@@ -54,6 +54,8 @@ Self Loop Error: `VIEW[**{computed}**][text():computed]`
 ```meta-bind
 INPUT[imageSuggester(optionQuery("Other/Images")):image]
 ```
+
+
 `VIEW[!\[\[{image}\]\]][text(renderMarkdown)]`
 
 ## Arrays and Objects

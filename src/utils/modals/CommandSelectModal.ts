@@ -1,10 +1,10 @@
-import { FuzzySuggestModal } from 'obsidian';
+import { type Command, FuzzySuggestModal } from 'obsidian';
 import type MetaBindPlugin from '../../main';
-import { type Command } from 'obsidian';
 
 export class CommandSelectModal extends FuzzySuggestModal<Command> {
 	plugin: MetaBindPlugin;
 	selectCallback: (selected: Command) => void;
+
 	constructor(plugin: MetaBindPlugin, selectCallback: (selected: Command) => void) {
 		super(plugin.app);
 
