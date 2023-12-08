@@ -15,7 +15,6 @@ export enum ButtonActionType {
 	INPUT = 'input',
 	SLEEP = 'sleep',
 	TEMPLATER_CREATE_NOTE = 'templaterCreateNote',
-	QUICK_SWITCHER = 'quickSwitcher',
 }
 
 export interface CommandButtonAction {
@@ -96,26 +95,13 @@ export const TemplaterCreateNoteButtonActionValidator = schemaForType<TemplaterC
 	}),
 );
 
-export interface QuickSwitcherButtonAction {
-	type: ButtonActionType.QUICK_SWITCHER;
-	filter: string;
-}
-
-export const QuickSwitcherButtonActionValidator = schemaForType<QuickSwitcherButtonAction>()(
-	z.object({
-		type: z.literal(ButtonActionType.QUICK_SWITCHER),
-		filter: z.string(),
-	}),
-);
-
 export type ButtonAction =
 	| CommandButtonAction
 	| JSButtonAction
 	| OpenButtonAction
 	| InputButtonAction
 	| SleepButtonAction
-	| TemplaterCreateNoteButtonAction
-	| QuickSwitcherButtonAction;
+	| TemplaterCreateNoteButtonAction;
 
 export const ButtonActionValidator = schemaForType<ButtonAction>()(
 	z.union([
@@ -125,7 +111,6 @@ export const ButtonActionValidator = schemaForType<ButtonAction>()(
 		InputButtonActionValidator,
 		SleepButtonActionValidator,
 		TemplaterCreateNoteButtonActionValidator,
-		QuickSwitcherButtonActionValidator,
 	]),
 );
 

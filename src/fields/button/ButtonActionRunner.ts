@@ -5,7 +5,6 @@ import {
 	type InputButtonAction,
 	type JSButtonAction,
 	type OpenButtonAction,
-	type QuickSwitcherButtonAction,
 	type SleepButtonAction,
 	type TemplaterCreateNoteButtonAction,
 } from '../../config/ButtonConfig';
@@ -39,11 +38,6 @@ export class ButtonActionRunner {
 				fileName: '',
 				openNote: true,
 			} satisfies TemplaterCreateNoteButtonAction;
-		} else if (type === ButtonActionType.QUICK_SWITCHER) {
-			return {
-				type: ButtonActionType.QUICK_SWITCHER,
-				filter: '',
-			} satisfies QuickSwitcherButtonAction;
 		}
 
 		throw new Error(`Unknown button action type: ${type}`);
@@ -67,9 +61,6 @@ export class ButtonActionRunner {
 			return;
 		} else if (action.type === ButtonActionType.TEMPLATER_CREATE_NOTE) {
 			await this.runTemplaterCreateNoteAction(action);
-			return;
-		} else if (action.type === ButtonActionType.QUICK_SWITCHER) {
-			await this.runQuickSwitcherAction(action);
 			return;
 		}
 
@@ -108,10 +99,6 @@ export class ButtonActionRunner {
 	}
 
 	async runTemplaterCreateNoteAction(_action: TemplaterCreateNoteButtonAction): Promise<void> {
-		throw new Error('Not supported');
-	}
-
-	async runQuickSwitcherAction(_action: QuickSwitcherButtonAction): Promise<void> {
 		throw new Error('Not supported');
 	}
 }

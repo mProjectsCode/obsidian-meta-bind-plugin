@@ -72,15 +72,13 @@
 	<p>
 		When creating <a href={DocsUtils.linkToInputFields()}>Input Fields</a> or
 		<a href={DocsUtils.linkToViewFields()}>View Fields</a>
-		<strong>warnings</strong>
-		(
+		<strong>warnings</strong> (
 		<ErrorIndicatorComponent
 			app={app}
 			declaration={exampleWarningDeclaration}
 			errorCollection={exampleWarningErrorCollection}
 		></ErrorIndicatorComponent>
-		) and <strong>errors</strong>
-		(
+		) and <strong>errors</strong> (
 		<ErrorIndicatorComponent
 			app={app}
 			declaration={exampleErrorDeclaration}

@@ -92,8 +92,6 @@
 			return 'Sleep for Some Time';
 		} else if (actionType === ButtonActionType.TEMPLATER_CREATE_NOTE) {
 			return 'Create a New Note Using Templater';
-		} else if (actionType === ButtonActionType.QUICK_SWITCHER) {
-			return 'Open the Quick Switcher';
 		}
 
 		return 'CHANGE ME';
@@ -218,15 +216,6 @@ Add action of type
 		<SettingComponent name="Open Note" description="Whether to open the new note after this action ran.">
 			<Toggle bind:checked={action.openNote}></Toggle>
 		</SettingComponent>
-	{/if}
-
-	{#if action.type === ButtonActionType.QUICK_SWITCHER}
-		<p>
-			Not Implemented Yet
-			<Button variant="destructive" on:click={() => removeAction(i)}>
-				<Icon iconName="x"></Icon>
-			</Button>
-		</p>
 	{/if}
 {/each}
 
