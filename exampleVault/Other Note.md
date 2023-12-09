@@ -16,12 +16,14 @@ This note is to test syncing to another note.
 ### Select
 Select
 ```meta-bind
-INPUT[select(
-option(option a),
-option(option b),
-option(option c),
-option(option d)
-):select]
+INPUT[
+	select(
+		option(option a),
+		option(option b),
+		option(option c),
+		option(option d)
+	):select
+]
 ```
 
 Select with title

@@ -4,12 +4,21 @@ import { parsePropPath } from '../../src/utils/prop/PropParser';
 import { PropPath } from '../../src/utils/prop/PropPath';
 import { TestPlugin } from '../__mocks__/TestPlugin';
 import { BindTargetDeclaration, BindTargetStorageType } from '../../src/parsers/BindTargetDeclaration';
+import { set } from 'itertools-ts/es';
 
 const plugin = new TestPlugin();
 const parser = plugin.api.bindTargetParser;
 const TEST_FILE = 'test.md';
 
-const validBindTargetFiles = [
+const validStorageTypes = [
+	undefined,
+	BindTargetStorageType.FRONTMATTER,
+	BindTargetStorageType.MEMORY,
+	BindTargetStorageType.GLOBAL_MEMORY,
+	BindTargetStorageType.SCOPE,
+];
+
+const validStoragePaths = [
 	undefined,
 	'file',
 	'testFile',
@@ -21,7 +30,7 @@ const validBindTargetFiles = [
 	'this is/some-path/to_some_file/in chinese/你叫什么名字',
 ];
 
-const validBindTargetPaths: [string, string[]][] = [
+const validStorageProps: [string, string[]][] = [
 	['test', ['test']],
 	['["test"]', ['test']],
 	['this["is"]', ['this', 'is']],
@@ -44,93 +53,84 @@ const localScopeBindTarget: BindTargetDeclaration = {
 const localScope = new BindTargetScope(localScopeBindTarget);
 
 interface BindTargetCombination {
-	filePath: string | undefined;
-	metadataPath: PropPath;
-	metadataPathString: string;
+	storageType: BindTargetStorageType | undefined;
+	storagePath: string | undefined;
+	storageProp: PropPath;
+	storagePropString: string;
 }
 
 function generateValidBindTargets(): BindTargetCombination[] {
 	const testCases: BindTargetCombination[] = [];
-	for (const validBindTargetFile of validBindTargetFiles) {
-		for (const validBindTargetPath of validBindTargetPaths) {
-			testCases.push({
-				filePath: validBindTargetFile,
-				metadataPathString: validBindTargetPath[0],
-				metadataPath: parsePropPath(validBindTargetPath[1]),
-			});
+	for (const [storageType, storagePath, storageProp] of set.cartesianProduct(
+		validStorageTypes,
+		validStoragePaths,
+		validStorageProps,
+	)) {
+		if (
+			(storageType === BindTargetStorageType.SCOPE || storageType === BindTargetStorageType.GLOBAL_MEMORY) &&
+			storagePath !== undefined
+		) {
+			continue;
 		}
+
+		testCases.push({
+			storageType: storageType,
+			storagePath: storagePath,
+			storagePropString: storageProp[0],
+			storageProp: parsePropPath(storageProp[1]),
+		});
 	}
 	return testCases;
 }
 
-interface TestCasePart {
+interface TestCase {
 	str: string;
 	expected: BindTargetDeclaration;
 }
 
-interface TestCase {
-	normal: TestCasePart;
-	local: TestCasePart;
-}
-
 function generateTestCase(combination: BindTargetCombination): TestCase {
-	if (combination.filePath === undefined) {
-		let localStr: string;
-		if (combination.metadataPathString.startsWith('[')) {
-			localStr = `^${combination.metadataPathString}`;
-		} else {
-			localStr = `^.${combination.metadataPathString}`;
-		}
+	const hasStorageType = combination.storageType !== undefined;
+	const hasStoragePath = combination.storagePath !== undefined;
 
-		return {
-			normal: {
-				str: combination.metadataPathString,
-				expected: {
-					storageType: BindTargetStorageType.FRONTMATTER,
-					storagePath: TEST_FILE,
-					storageProp: combination.metadataPath,
-					listenToChildren: false,
-				},
-			},
-			local: {
-				str: localStr,
-				expected: {
-					storageType: localScopeBindTarget.storageType,
-					storagePath: localScopeBindTarget.storagePath,
-					storageProp: localScopeBindTarget.storageProp.concat(combination.metadataPath),
-					listenToChildren: false,
-				},
-			},
-		};
-	} else {
-		let localStr: string;
-		if (combination.metadataPathString.startsWith('[')) {
-			localStr = `${combination.filePath}#^${combination.metadataPathString}`;
-		} else {
-			localStr = `${combination.filePath}#^.${combination.metadataPathString}`;
-		}
+	const storageTypePart = hasStorageType ? `${combination.storageType}^` : '';
+	const storagePathPart = hasStoragePath ? `${combination.storagePath}#` : '';
 
+	const combinedStr = storageTypePart + storagePathPart + combination.storagePropString;
+
+	if (combination.storageType === BindTargetStorageType.SCOPE) {
 		return {
-			normal: {
-				str: `${combination.filePath}#${combination.metadataPathString}`,
-				expected: {
-					storageType: BindTargetStorageType.FRONTMATTER,
-					storagePath: combination.filePath,
-					storageProp: combination.metadataPath,
-					listenToChildren: false,
-				},
-			},
-			local: {
-				str: localStr,
-				expected: {
-					storageType: localScopeBindTarget.storageType,
-					storagePath: localScopeBindTarget.storagePath,
-					storageProp: localScopeBindTarget.storageProp.concat(combination.metadataPath),
-					listenToChildren: false,
-				},
+			str: combinedStr,
+			expected: {
+				storageType: localScopeBindTarget.storageType,
+				storagePath: localScopeBindTarget.storagePath,
+				storageProp: localScopeBindTarget.storageProp.concat(combination.storageProp),
+				listenToChildren: false,
 			},
 		};
 	}
+	if (combination.storageType === BindTargetStorageType.GLOBAL_MEMORY) {
+		return {
+			str: combinedStr,
+			expected: {
+				storageType: BindTargetStorageType.GLOBAL_MEMORY,
+				storagePath: '',
+				storageProp: combination.storageProp,
+				listenToChildren: false,
+			},
+		};
+	}
+
+	return {
+		str: combinedStr,
+		expected: {
+			storageType: hasStorageType
+				? (combination.storageType as BindTargetStorageType)
+				: BindTargetStorageType.FRONTMATTER,
+			storagePath: hasStoragePath ? (combination.storagePath as string) : TEST_FILE,
+			storageProp: combination.storageProp,
+			listenToChildren: false,
+		},
+	};
 }
 
 describe('bind target parser', () => {
@@ -138,19 +138,16 @@ describe('bind target parser', () => {
 		for (const bindTarget of generateValidBindTargets()) {
 			const testCase = generateTestCase(bindTarget);
 
-			test(testCase.normal.str, () => {
-				// console.log(JSON.stringify(testCase.normal.expected, null, 2));
-				// console.log(JSON.stringify(parser.parseAndValidateBindTarget(testCase.normal.str), null, 2));
-				expect(parser.parseAndValidateBindTarget(testCase.normal.str, TEST_FILE)).toEqual(
-					testCase.normal.expected,
+			test(testCase.str, () => {
+				expect(parser.parseAndValidateBindTarget(testCase.str, TEST_FILE, localScope)).toEqual(
+					testCase.expected,
 				);
-			});
 
-			// test(testCase.local.str, () => {
-			// 	expect(parser.parseAndValidateBindTarget(testCase.local.str, localScope)).toEqual(
-			// 		testCase.local.expected,
-			// 	);
-			// });
+				// the syntax highlighting parser should not error
+				expect(
+					plugin.api.syntaxHighlighting.highlightBindTarget(testCase.str, false).parsingError,
+				).toBeUndefined();
+			});
 		}
 	});
 });

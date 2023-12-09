@@ -24,7 +24,7 @@ export class HLPUtils {
 	}
 
 	static separateBy(parser: Parser<Highlight[]>, separator: Parser<Highlight[]>): Parser<Highlight[]> {
-		return HLPUtils.sequence(parser, HLPUtils.sequence(separator, parser).many());
+		return HLPUtils.sequence(parser, HLPUtils.sequence(separator, parser).many()).optional([]);
 	}
 
 	static highlight(parser: Parser<unknown>, tokenClass: string): Parser<Highlight[]> {
@@ -66,23 +66,37 @@ export const BIND_TARGET_HLP: Parser<Highlight[]> = HLPUtils.sequence(
 );
 
 const inputFieldDeclarationHLP = HLPUtils.sequence(
-	keywordHLP,
-	HLPUtils.sequence(parenLHLP, fieldArgumentsHLP.trim(P_UTILS.optionalWhitespace()), parenRHLP).optional(),
-	HLPUtils.sequence(HLPUtils.highlightStr(':', MB_TokenClass.CONTROL), BIND_TARGET_HLP).optional(),
+	keywordHLP.trim(P_UTILS.optionalWhitespace()),
+	HLPUtils.sequence(parenLHLP, fieldArgumentsHLP.trim(P_UTILS.optionalWhitespace()), parenRHLP)
+		.trim(P_UTILS.optionalWhitespace())
+		.optional(),
+	HLPUtils.sequence(
+		HLPUtils.highlightStr(':', MB_TokenClass.CONTROL).trim(P_UTILS.optionalWhitespace()),
+		BIND_TARGET_HLP,
+	)
+		.trim(P_UTILS.optionalWhitespace())
+		.optional(),
 );
 
 const partialInputFieldDeclarationHLP = HLPUtils.sequence(
-	keywordHLP.optional(),
-	HLPUtils.sequence(parenLHLP, fieldArgumentsHLP.trim(P_UTILS.optionalWhitespace()), parenRHLP).optional(),
-	HLPUtils.sequence(HLPUtils.highlightStr(':', MB_TokenClass.CONTROL), BIND_TARGET_HLP).optional(),
+	keywordHLP.trim(P_UTILS.optionalWhitespace()).optional(),
+	HLPUtils.sequence(parenLHLP, fieldArgumentsHLP.trim(P_UTILS.optionalWhitespace()), parenRHLP)
+		.trim(P_UTILS.optionalWhitespace())
+		.optional(),
+	HLPUtils.sequence(
+		HLPUtils.highlightStr(':', MB_TokenClass.CONTROL).trim(P_UTILS.optionalWhitespace()),
+		BIND_TARGET_HLP,
+	)
+		.trim(P_UTILS.optionalWhitespace())
+		.optional(),
 );
 
 export const INPUT_FIELD_DECLARATION_HLP: Parser<Highlight[]> = P.or(
 	HLPUtils.sequence(
 		HLPUtils.highlightStr('INPUT', MB_TokenClass.CONTROL),
 		bracketLHLP,
-		identHLP,
-		bracketRHLP,
+		identHLP.trim(P_UTILS.optionalWhitespace()),
+		bracketRHLP.skip(P_UTILS.optionalWhitespace()),
 		bracketLHLP,
 		partialInputFieldDeclarationHLP,
 		bracketRHLP,
@@ -108,9 +122,16 @@ const viewFieldDeclarationHLP = HLPUtils.sequence(
 );
 
 const viewFieldExtraDeclarationHLP = HLPUtils.sequence(
-	keywordHLP.optional(),
-	HLPUtils.sequence(parenLHLP, fieldArgumentsHLP.trim(P_UTILS.optionalWhitespace()).optional(), parenRHLP).optional(),
-	HLPUtils.sequence(HLPUtils.highlightStr(':', MB_TokenClass.CONTROL), BIND_TARGET_HLP).optional(),
+	keywordHLP.trim(P_UTILS.optionalWhitespace()).optional(),
+	HLPUtils.sequence(parenLHLP, fieldArgumentsHLP.trim(P_UTILS.optionalWhitespace()).optional(), parenRHLP)
+		.trim(P_UTILS.optionalWhitespace())
+		.optional(),
+	HLPUtils.sequence(
+		HLPUtils.highlightStr(':', MB_TokenClass.CONTROL).trim(P_UTILS.optionalWhitespace()),
+		BIND_TARGET_HLP,
+	)
+		.trim(P_UTILS.optionalWhitespace())
+		.optional(),
 );
 
 export const VIEW_FIELD_DECLARATION_HLP: Parser<Highlight[]> = HLPUtils.sequence(
@@ -118,7 +139,11 @@ export const VIEW_FIELD_DECLARATION_HLP: Parser<Highlight[]> = HLPUtils.sequence
 	bracketLHLP,
 	viewFieldDeclarationHLP,
 	bracketRHLP,
-	HLPUtils.sequence(bracketLHLP, viewFieldExtraDeclarationHLP, bracketRHLP).optional(),
+	HLPUtils.sequence(
+		bracketLHLP.skip(P_UTILS.optionalWhitespace()),
+		viewFieldExtraDeclarationHLP,
+		bracketRHLP,
+	).optional(),
 );
 
 export const INLINE_BUTTON_DECLARATION_HLP: Parser<Highlight[]> = HLPUtils.sequence(

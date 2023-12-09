@@ -55,16 +55,19 @@ const viewFieldExtraDeclaration: Parser<PartialUnvalidatedViewFieldDeclaration> 
 			templateDeclaration: undefined,
 		} satisfies PartialUnvalidatedViewFieldDeclaration;
 	},
-	ident.node(createResultNode).optional().describe('input field type'),
+	ident.node(createResultNode).trim(P_UTILS.optionalWhitespace()).optional().describe('input field type'),
 	fieldArguments
 		.trim(P_UTILS.optionalWhitespace())
 		.wrapString('(', ')')
+		.trim(P_UTILS.optionalWhitespace())
 		.optional([] as UnvalidatedFieldArgument[]),
-	P.sequence(P.string(':'), BIND_TARGET).optional(),
+	P.sequence(P.string(':').trim(P_UTILS.optionalWhitespace()), BIND_TARGET)
+		.trim(P_UTILS.optionalWhitespace())
+		.optional(),
 );
 
 export const VIEW_FIELD_FULL_DECLARATION: Parser<PartialUnvalidatedViewFieldDeclaration> = P.sequenceMap(
-	(_1, declaration, extraDeclaration) => {
+	(_1, declaration, _2, extraDeclaration) => {
 		if (extraDeclaration === undefined) {
 			return {
 				viewFieldType: undefined,
@@ -79,6 +82,7 @@ export const VIEW_FIELD_FULL_DECLARATION: Parser<PartialUnvalidatedViewFieldDecl
 	},
 	P.string('VIEW'),
 	VIEW_FIELD_DECLARATION.wrapString('[', ']'),
+	P_UTILS.optionalWhitespace(),
 	viewFieldExtraDeclaration.wrapString('[', ']').optional(),
 	P_UTILS.eof(),
 );

@@ -17,12 +17,15 @@ export const INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclara
 			bindTarget: bindTarget,
 		} satisfies PartialUnvalidatedInputFieldDeclaration;
 	},
-	ident.node(createResultNode).describe('input field type'),
+	ident.node(createResultNode).trim(P_UTILS.optionalWhitespace()).describe('input field type'),
 	fieldArguments
 		.trim(P_UTILS.optionalWhitespace())
 		.wrap(P.string('(').describe('arguments paren "("'), P.string(')').describe('arguments paren ")"'))
+		.trim(P_UTILS.optionalWhitespace())
 		.optional([] as UnvalidatedFieldArgument[]),
-	P.sequence(P.string(':').describe('bind target separator ":"'), BIND_TARGET).optional(),
+	P.sequence(P.string(':').trim(P_UTILS.optionalWhitespace()).describe('bind target separator ":"'), BIND_TARGET)
+		.trim(P_UTILS.optionalWhitespace())
+		.optional(),
 );
 
 export const PARTIAL_INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclaration> = P.sequenceMap(
@@ -34,12 +37,15 @@ export const PARTIAL_INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFiel
 			bindTarget: bindTarget,
 		} satisfies PartialUnvalidatedInputFieldDeclaration;
 	},
-	ident.node(createResultNode).optional().describe('input field type'),
+	ident.node(createResultNode).trim(P_UTILS.optionalWhitespace()).optional().describe('input field type'),
 	fieldArguments
 		.trim(P_UTILS.optionalWhitespace())
 		.wrap(P.string('(').describe('arguments paren "("'), P.string(')').describe('arguments paren ")"'))
+		.trim(P_UTILS.optionalWhitespace())
 		.optional([] as UnvalidatedFieldArgument[]),
-	P.sequence(P.string(':').describe('bind target separator ":"'), BIND_TARGET).optional(),
+	P.sequence(P.string(':').trim(P_UTILS.optionalWhitespace()).describe('bind target separator ":"'), BIND_TARGET)
+		.trim(P_UTILS.optionalWhitespace())
+		.optional(),
 );
 
 export const INPUT_FIELD_FULL_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclaration> = P.or(
@@ -52,8 +58,8 @@ export const INPUT_FIELD_FULL_DECLARATION: Parser<PartialUnvalidatedInputFieldDe
 		P.sequenceMap(
 			(_1, templateName, _2) => templateName,
 			P.string('['),
-			identWithSpaces.node(createResultNode).describe('template name'),
-			P.string(']'),
+			identWithSpaces.node(createResultNode).trim(P_UTILS.optionalWhitespace()).describe('template name'),
+			P.string(']').skip(P_UTILS.optionalWhitespace()),
 		),
 		PARTIAL_INPUT_FIELD_DECLARATION.wrap(P.string('['), P.string(']')),
 		P_UTILS.eof(),

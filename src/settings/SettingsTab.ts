@@ -61,62 +61,15 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				});
 			});
 
-		new Setting(containerEl)
-			.setName('Sync interval')
-			.setDesc(
-				`The interval in milli-seconds between disk writes. Changing this number is not recommended except if your hard drive is exceptionally slow. Standard: ${DEFAULT_SETTINGS.syncInterval}; Minimum: ${DEFAULT_SETTINGS.minSyncInterval}; Maximum: ${DEFAULT_SETTINGS.maxSyncInterval}`,
-			)
-			.addText(cb => {
-				cb.setValue(this.plugin.settings.syncInterval.toString());
-				cb.onChange(data => {
-					this.plugin.settings.syncInterval = Number.parseInt(data);
-					if (Number.isNaN(this.plugin.settings.syncInterval)) {
-						this.plugin.settings.syncInterval = DEFAULT_SETTINGS.syncInterval;
-					}
-					if (this.plugin.settings.syncInterval < DEFAULT_SETTINGS.minSyncInterval) {
-						this.plugin.settings.syncInterval = DEFAULT_SETTINGS.minSyncInterval;
-					}
-					if (this.plugin.settings.syncInterval > DEFAULT_SETTINGS.maxSyncInterval) {
-						this.plugin.settings.syncInterval = DEFAULT_SETTINGS.maxSyncInterval;
-					}
-					void this.plugin.saveSettings();
-				});
-			});
+		containerEl.createEl('h2', { text: 'General Settings' });
 
 		new Setting(containerEl)
-			.setName('Date format')
-			.setDesc(
-				`The date format to be used by this plugin. Changing this setting will break the parsing of existing date inputs. Here is a list of all available date tokes https://momentjs.com/docs/#/displaying/.`,
-			)
-			.addText(cb => {
-				cb.setValue(this.plugin.settings.preferredDateFormat);
-				cb.onChange(data => {
-					this.plugin.settings.preferredDateFormat = data;
-					void this.plugin.saveSettings();
-				});
-			});
-
-		new Setting(containerEl)
-			.setName('Use US date input field order')
-			.setDesc(`When enabled the month input is before the day input.`)
+			.setName('Enable Syntax Highlighting')
+			.setDesc(`Enable syntax highlighting for. RESTART REQUIRED.`)
 			.addToggle(cb => {
-				cb.setValue(this.plugin.settings.useUsDateInputOrder);
+				cb.setValue(this.plugin.settings.enableSyntaxHighlighting);
 				cb.onChange(data => {
-					this.plugin.settings.useUsDateInputOrder = data;
-					void this.plugin.saveSettings();
-				});
-			});
-
-		new Setting(containerEl)
-			.setName('First Weekday')
-			.setDesc(`Specify the first weekday for the datepicker.`)
-			.addDropdown(cb => {
-				for (const weekday of weekdays) {
-					cb.addOption(weekday.name, weekday.name);
-				}
-				cb.setValue(this.plugin.settings.firstWeekday.name);
-				cb.onChange(data => {
-					this.plugin.settings.firstWeekday = weekdays.find(x => x.name === data)!;
+					this.plugin.settings.enableSyntaxHighlighting = data;
 					void this.plugin.saveSettings();
 				});
 			});
@@ -167,6 +120,46 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				});
 			});
 
+		containerEl.createEl('h2', { text: 'Date and Time Settings' });
+
+		new Setting(containerEl)
+			.setName('Date format')
+			.setDesc(
+				`The date format to be used by this plugin. Changing this setting will break the parsing of existing date inputs. Here is a list of all available date tokes https://momentjs.com/docs/#/displaying/.`,
+			)
+			.addText(cb => {
+				cb.setValue(this.plugin.settings.preferredDateFormat);
+				cb.onChange(data => {
+					this.plugin.settings.preferredDateFormat = data;
+					void this.plugin.saveSettings();
+				});
+			});
+
+		new Setting(containerEl)
+			.setName('Use US date input field order')
+			.setDesc(`When enabled the month input is before the day input.`)
+			.addToggle(cb => {
+				cb.setValue(this.plugin.settings.useUsDateInputOrder);
+				cb.onChange(data => {
+					this.plugin.settings.useUsDateInputOrder = data;
+					void this.plugin.saveSettings();
+				});
+			});
+
+		new Setting(containerEl)
+			.setName('First Weekday')
+			.setDesc(`Specify the first weekday for the datepicker.`)
+			.addDropdown(cb => {
+				for (const weekday of weekdays) {
+					cb.addOption(weekday.name, weekday.name);
+				}
+				cb.setValue(this.plugin.settings.firstWeekday.name);
+				cb.onChange(data => {
+					this.plugin.settings.firstWeekday = weekdays.find(x => x.name === data)!;
+					void this.plugin.saveSettings();
+				});
+			});
+
 		containerEl.createEl('h2', { text: 'Advanced Settings' });
 
 		new Setting(containerEl)
@@ -189,6 +182,28 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				cb.setValue(this.plugin.settings.ignoreCodeBlockRestrictions);
 				cb.onChange(data => {
 					this.plugin.settings.ignoreCodeBlockRestrictions = data;
+					void this.plugin.saveSettings();
+				});
+			});
+
+		new Setting(containerEl)
+			.setName('Sync interval')
+			.setDesc(
+				`The interval in milli-seconds between disk writes. Changing this number is not recommended except if your hard drive is exceptionally slow. Standard: ${DEFAULT_SETTINGS.syncInterval}; Minimum: ${DEFAULT_SETTINGS.minSyncInterval}; Maximum: ${DEFAULT_SETTINGS.maxSyncInterval}`,
+			)
+			.addText(cb => {
+				cb.setValue(this.plugin.settings.syncInterval.toString());
+				cb.onChange(data => {
+					this.plugin.settings.syncInterval = Number.parseInt(data);
+					if (Number.isNaN(this.plugin.settings.syncInterval)) {
+						this.plugin.settings.syncInterval = DEFAULT_SETTINGS.syncInterval;
+					}
+					if (this.plugin.settings.syncInterval < DEFAULT_SETTINGS.minSyncInterval) {
+						this.plugin.settings.syncInterval = DEFAULT_SETTINGS.minSyncInterval;
+					}
+					if (this.plugin.settings.syncInterval > DEFAULT_SETTINGS.maxSyncInterval) {
+						this.plugin.settings.syncInterval = DEFAULT_SETTINGS.maxSyncInterval;
+					}
 					void this.plugin.saveSettings();
 				});
 			});

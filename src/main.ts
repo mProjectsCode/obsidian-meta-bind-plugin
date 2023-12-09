@@ -17,9 +17,7 @@ import { RenderChildType } from './config/FieldConfigs';
 import { ButtonMDRC } from './renderChildren/ButtonMDRC';
 import { ButtonBuilderModal } from './fields/button/ButtonBuilderModal';
 import { InlineMDRCType, InlineMDRCUtils } from './utils/InlineMDRCUtils';
-import { type Mode, type StringStream } from 'codemirror';
-import { yaml } from '@codemirror/legacy-modes/mode/yaml';
-import { MB_TokenClass } from './parsers/HLPUtils';
+import { registerCm5HLModes } from './cm6/Cm5_Modes';
 
 export enum MetaBindBuild {
 	DEV = 'dev',
@@ -70,7 +68,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		this.registerEditorExtension(createMarkdownRenderChildWidgetEditorPlugin(this));
 
 		this.addCommands();
-		this.addCM5Modes();
+		registerCm5HLModes(this);
 
 		// misc
 		this.registerView(MB_FAQ_VIEW_TYPE, leaf => new FaqView(leaf, this));
@@ -131,7 +129,10 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				);
 			}
 			if (mdrcType === InlineMDRCType.VIEW_FIELD) {
-				this.api.createViewFieldFromString(content, RenderChildType.INLINE, ctx.sourcePath, codeBlock, ctx);
+				this.api.createViewFieldFromString(content, RenderChildType.BLOCK, ctx.sourcePath, codeBlock, ctx);
+			}
+			if (mdrcType === InlineMDRCType.BUTTON) {
+				this.api.createInlineButtonFromString(content, ctx.sourcePath, codeBlock, ctx);
 			}
 		});
 
@@ -220,55 +221,6 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		if (templateParseErrorCollection.hasErrors()) {
 			console.warn('meta-bind | failed to parse templates', templateParseErrorCollection);
 		}
-	}
-
-	addCM5Modes(): void {
-		/* eslint-disable */
-
-		window.CodeMirror.defineMode('meta-bind-button', _config => {
-			const mode: Mode<any> = {
-				startState: () => {
-					return yaml.startState?.(4);
-				},
-				blankLine: (state: any) => {
-					return yaml.blankLine?.(state, 4);
-				},
-				copyState: (_state: any) => {
-					return yaml.startState?.(4);
-				},
-				token: (stream: any, state: any) => {
-					return `line-HyperMD-codeblock ${yaml.token?.(stream, state)}`;
-				},
-			};
-
-			return mode;
-		});
-
-		const mdrcTypes = ['INPUT', 'VIEW'];
-		const mdrcRegexp = new RegExp(`^${mdrcTypes.join('|')}`);
-
-		window.CodeMirror.defineMode('meta-bind', _config => {
-			const mode: Mode<any> = {
-				token: (stream: StringStream, _state: any) => {
-					let ch = stream.peek();
-
-					if (stream.match(mdrcRegexp)) {
-						return `line-HyperMD-codeblock mb-highlight-${MB_TokenClass.CONTROL}`;
-					}
-
-					if (ch && '()[]{}:#,^'.includes(ch)) {
-						stream.next();
-						return `line-HyperMD-codeblock mb-highlight-${MB_TokenClass.CONTROL}`;
-					}
-
-					stream.next();
-
-					return `line-HyperMD-codeblock`;
-				},
-			};
-
-			return mode;
-		});
 	}
 
 	// TODO: move to internal API

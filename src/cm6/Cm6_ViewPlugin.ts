@@ -47,18 +47,20 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			 * @param view
 			 */
 			updateWidgets(view: EditorView): void {
-				// remove all decorations that are not in the viewport and call unload manually
+				// remove all decorations that are not visible and call unload manually
 				this.decorations = this.decorations.update({
 					filter: (fromA, toA, decoration) => {
 						const inVisibleRange = summary.anyMatch(view.visibleRanges, range =>
 							Cm6_Util.checkRangeOverlap(fromA, toA, range.from, range.to),
 						);
 
-						if (!inVisibleRange) {
-							// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-							decoration.spec.mb_unload?.();
+						if (inVisibleRange) {
+							return true;
 						}
-						return inVisibleRange;
+
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+						decoration.spec.mb_unload?.();
+						return false;
 					},
 				});
 
@@ -105,19 +107,25 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			 * Removes all decorations at a given node.
 			 *
 			 * @param node
-			 * @param widgetType if specified, decorations of this type are kept
+			 * @param widgetTypeToKeep if specified, decorations of this type are kept
 			 */
-			removeDecoration(node: SyntaxNode, widgetType?: MB_WidgetType): void {
+			removeDecoration(node: SyntaxNode, widgetTypeToKeep?: MB_WidgetType): void {
 				this.decorations.between(node.from - 1, node.to + 1, (from, to, _) => {
 					this.decorations = this.decorations.update({
 						filterFrom: from,
 						filterTo: to,
 						filter: (_from, _to, decoration) => {
-							if (widgetType) {
-								// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-								return decoration.spec.mb_widgetType === widgetType;
+							if (widgetTypeToKeep) {
+								// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+								const widgetType = decoration.spec.mb_widgetType;
+
+								if (widgetType === widgetTypeToKeep) {
+									return true;
+								}
 							}
 
+							// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+							decoration.spec.mb_unload?.();
 							return false;
 						},
 					});
@@ -202,7 +210,8 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 
 					return {
 						shouldRender: !hasSelectionOverlap && isLivePreview,
-						shouldHighlight: hasSelectionOverlap || !isLivePreview,
+						shouldHighlight:
+							(hasSelectionOverlap || !isLivePreview) && plugin.settings.enableSyntaxHighlighting,
 						content: content.content,
 						widgetType: content.widgetType,
 					};
@@ -324,7 +333,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 						},
 					}).range(node.from - 1, node.to + 1);
 				} else {
-					const highlight = plugin.api.syntaxHighlighting.highlight(content, mdrcType);
+					const highlight = plugin.api.syntaxHighlighting.highlight(content, mdrcType, false);
 
 					return highlight.getHighlights().map(h => {
 						// console.log(h);

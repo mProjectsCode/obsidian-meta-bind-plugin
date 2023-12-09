@@ -68,6 +68,7 @@ export interface MetaBindPluginSettings {
 	minSyncInterval: number;
 	enableJs: boolean;
 	viewFieldDisplayNullAsEmpty: boolean;
+	enableSyntaxHighlighting: boolean;
 
 	inputFieldTemplates: InputFieldTemplate[];
 	excludedFolders: string[];
@@ -92,6 +93,7 @@ export const DEFAULT_SETTINGS: MetaBindPluginSettings = {
 	maxSyncInterval: 1000,
 	enableJs: false,
 	viewFieldDisplayNullAsEmpty: false,
+	enableSyntaxHighlighting: true,
 
 	inputFieldTemplates: [],
 	excludedFolders: ['templates'],

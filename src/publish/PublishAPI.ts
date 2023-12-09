@@ -13,6 +13,7 @@ import { getUUID } from '../utils/Utils';
 import { InputFieldFactory } from '../fields/inputFields/InputFieldFactory';
 import { ButtonActionRunner } from '../fields/button/ButtonActionRunner';
 import { ButtonManager } from '../fields/button/ButtonManager';
+import { SyntaxHighlightingAPI } from '../api/SyntaxHighlightingAPI';
 
 export class PublishAPI implements IAPI {
 	public readonly plugin: IPlugin;
@@ -28,6 +29,8 @@ export class PublishAPI implements IAPI {
 	public readonly buttonActionRunner: ButtonActionRunner;
 	public readonly buttonManager: ButtonManager;
 
+	public readonly syntaxHighlighting: SyntaxHighlightingAPI;
+
 	constructor(plugin: IPlugin) {
 		this.plugin = plugin;
 
@@ -41,6 +44,8 @@ export class PublishAPI implements IAPI {
 
 		this.buttonActionRunner = new ButtonActionRunner(this.plugin);
 		this.buttonManager = new ButtonManager();
+
+		this.syntaxHighlighting = new SyntaxHighlightingAPI(this.plugin);
 	}
 
 	public createInputFieldFromString(
