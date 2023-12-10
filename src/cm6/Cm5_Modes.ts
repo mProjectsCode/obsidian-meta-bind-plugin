@@ -78,13 +78,13 @@ export function registerCm5HLModes(plugin: MetaBindPlugin): void {
 						state.highlights = plugin.api.syntaxHighlighting.highlight(state.str, state.mdrcType, true);
 					}
 
-					console.log(state.str, state.highlights.getHighlights());
+					// console.log(state.str, state.highlights.getHighlights());
 				}
 
 				const lineHighlights = state.highlights.getHighlights().filter(h => h.range.from.line === state.line);
 				const highlight = lineHighlights.find(h => h.range.from.column === stream.pos + 1);
 
-				console.log(state.line, stream.pos, stream.peek(), highlight);
+				// console.log(state.line, stream.pos, stream.peek(), highlight);
 
 				if (highlight === undefined) {
 					stream.next();

@@ -152,12 +152,10 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			});
 		}
 
-		if (this.settings.devMode) {
-			this.registerMarkdownCodeBlockProcessor('meta-bind-button', (source, el, ctx) => {
-				const button = new ButtonMDRC(el, source, this, ctx.sourcePath, getUUID());
-				ctx.addChild(button);
-			});
-		}
+		this.registerMarkdownCodeBlockProcessor('meta-bind-button', (source, el, ctx) => {
+			const button = new ButtonMDRC(el, source, this, ctx.sourcePath, getUUID());
+			ctx.addChild(button);
+		});
 	}
 
 	addCommands(): void {
