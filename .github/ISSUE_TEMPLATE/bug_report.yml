@@ -1,0 +1,79 @@
+name: Bug report
+description: Report an issue with the plugin.
+labels:
+    - bug
+body:
+    - type: markdown
+      attributes:
+          value: >-
+              Thanks for taking the time to fill out this bug report!
+              
+              
+              By filling out the form you are giving me a clear description of the
+              bug, which helps me to fix the bug more quickly. :)
+    - type: checkboxes
+      id: latest-version-check
+      attributes:
+          label: Please fill out these Check-boxes
+          options:
+              - label: I checked that the plugin is up to date
+                required: true
+              - label: The issue persist with all other plugins and themes disabled
+                required: false
+    - type: checkboxes
+      id: operating-systems
+      attributes:
+          label: This Issue Occurs on
+          description: Please select the operating systems that the bug occurs on.
+          options:
+              - label: Windows
+                required: false
+              - label: Linux
+                required: false
+              - label: macOS
+                required: false
+              - label: Android
+                required: false
+              - label: iOS
+                required: false
+    - type: input
+      id: plugin-version
+      attributes:
+          label: Plugin Version
+          description: Please enter the plugin version you are using in the textbox below.
+          placeholder: x.x.x
+      validations:
+          required: true
+    - type: textarea
+      id: description
+      attributes:
+          label: Describe the Issue
+          description: >-
+              Please provide a clear and concise description of what issue you are
+              experiencing.
+          render: Markdown
+      validations:
+          required: true
+    - type: textarea
+      id: reproduction-steps
+      attributes:
+          label: Steps to Reproduce
+          description: Please provide simple steps to reproduce the behavior.
+          placeholder: 1. Go to '...' 2. Click on '....' 3. Scroll down to '....' 4. See error
+          render: Markdown
+      validations:
+          required: true
+    - type: textarea
+      id: expected-behavior
+      attributes:
+          label: Expected Behavior
+          description: Please describe the behavior that you expected to see or happen.
+          placeholder: I expected the plugin to...
+          render: Markdown
+      validations:
+          required: true
+    - type: markdown
+      attributes:
+          value: >-
+              This template was generated with [Issue Forms
+              Creator](https://issue-forms-creator.netlify.app)

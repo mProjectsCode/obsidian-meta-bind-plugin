@@ -1,0 +1,34 @@
+name: Feature Request
+description: Suggest a new feature for this plugin.
+labels:
+    - feature request
+body:
+    - type: textarea
+      id: related-problem
+      attributes:
+          label: Is your Feature Request Related to a Problem?
+          description: >-
+              If your feature request is related to a problem, please provide clear
+              and concise description the problem.
+          placeholder: ' I''m always frustrated when...'
+          render: Markdown
+    - type: textarea
+      attributes:
+          label: Describe the Feature you'd Like
+          description: >-
+              Please provide a clear and concise description of the feature that you
+              would like.
+          placeholder: I would like the plugin to be able to do...
+          render: Markdown
+      validations:
+          required: true
+    - type: textarea
+      id: additional-context
+      attributes:
+          label: Additional Context
+          description: Provide any additional context here.
+    - type: markdown
+      attributes:
+          value: >-
+              This template was generated with [Issue Forms
+              Creator](https://issue-forms-creator.netlify.app)
