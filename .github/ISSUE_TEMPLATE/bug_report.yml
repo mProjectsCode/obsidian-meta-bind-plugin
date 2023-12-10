@@ -51,7 +51,6 @@ body:
           description: >-
               Please provide a clear and concise description of what issue you are
               experiencing.
-          render: Markdown
       validations:
           required: true
     - type: textarea
@@ -59,8 +58,11 @@ body:
       attributes:
           label: Steps to Reproduce
           description: Please provide simple steps to reproduce the behavior.
-          placeholder: 1. Go to '...' 2. Click on '....' 3. Scroll down to '....' 4. See error
-          render: Markdown
+          placeholder: >-
+              1. Go to '...'
+              2. Click on '....'
+              3. Scroll down to '....'
+              4. See error
       validations:
           required: true
     - type: textarea
@@ -69,7 +71,6 @@ body:
           label: Expected Behavior
           description: Please describe the behavior that you expected to see or happen.
           placeholder: I expected the plugin to...
-          render: Markdown
       validations:
           required: true
     - type: markdown
