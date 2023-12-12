@@ -2,13 +2,13 @@ import { AbstractViewField } from '../AbstractViewField';
 import { type ViewFieldDeclaration } from '../../../parsers/viewFieldParser/ViewFieldDeclaration';
 import { type ViewFieldMDRC, type ViewFieldVariable } from '../../../renderChildren/ViewFieldMDRC';
 import { ErrorLevel, MetaBindExpressionError } from '../../../utils/errors/MetaBindErrors';
-import * as MathJs from 'mathjs';
+// import { type EvalFunction, compile as MathJsCompile } from 'mathjs';
 import { Signal } from '../../../utils/Signal';
 import { getUUID } from '../../../utils/Utils';
 
 export class MathVF extends AbstractViewField {
 	container?: HTMLElement;
-	expression?: MathJs.EvalFunction;
+	// expression?: EvalFunction;
 	expressionStr?: string;
 
 	hidden: boolean;
@@ -43,7 +43,7 @@ export class MathVF extends AbstractViewField {
 			}
 		}
 
-		this.expression = MathJs.compile(this.expressionStr);
+		// this.expression = MathJsCompile(this.expressionStr);
 
 		return variables;
 	}
@@ -71,17 +71,18 @@ export class MathVF extends AbstractViewField {
 	}
 
 	async computeValue(variables: ViewFieldVariable[]): Promise<string> {
-		if (!this.expression) {
-			throw new MetaBindExpressionError({
-				errorLevel: ErrorLevel.ERROR,
-				effect: 'failed to evaluate expression',
-				cause: 'expression is undefined',
-			});
-		}
+		// if (!this.expression) {
+		// 	throw new MetaBindExpressionError({
+		// 		errorLevel: ErrorLevel.ERROR,
+		// 		effect: 'failed to evaluate expression',
+		// 		cause: 'expression is undefined',
+		// 	});
+		// }
 
 		const context = this.buildContext(variables);
 		try {
-			return this.expression.evaluate(context) as Promise<string>;
+			// return this.expression.evaluate(context) as Promise<string>;
+			return 'mathjs is disabled';
 		} catch (e) {
 			if (e instanceof Error) {
 				throw new MetaBindExpressionError({

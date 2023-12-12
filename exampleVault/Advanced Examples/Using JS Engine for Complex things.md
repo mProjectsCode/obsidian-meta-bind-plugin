@@ -1,5 +1,5 @@
 ---
-text: asd
+text: aaa
 locked: false
 ---
 
@@ -29,3 +29,20 @@ signal.registerListener({
 return reactive;
 ```
 
+```js-engine
+const mb = engine.getPlugin('obsidian-meta-bind-plugin').api;
+
+const signal = mb.createSignal(undefined)
+component.register(mb.listenToMetadata(signal, context.file.path, ['text']))
+
+function onUpdate(value) {
+	return value.toString()
+}
+
+const reactive = engine.reactive(onUpdate, signal.get())
+signal.registerListener({
+	callback: (v) => reactive.refresh(v),
+})
+
+return reactive;
+```
