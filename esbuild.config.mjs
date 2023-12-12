@@ -18,7 +18,7 @@ if you want to view the source, please visit the github repository of this plugi
 */
 `;
 
-const context = await esbuild.context({
+const build = await esbuild.build({
 	banner: {
 		js: banner,
 	},
@@ -62,9 +62,6 @@ const context = await esbuild.context({
 		}),
 	],
 });
-
-const build = await context.rebuild();
-console.log(await analyzeMetafile(build.metafile));
 
 const file = Bun.file('meta.txt');
 await Bun.write(file, JSON.stringify(build.metafile, null, '\t'));

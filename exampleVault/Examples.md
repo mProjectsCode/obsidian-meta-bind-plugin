@@ -1,5 +1,5 @@
 ---
-slider1: 3
+slider1: 8
 suggest: test
 toggle1: false
 Domestic_tasks:

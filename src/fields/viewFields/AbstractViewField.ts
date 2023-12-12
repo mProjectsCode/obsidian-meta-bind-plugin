@@ -2,6 +2,7 @@ import { type ViewFieldDeclaration } from '../../parsers/viewFieldParser/ViewFie
 import { type ViewFieldMDRC, type ViewFieldVariable } from '../../renderChildren/ViewFieldMDRC';
 
 import { ViewFieldArgumentType } from '../../config/FieldConfigs';
+import { stringifyUnknown } from '../../utils/Literal';
 
 export abstract class AbstractViewField {
 	protected renderChild: ViewFieldMDRC;
@@ -42,20 +43,10 @@ export abstract class AbstractViewField {
 			return;
 		}
 
-		try {
-			const text = value?.toString() ?? '';
-
-			if (!this.hidden) {
-				this.container.empty();
-				await this._update(this.container, text);
-			}
-			this.container.removeClass('mb-error');
-		} catch (e) {
-			if (e instanceof Error) {
-				console.error(e);
-				this.container.innerText = e.message;
-				this.container.addClass('mb-error');
-			}
+		if (!this.hidden) {
+			const text = stringifyUnknown(value, this.renderChild.plugin.settings.viewFieldDisplayNullAsEmpty) ?? '';
+			this.container.empty();
+			await this._update(this.container, text);
 		}
 	}
 

@@ -1,5 +1,5 @@
 import { type MBLiteral } from '../../../../utils/Literal';
-import { type DataArray, type DataviewApi, getAPI, type Literal } from 'obsidian-dataview';
+import { type DataArray, type DataviewApi, type Literal } from 'obsidian-dataview';
 import { InputFieldArgumentType } from '../../../../config/FieldConfigs';
 import { type OptionInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 import { type OptionQueryInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionQueryInputFieldArgument';
@@ -58,7 +58,8 @@ export function getSuggesterOptionsForInputField(
 	plugin: MetaBindPlugin,
 ): SuggesterOption<MBLiteral>[] {
 	const app = plugin.app;
-	const dv = getAPI(app);
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+	const dv = (app.plugins.getPlugin('obsidian-dataview') as any).api as DataviewApi | undefined;
 	const optionArgs = inputField.base.getArguments(InputFieldArgumentType.OPTION);
 	const optionQueryArgs = inputField.base.getArguments(InputFieldArgumentType.OPTION_QUERY);
 	const useLinksArgs = inputField.base.getArgument(InputFieldArgumentType.USE_LINKS);

@@ -2,14 +2,15 @@ import { AbstractViewField } from '../AbstractViewField';
 import { type ViewFieldDeclaration } from '../../../parsers/viewFieldParser/ViewFieldDeclaration';
 import { type ViewFieldMDRC, type ViewFieldVariable } from '../../../renderChildren/ViewFieldMDRC';
 import { ErrorLevel, MetaBindExpressionError } from '../../../utils/errors/MetaBindErrors';
-// import { type EvalFunction, compile as MathJsCompile } from 'mathjs';
 import { Signal } from '../../../utils/Signal';
 import { getUUID } from '../../../utils/Utils';
+import { compile as MathJsCompile, type EvalFunction } from 'mathjs';
 
 export class MathVF extends AbstractViewField {
 	container?: HTMLElement;
-	// expression?: EvalFunction;
+	expression?: EvalFunction;
 	expressionStr?: string;
+	hasError: boolean;
 
 	hidden: boolean;
 
@@ -17,6 +18,8 @@ export class MathVF extends AbstractViewField {
 		super(renderChild);
 
 		this.hidden = false;
+
+		this.hasError = false;
 	}
 
 	public buildVariables(declaration: ViewFieldDeclaration): ViewFieldVariable[] {
@@ -43,15 +46,20 @@ export class MathVF extends AbstractViewField {
 			}
 		}
 
-		// this.expression = MathJsCompile(this.expressionStr);
+		this.expression = MathJsCompile(this.expressionStr);
 
 		return variables;
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	protected _render(container: HTMLElement): void {}
+	protected _render(_container: HTMLElement): void {}
 
 	protected _update(container: HTMLElement, text: string): void {
+		// console.log('hasError', this.hasError);
+		if (this.hasError) {
+			container.addClass('mb-error');
+		} else {
+			container.removeClass('mb-error');
+		}
 		container.innerText = text;
 	}
 
@@ -70,37 +78,51 @@ export class MathVF extends AbstractViewField {
 		return context;
 	}
 
-	async computeValue(variables: ViewFieldVariable[]): Promise<string> {
-		// if (!this.expression) {
-		// 	throw new MetaBindExpressionError({
-		// 		errorLevel: ErrorLevel.ERROR,
-		// 		effect: 'failed to evaluate expression',
-		// 		cause: 'expression is undefined',
-		// 	});
-		// }
+	computeValue(variables: ViewFieldVariable[]): string {
+		this.hasError = false;
+
+		if (!this.expression) {
+			return this.handleComputeError(
+				new MetaBindExpressionError({
+					errorLevel: ErrorLevel.ERROR,
+					effect: 'failed to evaluate expression',
+					cause: 'expression is undefined',
+				}),
+			);
+		}
 
 		const context = this.buildContext(variables);
 		try {
-			// return this.expression.evaluate(context) as Promise<string>;
-			return 'mathjs is disabled';
+			// eslint-disable-next-line
+			return this.expression.evaluate(context).toString();
 		} catch (e) {
 			if (e instanceof Error) {
-				throw new MetaBindExpressionError({
-					errorLevel: ErrorLevel.ERROR,
-					effect: `failed to evaluate expression`,
-					cause: e,
-					context: {
-						expression: this.expressionStr,
-						context: context,
-					},
-				});
+				return this.handleComputeError(
+					new MetaBindExpressionError({
+						errorLevel: ErrorLevel.ERROR,
+						effect: `failed to evaluate expression`,
+						cause: e,
+						context: {
+							expression: this.expressionStr,
+							context: context,
+						},
+					}),
+				);
 			} else {
-				throw new Error('failed to evaluate js expression because of: unexpected thrown value');
+				return this.handleComputeError(
+					new Error('failed to evaluate js expression because of: unexpected thrown value'),
+				);
 			}
 		}
 	}
 
 	public getDefaultDisplayValue(): string {
 		return '';
+	}
+
+	private handleComputeError(e: Error): string {
+		this.hasError = true;
+		console.warn(e);
+		return e.message;
 	}
 }
