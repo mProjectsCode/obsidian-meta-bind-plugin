@@ -7,8 +7,8 @@ body:
       attributes:
           value: >-
               Thanks for taking the time to fill out this bug report!
-              
-              
+
+
               By filling out the form you are giving me a clear description of the
               bug, which helps me to fix the bug more quickly. :)
     - type: checkboxes

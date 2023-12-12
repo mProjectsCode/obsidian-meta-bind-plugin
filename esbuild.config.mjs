@@ -66,6 +66,6 @@ const context = await esbuild.context({
 const build = await context.rebuild();
 console.log(await analyzeMetafile(build.metafile));
 
-const file = Bun.file('meta.txt')
+const file = Bun.file('meta.txt');
 await Bun.write(file, JSON.stringify(build.metafile, null, '\t'));
-process.exit(0)
+process.exit(0);
