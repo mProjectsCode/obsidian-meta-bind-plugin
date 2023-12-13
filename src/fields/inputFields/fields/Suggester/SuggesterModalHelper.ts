@@ -7,6 +7,7 @@ import { Notice } from 'obsidian';
 import { SuggesterInputModal } from './SuggesterInputModal';
 import { type SuggesterLikeIFP, SuggesterOption } from './SuggesterHelper';
 import type MetaBindPlugin from '../../../../main';
+import { getDataViewPluginAPI } from '../../../../utils/ObsUtils';
 
 export function getSuggesterOptions(
 	dv: DataviewApi | undefined,
@@ -58,8 +59,8 @@ export function getSuggesterOptionsForInputField(
 	plugin: MetaBindPlugin,
 ): SuggesterOption<MBLiteral>[] {
 	const app = plugin.app;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-	const dv = (app.plugins.getPlugin('obsidian-dataview') as any).api as DataviewApi | undefined;
+
+	const dv = getDataViewPluginAPI(app);
 	const optionArgs = inputField.base.getArguments(InputFieldArgumentType.OPTION);
 	const optionQueryArgs = inputField.base.getArguments(InputFieldArgumentType.OPTION_QUERY);
 	const useLinksArgs = inputField.base.getArgument(InputFieldArgumentType.USE_LINKS);

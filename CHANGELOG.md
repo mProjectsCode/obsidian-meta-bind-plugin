@@ -1,5 +1,11 @@
 # Obsidian Meta Bind Changelog
 
+# 0.10.1
+
+Bug Fixes
+
+-   Fixed a bug with suggesters using Dataview not opening the suggester modal [#159](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/159)
+
 # 0.10.0
 
 New Features
