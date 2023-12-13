@@ -1,5 +1,21 @@
 # Obsidian Meta Bind Changelog
 
+# 0.10.0
+
+New Features
+
+-   Meta Bind Buttons: Create buttons inside your notes that can trigger actions on click. A spiritual successor to the discontinued Buttons Plugin.
+-   Syntax Highlighting: Meta Bind now has syntax highlighting for all its syntaxes in source mode and in live preview.
+-   Multiple Bind Target Storage Types: You can not choose to store intermediate inputs or view field outputs in memory. That way they won't clutter your frontmatter.
+
+Changes
+
+-   The way to reference scope in the Meta Bind Table has changed from `^.property` to `scope^property`.
+
+Bug Fixes
+
+-   Fixed a bug related to `null` and default values of input fields [#148](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/148)
+
 # 0.9.0
 
 New Features

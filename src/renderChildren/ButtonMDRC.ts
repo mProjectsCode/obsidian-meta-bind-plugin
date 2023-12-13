@@ -6,6 +6,7 @@ import { type ButtonConfig, ButtonConfigValidator } from '../config/ButtonConfig
 import { ErrorLevel, MetaBindButtonError } from '../utils/errors/MetaBindErrors';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
 import ButtonComponent from '../utils/components/ButtonComponent.svelte';
+import { DocsUtils } from '../utils/DocsUtils';
 
 export class ButtonMDRC extends AbstractMDRC {
 	content: string;
@@ -51,9 +52,11 @@ export class ButtonMDRC extends AbstractMDRC {
 		if (!validationResult.success) {
 			this.errorCollection.add(
 				new MetaBindButtonError({
-					errorLevel: ErrorLevel.CRITICAL,
+					errorLevel: ErrorLevel.ERROR,
 					effect: 'can not parse button config',
-					cause: validationResult.error,
+					cause: 'zod validation failed. Check your button syntax',
+					positionContext: validationResult.error.message,
+					docs: [DocsUtils.linkToButtonConfig()],
 				}),
 			);
 			this.createErrorIndicator(this.containerEl);

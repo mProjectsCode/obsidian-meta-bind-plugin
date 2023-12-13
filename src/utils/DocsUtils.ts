@@ -30,6 +30,14 @@ export class DocsUtils {
 		return `https://www.moritzjung.dev/obsidian-meta-bind-plugin-docs/guides/viewfields/`;
 	}
 
+	static linkToButtons(): string {
+		return `https://www.moritzjung.dev/obsidian-meta-bind-plugin-docs/guides/buttons/#button-configuration`;
+	}
+
+	static linkToButtonConfig(): string {
+		return `https://www.moritzjung.dev/obsidian-meta-bind-plugin-docs/guides/buttons/#button-configuration`;
+	}
+
 	static linkToSearch(search: string): string {
 		return `https://www.moritzjung.dev/obsidian-meta-bind-plugin-docs/?s=${encodeURIComponent(search)}`;
 	}

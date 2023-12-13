@@ -151,3 +151,19 @@ actions:
     command: obsidian-meta-bind-plugin:open-help
 
 ```
+
+
+## Invalid Buttons
+
+```meta-bind-button
+label: Test
+hidden: false
+id: ""
+style: default
+actions:
+  - type: sl
+    ms: 1000
+  - type: command
+    command: obsidian-meta-bind-plugin:open-help
+
+```
