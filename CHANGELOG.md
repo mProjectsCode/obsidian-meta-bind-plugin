@@ -1,5 +1,11 @@
 # Obsidian Meta Bind Changelog
 
+# 0.10.2
+
+Changes
+
+-   Updated dependencies to JS Engine 0.1.0
+
 # 0.10.1
 
 Bug Fixes
