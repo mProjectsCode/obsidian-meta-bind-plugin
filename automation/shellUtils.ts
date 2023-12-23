@@ -86,6 +86,7 @@ export async function $input(message: string): Promise<string> {
 	const stdin = Bun.stdin.stream();
 	const reader = stdin.getReader();
 	const chunk = await reader.read();
+	reader.releaseLock();
 	const text = Buffer.from(chunk.value ?? '').toString();
 	return text.trim();
 }
