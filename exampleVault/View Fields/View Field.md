@@ -71,3 +71,6 @@ Markdown:
 Null:
 `VIEW[{someUnknownValue}][text]`
 some text
+
+Input: `INPUT[number:someComputedValue]`
+Computed Value: `VIEW[{someInputValue} * 2][math:someComputedValue]`

@@ -204,7 +204,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 
 			await renderer.render(execution.result);
 
-			return renderer.renderToSimpleObject(execution.result);
+			return renderer.convertToSimpleObject(execution.result);
 		} catch (e) {
 			if (e instanceof Error) {
 				this.renderContainer.innerText = e.message;
