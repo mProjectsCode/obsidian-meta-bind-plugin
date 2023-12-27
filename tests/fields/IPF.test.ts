@@ -11,7 +11,7 @@ import { Stream } from 'itertools-ts';
 import { multi } from 'itertools-ts/es';
 import { METADATA_CACHE_UPDATE_CYCLE_THRESHOLD } from '../../src/metadata/MetadataManager';
 import { TestPlugin } from '../__mocks__/TestPlugin';
-import { BindTargetStorageType } from '../../src/parsers/BindTargetDeclaration';
+import { BindTargetStorageType } from '../../src/parsers/bindTargetParser/BindTargetDeclaration';
 
 const TEST_FILE_PATH = 'testFile';
 const TEST_PROP = 'testProp';

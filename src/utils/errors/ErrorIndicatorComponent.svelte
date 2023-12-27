@@ -8,7 +8,15 @@
 	export let declaration: string;
 
 	function openModal() {
-		const modal = new ErrorCollectionViewModal(app, errorCollection, declaration);
+		const modal = new ErrorCollectionViewModal(app, {
+			errorCollection: errorCollection,
+			declaration: declaration,
+			errorText:
+				'Errors caused the creation of the field to fail. Sometimes one error only occurs because of another.',
+			warningText:
+				'Warnings will not cause the creation of a field to fail, but they indicate that a part of the declaration was invalid or uses deprecated functionality.',
+			code: declaration,
+		});
 		modal.open();
 	}
 </script>

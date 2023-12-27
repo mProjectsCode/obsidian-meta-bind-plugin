@@ -2,7 +2,7 @@ import { type MetaBindPluginSettings } from '../settings/Settings';
 import { type IPlugin } from '../IPlugin';
 import { PublishAPI } from './PublishAPI';
 import { type MarkdownPostProcessorContext } from 'obsidian/publish';
-import { PublishAPIAdapter } from '../internalApi/PublishAPIAdapter';
+import { PublishAPIAdapter } from '../api/internalApi/PublishAPIAdapter';
 import { MetadataManager } from '../metadata/MetadataManager';
 import { PublishMetadataAdapter } from '../metadata/PublishMetadataAdapter';
 

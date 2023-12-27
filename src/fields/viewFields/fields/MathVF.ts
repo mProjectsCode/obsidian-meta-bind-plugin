@@ -78,7 +78,7 @@ export class MathVF extends AbstractViewField {
 		return context;
 	}
 
-	computeValue(variables: ViewFieldVariable[]): string {
+	computeValue(variables: ViewFieldVariable[]): unknown {
 		this.hasError = false;
 
 		if (!this.expression) {
@@ -94,7 +94,7 @@ export class MathVF extends AbstractViewField {
 		const context = this.buildContext(variables);
 		try {
 			// eslint-disable-next-line
-			return this.expression.evaluate(context).toString();
+			return this.expression.evaluate(context);
 		} catch (e) {
 			if (e instanceof Error) {
 				return this.handleComputeError(

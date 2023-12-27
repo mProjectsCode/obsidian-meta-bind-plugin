@@ -1,5 +1,5 @@
 import { ViewFieldParser } from '../parsers/viewFieldParser/ViewFieldParser';
-import { BindTargetParser } from '../parsers/BindTargetParser';
+import { BindTargetParser } from '../parsers/bindTargetParser/BindTargetParser';
 import { type IPlugin } from '../IPlugin';
 import { PublishInputFieldMDRC } from './PublishInputFieldMDRC';
 import { PublishViewFieldMDRC } from './PublishViewFieldMDRC';

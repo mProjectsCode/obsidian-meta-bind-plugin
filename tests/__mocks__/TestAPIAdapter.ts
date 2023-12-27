@@ -1,4 +1,4 @@
-import { IInternalAPI } from '../../src/internalApi/IInternalAPI';
+import { IInternalAPI } from '../../src/api/internalApi/IInternalAPI';
 import { DatePickerIPF } from '../../src/fields/inputFields/fields/DatePicker/DatePickerIPF';
 import { ImageSuggesterIPF } from '../../src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
 import { SuggesterLikeIFP, SuggesterOption } from '../../src/fields/inputFields/fields/Suggester/SuggesterHelper';

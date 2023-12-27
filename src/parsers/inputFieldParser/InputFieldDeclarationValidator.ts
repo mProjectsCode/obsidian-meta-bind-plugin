@@ -9,7 +9,7 @@ import { type InputFieldDeclaration, type UnvalidatedInputFieldDeclaration } fro
 import { type BindTargetScope } from '../../metadata/BindTargetScope';
 import { type ParsingResultNode } from '../nomParsers/GeneralNomParsers';
 import { InputFieldArgumentType, InputFieldType } from '../../config/FieldConfigs';
-import { type BindTargetDeclaration } from '../BindTargetDeclaration';
+import { type BindTargetDeclaration } from '../bindTargetParser/BindTargetDeclaration';
 
 export class InputFieldDeclarationValidator {
 	unvalidatedDeclaration: UnvalidatedInputFieldDeclaration;

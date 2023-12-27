@@ -12,12 +12,14 @@ import { ObsidianMetadataAdapter } from './metadata/ObsidianMetadataAdapter';
 import { FaqView, MB_FAQ_VIEW_TYPE } from './faq/FaqView';
 import { EMBED_MAX_DEPTH, EmbedMDRC } from './renderChildren/EmbedMDRC';
 import { getUUID } from './utils/Utils';
-import { ObsidianAPIAdapter } from './internalApi/ObsidianAPIAdapter';
+import { ObsidianAPIAdapter } from './api/internalApi/ObsidianAPIAdapter';
 import { RenderChildType } from './config/FieldConfigs';
 import { ButtonMDRC } from './renderChildren/ButtonMDRC';
 import { ButtonBuilderModal } from './fields/button/ButtonBuilderModal';
 import { InlineMDRCType, InlineMDRCUtils } from './utils/InlineMDRCUtils';
 import { registerCm5HLModes } from './cm6/Cm5_Modes';
+import { DependencyManager } from './utils/dependencies/DependencyManager';
+import { Version } from './utils/dependencies/Version';
 
 export enum MetaBindBuild {
 	DEV = 'dev',
@@ -44,6 +46,9 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	// @ts-expect-error TS2564
 	build: MetaBindBuild;
 
+	// @ts-expect-error TS2564
+	dependencyManager: DependencyManager;
+
 	async onload(): Promise<void> {
 		console.log(`meta-bind | Main >> load`);
 
@@ -53,6 +58,23 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		await this.loadSettings();
 		await this.saveSettings();
 		this.addSettingTab(new MetaBindSettingTab(this.app, this));
+
+		// check dependencies
+		this.dependencyManager = new DependencyManager(this, [
+			{
+				name: 'Dataview',
+				pluginId: 'dataview',
+				minVersion: new Version(0, 5, 64),
+			},
+			{
+				name: 'JS Engine',
+				pluginId: 'js-engine',
+				minVersion: new Version(0, 1, 0),
+			},
+		]);
+		if (this.dependencyManager.checkDependenciesOnStartup()) {
+			return;
+		}
 
 		// create all APIs and managers
 		this.api = new API(this);

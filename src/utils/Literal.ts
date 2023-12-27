@@ -141,6 +141,16 @@ export function parseUnknownToLiteral(literal: unknown): MBLiteral | undefined {
 }
 
 /**
+ * Turns a value into a literal. If it can't convert, it turns the value into a string.
+ *
+ * @param literal
+ * @param nullAsEmpty
+ */
+export function parseUnknownToLiteralOrString(literal: unknown, nullAsEmpty: boolean): MBLiteral {
+	return isLiteral(literal) ? literal : stringifyUnknown(literal, nullAsEmpty);
+}
+
+/**
  * Turns a value into a pretty string. Objects get turned to JSON.
  *
  * @param literal

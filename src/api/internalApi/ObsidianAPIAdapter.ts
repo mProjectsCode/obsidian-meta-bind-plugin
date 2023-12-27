@@ -1,20 +1,15 @@
 import { type IInternalAPI } from './IInternalAPI';
-import type MetaBindPlugin from '../main';
+import type MetaBindPlugin from '../../main';
 import { type App, Component, MarkdownRenderer, TFile } from 'obsidian';
-import { type DatePickerIPF } from '../fields/inputFields/fields/DatePicker/DatePickerIPF';
-import { type ImageSuggesterIPF } from '../fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
-import { type SuggesterLikeIFP, type SuggesterOption } from '../fields/inputFields/fields/Suggester/SuggesterHelper';
-import { type MBLiteral } from '../utils/Literal';
-import { TextPromptModal } from '../utils/modals/TextPromptModal';
-import { openSuggesterModalForInputField } from '../fields/inputFields/fields/Suggester/SuggesterModalHelper';
-import { openImageSuggesterModalForInputField } from '../fields/inputFields/fields/ImageSuggester/ImageSuggesterModalHelper';
-import { DatePickerInputModal } from '../fields/inputFields/fields/DatePicker/DatePickerInputModal';
-import { type API as JsEngineAPI } from 'jsEngine/api/API';
-import type JsEnginePlugin from 'jsEngine/main';
-
-function getJsEngineAPI(app: App): JsEngineAPI | undefined {
-	return (app.plugins.getPlugin('js-engine') as JsEnginePlugin | undefined)?.api;
-}
+import { type DatePickerIPF } from '../../fields/inputFields/fields/DatePicker/DatePickerIPF';
+import { type ImageSuggesterIPF } from '../../fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
+import { type SuggesterLikeIFP, type SuggesterOption } from '../../fields/inputFields/fields/Suggester/SuggesterHelper';
+import { type MBLiteral } from '../../utils/Literal';
+import { TextPromptModal } from '../../utils/modals/TextPromptModal';
+import { openSuggesterModalForInputField } from '../../fields/inputFields/fields/Suggester/SuggesterModalHelper';
+import { openImageSuggesterModalForInputField } from '../../fields/inputFields/fields/ImageSuggester/ImageSuggesterModalHelper';
+import { DatePickerInputModal } from '../../fields/inputFields/fields/DatePicker/DatePickerInputModal';
+import { getJsEnginePluginAPI } from '../../utils/ObsUtils';
 
 export class ObsidianAPIAdapter implements IInternalAPI {
 	readonly plugin: MetaBindPlugin;
@@ -66,10 +61,7 @@ export class ObsidianAPIAdapter implements IInternalAPI {
 		callingFilePath: string,
 		container?: HTMLElement,
 	): Promise<() => void> {
-		const jsEngineAPI = getJsEngineAPI(this.app);
-		if (!jsEngineAPI) {
-			throw new Error('js-engine plugin not found');
-		}
+		const jsEngineAPI = getJsEnginePluginAPI(this.plugin);
 
 		const callingFile = this.app.vault.getAbstractFileByPath(callingFilePath);
 		if (!callingFile || !(callingFile instanceof TFile)) {
@@ -92,10 +84,7 @@ export class ObsidianAPIAdapter implements IInternalAPI {
 	}
 
 	public async jsEngineRunCode(code: string, callingFilePath: string, container?: HTMLElement): Promise<() => void> {
-		const jsEngineAPI = getJsEngineAPI(this.app);
-		if (!jsEngineAPI) {
-			throw new Error('js-engine plugin not found');
-		}
+		const jsEngineAPI = getJsEnginePluginAPI(this.plugin);
 
 		const callingFile = this.app.vault.getAbstractFileByPath(callingFilePath);
 		if (!callingFile || !(callingFile instanceof TFile)) {

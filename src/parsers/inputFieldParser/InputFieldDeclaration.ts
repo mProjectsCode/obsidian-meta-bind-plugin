@@ -2,7 +2,10 @@ import { type InputFieldArgumentContainer } from '../../fields/fieldArguments/in
 import { type ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { type ParsingResultNode } from '../nomParsers/GeneralNomParsers';
 import { type InputFieldType } from '../../config/FieldConfigs';
-import { type BindTargetDeclaration, type UnvalidatedBindTargetDeclaration } from '../BindTargetDeclaration';
+import {
+	type BindTargetDeclaration,
+	type UnvalidatedBindTargetDeclaration,
+} from '../bindTargetParser/BindTargetDeclaration';
 
 export interface InputFieldDeclaration {
 	/**

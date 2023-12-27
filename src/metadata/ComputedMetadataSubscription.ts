@@ -4,7 +4,7 @@ import { type IMetadataSubscription } from './IMetadataSubscription';
 import { type MetadataManager } from './MetadataManager';
 import { type MetadataSubscription } from './MetadataSubscription';
 import { getUUID } from '../utils/Utils';
-import { type BindTargetDeclaration } from '../parsers/BindTargetDeclaration';
+import { type BindTargetDeclaration } from '../parsers/bindTargetParser/BindTargetDeclaration';
 
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 export type ComputeFunction = (values: unknown[]) => Promise<unknown> | unknown;

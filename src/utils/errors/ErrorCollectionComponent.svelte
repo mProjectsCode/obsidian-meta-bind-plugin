@@ -1,29 +1,34 @@
 <script lang="ts">
 	import { ErrorCollection } from './ErrorCollection';
 	import MetaBindErrorComponent from './MetaBindErrorComponent.svelte';
+	import { ErrorCollectionModalSettings } from './ErrorCollectionViewModal';
 
-	export let errorCollection: ErrorCollection;
-	export let declaration: string | undefined;
+	export let settings: ErrorCollectionModalSettings;
 </script>
 
-{#if declaration}
-	<p><code class="language-none meta-bind-none">{declaration}</code></p>
+{#if settings.text}
+	<p>{settings.text}</p>
 {/if}
 
-{#if errorCollection.hasErrors()}
+{#if settings.code}
+	<p><code class="language-none meta-bind-none">{settings.code}</code></p>
+{/if}
+
+{#if settings.errorCollection.hasErrors()}
 	<h6>Errors</h6>
-	<p>Errors caused the creation of the field to fail. Sometimes one error only occurs because of another.</p>
-	{#each errorCollection.getErrors() as error}
+	{#if settings.errorText}
+		<p>{settings.errorText}</p>
+	{/if}
+	{#each settings.errorCollection.getErrors() as error}
 		<MetaBindErrorComponent error={error}></MetaBindErrorComponent>
 	{/each}
 {/if}
-{#if errorCollection.hasWarnings()}
+{#if settings.errorCollection.hasWarnings()}
 	<h6>Warnings</h6>
-	<p>
-		Warnings will not cause the creation of a field to fail, but they indicate that a part of the declaration was
-		invalid or uses deprecated functionality.
-	</p>
-	{#each errorCollection.getWarnings() as warning}
+	{#if settings.warningText}
+		<p>{settings.warningText}</p>
+	{/if}
+	{#each settings.errorCollection.getWarnings() as warning}
 		<MetaBindErrorComponent error={warning}></MetaBindErrorComponent>
 	{/each}
 {/if}

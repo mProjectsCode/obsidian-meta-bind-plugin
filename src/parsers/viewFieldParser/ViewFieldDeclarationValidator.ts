@@ -9,7 +9,7 @@ import { ViewFieldArgumentContainer } from '../../fields/fieldArguments/viewFiel
 import { ViewFieldArgumentFactory } from '../../fields/fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
 import { type AbstractViewFieldArgument } from '../../fields/fieldArguments/viewFieldArguments/AbstractViewFieldArgument';
 import { ViewFieldArgumentType, ViewFieldType } from '../../config/FieldConfigs';
-import { type BindTargetDeclaration } from '../BindTargetDeclaration';
+import { type BindTargetDeclaration } from '../bindTargetParser/BindTargetDeclaration';
 
 export class ViewFieldDeclarationValidator {
 	unvalidatedDeclaration: UnvalidatedViewFieldDeclaration;

@@ -1,70 +1,17 @@
-import { type ParsingPosition, type ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
 import { ParsingError, runParser } from '../parsers/ParsingError';
-import {
-	BIND_TARGET_HLP,
-	INLINE_BUTTON_DECLARATION_HLP,
-	INPUT_FIELD_DECLARATION_HLP,
-	VIEW_FIELD_DECLARATION_HLP,
-} from '../parsers/HLPUtils';
 import { InlineMDRCType } from '../utils/InlineMDRCUtils';
 import { type IPlugin } from '../IPlugin';
 import { type IAPI } from './IAPI';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
-
-export class Highlight {
-	range: ParsingRange;
-	tokenClass: string;
-
-	constructor(range: ParsingRange, tokenClass: string) {
-		this.range = range;
-		this.tokenClass = tokenClass;
-	}
-}
-
-export class SyntaxHighlighting {
-	str: string;
-	highlights: Highlight[];
-	parsingError?: ParsingError;
-
-	constructor(str: string, highlights: Highlight[], parsingError?: ParsingError) {
-		this.str = str;
-		this.highlights = highlights.filter(x => x.range.from.index !== x.range.to.index);
-		this.parsingError = parsingError;
-	}
-
-	getHighlights(): Highlight[] {
-		if (this.parsingError === undefined) {
-			return this.highlights;
-		}
-
-		let errorTo: ParsingPosition;
-
-		if (this.str[this.parsingError.parseFailure.furthest.index] === '\n') {
-			errorTo = {
-				index: this.parsingError.parseFailure.furthest.index + 1,
-				column: 1,
-				line: this.parsingError.parseFailure.furthest.line + 1,
-			};
-		} else {
-			errorTo = {
-				index: this.parsingError.parseFailure.furthest.index + 1,
-				column: this.parsingError.parseFailure.furthest.column + 1,
-				line: this.parsingError.parseFailure.furthest.line,
-			};
-		}
-
-		return [
-			new Highlight(
-				{
-					from: this.parsingError.parseFailure.furthest,
-					to: errorTo,
-				},
-				'error',
-			),
-		];
-	}
-}
+import { SyntaxHighlighting } from '../parsers/syntaxHighlighting/SyntaxHighlighting';
+import { type Highlight } from '../parsers/syntaxHighlighting/Highlight';
+import {
+	BIND_TARGET_HLP,
+	INLINE_BUTTON_DECLARATION_HLP,
+	INPUT_FIELD_DECLARATION_HLP,
+	VIEW_FIELD_DECLARATION_HLP,
+} from '../parsers/syntaxHighlighting/HLPs';
 
 export class SyntaxHighlightingAPI {
 	public readonly api: IAPI;

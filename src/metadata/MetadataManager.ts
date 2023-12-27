@@ -17,7 +17,7 @@ import {
 } from './ComputedMetadataSubscription';
 import { PropUtils } from '../utils/prop/PropUtils';
 import { type PropPath } from '../utils/prop/PropPath';
-import { type BindTargetDeclaration, BindTargetStorageType } from '../parsers/BindTargetDeclaration';
+import { type BindTargetDeclaration, BindTargetStorageType } from '../parsers/bindTargetParser/BindTargetDeclaration';
 
 export const METADATA_CACHE_UPDATE_CYCLE_THRESHOLD = 5; // {syncInterval (200)} * 5 = 1s
 export const METADATA_CACHE_INACTIVE_CYCLE_THRESHOLD = 5 * 60; // {syncInterval (200)} * 5 * 60 = 1 minute

@@ -7,7 +7,7 @@ import {
 } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { type InputFieldArgumentType, type InputFieldType } from '../config/FieldConfigs';
 import { PROP_ACCESS_TYPE } from '../utils/prop/PropAccess';
-import { type UnvalidatedBindTargetDeclaration } from '../parsers/BindTargetDeclaration';
+import { type UnvalidatedBindTargetDeclaration } from '../parsers/bindTargetParser/BindTargetDeclaration';
 
 export class InputFieldAPI {
 	private readonly api: IAPI;

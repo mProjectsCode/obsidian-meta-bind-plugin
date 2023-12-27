@@ -10,15 +10,10 @@ import {
 	type ComputedSubscriptionDependency,
 } from '../metadata/ComputedMetadataSubscription';
 import { getUUID } from '../utils/Utils';
-import { type App, type TFile } from 'obsidian';
-import { type API as JsEngineAPI } from 'jsEngine/api/API';
-import type JsEnginePlugin from 'jsEngine/main';
+import { type TFile } from 'obsidian';
 import { type JsExecution } from 'jsEngine/engine/JsExecution';
 import { type RenderChildType } from '../config/FieldConfigs';
-
-function getJsEngineAPI(app: App): JsEngineAPI | undefined {
-	return (app.plugins.getPlugin('js-engine') as JsEnginePlugin | undefined)?.api;
-}
+import { getJsEnginePluginAPI } from '../utils/ObsUtils';
 
 export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 	fullDeclaration?: string;
@@ -83,13 +78,19 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 			});
 		}
 
-		const jsEngine = getJsEngineAPI(this.plugin.app);
-		if (jsEngine === undefined) {
-			throw new MetaBindJsError({
-				errorLevel: ErrorLevel.ERROR,
-				effect: 'can not evaluate js view field',
-				cause: 'js view fields need the JS Engine plugin to be installed',
-			});
+		let jsEngine = undefined;
+		try {
+			jsEngine = getJsEnginePluginAPI(this.plugin);
+		} catch (e) {
+			if (e instanceof Error) {
+				throw new MetaBindJsError({
+					errorLevel: ErrorLevel.ERROR,
+					effect: 'can not create js view field',
+					cause: e,
+				});
+			} else {
+				throw e;
+			}
 		}
 
 		const executionPromise = jsEngine.internal.execute({
@@ -139,14 +140,20 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 
 		this.plugin.mdrcManager.registerMDRC(this);
 
-		if (getJsEngineAPI(this.plugin.app) === undefined) {
-			this.errorCollection.add(
-				new MetaBindJsError({
-					errorLevel: ErrorLevel.ERROR,
-					effect: 'can not create js view field',
-					cause: 'js view fields need the JS Engine plugin to be installed',
-				}),
-			);
+		try {
+			getJsEnginePluginAPI(this.plugin);
+		} catch (e) {
+			if (e instanceof Error) {
+				this.errorCollection.add(
+					new MetaBindJsError({
+						errorLevel: ErrorLevel.ERROR,
+						effect: 'can not create js view field',
+						cause: e,
+					}),
+				);
+			} else {
+				this.errorCollection.add(e);
+			}
 		}
 
 		new ErrorIndicatorComponent({
@@ -190,14 +197,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 		}
 
 		try {
-			const jsEngine = getJsEngineAPI(this.plugin.app);
-			if (jsEngine === undefined) {
-				throw new MetaBindJsError({
-					errorLevel: ErrorLevel.ERROR,
-					effect: 'can not evaluate js view field',
-					cause: 'js view fields need the JS Engine plugin to be installed',
-				});
-			}
+			const jsEngine = getJsEnginePluginAPI(this.plugin);
 
 			const execution = await this.evaluateExpression();
 			const renderer = jsEngine.internal.createRenderer(this.renderContainer, this.filePath, this);

@@ -10,7 +10,7 @@ import type MetaBindPlugin from '../../../../main';
 import { getDataViewPluginAPI } from '../../../../utils/ObsUtils';
 
 export function getSuggesterOptions(
-	dv: DataviewApi | undefined,
+	plugin: MetaBindPlugin,
 	filePath: string,
 	optionArgs: OptionInputFieldArgument[],
 	optionQueryArgs: OptionQueryInputFieldArgument[],
@@ -23,8 +23,15 @@ export function getSuggesterOptions(
 	}
 
 	if (optionQueryArgs.length > 0) {
-		if (!dv) {
-			new Notice('meta-bind | dataview needs to be installed and enabled to use suggest option queries');
+		let dv: DataviewApi | undefined = undefined;
+		try {
+			dv = getDataViewPluginAPI(plugin);
+		} catch (e) {
+			new Notice(
+				'meta-bind | Dataview needs to be installed and enabled to use suggest option queries. Check the console for more information.',
+			);
+			console.warn('meta-bind | failed to get dataview api', e);
+
 			return options;
 		}
 
@@ -58,15 +65,12 @@ export function getSuggesterOptionsForInputField(
 	inputField: SuggesterLikeIFP,
 	plugin: MetaBindPlugin,
 ): SuggesterOption<MBLiteral>[] {
-	const app = plugin.app;
-
-	const dv = getDataViewPluginAPI(app);
 	const optionArgs = inputField.base.getArguments(InputFieldArgumentType.OPTION);
 	const optionQueryArgs = inputField.base.getArguments(InputFieldArgumentType.OPTION_QUERY);
 	const useLinksArgs = inputField.base.getArgument(InputFieldArgumentType.USE_LINKS);
 	// in not present, we treat the use links argument as true
 	return getSuggesterOptions(
-		dv,
+		plugin,
 		inputField.base.getFilePath(),
 		optionArgs,
 		optionQueryArgs,

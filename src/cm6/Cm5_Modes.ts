@@ -1,8 +1,8 @@
 import { type Mode, type StringStream } from 'codemirror';
 import { yaml } from '@codemirror/legacy-modes/mode/yaml';
-import { SyntaxHighlighting } from '../api/SyntaxHighlightingAPI';
 import { type InlineMDRCType, InlineMDRCUtils } from '../utils/InlineMDRCUtils';
 import type MetaBindPlugin from '../main';
+import { SyntaxHighlighting } from '../parsers/syntaxHighlighting/SyntaxHighlighting';
 
 export function registerCm5HLModes(plugin: MetaBindPlugin): void {
 	/* eslint-disable */

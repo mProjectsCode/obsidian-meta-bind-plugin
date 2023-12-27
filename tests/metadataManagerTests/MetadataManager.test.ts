@@ -5,7 +5,7 @@ import { ListenerCallback, Signal } from '../../src/utils/Signal';
 import { TestMetadataAdapter } from '../__mocks__/TestMetadataAdapter';
 import { beforeEach, describe, expect, Mock, spyOn, test } from 'bun:test';
 import { parsePropPath } from '../../src/utils/prop/PropParser';
-import { BindTargetDeclaration, BindTargetStorageType } from '../../src/parsers/BindTargetDeclaration';
+import { BindTargetDeclaration, BindTargetStorageType } from '../../src/parsers/bindTargetParser/BindTargetDeclaration';
 
 const testFilePath = 'testFile';
 

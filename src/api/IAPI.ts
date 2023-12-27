@@ -1,6 +1,6 @@
 import { type InputFieldDeclarationParser } from '../parsers/inputFieldParser/InputFieldParser';
 import { type ViewFieldParser } from '../parsers/viewFieldParser/ViewFieldParser';
-import { type BindTargetParser } from '../parsers/BindTargetParser';
+import { type BindTargetParser } from '../parsers/bindTargetParser/BindTargetParser';
 import { type IPlugin } from '../IPlugin';
 import { type InputFieldAPI } from './InputFieldAPI';
 import { type InputFieldFactory } from '../fields/inputFields/InputFieldFactory';

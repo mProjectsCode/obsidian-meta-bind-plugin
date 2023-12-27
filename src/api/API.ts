@@ -1,6 +1,6 @@
 import { InputFieldMDRC } from '../renderChildren/InputFieldMDRC';
 import { ViewFieldParser } from '../parsers/viewFieldParser/ViewFieldParser';
-import { BindTargetParser } from '../parsers/BindTargetParser';
+import { BindTargetParser } from '../parsers/bindTargetParser/BindTargetParser';
 import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
 import { JsViewFieldMDRC } from '../renderChildren/JsViewFieldMDRC';
 import type MetaBindPlugin from '../main';
@@ -28,7 +28,7 @@ import { parsePropPath } from '../utils/prop/PropParser';
 import { RenderChildType } from '../config/FieldConfigs';
 import { type ButtonActionRunner } from '../fields/button/ButtonActionRunner';
 import { ButtonManager } from '../fields/button/ButtonManager';
-import { type BindTargetDeclaration, BindTargetStorageType } from '../parsers/BindTargetDeclaration';
+import { type BindTargetDeclaration, BindTargetStorageType } from '../parsers/bindTargetParser/BindTargetDeclaration';
 import { ObsidianButtonActionRunner } from '../fields/button/ObsidianButtonActionRunner';
 import { ButtonMDRC } from '../renderChildren/ButtonMDRC';
 import { InlineButtonMDRC } from '../renderChildren/InlineButtonMDRC';

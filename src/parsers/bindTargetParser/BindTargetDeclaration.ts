@@ -1,6 +1,6 @@
-import { type PROP_ACCESS_TYPE } from '../utils/prop/PropAccess';
-import { type ParsingResultNode } from './nomParsers/GeneralNomParsers';
-import { type PropPath } from '../utils/prop/PropPath';
+import { type PROP_ACCESS_TYPE } from '../../utils/prop/PropAccess';
+import { type ParsingResultNode } from '../nomParsers/GeneralNomParsers';
+import { type PropPath } from '../../utils/prop/PropPath';
 
 export interface UnvalidatedBindTargetDeclaration {
 	storageType?: ParsingResultNode;

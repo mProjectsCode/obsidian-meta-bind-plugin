@@ -1,5 +1,5 @@
 import { IAPI } from '../../src/api/IAPI';
-import { BindTargetParser } from '../../src/parsers/BindTargetParser';
+import { BindTargetParser } from '../../src/parsers/bindTargetParser/BindTargetParser';
 import { InputFieldAPI } from '../../src/api/InputFieldAPI';
 import { InputFieldDeclarationParser } from '../../src/parsers/inputFieldParser/InputFieldParser';
 import { ViewFieldParser } from '../../src/parsers/viewFieldParser/ViewFieldParser';

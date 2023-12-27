@@ -1,16 +1,16 @@
-import { ErrorLevel } from '../utils/errors/MetaBindErrors';
-import { type IPlugin } from '../IPlugin';
-import { BIND_TARGET } from './nomParsers/BindTargetNomParsers';
-import { ParsingValidationError, runParser } from './ParsingError';
-import { type BindTargetScope } from '../metadata/BindTargetScope';
-import { PropAccess } from '../utils/prop/PropAccess';
-import { PropPath } from '../utils/prop/PropPath';
+import { ErrorLevel } from '../../utils/errors/MetaBindErrors';
+import { type IPlugin } from '../../IPlugin';
+import { BIND_TARGET } from '../nomParsers/BindTargetNomParsers';
+import { ParsingValidationError, runParser } from '../ParsingError';
+import { type BindTargetScope } from '../../metadata/BindTargetScope';
+import { PropAccess } from '../../utils/prop/PropAccess';
+import { PropPath } from '../../utils/prop/PropPath';
 import {
 	type BindTargetDeclaration,
 	BindTargetStorageType,
 	type UnvalidatedBindTargetDeclaration,
 } from './BindTargetDeclaration';
-import { type ParsingResultNode } from './nomParsers/GeneralNomParsers';
+import { type ParsingResultNode } from '../nomParsers/GeneralNomParsers';
 
 export class BindTargetParser {
 	plugin: IPlugin;

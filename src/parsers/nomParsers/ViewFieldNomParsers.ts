@@ -9,7 +9,7 @@ import {
 	type UnvalidatedJsViewFieldBindTargetMapping,
 	type UnvalidatedJsViewFieldDeclaration,
 } from '../viewFieldParser/ViewFieldDeclaration';
-import { type UnvalidatedBindTargetDeclaration } from '../BindTargetDeclaration';
+import { type UnvalidatedBindTargetDeclaration } from '../bindTargetParser/BindTargetDeclaration';
 
 export const viewFieldContentEscapeCharacter = P.string('\\')
 	.then(P_UTILS.any())

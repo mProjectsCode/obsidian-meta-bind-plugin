@@ -4,7 +4,7 @@ import { InputFieldArgumentMapType } from '../../src/fields/fieldArguments/input
 import { InputFieldDeclaration } from '../../src/parsers/inputFieldParser/InputFieldDeclaration';
 import { InputField } from '../../src/fields/inputFields/InputFieldFactory';
 import { TestPlugin } from './TestPlugin';
-import { BindTargetDeclaration } from '../../src/parsers/BindTargetDeclaration';
+import { BindTargetDeclaration } from '../../src/parsers/bindTargetParser/BindTargetDeclaration';
 
 export class TestIPFBase implements IInputFieldBase {
 	public readonly plugin: TestPlugin;

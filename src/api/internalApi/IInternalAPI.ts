@@ -1,7 +1,7 @@
-import { type SuggesterLikeIFP, type SuggesterOption } from '../fields/inputFields/fields/Suggester/SuggesterHelper';
-import { type MBLiteral } from '../utils/Literal';
-import { type ImageSuggesterIPF } from '../fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
-import { type DatePickerIPF } from '../fields/inputFields/fields/DatePicker/DatePickerIPF';
+import { type SuggesterLikeIFP, type SuggesterOption } from '../../fields/inputFields/fields/Suggester/SuggesterHelper';
+import { type MBLiteral } from '../../utils/Literal';
+import { type ImageSuggesterIPF } from '../../fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
+import { type DatePickerIPF } from '../../fields/inputFields/fields/DatePicker/DatePickerIPF';
 
 export interface IInternalAPI {
 	openTextPromptModal(

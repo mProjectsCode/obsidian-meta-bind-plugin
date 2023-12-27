@@ -20,7 +20,7 @@ import { type MetadataSubscription } from '../../metadata/MetadataSubscription';
 import { type MBExtendedLiteral } from '../../utils/Literal';
 import { parsePropPath } from '../../utils/prop/PropParser';
 import { RenderChildType } from '../../config/FieldConfigs';
-import { type BindTargetDeclaration } from '../../parsers/BindTargetDeclaration';
+import { type BindTargetDeclaration } from '../../parsers/bindTargetParser/BindTargetDeclaration';
 
 export type MetaBindTableCell = InputFieldDeclaration | ViewFieldDeclaration;
 

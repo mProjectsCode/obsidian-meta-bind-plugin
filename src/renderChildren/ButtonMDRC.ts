@@ -1,5 +1,5 @@
 import { AbstractMDRC } from './AbstractMDRC';
-import { parseYaml } from 'obsidian';
+import { Notice, parseYaml } from 'obsidian';
 import { RenderChildType } from '../config/FieldConfigs';
 import type MetaBindPlugin from '../main';
 import { type ButtonConfig, ButtonConfigValidator } from '../config/ButtonConfig';
@@ -30,14 +30,19 @@ export class ButtonMDRC extends AbstractMDRC {
 	}
 
 	private async runAction(buttonConfig: ButtonConfig): Promise<void> {
-		if (buttonConfig.action) {
-			await this.plugin.api.buttonActionRunner.runAction(buttonConfig.action, this.filePath);
-		} else if (buttonConfig.actions) {
-			for (const action of buttonConfig.actions) {
-				await this.plugin.api.buttonActionRunner.runAction(action, this.filePath);
+		try {
+			if (buttonConfig.action) {
+				await this.plugin.api.buttonActionRunner.runAction(buttonConfig.action, this.filePath);
+			} else if (buttonConfig.actions) {
+				for (const action of buttonConfig.actions) {
+					await this.plugin.api.buttonActionRunner.runAction(action, this.filePath);
+				}
+			} else {
+				console.warn('meta-bind | ButtonMDRC >> no action defined');
 			}
-		} else {
-			console.error('meta-bind | ButtonMDRC >> no action defined');
+		} catch (e) {
+			console.warn('meta-bind | ButtonMDRC >> error while running action', e);
+			new Notice('meta-bind | Error while running button action. Check console for details.');
 		}
 	}
 

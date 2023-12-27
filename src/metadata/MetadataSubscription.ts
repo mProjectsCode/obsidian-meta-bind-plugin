@@ -3,7 +3,7 @@ import { type Signal } from '../utils/Signal';
 import { type MetadataManager } from './MetadataManager';
 
 import { type ComputedSubscriptionDependency } from './ComputedMetadataSubscription';
-import { type BindTargetDeclaration } from '../parsers/BindTargetDeclaration';
+import { type BindTargetDeclaration } from '../parsers/bindTargetParser/BindTargetDeclaration';
 
 export class MetadataSubscription implements IMetadataSubscription {
 	readonly uuid: string;

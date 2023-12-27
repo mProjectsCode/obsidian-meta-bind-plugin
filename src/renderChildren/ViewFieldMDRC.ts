@@ -11,7 +11,7 @@ import {
 	type ComputedSubscriptionDependency,
 } from '../metadata/ComputedMetadataSubscription';
 import { type RenderChildType, type ViewFieldArgumentType } from '../config/FieldConfigs';
-import { type BindTargetDeclaration } from '../parsers/BindTargetDeclaration';
+import { type BindTargetDeclaration } from '../parsers/bindTargetParser/BindTargetDeclaration';
 
 export interface ViewFieldVariable {
 	bindTargetDeclaration: BindTargetDeclaration;

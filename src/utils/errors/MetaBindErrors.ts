@@ -18,6 +18,7 @@ export enum ErrorType {
 	EXAMPLE = 'MB_EXAMPLE',
 	EMBED = 'MB_EMBED',
 	BUTTON = 'MB_BUTTON',
+	DEPENDENCY = 'MB_DEPENDENCY',
 
 	OTHER = 'OTHER',
 }
@@ -139,5 +140,11 @@ export class MetaBindEmbedError extends MetaBindError {
 export class MetaBindButtonError extends MetaBindError {
 	public getErrorType(): ErrorType {
 		return ErrorType.BUTTON;
+	}
+}
+
+export class MetaBindDependencyError extends MetaBindError {
+	public getErrorType(): ErrorType {
+		return ErrorType.DEPENDENCY;
 	}
 }

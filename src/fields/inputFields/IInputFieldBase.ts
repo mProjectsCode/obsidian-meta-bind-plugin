@@ -1,7 +1,7 @@
 import { type InputFieldArgumentType } from '../../config/FieldConfigs';
 import { type InputFieldArgumentMapType } from '../fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
 import { type IPlugin } from '../../IPlugin';
-import { type BindTargetDeclaration } from '../../parsers/BindTargetDeclaration';
+import { type BindTargetDeclaration } from '../../parsers/bindTargetParser/BindTargetDeclaration';
 
 export interface IInputFieldBase {
 	readonly plugin: IPlugin;

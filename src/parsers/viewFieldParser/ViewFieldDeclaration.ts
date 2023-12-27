@@ -3,7 +3,10 @@ import { type ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { type ParsingResultNode } from '../nomParsers/GeneralNomParsers';
 import { type ViewFieldArgumentContainer } from '../../fields/fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
 import { type ViewFieldType } from '../../config/FieldConfigs';
-import { type BindTargetDeclaration, type UnvalidatedBindTargetDeclaration } from '../BindTargetDeclaration';
+import {
+	type BindTargetDeclaration,
+	type UnvalidatedBindTargetDeclaration,
+} from '../bindTargetParser/BindTargetDeclaration';
 
 export interface PartialUnvalidatedViewFieldDeclaration {
 	/**

@@ -3,7 +3,10 @@ import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { createResultNode, doubleQuotedString, ident } from './GeneralNomParsers';
 import { PROP_ACCESS_TYPE } from '../../utils/prop/PropAccess';
-import { type UnvalidatedBindTargetDeclaration, type UnvalidatedPropAccess } from '../BindTargetDeclaration';
+import {
+	type UnvalidatedBindTargetDeclaration,
+	type UnvalidatedPropAccess,
+} from '../bindTargetParser/BindTargetDeclaration';
 
 export const filePath: Parser<string> = P.manyNotOf('{}[]#^|:?').box('file path');
 

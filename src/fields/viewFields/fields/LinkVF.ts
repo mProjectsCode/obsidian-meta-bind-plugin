@@ -6,7 +6,7 @@ import { getUUID } from '../../../utils/Utils';
 import { ErrorLevel, MetaBindExpressionError, MetaBindValidationError } from '../../../utils/errors/MetaBindErrors';
 import LinkListComponent from '../../../utils/components/LinkListComponent.svelte';
 import { MDLinkParser } from '../../../parsers/MarkdownLinkParser';
-import { type BindTargetDeclaration } from '../../../parsers/BindTargetDeclaration';
+import { type BindTargetDeclaration } from '../../../parsers/bindTargetParser/BindTargetDeclaration';
 
 export class LinkVF extends AbstractViewField {
 	component?: LinkListComponent;

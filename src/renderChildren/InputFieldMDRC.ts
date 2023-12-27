@@ -12,7 +12,7 @@ import { type InputFieldArgumentMapType } from '../fields/fieldArguments/inputFi
 import { InputFieldArgumentType, InputFieldType, RenderChildType } from '../config/FieldConfigs';
 import { DocsUtils } from '../utils/DocsUtils';
 import { type IInputFieldBase } from '../fields/inputFields/IInputFieldBase';
-import { type BindTargetDeclaration } from '../parsers/BindTargetDeclaration';
+import { type BindTargetDeclaration } from '../parsers/bindTargetParser/BindTargetDeclaration';
 
 export class InputFieldMDRC extends AbstractMDRC implements IInputFieldBase {
 	inputField: InputField | undefined;

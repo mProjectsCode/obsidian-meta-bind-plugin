@@ -5,7 +5,7 @@ import { RenderChildType } from '../config/FieldConfigs';
 import { type ButtonConfig, ButtonStyleType } from '../config/ButtonConfig';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
 import { ButtonParser } from '../parsers/ButtonParser';
-import { Component } from 'obsidian';
+import { Component, Notice } from 'obsidian';
 
 export class InlineButtonMDRC extends AbstractMDRC {
 	content: string;
@@ -30,14 +30,19 @@ export class InlineButtonMDRC extends AbstractMDRC {
 	}
 
 	private async runAction(buttonConfig: ButtonConfig): Promise<void> {
-		if (buttonConfig.action) {
-			await this.plugin.api.buttonActionRunner.runAction(buttonConfig.action, this.filePath);
-		} else if (buttonConfig.actions) {
-			for (const action of buttonConfig.actions) {
-				await this.plugin.api.buttonActionRunner.runAction(action, this.filePath);
+		try {
+			if (buttonConfig.action) {
+				await this.plugin.api.buttonActionRunner.runAction(buttonConfig.action, this.filePath);
+			} else if (buttonConfig.actions) {
+				for (const action of buttonConfig.actions) {
+					await this.plugin.api.buttonActionRunner.runAction(action, this.filePath);
+				}
+			} else {
+				console.warn('meta-bind | ButtonMDRC >> no action defined');
 			}
-		} else {
-			console.error('ButtonMDRC | no action defined');
+		} catch (e) {
+			console.warn('meta-bind | ButtonMDRC >> error while running action', e);
+			new Notice('meta-bind | Error while running button action. Check console for details.');
 		}
 	}
 
