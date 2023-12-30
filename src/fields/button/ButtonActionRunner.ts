@@ -1,6 +1,7 @@
 import {
 	type ButtonAction,
 	ButtonActionType,
+	type ButtonConfig,
 	type CommandButtonAction,
 	type InputButtonAction,
 	type JSButtonAction,
@@ -9,14 +10,33 @@ import {
 	type TemplaterCreateNoteButtonAction,
 } from '../../config/ButtonConfig';
 import { MDLinkParser } from '../../parsers/MarkdownLinkParser';
-import { DocsUtils } from '../../utils/DocsUtils';
 import { type IPlugin } from '../../IPlugin';
+import { openURL } from '../../utils/Utils';
 
 export class ButtonActionRunner {
 	plugin: IPlugin;
 
 	constructor(plugin: IPlugin) {
 		this.plugin = plugin;
+	}
+
+	async runButtonAction(buttonConfig: ButtonConfig, filePath: string): Promise<void> {
+		try {
+			if (buttonConfig.action) {
+				await this.plugin.api.buttonActionRunner.runAction(buttonConfig.action, filePath);
+			} else if (buttonConfig.actions) {
+				for (const action of buttonConfig.actions) {
+					await this.plugin.api.buttonActionRunner.runAction(action, filePath);
+				}
+			} else {
+				console.warn('meta-bind | ButtonMDRC >> no action defined');
+			}
+		} catch (e) {
+			console.warn('meta-bind | ButtonMDRC >> error while running action', e);
+			this.plugin.internal.showNotice(
+				'meta-bind | Error while running button action. Check the console for details.',
+			);
+		}
 	}
 
 	createDefaultAction(type: ButtonActionType): ButtonAction {
@@ -81,8 +101,7 @@ export class ButtonActionRunner {
 		if (link.internal) {
 			this.plugin.internal.openFile(link.target, filePath);
 		} else {
-			// TODO: replace this with a proper function
-			DocsUtils.open(link.target);
+			openURL(link.target);
 		}
 	}
 

@@ -4,6 +4,7 @@ import {
 	type ViewFieldArgumentType,
 	type ViewFieldType,
 } from '../config/FieldConfigs';
+import { openURL } from './Utils';
 
 export class DocsUtils {
 	static linkToInputField(type: InputFieldType): string {
@@ -59,6 +60,6 @@ export class DocsUtils {
 	}
 
 	static open(link: string): void {
-		window.open(link, '_blank');
+		openURL(link);
 	}
 }

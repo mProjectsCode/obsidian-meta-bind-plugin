@@ -5,7 +5,7 @@ import { ViewFieldMDRC } from '../renderChildren/ViewFieldMDRC';
 import { JsViewFieldMDRC } from '../renderChildren/JsViewFieldMDRC';
 import type MetaBindPlugin from '../main';
 import { InputFieldDeclarationParser } from '../parsers/inputFieldParser/InputFieldParser';
-import { type Component, type MarkdownPostProcessorContext } from 'obsidian';
+import { type Component } from 'obsidian';
 import { InputFieldAPI } from './InputFieldAPI';
 import { type IAPI } from './IAPI';
 import { ExcludedMDRC } from '../renderChildren/ExcludedMDRC';
@@ -36,7 +36,6 @@ import { SyntaxHighlightingAPI } from './SyntaxHighlightingAPI';
 import {
 	V_BindTargetDeclaration,
 	V_BindTargetScope,
-	V_Component,
 	V_ComponentLike,
 	V_FilePath,
 	V_HTMLElement,

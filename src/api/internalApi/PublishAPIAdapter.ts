@@ -54,4 +54,6 @@ export class PublishAPIAdapter implements IInternalAPI {
 	public getFilePathByName(name: string): string | undefined {
 		return name;
 	}
+
+	public showNotice(_: string): void {}
 }

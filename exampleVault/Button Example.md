@@ -69,6 +69,7 @@ actions:
 
 ```meta-bind-button
 label: This is a button
+class: test-class
 hidden: false
 id: ""
 style: primary
@@ -86,6 +87,7 @@ actions:
 ```meta-bind-button
 label: Input
 hidden: false
+tooltip: "Open command palette and then search for 'help'"
 id: ""
 style: default
 actions:

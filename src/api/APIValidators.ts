@@ -1,25 +1,25 @@
 import { z } from 'zod';
-import { oneOf, schemaForType } from '../utils/ZodUtils';
-import { API, ComponentLike } from './API';
+import { schemaForType } from '../utils/ZodUtils';
+import { type ComponentLike } from './API';
 import { RenderChildType } from '../config/FieldConfigs';
 import {
-	UnvalidatedFieldArgument,
-	UnvalidatedInputFieldDeclaration,
+	type UnvalidatedFieldArgument,
+	type UnvalidatedInputFieldDeclaration,
 } from '../parsers/inputFieldParser/InputFieldDeclaration';
-import { ParsingResultNode } from '../parsers/nomParsers/GeneralNomParsers';
-import { ParsingPosition, ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
+import { type ParsingResultNode } from '../parsers/nomParsers/GeneralNomParsers';
+import { type ParsingPosition, type ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
 import {
-	BindTargetDeclaration,
+	type BindTargetDeclaration,
 	BindTargetStorageType,
-	UnvalidatedBindTargetDeclaration,
-	UnvalidatedPropAccess,
+	type UnvalidatedBindTargetDeclaration,
+	type UnvalidatedPropAccess,
 } from '../parsers/bindTargetParser/BindTargetDeclaration';
 import { PROP_ACCESS_TYPE } from '../utils/prop/PropAccess';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
 import { Component } from 'obsidian';
 import { BindTargetScope } from '../metadata/BindTargetScope';
 import { Signal } from '../utils/Signal';
-import { UnvalidatedViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
+import { type UnvalidatedViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
 import { PropPath } from '../utils/prop/PropPath';
 
 export const V_FilePath = schemaForType<string>()(z.string());

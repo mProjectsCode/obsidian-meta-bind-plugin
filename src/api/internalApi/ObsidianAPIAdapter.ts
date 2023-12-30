@@ -1,6 +1,6 @@
 import { type IInternalAPI } from './IInternalAPI';
 import type MetaBindPlugin from '../../main';
-import { type App, Component, MarkdownRenderer, TFile } from 'obsidian';
+import { type App, Component, MarkdownRenderer, Notice, TFile } from 'obsidian';
 import { type DatePickerIPF } from '../../fields/inputFields/fields/DatePicker/DatePickerIPF';
 import { type ImageSuggesterIPF } from '../../fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
 import { type SuggesterLikeIFP, type SuggesterOption } from '../../fields/inputFields/fields/Suggester/SuggesterHelper';
@@ -113,5 +113,9 @@ export class ObsidianAPIAdapter implements IInternalAPI {
 
 	public getFilePathByName(name: string): string | undefined {
 		return this.app.metadataCache.getFirstLinkpathDest(name, '')?.path;
+	}
+
+	public showNotice(message: string): void {
+		new Notice(message);
 	}
 }

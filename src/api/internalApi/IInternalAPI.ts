@@ -33,4 +33,6 @@ export interface IInternalAPI {
 	openFile(filePath: string, callingFilePath: string): void;
 
 	getFilePathByName(name: string): string | undefined;
+
+	showNotice(message: string): void;
 }

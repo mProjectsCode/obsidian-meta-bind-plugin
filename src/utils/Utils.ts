@@ -153,3 +153,9 @@ export class DecimalPrecision {
 		return DecimalPrecision.round(value, decimalPlaces).toFixed(decimalPlaces || 0);
 	}
 }
+
+export function openURL(link: string): void {
+	window.open(link, '_blank');
+}
+
+export type Tuple<T> = [T, ...T[]];

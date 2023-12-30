@@ -3,10 +3,7 @@ import { DatePickerIPF } from '../../src/fields/inputFields/fields/DatePicker/Da
 import { ImageSuggesterIPF } from '../../src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
 import { SuggesterLikeIFP, SuggesterOption } from '../../src/fields/inputFields/fields/Suggester/SuggesterHelper';
 import { MBLiteral } from '../../src/utils/Literal';
-
 import { TestPlugin } from './TestPlugin';
-import { plugin } from 'bun';
-import { undefined } from 'zod';
 
 export class TestAPIAdapter implements IInternalAPI {
 	plugin: TestPlugin;
@@ -56,4 +53,6 @@ export class TestAPIAdapter implements IInternalAPI {
 	public getFilePathByName(name: string): string | undefined {
 		return name;
 	}
+
+	public showNotice(_: string): void {}
 }

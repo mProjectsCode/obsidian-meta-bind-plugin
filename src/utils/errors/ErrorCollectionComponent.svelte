@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { ErrorCollection } from './ErrorCollection';
 	import MetaBindErrorComponent from './MetaBindErrorComponent.svelte';
 	import { ErrorCollectionModalSettings } from './ErrorCollectionViewModal';
 
