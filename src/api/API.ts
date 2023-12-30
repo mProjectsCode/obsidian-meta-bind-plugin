@@ -33,9 +33,27 @@ import { ObsidianButtonActionRunner } from '../fields/button/ObsidianButtonActio
 import { ButtonMDRC } from '../renderChildren/ButtonMDRC';
 import { InlineButtonMDRC } from '../renderChildren/InlineButtonMDRC';
 import { SyntaxHighlightingAPI } from './SyntaxHighlightingAPI';
+import {
+	V_BindTargetDeclaration,
+	V_BindTargetScope,
+	V_Component,
+	V_ComponentLike,
+	V_FilePath,
+	V_HTMLElement,
+	V_RenderChildType,
+	V_Signal,
+	V_UnvalidatedInputFieldDeclaration,
+	V_UnvalidatedViewFieldDeclaration,
+	V_VoidFunction,
+} from './APIValidators';
+import { z } from 'zod';
+
+export interface ComponentLike {
+	addChild(child: Component): void;
+}
 
 export class API implements IAPI {
-	public plugin: MetaBindPlugin;
+	public readonly plugin: MetaBindPlugin;
 	public readonly inputField: InputFieldAPI;
 
 	public readonly inputFieldParser: InputFieldDeclarationParser;
@@ -83,9 +101,16 @@ export class API implements IAPI {
 		renderType: RenderChildType,
 		filePath: string,
 		containerEl: HTMLElement,
-		component: Component | MarkdownPostProcessorContext,
+		component: ComponentLike,
 		scope?: BindTargetScope | undefined,
 	): InputFieldMDRC | ExcludedMDRC {
+		V_UnvalidatedInputFieldDeclaration.parse(unvalidatedDeclaration);
+		V_RenderChildType.parse(renderType);
+		V_FilePath.parse(filePath);
+		V_HTMLElement.parse(containerEl);
+		V_ComponentLike.parse(component);
+		V_BindTargetScope.optional().parse(scope);
+
 		if (this.plugin.isFilePathExcluded(filePath)) {
 			return this.createExcludedField(containerEl, filePath, component);
 		}
@@ -114,9 +139,16 @@ export class API implements IAPI {
 		renderType: RenderChildType,
 		filePath: string,
 		containerEl: HTMLElement,
-		component: Component | MarkdownPostProcessorContext,
+		component: ComponentLike,
 		scope?: BindTargetScope | undefined,
 	): InputFieldMDRC | ExcludedMDRC {
+		z.string().parse(fullDeclaration);
+		V_RenderChildType.parse(renderType);
+		V_FilePath.parse(filePath);
+		V_HTMLElement.parse(containerEl);
+		V_ComponentLike.parse(component);
+		V_BindTargetScope.optional().parse(scope);
+
 		if (this.plugin.isFilePathExcluded(filePath)) {
 			return this.createExcludedField(containerEl, filePath, component);
 		}
@@ -145,9 +177,16 @@ export class API implements IAPI {
 		renderType: RenderChildType,
 		filePath: string,
 		containerEl: HTMLElement,
-		component: Component | MarkdownPostProcessorContext,
+		component: ComponentLike,
 		scope?: BindTargetScope | undefined,
 	): ViewFieldMDRC | ExcludedMDRC {
+		z.string().parse(fullDeclaration);
+		V_RenderChildType.parse(renderType);
+		V_FilePath.parse(filePath);
+		V_HTMLElement.parse(containerEl);
+		V_ComponentLike.parse(component);
+		V_BindTargetScope.optional().parse(scope);
+
 		if (this.plugin.isFilePathExcluded(filePath)) {
 			return this.createExcludedField(containerEl, filePath, component);
 		}
@@ -175,8 +214,14 @@ export class API implements IAPI {
 		renderType: RenderChildType,
 		filePath: string,
 		containerEl: HTMLElement,
-		component: Component | MarkdownPostProcessorContext,
+		component: ComponentLike,
 	): JsViewFieldMDRC | ExcludedMDRC {
+		z.string().parse(fullDeclaration);
+		V_RenderChildType.parse(renderType);
+		V_FilePath.parse(filePath);
+		V_HTMLElement.parse(containerEl);
+		V_ComponentLike.parse(component);
+
 		if (this.plugin.isFilePathExcluded(filePath)) {
 			return this.createExcludedField(containerEl, filePath, component);
 		}
@@ -196,11 +241,7 @@ export class API implements IAPI {
 	 * @param filePath the file path that the field should be in or an empty string if it is not in a file
 	 * @param component component for lifecycle management
 	 */
-	public createExcludedField(
-		containerEl: HTMLElement,
-		filePath: string,
-		component: Component | MarkdownPostProcessorContext,
-	): ExcludedMDRC {
+	public createExcludedField(containerEl: HTMLElement, filePath: string, component: ComponentLike): ExcludedMDRC {
 		const excludedField = new ExcludedMDRC(containerEl, RenderChildType.INLINE, this.plugin, filePath, getUUID());
 		component.addChild(excludedField);
 
@@ -227,6 +268,12 @@ export class API implements IAPI {
 		listenToChildren: boolean = false,
 		onDelete?: () => void,
 	): () => void {
+		V_Signal.parse(signal);
+		V_FilePath.parse(filePath);
+		z.array(z.string()).parse(metadataPath);
+		z.boolean().parse(listenToChildren);
+		V_VoidFunction.optional().parse(onDelete);
+
 		const uuid = getUUID();
 
 		const subscription = this.plugin.metadataManager.subscribe(
@@ -259,11 +306,18 @@ export class API implements IAPI {
 	public createTable(
 		containerEl: HTMLElement,
 		filePath: string,
-		component: Component | MarkdownPostProcessorContext,
+		component: ComponentLike,
 		bindTarget: BindTargetDeclaration,
 		tableHead: string[],
 		columns: (UnvalidatedInputFieldDeclaration | UnvalidatedViewFieldDeclaration)[],
 	): MetaBindTable {
+		V_HTMLElement.parse(containerEl);
+		V_FilePath.parse(filePath);
+		V_ComponentLike.parse(component);
+		V_BindTargetDeclaration.parse(bindTarget);
+		z.array(z.string()).parse(tableHead);
+		z.array(z.union([V_UnvalidatedInputFieldDeclaration, V_UnvalidatedViewFieldDeclaration])).parse(columns);
+
 		const table = new MetaBindTable(
 			containerEl,
 			RenderChildType.INLINE,
@@ -280,6 +334,9 @@ export class API implements IAPI {
 	}
 
 	public createBindTarget(fullDeclaration: string, currentFilePath: string): BindTargetDeclaration {
+		z.string().parse(fullDeclaration);
+		V_FilePath.parse(currentFilePath);
+
 		return this.bindTargetParser.parseAndValidateBindTarget(fullDeclaration, currentFilePath);
 	}
 
@@ -287,8 +344,13 @@ export class API implements IAPI {
 		fullDeclaration: string,
 		filePath: string,
 		containerEl: HTMLElement,
-		component: Component | MarkdownPostProcessorContext,
+		component: ComponentLike,
 	): ButtonMDRC | ExcludedMDRC {
+		z.string().parse(fullDeclaration);
+		V_FilePath.parse(filePath);
+		V_HTMLElement.parse(containerEl);
+		V_ComponentLike.parse(component);
+
 		if (this.plugin.isFilePathExcluded(filePath)) {
 			return this.createExcludedField(containerEl, filePath, component);
 		}
@@ -303,8 +365,13 @@ export class API implements IAPI {
 		fullDeclaration: string,
 		filePath: string,
 		containerEl: HTMLElement,
-		component: Component | MarkdownPostProcessorContext,
+		component: ComponentLike,
 	): InlineButtonMDRC | ExcludedMDRC {
+		z.string().parse(fullDeclaration);
+		V_FilePath.parse(filePath);
+		V_HTMLElement.parse(containerEl);
+		V_ComponentLike.parse(component);
+
 		if (this.plugin.isFilePathExcluded(filePath)) {
 			return this.createExcludedField(containerEl, filePath, component);
 		}

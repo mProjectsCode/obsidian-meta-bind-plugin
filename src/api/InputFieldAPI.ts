@@ -211,7 +211,7 @@ export class InputFieldAPI {
 		unvalidatedDeclaration: UnvalidatedInputFieldDeclaration,
 		override: UnvalidatedInputFieldDeclaration,
 	): UnvalidatedInputFieldDeclaration {
-		let bindTarget = {} as UnvalidatedBindTargetDeclaration | undefined;
+		let bindTarget: UnvalidatedBindTargetDeclaration | undefined;
 
 		if (unvalidatedDeclaration.bindTarget === undefined) {
 			bindTarget = override.bindTarget;

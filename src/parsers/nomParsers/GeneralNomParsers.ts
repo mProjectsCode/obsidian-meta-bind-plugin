@@ -5,8 +5,8 @@ import { type ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
 import { type UnvalidatedFieldArgument } from '../inputFieldParser/InputFieldDeclaration';
 
 export const ident: Parser<string> = P.sequence(
-	P_UTILS.unicodeLetter(),
-	P.or(P_UTILS.unicodeAlphanumeric(), P.oneOf('-_')).many(),
+	P.or(P_UTILS.unicodeLetter(), P.oneOf('_$')),
+	P.or(P_UTILS.unicodeAlphanumeric(), P.oneOf('-_$')).many(),
 )
 	.map(x => {
 		return x[0] + x[1].join('');
