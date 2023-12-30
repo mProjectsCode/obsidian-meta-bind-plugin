@@ -75,8 +75,7 @@ export class ButtonField {
 	}
 
 	public unmount(): void {
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-		this.buttonComponent?.destroy();
+		this.buttonComponent?.$destroy();
 
 		if (!this.inline) {
 			if (this.config?.id) {

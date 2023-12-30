@@ -53,7 +53,6 @@ style: destructive
 actions:
   - type: command
     command: theme:use-light
-
 ```
 
 ```meta-bind-button
