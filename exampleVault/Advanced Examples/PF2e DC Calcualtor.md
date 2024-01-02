@@ -1,6 +1,6 @@
 ---
-playerLevel: 5
-spellLevel: 12
+playerLevel: 10
+spellLevel: 5
 ---
 
 ### DC by Proficiency

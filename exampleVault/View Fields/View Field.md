@@ -12,6 +12,8 @@ object:
   key: value
 file: Example Note with Embeds
 image: Other/Images/img_butterfly.webp
+someInputValue: 1
+someComputedValue: 2
 ---
 
 `INPUT[number:number1]`
@@ -70,7 +72,6 @@ Markdown:
 
 Null:
 `VIEW[{someUnknownValue}][text]`
-some text
 
-Input: `INPUT[number:someComputedValue]`
+Input: `INPUT[number:someInputValue]`
 Computed Value: `VIEW[{someInputValue} * 2][math:someComputedValue]`

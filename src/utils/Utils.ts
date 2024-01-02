@@ -125,6 +125,14 @@ export function isUrl(str: string): boolean {
 	}
 }
 
+export function tryParseUrl(str: string): URL | undefined {
+	try {
+		return new URL(str);
+	} catch (_) {
+		return undefined;
+	}
+}
+
 // inspired by https://stackoverflow.com/a/48764436
 export class DecimalPrecision {
 	static round(value: number, decimalPlaces: number = 0): number {

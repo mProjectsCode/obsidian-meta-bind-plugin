@@ -1,6 +1,5 @@
 import { AbstractViewField } from '../AbstractViewField';
-import { type ViewFieldMDRC, type ViewFieldVariable } from '../../../renderChildren/ViewFieldMDRC';
-import { type ViewFieldDeclaration } from '../../../parsers/viewFieldParser/ViewFieldDeclaration';
+import { type ViewFieldMDRC } from '../../../renderChildren/ViewFieldMDRC';
 import { Signal } from '../../../utils/Signal';
 import { getUUID } from '../../../utils/Utils';
 import { ErrorLevel, MetaBindExpressionError, MetaBindValidationError } from '../../../utils/errors/MetaBindErrors';
@@ -15,11 +14,11 @@ export class LinkVF extends AbstractViewField {
 		super(renderChild);
 	}
 
-	public buildVariables(declaration: ViewFieldDeclaration): ViewFieldVariable[] {
+	protected buildVariables(): void {
 		// filter out empty strings
-		const entries: (string | BindTargetDeclaration)[] = declaration.templateDeclaration.filter(x =>
-			typeof x === 'string' ? x : true,
-		);
+		const entries: (string | BindTargetDeclaration)[] = this.base
+			.getDeclaration()
+			.templateDeclaration.filter(x => (typeof x === 'string' ? x : true));
 
 		if (entries.length !== 1) {
 			throw new MetaBindValidationError({
@@ -38,17 +37,43 @@ export class LinkVF extends AbstractViewField {
 			});
 		}
 
-		const variable: ViewFieldVariable = {
-			bindTargetDeclaration: firstEntry,
-			inputSignal: new Signal<unknown>(undefined),
-			uuid: getUUID(),
-			contextName: `MB_VAR_0`,
-		};
-
-		return [variable];
+		this.variables = [
+			{
+				bindTargetDeclaration: firstEntry,
+				inputSignal: new Signal<unknown>(undefined),
+				uuid: getUUID(),
+				contextName: `MB_VAR_0`,
+			},
+		];
 	}
 
-	protected _render(container: HTMLElement): void {
+	protected computeValue(): string {
+		if (this.variables.length !== 1) {
+			throw new MetaBindExpressionError({
+				errorLevel: ErrorLevel.CRITICAL,
+				effect: 'failed to evaluate link view field',
+				cause: 'there should be exactly one variable',
+			});
+		}
+
+		const variable = this.variables[0];
+		const content = variable.inputSignal.get();
+
+		// we want the return value to be a human-readable string, since someone could save this to the frontmatter
+		if (typeof content === 'string') {
+			return MDLinkParser.convertToLinkString(content);
+		} else if (Array.isArray(content)) {
+			const strings = content.filter(x => typeof x === 'string') as string[];
+			return strings
+				.map(x => MDLinkParser.convertToLinkString(x))
+				.filter(x => x !== '')
+				.join(', ');
+		} else {
+			return '';
+		}
+	}
+
+	protected onInitialRender(container: HTMLElement): void {
 		this.component = new LinkListComponent({
 			target: container,
 			props: {
@@ -57,7 +82,7 @@ export class LinkVF extends AbstractViewField {
 		});
 	}
 
-	protected async _update(container: HTMLElement, text: string): Promise<void> {
+	protected async onRerender(container: HTMLElement, text: string): Promise<void> {
 		const linkList = MDLinkParser.parseLinkList(text);
 		this.component = new LinkListComponent({
 			target: container,
@@ -67,58 +92,7 @@ export class LinkVF extends AbstractViewField {
 		});
 	}
 
-	public destroy(): void {
+	protected onunmount(): void {
 		this.component?.$destroy();
-	}
-
-	computeValue(variables: ViewFieldVariable[]): string {
-		if (variables.length !== 1) {
-			throw new MetaBindExpressionError({
-				errorLevel: ErrorLevel.CRITICAL,
-				effect: 'failed to evaluate link view field',
-				cause: 'there should be exactly one variable',
-			});
-		}
-
-		const variable = variables[0];
-		const content = variable.inputSignal.get();
-
-		// we want the return value to be a human-readable string, since someone could save this to the frontmatter
-		if (typeof content === 'string') {
-			return this.convertToLink(content);
-		} else if (Array.isArray(content)) {
-			const strings = content.filter(x => typeof x === 'string') as string[];
-			return strings
-				.map(x => this.convertToLink(x))
-				.filter(x => x !== '')
-				.join(', ');
-		} else {
-			return '';
-		}
-	}
-
-	convertToLink(str: string): string {
-		if (MDLinkParser.isLink(str)) {
-			return str;
-		} else if (MDLinkParser.isLink(`[[${str}]]`)) {
-			return `[[${str}]]`;
-		} else if (this.getUrl(str)) {
-			const url = this.getUrl(str)!;
-			return `[${url.hostname}](${str})`;
-		} else {
-			return '';
-		}
-	}
-
-	getUrl(str: string): URL | undefined {
-		try {
-			return new URL(str);
-		} catch (e) {
-			return undefined;
-		}
-	}
-
-	public getDefaultDisplayValue(): string {
-		return '';
 	}
 }

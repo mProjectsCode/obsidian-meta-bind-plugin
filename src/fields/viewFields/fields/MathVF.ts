@@ -1,10 +1,10 @@
 import { AbstractViewField } from '../AbstractViewField';
-import { type ViewFieldDeclaration } from '../../../parsers/viewFieldParser/ViewFieldDeclaration';
 import { type ViewFieldMDRC, type ViewFieldVariable } from '../../../renderChildren/ViewFieldMDRC';
 import { ErrorLevel, MetaBindExpressionError } from '../../../utils/errors/MetaBindErrors';
 import { Signal } from '../../../utils/Signal';
 import { getUUID } from '../../../utils/Utils';
 import { compile as MathJsCompile, type EvalFunction } from 'mathjs';
+import { parseLiteral } from '../../../utils/Literal';
 
 export class MathVF extends AbstractViewField {
 	container?: HTMLElement;
@@ -22,13 +22,13 @@ export class MathVF extends AbstractViewField {
 		this.hasError = false;
 	}
 
-	public buildVariables(declaration: ViewFieldDeclaration): ViewFieldVariable[] {
+	protected buildVariables(): void {
 		let varCounter = 0;
 		this.expressionStr = '';
 
-		const variables: ViewFieldVariable[] = [];
+		this.variables = [];
 
-		for (const entry of declaration.templateDeclaration ?? []) {
+		for (const entry of this.base.getDeclaration().templateDeclaration ?? []) {
 			if (typeof entry !== 'string') {
 				const variable: ViewFieldVariable = {
 					bindTargetDeclaration: entry,
@@ -37,7 +37,7 @@ export class MathVF extends AbstractViewField {
 					contextName: `MB_VAR_${varCounter}`,
 				};
 
-				variables.push(variable);
+				this.variables.push(variable);
 
 				this.expressionStr += variable.contextName;
 				varCounter += 1;
@@ -47,27 +47,11 @@ export class MathVF extends AbstractViewField {
 		}
 
 		this.expression = MathJsCompile(this.expressionStr);
-
-		return variables;
 	}
 
-	protected _render(_container: HTMLElement): void {}
-
-	protected _update(container: HTMLElement, text: string): void {
-		// console.log('hasError', this.hasError);
-		if (this.hasError) {
-			container.addClass('mb-error');
-		} else {
-			container.removeClass('mb-error');
-		}
-		container.innerText = text;
-	}
-
-	public destroy(): void {}
-
-	buildContext(variables: ViewFieldVariable[]): Record<string, unknown> {
+	private buildMathJSContext(): Record<string, unknown> {
 		const context: Record<string, unknown> = {};
-		for (const variable of variables ?? []) {
+		for (const variable of this.variables ?? []) {
 			if (!variable.contextName || !variable.inputSignal) {
 				continue;
 			}
@@ -78,7 +62,7 @@ export class MathVF extends AbstractViewField {
 		return context;
 	}
 
-	computeValue(variables: ViewFieldVariable[]): unknown {
+	protected computeValue(): unknown {
 		this.hasError = false;
 
 		if (!this.expression) {
@@ -91,10 +75,10 @@ export class MathVF extends AbstractViewField {
 			);
 		}
 
-		const context = this.buildContext(variables);
+		const context = this.buildMathJSContext();
 		try {
 			// eslint-disable-next-line
-			return this.expression.evaluate(context);
+			return parseLiteral(this.expression.evaluate(context)?.toString());
 		} catch (e) {
 			if (e instanceof Error) {
 				return this.handleComputeError(
@@ -116,8 +100,16 @@ export class MathVF extends AbstractViewField {
 		}
 	}
 
-	public getDefaultDisplayValue(): string {
-		return '';
+	protected onInitialRender(_container: HTMLElement): void {}
+
+	protected onRerender(container: HTMLElement, text: string): void {
+		// console.log('hasError', this.hasError);
+		if (this.hasError) {
+			container.addClass('mb-error');
+		} else {
+			container.removeClass('mb-error');
+		}
+		container.innerText = text;
 	}
 
 	private handleComputeError(e: Error): string {

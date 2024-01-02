@@ -88,4 +88,17 @@ export class MDLinkParser {
 			return MDLinkParser.parseLink(str);
 		}
 	}
+
+	static convertToLinkString(str: string): string {
+		if (MDLinkParser.isLink(str)) {
+			return str;
+		} else if (isUrl(str)) {
+			const url = new URL(str);
+			return `[${url.hostname}](${str})`;
+		} else if (MDLinkParser.isLink(`[[${str}]]`)) {
+			return `[[${str}]]`;
+		} else {
+			return '';
+		}
+	}
 }

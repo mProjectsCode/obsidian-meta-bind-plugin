@@ -130,6 +130,8 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 	}
 
 	public mount(container: HTMLElement): void {
+		this.onmount();
+
 		this.computedSignal.registerListener({
 			callback: value => this.inputFieldComponent.setValue(this.reverseMapValue(value)),
 		});
@@ -156,6 +158,8 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 	}
 
 	public unmount(): void {
+		this.onunmount();
+
 		this.computedSignal.unregisterAllListeners();
 		this.metadataSubscription?.unsubscribe();
 

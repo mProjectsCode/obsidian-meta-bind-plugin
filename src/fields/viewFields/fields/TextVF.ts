@@ -1,33 +1,29 @@
 import { AbstractViewField } from '../AbstractViewField';
-import { type ViewFieldDeclaration } from '../../../parsers/viewFieldParser/ViewFieldDeclaration';
 import { type ViewFieldMDRC, type ViewFieldVariable } from '../../../renderChildren/ViewFieldMDRC';
 import { Signal } from '../../../utils/Signal';
 import { ErrorLevel, MetaBindExpressionError } from '../../../utils/errors/MetaBindErrors';
-import { Component, MarkdownRenderer } from 'obsidian';
 import { getUUID } from '../../../utils/Utils';
 import { ViewFieldArgumentType } from '../../../config/FieldConfigs';
 import { stringifyUnknown } from '../../../utils/Literal';
 
 export class TextVF extends AbstractViewField {
 	textParts?: (string | number)[];
-
 	renderMarkdown: boolean;
-	markdownComponent: Component;
+	markdownUnloadCallback?: () => void;
 
 	constructor(renderChild: ViewFieldMDRC) {
 		super(renderChild);
 
 		this.renderMarkdown = false;
-		this.markdownComponent = new Component();
 	}
 
-	public buildVariables(declaration: ViewFieldDeclaration): ViewFieldVariable[] {
+	protected buildVariables(): void {
 		this.textParts = [];
 
 		let varCounter = 0;
-		const variables: ViewFieldVariable[] = [];
+		this.variables = [];
 
-		for (const entry of declaration.templateDeclaration ?? []) {
+		for (const entry of this.base.getDeclaration().templateDeclaration ?? []) {
 			if (typeof entry !== 'string') {
 				const variable: ViewFieldVariable = {
 					bindTargetDeclaration: entry,
@@ -36,7 +32,7 @@ export class TextVF extends AbstractViewField {
 					contextName: `MB_VAR_${varCounter}`,
 				};
 
-				variables.push(variable);
+				this.variables.push(variable);
 
 				this.textParts.push(varCounter);
 				varCounter += 1;
@@ -44,41 +40,9 @@ export class TextVF extends AbstractViewField {
 				this.textParts.push(entry);
 			}
 		}
-
-		return variables;
 	}
 
-	protected _render(container: HTMLElement): void {
-		this.renderMarkdown = this.renderChild.getArgument(ViewFieldArgumentType.RENDER_MARKDOWN)?.value ?? false;
-		this.markdownComponent.load();
-
-		if (this.renderMarkdown) {
-			container.addClass('mb-view-markdown');
-		}
-	}
-
-	protected async _update(container: HTMLElement, text: string): Promise<void> {
-		if (this.renderMarkdown) {
-			this.markdownComponent.unload();
-			this.markdownComponent.load();
-
-			await MarkdownRenderer.render(
-				this.renderChild.plugin.app,
-				text,
-				container,
-				this.renderChild.filePath,
-				this.markdownComponent,
-			);
-		} else {
-			container.innerText = text;
-		}
-	}
-
-	public destroy(): void {
-		this.markdownComponent.unload();
-	}
-
-	computeValue(variables: ViewFieldVariable[]): string {
+	protected computeValue(): string {
 		if (!this.textParts) {
 			throw new MetaBindExpressionError({
 				errorLevel: ErrorLevel.CRITICAL,
@@ -91,8 +55,8 @@ export class TextVF extends AbstractViewField {
 			.map<string>(x => {
 				if (typeof x === 'number') {
 					return stringifyUnknown(
-						variables[x].inputSignal.get(),
-						this.renderChild.plugin.settings.viewFieldDisplayNullAsEmpty,
+						this.variables[x].inputSignal.get(),
+						this.base.plugin.settings.viewFieldDisplayNullAsEmpty,
 					);
 				} else {
 					return x;
@@ -101,7 +65,29 @@ export class TextVF extends AbstractViewField {
 			.join('');
 	}
 
-	public getDefaultDisplayValue(): string {
-		return '';
+	protected onInitialRender(container: HTMLElement): void {
+		this.renderMarkdown = this.base.getArgument(ViewFieldArgumentType.RENDER_MARKDOWN)?.value ?? false;
+
+		if (this.renderMarkdown) {
+			container.addClass('mb-view-markdown');
+		}
+	}
+
+	protected async onRerender(container: HTMLElement, text: string): Promise<void> {
+		if (this.renderMarkdown) {
+			this.markdownUnloadCallback?.();
+
+			this.markdownUnloadCallback = await this.base.plugin.internal.renderMarkdown(
+				text,
+				container,
+				this.base.getFilePath(),
+			);
+		} else {
+			container.innerText = text;
+		}
+	}
+
+	onunload(): void {
+		this.markdownUnloadCallback?.();
 	}
 }

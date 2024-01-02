@@ -13,5 +13,3 @@ save to {result}
 ---
 return engine.markdown.create(`**${context.bound.n1 * context.bound.n2}** km`);
 ```
-
-[test](test\ 1.excalidraw)

@@ -1,4 +1,4 @@
-import { Signal } from '../utils/Signal';
+import { type Signal } from '../utils/Signal';
 import { AbstractViewFieldMDRC } from './AbstractViewFieldMDRC';
 import type MetaBindPlugin from '../main';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
@@ -6,12 +6,9 @@ import { type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldD
 import { type AbstractViewField } from '../fields/viewFields/AbstractViewField';
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
 import { type ViewFieldArgumentMapType } from '../fields/fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
-import {
-	type ComputedMetadataSubscription,
-	type ComputedSubscriptionDependency,
-} from '../metadata/ComputedMetadataSubscription';
-import { type RenderChildType, type ViewFieldArgumentType } from '../config/FieldConfigs';
+import { RenderChildType, type ViewFieldArgumentType } from '../config/FieldConfigs';
 import { type BindTargetDeclaration } from '../parsers/bindTargetParser/BindTargetDeclaration';
+import { type IViewFieldBase } from '../fields/viewFields/IViewFieldBase';
 
 export interface ViewFieldVariable {
 	bindTargetDeclaration: BindTargetDeclaration;
@@ -20,14 +17,11 @@ export interface ViewFieldVariable {
 	contextName: string | undefined;
 }
 
-export class ViewFieldMDRC extends AbstractViewFieldMDRC {
-	viewField?: AbstractViewField;
+export class ViewFieldMDRC extends AbstractViewFieldMDRC implements IViewFieldBase {
+	viewField: AbstractViewField | undefined;
 
 	fullDeclaration?: string;
 	viewFieldDeclaration: ViewFieldDeclaration;
-	variables: ViewFieldVariable[];
-	metadataSubscription?: ComputedMetadataSubscription;
-	inputSignal: Signal<unknown>;
 
 	constructor(
 		containerEl: HTMLElement,
@@ -43,43 +37,6 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 
 		this.fullDeclaration = declaration.fullDeclaration;
 		this.viewFieldDeclaration = declaration;
-		this.variables = [];
-		this.inputSignal = new Signal<unknown>(undefined);
-
-		if (this.errorCollection.isEmpty()) {
-			try {
-				this.viewField = this.plugin.api.viewFieldFactory.createViewField(declaration.viewFieldType, this);
-				this.variables = this.viewField?.buildVariables(this.viewFieldDeclaration) ?? [];
-			} catch (e) {
-				this.errorCollection.add(e);
-			}
-		}
-	}
-
-	registerSelfToMetadataManager(): void {
-		try {
-			this.metadataSubscription = this.plugin.metadataManager.subscribeComputed(
-				this.uuid,
-				this.inputSignal,
-				this.viewFieldDeclaration.writeToBindTarget,
-				this.variables.map((x): ComputedSubscriptionDependency => {
-					return {
-						bindTarget: x.bindTargetDeclaration,
-						callbackSignal: x.inputSignal,
-					};
-				}),
-				async () => await this.viewField?.computeValue(this.variables),
-				() => this.unload(),
-			);
-
-			this.inputSignal.registerListener({ callback: value => void this.viewField?.update(value) });
-		} catch (e) {
-			this.errorCollection.add(e);
-		}
-	}
-
-	unregisterSelfFromMetadataManager(): void {
-		this.metadataSubscription?.unsubscribe();
 	}
 
 	getArguments<T extends ViewFieldArgumentType>(name: T): ViewFieldArgumentMapType<T>[] {
@@ -98,44 +55,94 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC {
 		return this.getArguments(name).at(0);
 	}
 
-	onload(): void {
-		console.log('meta-bind | ViewFieldMarkdownRenderChild >> load', this);
+	public getDeclaration(): ViewFieldDeclaration {
+		return this.viewFieldDeclaration;
+	}
 
-		this.containerEl.addClass('mb-view');
-		this.containerEl.empty();
+	public getUuid(): string {
+		return this.uuid;
+	}
 
-		this.plugin.mdrcManager.registerMDRC(this);
+	public getFilePath(): string {
+		return this.filePath;
+	}
 
-		if (!this.errorCollection.hasErrors()) {
-			this.registerSelfToMetadataManager();
-		}
-
+	private createErrorIndicator(el: HTMLElement): void {
 		new ErrorIndicatorComponent({
-			target: this.containerEl,
+			target: el,
 			props: {
 				app: this.plugin.app,
 				errorCollection: this.errorCollection,
 				declaration: this.fullDeclaration,
 			},
 		});
+	}
+
+	private createViewField(): void {
+		if (!this.errorCollection.hasErrors()) {
+			try {
+				this.viewField = this.plugin.api.viewFieldFactory.createViewField(
+					this.viewFieldDeclaration.viewFieldType,
+					this,
+				);
+			} catch (e) {
+				this.errorCollection.add(e);
+			}
+		}
+
+		if (!this.errorCollection.hasErrors() && !this.viewField) {
+			this.errorCollection.add(
+				new MetaBindInternalError({
+					errorLevel: ErrorLevel.CRITICAL,
+					effect: "can't render view field",
+					cause: 'view field is undefined',
+				}),
+			);
+		}
+	}
+
+	onload(): void {
+		console.log('meta-bind | ViewFieldMarkdownRenderChild >> load', this);
+
+		this.containerEl.addClass('mb-view');
+		this.containerEl.empty();
+
+		// --- Register to MDRC manager ---
+		this.plugin.mdrcManager.registerMDRC(this);
+
+		this.createViewField();
+
+		// if there is an error, render error then quit
 		if (this.errorCollection.hasErrors()) {
+			this.createErrorIndicator(this.containerEl);
 			return;
 		}
 
 		const container: HTMLDivElement = createDiv();
 		container.addClass('mb-view-wrapper');
 
-		void this.viewField?.render(container);
+		try {
+			this.viewField?.mount(container);
+		} catch (e) {
+			this.errorCollection.add(e);
+		}
 
-		this.containerEl.appendChild(container);
+		this.createErrorIndicator(this.containerEl);
+		this.containerEl.append(container);
+
+		// --- Apply Block or Inline Class ---
+		if (this.renderChildType === RenderChildType.BLOCK) {
+			this.containerEl.addClass('mb-view-block');
+		} else {
+			this.containerEl.addClass('mb-view-inline');
+		}
 	}
 
 	onunload(): void {
 		console.log('meta-bind | ViewFieldMarkdownRenderChild >> unload', this);
 
-		this.plugin.mdrcManager.unregisterMDRC(this);
-		this.unregisterSelfFromMetadataManager();
 		this.viewField?.destroy();
+		this.plugin.mdrcManager.unregisterMDRC(this);
 
 		this.containerEl.empty();
 		this.containerEl.createEl('span', { text: 'unloaded meta bind view field', cls: 'mb-error' });

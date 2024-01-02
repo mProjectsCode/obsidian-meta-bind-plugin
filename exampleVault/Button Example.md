@@ -1,5 +1,5 @@
 ---
-count: 3
+count: 1
 ---
 Meta Bind is getting Buttons
 
