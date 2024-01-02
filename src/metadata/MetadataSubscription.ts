@@ -4,6 +4,7 @@ import { type MetadataManager } from './MetadataManager';
 
 import { type ComputedSubscriptionDependency } from './ComputedMetadataSubscription';
 import { type BindTargetDeclaration } from '../parsers/bindTargetParser/BindTargetDeclaration';
+import { evaluateMetadataCacheUpdate, type MetadataCacheUpdate } from './MetadataCacheUpdate';
 
 export class MetadataSubscription implements IMetadataSubscription {
 	readonly uuid: string;
@@ -46,6 +47,12 @@ export class MetadataSubscription implements IMetadataSubscription {
 	 */
 	public update(value: unknown): void {
 		this.metadataManager.updateCache(value, this);
+	}
+
+	public applyUpdate(update: MetadataCacheUpdate): void {
+		const currentValue = this.callbackSignal.get();
+		const newValue = evaluateMetadataCacheUpdate(update, currentValue);
+		this.update(newValue);
 	}
 
 	/**

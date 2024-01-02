@@ -8,10 +8,12 @@ import {
 	type OpenButtonAction,
 	type SleepButtonAction,
 	type TemplaterCreateNoteButtonAction,
+	type UpdateMetadataButtonAction,
 } from '../../config/ButtonConfig';
 import { MDLinkParser } from '../../parsers/MarkdownLinkParser';
 import { type IPlugin } from '../../IPlugin';
-import { openURL } from '../../utils/Utils';
+import { getUUID, openURL } from '../../utils/Utils';
+import { Signal } from '../../utils/Signal';
 
 export class ButtonActionRunner {
 	plugin: IPlugin;
@@ -58,6 +60,13 @@ export class ButtonActionRunner {
 				fileName: '',
 				openNote: true,
 			} satisfies TemplaterCreateNoteButtonAction;
+		} else if (type === ButtonActionType.UPDATE_METADATA) {
+			return {
+				type: ButtonActionType.UPDATE_METADATA,
+				bindTarget: '',
+				evaluate: false,
+				value: '',
+			} satisfies UpdateMetadataButtonAction;
 		}
 
 		throw new Error(`Unknown button action type: ${type}`);
@@ -81,6 +90,9 @@ export class ButtonActionRunner {
 			return;
 		} else if (action.type === ButtonActionType.TEMPLATER_CREATE_NOTE) {
 			await this.runTemplaterCreateNoteAction(action);
+			return;
+		} else if (action.type === ButtonActionType.UPDATE_METADATA) {
+			await this.runUpdateMetadataAction(action, filePath);
 			return;
 		}
 
@@ -119,5 +131,17 @@ export class ButtonActionRunner {
 
 	async runTemplaterCreateNoteAction(_action: TemplaterCreateNoteButtonAction): Promise<void> {
 		throw new Error('Not supported');
+	}
+
+	async runUpdateMetadataAction(action: UpdateMetadataButtonAction, filePath: string): Promise<void> {
+		const bindTarget = this.plugin.api.bindTargetParser.parseAndValidateBindTarget(action.bindTarget, filePath);
+		const uuid = getUUID();
+		const signal = new Signal<unknown>(undefined);
+		const subscription = this.plugin.metadataManager.subscribe(uuid, signal, bindTarget, () => {});
+		subscription.applyUpdate({
+			value: action.value,
+			evaluate: action.evaluate,
+		});
+		subscription.unsubscribe();
 	}
 }

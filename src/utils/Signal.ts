@@ -1,24 +1,24 @@
 import { getUUID } from './Utils';
 
-export interface NotifierInterface<T, L extends Listener<T>> {
-	registerListener(listener: Omit<L, 'uuid'>): L;
+export interface NotifierInterface<T, TListener extends Listener<T>> {
+	registerListener(listener: Omit<TListener, 'uuid'>): TListener;
 
-	unregisterListener(listener: L): void;
+	unregisterListener(listener: TListener): void;
 
 	unregisterListenerById(listenerId: string): void;
 
 	notifyListeners(value: T): void;
 }
 
-export class Notifier<T, L extends Listener<T>> implements NotifierInterface<T, Listener<T>> {
-	listeners: L[];
+export class Notifier<T, TListener extends Listener<T>> implements NotifierInterface<T, TListener> {
+	private listeners: TListener[];
 
 	constructor() {
 		this.listeners = [];
 	}
 
-	public registerListener(listener: Omit<L, 'uuid'>): L {
-		const l: L = listener as L;
+	public registerListener(listener: Omit<TListener, 'uuid'>): TListener {
+		const l: TListener = listener as TListener;
 		l.uuid = getUUID();
 
 		this.listeners.push(l);
@@ -26,12 +26,16 @@ export class Notifier<T, L extends Listener<T>> implements NotifierInterface<T, 
 		return l;
 	}
 
-	public unregisterListener(listener: L): void {
+	public unregisterListener(listener: TListener): void {
 		this.unregisterListenerById(listener.uuid);
 	}
 
 	public unregisterListenerById(listenerId: string): void {
 		this.listeners = this.listeners.filter(x => x.uuid !== listenerId);
+	}
+
+	public unregisterAllListeners(): void {
+		this.listeners = [];
 	}
 
 	public notifyListeners(value: T): void {
@@ -52,7 +56,7 @@ export type ListenerCallback<T> = (value: T) => void;
 export type SignalLike<T> = Signal<T> | ComputedSignal<unknown, T>;
 
 export class Signal<T> extends Notifier<T, Listener<T>> {
-	value: T;
+	private value: T;
 
 	constructor(value: T) {
 		super();
@@ -71,9 +75,9 @@ export class Signal<T> extends Notifier<T, Listener<T>> {
 }
 
 export class ComputedSignal<R, T> extends Notifier<T, Listener<T>> {
-	value: T;
-	dependency: SignalLike<R>;
-	dependencyListener: Listener<R>;
+	private value: T;
+	private readonly dependency: SignalLike<R>;
+	private readonly dependencyListener: Listener<R>;
 
 	constructor(dependency: SignalLike<R>, compute: (signal: R) => T) {
 		super();

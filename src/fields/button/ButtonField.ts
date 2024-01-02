@@ -1,9 +1,10 @@
 import { type ButtonConfig } from '../../config/ButtonConfig';
 import ButtonComponent from '../../utils/components/ButtonComponent.svelte';
 import { type IPlugin } from '../../IPlugin';
-import { ButtonConfigValidator } from '../../config/ButtonConfigValidators';
+import { V_ButtonConfig } from '../../config/ButtonConfigValidators';
 import { ErrorLevel, MetaBindButtonError } from '../../utils/errors/MetaBindErrors';
 import { DocsUtils } from '../../utils/DocsUtils';
+import { isTruthy } from '../../utils/Utils';
 
 export class ButtonField {
 	plugin: IPlugin;
@@ -33,7 +34,7 @@ export class ButtonField {
 			props: {
 				variant: config.style,
 				label: config.label,
-				tooltip: config.tooltip ?? config.label,
+				tooltip: isTruthy(config.tooltip) ? config.tooltip : config.label,
 				onClick: async (): Promise<void> => {
 					await this.plugin.api.buttonActionRunner.runButtonAction(config, this.filePath);
 				},
@@ -44,7 +45,7 @@ export class ButtonField {
 	public mount(container: HTMLElement): void {
 		container.empty();
 		container.addClass('mb-button', this.inline ? 'mb-button-inline' : 'mb-button-block');
-		const validationResult = ButtonConfigValidator.safeParse(this.unvalidatedConfig);
+		const validationResult = V_ButtonConfig.safeParse(this.unvalidatedConfig);
 
 		if (!validationResult.success) {
 			throw new MetaBindButtonError({
@@ -68,7 +69,7 @@ export class ButtonField {
 		}
 
 		if (this.config.class) {
-			container.addClass(...this.config.class.split(' '));
+			container.addClass(...this.config.class.split(' ').filter(x => x !== ''));
 		}
 
 		this.renderButton(container);

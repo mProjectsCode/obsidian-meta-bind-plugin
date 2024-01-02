@@ -24,6 +24,8 @@
 	let buttonConfig: ButtonConfig = {
 		label: 'This is a button',
 		hidden: false,
+		class: '',
+		tooltip: '',
 		id: '',
 		style: ButtonStyleType.DEFAULT,
 		actions: [],
@@ -92,6 +94,8 @@
 			return 'Sleep for Some Time';
 		} else if (actionType === ButtonActionType.TEMPLATER_CREATE_NOTE) {
 			return 'Create a New Note Using Templater';
+		} else if (actionType === ButtonActionType.UPDATE_METADATA) {
+			return 'Update Metadata';
 		}
 
 		return 'CHANGE ME';
@@ -110,6 +114,20 @@
 			<option value={option}>{option}</option>
 		{/each}
 	</select>
+</SettingComponent>
+
+<SettingComponent
+	name="CSS Classes"
+	description="A list of CSS classes to add to the button. Multiple classes should be separated by a space."
+>
+	<input type="text" bind:value={buttonConfig.class} />
+</SettingComponent>
+
+<SettingComponent
+	name="Tooltip"
+	description="A tooltip to show when hovering the button. If not set, the button label will be shown instead."
+>
+	<input type="text" bind:value={buttonConfig.tooltip} />
 </SettingComponent>
 
 <SettingComponent name="ID" description="An ID that allows the button to be referenced in inline buttons.">
@@ -186,12 +204,7 @@ Add action of type
 	{/if}
 
 	{#if action.type === ButtonActionType.TEMPLATER_CREATE_NOTE}
-		<p>
-			Remove Action
-			<Button variant="destructive" on:click={() => removeAction(i)}>
-				<Icon iconName="x"></Icon>
-			</Button>
-		</p>
+		<Button variant="destructive" on:click={() => removeAction(i)}>Remove Action</Button>
 
 		<SettingComponent
 			name="Template File: {action.templateFile || 'none'}"
@@ -215,6 +228,22 @@ Add action of type
 
 		<SettingComponent name="Open Note" description="Whether to open the new note after this action ran.">
 			<Toggle bind:checked={action.openNote}></Toggle>
+		</SettingComponent>
+	{/if}
+
+	{#if action.type === ButtonActionType.UPDATE_METADATA}
+		<Button variant="destructive" on:click={() => removeAction(i)}>Remove Action</Button>
+
+		<SettingComponent name="Metadata Property" description="The metadata property in form of a bind target.">
+			<input type="text" bind:value={action.bindTarget} placeholder="some value" />
+		</SettingComponent>
+
+		<SettingComponent name="Value" description="The new value.">
+			<input type="text" bind:value={action.value} placeholder="some value" />
+		</SettingComponent>
+
+		<SettingComponent name="Evaluate" description="Whether to evaluate the value as a JS expression.">
+			<Toggle bind:checked={action.evaluate}></Toggle>
 		</SettingComponent>
 	{/if}
 {/each}

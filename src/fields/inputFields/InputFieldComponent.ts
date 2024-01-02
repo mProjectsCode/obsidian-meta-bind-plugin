@@ -55,7 +55,7 @@ export class InputFieldComponent<Value> extends Notifier<Value, Listener<Value>>
 	 * This unmounts the component.
 	 */
 	public unmount(): void {
-		this.listeners = [];
+		this.unregisterAllListeners();
 		this.svelteComponentInstance?.$destroy();
 
 		this.mounted = false;

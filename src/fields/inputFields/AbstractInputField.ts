@@ -156,7 +156,7 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 	}
 
 	public unmount(): void {
-		this.computedSignal.listeners = [];
+		this.computedSignal.unregisterAllListeners();
 		this.metadataSubscription?.unsubscribe();
 
 		this.inputFieldComponent.unmount();

@@ -17,6 +17,7 @@ export class ButtonMDRC extends AbstractMDRC {
 	public onload(): void {
 		console.log('meta-bind | ButtonMDRC >> onload');
 		this.plugin.mdrcManager.registerMDRC(this);
+		this.containerEl.className = '';
 
 		const yamlContent = parseYaml(this.content) as unknown;
 
@@ -41,6 +42,7 @@ export class ButtonMDRC extends AbstractMDRC {
 		console.log('meta-bind | ButtonMDRC >> onunload');
 		this.buttonField?.unmount();
 		this.containerEl.empty();
+		this.containerEl.className = '';
 		this.containerEl.addClass('mb-error');
 		this.containerEl.innerText = 'unloaded meta bind button';
 		this.plugin.mdrcManager.unregisterMDRC(this);

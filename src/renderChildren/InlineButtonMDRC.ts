@@ -16,6 +16,7 @@ export class InlineButtonMDRC extends AbstractMDRC {
 	public onload(): void {
 		console.log('meta-bind | InlineButtonMDRC >> onload');
 		this.plugin.mdrcManager.registerMDRC(this);
+		this.containerEl.className = '';
 
 		this.buttonField = new InlineButtonField(this.plugin, this.content, this.filePath);
 		try {
@@ -38,6 +39,7 @@ export class InlineButtonMDRC extends AbstractMDRC {
 		console.log('meta-bind | InlineButtonMDRC >> onunload');
 		this.buttonField?.unmount();
 		this.containerEl.empty();
+		this.containerEl.className = '';
 		this.containerEl.addClass('mb-error');
 		this.containerEl.innerText = 'unloaded meta bind button';
 		this.plugin.mdrcManager.unregisterMDRC(this);
