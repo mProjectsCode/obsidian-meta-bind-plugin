@@ -381,6 +381,16 @@ code.mb-error {
 	color: var(--text-error) !important;
 }
 
+.mb-warning {
+	color: var(--text-warning) !important;
+	font-weight: bold;
+	font-family: var(--font-monospace);
+}
+
+code.mb-warning {
+	color: var(--text-warning) !important;
+}
+
 /* Code */
 .mb-code {
 	color: var(--text-normal);

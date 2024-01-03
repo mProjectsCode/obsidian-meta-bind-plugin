@@ -3,6 +3,7 @@ import type MetaBindPlugin from '../main';
 import { RenderChildType } from '../config/FieldConfigs';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
 import { InlineButtonField } from '../fields/button/InlineButtonField';
+import { showUnloadedMessage } from '../utils/Utils';
 
 export class InlineButtonMDRC extends AbstractMDRC {
 	content: string;
@@ -37,11 +38,12 @@ export class InlineButtonMDRC extends AbstractMDRC {
 
 	public onunload(): void {
 		console.log('meta-bind | InlineButtonMDRC >> onunload');
+
 		this.buttonField?.unmount();
-		this.containerEl.empty();
-		this.containerEl.className = '';
-		this.containerEl.addClass('mb-error');
-		this.containerEl.innerText = 'unloaded meta bind button';
 		this.plugin.mdrcManager.unregisterMDRC(this);
+
+		showUnloadedMessage(this.containerEl, 'inline button');
+
+		super.onunload();
 	}
 }

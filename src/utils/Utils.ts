@@ -194,3 +194,14 @@ export function toEnumeration(
 export function expectType<T>(_: T): void {
 	// no op
 }
+
+export function showUnloadedMessage(container: HTMLElement, subject: string): void {
+	container.innerHTML = '';
+	container.className = '';
+
+	const span = document.createElement('span');
+	span.className = 'mb-warning mb-unloaded';
+	span.innerText = `[MB_UNLOADED] ${subject}`;
+
+	container.appendChild(span);
+}

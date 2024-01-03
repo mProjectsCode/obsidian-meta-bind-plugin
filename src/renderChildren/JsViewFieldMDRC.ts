@@ -9,7 +9,7 @@ import {
 	type ComputedMetadataSubscription,
 	type ComputedSubscriptionDependency,
 } from '../metadata/ComputedMetadataSubscription';
-import { getUUID } from '../utils/Utils';
+import { getUUID, showUnloadedMessage } from '../utils/Utils';
 import { type TFile } from 'obsidian';
 import { type JsExecution } from 'jsEngine/engine/JsExecution';
 import { type RenderChildType } from '../config/FieldConfigs';
@@ -185,8 +185,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 		this.plugin.mdrcManager.unregisterMDRC(this);
 		this.unregisterSelfFromMetadataManager();
 
-		this.containerEl.empty();
-		this.containerEl.createEl('span', { text: 'unloaded meta bind view field', cls: 'mb-error' });
+		showUnloadedMessage(this.containerEl, 'js view field');
 
 		super.onunload();
 	}

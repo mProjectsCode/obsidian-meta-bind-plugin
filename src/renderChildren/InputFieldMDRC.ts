@@ -2,7 +2,7 @@ import { type ClassInputFieldArgument } from '../fields/fieldArguments/inputFiel
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
 import { type ShowcaseInputFieldArgument } from '../fields/fieldArguments/inputFieldArguments/arguments/ShowcaseInputFieldArgument';
 import { type TitleInputFieldArgument } from '../fields/fieldArguments/inputFieldArguments/arguments/TitleInputFieldArgument';
-import { isTruthy } from '../utils/Utils';
+import { isTruthy, showUnloadedMessage } from '../utils/Utils';
 import { AbstractMDRC } from './AbstractMDRC';
 import type MetaBindPlugin from '../main';
 import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
@@ -144,7 +144,7 @@ export class InputFieldMDRC extends AbstractMDRC implements IInputFieldBase {
 	}
 
 	onload(): void {
-		console.log('meta-bind | InputFieldMarkdownRenderChild >> load', this);
+		console.log('meta-bind | InputFieldMDRC >> load', this);
 
 		this.containerEl.addClass('mb-input');
 		this.containerEl.empty();
@@ -189,13 +189,12 @@ export class InputFieldMDRC extends AbstractMDRC implements IInputFieldBase {
 	}
 
 	onunload(): void {
-		console.log('meta-bind | InputFieldMarkdownRenderChild >> unload', this);
+		console.log('meta-bind | InputFieldMDRC >> unload', this);
 
 		this.inputField?.destroy();
 		this.plugin.mdrcManager.unregisterMDRC(this);
 
-		this.containerEl.empty();
-		this.containerEl.createEl('span', { text: 'unloaded meta bind input field', cls: 'mb-error' });
+		showUnloadedMessage(this.containerEl, 'input field');
 
 		super.onunload();
 	}

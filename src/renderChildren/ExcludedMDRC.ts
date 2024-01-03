@@ -15,6 +15,9 @@ export class ExcludedMDRC extends AbstractMDRC {
 
 	public onunload(): void {
 		console.log('meta-bind | ExcludedMDRC >> unload', this);
+
 		this.plugin.mdrcManager.unregisterMDRC(this);
+
+		super.onunload();
 	}
 }

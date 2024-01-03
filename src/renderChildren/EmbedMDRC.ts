@@ -4,6 +4,7 @@ import { MarkdownRenderer } from 'obsidian';
 import { MDLinkParser } from '../parsers/MarkdownLinkParser';
 import { ErrorLevel, MetaBindEmbedError } from '../utils/errors/MetaBindErrors';
 import { RenderChildType } from '../config/FieldConfigs';
+import { showUnloadedMessage } from '../utils/Utils';
 
 export const EMBED_MAX_DEPTH = 8;
 
@@ -63,6 +64,8 @@ export class EmbedMDRC extends AbstractMDRC {
 	}
 
 	public async onload(): Promise<void> {
+		console.log('meta-bind | EmbedMDRC >> unload', this);
+
 		this.plugin.mdrcManager.registerMDRC(this);
 
 		if (this.depth >= EMBED_MAX_DEPTH) {
@@ -77,6 +80,12 @@ export class EmbedMDRC extends AbstractMDRC {
 	}
 
 	public onunload(): void {
+		console.log('meta-bind | EmbedMDRC >> unload', this);
+
 		this.plugin.mdrcManager.unregisterMDRC(this);
+
+		showUnloadedMessage(this.containerEl, 'embed');
+
+		super.onunload();
 	}
 }

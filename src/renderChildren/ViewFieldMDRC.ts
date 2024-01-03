@@ -9,6 +9,7 @@ import { type ViewFieldArgumentMapType } from '../fields/fieldArguments/viewFiel
 import { RenderChildType, type ViewFieldArgumentType } from '../config/FieldConfigs';
 import { type BindTargetDeclaration } from '../parsers/bindTargetParser/BindTargetDeclaration';
 import { type IViewFieldBase } from '../fields/viewFields/IViewFieldBase';
+import { showUnloadedMessage } from '../utils/Utils';
 
 export interface ViewFieldVariable {
 	bindTargetDeclaration: BindTargetDeclaration;
@@ -144,8 +145,7 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC implements IViewFieldBa
 		this.viewField?.destroy();
 		this.plugin.mdrcManager.unregisterMDRC(this);
 
-		this.containerEl.empty();
-		this.containerEl.createEl('span', { text: 'unloaded meta bind view field', cls: 'mb-error' });
+		showUnloadedMessage(this.containerEl, 'view field');
 
 		super.onunload();
 	}
