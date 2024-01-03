@@ -167,3 +167,30 @@ export function openURL(link: string): void {
 }
 
 export type Tuple<T> = [T, ...T[]];
+
+export function toEnumeration(
+	arr: string[],
+	map: (x: string) => string,
+	separator: string = ', ',
+	lastSeparator: string = 'and',
+): string {
+	if (arr.length === 0) {
+		return '';
+	}
+
+	arr = arr.map(map);
+
+	if (arr.length === 1) {
+		return arr[0];
+	}
+
+	if (arr.length === 2) {
+		return `${arr[0]} ${lastSeparator} ${arr[1]}`;
+	}
+
+	return `${arr.slice(0, -1).join(separator)} ${lastSeparator} ${arr.slice(-1)}`;
+}
+
+export function expectType<T>(_: T): void {
+	// no op
+}

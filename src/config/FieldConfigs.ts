@@ -185,6 +185,12 @@ export const InputFieldConfigs: Record<InputFieldType, InputFieldConfig> = {
 	},
 } as const;
 
+export enum UseLinksInputFieldArgumentValue {
+	TRUE = 'true',
+	PARTIAL = 'partial',
+	FALSE = 'false',
+}
+
 export type InputFieldArgumentConfig = FieldArgumentConfig<InputFieldArgumentType, InputFieldType>;
 
 export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFieldArgumentConfig> = {
@@ -418,7 +424,11 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 			[
 				{
 					name: 'value',
-					allowed: ['true', 'false'],
+					allowed: [
+						UseLinksInputFieldArgumentValue.TRUE,
+						UseLinksInputFieldArgumentValue.PARTIAL,
+						UseLinksInputFieldArgumentValue.FALSE,
+					],
 					description: '',
 				},
 			],

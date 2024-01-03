@@ -1,6 +1,6 @@
 import { type MBLiteral } from '../../../../utils/Literal';
 import { type DataArray, type DataviewApi, type Literal } from 'obsidian-dataview';
-import { InputFieldArgumentType } from '../../../../config/FieldConfigs';
+import { InputFieldArgumentType, UseLinksInputFieldArgumentValue } from '../../../../config/FieldConfigs';
 import { type OptionInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 import { type OptionQueryInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionQueryInputFieldArgument';
 import { Notice } from 'obsidian';
@@ -8,13 +8,15 @@ import { SuggesterInputModal } from './SuggesterInputModal';
 import { type SuggesterLikeIFP, SuggesterOption } from './SuggesterHelper';
 import type MetaBindPlugin from '../../../../main';
 import { getDataViewPluginAPI } from '../../../../utils/ObsUtils';
+import { applyUseLinksArgument } from '../../../fieldArguments/inputFieldArguments/arguments/UseLinksInputFieldArgument';
+import { z } from 'zod';
 
 export function getSuggesterOptions(
 	plugin: MetaBindPlugin,
 	filePath: string,
 	optionArgs: OptionInputFieldArgument[],
 	optionQueryArgs: OptionQueryInputFieldArgument[],
-	useLinks: boolean,
+	useLinks: UseLinksInputFieldArgumentValue,
 ): SuggesterOption<MBLiteral>[] {
 	const options: SuggesterOption<MBLiteral>[] = [];
 
@@ -35,22 +37,24 @@ export function getSuggesterOptions(
 			return options;
 		}
 
+		const fileValidator = z.object({
+			name: z.string().min(1),
+			path: z.string().min(1),
+		});
+
 		for (const suggestOptionsQueryArgument of optionQueryArgs) {
 			const result: DataArray<Record<string, Literal>> = dv.pages(suggestOptionsQueryArgument.value, filePath);
 
 			result.forEach((file: Record<string, Literal>) => {
 				try {
-					// FIXME: this is unsafe, maybe add validation
 					const dvFile = file.file as { name: string; path: string };
 
-					if (useLinks) {
-						options.push(
-							new SuggesterOption<MBLiteral>(`[[${dvFile.path}|${dvFile.name}]]`, `file: ${dvFile.name}`),
-						);
-					} else {
-						// console.log(tFile);
-						options.push(new SuggesterOption<MBLiteral>(dvFile.name, `file: ${dvFile.name}`));
+					if (!fileValidator.safeParse(dvFile).success) {
+						return;
 					}
+
+					const link = applyUseLinksArgument(dvFile.path, dvFile.name, useLinks);
+					options.push(new SuggesterOption<MBLiteral>(link, `file: ${dvFile.name}`));
 				} catch (e) {
 					console.warn('meta-bind | error while computing suggest options', e);
 				}
@@ -67,14 +71,14 @@ export function getSuggesterOptionsForInputField(
 ): SuggesterOption<MBLiteral>[] {
 	const optionArgs = inputField.base.getArguments(InputFieldArgumentType.OPTION);
 	const optionQueryArgs = inputField.base.getArguments(InputFieldArgumentType.OPTION_QUERY);
-	const useLinksArgs = inputField.base.getArgument(InputFieldArgumentType.USE_LINKS);
+	const useLinksArg = inputField.base.getArgument(InputFieldArgumentType.USE_LINKS);
 	// in not present, we treat the use links argument as true
 	return getSuggesterOptions(
 		plugin,
 		inputField.base.getFilePath(),
 		optionArgs,
 		optionQueryArgs,
-		useLinksArgs === undefined || useLinksArgs.value,
+		useLinksArg === undefined ? UseLinksInputFieldArgumentValue.TRUE : useLinksArg.value,
 	);
 }
 
