@@ -7,7 +7,7 @@ New Features
 -   Meta Bind Buttons can now update metadata (implements [#160](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/160))
 -   CSS Classes can now be added to Meta Bind Buttons
 -   A tooltip that is different from the label can now be added to Meta Bind Buttons (implements [#170](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/170))
--   The `useLinks` argument suggester like input fields now supports the `partial` value. (implements [#151](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/151))
+-   The `useLinks` argument for suggester like input fields now supports the `partial` value. (implements [#151](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/151))
 
 Changes
 
