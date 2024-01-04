@@ -1,5 +1,22 @@
 # Obsidian Meta Bind Changelog
 
+# 0.11.0
+
+New Features
+
+-   Meta Bind Buttons can now update metadata (implements [#160](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/160))
+-   CSS Classes can now be added to Meta Bind Buttons
+-   A tooltip that is different from the label can now be added to Meta Bind Buttons (implements [#170](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/170))
+-   The `useLinks` argument suggester like input fields now supports the `partial` value. (implements [#151](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/151))
+
+Changes
+
+-   The computed value of math view fields will now be saved as a number if it is a number
+
+Bug Fixes
+
+-   Fixed a multitude of small issues related to unloading and the button builder
+
 # 0.10.2
 
 Changes

@@ -1,5 +1,5 @@
 ---
-count: 1
+count: 0
 ---
 Meta Bind is getting Buttons
 
@@ -193,7 +193,7 @@ actions:
   - type: updateMetadata
     bindTarget: count
     evaluate: false
-    value: "0"
+    value: 0
 
 ```
 
