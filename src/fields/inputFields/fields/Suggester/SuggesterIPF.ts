@@ -18,6 +18,7 @@ export class SuggesterIPF extends AbstractInputField<MBLiteral, MBLiteral> {
 	}
 
 	protected getSvelteComponent(): typeof SvelteComponent {
+		// @ts-ignore
 		return SuggesterComponent;
 	}
 

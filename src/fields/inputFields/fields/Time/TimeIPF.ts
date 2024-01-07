@@ -20,6 +20,7 @@ export class TimeIPF extends AbstractInputField<string, Time> {
 	}
 
 	protected getSvelteComponent(): typeof SvelteComponent {
+		// @ts-ignore
 		return TimeComponent;
 	}
 

@@ -20,6 +20,7 @@ export class EditorIPF extends AbstractInputField<string, string> {
 	}
 
 	protected getSvelteComponent(): typeof SvelteComponent {
+		// @ts-ignore
 		return EditorComponent;
 	}
 

@@ -19,6 +19,7 @@ export class NumberIPF extends AbstractInputField<number, number> {
 	}
 
 	protected getSvelteComponent(): typeof SvelteComponent {
+		// @ts-ignore
 		return NumberComponent;
 	}
 

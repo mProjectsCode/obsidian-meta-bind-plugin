@@ -18,6 +18,7 @@ export class InlineListSuggesterIPF extends AbstractInputField<MBLiteral[], MBLi
 	}
 
 	protected getSvelteComponent(): typeof SvelteComponent {
+		// @ts-ignore
 		return InlineListSuggesterComponent;
 	}
 

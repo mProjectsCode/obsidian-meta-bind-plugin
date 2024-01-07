@@ -37,6 +37,7 @@ export class ProgressBarIPF extends AbstractInputField<number, number> {
 	}
 
 	protected getSvelteComponent(): typeof SvelteComponent {
+		// @ts-ignore
 		return ProgressBarComponent;
 	}
 

@@ -25,6 +25,7 @@ export class ToggleIPF extends AbstractInputField<MBLiteral, boolean> {
 	}
 
 	protected getSvelteComponent(): typeof SvelteComponent {
+		// @ts-ignore
 		return ToggleComponent;
 	}
 

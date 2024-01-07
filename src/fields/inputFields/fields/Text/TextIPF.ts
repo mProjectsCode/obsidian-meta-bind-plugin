@@ -20,6 +20,7 @@ export class TextIPF extends AbstractInputField<string, string> {
 	}
 
 	protected getSvelteComponent(): typeof SvelteComponent {
+		// @ts-ignore
 		return TextComponent;
 	}
 

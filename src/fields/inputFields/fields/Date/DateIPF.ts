@@ -27,6 +27,7 @@ export class DateIPF extends AbstractInputField<string, moment.Moment> {
 	}
 
 	protected getSvelteComponent(): typeof SvelteComponent {
+		// @ts-ignore
 		return DateComponent;
 	}
 

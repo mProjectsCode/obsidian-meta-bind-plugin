@@ -38,6 +38,7 @@ export class SliderIPF extends AbstractInputField<number, number> {
 	}
 
 	protected getSvelteComponent(): typeof SvelteComponent {
+		// @ts-ignore
 		return SliderComponent;
 	}
 

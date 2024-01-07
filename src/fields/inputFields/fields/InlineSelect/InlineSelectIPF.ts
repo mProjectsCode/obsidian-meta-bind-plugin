@@ -24,6 +24,7 @@ export class InlineSelectIPF extends AbstractInputField<MBLiteral, MBLiteral> {
 	}
 
 	protected getSvelteComponent(): typeof SvelteComponent {
+		// @ts-ignore
 		return InlineSelectComponent;
 	}
 

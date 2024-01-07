@@ -36,6 +36,7 @@ export class DatePickerIPF extends AbstractInputField<string | null, moment.Mome
 	}
 
 	protected getSvelteComponent(): typeof SvelteComponent {
+		// @ts-ignore
 		return DatePickerComponent;
 	}
 

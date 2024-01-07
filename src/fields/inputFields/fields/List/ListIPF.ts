@@ -19,6 +19,7 @@ export class ListIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> {
 	}
 
 	protected getSvelteComponent(): typeof SvelteComponent {
+		// @ts-ignore
 		return ListComponent;
 	}
 
