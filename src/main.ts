@@ -20,6 +20,7 @@ import { InlineMDRCType, InlineMDRCUtils } from './utils/InlineMDRCUtils';
 import { registerCm5HLModes } from './cm6/Cm5_Modes';
 import { DependencyManager } from './utils/dependencies/DependencyManager';
 import { Version } from './utils/dependencies/Version';
+import { createEditorMenu } from './EditorMenu';
 
 export enum MetaBindBuild {
 	DEV = 'dev',
@@ -95,6 +96,14 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		// misc
 		this.registerView(MB_FAQ_VIEW_TYPE, leaf => new FaqView(leaf, this));
 		this.addStatusBarBuildIndicator();
+
+		if (this.settings.enableEditorRightClickMenu) {
+			this.registerEvent(
+				this.app.workspace.on('editor-menu', (menu, editor) => {
+					createEditorMenu(menu, editor, this);
+				}),
+			);
+		}
 	}
 
 	onunload(): void {
@@ -209,11 +218,15 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			id: 'open-button-builder',
 			name: 'Open Button Builder',
 			callback: () => {
-				new ButtonBuilderModal(this, config => {
-					void window.navigator.clipboard.writeText(
-						`\`\`\`meta-bind-button\n${stringifyYaml(config)}\n\`\`\``,
-					);
-				}).open();
+				new ButtonBuilderModal(
+					this,
+					config => {
+						void window.navigator.clipboard.writeText(
+							`\`\`\`meta-bind-button\n${stringifyYaml(config)}\n\`\`\``,
+						);
+					},
+					'Copy to Clipboard',
+				).open();
 			},
 		});
 	}

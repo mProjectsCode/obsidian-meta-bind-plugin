@@ -57,6 +57,7 @@
 		"@lemons_dev/parsinom": "^0.0.12",
 		"itertools-ts": "^1.27.0",
 		"mathjs": "^12.0.0",
-		"zod": "^3.22.4"
+		"zod": "^3.22.4",
+		"zod-validation-error": "^2.1.0"
 	}
 }

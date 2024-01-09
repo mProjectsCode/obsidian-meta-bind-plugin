@@ -69,6 +69,7 @@ export interface MetaBindPluginSettings {
 	enableJs: boolean;
 	viewFieldDisplayNullAsEmpty: boolean;
 	enableSyntaxHighlighting: boolean;
+	enableEditorRightClickMenu: boolean;
 
 	inputFieldTemplates: InputFieldTemplate[];
 	excludedFolders: string[];
@@ -94,6 +95,7 @@ export const DEFAULT_SETTINGS: MetaBindPluginSettings = {
 	enableJs: false,
 	viewFieldDisplayNullAsEmpty: false,
 	enableSyntaxHighlighting: true,
+	enableEditorRightClickMenu: true,
 
 	inputFieldTemplates: [],
 	excludedFolders: ['templates'],

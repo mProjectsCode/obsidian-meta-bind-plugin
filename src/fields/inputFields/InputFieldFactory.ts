@@ -70,17 +70,11 @@ export class InputFieldFactory {
 			return new TextIPF(base);
 		} else if (type === InputFieldType.TEXT_AREA) {
 			return new TextAreaIPF(base);
-		} else if (type === InputFieldType.TEXT_AREA_DEPRECATED) {
-			return new TextAreaIPF(base);
 		} else if (type === InputFieldType.SELECT) {
 			return new SelectIPF(base);
 		} else if (type === InputFieldType.MULTI_SELECT) {
 			return new MultiSelectIPF(base);
-		} else if (type === InputFieldType.MULTI_SELECT_DEPRECATED) {
-			return new MultiSelectIPF(base);
 		} else if (type === InputFieldType.DATE_PICKER) {
-			return new DatePickerIPF(base);
-		} else if (type === InputFieldType.DATE_PICKER_DEPRECATED) {
 			return new DatePickerIPF(base);
 		} else if (type === InputFieldType.NUMBER) {
 			return new NumberIPF(base);

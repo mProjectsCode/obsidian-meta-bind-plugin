@@ -5,6 +5,7 @@ import { V_ButtonConfig } from '../../config/ButtonConfigValidators';
 import { ErrorLevel, MetaBindButtonError } from '../../utils/errors/MetaBindErrors';
 import { DocsUtils } from '../../utils/DocsUtils';
 import { isTruthy } from '../../utils/Utils';
+import { fromZodError } from 'zod-validation-error';
 
 export class ButtonField {
 	plugin: IPlugin;
@@ -48,11 +49,17 @@ export class ButtonField {
 		const validationResult = V_ButtonConfig.safeParse(this.unvalidatedConfig);
 
 		if (!validationResult.success) {
+			const niceError = fromZodError(validationResult.error, {
+				unionSeparator: '\nOR ',
+				issueSeparator: ' AND ',
+				prefix: null,
+			});
+
 			throw new MetaBindButtonError({
 				errorLevel: ErrorLevel.ERROR,
 				effect: 'can not parse button config',
 				cause: 'zod validation failed. Check your button syntax',
-				positionContext: validationResult.error.message,
+				positionContext: niceError.message,
 				docs: [DocsUtils.linkToButtonConfig()],
 			});
 		}

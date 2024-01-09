@@ -105,31 +105,9 @@ describe('should not error or warn cases', () => {
 	});
 });
 
-describe('should warn on deprecation', () => {
-	test('INPUT[multi_select]', () => {
-		const input = 'INPUT[multi_select]';
-		const res = parser.parseString(input, TEST_FILE, undefined);
-
-		expect(res.errorCollection.hasWarnings()).toBe(true);
-		expect(res.errorCollection.hasErrors()).toBe(false);
-	});
-
-	test('INPUT[date_picker]', () => {
-		const input = 'INPUT[date_picker]';
-		const res = parser.parseString(input, TEST_FILE, undefined);
-
-		expect(res.errorCollection.hasWarnings()).toBe(true);
-		expect(res.errorCollection.hasErrors()).toBe(false);
-	});
-
-	test('INPUT[text_area]', () => {
-		const input = 'INPUT[text_area]';
-		const res = parser.parseString(input, TEST_FILE, undefined);
-
-		expect(res.errorCollection.hasWarnings()).toBe(true);
-		expect(res.errorCollection.hasErrors()).toBe(false);
-	});
-});
+// describe('should warn on deprecation', () => {
+//
+// });
 
 describe('should warn on invalid argument', () => {
 	test('INPUT[text(invalidArgument)]', () => {

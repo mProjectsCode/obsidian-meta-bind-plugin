@@ -1,6 +1,11 @@
-import { InputFieldArgumentType, type InputFieldType } from '../config/FieldConfigs';
+import {
+	InputFieldArgumentType,
+	InputFieldConfigs,
+	type InputFieldType,
+	type ViewFieldType,
+} from '../config/FieldConfigs';
 import { type UnvalidatedInputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
-import type MetaBindPlugin from '../main';
+import { type IPlugin } from '../IPlugin';
 
 export const INPUT_FIELD_EXAMPLE_DECLARATIONS: Record<InputFieldType, string> = {
 	date: 'date',
@@ -23,13 +28,18 @@ export const INPUT_FIELD_EXAMPLE_DECLARATIONS: Record<InputFieldType, string> = 
 	time: 'time',
 	toggle: 'toggle',
 
-	date_picker: '',
-	multi_select: '',
-	text_area: '',
 	invalid: '',
 };
 
-export function createInputFieldExamples(plugin: MetaBindPlugin): [InputFieldType, UnvalidatedInputFieldDeclaration][] {
+export const VIEW_FIELD_EXAMPLE_DECLARATIONS: Record<ViewFieldType, string> = {
+	math: 'VIEW[{exampleProperty} + 2][math]',
+	text: 'VIEW[some text {exampleProperty}][text]',
+	link: 'VIEW[{exampleProperty}][link]',
+
+	invalid: '',
+};
+
+export function createInputFieldFAQExamples(plugin: IPlugin): [InputFieldType, UnvalidatedInputFieldDeclaration][] {
 	const ret: [InputFieldType, UnvalidatedInputFieldDeclaration][] = [];
 	for (const [type, declaration] of Object.entries(INPUT_FIELD_EXAMPLE_DECLARATIONS)) {
 		if (declaration === '') {
@@ -48,5 +58,49 @@ export function createInputFieldExamples(plugin: MetaBindPlugin): [InputFieldTyp
 
 		ret.push([type as InputFieldType, parsedDeclaration]);
 	}
+	return ret;
+}
+
+export function createInputFieldInsertExamples(_plugin: IPlugin): [string, string][] {
+	const ret: [string, string][] = [];
+	for (const [type, declaration] of Object.entries(INPUT_FIELD_EXAMPLE_DECLARATIONS)) {
+		if (declaration === '') {
+			continue;
+		}
+		const ipfType = type as InputFieldType;
+
+		let fullDeclaration = '';
+
+		if (InputFieldConfigs[ipfType].allowInline) {
+			fullDeclaration = `\`INPUT[${declaration}:exampleProperty]\``;
+		} else {
+			fullDeclaration = `\n\`\`\`meta-bind\nINPUT[${declaration}:exampleProperty]\n\`\`\`\n`;
+		}
+
+		ret.push([ipfType, fullDeclaration]);
+	}
+
+	ret.sort((a, b) => a[0].localeCompare(b[0]));
+
+	return ret;
+}
+
+export function createViewFieldInsertExamples(_plugin: IPlugin): [string, string][] {
+	const ret: [string, string][] = [];
+	for (const [type, declaration] of Object.entries(VIEW_FIELD_EXAMPLE_DECLARATIONS)) {
+		if (declaration === '') {
+			continue;
+		}
+		const vfType = type as ViewFieldType;
+
+		const fullDeclaration = `\`${declaration}\``;
+
+		ret.push([vfType, fullDeclaration]);
+	}
+
+	ret.push(['markdown', `\`VIEW[**some markdown** {exampleProperty}][text(renderMarkdown)]\``]);
+
+	ret.sort((a, b) => a[0].localeCompare(b[0]));
+
 	return ret;
 }

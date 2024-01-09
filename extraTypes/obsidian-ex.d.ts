@@ -57,6 +57,19 @@ declare module 'obsidian' {
 			removeCommand: (commandId: string) => void;
 		};
 	}
+
+	interface Menu {
+		dom: HTMLElement;
+		items: MenuItem[];
+		onMouseOver: (evt: MouseEvent) => void;
+	}
+
+	interface MenuItem {
+		callback: () => void;
+		dom: HTMLElement;
+		setSubmenu: () => Menu;
+		disabled: boolean;
+	}
 }
 
 declare global {

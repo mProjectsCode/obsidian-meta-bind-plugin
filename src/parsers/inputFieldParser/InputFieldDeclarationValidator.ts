@@ -66,22 +66,8 @@ export class InputFieldDeclarationValidator {
 		return InputFieldType.INVALID;
 	}
 
-	private checkForDeprecation(declaration: InputFieldDeclaration): void {
-		if (
-			declaration.inputFieldType === InputFieldType.DATE_PICKER_DEPRECATED ||
-			declaration.inputFieldType === InputFieldType.TEXT_AREA_DEPRECATED ||
-			declaration.inputFieldType === InputFieldType.MULTI_SELECT_DEPRECATED
-		) {
-			this.errorCollection.add(
-				new ParsingValidationError(
-					ErrorLevel.WARNING,
-					'Declaration Validator',
-					`'${declaration.inputFieldType}' is deprecated, as it has been renamed to be in camel case ('input_field_type' => 'inputFieldType').`,
-					this.unvalidatedDeclaration.fullDeclaration,
-					this.unvalidatedDeclaration.inputFieldType?.position,
-				),
-			);
-		}
+	private checkForDeprecation(_declaration: InputFieldDeclaration): void {
+		// nothing to check atm
 	}
 
 	private validateBindTarget(scope: BindTargetScope | undefined): BindTargetDeclaration | undefined {

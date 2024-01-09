@@ -19,28 +19,19 @@ export function getPublishDefaultValue(declaration: InputFieldDeclaration): unkn
 		return minArgument ? minArgument.value : 0;
 	} else if (declaration.inputFieldType === InputFieldType.TEXT) {
 		return placeholderString;
-	} else if (
-		declaration.inputFieldType === InputFieldType.TEXT_AREA_DEPRECATED ||
-		declaration.inputFieldType === InputFieldType.TEXT_AREA
-	) {
+	} else if (declaration.inputFieldType === InputFieldType.TEXT_AREA) {
 		return placeholderString;
 	} else if (declaration.inputFieldType === InputFieldType.SELECT) {
 		const firstOptionArgument = declaration.argumentContainer.get(InputFieldArgumentType.OPTION);
 		return firstOptionArgument ? firstOptionArgument.value : placeholderString;
-	} else if (
-		declaration.inputFieldType === InputFieldType.MULTI_SELECT_DEPRECATED ||
-		declaration.inputFieldType === InputFieldType.MULTI_SELECT
-	) {
+	} else if (declaration.inputFieldType === InputFieldType.MULTI_SELECT) {
 		const firstOptionArgument = declaration.argumentContainer.get(InputFieldArgumentType.OPTION);
 		return firstOptionArgument ? firstOptionArgument.value : placeholderString;
 	} else if (declaration.inputFieldType === InputFieldType.DATE) {
 		return '1970-01-01';
 	} else if (declaration.inputFieldType === InputFieldType.TIME) {
 		return '00:00';
-	} else if (
-		declaration.inputFieldType === InputFieldType.DATE_PICKER_DEPRECATED ||
-		declaration.inputFieldType === InputFieldType.DATE_PICKER
-	) {
+	} else if (declaration.inputFieldType === InputFieldType.DATE_PICKER) {
 		return '1970-01-01';
 	} else if (declaration.inputFieldType === InputFieldType.NUMBER) {
 		return 0;

@@ -7,11 +7,13 @@ export class ButtonBuilderModal extends Modal {
 	plugin: MetaBindPlugin;
 	component?: ButtonBuilderModalComponent;
 	onOkay: (config: ButtonConfig) => void;
+	submitText: string;
 
-	constructor(plugin: MetaBindPlugin, onOkay: (config: ButtonConfig) => void) {
+	constructor(plugin: MetaBindPlugin, onOkay: (config: ButtonConfig) => void, submitText: string) {
 		super(plugin.app);
 		this.plugin = plugin;
 		this.onOkay = onOkay;
+		this.submitText = submitText;
 	}
 
 	public onOpen(): void {

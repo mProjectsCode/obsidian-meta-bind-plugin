@@ -253,6 +253,6 @@ Add action of type
 <div bind:this={buttonEl}></div>
 
 <ModalButtonGroup>
-	<Button variant="primary" on:click={() => modal.okay(buttonConfig)}>Copy to Clipboard</Button>
+	<Button variant="primary" on:click={() => modal.okay(buttonConfig)}>{modal.submitText}</Button>
 	<Button variant="default" on:click={() => modal.cancel()}>Cancel</Button>
 </ModalButtonGroup>

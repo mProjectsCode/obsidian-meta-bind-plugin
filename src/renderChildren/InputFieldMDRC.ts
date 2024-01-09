@@ -67,7 +67,6 @@ export class InputFieldMDRC extends AbstractMDRC implements IInputFieldBase {
 	private shouldAddCardContainer(): boolean {
 		const containerInputFieldType =
 			this.inputFieldDeclaration.inputFieldType === InputFieldType.SELECT ||
-			this.inputFieldDeclaration.inputFieldType === InputFieldType.MULTI_SELECT_DEPRECATED ||
 			this.inputFieldDeclaration.inputFieldType === InputFieldType.MULTI_SELECT ||
 			this.inputFieldDeclaration.inputFieldType === InputFieldType.LIST;
 

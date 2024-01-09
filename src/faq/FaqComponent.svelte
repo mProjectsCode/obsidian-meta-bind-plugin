@@ -5,7 +5,7 @@
 	import { ErrorCollection } from '../utils/errors/ErrorCollection';
 	import { onMount } from 'svelte';
 	import { ErrorLevel, MetaBindExampleError } from '../utils/errors/MetaBindErrors';
-	import { createInputFieldExamples } from './InputFieldExamples';
+	import { createInputFieldFAQExamples } from './InputFieldExamples';
 	import MetaBindPlugin from '../main';
 	import InputFieldExampleComponent from './InputFieldExampleComponent.svelte';
 	import Button from '../utils/components/Button.svelte';
@@ -94,7 +94,7 @@
 		of notes.
 	</p>
 
-	{#each createInputFieldExamples(plugin) as example}
+	{#each createInputFieldFAQExamples(plugin) as example}
 		<InputFieldExampleComponent type={example[0]} declaration={example[1]} plugin={plugin}
 		></InputFieldExampleComponent>
 	{/each}

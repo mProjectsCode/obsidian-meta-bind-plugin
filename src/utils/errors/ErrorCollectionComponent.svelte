@@ -10,7 +10,7 @@
 {/if}
 
 {#if settings.code}
-	<p><code class="language-none meta-bind-none">{settings.code}</code></p>
+	<pre class="mb-pre"><code class="language-none meta-bind-none">{settings.code}</code></pre>
 {/if}
 
 {#if settings.errorCollection.hasErrors()}

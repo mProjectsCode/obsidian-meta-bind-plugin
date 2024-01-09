@@ -207,8 +207,19 @@ hidden: false
 id: ""
 style: default
 actions:
-  - type: sl
-    ms: 1000
+  - type: sleep
+  - type: command
+    command: obsidian-meta-bind-plugin:open-help
+
+```
+
+
+```meta-bind-button
+label: Test
+hidden: asdasd
+id: ""
+style: default
+actions:
   - type: command
     command: obsidian-meta-bind-plugin:open-help
 

@@ -1,5 +1,10 @@
 # Obsidian Meta Bind Changelog
 
+# Unreleased
+
+-   Improved validation errors for buttons and the API
+-   Removed deprecated input fields that had names in snake_case. Use the camelCase variants instead. The snake_case variants were deprecated since version `0.6.0`.
+
 # 0.11.0
 
 New Features

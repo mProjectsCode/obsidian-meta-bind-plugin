@@ -1,4 +1,7 @@
 import { type RefinementCtx, z } from 'zod';
+import { type Tuple } from './Utils';
+import { ErrorLevel, MetaBindInternalError } from './errors/MetaBindErrors';
+import { fromZodError } from 'zod-validation-error';
 
 export function oneOf<
 	A,
@@ -25,4 +28,18 @@ export function schemaForType<T>(): <S extends z.ZodType<T, any, any>>(arg: S) =
 	return function <S extends z.ZodType<T, any, any>>(arg: S): S {
 		return arg;
 	};
+}
+
+export type ZodifyTuple<T extends Tuple<unknown>> = { [P in keyof T]: z.ZodType<T[P]> };
+
+export function validateArgs<T extends Tuple<unknown>>(validator: z.ZodTuple<ZodifyTuple<T>>, args: T): void {
+	const result = validator.safeParse(args);
+
+	if (!result.success) {
+		throw new MetaBindInternalError({
+			errorLevel: ErrorLevel.CRITICAL,
+			effect: 'invalid arguments supplied to function',
+			cause: fromZodError(result.error),
+		});
+	}
 }

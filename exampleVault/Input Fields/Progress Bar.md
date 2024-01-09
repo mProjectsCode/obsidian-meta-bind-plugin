@@ -1,7 +1,8 @@
 ---
 progress1: -6
 progress2: 0.2
-progress3: 4
+progress3: 2
+progress4: 3.6
 ---
 
 ```meta-bind
@@ -16,4 +17,7 @@ INPUT[progressBar(showcase, minValue(0), maxValue(1), stepSize(0.1)):progress2]
 INPUT[progressBar(showcase, minValue(0), maxValue(10), stepSize(-1)):progress3]
 ```
 
+```meta-bind
+INPUT[progressBar(showcase, minValue(0), maxValue(10), stepSize(0.1)):progress4]
+```
 

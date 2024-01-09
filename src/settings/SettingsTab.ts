@@ -75,6 +75,17 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
+			.setName('Enable Editor Right Click Menu')
+			.setDesc(`Enable a meta bind menu section in the editor right click menu. RESTART REQUIRED.`)
+			.addToggle(cb => {
+				cb.setValue(this.plugin.settings.enableEditorRightClickMenu);
+				cb.onChange(data => {
+					this.plugin.settings.enableEditorRightClickMenu = data;
+					void this.plugin.saveSettings();
+				});
+			});
+
+		new Setting(containerEl)
 			.setName('Input Field Templates')
 			.setDesc(
 				`You can specify input field templates here, and access them using \`INPUT[template_name][overrides (optional)]\` in your notes.`,

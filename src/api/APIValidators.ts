@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { schemaForType } from '../utils/ZodUtils';
-import { type ComponentLike } from './API';
+import { type API, type ComponentLike } from './API';
 import { RenderChildType } from '../config/FieldConfigs';
 import {
 	type UnvalidatedFieldArgument,
@@ -114,3 +114,57 @@ export const V_ComponentLike = schemaForType<ComponentLike>()(
 		addChild: z.function().args(z.instanceof(Component)).returns(z.void()),
 	}),
 );
+
+export const V_API_createInputField = schemaForType<Parameters<InstanceType<typeof API>['createInputField']>>()(
+	z.tuple([
+		V_UnvalidatedInputFieldDeclaration,
+		V_RenderChildType,
+		V_FilePath,
+		V_HTMLElement,
+		V_ComponentLike,
+		V_BindTargetScope.optional(),
+	]),
+);
+
+export const V_API_createInputFieldFromString = schemaForType<
+	Parameters<InstanceType<typeof API>['createInputFieldFromString']>
+>()(z.tuple([z.string(), V_RenderChildType, V_FilePath, V_HTMLElement, V_ComponentLike, V_BindTargetScope.optional()]));
+
+export const V_API_createViewFieldFromString = schemaForType<
+	Parameters<InstanceType<typeof API>['createViewFieldFromString']>
+>()(z.tuple([z.string(), V_RenderChildType, V_FilePath, V_HTMLElement, V_ComponentLike, V_BindTargetScope.optional()]));
+
+export const V_API_createJsViewFieldFromString = schemaForType<
+	Parameters<InstanceType<typeof API>['createJsViewFieldFromString']>
+>()(z.tuple([z.string(), V_RenderChildType, V_FilePath, V_HTMLElement, V_ComponentLike]));
+
+export const V_API_createExcludedField = schemaForType<Parameters<InstanceType<typeof API>['createExcludedField']>>()(
+	z.tuple([V_HTMLElement, V_FilePath, V_ComponentLike]),
+);
+
+export const V_API_listenToMetadata = schemaForType<Parameters<InstanceType<typeof API>['listenToMetadata']>>()(
+	z.tuple([V_Signal, V_FilePath, z.array(z.string()), z.boolean(), V_VoidFunction.optional()]),
+);
+
+export const V_API_createTable = schemaForType<Parameters<InstanceType<typeof API>['createTable']>>()(
+	z.tuple([
+		V_HTMLElement,
+		V_FilePath,
+		V_ComponentLike,
+		V_BindTargetDeclaration,
+		z.array(z.string()),
+		z.array(z.union([V_UnvalidatedInputFieldDeclaration, V_UnvalidatedViewFieldDeclaration])),
+	]),
+);
+
+export const V_API_createBindTarget = schemaForType<Parameters<InstanceType<typeof API>['createBindTarget']>>()(
+	z.tuple([z.string(), V_FilePath]),
+);
+
+export const V_API_createButtonFromString = schemaForType<
+	Parameters<InstanceType<typeof API>['createButtonFromString']>
+>()(z.tuple([z.string(), V_FilePath, V_HTMLElement, V_ComponentLike]));
+
+export const V_API_createInlineButtonFromString = schemaForType<
+	Parameters<InstanceType<typeof API>['createInlineButtonFromString']>
+>()(z.tuple([z.string(), V_FilePath, V_HTMLElement, V_ComponentLike]));

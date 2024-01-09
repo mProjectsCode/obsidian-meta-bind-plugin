@@ -5,12 +5,11 @@
 
 	export let app: App;
 	export let errorCollection: ErrorCollection;
-	export let declaration: string;
+	export let declaration: string | undefined;
 
 	function openModal() {
 		const modal = new ErrorCollectionViewModal(app, {
 			errorCollection: errorCollection,
-			declaration: declaration,
 			errorText:
 				'Errors caused the creation of the field to fail. Sometimes one error only occurs because of another.',
 			warningText:

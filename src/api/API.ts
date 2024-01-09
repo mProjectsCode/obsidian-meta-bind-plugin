@@ -34,18 +34,18 @@ import { ButtonMDRC } from '../renderChildren/ButtonMDRC';
 import { InlineButtonMDRC } from '../renderChildren/InlineButtonMDRC';
 import { SyntaxHighlightingAPI } from './SyntaxHighlightingAPI';
 import {
-	V_BindTargetDeclaration,
-	V_BindTargetScope,
-	V_ComponentLike,
-	V_FilePath,
-	V_HTMLElement,
-	V_RenderChildType,
-	V_Signal,
-	V_UnvalidatedInputFieldDeclaration,
-	V_UnvalidatedViewFieldDeclaration,
-	V_VoidFunction,
+	V_API_createBindTarget,
+	V_API_createButtonFromString,
+	V_API_createExcludedField,
+	V_API_createInlineButtonFromString,
+	V_API_createInputField,
+	V_API_createInputFieldFromString,
+	V_API_createJsViewFieldFromString,
+	V_API_createTable,
+	V_API_createViewFieldFromString,
+	V_API_listenToMetadata,
 } from './APIValidators';
-import { z } from 'zod';
+import { validateArgs } from '../utils/ZodUtils';
 
 export interface ComponentLike {
 	addChild(child: Component): void;
@@ -103,12 +103,14 @@ export class API implements IAPI {
 		component: ComponentLike,
 		scope?: BindTargetScope | undefined,
 	): InputFieldMDRC | ExcludedMDRC {
-		V_UnvalidatedInputFieldDeclaration.parse(unvalidatedDeclaration);
-		V_RenderChildType.parse(renderType);
-		V_FilePath.parse(filePath);
-		V_HTMLElement.parse(containerEl);
-		V_ComponentLike.parse(component);
-		V_BindTargetScope.optional().parse(scope);
+		validateArgs(V_API_createInputField, [
+			unvalidatedDeclaration,
+			renderType,
+			filePath,
+			containerEl,
+			component,
+			scope,
+		]);
 
 		if (this.plugin.isFilePathExcluded(filePath)) {
 			return this.createExcludedField(containerEl, filePath, component);
@@ -141,12 +143,14 @@ export class API implements IAPI {
 		component: ComponentLike,
 		scope?: BindTargetScope | undefined,
 	): InputFieldMDRC | ExcludedMDRC {
-		z.string().parse(fullDeclaration);
-		V_RenderChildType.parse(renderType);
-		V_FilePath.parse(filePath);
-		V_HTMLElement.parse(containerEl);
-		V_ComponentLike.parse(component);
-		V_BindTargetScope.optional().parse(scope);
+		validateArgs(V_API_createInputFieldFromString, [
+			fullDeclaration,
+			renderType,
+			filePath,
+			containerEl,
+			component,
+			scope,
+		]);
 
 		if (this.plugin.isFilePathExcluded(filePath)) {
 			return this.createExcludedField(containerEl, filePath, component);
@@ -179,12 +183,14 @@ export class API implements IAPI {
 		component: ComponentLike,
 		scope?: BindTargetScope | undefined,
 	): ViewFieldMDRC | ExcludedMDRC {
-		z.string().parse(fullDeclaration);
-		V_RenderChildType.parse(renderType);
-		V_FilePath.parse(filePath);
-		V_HTMLElement.parse(containerEl);
-		V_ComponentLike.parse(component);
-		V_BindTargetScope.optional().parse(scope);
+		validateArgs(V_API_createViewFieldFromString, [
+			fullDeclaration,
+			renderType,
+			filePath,
+			containerEl,
+			component,
+			scope,
+		]);
 
 		if (this.plugin.isFilePathExcluded(filePath)) {
 			return this.createExcludedField(containerEl, filePath, component);
@@ -215,11 +221,13 @@ export class API implements IAPI {
 		containerEl: HTMLElement,
 		component: ComponentLike,
 	): JsViewFieldMDRC | ExcludedMDRC {
-		z.string().parse(fullDeclaration);
-		V_RenderChildType.parse(renderType);
-		V_FilePath.parse(filePath);
-		V_HTMLElement.parse(containerEl);
-		V_ComponentLike.parse(component);
+		validateArgs(V_API_createJsViewFieldFromString, [
+			fullDeclaration,
+			renderType,
+			filePath,
+			containerEl,
+			component,
+		]);
 
 		if (this.plugin.isFilePathExcluded(filePath)) {
 			return this.createExcludedField(containerEl, filePath, component);
@@ -241,6 +249,8 @@ export class API implements IAPI {
 	 * @param component component for lifecycle management
 	 */
 	public createExcludedField(containerEl: HTMLElement, filePath: string, component: ComponentLike): ExcludedMDRC {
+		validateArgs(V_API_createExcludedField, [containerEl, filePath, component]);
+
 		const excludedField = new ExcludedMDRC(containerEl, RenderChildType.INLINE, this.plugin, filePath, getUUID());
 		component.addChild(excludedField);
 
@@ -267,11 +277,7 @@ export class API implements IAPI {
 		listenToChildren: boolean = false,
 		onDelete?: () => void,
 	): () => void {
-		V_Signal.parse(signal);
-		V_FilePath.parse(filePath);
-		z.array(z.string()).parse(metadataPath);
-		z.boolean().parse(listenToChildren);
-		V_VoidFunction.optional().parse(onDelete);
+		validateArgs(V_API_listenToMetadata, [signal, filePath, metadataPath, listenToChildren, onDelete]);
 
 		const uuid = getUUID();
 
@@ -310,12 +316,7 @@ export class API implements IAPI {
 		tableHead: string[],
 		columns: (UnvalidatedInputFieldDeclaration | UnvalidatedViewFieldDeclaration)[],
 	): MetaBindTable {
-		V_HTMLElement.parse(containerEl);
-		V_FilePath.parse(filePath);
-		V_ComponentLike.parse(component);
-		V_BindTargetDeclaration.parse(bindTarget);
-		z.array(z.string()).parse(tableHead);
-		z.array(z.union([V_UnvalidatedInputFieldDeclaration, V_UnvalidatedViewFieldDeclaration])).parse(columns);
+		validateArgs(V_API_createTable, [containerEl, filePath, component, bindTarget, tableHead, columns]);
 
 		const table = new MetaBindTable(
 			containerEl,
@@ -333,8 +334,7 @@ export class API implements IAPI {
 	}
 
 	public createBindTarget(fullDeclaration: string, currentFilePath: string): BindTargetDeclaration {
-		z.string().parse(fullDeclaration);
-		V_FilePath.parse(currentFilePath);
+		validateArgs(V_API_createBindTarget, [fullDeclaration, currentFilePath]);
 
 		return this.bindTargetParser.parseAndValidateBindTarget(fullDeclaration, currentFilePath);
 	}
@@ -345,10 +345,7 @@ export class API implements IAPI {
 		containerEl: HTMLElement,
 		component: ComponentLike,
 	): ButtonMDRC | ExcludedMDRC {
-		z.string().parse(fullDeclaration);
-		V_FilePath.parse(filePath);
-		V_HTMLElement.parse(containerEl);
-		V_ComponentLike.parse(component);
+		validateArgs(V_API_createButtonFromString, [fullDeclaration, filePath, containerEl, component]);
 
 		if (this.plugin.isFilePathExcluded(filePath)) {
 			return this.createExcludedField(containerEl, filePath, component);
@@ -366,10 +363,7 @@ export class API implements IAPI {
 		containerEl: HTMLElement,
 		component: ComponentLike,
 	): InlineButtonMDRC | ExcludedMDRC {
-		z.string().parse(fullDeclaration);
-		V_FilePath.parse(filePath);
-		V_HTMLElement.parse(containerEl);
-		V_ComponentLike.parse(component);
+		validateArgs(V_API_createInlineButtonFromString, [fullDeclaration, filePath, containerEl, component]);
 
 		if (this.plugin.isFilePathExcluded(filePath)) {
 			return this.createExcludedField(containerEl, filePath, component);

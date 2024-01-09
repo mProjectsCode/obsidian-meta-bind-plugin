@@ -71,7 +71,7 @@
 
 	function round(number: number, increment: number) {
 		// the parsing is done to fix floating point errors
-		return Number.parseFloat((Math.round(number / increment) * increment).toFixed(15));
+		return Number.parseFloat((Math.round(number / increment) * increment).toFixed(10));
 	}
 
 	function onKeyPress(e: KeyboardEvent) {
