@@ -63,7 +63,10 @@
 		<div>
 			<h3 class="mod-error">Some Templates Failed to Parse</h3>
 
-			<ErrorCollectionComponent errorCollection={errorCollection} declaration={undefined}
+			<ErrorCollectionComponent
+				settings={{
+					errorCollection: errorCollection,
+				}}
 			></ErrorCollectionComponent>
 		</div>
 	{/if}
