@@ -32,6 +32,7 @@ export const V_OpenButtonAction = schemaForType<OpenButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.OPEN),
 		link: z.string(),
+		newTab: z.boolean().optional(),
 	}),
 );
 

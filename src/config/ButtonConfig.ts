@@ -28,6 +28,7 @@ export interface JSButtonAction {
 export interface OpenButtonAction {
 	type: ButtonActionType.OPEN;
 	link: string;
+	newTab?: boolean;
 }
 
 export interface InputButtonAction {

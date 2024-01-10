@@ -46,7 +46,7 @@ export class TestAPIAdapter implements IInternalAPI {
 		return Promise.reject(new Error('not implemented'));
 	}
 
-	public openFile(_filePath: string, _callingFilePath: string): void {
+	public openFile(_filePath: string, _callingFilePath: string, _newTab: boolean): void {
 		throw new Error('not implemented');
 	}
 

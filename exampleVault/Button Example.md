@@ -37,6 +37,17 @@ action:
 ```
 
 ```meta-bind-button
+style: primary
+id: open-tab-button
+hidden: true
+label: Open File new Tab
+action:
+  type: open
+  newTab: true
+  link: "[[View Fields/Other Note|Other Note]]"
+```
+
+```meta-bind-button
 style: default
 id: docs-button
 hidden: true
@@ -46,7 +57,7 @@ action:
   link: https://www.moritzjung.dev/obsidian-meta-bind-plugin-docs/
 ```
 
-text `BUTTON[docs-button, open-button]` text
+text `BUTTON[docs-button, open-button, open-tab-button]` text
 
 ```meta-bind-button
 label: Switch to Light Mode

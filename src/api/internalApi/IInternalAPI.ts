@@ -30,7 +30,7 @@ export interface IInternalAPI {
 
 	jsEngineRunCode(code: string, callingFilePath: string, container?: HTMLElement): Promise<() => void>;
 
-	openFile(filePath: string, callingFilePath: string): void;
+	openFile(filePath: string, callingFilePath: string, newTab: boolean): void;
 
 	getFilePathByName(name: string): string | undefined;
 

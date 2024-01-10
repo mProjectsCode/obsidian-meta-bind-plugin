@@ -111,7 +111,7 @@ export class ButtonActionRunner {
 	async runOpenAction(action: OpenButtonAction, filePath: string): Promise<void> {
 		const link = MDLinkParser.parseLinkOrUrl(action.link);
 		if (link.internal) {
-			this.plugin.internal.openFile(link.target, filePath);
+			this.plugin.internal.openFile(link.target, filePath, action.newTab ?? false);
 		} else {
 			openURL(link.target);
 		}
