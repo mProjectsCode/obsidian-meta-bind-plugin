@@ -14,13 +14,15 @@ export class ButtonField {
 	inline: boolean;
 	buttonComponent?: ButtonComponent;
 	config: ButtonConfig | undefined;
+	isPreview: boolean;
 
-	constructor(plugin: IPlugin, config: unknown, filePath: string, inline: boolean) {
+	constructor(plugin: IPlugin, config: unknown, filePath: string, inline: boolean, isPreview: boolean) {
 		this.plugin = plugin;
 		this.unvalidatedConfig = config;
 		this.filePath = filePath;
 		this.inline = inline;
 		this.config = undefined;
+		this.isPreview = isPreview;
 	}
 
 	private renderButton(container: HTMLElement): void {
@@ -66,7 +68,7 @@ export class ButtonField {
 
 		this.config = validationResult.data;
 
-		if (!this.inline) {
+		if (!this.inline && !this.isPreview) {
 			if (this.config.id) {
 				this.plugin.api.buttonManager.addButton(this.filePath, this.config);
 			}

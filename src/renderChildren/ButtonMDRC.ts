@@ -9,10 +9,19 @@ import { showUnloadedMessage } from '../utils/Utils';
 export class ButtonMDRC extends AbstractMDRC {
 	content: string;
 	buttonField?: ButtonField;
+	isPreview: boolean;
 
-	constructor(containerEl: HTMLElement, content: string, plugin: MetaBindPlugin, filePath: string, uuid: string) {
+	constructor(
+		containerEl: HTMLElement,
+		content: string,
+		plugin: MetaBindPlugin,
+		filePath: string,
+		uuid: string,
+		isPreview: boolean,
+	) {
 		super(containerEl, RenderChildType.BLOCK, plugin, filePath, uuid);
 		this.content = content;
+		this.isPreview = isPreview;
 	}
 
 	public onload(): void {
@@ -22,7 +31,7 @@ export class ButtonMDRC extends AbstractMDRC {
 
 		const yamlContent = parseYaml(this.content) as unknown;
 
-		this.buttonField = new ButtonField(this.plugin, yamlContent, this.filePath, false);
+		this.buttonField = new ButtonField(this.plugin, yamlContent, this.filePath, false, this.isPreview);
 		try {
 			this.buttonField.mount(this.containerEl);
 		} catch (e) {

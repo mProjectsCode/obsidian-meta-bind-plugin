@@ -6,6 +6,7 @@ import { ExcludedFoldersSettingModal } from './excludedFoldersSetting/ExcludedFo
 import { InputFieldTemplatesSettingModal } from './inputFieldTemplateSetting/InputFieldTemplatesSettingModal';
 import { DocsUtils } from '../utils/DocsUtils';
 import { MB_FAQ_VIEW_TYPE } from '../faq/FaqView';
+import { ButtonTemplatesSettingModal } from './buttonTemplateSetting/ButtonTemplatesSettingModal';
 
 export class MetaBindSettingTab extends PluginSettingTab {
 	plugin: MetaBindPlugin;
@@ -94,6 +95,16 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				cb.setButtonText('Edit Templates');
 				cb.onClick(() => {
 					new InputFieldTemplatesSettingModal(this.app, this.plugin).open();
+				});
+			});
+
+		new Setting(containerEl)
+			.setName('Button Templates')
+			.setDesc(`You can specify button field templates here, and access them in inline buttons.`)
+			.addButton(cb => {
+				cb.setButtonText('Edit Templates');
+				cb.onClick(() => {
+					new ButtonTemplatesSettingModal(this.app, this.plugin).open();
 				});
 			});
 

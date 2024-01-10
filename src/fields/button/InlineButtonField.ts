@@ -48,7 +48,7 @@ export class InlineButtonField {
 				buttonId,
 				(buttonConfig: ButtonConfig) => {
 					initialButton?.$destroy();
-					button = new ButtonField(this.plugin, buttonConfig, this.filePath, true);
+					button = new ButtonField(this.plugin, buttonConfig, this.filePath, true, false);
 					button.mount(element);
 				},
 			);

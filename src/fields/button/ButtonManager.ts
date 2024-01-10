@@ -1,13 +1,54 @@
 import { type ButtonConfig } from '../../config/ButtonConfig';
 import { getUUID } from '../../utils/Utils';
+import { ErrorCollection } from '../../utils/errors/ErrorCollection';
+import { ErrorLevel, MetaBindButtonError } from '../../utils/errors/MetaBindErrors';
 
 export class ButtonManager {
 	buttons: Map<string, Map<string, ButtonConfig>>;
 	buttonLoadListeners: Map<string, Map<string, Map<string, (config: ButtonConfig) => void>>>;
+	buttonTemplates: Map<string, ButtonConfig>;
 
 	constructor() {
 		this.buttons = new Map();
 		this.buttonLoadListeners = new Map();
+		this.buttonTemplates = new Map();
+	}
+
+	public setButtonTemplates(buttonTemplates: ButtonConfig[]): ErrorCollection {
+		const idSet = new Set<string>();
+
+		const errorCollection = new ErrorCollection('ButtonManager');
+
+		this.buttonTemplates.clear();
+
+		for (const buttonTemplate of buttonTemplates) {
+			if (buttonTemplate.id === undefined || buttonTemplate.id === '') {
+				errorCollection.add(
+					new MetaBindButtonError({
+						errorLevel: ErrorLevel.ERROR,
+						cause: `Button with label "${buttonTemplate.label}" has no id, but button templates must have an id.`,
+						effect: 'Button templates could not be saved.',
+					}),
+				);
+			} else if (idSet.has(buttonTemplate.id)) {
+				errorCollection.add(
+					new MetaBindButtonError({
+						errorLevel: ErrorLevel.ERROR,
+						cause: `Button id "${buttonTemplate.id}" is not unique. The same id is used by multiple buttons.`,
+						effect: 'Button templates could not be saved.',
+					}),
+				);
+			} else {
+				idSet.add(buttonTemplate.id);
+				this.buttonTemplates.set(buttonTemplate.id, buttonTemplate);
+			}
+		}
+
+		if (errorCollection.hasErrors()) {
+			this.buttonTemplates.clear();
+		}
+
+		return errorCollection;
 	}
 
 	public registerButtonLoadListener(
@@ -81,8 +122,12 @@ export class ButtonManager {
 	}
 
 	public addButton(filePath: string, button: ButtonConfig): void {
-		if (button.id === undefined) {
+		if (button.id === undefined || button.id === '') {
 			throw new Error('ButtonManager | button id is undefined');
+		}
+
+		if (this.buttonTemplates.has(button.id)) {
+			throw new Error(`ButtonManager | button with id "${button.id}" already exists in the button templates`);
 		}
 
 		if (!this.buttons.has(filePath)) {
@@ -90,6 +135,10 @@ export class ButtonManager {
 		}
 
 		const fileButtons = this.buttons.get(filePath)!;
+
+		if (fileButtons.has(button.id)) {
+			throw new Error(`ButtonManager | button with id "${button.id}" already exists`);
+		}
 
 		fileButtons.set(button.id, button);
 		this.notifyButtonLoadListeners(filePath, button.id);
@@ -100,6 +149,10 @@ export class ButtonManager {
 	}
 
 	public getButton(filePath: string, buttonId: string): ButtonConfig | undefined {
+		if (this.buttonTemplates.has(buttonId)) {
+			return this.buttonTemplates.get(buttonId);
+		}
+
 		const fileButtons = this.buttons.get(filePath);
 		if (fileButtons) {
 			return fileButtons.get(buttonId);

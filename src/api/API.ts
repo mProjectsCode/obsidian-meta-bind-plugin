@@ -351,7 +351,7 @@ export class API implements IAPI {
 			return this.createExcludedField(containerEl, filePath, component);
 		}
 
-		const button = new ButtonMDRC(containerEl, fullDeclaration, this.plugin, filePath, getUUID());
+		const button = new ButtonMDRC(containerEl, fullDeclaration, this.plugin, filePath, getUUID(), false);
 		component.addChild(button);
 
 		return button;

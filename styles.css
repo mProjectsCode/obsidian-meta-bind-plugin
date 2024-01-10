@@ -492,6 +492,18 @@ table.mb-html-table {
 	overflow-x: auto;
 }
 
+.mb-flex-row {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	gap: var(--size-4-2);
+}
+
+.mb-flex-row > :first-child {
+	flex: 1;
+}
+
 /* --- HIGHLIGHTING CLASSES --- */
 .mb-highlight-test {
 	color: #00bfbc;

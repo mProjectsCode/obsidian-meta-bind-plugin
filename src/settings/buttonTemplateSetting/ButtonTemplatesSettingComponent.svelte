@@ -1,32 +1,29 @@
 <script lang="ts">
-	import { InputFieldTemplate } from '../Settings';
-	import InputFieldTemplateSettingComponent from './InputFieldTemplateSettingComponent.svelte';
-	import { InputFieldTemplatesSettingModal } from './InputFieldTemplatesSettingModal';
 	import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 	import ErrorCollectionComponent from '../../utils/errors/ErrorCollectionComponent.svelte';
 	import ModalButtonGroup from '../../utils/components/ModalButtonGroup.svelte';
 	import Button from '../../utils/components/Button.svelte';
+	import { ButtonConfig } from '../../config/ButtonConfig';
+	import { ButtonTemplatesSettingModal } from './ButtonTemplatesSettingModal';
+	import ButtonTemplateSettingComponent from './ButtonTemplateSettingComponent.svelte';
 
-	export let inputFieldTemplates: InputFieldTemplate[];
-	export let modal: InputFieldTemplatesSettingModal;
+	export let buttonConfigs: ButtonConfig[];
+	export let modal: ButtonTemplatesSettingModal;
 
 	let errorCollection: ErrorCollection | undefined;
 
-	function deleteTemplate(template: InputFieldTemplate): void {
-		inputFieldTemplates = inputFieldTemplates.filter(x => x !== template);
+	function deleteTemplate(template: ButtonConfig): void {
+		buttonConfigs = buttonConfigs.filter(x => x !== template);
 	}
 
 	function addTemplate(): void {
-		inputFieldTemplates.push({
-			name: '',
-			declaration: '',
-		});
+		buttonConfigs.push(modal.plugin.api.buttonActionRunner.createDefaultButtonConfig());
 
-		inputFieldTemplates = inputFieldTemplates;
+		buttonConfigs = buttonConfigs;
 	}
 
 	function save(): void {
-		errorCollection = modal.save(inputFieldTemplates);
+		errorCollection = modal.save(buttonConfigs);
 
 		if (errorCollection === undefined) {
 			modal.close();
@@ -39,11 +36,12 @@
 </script>
 
 <div>
-	{#each inputFieldTemplates as template}
-		<InputFieldTemplateSettingComponent
+	{#each buttonConfigs as template}
+		<ButtonTemplateSettingComponent
+			plugin={modal.plugin}
 			template={template}
 			on:delete-template={evt => deleteTemplate(evt.detail.template)}
-		></InputFieldTemplateSettingComponent>
+		></ButtonTemplateSettingComponent>
 	{/each}
 
 	<Button on:click={() => addTemplate()} variant="primary" tooltip="Create New Template">Add Template</Button>

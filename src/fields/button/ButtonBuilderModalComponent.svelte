@@ -21,15 +21,8 @@
 	import Toggle from '../../utils/components/Toggle.svelte';
 
 	export let modal: ButtonBuilderModal;
-	let buttonConfig: ButtonConfig = {
-		label: 'This is a button',
-		hidden: false,
-		class: '',
-		tooltip: '',
-		id: '',
-		style: ButtonStyleType.DEFAULT,
-		actions: [],
-	};
+	export let buttonConfig: ButtonConfig;
+
 	let buttonEl: HTMLElement;
 	let buttonMDRC: ButtonMDRC;
 	let addActionType: ButtonActionType;
@@ -44,7 +37,7 @@
 		buttonMDRC?.unload();
 		if (el) {
 			el.empty();
-			buttonMDRC = new ButtonMDRC(el, stringifyYaml(config), modal.plugin, '', getUUID());
+			buttonMDRC = new ButtonMDRC(el, stringifyYaml(config), modal.plugin, '', getUUID(), true);
 			buttonMDRC.load();
 		}
 	}

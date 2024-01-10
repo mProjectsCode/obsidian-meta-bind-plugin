@@ -1,3 +1,5 @@
+import { type ButtonConfig } from '../config/ButtonConfig';
+
 export const monthNames = [
 	'January',
 	'February',
@@ -72,6 +74,7 @@ export interface MetaBindPluginSettings {
 	enableEditorRightClickMenu: boolean;
 
 	inputFieldTemplates: InputFieldTemplate[];
+	buttonTemplates: ButtonConfig[];
 	excludedFolders: string[];
 
 	// @deprecated
@@ -98,6 +101,7 @@ export const DEFAULT_SETTINGS: MetaBindPluginSettings = {
 	enableEditorRightClickMenu: true,
 
 	inputFieldTemplates: [],
+	buttonTemplates: [],
 	excludedFolders: ['templates'],
 
 	// @deprecated

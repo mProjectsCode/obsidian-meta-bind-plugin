@@ -14,7 +14,6 @@ import { EMBED_MAX_DEPTH, EmbedMDRC } from './renderChildren/EmbedMDRC';
 import { getUUID } from './utils/Utils';
 import { ObsidianAPIAdapter } from './api/internalApi/ObsidianAPIAdapter';
 import { RenderChildType } from './config/FieldConfigs';
-import { ButtonMDRC } from './renderChildren/ButtonMDRC';
 import { ButtonBuilderModal } from './fields/button/ButtonBuilderModal';
 import { InlineMDRCType, InlineMDRCUtils } from './utils/InlineMDRCUtils';
 import { registerCm5HLModes } from './cm6/Cm5_Modes';
@@ -57,7 +56,6 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		// settings
 		await this.loadSettings();
-		await this.saveSettings();
 		this.addSettingTab(new MetaBindSettingTab(this.app, this));
 
 		// check dependencies
@@ -184,8 +182,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		}
 
 		this.registerMarkdownCodeBlockProcessor('meta-bind-button', (source, el, ctx) => {
-			const button = new ButtonMDRC(el, source, this, ctx.sourcePath, getUUID());
-			ctx.addChild(button);
+			this.api.createButtonFromString(source, ctx.sourcePath, el, ctx);
 		});
 	}
 
@@ -218,15 +215,15 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			id: 'open-button-builder',
 			name: 'Open Button Builder',
 			callback: () => {
-				new ButtonBuilderModal(
-					this,
-					config => {
+				new ButtonBuilderModal({
+					plugin: this,
+					onOkay: (config): void => {
 						void window.navigator.clipboard.writeText(
 							`\`\`\`meta-bind-button\n${stringifyYaml(config)}\n\`\`\``,
 						);
 					},
-					'Copy to Clipboard',
-				).open();
+					submitText: 'Copy to Clipboard',
+				}).open();
 			},
 		});
 	}
@@ -248,11 +245,18 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	}
 
 	loadTemplates(): void {
-		const templateParseErrorCollection = this.api.inputFieldParser.parseTemplates(
+		const inputFieldTemplateParseErrorCollection = this.api.inputFieldParser.parseTemplates(
 			this.settings.inputFieldTemplates,
 		);
-		if (templateParseErrorCollection.hasErrors()) {
-			console.warn('meta-bind | failed to parse templates', templateParseErrorCollection);
+		if (inputFieldTemplateParseErrorCollection.hasErrors()) {
+			console.warn('meta-bind | failed to parse input field templates', inputFieldTemplateParseErrorCollection);
+		}
+
+		const buttonTemplateParseErrorCollection = this.api.buttonManager.setButtonTemplates(
+			this.settings.buttonTemplates,
+		);
+		if (buttonTemplateParseErrorCollection.hasErrors()) {
+			console.warn('meta-bind | failed to parse button templates', buttonTemplateParseErrorCollection);
 		}
 	}
 
@@ -270,11 +274,9 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	async loadSettings(): Promise<void> {
 		console.log(`meta-bind | Main >> settings load`);
 
-		let loadedSettings = (await this.loadData()) as MetaBindPluginSettings;
+		const loadedSettings = (await this.loadData()) as MetaBindPluginSettings;
 
-		loadedSettings = this.applyTemplatesMigration(Object.assign({}, DEFAULT_SETTINGS, loadedSettings));
-
-		this.settings = loadedSettings;
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, loadedSettings);
 
 		await this.saveSettings();
 	}
@@ -287,11 +289,6 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		setFirstWeekday(this.settings.firstWeekday);
 
 		await this.saveData(this.settings);
-	}
-
-	// TODO: move to internal API
-	applyTemplatesMigration(oldSettings: MetaBindPluginSettings): MetaBindPluginSettings {
-		return oldSettings;
 	}
 
 	// TODO: move to internal API

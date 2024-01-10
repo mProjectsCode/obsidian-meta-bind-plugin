@@ -49,13 +49,13 @@ export function createEditorMenu(menu: Menu, editor: Editor, plugin: MetaBindPlu
 		mbSubmenu.addItem(buttonItem => {
 			buttonItem.setTitle('Button');
 			buttonItem.onClick(() => {
-				new ButtonBuilderModal(
-					plugin,
-					config => {
+				new ButtonBuilderModal({
+					plugin: plugin,
+					onOkay: (config): void => {
 						insetAtCursor(editor, `\`\`\`meta-bind-button\n${stringifyYaml(config)}\n\`\`\``);
 					},
-					'Insert',
-				).open();
+					submitText: 'Insert',
+				}).open();
 			});
 		});
 	});

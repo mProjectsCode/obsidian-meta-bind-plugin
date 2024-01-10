@@ -210,6 +210,10 @@ actions:
 
 `BUTTON[count-decrement, count-reset, count-increment]` `VIEW[{count}]`
 
+## Button Templates
+
+`BUTTON[test-id]`
+
 ## Invalid Buttons
 
 ```meta-bind-button

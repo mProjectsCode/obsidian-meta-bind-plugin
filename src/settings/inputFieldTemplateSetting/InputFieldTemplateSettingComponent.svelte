@@ -3,6 +3,9 @@
 	import { createEventDispatcher } from 'svelte';
 	import Button from '../../utils/components/Button.svelte';
 	import Icon from '../../utils/components/Icon.svelte';
+	import SettingComponent from '../../utils/components/SettingComponent.svelte';
+	import { ButtonStyleType } from '../../config/ButtonConfig';
+	import FlexRow from '../../utils/components/FlexRow.svelte';
 
 	export let template: InputFieldTemplate;
 
@@ -11,26 +14,22 @@
 	function dispatchDeleteEvent(): void {
 		console.log('dispatch');
 		dispatch('delete-template', {
-			name: template.name,
+			template: template,
 		});
 	}
 </script>
 
-<tr>
-	<td>
+<div class="mb-card">
+	<FlexRow>
 		<input type="text" bind:value={template.name} placeholder="template-name" />
-	</td>
-	<td style="width: 100%">
-		<input
-			type="text"
-			bind:value={template.declaration}
-			placeholder="INPUT[slider(addLabels)]"
-			style="width: 100%"
-		/>
-	</td>
-	<td>
-		<Button on:click={() => dispatchDeleteEvent()} tooltip="Delete Template">
+		<Button on:click={() => dispatchDeleteEvent()} variant={ButtonStyleType.DESTRUCTIVE} tooltip="Delete Template">
 			<Icon iconName="x" />
 		</Button>
-	</td>
-</tr>
+	</FlexRow>
+	<textarea
+		type="text"
+		bind:value={template.declaration}
+		placeholder="INPUT[slider(addLabels)]"
+		style="width: 100%; height: 100px; resize: vertical;"
+	></textarea>
+</div>

@@ -2,6 +2,7 @@ import {
 	type ButtonAction,
 	ButtonActionType,
 	type ButtonConfig,
+	ButtonStyleType,
 	type CommandButtonAction,
 	type InputButtonAction,
 	type JSButtonAction,
@@ -20,6 +21,18 @@ export class ButtonActionRunner {
 
 	constructor(plugin: IPlugin) {
 		this.plugin = plugin;
+	}
+
+	createDefaultButtonConfig(): ButtonConfig {
+		return {
+			label: 'This is a button',
+			hidden: false,
+			class: '',
+			tooltip: '',
+			id: '',
+			style: ButtonStyleType.DEFAULT,
+			actions: [],
+		};
 	}
 
 	async runButtonAction(buttonConfig: ButtonConfig, filePath: string): Promise<void> {
