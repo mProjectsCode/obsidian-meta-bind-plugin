@@ -9,8 +9,8 @@
 	let inputEl: HTMLElement;
 
 	onMount(() => {
-		renderEl.toggleVisibility(true);
-		inputEl.toggleVisibility(false);
+		renderEl.style.display = "block";
+		inputEl.style.display = "none";
 		render(renderEl, value);
 	});
 
@@ -20,15 +20,15 @@
 	}
 
 	function focusOut() {
-		renderEl.toggleVisibility(true);
-		inputEl.toggleVisibility(false);
+		renderEl.style.display = "block";
+		inputEl.style.display = "none";
 		render(renderEl, value);
 	}
 
 	function focusIn() {
-		console.log('focus in');
-		renderEl.toggleVisibility(false);
-		inputEl.toggleVisibility(true);
+		// console.log('focus in');
+		renderEl.style.display = "none";
+		inputEl.style.display = "block";
 		inputEl.focus();
 	}
 
@@ -63,6 +63,7 @@
 		padding: 0;
 		position: relative;
 		margin-left: 0;
+		overflow: scroll;
 	}
 
 	.editor-input > textarea {
@@ -73,6 +74,7 @@
 		position: absolute;
 		inset: 0;
 		resize: none;
+		border-radius: 0;
 	}
 
 	.editor-input > div {
