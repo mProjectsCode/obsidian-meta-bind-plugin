@@ -71,21 +71,17 @@ export class ObsidianMetadataAdapter implements IMetadataAdapter {
 			}),
 		);
 
-		this.plugin.registerEvent(
-			this.plugin.app.vault.on('delete', file => {
-				this.manager?.deleteCacheInstantly(file.path);
-			}),
-		);
-
-		this.plugin.registerEvent(
-			this.plugin.app.vault.on('rename', (_, oldPath) => {
-				this.manager?.deleteCacheInstantly(oldPath);
-			}),
-		);
-
 		if (this.manager !== undefined) {
 			this.interval = window.setInterval(() => this.manager?.cycle(), this.plugin.settings.syncInterval);
 		}
+	}
+
+	public onFileRename(oldPath: string): void {
+		this.manager?.deleteCacheInstantly(oldPath);
+	}
+
+	public onFileDelete(path: string): void {
+		this.manager?.deleteCacheInstantly(path);
 	}
 
 	public unload(): void {

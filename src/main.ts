@@ -82,6 +82,20 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		const metadataAdapter = new ObsidianMetadataAdapter(this);
 		this.metadataManager = new MetadataManager(metadataAdapter);
 
+		this.registerEvent(
+			this.app.vault.on('rename', (_file, oldPath) => {
+				this.mdrcManager.unloadFile(oldPath);
+				metadataAdapter.onFileRename(oldPath);
+			}),
+		);
+
+		this.registerEvent(
+			this.app.vault.on('delete', file => {
+				this.mdrcManager.unloadFile(file.path);
+				metadataAdapter.onFileDelete(file.path);
+			}),
+		);
+
 		this.loadTemplates();
 
 		// register all post processors for MDRCs

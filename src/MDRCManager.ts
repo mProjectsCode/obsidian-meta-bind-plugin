@@ -7,6 +7,15 @@ export class MDRCManager {
 		this.activeMDRCs = new Map<string, AbstractMDRC>();
 	}
 
+	unloadFile(filePath: string): void {
+		for (const mdrc of this.activeMDRCs.values()) {
+			if (mdrc.filePath === filePath) {
+				console.debug(`meta-bind | MDRCManager >> unregistered MDRC ${mdrc.uuid}`);
+				mdrc.unload();
+			}
+		}
+	}
+
 	unload(): void {
 		for (const mdrc of this.activeMDRCs.values()) {
 			console.debug(`meta-bind | MDRCManager >> unregistered MDRC ${mdrc.uuid}`);
