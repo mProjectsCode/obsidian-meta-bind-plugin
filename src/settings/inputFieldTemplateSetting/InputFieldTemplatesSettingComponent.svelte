@@ -39,6 +39,8 @@
 </script>
 
 <div>
+	<h2>Meta Bind Input Field Templates</h2>
+
 	{#each inputFieldTemplates as template}
 		<InputFieldTemplateSettingComponent
 			template={template}

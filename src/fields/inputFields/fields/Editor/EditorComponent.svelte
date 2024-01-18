@@ -9,8 +9,8 @@
 	let inputEl: HTMLElement;
 
 	onMount(() => {
-		renderEl.style.display = "block";
-		inputEl.style.display = "none";
+		renderEl.style.display = 'block';
+		inputEl.style.display = 'none';
 		render(renderEl, value);
 	});
 
@@ -20,15 +20,15 @@
 	}
 
 	function focusOut() {
-		renderEl.style.display = "block";
-		inputEl.style.display = "none";
+		renderEl.style.display = 'block';
+		inputEl.style.display = 'none';
 		render(renderEl, value);
 	}
 
 	function focusIn() {
 		// console.log('focus in');
-		renderEl.style.display = "none";
-		inputEl.style.display = "block";
+		renderEl.style.display = 'none';
+		inputEl.style.display = 'block';
 		inputEl.focus();
 	}
 

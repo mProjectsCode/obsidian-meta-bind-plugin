@@ -6,6 +6,11 @@
 	import { ButtonConfig } from '../../config/ButtonConfig';
 	import { ButtonTemplatesSettingModal } from './ButtonTemplatesSettingModal';
 	import ButtonTemplateSettingComponent from './ButtonTemplateSettingComponent.svelte';
+	import { V_ButtonConfig } from '../../config/ButtonConfigValidators';
+	import { fromZodError } from 'zod-validation-error';
+	import { ErrorLevel, MetaBindButtonError } from '../../utils/errors/MetaBindErrors';
+	import { DocsUtils } from '../../utils/DocsUtils';
+	import { Notice, parseYaml } from 'obsidian';
 
 	export let buttonConfigs: ButtonConfig[];
 	export let modal: ButtonTemplatesSettingModal;
@@ -18,6 +23,49 @@
 
 	function addTemplate(): void {
 		buttonConfigs.push(modal.plugin.api.buttonActionRunner.createDefaultButtonConfig());
+
+		buttonConfigs = buttonConfigs;
+	}
+
+	async function addTemplateFromClipboard(): void {
+		let unvalidatedConfig: ButtonConfig | undefined;
+		try {
+			unvalidatedConfig = parseYaml(await navigator.clipboard.readText());
+		} catch (e) {
+			console.warn(e);
+			new Notice(
+				'meta-bind | Can not parse button config. Check your button syntax. See the console for more details.',
+			);
+			return;
+		}
+
+		const validationResult = V_ButtonConfig.safeParse(unvalidatedConfig);
+
+		if (!validationResult.success) {
+			const niceError = fromZodError(validationResult.error, {
+				unionSeparator: '\nOR ',
+				issueSeparator: ' AND ',
+				prefix: null,
+			});
+
+			console.warn(
+				new MetaBindButtonError({
+					errorLevel: ErrorLevel.ERROR,
+					effect: 'can not parse button config',
+					cause: 'zod validation failed. Check your button syntax',
+					positionContext: niceError.message,
+					docs: [DocsUtils.linkToButtonConfig()],
+				}),
+			);
+			console.warn(niceError);
+
+			new Notice(
+				'meta-bind | Can not parse button config. Check your button syntax. See the console for more details.',
+			);
+			return;
+		}
+
+		buttonConfigs.push(unvalidatedConfig as ButtonConfig);
 
 		buttonConfigs = buttonConfigs;
 	}
@@ -36,6 +84,8 @@
 </script>
 
 <div>
+	<h2>Meta Bind Button Templates</h2>
+
 	{#each buttonConfigs as template}
 		<ButtonTemplateSettingComponent
 			plugin={modal.plugin}
@@ -45,6 +95,11 @@
 	{/each}
 
 	<Button on:click={() => addTemplate()} variant="primary" tooltip="Create New Template">Add Template</Button>
+	<Button
+		on:click={() => addTemplateFromClipboard()}
+		variant="default"
+		tooltip="Create New Template from YAML in Clipboard">Add Template from Clipboard</Button
+	>
 
 	{#if errorCollection}
 		<div>

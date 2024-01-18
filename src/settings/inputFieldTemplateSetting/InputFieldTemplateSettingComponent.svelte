@@ -12,7 +12,6 @@
 	const dispatch = createEventDispatcher();
 
 	function dispatchDeleteEvent(): void {
-		console.log('dispatch');
 		dispatch('delete-template', {
 			template: template,
 		});

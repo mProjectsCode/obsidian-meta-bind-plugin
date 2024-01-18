@@ -4,7 +4,7 @@
 	import Icon from '../../utils/components/Icon.svelte';
 	import { ButtonConfig, ButtonStyleType } from '../../config/ButtonConfig';
 	import FlexRow from '../../utils/components/FlexRow.svelte';
-	import { stringifyYaml } from 'obsidian';
+	import { Notice, stringifyYaml } from 'obsidian';
 	import { ButtonBuilderModal } from '../../fields/button/ButtonBuilderModal';
 	import MetaBindPlugin from '../../main';
 
@@ -29,6 +29,12 @@
 			config: template,
 		}).open();
 	}
+
+	function copyTemplate(): void {
+		const yaml = stringifyYaml(template);
+		void navigator.clipboard.writeText(yaml);
+		new Notice('meta-bind | Copied to Clipboard');
+	}
 </script>
 
 <div class="mb-card markdown-rendered">
@@ -36,6 +42,9 @@
 		<span>{template.id}</span>
 		<Button on:click={() => editTemplate()} variant={ButtonStyleType.PRIMARY} tooltip="Edit">
 			<Icon iconName="pen-line" />
+		</Button>
+		<Button on:click={() => copyTemplate()} variant={ButtonStyleType.DEFAULT} tooltip="Copy">
+			<Icon iconName="copy" />
 		</Button>
 		<Button on:click={() => dispatchDeleteEvent()} variant={ButtonStyleType.DESTRUCTIVE} tooltip="Delete">
 			<Icon iconName="x" />
