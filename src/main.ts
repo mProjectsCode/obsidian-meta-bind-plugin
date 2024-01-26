@@ -8,7 +8,7 @@ import { createMarkdownRenderChildWidgetEditorPlugin } from './cm6/Cm6_ViewPlugi
 import { MDRCManager } from './MDRCManager';
 import { DEFAULT_SETTINGS, type MetaBindPluginSettings } from './settings/Settings';
 import { type IPlugin } from './IPlugin';
-import { ObsidianMetadataAdapter } from './metadata/ObsidianMetadataAdapter';
+// import { ObsidianMetadataAdapter } from './metadata/ObsidianMetadataAdapter';
 import { FaqView, MB_FAQ_VIEW_TYPE } from './faq/FaqView';
 import { EMBED_MAX_DEPTH, EmbedMDRC } from './renderChildren/EmbedMDRC';
 import { getUUID } from './utils/Utils';
@@ -20,6 +20,9 @@ import { registerCm5HLModes } from './cm6/Cm5_Modes';
 import { DependencyManager } from './utils/dependencies/DependencyManager';
 import { Version } from './utils/dependencies/Version';
 import { createEditorMenu } from './EditorMenu';
+import { BindTargetStorageType } from './parsers/bindTargetParser/BindTargetDeclaration';
+import { GlobalMetadataSource, InternalMetadataSource } from './metadata/InternalMetadataSources';
+import { ObsidianMetadataSource } from './metadata/ObsidianMetadataSource';
 
 export enum MetaBindBuild {
 	DEV = 'dev',
@@ -79,22 +82,9 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		this.api = new API(this);
 		this.internal = new ObsidianAPIAdapter(this);
 		this.mdrcManager = new MDRCManager();
-		const metadataAdapter = new ObsidianMetadataAdapter(this);
-		this.metadataManager = new MetadataManager(metadataAdapter);
+		// const metadataAdapter = new ObsidianMetadataAdapter(this);
 
-		this.registerEvent(
-			this.app.vault.on('rename', (_file, oldPath) => {
-				this.mdrcManager.unloadFile(oldPath);
-				metadataAdapter.onFileRename(oldPath);
-			}),
-		);
-
-		this.registerEvent(
-			this.app.vault.on('delete', file => {
-				this.mdrcManager.unloadFile(file.path);
-				metadataAdapter.onFileDelete(file.path);
-			}),
-		);
+		this.setUpMetadataManager();
 
 		this.loadTemplates();
 
@@ -121,7 +111,6 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	onunload(): void {
 		console.log(`meta-bind | Main >> unload`);
 		this.mdrcManager.unload();
-		this.metadataManager.unload();
 	}
 
 	// TODO: move to internal API
@@ -133,6 +122,42 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		} else {
 			return MetaBindBuild.RELEASE;
 		}
+	}
+
+	setUpMetadataManager(): void {
+		this.metadataManager = new MetadataManager();
+
+		const obsidianMetadataSource = new ObsidianMetadataSource(
+			this,
+			BindTargetStorageType.FRONTMATTER,
+			this.metadataManager,
+		);
+		this.metadataManager.registerSource(obsidianMetadataSource);
+
+		const memoryMetadataSource = new InternalMetadataSource(BindTargetStorageType.MEMORY, this.metadataManager);
+		this.metadataManager.registerSource(memoryMetadataSource);
+
+		const globalMemoryMetadataSource = new GlobalMetadataSource(
+			BindTargetStorageType.GLOBAL_MEMORY,
+			this.metadataManager,
+		);
+		this.metadataManager.registerSource(globalMemoryMetadataSource);
+
+		this.registerEvent(
+			this.app.vault.on('rename', (file, oldPath) => {
+				this.mdrcManager.unloadFile(oldPath);
+				this.metadataManager.onStoragePathRenamed(oldPath, file.path);
+			}),
+		);
+
+		this.registerEvent(
+			this.app.vault.on('delete', file => {
+				this.mdrcManager.unloadFile(file.path);
+				this.metadataManager.onStoragePathDeleted(file.path);
+			}),
+		);
+
+		this.registerInterval(window.setInterval(() => this.metadataManager.cycle(), this.settings.syncInterval));
 	}
 
 	addPostProcessors(): void {

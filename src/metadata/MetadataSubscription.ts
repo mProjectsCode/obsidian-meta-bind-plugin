@@ -46,7 +46,7 @@ export class MetadataSubscription implements IMetadataSubscription {
 	 * @param value
 	 */
 	public update(value: unknown): void {
-		this.metadataManager.updateCache(value, this);
+		this.metadataManager.update(value, this);
 	}
 
 	public applyUpdate(update: MetadataCacheUpdate): void {

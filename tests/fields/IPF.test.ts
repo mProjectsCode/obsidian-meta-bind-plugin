@@ -1,7 +1,6 @@
 import { describe, expect, spyOn, test } from 'bun:test';
 import { InputFieldType, RenderChildType } from '../../src/config/FieldConfigs';
 import { TestIPFBase } from '../__mocks__/TestIPFBase';
-import { Metadata } from '../../src/metadata/MetadataManagerCacheItem';
 import { Signal } from '../../src/utils/Signal';
 import { getUUID } from '../../src/utils/Utils';
 import { parsePropPath } from '../../src/utils/prop/PropParser';
@@ -12,6 +11,7 @@ import { multi } from 'itertools-ts/es';
 import { METADATA_CACHE_UPDATE_CYCLE_THRESHOLD } from '../../src/metadata/MetadataManager';
 import { TestPlugin } from '../__mocks__/TestPlugin';
 import { BindTargetStorageType } from '../../src/parsers/bindTargetParser/BindTargetDeclaration';
+import { Metadata } from '../../src/metadata/MetadataSource';
 
 const TEST_FILE_PATH = 'testFile';
 const TEST_PROP = 'testProp';
@@ -460,11 +460,24 @@ describe('IPF', () => {
 	}
 
 	function setCacheExternally(metadata: Metadata): void {
-		testPlugin.metadataManager.updateCacheOnExternalFrontmatterUpdate(TEST_FILE_PATH, metadata);
+		const source = testPlugin.metadataManager.getSource(BindTargetStorageType.FRONTMATTER);
+		if (!source) {
+			throw new Error('source not found');
+		}
+		testPlugin.metadataManager.onExternalUpdate(source, TEST_FILE_PATH, metadata);
 	}
 
 	function getCacheMetadata(): Metadata | undefined {
-		return testPlugin.metadataManager.getCacheForFile(TEST_FILE_PATH)?.metadata;
+		const source = testPlugin.metadataManager.getSource(BindTargetStorageType.FRONTMATTER);
+		if (!source) {
+			throw new Error('source not found');
+		}
+		const cacheItem = source.getCacheItemForStoragePath(TEST_FILE_PATH);
+		if (!cacheItem) {
+			throw new Error('cache item not found');
+		}
+
+		return source.readEntireCacheItem(cacheItem);
 	}
 
 	function updateMetadataManager(): void {
@@ -481,7 +494,7 @@ describe('IPF', () => {
 						createInitialCache({ [TEST_PROP]: validValue });
 
 						const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
-						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'updateCache');
+						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
 
 						// load the input field
 						loadIPF();
@@ -502,7 +515,7 @@ describe('IPF', () => {
 						createInitialCache({ [TEST_PROP]: validValue[0] });
 
 						const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
-						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'updateCache');
+						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
 
 						// load the input field
 						loadIPF();
@@ -525,7 +538,7 @@ describe('IPF', () => {
 						createInitialCache({ [TEST_PROP]: invalidValue });
 
 						const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
-						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'updateCache');
+						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
 
 						// load the input field
 						loadIPF();
@@ -544,7 +557,7 @@ describe('IPF', () => {
 				setup(TEST_CASE);
 
 				const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
-				const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'updateCache');
+				const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
 
 				// load the input field without any metadata being set
 				loadIPF();
@@ -565,7 +578,7 @@ describe('IPF', () => {
 						setup(TEST_CASE);
 
 						const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
-						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'updateCache');
+						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
 
 						// load the input field
 						loadIPF();
@@ -586,7 +599,7 @@ describe('IPF', () => {
 						setup(TEST_CASE);
 
 						const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
-						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'updateCache');
+						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
 
 						// load the input field
 						loadIPF();
@@ -609,7 +622,7 @@ describe('IPF', () => {
 						setup(TEST_CASE);
 
 						const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
-						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'updateCache');
+						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
 
 						// load the input field
 						loadIPF();
@@ -634,7 +647,7 @@ describe('IPF', () => {
 						setup(TEST_CASE);
 
 						const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
-						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'updateCache');
+						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
 
 						// load the input field
 						loadIPF();
@@ -665,7 +678,7 @@ describe('IPF', () => {
 						setup(TEST_CASE);
 
 						const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
-						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'updateCache');
+						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
 
 						// load the input field
 						loadIPF();
@@ -699,7 +712,7 @@ describe('IPF', () => {
 						setup(TEST_CASE);
 
 						const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
-						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'updateCache');
+						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
 
 						// load the input field
 						loadIPF();
@@ -737,7 +750,7 @@ describe('IPF', () => {
 						setup(TEST_CASE);
 
 						const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
-						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'updateCache');
+						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
 
 						// load the input field
 						loadIPF();
@@ -782,7 +795,7 @@ describe('IPF', () => {
 
 							const ipf1SignalSetSpy = spyOn(ipf1.computedSignal, 'set');
 							const ipf2SignalSetSpy = spyOn(ipf2.computedSignal, 'set');
-							const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'updateCache');
+							const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
 
 							// load the input field
 							loadIPF1();
@@ -807,7 +820,7 @@ describe('IPF', () => {
 
 							const ipf1SignalSetSpy = spyOn(ipf1.computedSignal, 'set');
 							const ipf2SignalSetSpy = spyOn(ipf2.computedSignal, 'set');
-							const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'updateCache');
+							const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
 
 							// load the input field
 							loadIPF1();
@@ -834,7 +847,7 @@ describe('IPF', () => {
 
 							const ipf1SignalSetSpy = spyOn(ipf1.computedSignal, 'set');
 							const ipf2SignalSetSpy = spyOn(ipf2.computedSignal, 'set');
-							const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'updateCache');
+							const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
 
 							// load the input field
 							loadIPF1();
@@ -857,7 +870,7 @@ describe('IPF', () => {
 
 					const ipf1SignalSetSpy = spyOn(ipf1.computedSignal, 'set');
 					const ipf2SignalSetSpy = spyOn(ipf2.computedSignal, 'set');
-					const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'updateCache');
+					const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
 
 					// load the input field without any metadata being set
 					loadIPF1();
@@ -882,7 +895,7 @@ describe('IPF', () => {
 
 							const ipf1SignalSetSpy = spyOn(ipf1.computedSignal, 'set');
 							const ipf2SignalSetSpy = spyOn(ipf2.computedSignal, 'set');
-							const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'updateCache');
+							const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
 
 							// load the input field
 							loadIPF1();
@@ -917,7 +930,7 @@ describe('IPF', () => {
 
 							const ipf1SignalSetSpy = spyOn(ipf1.computedSignal, 'set');
 							const ipf2SignalSetSpy = spyOn(ipf2.computedSignal, 'set');
-							const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'updateCache');
+							const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
 
 							// load the input field
 							loadIPF1();
@@ -955,7 +968,7 @@ describe('IPF', () => {
 
 							const ipf1SignalSetSpy = spyOn(ipf1.computedSignal, 'set');
 							const ipf2SignalSetSpy = spyOn(ipf2.computedSignal, 'set');
-							const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'updateCache');
+							const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
 
 							// load the input field
 							loadIPF1();
@@ -997,7 +1010,7 @@ describe('IPF', () => {
 
 							const ipf1SignalSetSpy = spyOn(ipf1.computedSignal, 'set');
 							const ipf2SignalSetSpy = spyOn(ipf2.computedSignal, 'set');
-							const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'updateCache');
+							const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
 
 							// load the input field
 							loadIPF1();

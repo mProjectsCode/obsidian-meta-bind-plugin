@@ -1,6 +1,6 @@
 ---
 playerCount: 6
-playerLevel: 6
+playerLevel: 4
 enemy:
   - name: Somthing
     level: 2

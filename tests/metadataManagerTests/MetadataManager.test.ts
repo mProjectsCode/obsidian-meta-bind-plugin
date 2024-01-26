@@ -2,10 +2,11 @@ import { MetadataManager } from '../../src/metadata/MetadataManager';
 import { MetadataSubscription } from '../../src/metadata/MetadataSubscription';
 import { getUUID } from '../../src/utils/Utils';
 import { ListenerCallback, Signal } from '../../src/utils/Signal';
-import { TestMetadataAdapter } from '../__mocks__/TestMetadataAdapter';
 import { beforeEach, describe, expect, Mock, spyOn, test } from 'bun:test';
 import { parsePropPath } from '../../src/utils/prop/PropParser';
 import { BindTargetDeclaration, BindTargetStorageType } from '../../src/parsers/bindTargetParser/BindTargetDeclaration';
+import { InternalMetadataSource } from '../../src/metadata/InternalMetadataSources';
+import { Metadata } from '../../src/metadata/MetadataSource';
 
 const testFilePath = 'testFile';
 
@@ -32,12 +33,20 @@ function createBindTarget(file: string, path: string[], listenToChildren: boolea
 	};
 }
 
+function externalUpdate(manager: MetadataManager, filePath: string, value: Metadata): void {
+	const source = manager.sources.get(BindTargetStorageType.FRONTMATTER);
+	if (source) {
+		manager.onExternalUpdate(source, filePath, value);
+	}
+}
+
 describe('metadata manager', () => {
 	let manager: MetadataManager;
 
 	beforeEach(() => {
-		const adapter = new TestMetadataAdapter(new Map());
-		manager = new MetadataManager(adapter);
+		manager = new MetadataManager();
+		const obsidianMetadataSource = new InternalMetadataSource(BindTargetStorageType.FRONTMATTER, manager);
+		manager.registerSource(obsidianMetadataSource);
 	});
 
 	test('subscribing should change the signal value to the current cache value', () => {
@@ -64,7 +73,7 @@ describe('metadata manager', () => {
 		expect(s1.spy).toHaveBeenCalledTimes(1);
 		expect(s1.spy.mock.calls).toEqual([[undefined]]);
 
-		manager.updateCacheOnExternalFrontmatterUpdate(testFilePath, { var1: 5 });
+		externalUpdate(manager, testFilePath, { var1: 5 });
 
 		expect(s1.signal.get()).toBe(5);
 		expect(s1.spy).toHaveBeenCalledTimes(2);
@@ -75,7 +84,7 @@ describe('metadata manager', () => {
 		const s1 = subscribe(manager, createBindTarget(testFilePath, ['var1']));
 		s1.subscription.unsubscribe();
 
-		manager.updateCacheOnExternalFrontmatterUpdate(testFilePath, { var1: 5 });
+		externalUpdate(manager, testFilePath, { var1: 5 });
 
 		expect(s1.signal.get()).toBe(undefined);
 		expect(s1.spy).toHaveBeenCalledTimes(1);
@@ -86,7 +95,7 @@ describe('metadata manager', () => {
 		const s1 = subscribe(manager, createBindTarget(testFilePath, ['var1']));
 		const s2 = subscribe(manager, createBindTarget(testFilePath, ['var2']));
 
-		manager.updateCacheOnExternalFrontmatterUpdate(testFilePath, { var1: 5, var2: 6 });
+		externalUpdate(manager, testFilePath, { var1: 5, var2: 6 });
 
 		expect(s1.signal.get()).toBe(5);
 		expect(s1.spy).toHaveBeenCalledTimes(2);
@@ -111,7 +120,7 @@ describe('metadata manager', () => {
 		const s1 = subscribe(manager, createBindTarget(testFilePath, ['var1']));
 		const s2 = subscribe(manager, createBindTarget('otherFile', ['var1']));
 
-		manager.updateCacheOnExternalFrontmatterUpdate(testFilePath, { var1: 5 });
+		externalUpdate(manager, testFilePath, { var1: 5 });
 
 		expect(s1.signal.get()).toBe(5);
 		expect(s1.spy).toHaveBeenCalledTimes(2);

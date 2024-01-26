@@ -4,7 +4,8 @@ import { PublishAPI } from './PublishAPI';
 import { type MarkdownPostProcessorContext } from 'obsidian/publish';
 import { PublishAPIAdapter } from '../api/internalApi/PublishAPIAdapter';
 import { MetadataManager } from '../metadata/MetadataManager';
-import { PublishMetadataAdapter } from '../metadata/PublishMetadataAdapter';
+import { BindTargetStorageType } from '../parsers/bindTargetParser/BindTargetDeclaration';
+import { GlobalMetadataSource, InternalMetadataSource } from '../metadata/InternalMetadataSources';
 
 export class MetaBindPublishPlugin implements IPlugin {
 	settings: MetaBindPluginSettings;
@@ -17,10 +18,29 @@ export class MetaBindPublishPlugin implements IPlugin {
 
 		this.api = new PublishAPI(this);
 		this.internal = new PublishAPIAdapter(this);
-		const metadataAdapter = new PublishMetadataAdapter();
-		this.metadataManager = new MetadataManager(metadataAdapter);
+		this.metadataManager = new MetadataManager();
+		this.setUpMetadataManager();
 
 		this.load();
+	}
+
+	setUpMetadataManager(): void {
+		const obsidianMetadataSource = new InternalMetadataSource(
+			BindTargetStorageType.FRONTMATTER,
+			this.metadataManager,
+		);
+		this.metadataManager.registerSource(obsidianMetadataSource);
+
+		const memoryMetadataSource = new InternalMetadataSource(BindTargetStorageType.MEMORY, this.metadataManager);
+		this.metadataManager.registerSource(memoryMetadataSource);
+
+		const globalMemoryMetadataSource = new GlobalMetadataSource(
+			BindTargetStorageType.GLOBAL_MEMORY,
+			this.metadataManager,
+		);
+		this.metadataManager.registerSource(globalMemoryMetadataSource);
+
+		window.setInterval(() => this.metadataManager.cycle(), this.settings.syncInterval);
 	}
 
 	onLoad(): void {

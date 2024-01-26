@@ -117,7 +117,7 @@ export class BindTargetParser {
 				'Failed to resolve bind target scope, no scope provided',
 			);
 		} else {
-			console.log('resolve scope', bindTarget, scope.scope);
+			// console.log('resolve scope', bindTarget, scope.scope);
 
 			bindTarget.storageType = scope.scope.storageType;
 			bindTarget.storagePath = scope.scope.storagePath;
