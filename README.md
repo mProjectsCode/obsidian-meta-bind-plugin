@@ -1,5 +1,7 @@
 # Obsidian Meta Bind Plugin
 
+A plugin for [Obsidian](https://obsidian.md/) to make your notes interactive with inline input fields, metadata displays, and buttons.
+
 Meta Bind allows you to create input and view fields inside your notes.
 Those input and view fields can then be bound to frontmatter properties, which keeps them in sync those frontmatter properties.
 Allowing you to edit and view your frontmatter properties inside your notes.
