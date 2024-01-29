@@ -485,6 +485,14 @@ a.mb-no-link {
 }
 
 table.mb-html-table {
+
+}
+
+td.mb-html-table-button-cell {
+	--table-column-min-width: 10px;
+}
+
+th.mb-html-table-button-cell {
 	--table-column-min-width: 10px;
 }
 

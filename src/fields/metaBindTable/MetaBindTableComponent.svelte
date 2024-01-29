@@ -21,7 +21,7 @@
 				{#each tableHead as headCell}
 					<th>{headCell}</th>
 				{/each}
-				<th></th>
+				<th class="mb-html-table-button-cell"></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -36,7 +36,7 @@
 						<td class="meta-bind-error" colspan={tableHead.length}> invalid data</td>
 					{/if}
 
-					<td>
+					<td class="mb-html-table-button-cell">
 						<Button on:click={() => table.removeColumn(tableRow.index)}>
 							<Icon iconName="x" />
 						</Button>
