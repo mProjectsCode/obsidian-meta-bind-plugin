@@ -25,7 +25,7 @@ export class ButtonMDRC extends AbstractMDRC {
 	}
 
 	public onload(): void {
-		console.log('meta-bind | ButtonMDRC >> onload');
+		console.debug('meta-bind | ButtonMDRC >> onload');
 		this.plugin.mdrcManager.registerMDRC(this);
 		this.containerEl.className = '';
 
@@ -49,7 +49,7 @@ export class ButtonMDRC extends AbstractMDRC {
 	}
 
 	public onunload(): void {
-		console.log('meta-bind | ButtonMDRC >> onunload');
+		console.debug('meta-bind | ButtonMDRC >> onunload');
 		this.buttonField?.unmount();
 		this.plugin.mdrcManager.unregisterMDRC(this);
 

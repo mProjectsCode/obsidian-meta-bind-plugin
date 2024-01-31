@@ -143,7 +143,7 @@ export class InputFieldMDRC extends AbstractMDRC implements IInputFieldBase {
 	}
 
 	onload(): void {
-		console.log('meta-bind | InputFieldMDRC >> load', this);
+		console.debug('meta-bind | InputFieldMDRC >> load', this);
 
 		this.containerEl.addClass('mb-input');
 		this.containerEl.empty();
@@ -188,7 +188,7 @@ export class InputFieldMDRC extends AbstractMDRC implements IInputFieldBase {
 	}
 
 	onunload(): void {
-		console.log('meta-bind | InputFieldMDRC >> unload', this);
+		console.debug('meta-bind | InputFieldMDRC >> unload', this);
 
 		this.inputField?.destroy();
 		this.plugin.mdrcManager.unregisterMDRC(this);

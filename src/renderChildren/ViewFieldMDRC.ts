@@ -103,7 +103,7 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC implements IViewFieldBa
 	}
 
 	onload(): void {
-		console.log('meta-bind | ViewFieldMarkdownRenderChild >> load', this);
+		console.debug('meta-bind | ViewFieldMarkdownRenderChild >> load', this);
 
 		this.containerEl.addClass('mb-view');
 		this.containerEl.empty();
@@ -140,7 +140,7 @@ export class ViewFieldMDRC extends AbstractViewFieldMDRC implements IViewFieldBa
 	}
 
 	onunload(): void {
-		console.log('meta-bind | ViewFieldMarkdownRenderChild >> unload', this);
+		console.debug('meta-bind | ViewFieldMarkdownRenderChild >> unload', this);
 
 		this.viewField?.destroy();
 		this.plugin.mdrcManager.unregisterMDRC(this);

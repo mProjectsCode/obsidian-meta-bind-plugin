@@ -133,7 +133,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 	}
 
 	async onload(): Promise<void> {
-		console.log('meta-bind | ViewFieldMarkdownRenderChild >> load', this);
+		console.debug('meta-bind | ViewFieldMarkdownRenderChild >> load', this);
 
 		this.containerEl.addClass('mb-view');
 		this.containerEl.empty();
@@ -180,7 +180,7 @@ export class JsViewFieldMDRC extends AbstractViewFieldMDRC {
 	}
 
 	onunload(): void {
-		console.log('meta-bind | ViewFieldMarkdownRenderChild >> unload', this);
+		console.debug('meta-bind | ViewFieldMarkdownRenderChild >> unload', this);
 
 		this.plugin.mdrcManager.unregisterMDRC(this);
 		this.unregisterSelfFromMetadataManager();

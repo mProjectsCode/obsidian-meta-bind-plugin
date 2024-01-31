@@ -15,7 +15,7 @@ export class InlineButtonMDRC extends AbstractMDRC {
 	}
 
 	public onload(): void {
-		console.log('meta-bind | InlineButtonMDRC >> onload');
+		console.debug('meta-bind | InlineButtonMDRC >> onload');
 		this.plugin.mdrcManager.registerMDRC(this);
 		this.containerEl.className = '';
 
@@ -37,7 +37,7 @@ export class InlineButtonMDRC extends AbstractMDRC {
 	}
 
 	public onunload(): void {
-		console.log('meta-bind | InlineButtonMDRC >> onunload');
+		console.debug('meta-bind | InlineButtonMDRC >> onunload');
 
 		this.buttonField?.unmount();
 		this.plugin.mdrcManager.unregisterMDRC(this);

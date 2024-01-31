@@ -64,7 +64,7 @@ export class EmbedMDRC extends AbstractMDRC {
 	}
 
 	public async onload(): Promise<void> {
-		console.log('meta-bind | EmbedMDRC >> unload', this);
+		console.debug('meta-bind | EmbedMDRC >> unload', this);
 
 		this.plugin.mdrcManager.registerMDRC(this);
 
@@ -80,7 +80,7 @@ export class EmbedMDRC extends AbstractMDRC {
 	}
 
 	public onunload(): void {
-		console.log('meta-bind | EmbedMDRC >> unload', this);
+		console.debug('meta-bind | EmbedMDRC >> unload', this);
 
 		this.plugin.mdrcManager.unregisterMDRC(this);
 

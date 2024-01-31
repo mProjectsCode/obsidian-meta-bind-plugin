@@ -131,7 +131,7 @@ export class PublishViewFieldMDRC extends MarkdownRenderChild {
 	// }
 
 	async onload(): Promise<void> {
-		console.log('meta-bind | InputFieldMarkdownRenderChild >> load', this);
+		console.debug('meta-bind | InputFieldMarkdownRenderChild >> load', this);
 
 		this.containerEl.addClass('meta-bind-plugin-view');
 		this.containerEl.empty();

@@ -16,7 +16,7 @@
 			try {
 				await onClick();
 			} catch (e) {
-				console.log('failed to run button component on click', e);
+				console.warn('failed to run button component on click', e);
 			} finally {
 				disabled = false;
 			}

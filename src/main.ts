@@ -1,4 +1,4 @@
-import { type MarkdownPostProcessorContext, Plugin, stringifyYaml, type WorkspaceLeaf } from 'obsidian';
+import { type MarkdownPostProcessorContext, Plugin, stringifyYaml, TFile, type WorkspaceLeaf } from 'obsidian';
 import { MetaBindSettingTab } from './settings/SettingsTab';
 import { DateParser } from './parsers/DateParser';
 import { MetadataManager } from './metadata/MetadataManager';

@@ -8,7 +8,6 @@
 
 	function toggleValue() {
 		value = !value;
-		console.log('toggle');
 		onValueChange(value);
 	}
 
