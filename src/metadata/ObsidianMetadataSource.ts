@@ -1,15 +1,15 @@
-import { type MapMetadataCacheItem } from './MetadataCacheItem';
+import { type FilePathMetadataCacheItem } from './MetadataCacheItem';
 import { TFile } from 'obsidian';
-import { MapMetadataSource, type Metadata } from './MetadataSource';
+import { FilePathMetadataSource, type Metadata } from './MetadataSource';
 import type MetaBindPlugin from '../main';
 import { type MetadataManager } from './MetadataManager';
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
 
-interface ObsidianMetadataCacheItem extends MapMetadataCacheItem {
+interface ObsidianMetadataCacheItem extends FilePathMetadataCacheItem {
 	file: TFile;
 }
 
-export class ObsidianMetadataSource extends MapMetadataSource<ObsidianMetadataCacheItem> {
+export class ObsidianMetadataSource extends FilePathMetadataSource<ObsidianMetadataCacheItem> {
 	public readonly plugin: MetaBindPlugin;
 
 	constructor(plugin: MetaBindPlugin, id: string, manager: MetadataManager) {

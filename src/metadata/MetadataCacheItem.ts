@@ -23,7 +23,7 @@ export interface IMetadataCacheItem {
 	inactive: boolean;
 }
 
-export interface MapMetadataCacheItem extends IMetadataCacheItem {
+export interface FilePathMetadataCacheItem extends IMetadataCacheItem {
 	storagePath: string;
 	data: Metadata;
 }

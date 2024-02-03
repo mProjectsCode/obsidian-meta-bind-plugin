@@ -3,14 +3,30 @@ import { type BindTargetDeclaration } from '../parsers/bindTargetParser/BindTarg
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
 import { type MetadataManager } from './MetadataManager';
 import { PropUtils } from '../utils/prop/PropUtils';
-import { type IMetadataCacheItem, type MapMetadataCacheItem } from './MetadataCacheItem';
+import { type IMetadataCacheItem, type FilePathMetadataCacheItem } from './MetadataCacheItem';
 import { type PropPath } from '../utils/prop/PropPath';
+import { type ParsingResultNode } from '../parsers/nomParsers/GeneralNomParsers';
+import { type BindTargetParser } from '../parsers/bindTargetParser/BindTargetParser';
+import { type BindTargetScope } from './BindTargetScope';
 
 export type Metadata = Record<string, unknown>;
 
 export interface IMetadataSource<T extends IMetadataCacheItem> {
 	readonly id: string;
 	readonly manager: MetadataManager;
+
+	validateStoragePath(
+		storagePath: ParsingResultNode,
+		hadStoragePath: boolean,
+		bindTargetDeclaration: string,
+		parser: BindTargetParser,
+	): string;
+
+	resolveBindTargetScope(
+		bindTargetDeclaration: BindTargetDeclaration,
+		scope: BindTargetScope | undefined,
+		parser: BindTargetParser,
+	): BindTargetDeclaration;
 
 	/**
 	 * Subscribes a subscription to the metadata source.
@@ -102,7 +118,7 @@ export interface IMetadataSource<T extends IMetadataCacheItem> {
 	readEntireCacheItem(cacheItem: T): Metadata;
 }
 
-export abstract class MapMetadataSource<T extends MapMetadataCacheItem> implements IMetadataSource<T> {
+export abstract class FilePathMetadataSource<T extends FilePathMetadataCacheItem> implements IMetadataSource<T> {
 	public readonly id: string;
 	public readonly manager: MetadataManager;
 	public readonly cache: Map<string, T>;
@@ -111,6 +127,23 @@ export abstract class MapMetadataSource<T extends MapMetadataCacheItem> implemen
 		this.id = id;
 		this.manager = manager;
 		this.cache = new Map<string, T>();
+	}
+
+	public validateStoragePath(
+		storagePath: ParsingResultNode,
+		_hadStoragePath: boolean,
+		bindTargetDeclaration: string,
+		parser: BindTargetParser,
+	): string {
+		return parser.validateStoragePathAsFilePath(storagePath, bindTargetDeclaration);
+	}
+
+	public resolveBindTargetScope(
+		bindTargetDeclaration: BindTargetDeclaration,
+		_scope: BindTargetScope | undefined,
+		_parser: BindTargetParser,
+	): BindTargetDeclaration {
+		return bindTargetDeclaration;
 	}
 
 	abstract getDefaultCacheItem(storagePath: string): T;

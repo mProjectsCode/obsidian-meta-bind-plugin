@@ -15,7 +15,7 @@ export interface UnvalidatedPropAccess {
 }
 
 export interface BindTargetDeclaration {
-	storageType: BindTargetStorageType;
+	storageType: string;
 	storagePath: string;
 	storageProp: PropPath;
 	listenToChildren: boolean;

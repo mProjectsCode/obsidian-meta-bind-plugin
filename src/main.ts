@@ -1,4 +1,4 @@
-import { type MarkdownPostProcessorContext, Plugin, stringifyYaml, TFile, type WorkspaceLeaf } from 'obsidian';
+import { type MarkdownPostProcessorContext, Plugin, stringifyYaml, type WorkspaceLeaf } from 'obsidian';
 import { MetaBindSettingTab } from './settings/SettingsTab';
 import { DateParser } from './parsers/DateParser';
 import { MetadataManager } from './metadata/MetadataManager';
@@ -21,7 +21,7 @@ import { DependencyManager } from './utils/dependencies/DependencyManager';
 import { Version } from './utils/dependencies/Version';
 import { createEditorMenu } from './EditorMenu';
 import { BindTargetStorageType } from './parsers/bindTargetParser/BindTargetDeclaration';
-import { GlobalMetadataSource, InternalMetadataSource } from './metadata/InternalMetadataSources';
+import { GlobalMetadataSource, InternalMetadataSource, ScopeMetadataSource } from './metadata/InternalMetadataSources';
 import { ObsidianMetadataSource } from './metadata/ObsidianMetadataSource';
 
 export enum MetaBindBuild {
@@ -126,22 +126,17 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 	setUpMetadataManager(): void {
 		this.metadataManager = new MetadataManager();
-
-		const obsidianMetadataSource = new ObsidianMetadataSource(
-			this,
-			BindTargetStorageType.FRONTMATTER,
-			this.metadataManager,
+		this.metadataManager.registerSource(
+			new ObsidianMetadataSource(this, BindTargetStorageType.FRONTMATTER, this.metadataManager),
 		);
-		this.metadataManager.registerSource(obsidianMetadataSource);
-
-		const memoryMetadataSource = new InternalMetadataSource(BindTargetStorageType.MEMORY, this.metadataManager);
-		this.metadataManager.registerSource(memoryMetadataSource);
-
-		const globalMemoryMetadataSource = new GlobalMetadataSource(
-			BindTargetStorageType.GLOBAL_MEMORY,
-			this.metadataManager,
+		this.metadataManager.registerSource(
+			new InternalMetadataSource(BindTargetStorageType.MEMORY, this.metadataManager),
 		);
-		this.metadataManager.registerSource(globalMemoryMetadataSource);
+		this.metadataManager.registerSource(
+			new GlobalMetadataSource(BindTargetStorageType.GLOBAL_MEMORY, this.metadataManager),
+		);
+		this.metadataManager.registerSource(new ScopeMetadataSource(BindTargetStorageType.SCOPE, this.metadataManager));
+		this.metadataManager.setDefaultSource(BindTargetStorageType.FRONTMATTER);
 
 		this.registerEvent(
 			this.app.vault.on('rename', (file, oldPath) => {
@@ -174,9 +169,11 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				const content = codeBlock.innerText;
 
 				const mdrcType = InlineMDRCUtils.isDeclarationAndGetMDRCType(content);
+
 				if (mdrcType === undefined) {
 					continue;
 				}
+				console.log(content, ctx.getSectionInfo(codeBlock)?.lineStart, ctx.getSectionInfo(codeBlock)?.lineEnd);
 				InlineMDRCUtils.constructMDRC(mdrcType, content, ctx.sourcePath, codeBlock, ctx, this);
 			}
 		}, 1);
@@ -221,6 +218,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		}
 
 		this.registerMarkdownCodeBlockProcessor('meta-bind-button', (source, el, ctx) => {
+			console.log(ctx.getSectionInfo(el));
 			this.api.createButtonFromString(source, ctx.sourcePath, el, ctx);
 		});
 	}

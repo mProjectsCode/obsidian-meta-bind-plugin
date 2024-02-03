@@ -676,13 +676,27 @@ export function bindTargetToString(a: BindTargetDeclaration | undefined): string
 
 export class MetadataManager {
 	sources: Map<string, MetadataSource>;
+	defaultSource: string;
 
 	constructor() {
 		this.sources = new Map<string, MetadataSource>();
+		this.defaultSource = 'CHANGE_THE_DEFAULT_SOURCE';
 	}
 
 	public registerSource(source: MetadataSource): void {
 		this.sources.set(source.id, source);
+	}
+
+	public setDefaultSource(id: string): void {
+		if (this.sources.has(id)) {
+			this.defaultSource = id;
+		} else {
+			throw new MetaBindInternalError({
+				errorLevel: ErrorLevel.CRITICAL,
+				effect: 'can not set default source',
+				cause: `Source "${id}" does not exist`,
+			});
+		}
 	}
 
 	public unregisterSource(source: MetadataSource): void {
@@ -691,6 +705,10 @@ export class MetadataManager {
 
 	public getSource(id: string): MetadataSource | undefined {
 		return this.sources.get(id);
+	}
+
+	public iterateSources(): IterableIterator<string> {
+		return this.sources.keys();
 	}
 
 	public subscribe(

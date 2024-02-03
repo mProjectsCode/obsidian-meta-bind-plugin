@@ -1,7 +1,9 @@
 ---
 activities:
-  - {}
-  - {}
+  - from: 03:00
+    to: 04:17
+    activity: sudying
+    status: 0
 ---
 
 ```js-engine

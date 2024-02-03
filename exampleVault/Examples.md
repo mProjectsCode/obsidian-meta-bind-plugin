@@ -1,5 +1,5 @@
 ---
-slider1: 7
+slider1: 9
 suggest: test
 toggle1: false
 Domestic_tasks:
@@ -13,7 +13,7 @@ inlineSelect: 0
 nested:
   object: test
 number1: 2
-number2: 14
+number2: 18
 ---
 
 ## Fields Work Everywhere
