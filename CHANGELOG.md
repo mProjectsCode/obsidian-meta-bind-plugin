@@ -1,9 +1,30 @@
 # Obsidian Meta Bind Changelog
 
-# Unreleased
+# 0.12.0
+
+New Features
+
+-   Added options to insert example input and view fields, as well as buttons, from the editor context menu [#179](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/179)
+-   Added the option to control if a note should be opened in a new tab to the `open` button action [#178](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/178)
+-   Added button templates that can be edited from the plugin settings
+
+Changes
 
 -   Improved validation errors for buttons and the API
 -   Removed deprecated input fields that had names in snake_case. Use the camelCase variants instead. The snake_case variants were deprecated since version `0.6.0`.
+-   Reworked the UI for the input field template modal
+-   Made substantial internal changes to the way the plugin handles metadata
+-   Changed the plugin name to `Meta Bind` to comply with the new Obsidian plugin naming requirements
+-   Removed some unnecessary console logs to comply with the Obsidian plugin guidelines
+
+Bug Fixes
+
+-   Fixed an issue with the `stepSize` argument causing floating point errors under specific conditions when used with the `progressBar` input [#180](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/180)
+-   Fixed parsing errors not showing in the input field template modal
+-   Fixed button id collisions [#187](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/187)
+-   Fixed buttons not unloading on file rename or delete [#187](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/187)
+-   Fixed not being able to scroll the `editor` input field [#161](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/161)
+-   Fixed the `editor` input field overflowing [#190](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/190)
 
 # 0.11.0
 

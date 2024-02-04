@@ -35,23 +35,14 @@ export class TestPlugin implements IPlugin {
 		this.metadataManager.registerSource(
 			new InternalMetadataSource(BindTargetStorageType.FRONTMATTER, this.metadataManager),
 		);
-
 		this.metadataManager.registerSource(
 			new InternalMetadataSource(BindTargetStorageType.MEMORY, this.metadataManager),
 		);
-
 		this.metadataManager.registerSource(
 			new GlobalMetadataSource(BindTargetStorageType.GLOBAL_MEMORY, this.metadataManager),
 		);
-
 		this.metadataManager.registerSource(new ScopeMetadataSource(BindTargetStorageType.SCOPE, this.metadataManager));
 
 		this.metadataManager.setDefaultSource(BindTargetStorageType.FRONTMATTER);
-
-		// window.setInterval(() => this.metadataManager.cycle(), this.settings.syncInterval);
-	}
-
-	public getFilePathsByName(name: string): string[] {
-		return [name];
 	}
 }
