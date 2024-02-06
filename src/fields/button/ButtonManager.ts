@@ -2,9 +2,12 @@ import { type ButtonConfig } from '../../config/ButtonConfig';
 import { getUUID } from '../../utils/Utils';
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { ErrorLevel, MetaBindButtonError } from '../../utils/errors/MetaBindErrors';
+import { RefCounter } from '../../utils/RefCounter';
 
 export class ButtonManager {
-	buttons: Map<string, Map<string, ButtonConfig>>;
+	// filePath -> buttonId -> ref counter of buttonConfig
+	buttons: Map<string, Map<string, RefCounter<ButtonConfig>>>;
+	// filePath -> buttonId -> listenerId -> callback
 	buttonLoadListeners: Map<string, Map<string, Map<string, (config: ButtonConfig) => void>>>;
 	buttonTemplates: Map<string, ButtonConfig>;
 
@@ -89,34 +92,37 @@ export class ButtonManager {
 			throw new Error(`ButtonManager | button with id ${buttonId} does not exist`);
 		}
 
-		const fileButtonLoadListeners = this.buttonLoadListeners.get(filePath);
-		if (!fileButtonLoadListeners) {
+		const fileLoadListeners = this.buttonLoadListeners.get(filePath);
+		if (!fileLoadListeners) {
 			return;
 		}
 
-		const buttonLoadListeners = fileButtonLoadListeners.get(buttonId);
-		if (!buttonLoadListeners) {
+		const loadListeners = fileLoadListeners.get(buttonId);
+		if (!loadListeners) {
 			return;
 		}
 
-		for (const [_, fileButtonLoadListener] of buttonLoadListeners) {
+		for (const [_, fileButtonLoadListener] of loadListeners) {
 			fileButtonLoadListener(config);
 		}
 	}
 
 	private removeButtonLoadListener(filePath: string, buttonId: string, listenerId: string): void {
-		const fileButtonLoadListeners = this.buttonLoadListeners.get(filePath);
-		if (!fileButtonLoadListeners) {
+		const fileLoadListeners = this.buttonLoadListeners.get(filePath);
+		if (!fileLoadListeners) {
 			return;
 		}
 
-		const buttonLoadListeners = fileButtonLoadListeners.get(buttonId);
-		if (!buttonLoadListeners) {
+		const loadListeners = fileLoadListeners.get(buttonId);
+		if (!loadListeners) {
 			return;
 		}
 
-		buttonLoadListeners.delete(listenerId);
-		if (fileButtonLoadListeners.size === 0) {
+		loadListeners.delete(listenerId);
+		if (loadListeners.size === 0) {
+			fileLoadListeners.delete(buttonId);
+		}
+		if (fileLoadListeners.size === 0) {
 			this.buttonLoadListeners.delete(filePath);
 		}
 	}
@@ -137,15 +143,16 @@ export class ButtonManager {
 		const fileButtons = this.buttons.get(filePath)!;
 
 		if (fileButtons.has(button.id)) {
-			throw new Error(`ButtonManager | button with id "${button.id}" already exists`);
+			if (JSON.stringify(fileButtons.get(button.id)?.getValue()) === JSON.stringify(button)) {
+				fileButtons.get(button.id)?.increment();
+				return;
+			} else {
+				throw new Error(`ButtonManager | button with id "${button.id}" already exists`);
+			}
 		}
 
-		fileButtons.set(button.id, button);
+		fileButtons.set(button.id, new RefCounter(button));
 		this.notifyButtonLoadListeners(filePath, button.id);
-	}
-
-	public getButtons(filePath: string): Map<string, ButtonConfig> | undefined {
-		return this.buttons.get(filePath);
 	}
 
 	public getButton(filePath: string, buttonId: string): ButtonConfig | undefined {
@@ -155,7 +162,7 @@ export class ButtonManager {
 
 		const fileButtons = this.buttons.get(filePath);
 		if (fileButtons) {
-			return fileButtons.get(buttonId);
+			return fileButtons.get(buttonId)?.getValue();
 		}
 		return undefined;
 	}
@@ -163,7 +170,10 @@ export class ButtonManager {
 	public removeButton(filePath: string, buttonId: string): void {
 		const fileButtons = this.buttons.get(filePath);
 		if (fileButtons) {
-			fileButtons.delete(buttonId);
+			fileButtons.get(buttonId)?.decrement();
+			if (fileButtons.get(buttonId)?.isEmpty()) {
+				fileButtons.delete(buttonId);
+			}
 
 			if (fileButtons.size === 0) {
 				this.buttons.delete(filePath);

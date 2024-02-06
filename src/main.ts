@@ -173,7 +173,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				if (mdrcType === undefined) {
 					continue;
 				}
-				console.log(content, ctx.getSectionInfo(codeBlock)?.lineStart, ctx.getSectionInfo(codeBlock)?.lineEnd);
+				// console.log(content, ctx.getSectionInfo(codeBlock)?.lineStart, ctx.getSectionInfo(codeBlock)?.lineEnd);
 				InlineMDRCUtils.constructMDRC(mdrcType, content, ctx.sourcePath, codeBlock, ctx, this);
 			}
 		}, 1);

@@ -172,19 +172,11 @@ export class ScopeMetadataSource implements IMetadataSource<IMetadataCacheItem> 
 	}
 
 	public delete(_cacheItem: IMetadataCacheItem): void {
-		throw new MetaBindInternalError({
-			errorLevel: ErrorLevel.CRITICAL,
-			effect: 'action not permitted',
-			cause: `source 'scope' should have no cache items or subscriptions`,
-		});
+		// noop
 	}
 
 	public getCacheItemForStoragePath(_storagePath: string): IMetadataCacheItem | undefined {
-		throw new MetaBindInternalError({
-			errorLevel: ErrorLevel.CRITICAL,
-			effect: 'action not permitted',
-			cause: `source 'scope' should have no cache items or subscriptions`,
-		});
+		return undefined;
 	}
 
 	public iterateCacheItems(): IterableIterator<IMetadataCacheItem> {
@@ -196,27 +188,15 @@ export class ScopeMetadataSource implements IMetadataSource<IMetadataCacheItem> 
 	}
 
 	public readCache(_bindTarget: BindTargetDeclaration): unknown {
-		throw new MetaBindInternalError({
-			errorLevel: ErrorLevel.CRITICAL,
-			effect: 'action not permitted',
-			cause: `source 'scope' should have no cache items or subscriptions`,
-		});
+		return undefined;
 	}
 
 	public readCacheItem(_cacheItem: IMetadataCacheItem, _propPath: PropPath): unknown {
-		throw new MetaBindInternalError({
-			errorLevel: ErrorLevel.CRITICAL,
-			effect: 'action not permitted',
-			cause: `source 'scope' should have no cache items or subscriptions`,
-		});
+		return undefined;
 	}
 
 	public shouldDelete(_cacheItem: IMetadataCacheItem): boolean {
-		throw new MetaBindInternalError({
-			errorLevel: ErrorLevel.CRITICAL,
-			effect: 'action not permitted',
-			cause: `source 'scope' should have no cache items or subscriptions`,
-		});
+		return true;
 	}
 
 	public subscribe(_subscription: IMetadataSubscription): IMetadataCacheItem {
@@ -248,11 +228,7 @@ export class ScopeMetadataSource implements IMetadataSource<IMetadataCacheItem> 
 	}
 
 	public updateEntireCache(_value: Metadata, _cacheItem: IMetadataCacheItem): void {
-		throw new MetaBindInternalError({
-			errorLevel: ErrorLevel.CRITICAL,
-			effect: 'action not permitted',
-			cause: `source 'scope' should have no cache items or subscriptions`,
-		});
+		// noop
 	}
 
 	public readEntireCacheItem(_cacheItem: IMetadataCacheItem): Metadata {
