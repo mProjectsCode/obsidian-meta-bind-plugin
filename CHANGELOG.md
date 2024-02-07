@@ -1,5 +1,13 @@
 # Obsidian Meta Bind Changelog
 
+# 0.12.1
+
+Bug Fixes
+
+-   Fixed an issue with the button id collision triggering when it shouldn't [#207](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/207)
+-   Fixed a minor memory leak in the button manager
+-   Fixed an error being thrown when deleting or renaming a note
+
 # 0.12.0
 
 New Features
