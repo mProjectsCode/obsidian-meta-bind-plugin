@@ -1,6 +1,6 @@
 import { type FilePathMetadataCacheItem } from './MetadataCacheItem';
 import { TFile } from 'obsidian';
-import { FilePathMetadataSource, type Metadata } from './MetadataSource';
+import { FilePathMetadataSource } from './MetadataSource';
 import type MetaBindPlugin from '../main';
 import { type MetadataManager } from './MetadataManager';
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
@@ -18,7 +18,7 @@ export class ObsidianMetadataSource extends FilePathMetadataSource<ObsidianMetad
 
 		this.plugin.registerEvent(
 			this.plugin.app.metadataCache.on('changed', (file, _data, cache) => {
-				this.manager.onExternalUpdate(this, file.path, cache.frontmatter as Metadata);
+				this.manager.onExternalUpdate(this, file.path, structuredClone(cache.frontmatter) ?? {});
 			}),
 		);
 	}
