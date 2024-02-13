@@ -148,6 +148,11 @@ export class InputFieldMDRC extends AbstractMDRC implements IInputFieldBase {
 		this.containerEl.addClass('mb-input');
 		this.containerEl.empty();
 
+		// const observer = new MutationObserver(mutations => {
+		// 	console.trace('meta-bind | InputFieldMDRC >> MutationObserver', mutations);
+		// });
+		// observer.observe(this.containerEl, { childList: true, subtree: true });
+
 		// --- Register to MDRC manager ---
 		this.plugin.mdrcManager.registerMDRC(this);
 

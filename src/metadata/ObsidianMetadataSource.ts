@@ -36,6 +36,9 @@ export class ObsidianMetadataSource extends FilePathMetadataSource<ObsidianMetad
 
 		const frontmatter = this.plugin.app.metadataCache.getFileCache(file)?.frontmatter;
 
+		// TODO: remove
+		console.log('meta-bind | Obs Source >> default cache', structuredClone(frontmatter), storagePath);
+
 		return {
 			data: structuredClone(frontmatter) ?? {},
 			storagePath: storagePath,

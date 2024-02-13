@@ -1,4 +1,4 @@
-import { type MarkdownPostProcessorContext, Plugin, stringifyYaml, type WorkspaceLeaf } from 'obsidian';
+import { loadPrism, type MarkdownPostProcessorContext, Plugin, stringifyYaml, type WorkspaceLeaf } from 'obsidian';
 import { MetaBindSettingTab } from './settings/SettingsTab';
 import { DateParser } from './parsers/DateParser';
 import { MetadataManager } from './metadata/MetadataManager';
@@ -8,7 +8,6 @@ import { createMarkdownRenderChildWidgetEditorPlugin } from './cm6/Cm6_ViewPlugi
 import { MDRCManager } from './MDRCManager';
 import { DEFAULT_SETTINGS, type MetaBindPluginSettings } from './settings/Settings';
 import { type IPlugin } from './IPlugin';
-// import { ObsidianMetadataAdapter } from './metadata/ObsidianMetadataAdapter';
 import { FaqView, MB_FAQ_VIEW_TYPE } from './faq/FaqView';
 import { EMBED_MAX_DEPTH, EmbedMDRC } from './renderChildren/EmbedMDRC';
 import { getUUID } from './utils/Utils';
@@ -106,6 +105,9 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				}),
 			);
 		}
+
+		// we need to wait for prism to load first, otherwise prism will cause problems by highlighting things that it shouldn't
+		await loadPrism();
 	}
 
 	onunload(): void {

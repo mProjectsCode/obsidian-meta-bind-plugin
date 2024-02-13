@@ -791,6 +791,10 @@ export class MetadataManager {
 		const cacheItem = source.subscribe(subscription);
 		cacheItem.inactive = false;
 		cacheItem.cyclesSinceInactive = 0;
+
+		// TODO: remove
+		console.log('meta-bind | MetadataManager >> subscribed', subscription, cacheItem);
+
 		subscription.notify(source.readCacheItem(cacheItem, subscription.bindTarget.storageProp));
 	}
 
@@ -904,11 +908,10 @@ export class MetadataManager {
 				if (cacheItem.pendingInternalChange) {
 					try {
 						source.syncExternal(cacheItem);
-						cacheItem.pendingInternalChange = false;
 					} catch (e) {
-						cacheItem.pendingInternalChange = false;
 						console.warn('failed to update frontmatter', e);
 					}
+					cacheItem.pendingInternalChange = false;
 				}
 				cacheItem.cyclesSinceInternalChange += 1;
 
