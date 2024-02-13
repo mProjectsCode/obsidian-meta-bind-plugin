@@ -64,7 +64,7 @@ export const V_UpdateMetadataButtonAction = schemaForType<UpdateMetadataButtonAc
 		type: z.literal(ButtonActionType.UPDATE_METADATA),
 		bindTarget: z.string(),
 		evaluate: z.boolean(),
-		value: z.string(),
+		value: z.coerce.string(),
 	}),
 );
 

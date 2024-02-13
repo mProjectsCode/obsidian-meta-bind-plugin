@@ -792,9 +792,6 @@ export class MetadataManager {
 		cacheItem.inactive = false;
 		cacheItem.cyclesSinceInactive = 0;
 
-		// TODO: remove
-		console.log('meta-bind | MetadataManager >> subscribed', subscription, cacheItem);
-
 		subscription.notify(source.readCacheItem(cacheItem, subscription.bindTarget.storageProp));
 	}
 
