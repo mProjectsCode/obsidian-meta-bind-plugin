@@ -62,9 +62,9 @@ export const V_TemplaterCreateNoteButtonAction = schemaForType<TemplaterCreateNo
 export const V_UpdateMetadataButtonAction = schemaForType<UpdateMetadataButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.UPDATE_METADATA),
-		bindTarget: z.coerce.string(),
+		bindTarget: z.string(),
 		evaluate: z.boolean(),
-		value: z.coerce.string(),
+		value: z.string(),
 	}),
 );
 
