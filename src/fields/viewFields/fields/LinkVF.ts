@@ -1,5 +1,4 @@
 import { AbstractViewField } from '../AbstractViewField';
-import { type ViewFieldMDRC } from '../../../renderChildren/ViewFieldMDRC';
 import { Signal } from '../../../utils/Signal';
 import { getUUID } from '../../../utils/Utils';
 import { ErrorLevel, MetaBindExpressionError, MetaBindValidationError } from '../../../utils/errors/MetaBindErrors';
@@ -7,10 +6,12 @@ import LinkListComponent from '../../../utils/components/LinkListComponent.svelt
 import { MDLinkParser } from '../../../parsers/MarkdownLinkParser';
 import { type BindTargetDeclaration } from '../../../parsers/bindTargetParser/BindTargetDeclaration';
 
+import { type IViewFieldBase } from '../ViewFieldBase';
+
 export class LinkVF extends AbstractViewField {
 	component?: LinkListComponent;
 
-	constructor(renderChild: ViewFieldMDRC) {
+	constructor(renderChild: IViewFieldBase) {
 		super(renderChild);
 	}
 

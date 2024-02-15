@@ -7,7 +7,6 @@ import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 import type MetaBindPlugin from '../../main';
 import { BindTargetScope } from '../../metadata/BindTargetScope';
 import { type Listener, Signal } from '../../utils/Signal';
-import { getUUID } from '../../utils/Utils';
 import MetaBindTableComponent from './MetaBindTableComponent.svelte';
 import { ViewFieldMDRC } from '../../renderChildren/ViewFieldMDRC';
 import { type Component } from 'obsidian';
@@ -57,16 +56,14 @@ export class MetaBindTable extends AbstractMDRC {
 	private value: T | undefined;
 
 	constructor(
-		containerEl: HTMLElement,
-		renderChildType: RenderChildType,
 		plugin: MetaBindPlugin,
 		filePath: string,
-		uuid: string,
+		containerEl: HTMLElement,
 		bindTarget: BindTargetDeclaration,
 		tableHead: string[],
 		columns: MetaBindColumnDeclaration[],
 	) {
-		super(containerEl, renderChildType, plugin, filePath, uuid);
+		super(plugin, filePath, containerEl);
 		this.bindTarget = bindTarget;
 		this.tableHead = tableHead;
 		this.columns = columns;
@@ -145,26 +142,11 @@ export class MetaBindTable extends AbstractMDRC {
 	}
 
 	createCell(cell: MetaBindTableCell, element: HTMLElement, cellComponent: Component): void {
-		const uuid = getUUID();
 		if ('inputFieldType' in cell) {
-			const field = new InputFieldMDRC(
-				element,
-				RenderChildType.INLINE,
-				cell,
-				this.plugin,
-				this.filePath,
-				`${this.uuid}/${uuid}`,
-			);
+			const field = new InputFieldMDRC(this.plugin, this.filePath, element, RenderChildType.INLINE, cell);
 			cellComponent.addChild(field);
 		} else {
-			const field = new ViewFieldMDRC(
-				element,
-				RenderChildType.INLINE,
-				cell,
-				this.plugin,
-				this.filePath,
-				`${this.uuid}/${uuid}`,
-			);
+			const field = new ViewFieldMDRC(this.plugin, this.filePath, element, RenderChildType.INLINE, cell);
 			cellComponent.addChild(field);
 		}
 	}

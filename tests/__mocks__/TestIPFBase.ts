@@ -1,10 +1,10 @@
-import { IInputFieldBase } from '../../src/fields/inputFields/IInputFieldBase';
 import { InputFieldArgumentType, RenderChildType } from '../../src/config/FieldConfigs';
 import { InputFieldArgumentMapType } from '../../src/fields/fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
 import { InputFieldDeclaration } from '../../src/parsers/inputFieldParser/InputFieldDeclaration';
 import { InputField } from '../../src/fields/inputFields/InputFieldFactory';
 import { TestPlugin } from './TestPlugin';
 import { BindTargetDeclaration } from '../../src/parsers/bindTargetParser/BindTargetDeclaration';
+import { IInputFieldBase } from '../../src/fields/inputFields/InputFieldBase';
 
 export class TestIPFBase implements IInputFieldBase {
 	public readonly plugin: TestPlugin;
@@ -39,6 +39,10 @@ export class TestIPFBase implements IInputFieldBase {
 		);
 	}
 
+	public hasArgument<T extends InputFieldArgumentType>(name: T): boolean {
+		return this.getArguments(name).length > 0;
+	}
+
 	public getArgument<T extends InputFieldArgumentType>(name: T): InputFieldArgumentMapType<T> | undefined {
 		return this.declaration.argumentContainer.get(name);
 	}
@@ -59,7 +63,7 @@ export class TestIPFBase implements IInputFieldBase {
 		return this.uuid;
 	}
 
-	public load(): void {
+	public mount(): void {
 		this.containerEl.classList.add('mb-input');
 		this.containerEl.innerHTML = '';
 
@@ -70,7 +74,7 @@ export class TestIPFBase implements IInputFieldBase {
 		this.inputField?.mount(container);
 	}
 
-	public unload(): void {
+	public destroy(): void {
 		this.inputField?.destroy();
 		this.containerEl.innerHTML = '';
 	}

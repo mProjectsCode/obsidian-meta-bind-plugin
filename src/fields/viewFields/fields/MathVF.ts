@@ -1,10 +1,11 @@
 import { AbstractViewField } from '../AbstractViewField';
-import { type ViewFieldMDRC, type ViewFieldVariable } from '../../../renderChildren/ViewFieldMDRC';
 import { ErrorLevel, MetaBindExpressionError } from '../../../utils/errors/MetaBindErrors';
 import { Signal } from '../../../utils/Signal';
 import { getUUID } from '../../../utils/Utils';
 import { compile as MathJsCompile, type EvalFunction } from 'mathjs';
 import { parseLiteral } from '../../../utils/Literal';
+import { type ViewFieldVariable } from '../ViewFieldVariable';
+import { type IViewFieldBase } from '../ViewFieldBase';
 
 export class MathVF extends AbstractViewField {
 	container?: HTMLElement;
@@ -14,7 +15,7 @@ export class MathVF extends AbstractViewField {
 
 	hidden: boolean;
 
-	constructor(renderChild: ViewFieldMDRC) {
+	constructor(renderChild: IViewFieldBase) {
 		super(renderChild);
 
 		this.hidden = false;

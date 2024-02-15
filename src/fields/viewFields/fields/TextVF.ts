@@ -1,17 +1,18 @@
 import { AbstractViewField } from '../AbstractViewField';
-import { type ViewFieldMDRC, type ViewFieldVariable } from '../../../renderChildren/ViewFieldMDRC';
 import { Signal } from '../../../utils/Signal';
 import { ErrorLevel, MetaBindExpressionError } from '../../../utils/errors/MetaBindErrors';
 import { getUUID } from '../../../utils/Utils';
 import { ViewFieldArgumentType } from '../../../config/FieldConfigs';
 import { stringifyUnknown } from '../../../utils/Literal';
+import { type ViewFieldVariable } from '../ViewFieldVariable';
+import { type IViewFieldBase } from '../ViewFieldBase';
 
 export class TextVF extends AbstractViewField {
 	textParts?: (string | number)[];
 	renderMarkdown: boolean;
 	markdownUnloadCallback?: () => void;
 
-	constructor(renderChild: ViewFieldMDRC) {
+	constructor(renderChild: IViewFieldBase) {
 		super(renderChild);
 
 		this.renderMarkdown = false;

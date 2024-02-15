@@ -21,7 +21,8 @@ import { type InputFieldConfig, InputFieldConfigs, InputFieldType, RenderChildTy
 import { DocsUtils } from '../../utils/DocsUtils';
 import { InlineListSuggesterIPF } from './fields/InlineListSuggester/InlineListSuggesterIPF';
 import { InlineListIPF } from './fields/InlineList/InlineListIPF';
-import { type IInputFieldBase } from './IInputFieldBase';
+
+import { type IInputFieldBase } from './InputFieldBase';
 
 export type InputField =
 	| ToggleIPF

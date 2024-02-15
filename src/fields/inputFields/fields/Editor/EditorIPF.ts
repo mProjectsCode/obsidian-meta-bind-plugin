@@ -2,7 +2,8 @@ import { AbstractInputField } from '../../AbstractInputField';
 import { type SvelteComponent } from 'svelte';
 import EditorComponent from './EditorComponent.svelte';
 import { isLiteral } from '../../../../utils/Literal';
-import { type IInputFieldBase } from '../../IInputFieldBase';
+
+import { type IInputFieldBase } from '../../InputFieldBase';
 
 export class EditorIPF extends AbstractInputField<string, string> {
 	mdUnloadCallback: (() => void) | undefined;

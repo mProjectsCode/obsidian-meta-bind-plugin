@@ -3,7 +3,8 @@ import { type moment } from 'obsidian';
 import { type SvelteComponent } from 'svelte';
 import { DateParser } from '../../../../parsers/DateParser';
 import DateComponent from './DateComponent.svelte';
-import { type IInputFieldBase } from '../../IInputFieldBase';
+
+import { type IInputFieldBase } from '../../InputFieldBase';
 
 export class DateIPF extends AbstractInputField<string, moment.Moment> {
 	constructor(renderChild: IInputFieldBase) {

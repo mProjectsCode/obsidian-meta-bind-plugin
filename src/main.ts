@@ -10,7 +10,6 @@ import { DEFAULT_SETTINGS, type MetaBindPluginSettings } from './settings/Settin
 import { type IPlugin } from './IPlugin';
 import { FaqView, MB_FAQ_VIEW_TYPE } from './faq/FaqView';
 import { EMBED_MAX_DEPTH, EmbedMDRC } from './renderChildren/EmbedMDRC';
-import { getUUID } from './utils/Utils';
 import { ObsidianAPIAdapter } from './api/internalApi/ObsidianAPIAdapter';
 import { RenderChildType } from './config/FieldConfigs';
 import { ButtonBuilderModal } from './fields/button/ButtonBuilderModal';
@@ -208,13 +207,13 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		});
 
 		this.registerMarkdownCodeBlockProcessor('meta-bind-embed', (source, el, ctx) => {
-			const embed = new EmbedMDRC(el, source, this, ctx.sourcePath, getUUID(), 0);
+			const embed = new EmbedMDRC(this, ctx.sourcePath, el, source, 0);
 			ctx.addChild(embed);
 		});
 
 		for (let i = 1; i <= EMBED_MAX_DEPTH; i++) {
 			this.registerMarkdownCodeBlockProcessor(`meta-bind-embed-internal-${i}`, (source, el, ctx) => {
-				const embed = new EmbedMDRC(el, source, this, ctx.sourcePath, getUUID(), i);
+				const embed = new EmbedMDRC(this, ctx.sourcePath, el, source, i);
 				ctx.addChild(embed);
 			});
 		}

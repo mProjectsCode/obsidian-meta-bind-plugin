@@ -14,6 +14,7 @@ import { InputFieldFactory } from '../fields/inputFields/InputFieldFactory';
 import { ButtonActionRunner } from '../fields/button/ButtonActionRunner';
 import { ButtonManager } from '../fields/button/ButtonManager';
 import { SyntaxHighlightingAPI } from '../api/SyntaxHighlightingAPI';
+import { ViewFieldFactory } from '../fields/viewFields/ViewFieldFactory';
 
 export class PublishAPI implements IAPI {
 	public readonly plugin: IPlugin;
@@ -23,6 +24,7 @@ export class PublishAPI implements IAPI {
 	public readonly bindTargetParser: BindTargetParser;
 
 	public readonly inputFieldFactory: InputFieldFactory;
+	public readonly viewFieldFactory: ViewFieldFactory;
 
 	public readonly inputField: InputFieldAPI;
 
@@ -39,6 +41,7 @@ export class PublishAPI implements IAPI {
 		this.bindTargetParser = new BindTargetParser(this.plugin);
 
 		this.inputFieldFactory = new InputFieldFactory(this.plugin);
+		this.viewFieldFactory = new ViewFieldFactory(this.plugin);
 
 		this.inputField = new InputFieldAPI(this);
 

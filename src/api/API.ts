@@ -25,7 +25,7 @@ import {
 import { ViewFieldFactory } from '../fields/viewFields/ViewFieldFactory';
 import { getUUID } from '../utils/Utils';
 import { parsePropPath } from '../utils/prop/PropParser';
-import { RenderChildType } from '../config/FieldConfigs';
+import { type RenderChildType } from '../config/FieldConfigs';
 import { type ButtonActionRunner } from '../fields/button/ButtonActionRunner';
 import { ButtonManager } from '../fields/button/ButtonManager';
 import { type BindTargetDeclaration, BindTargetStorageType } from '../parsers/bindTargetParser/BindTargetDeclaration';
@@ -118,7 +118,7 @@ export class API implements IAPI {
 
 		const declaration = this.inputFieldParser.validateDeclaration(unvalidatedDeclaration, filePath, scope);
 
-		const inputField = new InputFieldMDRC(containerEl, renderType, declaration, this.plugin, filePath, getUUID());
+		const inputField = new InputFieldMDRC(this.plugin, filePath, containerEl, renderType, declaration);
 		component.addChild(inputField);
 
 		return inputField;
@@ -158,7 +158,7 @@ export class API implements IAPI {
 
 		const declaration: InputFieldDeclaration = this.inputFieldParser.parseString(fullDeclaration, filePath, scope);
 
-		const inputField = new InputFieldMDRC(containerEl, renderType, declaration, this.plugin, filePath, getUUID());
+		const inputField = new InputFieldMDRC(this.plugin, filePath, containerEl, renderType, declaration);
 		component.addChild(inputField);
 
 		return inputField;
@@ -198,7 +198,7 @@ export class API implements IAPI {
 
 		const declaration: ViewFieldDeclaration = this.viewFieldParser.parseString(fullDeclaration, filePath, scope);
 
-		const viewField = new ViewFieldMDRC(containerEl, renderType, declaration, this.plugin, filePath, getUUID());
+		const viewField = new ViewFieldMDRC(this.plugin, filePath, containerEl, renderType, declaration);
 		component.addChild(viewField);
 
 		return viewField;
@@ -235,7 +235,7 @@ export class API implements IAPI {
 
 		const declaration: JsViewFieldDeclaration = this.viewFieldParser.parseJsString(fullDeclaration, filePath);
 
-		const viewField = new JsViewFieldMDRC(containerEl, renderType, declaration, this.plugin, filePath, getUUID());
+		const viewField = new JsViewFieldMDRC(this.plugin, filePath, containerEl, renderType, declaration);
 		component.addChild(viewField);
 
 		return viewField;
@@ -251,7 +251,7 @@ export class API implements IAPI {
 	public createExcludedField(containerEl: HTMLElement, filePath: string, component: ComponentLike): ExcludedMDRC {
 		validateArgs(V_API_createExcludedField, [containerEl, filePath, component]);
 
-		const excludedField = new ExcludedMDRC(containerEl, RenderChildType.INLINE, this.plugin, filePath, getUUID());
+		const excludedField = new ExcludedMDRC(this.plugin, filePath, containerEl);
 		component.addChild(excludedField);
 
 		return excludedField;
@@ -318,16 +318,7 @@ export class API implements IAPI {
 	): MetaBindTable {
 		validateArgs(V_API_createTable, [containerEl, filePath, component, bindTarget, tableHead, columns]);
 
-		const table = new MetaBindTable(
-			containerEl,
-			RenderChildType.INLINE,
-			this.plugin,
-			filePath,
-			getUUID(),
-			bindTarget,
-			tableHead,
-			columns,
-		);
+		const table = new MetaBindTable(this.plugin, filePath, containerEl, bindTarget, tableHead, columns);
 		component.addChild(table);
 
 		return table;
@@ -351,7 +342,7 @@ export class API implements IAPI {
 			return this.createExcludedField(containerEl, filePath, component);
 		}
 
-		const button = new ButtonMDRC(containerEl, fullDeclaration, this.plugin, filePath, getUUID(), false);
+		const button = new ButtonMDRC(this.plugin, filePath, containerEl, fullDeclaration, false);
 		component.addChild(button);
 
 		return button;
@@ -369,7 +360,7 @@ export class API implements IAPI {
 			return this.createExcludedField(containerEl, filePath, component);
 		}
 
-		const button = new InlineButtonMDRC(containerEl, fullDeclaration, this.plugin, filePath, getUUID());
+		const button = new InlineButtonMDRC(this.plugin, filePath, containerEl, fullDeclaration);
 		component.addChild(button);
 
 		return button;

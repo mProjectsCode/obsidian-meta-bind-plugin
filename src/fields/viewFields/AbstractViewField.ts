@@ -1,13 +1,12 @@
-import { type ViewFieldVariable } from '../../renderChildren/ViewFieldMDRC';
-
 import { ViewFieldArgumentType } from '../../config/FieldConfigs';
 import { stringifyUnknown } from '../../utils/Literal';
-import { type IViewFieldBase } from './IViewFieldBase';
 import {
 	type ComputedMetadataSubscription,
 	type ComputedSubscriptionDependency,
 } from '../../metadata/ComputedMetadataSubscription';
 import { Signal } from '../../utils/Signal';
+import { type ViewFieldVariable } from './ViewFieldVariable';
+import { type IViewFieldBase } from './ViewFieldBase';
 
 export abstract class AbstractViewField {
 	readonly base: IViewFieldBase;
@@ -89,7 +88,7 @@ export abstract class AbstractViewField {
 				};
 			}),
 			async () => await this.computeValue(),
-			() => this.base.unload(),
+			() => this.base.destroy(),
 		);
 
 		void this.initialRender(container);

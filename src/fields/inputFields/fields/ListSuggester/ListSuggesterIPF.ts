@@ -2,7 +2,8 @@ import { AbstractInputField } from '../../AbstractInputField';
 import { type SvelteComponent } from 'svelte';
 import ListSuggesterComponent from './ListSuggesterComponent.svelte';
 import { type MBLiteral, parseUnknownToLiteralArray } from '../../../../utils/Literal';
-import { type IInputFieldBase } from '../../IInputFieldBase';
+
+import { type IInputFieldBase } from '../../InputFieldBase';
 
 export class ListSuggesterIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> {
 	constructor(renderChild: IInputFieldBase) {

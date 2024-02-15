@@ -3,7 +3,6 @@ import { AbstractMDRC } from './AbstractMDRC';
 export class ExcludedMDRC extends AbstractMDRC {
 	public onload(): void {
 		console.debug('meta-bind | ExcludedMDRC >> load', this);
-		this.plugin.mdrcManager.registerMDRC(this);
 
 		this.containerEl.empty();
 
@@ -11,12 +10,12 @@ export class ExcludedMDRC extends AbstractMDRC {
 			text: '[META_BIND] This folder has been excluded in the settings',
 			cls: 'mb-error',
 		});
+
+		super.onload();
 	}
 
 	public onunload(): void {
 		console.debug('meta-bind | ExcludedMDRC >> unload', this);
-
-		this.plugin.mdrcManager.unregisterMDRC(this);
 
 		super.onunload();
 	}

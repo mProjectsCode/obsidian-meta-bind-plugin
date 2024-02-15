@@ -405,7 +405,7 @@ describe('IPF', () => {
 	}
 
 	function loadIPF(): void {
-		ipfBase.load();
+		ipfBase.mount();
 	}
 
 	function setupTwoIPFs(testCase: IPFTestCase): void {
@@ -430,11 +430,11 @@ describe('IPF', () => {
 	}
 
 	function loadIPF1(): void {
-		ipfBase1.load();
+		ipfBase1.mount();
 	}
 
 	function loadIPF2(): void {
-		ipfBase2.load();
+		ipfBase2.mount();
 	}
 
 	function createInitialCache(initialMetadata: Metadata): void {

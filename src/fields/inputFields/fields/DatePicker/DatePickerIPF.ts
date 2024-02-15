@@ -5,7 +5,8 @@ import { type moment } from 'obsidian';
 import DatePickerComponent from './DatePickerComponent.svelte';
 import { DateParser } from '../../../../parsers/DateParser';
 import { InputFieldArgumentType } from '../../../../config/FieldConfigs';
-import { type IInputFieldBase } from '../../IInputFieldBase';
+
+import { type IInputFieldBase } from '../../InputFieldBase';
 
 export class DatePickerIPF extends AbstractInputField<string | null, moment.Moment | null> {
 	options: OptionInputFieldArgument[];

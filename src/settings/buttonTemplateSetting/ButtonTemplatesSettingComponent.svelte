@@ -98,8 +98,9 @@
 	<Button
 		on:click={() => addTemplateFromClipboard()}
 		variant="default"
-		tooltip="Create New Template from YAML in Clipboard">Add Template from Clipboard</Button
-	>
+		tooltip="Create New Template from YAML in Clipboard"
+		>Add Template from Clipboard
+	</Button>
 
 	{#if errorCollection}
 		<div>

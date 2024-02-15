@@ -1,32 +1,29 @@
 import { MarkdownRenderChild } from 'obsidian';
-import { ErrorCollection } from '../utils/errors/ErrorCollection';
 import type MetaBindPlugin from '../main';
-import { type RenderChildType } from '../config/FieldConfigs';
+import { getUUID } from '../utils/Utils';
 
 export class AbstractMDRC extends MarkdownRenderChild {
-	plugin: MetaBindPlugin;
-	/**
-	 * The path of the file that this MDRC is in. This can be wrong if the file was renamed.
-	 */
-	filePath: string;
-	uuid: string;
-	renderChildType: RenderChildType;
-	errorCollection: ErrorCollection;
+	readonly plugin: MetaBindPlugin;
+	readonly uuid: string;
+	readonly filePath: string;
 
-	constructor(
-		containerEl: HTMLElement,
-		renderChildType: RenderChildType,
-		plugin: MetaBindPlugin,
-		filePath: string,
-		uuid: string,
-	) {
+	constructor(plugin: MetaBindPlugin, filePath: string, containerEl: HTMLElement) {
 		super(containerEl);
 
-		this.renderChildType = renderChildType;
 		this.plugin = plugin;
 		this.filePath = filePath;
-		this.uuid = uuid;
+		this.uuid = getUUID();
+	}
 
-		this.errorCollection = new ErrorCollection(this.uuid);
+	onload(): void {
+		this.plugin.mdrcManager.registerMDRC(this);
+
+		super.onload();
+	}
+
+	public onunload(): void {
+		this.plugin.mdrcManager.unregisterMDRC(this);
+
+		super.onunload();
 	}
 }

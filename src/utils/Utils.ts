@@ -205,3 +205,44 @@ export function showUnloadedMessage(container: HTMLElement, subject: string): vo
 
 	container.appendChild(span);
 }
+
+export class DomHelpers {
+	static createElement<K extends keyof HTMLElementTagNameMap>(
+		parent: HTMLElement,
+		tagName: K,
+		options?: {
+			text?: string;
+			class?: string;
+		},
+	): HTMLElementTagNameMap[K] {
+		const el = document.createElement(tagName);
+		if (options?.text) {
+			el.innerText = options.text;
+		}
+		if (options?.class) {
+			el.className = options.class;
+		}
+		parent.appendChild(el);
+		return el;
+	}
+
+	static addClass(el: HTMLElement, cls: string): void {
+		el.classList.add(...cls.split(' '));
+	}
+
+	static addClasses(el: HTMLElement, cls: string[]): void {
+		el.classList.add(...cls);
+	}
+
+	static removeClass(el: HTMLElement, cls: string): void {
+		el.classList.remove(...cls.split(' '));
+	}
+
+	static hasClass(el: HTMLElement, cls: string): boolean {
+		return el.classList.contains(cls);
+	}
+
+	static empty(el: HTMLElement): void {
+		el.innerHTML = '';
+	}
+}

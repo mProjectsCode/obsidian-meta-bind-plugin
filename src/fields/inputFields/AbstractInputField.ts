@@ -3,8 +3,8 @@ import { type SvelteComponent } from 'svelte';
 import { ComputedSignal, Signal } from '../../utils/Signal';
 
 import { InputFieldArgumentType } from '../../config/FieldConfigs';
-import { type IInputFieldBase } from './IInputFieldBase';
 import { type MetadataSubscription } from '../../metadata/MetadataSubscription';
+import { type IInputFieldBase } from './InputFieldBase';
 
 export abstract class AbstractInputField<MetadataValueType, ComponentValueType> {
 	readonly base: IInputFieldBase;
@@ -150,7 +150,7 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 				this.base.getUuid(),
 				this.inputSignal,
 				bindTarget,
-				() => this.base.unload(),
+				() => this.base.destroy(),
 			);
 		}
 

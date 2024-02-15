@@ -1,9 +1,10 @@
-import { type IInternalAPI } from './IInternalAPI';
+import { type ErrorIndicatorProps, type IInternalAPI } from './IInternalAPI';
 import { type MetaBindPublishPlugin } from '../../publish/Publish';
 import { type DatePickerIPF } from '../../fields/inputFields/fields/DatePicker/DatePickerIPF';
 import { type ImageSuggesterIPF } from '../../fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
 import { type SuggesterLikeIFP, type SuggesterOption } from '../../fields/inputFields/fields/Suggester/SuggesterHelper';
 import { type MBLiteral } from '../../utils/Literal';
+import { type IJsRenderer } from '../../fields/viewFields/jsRenderer/IJsRenderer';
 
 // TODO: implement
 export class PublishAPIAdapter implements IInternalAPI {
@@ -39,12 +40,20 @@ export class PublishAPIAdapter implements IInternalAPI {
 		throw new Error('not implemented');
 	}
 
+	public isJsEngineAvailable(): boolean {
+		return false;
+	}
+
 	public jsEngineRunFile(_filePath: string, _callingFilePath: string, _container?: HTMLElement): Promise<() => void> {
 		return Promise.reject(new Error('not implemented'));
 	}
 
 	public jsEngineRunCode(_code: string, _callingFilePath: string, _container?: HTMLElement): Promise<() => void> {
 		return Promise.reject(new Error('not implemented'));
+	}
+
+	public createJsRenderer(_container: HTMLElement, _filePath: string, _code: string): IJsRenderer {
+		throw new Error('not implemented');
 	}
 
 	public openFile(_filePath: string, _callingFilePath: string, _newTab: boolean): void {
@@ -56,4 +65,6 @@ export class PublishAPIAdapter implements IInternalAPI {
 	}
 
 	public showNotice(_: string): void {}
+
+	public createErrorIndicator(_: HTMLElement, _props: ErrorIndicatorProps): void {}
 }

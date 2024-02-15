@@ -13,6 +13,7 @@ import { ButtonActionRunner } from '../../src/fields/button/ButtonActionRunner';
 import { TestPlugin } from './TestPlugin';
 import { ButtonManager } from '../../src/fields/button/ButtonManager';
 import { SyntaxHighlightingAPI } from '../../src/api/SyntaxHighlightingAPI';
+import { ViewFieldFactory } from '../../src/fields/viewFields/ViewFieldFactory';
 
 export class TestAPI implements IAPI {
 	public readonly plugin: TestPlugin;
@@ -22,6 +23,7 @@ export class TestAPI implements IAPI {
 	public readonly viewFieldParser: ViewFieldParser;
 
 	public readonly inputFieldFactory: InputFieldFactory;
+	public readonly viewFieldFactory: ViewFieldFactory;
 
 	public readonly inputField: InputFieldAPI;
 
@@ -38,6 +40,7 @@ export class TestAPI implements IAPI {
 		this.bindTargetParser = new BindTargetParser(this.plugin);
 
 		this.inputFieldFactory = new InputFieldFactory(this.plugin);
+		this.viewFieldFactory = new ViewFieldFactory(this.plugin);
 
 		this.inputField = new InputFieldAPI(this);
 

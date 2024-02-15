@@ -2,20 +2,24 @@
 	import { ErrorCollection } from './ErrorCollection';
 	import { ErrorCollectionViewModal } from './ErrorCollectionViewModal';
 	import { App } from 'obsidian';
+	import { ErrorIndicatorProps } from '../../api/internalApi/IInternalAPI';
 
 	export let app: App;
-	export let errorCollection: ErrorCollection;
-	export let declaration: string | undefined;
+
+	export let props: ErrorIndicatorProps;
+
+	let errorCollection: ErrorCollection = props.errorCollection;
 
 	function openModal() {
-		const modal = new ErrorCollectionViewModal(app, {
-			errorCollection: errorCollection,
-			errorText:
-				'Errors caused the creation of the field to fail. Sometimes one error only occurs because of another.',
-			warningText:
-				'Warnings will not cause the creation of a field to fail, but they indicate that a part of the declaration was invalid or uses deprecated functionality.',
-			code: declaration,
-		});
+		// const modal = new ErrorCollectionViewModal(app, {
+		// 	errorCollection: errorCollection,
+		// 	errorText:
+		// 		'Errors caused the creation of the field to fail. Sometimes one error only occurs because of another.',
+		// 	warningText:
+		// 		'Warnings will not cause the creation of a field to fail, but they indicate that a part of the declaration was invalid or uses deprecated functionality.',
+		// 	code: declaration,
+		// });
+		const modal = new ErrorCollectionViewModal(app, props);
 		modal.open();
 	}
 </script>

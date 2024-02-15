@@ -4,7 +4,8 @@ import TextComponent from './TextComponent.svelte';
 
 import { InputFieldArgumentType } from '../../../../config/FieldConfigs';
 import { parseUnknownToString } from '../../../../utils/Literal';
-import { type IInputFieldBase } from '../../IInputFieldBase';
+
+import { type IInputFieldBase } from '../../InputFieldBase';
 
 export class TextIPF extends AbstractInputField<string, string> {
 	constructor(renderChild: IInputFieldBase) {

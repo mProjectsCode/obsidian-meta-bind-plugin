@@ -3,27 +3,22 @@ import type MetaBindPlugin from '../main';
 import { MarkdownRenderer } from 'obsidian';
 import { MDLinkParser } from '../parsers/MarkdownLinkParser';
 import { ErrorLevel, MetaBindEmbedError } from '../utils/errors/MetaBindErrors';
-import { RenderChildType } from '../config/FieldConfigs';
-import { showUnloadedMessage } from '../utils/Utils';
+import { getUUID, showUnloadedMessage } from '../utils/Utils';
 
 export const EMBED_MAX_DEPTH = 8;
 
 export class EmbedMDRC extends AbstractMDRC {
 	content: string;
 	depth: number;
+	uuid: string;
 
-	constructor(
-		containerEl: HTMLElement,
-		content: string,
-		plugin: MetaBindPlugin,
-		filePath: string,
-		uuid: string,
-		depth: number,
-	) {
-		super(containerEl, RenderChildType.BLOCK, plugin, filePath, uuid);
+	constructor(plugin: MetaBindPlugin, filePath: string, containerEl: HTMLElement, content: string, depth: number) {
+		super(plugin, filePath, containerEl);
 
 		this.content = content;
 		this.depth = depth;
+
+		this.uuid = getUUID();
 	}
 
 	async parseContent(): Promise<string> {
@@ -66,8 +61,6 @@ export class EmbedMDRC extends AbstractMDRC {
 	public async onload(): Promise<void> {
 		console.debug('meta-bind | EmbedMDRC >> unload', this);
 
-		this.plugin.mdrcManager.registerMDRC(this);
-
 		if (this.depth >= EMBED_MAX_DEPTH) {
 			this.containerEl.empty();
 			this.containerEl.addClass('mb-error');
@@ -77,12 +70,12 @@ export class EmbedMDRC extends AbstractMDRC {
 
 			await MarkdownRenderer.render(this.plugin.app, fileContent, this.containerEl, this.filePath, this);
 		}
+
+		super.onload();
 	}
 
 	public onunload(): void {
 		console.debug('meta-bind | EmbedMDRC >> unload', this);
-
-		this.plugin.mdrcManager.unregisterMDRC(this);
 
 		showUnloadedMessage(this.containerEl, 'embed');
 

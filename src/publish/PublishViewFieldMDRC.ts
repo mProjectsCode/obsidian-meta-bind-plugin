@@ -3,11 +3,11 @@ import { type PublishAPI } from './PublishAPI';
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
 import * as MathJs from 'mathjs';
 import { ErrorLevel, MetaBindExpressionError } from '../utils/errors/MetaBindErrors';
-import { type ViewFieldVariable } from '../renderChildren/ViewFieldMDRC';
 import { Signal } from '../utils/Signal';
 import PublishFieldComponent from './PublishFieldComponent.svelte';
 import { type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
 import { getUUID } from '../utils/Utils';
+import { type ViewFieldVariable } from '../fields/viewFields/ViewFieldVariable';
 
 export class PublishViewFieldMDRC extends MarkdownRenderChild {
 	api: PublishAPI;

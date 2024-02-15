@@ -7,6 +7,7 @@ import { type InputFieldFactory } from '../fields/inputFields/InputFieldFactory'
 import { type ButtonActionRunner } from '../fields/button/ButtonActionRunner';
 import { type ButtonManager } from '../fields/button/ButtonManager';
 import { type SyntaxHighlightingAPI } from './SyntaxHighlightingAPI';
+import { type ViewFieldFactory } from '../fields/viewFields/ViewFieldFactory';
 
 export interface IAPI {
 	readonly plugin: IPlugin;
@@ -29,6 +30,7 @@ export interface IAPI {
 	readonly bindTargetParser: BindTargetParser;
 
 	readonly inputFieldFactory: InputFieldFactory;
+	readonly viewFieldFactory: ViewFieldFactory;
 
 	readonly buttonActionRunner: ButtonActionRunner;
 	readonly buttonManager: ButtonManager;

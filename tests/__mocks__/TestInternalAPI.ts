@@ -1,11 +1,12 @@
-import { IInternalAPI } from '../../src/api/internalApi/IInternalAPI';
+import { type ErrorIndicatorProps, IInternalAPI } from '../../src/api/internalApi/IInternalAPI';
 import { DatePickerIPF } from '../../src/fields/inputFields/fields/DatePicker/DatePickerIPF';
 import { ImageSuggesterIPF } from '../../src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
 import { SuggesterLikeIFP, SuggesterOption } from '../../src/fields/inputFields/fields/Suggester/SuggesterHelper';
 import { MBLiteral } from '../../src/utils/Literal';
 import { TestPlugin } from './TestPlugin';
+import { IJsRenderer } from '../../src/fields/viewFields/jsRenderer/IJsRenderer';
 
-export class TestAPIAdapter implements IInternalAPI {
+export class TestInternalAPI implements IInternalAPI {
 	plugin: TestPlugin;
 
 	constructor(plugin: TestPlugin) {
@@ -38,12 +39,20 @@ export class TestAPIAdapter implements IInternalAPI {
 		return true;
 	}
 
+	public isJsEngineAvailable(): boolean {
+		return false;
+	}
+
 	public jsEngineRunFile(_filePath: string, _callingFilePath: string, _container?: HTMLElement): Promise<() => void> {
 		return Promise.reject(new Error('not implemented'));
 	}
 
 	public jsEngineRunCode(_code: string, _callingFilePath: string, _container?: HTMLElement): Promise<() => void> {
 		return Promise.reject(new Error('not implemented'));
+	}
+
+	public createJsRenderer(_container: HTMLElement, _filePath: string, _code: string): IJsRenderer {
+		throw new Error('not implemented');
 	}
 
 	public openFile(_filePath: string, _callingFilePath: string, _newTab: boolean): void {
@@ -55,4 +64,6 @@ export class TestAPIAdapter implements IInternalAPI {
 	}
 
 	public showNotice(_: string): void {}
+
+	public createErrorIndicator(_: HTMLElement, _props: ErrorIndicatorProps): void {}
 }

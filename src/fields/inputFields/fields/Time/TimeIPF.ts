@@ -3,7 +3,8 @@ import { type Time, TimeParser } from '../../../../parsers/TimeParser';
 import { type SvelteComponent } from 'svelte';
 import TimeComponent from './TimeComponent.svelte';
 import { parseUnknownToString } from '../../../../utils/Literal';
-import { type IInputFieldBase } from '../../IInputFieldBase';
+
+import { type IInputFieldBase } from '../../InputFieldBase';
 
 export class TimeIPF extends AbstractInputField<string, Time> {
 	constructor(renderChild: IInputFieldBase) {

@@ -4,7 +4,8 @@ import { type SvelteComponent } from 'svelte';
 import MultiSelectComponent from './MultiSelectComponent.svelte';
 import { InputFieldArgumentType } from '../../../../config/FieldConfigs';
 import { type MBLiteral, parseUnknownToLiteralArray } from '../../../../utils/Literal';
-import { type IInputFieldBase } from '../../IInputFieldBase';
+
+import { type IInputFieldBase } from '../../InputFieldBase';
 
 export class MultiSelectIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> {
 	options: OptionInputFieldArgument[];

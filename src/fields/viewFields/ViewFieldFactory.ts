@@ -1,10 +1,11 @@
 import { type IPlugin } from '../../IPlugin';
-import { type ViewFieldMDRC } from '../../renderChildren/ViewFieldMDRC';
 import { type AbstractViewField } from './AbstractViewField';
 import { MathVF } from './fields/MathVF';
 import { TextVF } from './fields/TextVF';
 import { ViewFieldType } from '../../config/FieldConfigs';
 import { LinkVF } from './fields/LinkVF';
+
+import { type IViewFieldBase } from './ViewFieldBase';
 
 export class ViewFieldFactory {
 	plugin: IPlugin;
@@ -13,7 +14,7 @@ export class ViewFieldFactory {
 		this.plugin = plugin;
 	}
 
-	createViewField(type: ViewFieldType, renderChild: ViewFieldMDRC): AbstractViewField | undefined {
+	createViewField(type: ViewFieldType, renderChild: IViewFieldBase): AbstractViewField | undefined {
 		// Skipped: Date, Time, Image Suggester
 
 		if (type === ViewFieldType.MATH) {

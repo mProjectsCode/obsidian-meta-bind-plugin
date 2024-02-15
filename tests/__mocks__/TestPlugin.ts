@@ -1,6 +1,6 @@
 import { IPlugin } from '../../src/IPlugin';
 import { MetadataManager } from '../../src/metadata/MetadataManager';
-import { TestAPIAdapter } from './TestAPIAdapter';
+import { TestInternalAPI } from './TestInternalAPI';
 import { DEFAULT_SETTINGS, MetaBindPluginSettings } from '../../src/settings/Settings';
 import { DateParser } from '../../src/parsers/DateParser';
 import { setFirstWeekday } from '../../src/utils/DatePickerUtils';
@@ -15,13 +15,13 @@ import { BindTargetStorageType } from '../../src/parsers/bindTargetParser/BindTa
 export class TestPlugin implements IPlugin {
 	public api: TestAPI;
 	public metadataManager: MetadataManager;
-	public internal: TestAPIAdapter;
+	public internal: TestInternalAPI;
 
 	public settings: MetaBindPluginSettings;
 
 	constructor() {
 		this.api = new TestAPI(this);
-		this.internal = new TestAPIAdapter(this);
+		this.internal = new TestInternalAPI(this);
 		this.metadataManager = new MetadataManager();
 		this.setUpMetadataManager();
 

@@ -3,7 +3,6 @@
 	import { createEventDispatcher } from 'svelte';
 	import Button from '../../utils/components/Button.svelte';
 	import Icon from '../../utils/components/Icon.svelte';
-	import SettingComponent from '../../utils/components/SettingComponent.svelte';
 	import { ButtonStyleType } from '../../config/ButtonConfig';
 	import FlexRow from '../../utils/components/FlexRow.svelte';
 

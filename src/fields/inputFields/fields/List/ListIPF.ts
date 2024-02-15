@@ -3,7 +3,8 @@ import { type SvelteComponent } from 'svelte';
 import ListComponent from './ListComponent.svelte';
 import { InputFieldArgumentType } from '../../../../config/FieldConfigs';
 import { type MBLiteral, parseUnknownToLiteralArray } from '../../../../utils/Literal';
-import { type IInputFieldBase } from '../../IInputFieldBase';
+
+import { type IInputFieldBase } from '../../InputFieldBase';
 
 export class ListIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> {
 	constructor(renderChild: IInputFieldBase) {

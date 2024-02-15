@@ -1,7 +1,7 @@
-import { type IMetadataSource, FilePathMetadataSource, type Metadata } from './MetadataSource';
+import { FilePathMetadataSource, type IMetadataSource, type Metadata } from './MetadataSource';
 import {
-	type GlobalMetadataCacheItem,
 	type FilePathMetadataCacheItem,
+	type GlobalMetadataCacheItem,
 	type IMetadataCacheItem,
 } from './MetadataCacheItem';
 import { type MetadataManager } from './MetadataManager';

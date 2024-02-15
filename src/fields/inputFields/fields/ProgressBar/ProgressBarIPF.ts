@@ -5,7 +5,8 @@ import ProgressBarComponent from './ProgressBarComponent.svelte';
 import { ErrorLevel, MetaBindArgumentError } from '../../../../utils/errors/MetaBindErrors';
 import { InputFieldArgumentType } from '../../../../config/FieldConfigs';
 import { parseUnknownToFloat } from '../../../../utils/Literal';
-import { type IInputFieldBase } from '../../IInputFieldBase';
+
+import { type IInputFieldBase } from '../../InputFieldBase';
 
 export class ProgressBarIPF extends AbstractInputField<number, number> {
 	minValue: number;

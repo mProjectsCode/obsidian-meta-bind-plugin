@@ -15,6 +15,6 @@ export function getDataViewPluginAPI(plugin: MetaBindPlugin): DataviewApi {
 
 export function getJsEnginePluginAPI(plugin: MetaBindPlugin): JsEngineAPI {
 	/* eslint-disable */
-	const dataViewPlugin = plugin.dependencyManager.checkDependency('js-engine');
-	return (dataViewPlugin as any).api as JsEngineAPI;
+	const jsEnginePlugin = plugin.dependencyManager.checkDependency('js-engine');
+	return (jsEnginePlugin as any).api as JsEngineAPI;
 }
