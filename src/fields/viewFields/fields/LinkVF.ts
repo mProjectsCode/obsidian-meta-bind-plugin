@@ -5,14 +5,13 @@ import { ErrorLevel, MetaBindExpressionError, MetaBindValidationError } from '..
 import LinkListComponent from '../../../utils/components/LinkListComponent.svelte';
 import { MDLinkParser } from '../../../parsers/MarkdownLinkParser';
 import { type BindTargetDeclaration } from '../../../parsers/bindTargetParser/BindTargetDeclaration';
-
-import { type IViewFieldBase } from '../ViewFieldBase';
+import { type ViewFieldBase } from '../ViewFieldBase';
 
 export class LinkVF extends AbstractViewField {
 	component?: LinkListComponent;
 
-	constructor(renderChild: IViewFieldBase) {
-		super(renderChild);
+	constructor(base: ViewFieldBase) {
+		super(base);
 	}
 
 	protected buildVariables(): void {
@@ -93,7 +92,9 @@ export class LinkVF extends AbstractViewField {
 		});
 	}
 
-	protected onunmount(): void {
+	protected onUnmount(): void {
+		super.onUnmount();
+
 		this.component?.$destroy();
 	}
 }

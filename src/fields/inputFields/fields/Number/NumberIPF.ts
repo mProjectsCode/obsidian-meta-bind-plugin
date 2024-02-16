@@ -4,13 +4,7 @@ import NumberComponent from './NumberComponent.svelte';
 import { InputFieldArgumentType } from '../../../../config/FieldConfigs';
 import { parseUnknownToFloat } from '../../../../utils/Literal';
 
-import { type IInputFieldBase } from '../../InputFieldBase';
-
 export class NumberIPF extends AbstractInputField<number, number> {
-	constructor(renderChild: IInputFieldBase) {
-		super(renderChild);
-	}
-
 	protected filterValue(value: unknown): number | undefined {
 		return parseUnknownToFloat(value);
 	}

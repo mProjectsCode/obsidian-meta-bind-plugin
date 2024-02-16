@@ -3,14 +3,8 @@ import { type SvelteComponent } from 'svelte';
 import EditorComponent from './EditorComponent.svelte';
 import { isLiteral } from '../../../../utils/Literal';
 
-import { type IInputFieldBase } from '../../InputFieldBase';
-
 export class EditorIPF extends AbstractInputField<string, string> {
 	mdUnloadCallback: (() => void) | undefined;
-
-	constructor(renderChild: IInputFieldBase) {
-		super(renderChild);
-	}
 
 	protected filterValue(value: unknown): string | undefined {
 		return isLiteral(value) ? value?.toString() : undefined;
@@ -45,8 +39,9 @@ export class EditorIPF extends AbstractInputField<string, string> {
 		this.mdUnloadCallback = await this.base.plugin.internal.renderMarkdown(value, el, this.base.getFilePath());
 	}
 
-	protected onunmount(): void {
-		super.onunmount();
+	protected onUnmount(): void {
+		super.onUnmount();
+
 		this.mdUnloadCallback?.();
 	}
 }

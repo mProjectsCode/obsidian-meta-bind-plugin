@@ -5,8 +5,9 @@ import { type SyntaxNode } from '@lezer/common';
 import { Component, editorLivePreviewField, type TFile } from 'obsidian';
 import type MetaBindPlugin from '../main';
 import { Cm6_Util, MB_WidgetType } from './Cm6_Util';
-import { type InlineMDRCType, InlineMDRCUtils } from '../utils/InlineMDRCUtils';
+import { MDRCWidgetUtils } from './MDRCWidgetUtils';
 import { summary } from 'itertools-ts/es';
+import { type FieldType } from '../api/API';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlugin): ViewPlugin<any> {
@@ -146,7 +147,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				view: EditorView,
 				widgetType: MB_WidgetType,
 				content: string,
-				mdrcType: InlineMDRCType,
+				mdrcType: FieldType,
 			): void {
 				const from = node.from - 1;
 				const to = node.to + 1;
@@ -191,7 +192,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				shouldRender: boolean;
 				shouldHighlight: boolean;
 				content: string | undefined;
-				widgetType: InlineMDRCType | undefined;
+				widgetType: FieldType | undefined;
 			} {
 				// get the node props
 				// const propsString: string | undefined = node.type.prop<string>(tokenClassNodeProp);
@@ -230,11 +231,11 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				view: EditorView,
 				from: number,
 				to: number,
-			): { content: string; widgetType: InlineMDRCType | undefined } {
+			): { content: string; widgetType: FieldType | undefined } {
 				const content = Cm6_Util.getContent(view.state, from, to);
 				return {
 					content: content,
-					widgetType: InlineMDRCUtils.isDeclarationAndGetMDRCType(content),
+					widgetType: MDRCWidgetUtils.isDeclarationAndGetMDRCType(content),
 				};
 			}
 
@@ -311,13 +312,13 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			 */
 			renderWidget(
 				node: SyntaxNode,
-				mdrcType: InlineMDRCType,
+				mdrcType: FieldType,
 				widgetType: MB_WidgetType,
 				content: string,
 				currentFile: TFile,
 			): Range<Decoration> | Range<Decoration>[] {
 				if (widgetType === MB_WidgetType.FIELD) {
-					const widget = InlineMDRCUtils.constructMDRCWidget(
+					const widget = MDRCWidgetUtils.constructMDRCWidget(
 						mdrcType,
 						content,
 						currentFile.path,

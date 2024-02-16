@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { schemaForType } from '../utils/ZodUtils';
-import { type API, type ComponentLike } from './API';
+import { type ComponentLike, type ObsidianAPI } from './ObsidianAPI';
 import { RenderChildType } from '../config/FieldConfigs';
 import {
 	type UnvalidatedFieldArgument,
@@ -115,7 +115,7 @@ export const V_ComponentLike = schemaForType<ComponentLike>()(
 	}),
 );
 
-export const V_API_createInputField = schemaForType<Parameters<InstanceType<typeof API>['createInputField']>>()(
+export const V_API_createInputField = schemaForType<Parameters<InstanceType<typeof ObsidianAPI>['createInputField']>>()(
 	z.tuple([
 		V_UnvalidatedInputFieldDeclaration,
 		V_RenderChildType,
@@ -127,26 +127,26 @@ export const V_API_createInputField = schemaForType<Parameters<InstanceType<type
 );
 
 export const V_API_createInputFieldFromString = schemaForType<
-	Parameters<InstanceType<typeof API>['createInputFieldFromString']>
+	Parameters<InstanceType<typeof ObsidianAPI>['createInputFieldFromString']>
 >()(z.tuple([z.string(), V_RenderChildType, V_FilePath, V_HTMLElement, V_ComponentLike, V_BindTargetScope.optional()]));
 
 export const V_API_createViewFieldFromString = schemaForType<
-	Parameters<InstanceType<typeof API>['createViewFieldFromString']>
+	Parameters<InstanceType<typeof ObsidianAPI>['createViewFieldFromString']>
 >()(z.tuple([z.string(), V_RenderChildType, V_FilePath, V_HTMLElement, V_ComponentLike, V_BindTargetScope.optional()]));
 
 export const V_API_createJsViewFieldFromString = schemaForType<
-	Parameters<InstanceType<typeof API>['createJsViewFieldFromString']>
+	Parameters<InstanceType<typeof ObsidianAPI>['createJsViewFieldFromString']>
 >()(z.tuple([z.string(), V_RenderChildType, V_FilePath, V_HTMLElement, V_ComponentLike]));
 
-export const V_API_createExcludedField = schemaForType<Parameters<InstanceType<typeof API>['createExcludedField']>>()(
-	z.tuple([V_HTMLElement, V_FilePath, V_ComponentLike]),
-);
+export const V_API_createExcludedField = schemaForType<
+	Parameters<InstanceType<typeof ObsidianAPI>['createExcludedField']>
+>()(z.tuple([V_HTMLElement, V_FilePath, V_ComponentLike]));
 
-export const V_API_listenToMetadata = schemaForType<Parameters<InstanceType<typeof API>['listenToMetadata']>>()(
+export const V_API_listenToMetadata = schemaForType<Parameters<InstanceType<typeof ObsidianAPI>['listenToMetadata']>>()(
 	z.tuple([V_Signal, V_FilePath, z.array(z.string()), z.boolean(), V_VoidFunction.optional()]),
 );
 
-export const V_API_createTable = schemaForType<Parameters<InstanceType<typeof API>['createTable']>>()(
+export const V_API_createTable = schemaForType<Parameters<InstanceType<typeof ObsidianAPI>['createTable']>>()(
 	z.tuple([
 		V_HTMLElement,
 		V_FilePath,
@@ -157,14 +157,14 @@ export const V_API_createTable = schemaForType<Parameters<InstanceType<typeof AP
 	]),
 );
 
-export const V_API_createBindTarget = schemaForType<Parameters<InstanceType<typeof API>['createBindTarget']>>()(
+export const V_API_createBindTarget = schemaForType<Parameters<InstanceType<typeof ObsidianAPI>['createBindTarget']>>()(
 	z.tuple([z.string(), V_FilePath]),
 );
 
 export const V_API_createButtonFromString = schemaForType<
-	Parameters<InstanceType<typeof API>['createButtonFromString']>
+	Parameters<InstanceType<typeof ObsidianAPI>['createButtonFromString']>
 >()(z.tuple([z.string(), V_FilePath, V_HTMLElement, V_ComponentLike]));
 
 export const V_API_createInlineButtonFromString = schemaForType<
-	Parameters<InstanceType<typeof API>['createInlineButtonFromString']>
+	Parameters<InstanceType<typeof ObsidianAPI>['createInlineButtonFromString']>
 >()(z.tuple([z.string(), V_FilePath, V_HTMLElement, V_ComponentLike]));

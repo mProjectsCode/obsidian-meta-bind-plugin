@@ -1,4 +1,4 @@
-import { type ErrorIndicatorProps, IInternalAPI } from '../../src/api/internalApi/IInternalAPI';
+import { type ErrorIndicatorProps, IInternalAPI } from '../../src/api/IInternalAPI';
 import { DatePickerIPF } from '../../src/fields/inputFields/fields/DatePicker/DatePickerIPF';
 import { ImageSuggesterIPF } from '../../src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
 import { SuggesterLikeIFP, SuggesterOption } from '../../src/fields/inputFields/fields/Suggester/SuggesterHelper';
@@ -66,4 +66,8 @@ export class TestInternalAPI implements IInternalAPI {
 	public showNotice(_: string): void {}
 
 	public createErrorIndicator(_: HTMLElement, _props: ErrorIndicatorProps): void {}
+
+	public parseYaml(_yaml: string): unknown {
+		return {};
+	}
 }

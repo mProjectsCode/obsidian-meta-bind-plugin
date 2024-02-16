@@ -1,13 +1,24 @@
 import type { IPlugin } from '../IPlugin';
+import { Mountable } from '../utils/Mountable';
 
-export interface IFieldBase {
+export abstract class FieldBase extends Mountable {
 	readonly plugin: IPlugin;
+	private readonly filePath: string;
+	private readonly uuid: string;
 
-	getUuid(): string;
+	protected constructor(plugin: IPlugin, uuid: string, filePath: string) {
+		super();
 
-	getFilePath(): string;
+		this.plugin = plugin;
+		this.filePath = filePath;
+		this.uuid = uuid;
+	}
 
-	mount(): void;
+	getUuid(): string {
+		return this.uuid;
+	}
 
-	destroy(): void;
+	getFilePath(): string {
+		return this.filePath;
+	}
 }

@@ -242,6 +242,10 @@ export class DomHelpers {
 		return el.classList.contains(cls);
 	}
 
+	static removeAllClasses(el: HTMLElement): void {
+		el.className = '';
+	}
+
 	static empty(el: HTMLElement): void {
 		el.innerHTML = '';
 	}

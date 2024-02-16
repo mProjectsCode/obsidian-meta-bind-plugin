@@ -5,7 +5,7 @@ import { getUUID } from '../../../utils/Utils';
 import { compile as MathJsCompile, type EvalFunction } from 'mathjs';
 import { parseLiteral } from '../../../utils/Literal';
 import { type ViewFieldVariable } from '../ViewFieldVariable';
-import { type IViewFieldBase } from '../ViewFieldBase';
+import { type ViewFieldBase } from '../ViewFieldBase';
 
 export class MathVF extends AbstractViewField {
 	container?: HTMLElement;
@@ -15,8 +15,8 @@ export class MathVF extends AbstractViewField {
 
 	hidden: boolean;
 
-	constructor(renderChild: IViewFieldBase) {
-		super(renderChild);
+	constructor(base: ViewFieldBase) {
+		super(base);
 
 		this.hidden = false;
 

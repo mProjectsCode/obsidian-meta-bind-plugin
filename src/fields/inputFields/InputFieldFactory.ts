@@ -21,8 +21,7 @@ import { type InputFieldConfig, InputFieldConfigs, InputFieldType, RenderChildTy
 import { DocsUtils } from '../../utils/DocsUtils';
 import { InlineListSuggesterIPF } from './fields/InlineListSuggester/InlineListSuggesterIPF';
 import { InlineListIPF } from './fields/InlineList/InlineListIPF';
-
-import { type IInputFieldBase } from './InputFieldBase';
+import { type InputFieldBase } from './InputFieldBase';
 
 export type InputField =
 	| ToggleIPF
@@ -52,11 +51,10 @@ export class InputFieldFactory {
 		this.plugin = plugin;
 	}
 
-	createInputField(
-		type: InputFieldType,
-		renderChildType: RenderChildType,
-		base: IInputFieldBase,
-	): InputField | undefined {
+	createInputField(base: InputFieldBase): InputField | undefined {
+		const type = base.declaration.inputFieldType;
+		const renderChildType = base.renderChildType;
+
 		if (type !== InputFieldType.INVALID) {
 			this.checkRenderChildTypeAllowed(type, renderChildType);
 		}

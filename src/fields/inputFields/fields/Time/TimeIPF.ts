@@ -4,13 +4,7 @@ import { type SvelteComponent } from 'svelte';
 import TimeComponent from './TimeComponent.svelte';
 import { parseUnknownToString } from '../../../../utils/Literal';
 
-import { type IInputFieldBase } from '../../InputFieldBase';
-
 export class TimeIPF extends AbstractInputField<string, Time> {
-	constructor(renderChild: IInputFieldBase) {
-		super(renderChild);
-	}
-
 	protected filterValue(value: unknown): string | undefined {
 		const strValue = parseUnknownToString(value);
 		return TimeParser.parse(strValue) ? strValue : undefined;

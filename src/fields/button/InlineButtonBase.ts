@@ -1,51 +1,35 @@
-import { type IFieldBase } from '../IFieldBase';
 import { type IPlugin } from '../../IPlugin';
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { InlineButtonField } from './InlineButtonField';
-import { showUnloadedMessage } from '../../utils/Utils';
+import { DomHelpers, showUnloadedMessage } from '../../utils/Utils';
+import { FieldBase } from '../IFieldBase';
 
-export type IInlineButtonBase = IFieldBase;
-
-export class InlineButtonBase implements IInlineButtonBase {
-	readonly plugin: IPlugin;
-	filePath: string;
-	uuid: string;
+export class InlineButtonBase extends FieldBase {
 	errorCollection: ErrorCollection;
-	containerEl: HTMLElement;
 
 	declarationString: string;
 	buttonField: InlineButtonField | undefined;
 
-	constructor(plugin: IPlugin, uuid: string, filePath: string, containerEl: HTMLElement, declaration: string) {
-		this.plugin = plugin;
-		this.filePath = filePath;
-		this.containerEl = containerEl;
+	constructor(plugin: IPlugin, uuid: string, filePath: string, declaration: string) {
+		super(plugin, uuid, filePath);
+
 		this.declarationString = declaration;
 
-		this.uuid = uuid;
-		this.errorCollection = new ErrorCollection(this.uuid);
+		this.errorCollection = new ErrorCollection(this.getUuid());
 	}
 
-	getUuid(): string {
-		return this.uuid;
-	}
+	protected onMount(targetEl: HTMLElement): void {
+		console.debug('meta-bind | InlineButtonBase >> mount', this.declarationString);
 
-	getFilePath(): string {
-		return this.filePath;
-	}
-
-	mount(): void {
-		console.debug('meta-bind | InlineButtonBase >> mount');
-
-		this.containerEl.className = '';
-		this.buttonField = new InlineButtonField(this.plugin, this.declarationString, this.filePath);
+		DomHelpers.removeAllClasses(targetEl);
+		this.buttonField = new InlineButtonField(this.plugin, this.declarationString, this.getFilePath());
 
 		try {
-			this.buttonField.mount(this.containerEl);
+			this.buttonField.mount(targetEl);
 		} catch (e) {
 			this.errorCollection.add(e);
 
-			this.plugin.internal.createErrorIndicator(this.containerEl, {
+			this.plugin.internal.createErrorIndicator(targetEl, {
 				errorCollection: this.errorCollection,
 				errorText:
 					'Errors caused the creation of the field to fail. Sometimes one error only occurs because of another.',
@@ -56,11 +40,11 @@ export class InlineButtonBase implements IInlineButtonBase {
 		}
 	}
 
-	destroy(): void {
-		console.debug('meta-bind | InlineButtonBase >> destroy');
+	protected onUnmount(targetEl: HTMLElement): void {
+		console.debug('meta-bind | InlineButtonBase >> destroy', this.declarationString);
 
 		this.buttonField?.unmount();
 
-		showUnloadedMessage(this.containerEl, 'inline button');
+		showUnloadedMessage(targetEl, 'inline button');
 	}
 }

@@ -6,25 +6,11 @@ import { type AbstractViewField } from './AbstractViewField';
 import type { ViewFieldDeclaration } from '../../parsers/viewFieldParser/ViewFieldDeclaration';
 import { type ViewFieldArgumentMapType } from '../fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
 import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
-import type { IFieldBase } from '../IFieldBase';
+import { FieldBase } from '../IFieldBase';
 
-export interface IViewFieldBase extends IFieldBase {
-	getDeclaration(): ViewFieldDeclaration;
-
-	hasArgument<T extends ViewFieldArgumentType>(name: T): boolean;
-
-	getArguments<T extends ViewFieldArgumentType>(name: T): ViewFieldArgumentMapType<T>[];
-
-	getArgument<T extends ViewFieldArgumentType>(name: T): ViewFieldArgumentMapType<T> | undefined;
-}
-
-export class ViewFieldBase implements IViewFieldBase {
-	readonly plugin: IPlugin;
-	filePath: string;
-	uuid: string;
+export class ViewFieldBase extends FieldBase {
 	renderChildType: RenderChildType;
 	errorCollection: ErrorCollection;
-	containerEl: HTMLElement;
 
 	viewField: AbstractViewField | undefined;
 	declarationString: string | undefined;
@@ -34,20 +20,16 @@ export class ViewFieldBase implements IViewFieldBase {
 		plugin: IPlugin,
 		uuid: string,
 		filePath: string,
-		containerEl: HTMLElement,
 		renderChildType: RenderChildType,
 		declaration: ViewFieldDeclaration,
 	) {
-		this.plugin = plugin;
-		this.filePath = filePath;
-		this.containerEl = containerEl;
+		super(plugin, uuid, filePath);
+
 		this.renderChildType = renderChildType;
 		this.declaration = declaration;
-
 		this.declarationString = declaration.fullDeclaration;
 
-		this.uuid = uuid;
-		this.errorCollection = new ErrorCollection(this.uuid);
+		this.errorCollection = new ErrorCollection(this.getUuid());
 		this.errorCollection.merge(declaration.errorCollection);
 	}
 
@@ -75,18 +57,10 @@ export class ViewFieldBase implements IViewFieldBase {
 		return this.declaration;
 	}
 
-	public getFilePath(): string {
-		return this.filePath;
-	}
-
-	public getUuid(): string {
-		return this.uuid;
-	}
-
 	private createViewField(): void {
 		if (!this.errorCollection.hasErrors()) {
 			try {
-				this.viewField = this.plugin.api.viewFieldFactory.createViewField(this.declaration.viewFieldType, this);
+				this.viewField = this.plugin.api.viewFieldFactory.createViewField(this);
 			} catch (e) {
 				this.errorCollection.add(e);
 			}
@@ -114,16 +88,16 @@ export class ViewFieldBase implements IViewFieldBase {
 		});
 	}
 
-	public mount(): void {
-		console.debug('meta-bind | ViewFieldBase >> mount', this);
+	protected onMount(targetEl: HTMLElement): void {
+		console.debug('meta-bind | ViewFieldBase >> mount', this.declaration);
 
-		DomHelpers.empty(this.containerEl);
-		DomHelpers.addClass(this.containerEl, 'mb-view');
+		DomHelpers.empty(targetEl);
+		DomHelpers.addClass(targetEl, 'mb-view');
 
 		this.createViewField();
 
 		if (this.errorCollection.hasErrors()) {
-			this.createErrorIndicator(this.containerEl);
+			this.createErrorIndicator(targetEl);
 			return;
 		}
 
@@ -136,23 +110,23 @@ export class ViewFieldBase implements IViewFieldBase {
 			this.errorCollection.add(e);
 		}
 
-		this.createErrorIndicator(this.containerEl);
-		this.containerEl.append(wrapperEl);
+		this.createErrorIndicator(targetEl);
+		targetEl.append(wrapperEl);
 
 		DomHelpers.addClass(wrapperEl, `mb-view-type-${this.declaration.viewFieldType}`);
 
 		if (this.renderChildType === RenderChildType.BLOCK) {
-			DomHelpers.addClass(this.containerEl, 'mb-view-block');
+			DomHelpers.addClass(targetEl, 'mb-view-block');
 		} else {
-			DomHelpers.addClass(this.containerEl, 'mb-view-inline');
+			DomHelpers.addClass(targetEl, 'mb-view-inline');
 		}
 	}
 
-	public destroy(): void {
-		console.debug('meta-bind | ViewFieldBase >> destroy', this);
+	protected onUnmount(targetEl: HTMLElement): void {
+		console.debug('meta-bind | ViewFieldBase >> unmount', this.declaration);
 
-		this.viewField?.destroy();
+		this.viewField?.unmount();
 
-		showUnloadedMessage(this.containerEl, 'view field');
+		showUnloadedMessage(targetEl, 'view field');
 	}
 }

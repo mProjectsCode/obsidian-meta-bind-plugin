@@ -4,17 +4,20 @@ import { ComputedSignal, Signal } from '../../utils/Signal';
 
 import { InputFieldArgumentType } from '../../config/FieldConfigs';
 import { type MetadataSubscription } from '../../metadata/MetadataSubscription';
-import { type IInputFieldBase } from './InputFieldBase';
+import { type InputFieldBase } from './InputFieldBase';
+import { Mountable } from '../../utils/Mountable';
 
-export abstract class AbstractInputField<MetadataValueType, ComponentValueType> {
-	readonly base: IInputFieldBase;
+export abstract class AbstractInputField<MetadataValueType, ComponentValueType> extends Mountable {
+	readonly base: InputFieldBase;
 	readonly inputFieldComponent: InputFieldComponent<ComponentValueType>;
 	readonly inputSignal: Signal<unknown>;
 	readonly computedSignal: ComputedSignal<unknown, MetadataValueType>;
 
 	private metadataSubscription?: MetadataSubscription;
 
-	protected constructor(base: IInputFieldBase) {
+	constructor(base: InputFieldBase) {
+		super();
+
 		this.base = base;
 		this.inputSignal = new Signal<unknown>(undefined);
 		this.inputFieldComponent = new InputFieldComponent<ComponentValueType>(this.getSvelteComponent());
@@ -129,9 +132,7 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 		return {};
 	}
 
-	public mount(container: HTMLElement): void {
-		this.onmount();
-
+	protected onMount(targetEl: HTMLElement): void {
 		this.computedSignal.registerListener({
 			callback: value => this.inputFieldComponent.setValue(this.reverseMapValue(value)),
 		});
@@ -150,23 +151,17 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 				this.base.getUuid(),
 				this.inputSignal,
 				bindTarget,
-				() => this.base.destroy(),
+				() => this.base.unmount(),
 			);
 		}
 
-		this.inputFieldComponent.mount(container, this.reverseMapValue(this.getValue()), this.getMountArgs());
+		this.inputFieldComponent.mount(targetEl, this.reverseMapValue(this.getValue()), this.getMountArgs());
 	}
 
-	public unmount(): void {
-		this.onunmount();
-
+	protected onUnmount(): void {
 		this.computedSignal.unregisterAllListeners();
 		this.metadataSubscription?.unsubscribe();
 
 		this.inputFieldComponent.unmount();
 	}
-
-	protected onmount(): void {}
-
-	protected onunmount(): void {}
 }

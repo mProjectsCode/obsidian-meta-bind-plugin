@@ -1,9 +1,9 @@
-import { type SuggesterLikeIFP, type SuggesterOption } from '../../fields/inputFields/fields/Suggester/SuggesterHelper';
-import { type MBLiteral } from '../../utils/Literal';
-import { type ImageSuggesterIPF } from '../../fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
-import { type DatePickerIPF } from '../../fields/inputFields/fields/DatePicker/DatePickerIPF';
-import type { ErrorCollection } from '../../utils/errors/ErrorCollection';
-import { type IJsRenderer } from '../../fields/viewFields/jsRenderer/IJsRenderer';
+import { type SuggesterLikeIFP, type SuggesterOption } from '../fields/inputFields/fields/Suggester/SuggesterHelper';
+import { type MBLiteral } from '../utils/Literal';
+import { type ImageSuggesterIPF } from '../fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
+import { type DatePickerIPF } from '../fields/inputFields/fields/DatePicker/DatePickerIPF';
+import type { ErrorCollection } from '../utils/errors/ErrorCollection';
+import { type IJsRenderer } from '../fields/viewFields/jsRenderer/IJsRenderer';
 
 export interface ErrorIndicatorProps {
 	errorCollection: ErrorCollection;
@@ -51,4 +51,6 @@ export interface IInternalAPI {
 	showNotice(message: string): void;
 
 	createErrorIndicator(element: HTMLElement, props: ErrorIndicatorProps): void;
+
+	parseYaml(yaml: string): unknown;
 }

@@ -8,25 +8,11 @@ import type { InputField } from './InputFieldFactory';
 import { type InputFieldDeclaration } from '../../parsers/inputFieldParser/InputFieldDeclaration';
 import { ErrorLevel, MetaBindInternalError } from '../../utils/errors/MetaBindErrors';
 import { DocsUtils } from '../../utils/DocsUtils';
-import type { IFieldBase } from '../IFieldBase';
+import { FieldBase } from '../IFieldBase';
 
-export interface IInputFieldBase extends IFieldBase {
-	getBindTarget(): BindTargetDeclaration | undefined;
-
-	hasArgument<T extends InputFieldArgumentType>(name: T): boolean;
-
-	getArguments<T extends InputFieldArgumentType>(name: T): InputFieldArgumentMapType<T>[];
-
-	getArgument<T extends InputFieldArgumentType>(name: T): InputFieldArgumentMapType<T> | undefined;
-}
-
-export class InputFieldBase implements IInputFieldBase {
-	readonly plugin: IPlugin;
-	filePath: string;
-	uuid: string;
+export class InputFieldBase extends FieldBase {
 	renderChildType: RenderChildType;
 	errorCollection: ErrorCollection;
-	containerEl: HTMLElement;
 
 	inputField: InputField | undefined;
 	declarationString: string | undefined;
@@ -36,20 +22,17 @@ export class InputFieldBase implements IInputFieldBase {
 		plugin: IPlugin,
 		uuid: string,
 		filePath: string,
-		containerEl: HTMLElement,
 		renderChildType: RenderChildType,
 		declaration: InputFieldDeclaration,
 	) {
-		this.plugin = plugin;
-		this.filePath = filePath;
-		this.containerEl = containerEl;
+		super(plugin, uuid, filePath);
+
 		this.renderChildType = renderChildType;
 		this.declaration = declaration;
 
 		this.declarationString = declaration.fullDeclaration;
 
-		this.uuid = uuid;
-		this.errorCollection = new ErrorCollection(this.uuid);
+		this.errorCollection = new ErrorCollection(this.getUuid());
 		this.errorCollection.merge(declaration.errorCollection);
 	}
 
@@ -75,14 +58,6 @@ export class InputFieldBase implements IInputFieldBase {
 
 	public getBindTarget(): BindTargetDeclaration | undefined {
 		return this.declaration.bindTarget;
-	}
-
-	public getFilePath(): string {
-		return this.filePath;
-	}
-
-	public getUuid(): string {
-		return this.uuid;
 	}
 
 	private shouldAddCardContainer(): boolean {
@@ -127,11 +102,7 @@ export class InputFieldBase implements IInputFieldBase {
 	private createInputField(): void {
 		if (!this.errorCollection.hasErrors()) {
 			try {
-				this.inputField = this.plugin.api.inputFieldFactory.createInputField(
-					this.declaration.inputFieldType,
-					this.renderChildType,
-					this,
-				);
+				this.inputField = this.plugin.api.inputFieldFactory.createInputField(this);
 			} catch (e) {
 				this.errorCollection.add(e);
 			}
@@ -159,20 +130,20 @@ export class InputFieldBase implements IInputFieldBase {
 		});
 	}
 
-	public mount(): void {
-		console.debug('meta-bind | InputFieldBase >> mount', this);
+	protected onMount(targetEl: HTMLElement): void {
+		console.debug('meta-bind | InputFieldBase >> mount', this.declaration);
 
-		DomHelpers.empty(this.containerEl);
-		DomHelpers.addClass(this.containerEl, 'mb-input');
+		DomHelpers.empty(targetEl);
+		DomHelpers.addClass(targetEl, 'mb-input');
 
 		this.createInputField();
 
 		if (this.errorCollection.hasErrors()) {
-			this.createErrorIndicator(this.containerEl);
+			this.createErrorIndicator(targetEl);
 			return;
 		}
 
-		const containerEl = this.createContainer(this.containerEl);
+		const containerEl = this.createContainer(targetEl);
 
 		this.createErrorIndicator(containerEl);
 
@@ -187,19 +158,19 @@ export class InputFieldBase implements IInputFieldBase {
 		DomHelpers.addClass(wrapperEl, `mb-input-type-${this.declaration.inputFieldType}`);
 
 		if (this.renderChildType === RenderChildType.BLOCK) {
-			DomHelpers.addClass(this.containerEl, 'mb-input-block');
+			DomHelpers.addClass(targetEl, 'mb-input-block');
 		} else {
-			DomHelpers.addClass(this.containerEl, 'mb-input-inline');
+			DomHelpers.addClass(targetEl, 'mb-input-inline');
 		}
 
 		this.addShowcase(containerEl);
 	}
 
-	public destroy(): void {
-		console.debug('meta-bind | InputFieldBase >> destroy', this);
+	protected onUnmount(targetEl: HTMLElement): void {
+		console.debug('meta-bind | InputFieldBase >> destroy', this.declaration);
 
 		this.inputField?.destroy();
 
-		showUnloadedMessage(this.containerEl, 'input field');
+		showUnloadedMessage(targetEl, 'input field');
 	}
 }

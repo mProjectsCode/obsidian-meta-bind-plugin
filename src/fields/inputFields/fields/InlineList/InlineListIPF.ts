@@ -3,13 +3,7 @@ import { type MBLiteral, parseUnknownToLiteralArray } from '../../../../utils/Li
 import { type SvelteComponent } from 'svelte';
 import InlineListComponent from './InlineListComponent.svelte';
 
-import { type IInputFieldBase } from '../../InputFieldBase';
-
 export class InlineListIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> {
-	constructor(renderChild: IInputFieldBase) {
-		super(renderChild);
-	}
-
 	protected filterValue(value: unknown): MBLiteral[] | undefined {
 		return parseUnknownToLiteralArray(value);
 	}

@@ -4,8 +4,7 @@ import { MathVF } from './fields/MathVF';
 import { TextVF } from './fields/TextVF';
 import { ViewFieldType } from '../../config/FieldConfigs';
 import { LinkVF } from './fields/LinkVF';
-
-import { type IViewFieldBase } from './ViewFieldBase';
+import { type ViewFieldBase } from './ViewFieldBase';
 
 export class ViewFieldFactory {
 	plugin: IPlugin;
@@ -14,15 +13,17 @@ export class ViewFieldFactory {
 		this.plugin = plugin;
 	}
 
-	createViewField(type: ViewFieldType, renderChild: IViewFieldBase): AbstractViewField | undefined {
+	createViewField(base: ViewFieldBase): AbstractViewField | undefined {
 		// Skipped: Date, Time, Image Suggester
 
+		const type = base.declaration.viewFieldType;
+
 		if (type === ViewFieldType.MATH) {
-			return new MathVF(renderChild);
+			return new MathVF(base);
 		} else if (type === ViewFieldType.TEXT) {
-			return new TextVF(renderChild);
+			return new TextVF(base);
 		} else if (type === ViewFieldType.LINK) {
-			return new LinkVF(renderChild);
+			return new LinkVF(base);
 		}
 
 		return undefined;

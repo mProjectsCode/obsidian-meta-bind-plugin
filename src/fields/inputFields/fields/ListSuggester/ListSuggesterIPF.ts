@@ -3,13 +3,7 @@ import { type SvelteComponent } from 'svelte';
 import ListSuggesterComponent from './ListSuggesterComponent.svelte';
 import { type MBLiteral, parseUnknownToLiteralArray } from '../../../../utils/Literal';
 
-import { type IInputFieldBase } from '../../InputFieldBase';
-
 export class ListSuggesterIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> {
-	constructor(renderChild: IInputFieldBase) {
-		super(renderChild);
-	}
-
 	protected filterValue(value: unknown): MBLiteral[] | undefined {
 		return parseUnknownToLiteralArray(value);
 	}

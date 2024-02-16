@@ -1,7 +1,6 @@
 import { ParsingError, runParser } from '../parsers/ParsingError';
-import { InlineMDRCType } from '../utils/InlineMDRCUtils';
 import { type IPlugin } from '../IPlugin';
-import { type IAPI } from './IAPI';
+import { FieldType } from './API';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { SyntaxHighlighting } from '../parsers/syntaxHighlighting/SyntaxHighlighting';
@@ -14,12 +13,10 @@ import {
 } from '../parsers/syntaxHighlighting/HLPs';
 
 export class SyntaxHighlightingAPI {
-	public readonly api: IAPI;
 	public readonly plugin: IPlugin;
 
 	constructor(plugin: IPlugin) {
 		this.plugin = plugin;
-		this.api = plugin.api;
 	}
 
 	highlightInputFieldDeclaration(str: string, trimWhiteSpace: boolean): SyntaxHighlighting {
@@ -34,12 +31,12 @@ export class SyntaxHighlightingAPI {
 		return this.highlightWithParser(str, trimWhiteSpace, INLINE_BUTTON_DECLARATION_HLP);
 	}
 
-	highlight(str: string, mdrcType: InlineMDRCType, trimWhiteSpace: boolean): SyntaxHighlighting {
-		if (mdrcType === InlineMDRCType.INPUT_FIELD) {
+	highlight(str: string, mdrcType: FieldType, trimWhiteSpace: boolean): SyntaxHighlighting {
+		if (mdrcType === FieldType.INPUT_FIELD) {
 			return this.highlightInputFieldDeclaration(str, trimWhiteSpace);
-		} else if (mdrcType === InlineMDRCType.VIEW_FIELD) {
+		} else if (mdrcType === FieldType.VIEW_FIELD) {
 			return this.highlightViewFieldDeclaration(str, trimWhiteSpace);
-		} else if (mdrcType === InlineMDRCType.BUTTON) {
+		} else if (mdrcType === FieldType.INLINE_BUTTON) {
 			return this.highlightInlineButtonDeclaration(str, trimWhiteSpace);
 		}
 

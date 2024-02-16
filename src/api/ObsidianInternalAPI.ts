@@ -1,20 +1,20 @@
 import { type ErrorIndicatorProps, type IInternalAPI } from './IInternalAPI';
-import type MetaBindPlugin from '../../main';
-import { type App, Component, MarkdownRenderer, Notice, TFile } from 'obsidian';
-import { type DatePickerIPF } from '../../fields/inputFields/fields/DatePicker/DatePickerIPF';
-import { type ImageSuggesterIPF } from '../../fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
-import { type SuggesterLikeIFP, type SuggesterOption } from '../../fields/inputFields/fields/Suggester/SuggesterHelper';
-import { type MBLiteral } from '../../utils/Literal';
-import { TextPromptModal } from '../../utils/modals/TextPromptModal';
-import { openSuggesterModalForInputField } from '../../fields/inputFields/fields/Suggester/SuggesterModalHelper';
-import { openImageSuggesterModalForInputField } from '../../fields/inputFields/fields/ImageSuggester/ImageSuggesterModalHelper';
-import { DatePickerInputModal } from '../../fields/inputFields/fields/DatePicker/DatePickerInputModal';
-import { getJsEnginePluginAPI } from '../../utils/ObsUtils';
-import ErrorIndicatorComponent from '../../utils/errors/ErrorIndicatorComponent.svelte';
-import { type IJsRenderer } from '../../fields/viewFields/jsRenderer/IJsRenderer';
-import { ObsidianJsRenderer } from '../../fields/viewFields/jsRenderer/ObsidianJsRenderer';
+import type MetaBindPlugin from '../main';
+import { type App, Component, MarkdownRenderer, Notice, TFile, parseYaml } from 'obsidian';
+import { type DatePickerIPF } from '../fields/inputFields/fields/DatePicker/DatePickerIPF';
+import { type ImageSuggesterIPF } from '../fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
+import { type SuggesterLikeIFP, type SuggesterOption } from '../fields/inputFields/fields/Suggester/SuggesterHelper';
+import { type MBLiteral } from '../utils/Literal';
+import { TextPromptModal } from '../utils/modals/TextPromptModal';
+import { openSuggesterModalForInputField } from '../fields/inputFields/fields/Suggester/SuggesterModalHelper';
+import { openImageSuggesterModalForInputField } from '../fields/inputFields/fields/ImageSuggester/ImageSuggesterModalHelper';
+import { DatePickerInputModal } from '../fields/inputFields/fields/DatePicker/DatePickerInputModal';
+import { getJsEnginePluginAPI } from '../utils/ObsUtils';
+import ErrorIndicatorComponent from '../utils/errors/ErrorIndicatorComponent.svelte';
+import { type IJsRenderer } from '../fields/viewFields/jsRenderer/IJsRenderer';
+import { ObsidianJsRenderer } from '../fields/viewFields/jsRenderer/ObsidianJsRenderer';
 
-export class ObsidianAPIAdapter implements IInternalAPI {
+export class ObsidianInternalAPI implements IInternalAPI {
 	readonly plugin: MetaBindPlugin;
 	readonly app: App;
 
@@ -143,5 +143,9 @@ export class ObsidianAPIAdapter implements IInternalAPI {
 				props: props,
 			},
 		});
+	}
+
+	public parseYaml(yaml: string): unknown {
+		return parseYaml(yaml);
 	}
 }

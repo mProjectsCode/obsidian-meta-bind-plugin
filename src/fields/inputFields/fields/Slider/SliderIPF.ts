@@ -5,16 +5,15 @@ import SliderComponent from './SliderComponent.svelte';
 import { ErrorLevel, MetaBindArgumentError } from '../../../../utils/errors/MetaBindErrors';
 import { InputFieldArgumentType } from '../../../../config/FieldConfigs';
 import { parseUnknownToFloat } from '../../../../utils/Literal';
-
-import { type IInputFieldBase } from '../../InputFieldBase';
+import { type InputFieldBase } from '../../InputFieldBase';
 
 export class SliderIPF extends AbstractInputField<number, number> {
 	minValue: number;
 	maxValue: number;
 	stepSize: number;
 
-	constructor(renderChild: IInputFieldBase) {
-		super(renderChild);
+	constructor(base: InputFieldBase) {
+		super(base);
 
 		// FIXME: Check that minvalue < maxvalue.
 		this.minValue = this.base.getArgument(InputFieldArgumentType.MIN_VALUE)?.value ?? 0;

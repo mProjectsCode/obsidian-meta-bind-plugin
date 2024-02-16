@@ -3,6 +3,7 @@ import { ButtonField } from './ButtonField';
 import ButtonComponent from '../../utils/components/ButtonComponent.svelte';
 import { type ButtonConfig, ButtonStyleType } from '../../config/ButtonConfig';
 import { type IPlugin } from '../../IPlugin';
+import { DomHelpers } from '../../utils/Utils';
 
 export class InlineButtonField {
 	plugin: IPlugin;
@@ -30,26 +31,26 @@ export class InlineButtonField {
 		});
 	}
 
-	public mount(container: HTMLElement): void {
-		container.empty();
-		container.addClass('mb-button-group');
+	public mount(targetEl: HTMLElement): void {
+		DomHelpers.empty(targetEl);
+		DomHelpers.addClass(targetEl, 'mb-button-group');
 
 		const buttonIds: string[] = ButtonParser.parseString(this.content);
 
 		for (const buttonId of buttonIds) {
-			const element = document.createElement('span');
-			container.append(element);
-			element.addClass('mb-button', 'mb-button-inline');
-			const initialButton: ButtonComponent | undefined = this.renderInitialButton(element, buttonId);
+			const wrapperEl = DomHelpers.createElement(targetEl, 'span', { class: 'mb-button mb-button-inline' });
+
+			const initialButton: ButtonComponent | undefined = this.renderInitialButton(wrapperEl, buttonId);
 			let button: ButtonField | undefined;
 
 			const loadListenerCleanup = this.plugin.api.buttonManager.registerButtonLoadListener(
 				this.filePath,
 				buttonId,
 				(buttonConfig: ButtonConfig) => {
+					console.warn('Button loaded', buttonConfig);
 					initialButton?.$destroy();
 					button = new ButtonField(this.plugin, buttonConfig, this.filePath, true, false);
-					button.mount(element);
+					button.mount(wrapperEl);
 				},
 			);
 

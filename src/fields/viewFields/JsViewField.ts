@@ -8,17 +8,14 @@ import type {
 	ComputedSubscriptionDependency,
 } from '../../metadata/ComputedMetadataSubscription';
 import { Signal } from '../../utils/Signal';
-import { getUUID, showUnloadedMessage } from '../../utils/Utils';
+import { DomHelpers, getUUID, showUnloadedMessage } from '../../utils/Utils';
 import { ErrorLevel, MetaBindJsError } from '../../utils/errors/MetaBindErrors';
 import { type IJsRenderer } from './jsRenderer/IJsRenderer';
+import { FieldBase } from '../IFieldBase';
 
-export class JsViewField {
-	readonly plugin: IPlugin;
-	filePath: string;
-	uuid: string;
+export class JsViewField extends FieldBase {
 	renderChildType: RenderChildType;
 	errorCollection: ErrorCollection;
-	containerEl: HTMLElement;
 
 	declarationString: string | undefined;
 	declaration: JsViewFieldDeclaration;
@@ -31,20 +28,17 @@ export class JsViewField {
 		plugin: IPlugin,
 		uuid: string,
 		filePath: string,
-		containerEl: HTMLElement,
 		renderChildType: RenderChildType,
 		declaration: JsViewFieldDeclaration,
 	) {
-		this.plugin = plugin;
-		this.filePath = filePath;
-		this.containerEl = containerEl;
+		super(plugin, uuid, filePath);
+
 		this.renderChildType = renderChildType;
 		this.declaration = declaration;
 
 		this.declarationString = declaration.fullDeclaration;
 
-		this.uuid = uuid;
-		this.errorCollection = new ErrorCollection(this.uuid);
+		this.errorCollection = new ErrorCollection(this.getUuid());
 		this.errorCollection.merge(declaration.errorCollection);
 
 		this.variables = [];
@@ -92,7 +86,7 @@ export class JsViewField {
 		const updateSignal = new Signal<unknown>(undefined);
 
 		this.metadataSubscription = this.plugin.metadataManager.subscribeComputed(
-			this.uuid,
+			this.getUuid(),
 			updateSignal,
 			this.declaration.writeToBindTarget,
 			this.variables.map((x): ComputedSubscriptionDependency => {
@@ -102,7 +96,7 @@ export class JsViewField {
 				};
 			}),
 			async () => await this.evaluate(),
-			() => this.destroy(),
+			() => this.unmount(),
 		);
 	}
 
@@ -121,11 +115,11 @@ export class JsViewField {
 		});
 	}
 
-	mount(): void {
-		console.debug('meta-bind | JsViewField >> load', this);
+	protected onMount(targetEl: HTMLElement): void {
+		console.debug('meta-bind | JsViewField >> mount', this.declaration);
 
-		this.containerEl.addClass('mb-view');
-		this.containerEl.empty();
+		DomHelpers.addClass(targetEl, 'mb-view');
+		DomHelpers.empty(targetEl);
 
 		if (!this.plugin.internal.isJsEngineAvailable()) {
 			this.errorCollection.add(
@@ -145,7 +139,7 @@ export class JsViewField {
 			});
 		}
 
-		this.createErrorIndicator(this.containerEl);
+		this.createErrorIndicator(targetEl);
 
 		if (this.errorCollection.hasErrors()) {
 			return;
@@ -154,18 +148,18 @@ export class JsViewField {
 		const wrapperEl: HTMLDivElement = createDiv();
 		wrapperEl.addClass('mb-view-wrapper');
 
-		this.jsRenderer = this.plugin.internal.createJsRenderer(wrapperEl, this.filePath, this.declaration.code);
+		this.jsRenderer = this.plugin.internal.createJsRenderer(wrapperEl, this.getFilePath(), this.declaration.code);
 
 		this.registerSelfToMetadataManager();
 
-		this.containerEl.appendChild(wrapperEl);
+		targetEl.appendChild(wrapperEl);
 	}
 
-	destroy(): void {
-		console.debug('meta-bind | JsViewField >> unload', this);
+	protected onUnmount(targetEl: HTMLElement): void {
+		console.debug('meta-bind | JsViewField >> unmount', this.declaration);
 
 		this.unregisterSelfFromMetadataManager();
 
-		showUnloadedMessage(this.containerEl, 'js view field');
+		showUnloadedMessage(targetEl, 'js view field');
 	}
 }

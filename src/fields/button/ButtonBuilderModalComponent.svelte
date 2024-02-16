@@ -9,7 +9,6 @@
 	} from '../../config/ButtonConfig';
 	import SettingComponent from '../../utils/components/SettingComponent.svelte';
 	import { onDestroy } from 'svelte';
-	import { ButtonMDRC } from '../../renderChildren/ButtonMDRC';
 	import { Command, stringifyYaml, TFile, TFolder } from 'obsidian';
 	import { getUUID } from '../../utils/Utils';
 	import Button from '../../utils/components/Button.svelte';
@@ -19,12 +18,13 @@
 	import { FolderSelectModal } from '../../utils/modals/FolderSelectModal';
 	import { FileSelectModal } from '../../utils/modals/FileSelectModal';
 	import Toggle from '../../utils/components/Toggle.svelte';
+	import { ButtonBase } from './ButtonBase';
 
 	export let modal: ButtonBuilderModal;
 	export let buttonConfig: ButtonConfig;
 
 	let buttonEl: HTMLElement;
-	let buttonMDRC: ButtonMDRC;
+	let buttonMDRC: ButtonBase;
 	let addActionType: ButtonActionType;
 
 	$: updatePreviewButton(buttonConfig, buttonEl);
@@ -34,11 +34,11 @@
 	});
 
 	function updatePreviewButton(config: ButtonConfig, el: HTMLElement) {
-		buttonMDRC?.unload();
+		buttonMDRC?.unmount();
 		if (el) {
 			el.empty();
-			buttonMDRC = new ButtonMDRC(el, stringifyYaml(config), modal.plugin, '', getUUID(), true);
-			buttonMDRC.load();
+			buttonMDRC = new ButtonBase(modal.plugin, getUUID(), '', stringifyYaml(config), true);
+			buttonMDRC.mount(el);
 		}
 	}
 

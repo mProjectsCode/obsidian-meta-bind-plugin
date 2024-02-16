@@ -2,7 +2,7 @@ import { loadPrism, type MarkdownPostProcessorContext, Plugin, stringifyYaml, ty
 import { MetaBindSettingTab } from './settings/SettingsTab';
 import { DateParser } from './parsers/DateParser';
 import { MetadataManager } from './metadata/MetadataManager';
-import { API } from './api/API';
+import { ObsidianAPI } from './api/ObsidianAPI';
 import { setFirstWeekday } from './utils/DatePickerUtils';
 import { createMarkdownRenderChildWidgetEditorPlugin } from './cm6/Cm6_ViewPlugin';
 import { MDRCManager } from './MDRCManager';
@@ -10,10 +10,10 @@ import { DEFAULT_SETTINGS, type MetaBindPluginSettings } from './settings/Settin
 import { type IPlugin } from './IPlugin';
 import { FaqView, MB_FAQ_VIEW_TYPE } from './faq/FaqView';
 import { EMBED_MAX_DEPTH, EmbedMDRC } from './renderChildren/EmbedMDRC';
-import { ObsidianAPIAdapter } from './api/internalApi/ObsidianAPIAdapter';
+import { ObsidianInternalAPI } from './api/ObsidianInternalAPI';
 import { RenderChildType } from './config/FieldConfigs';
 import { ButtonBuilderModal } from './fields/button/ButtonBuilderModal';
-import { InlineMDRCType, InlineMDRCUtils } from './utils/InlineMDRCUtils';
+import { MDRCWidgetUtils } from './cm6/MDRCWidgetUtils';
 import { registerCm5HLModes } from './cm6/Cm5_Modes';
 import { DependencyManager } from './utils/dependencies/DependencyManager';
 import { Version } from './utils/dependencies/Version';
@@ -21,6 +21,7 @@ import { createEditorMenu } from './EditorMenu';
 import { BindTargetStorageType } from './parsers/bindTargetParser/BindTargetDeclaration';
 import { GlobalMetadataSource, InternalMetadataSource, ScopeMetadataSource } from './metadata/InternalMetadataSources';
 import { ObsidianMetadataSource } from './metadata/ObsidianMetadataSource';
+import { FieldType } from './api/API';
 
 export enum MetaBindBuild {
 	DEV = 'dev',
@@ -39,10 +40,10 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	metadataManager: MetadataManager;
 
 	// @ts-expect-error TS2564
-	api: API;
+	api: ObsidianAPI;
 
 	// @ts-expect-error TS2564
-	internal: ObsidianAPIAdapter;
+	internal: ObsidianInternalAPI;
 
 	// @ts-expect-error TS2564
 	build: MetaBindBuild;
@@ -77,8 +78,8 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		}
 
 		// create all APIs and managers
-		this.api = new API(this);
-		this.internal = new ObsidianAPIAdapter(this);
+		this.api = new ObsidianAPI(this);
+		this.internal = new ObsidianInternalAPI(this);
 		this.mdrcManager = new MDRCManager();
 		// const metadataAdapter = new ObsidianMetadataAdapter(this);
 
@@ -157,8 +158,10 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	}
 
 	addPostProcessors(): void {
+		// inline code blocks
 		this.registerMarkdownPostProcessor((el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
 			const codeBlocks = el.querySelectorAll('code');
+			const filePath = ctx.sourcePath;
 
 			for (let index = 0; index < codeBlocks.length; index++) {
 				const codeBlock = codeBlocks.item(index);
@@ -168,44 +171,47 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				}
 
 				const content = codeBlock.innerText;
-
-				const mdrcType = InlineMDRCUtils.isDeclarationAndGetMDRCType(content);
-
+				const mdrcType = MDRCWidgetUtils.isDeclarationAndGetMDRCType(content);
 				if (mdrcType === undefined) {
 					continue;
 				}
 				// console.log(content, ctx.getSectionInfo(codeBlock)?.lineStart, ctx.getSectionInfo(codeBlock)?.lineEnd);
-				InlineMDRCUtils.constructMDRC(mdrcType, content, ctx.sourcePath, codeBlock, ctx, this);
+				this.api.createMDRC(mdrcType, content, RenderChildType.INLINE, filePath, codeBlock, ctx, undefined);
 			}
 		}, 1);
 
+		// "meta-bind" code blocks
 		this.registerMarkdownCodeBlockProcessor('meta-bind', (source, el, ctx) => {
 			const codeBlock = el;
 			const content = source.trim();
-			const mdrcType = InlineMDRCUtils.isDeclarationAndGetMDRCType(content);
+			const filePath = ctx.sourcePath;
 
-			if (mdrcType === InlineMDRCType.INPUT_FIELD) {
-				this.api.createInputFieldFromString(
-					content,
-					RenderChildType.BLOCK,
-					ctx.sourcePath,
-					codeBlock,
-					ctx,
-					undefined,
-				);
+			const mdrcType = MDRCWidgetUtils.isDeclarationAndGetMDRCType(content);
+			if (mdrcType === undefined) {
+				return;
 			}
-			if (mdrcType === InlineMDRCType.VIEW_FIELD) {
-				this.api.createViewFieldFromString(content, RenderChildType.BLOCK, ctx.sourcePath, codeBlock, ctx);
-			}
-			if (mdrcType === InlineMDRCType.BUTTON) {
-				this.api.createInlineButtonFromString(content, ctx.sourcePath, codeBlock, ctx);
-			}
+
+			this.api.createMDRC(mdrcType, content, RenderChildType.BLOCK, filePath, codeBlock, ctx, undefined);
 		});
 
+		// "meta-bind-js-view" code blocks
 		this.registerMarkdownCodeBlockProcessor('meta-bind-js-view', (source, el, ctx) => {
-			this.api.createJsViewFieldFromString(source, RenderChildType.BLOCK, ctx.sourcePath, el, ctx);
+			const codeBlock = el;
+			const content = source.trim();
+			const filePath = ctx.sourcePath;
+
+			this.api.createMDRC(
+				FieldType.JS_VIEW_FIELD,
+				content,
+				RenderChildType.BLOCK,
+				filePath,
+				codeBlock,
+				ctx,
+				undefined,
+			);
 		});
 
+		// "meta-bind-embed" code blocks
 		this.registerMarkdownCodeBlockProcessor('meta-bind-embed', (source, el, ctx) => {
 			const embed = new EmbedMDRC(this, ctx.sourcePath, el, source, 0);
 			ctx.addChild(embed);
@@ -218,6 +224,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			});
 		}
 
+		// "meta-bind-button" code blocks
 		this.registerMarkdownCodeBlockProcessor('meta-bind-button', (source, el, ctx) => {
 			console.log(ctx.getSectionInfo(el));
 			this.api.createButtonFromString(source, ctx.sourcePath, el, ctx);

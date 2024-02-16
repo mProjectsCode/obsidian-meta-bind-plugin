@@ -1,64 +1,40 @@
-import { type IFieldBase } from '../IFieldBase';
+import { FieldBase } from '../IFieldBase';
 import { type IPlugin } from '../../IPlugin';
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
-import { showUnloadedMessage } from '../../utils/Utils';
+import { DomHelpers, showUnloadedMessage } from '../../utils/Utils';
 import { ButtonField } from './ButtonField';
-import { parseYaml } from 'obsidian';
 
-export type IButtonBase = IFieldBase;
-
-export class ButtonBase implements IButtonBase {
-	readonly plugin: IPlugin;
-	filePath: string;
-	uuid: string;
+export class ButtonBase extends FieldBase {
 	errorCollection: ErrorCollection;
-	containerEl: HTMLElement;
 
 	declarationString: string;
 	buttonField: ButtonField | undefined;
 	isPreview: boolean;
 
-	constructor(
-		plugin: IPlugin,
-		uuid: string,
-		filePath: string,
-		containerEl: HTMLElement,
-		declaration: string,
-		isPreview: boolean,
-	) {
-		this.plugin = plugin;
-		this.filePath = filePath;
-		this.containerEl = containerEl;
+	constructor(plugin: IPlugin, uuid: string, filePath: string, declaration: string, isPreview: boolean) {
+		super(plugin, uuid, filePath);
+
 		this.declarationString = declaration;
 		this.isPreview = isPreview;
 
-		this.uuid = uuid;
-		this.errorCollection = new ErrorCollection(this.uuid);
+		this.errorCollection = new ErrorCollection(this.getUuid());
 	}
 
-	getUuid(): string {
-		return this.uuid;
-	}
+	protected onMount(targetEl: HTMLElement): void {
+		console.debug('meta-bind | ButtonBase >> mount', this.declarationString);
 
-	getFilePath(): string {
-		return this.filePath;
-	}
+		DomHelpers.removeAllClasses(targetEl);
 
-	mount(): void {
-		console.debug('meta-bind | ButtonBase >> mount');
+		const yamlContent = this.plugin.internal.parseYaml(this.declarationString);
 
-		this.containerEl.className = '';
-
-		const yamlContent = parseYaml(this.declarationString) as unknown;
-
-		this.buttonField = new ButtonField(this.plugin, yamlContent, this.filePath, false, this.isPreview);
+		this.buttonField = new ButtonField(this.plugin, yamlContent, this.getFilePath(), false, this.isPreview);
 
 		try {
-			this.buttonField.mount(this.containerEl);
+			this.buttonField.mount(targetEl);
 		} catch (e) {
 			this.errorCollection.add(e);
 
-			this.plugin.internal.createErrorIndicator(this.containerEl, {
+			this.plugin.internal.createErrorIndicator(targetEl, {
 				errorCollection: this.errorCollection,
 				errorText:
 					'Errors caused the creation of the field to fail. Sometimes one error only occurs because of another.',
@@ -69,11 +45,11 @@ export class ButtonBase implements IButtonBase {
 		}
 	}
 
-	destroy(): void {
-		console.debug('meta-bind | ButtonBase >> destroy');
+	protected onUnmount(targetEl: HTMLElement): void {
+		console.debug('meta-bind | ButtonBase >> destroy', this.declarationString);
 
 		this.buttonField?.unmount();
 
-		showUnloadedMessage(this.containerEl, 'button');
+		showUnloadedMessage(targetEl, 'button');
 	}
 }

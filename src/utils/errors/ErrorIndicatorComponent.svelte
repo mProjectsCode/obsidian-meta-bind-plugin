@@ -2,7 +2,7 @@
 	import { ErrorCollection } from './ErrorCollection';
 	import { ErrorCollectionViewModal } from './ErrorCollectionViewModal';
 	import { App } from 'obsidian';
-	import { ErrorIndicatorProps } from '../../api/internalApi/IInternalAPI';
+	import { ErrorIndicatorProps } from '../../api/IInternalAPI';
 
 	export let app: App;
 

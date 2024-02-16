@@ -4,13 +4,7 @@ import { type SvelteComponent } from 'svelte';
 import { DateParser } from '../../../../parsers/DateParser';
 import DateComponent from './DateComponent.svelte';
 
-import { type IInputFieldBase } from '../../InputFieldBase';
-
 export class DateIPF extends AbstractInputField<string, moment.Moment> {
-	constructor(renderChild: IInputFieldBase) {
-		super(renderChild);
-	}
-
 	protected filterValue(value: unknown): string | undefined {
 		if (value === null || value === undefined || typeof value !== 'string') {
 			return undefined;

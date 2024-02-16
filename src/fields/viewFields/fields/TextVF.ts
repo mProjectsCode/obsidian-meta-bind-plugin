@@ -5,15 +5,15 @@ import { getUUID } from '../../../utils/Utils';
 import { ViewFieldArgumentType } from '../../../config/FieldConfigs';
 import { stringifyUnknown } from '../../../utils/Literal';
 import { type ViewFieldVariable } from '../ViewFieldVariable';
-import { type IViewFieldBase } from '../ViewFieldBase';
+import { type ViewFieldBase } from '../ViewFieldBase';
 
 export class TextVF extends AbstractViewField {
 	textParts?: (string | number)[];
 	renderMarkdown: boolean;
 	markdownUnloadCallback?: () => void;
 
-	constructor(renderChild: IViewFieldBase) {
-		super(renderChild);
+	constructor(base: ViewFieldBase) {
+		super(base);
 
 		this.renderMarkdown = false;
 	}
@@ -88,7 +88,8 @@ export class TextVF extends AbstractViewField {
 		}
 	}
 
-	onunload(): void {
+	protected onUnmount(): void {
+		super.onUnmount();
 		this.markdownUnloadCallback?.();
 	}
 }

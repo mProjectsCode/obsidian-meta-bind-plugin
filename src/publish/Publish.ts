@@ -2,7 +2,7 @@ import { type MetaBindPluginSettings } from '../settings/Settings';
 import { type IPlugin } from '../IPlugin';
 import { PublishAPI } from './PublishAPI';
 import { type MarkdownPostProcessorContext } from 'obsidian/publish';
-import { PublishAPIAdapter } from '../api/internalApi/PublishAPIAdapter';
+import { PublishInternalAPI } from './PublishInternalAPI';
 import { MetadataManager } from '../metadata/MetadataManager';
 import { BindTargetStorageType } from '../parsers/bindTargetParser/BindTargetDeclaration';
 import { GlobalMetadataSource, InternalMetadataSource } from '../metadata/InternalMetadataSources';
@@ -10,14 +10,14 @@ import { GlobalMetadataSource, InternalMetadataSource } from '../metadata/Intern
 export class MetaBindPublishPlugin implements IPlugin {
 	settings: MetaBindPluginSettings;
 	api: PublishAPI;
-	internal: PublishAPIAdapter;
+	internal: PublishInternalAPI;
 	metadataManager: MetadataManager;
 
 	constructor(settings: MetaBindPluginSettings) {
 		this.settings = settings;
 
 		this.api = new PublishAPI(this);
-		this.internal = new PublishAPIAdapter(this);
+		this.internal = new PublishInternalAPI(this);
 		this.metadataManager = new MetadataManager();
 		this.setUpMetadataManager();
 

@@ -3,12 +3,10 @@ import {
 	type UnvalidatedInputFieldDeclaration,
 } from '../../parsers/inputFieldParser/InputFieldDeclaration';
 import { AbstractMDRC } from '../../renderChildren/AbstractMDRC';
-import { InputFieldMDRC } from '../../renderChildren/InputFieldMDRC';
 import type MetaBindPlugin from '../../main';
 import { BindTargetScope } from '../../metadata/BindTargetScope';
 import { type Listener, Signal } from '../../utils/Signal';
 import MetaBindTableComponent from './MetaBindTableComponent.svelte';
-import { ViewFieldMDRC } from '../../renderChildren/ViewFieldMDRC';
 import { type Component } from 'obsidian';
 import {
 	type UnvalidatedViewFieldDeclaration,
@@ -20,6 +18,9 @@ import { type MBExtendedLiteral } from '../../utils/Literal';
 import { parsePropPath } from '../../utils/prop/PropParser';
 import { RenderChildType } from '../../config/FieldConfigs';
 import { type BindTargetDeclaration } from '../../parsers/bindTargetParser/BindTargetDeclaration';
+import { InputFieldBase } from '../inputFields/InputFieldBase';
+import { ViewFieldBase } from '../viewFields/ViewFieldBase';
+import { getUUID } from '../../utils/Utils';
 
 export type MetaBindTableCell = InputFieldDeclaration | ViewFieldDeclaration;
 
@@ -142,12 +143,18 @@ export class MetaBindTable extends AbstractMDRC {
 	}
 
 	createCell(cell: MetaBindTableCell, element: HTMLElement, cellComponent: Component): void {
+		const uuid = getUUID();
+
 		if ('inputFieldType' in cell) {
-			const field = new InputFieldMDRC(this.plugin, this.filePath, element, RenderChildType.INLINE, cell);
-			cellComponent.addChild(field);
+			const field = new InputFieldBase(this.plugin, uuid, this.filePath, RenderChildType.INLINE, cell);
+
+			field.mount(element);
+			cellComponent.register(() => field.unmount());
 		} else {
-			const field = new ViewFieldMDRC(this.plugin, this.filePath, element, RenderChildType.INLINE, cell);
-			cellComponent.addChild(field);
+			const field = new ViewFieldBase(this.plugin, uuid, this.filePath, RenderChildType.INLINE, cell);
+
+			field.mount(element);
+			cellComponent.register(() => field.unmount());
 		}
 	}
 

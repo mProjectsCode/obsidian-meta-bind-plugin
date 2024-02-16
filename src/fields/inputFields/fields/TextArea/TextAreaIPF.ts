@@ -1,17 +1,10 @@
 import { AbstractInputField } from '../../AbstractInputField';
 import { type SvelteComponent } from 'svelte';
 import TextAreaComponent from './TextAreaComponent.svelte';
-
 import { InputFieldArgumentType } from '../../../../config/FieldConfigs';
 import { parseUnknownToString } from '../../../../utils/Literal';
 
-import { type IInputFieldBase } from '../../InputFieldBase';
-
 export class TextAreaIPF extends AbstractInputField<string, string> {
-	constructor(renderChild: IInputFieldBase) {
-		super(renderChild);
-	}
-
 	protected filterValue(value: unknown): string | undefined {
 		return parseUnknownToString(value);
 	}

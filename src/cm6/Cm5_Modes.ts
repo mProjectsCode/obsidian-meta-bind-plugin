@@ -1,8 +1,9 @@
 import { type Mode, type StringStream } from 'codemirror';
 import { yaml } from '@codemirror/legacy-modes/mode/yaml';
-import { type InlineMDRCType, InlineMDRCUtils } from '../utils/InlineMDRCUtils';
+import { MDRCWidgetUtils } from './MDRCWidgetUtils';
 import type MetaBindPlugin from '../main';
 import { SyntaxHighlighting } from '../parsers/syntaxHighlighting/SyntaxHighlighting';
+import { type FieldType } from '../api/API';
 
 export function registerCm5HLModes(plugin: MetaBindPlugin): void {
 	/* eslint-disable */
@@ -34,7 +35,7 @@ export function registerCm5HLModes(plugin: MetaBindPlugin): void {
 
 	type MBModeState = {
 		str: string;
-		mdrcType: InlineMDRCType;
+		mdrcType: FieldType;
 		highlights: SyntaxHighlighting;
 		line: number;
 	};
@@ -70,7 +71,7 @@ export function registerCm5HLModes(plugin: MetaBindPlugin): void {
 
 					state.str = lines.filter(x => x.trim() !== '').join('\n');
 
-					let mdrcType = InlineMDRCUtils.isDeclarationAndGetMDRCType(state.str.trim());
+					let mdrcType = MDRCWidgetUtils.isDeclarationAndGetMDRCType(state.str.trim());
 					if (mdrcType === undefined) {
 						state.highlights = new SyntaxHighlighting(state.str, []);
 					} else {

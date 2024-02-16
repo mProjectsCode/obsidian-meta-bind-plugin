@@ -4,7 +4,7 @@ import { type IPlugin } from '../../IPlugin';
 import { V_ButtonConfig } from '../../config/ButtonConfigValidators';
 import { ErrorLevel, MetaBindButtonError } from '../../utils/errors/MetaBindErrors';
 import { DocsUtils } from '../../utils/DocsUtils';
-import { isTruthy } from '../../utils/Utils';
+import { DomHelpers, isTruthy } from '../../utils/Utils';
 import { fromZodError } from 'zod-validation-error';
 
 export class ButtonField {
@@ -45,9 +45,10 @@ export class ButtonField {
 		});
 	}
 
-	public mount(container: HTMLElement): void {
-		container.empty();
-		container.addClass('mb-button', this.inline ? 'mb-button-inline' : 'mb-button-block');
+	public mount(wrapperEl: HTMLElement): void {
+		DomHelpers.empty(wrapperEl);
+		DomHelpers.addClasses(wrapperEl, ['mb-button', this.inline ? 'mb-button-inline' : 'mb-button-block']);
+
 		const validationResult = V_ButtonConfig.safeParse(this.unvalidatedConfig);
 
 		if (!validationResult.success) {
@@ -70,6 +71,7 @@ export class ButtonField {
 
 		if (!this.inline && !this.isPreview) {
 			if (this.config.id) {
+				console.warn('registering button', this.filePath, this.config);
 				this.plugin.api.buttonManager.addButton(this.filePath, this.config);
 			}
 			if (this.config.hidden) {
@@ -78,10 +80,10 @@ export class ButtonField {
 		}
 
 		if (this.config.class) {
-			container.addClass(...this.config.class.split(' ').filter(x => x !== ''));
+			wrapperEl.addClass(...this.config.class.split(' ').filter(x => x !== ''));
 		}
 
-		this.renderButton(container);
+		this.renderButton(wrapperEl);
 	}
 
 	public unmount(): void {

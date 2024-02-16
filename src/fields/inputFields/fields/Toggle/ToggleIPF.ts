@@ -3,15 +3,14 @@ import { type SvelteComponent } from 'svelte';
 import ToggleComponent from './ToggleComponent.svelte';
 import { InputFieldArgumentType } from '../../../../config/FieldConfigs';
 import { type MBLiteral, parseUnknownToLiteral } from '../../../../utils/Literal';
-
-import { type IInputFieldBase } from '../../InputFieldBase';
+import { type InputFieldBase } from '../../InputFieldBase';
 
 export class ToggleIPF extends AbstractInputField<MBLiteral, boolean> {
 	onValue: MBLiteral;
 	offValue: MBLiteral;
 
-	constructor(renderChild: IInputFieldBase) {
-		super(renderChild);
+	constructor(base: InputFieldBase) {
+		super(base);
 
 		this.onValue = this.base.getArgument(InputFieldArgumentType.ON_VALUE)?.value ?? true;
 		this.offValue = this.base.getArgument(InputFieldArgumentType.OFF_VALUE)?.value ?? false;

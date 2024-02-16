@@ -6,13 +6,13 @@ import DatePickerComponent from './DatePickerComponent.svelte';
 import { DateParser } from '../../../../parsers/DateParser';
 import { InputFieldArgumentType } from '../../../../config/FieldConfigs';
 
-import { type IInputFieldBase } from '../../InputFieldBase';
+import { type InputFieldBase } from '../../InputFieldBase';
 
 export class DatePickerIPF extends AbstractInputField<string | null, moment.Moment | null> {
 	options: OptionInputFieldArgument[];
 
-	constructor(renderChild: IInputFieldBase) {
-		super(renderChild);
+	constructor(base: InputFieldBase) {
+		super(base);
 
 		this.options = this.base.getArguments(InputFieldArgumentType.OPTION);
 	}

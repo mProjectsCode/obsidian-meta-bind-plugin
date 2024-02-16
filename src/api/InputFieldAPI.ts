@@ -1,6 +1,4 @@
 import { ErrorCollection } from '../utils/errors/ErrorCollection';
-
-import { type IAPI } from './IAPI';
 import {
 	type UnvalidatedFieldArgument,
 	type UnvalidatedInputFieldDeclaration,
@@ -8,12 +6,13 @@ import {
 import { type InputFieldArgumentType, type InputFieldType } from '../config/FieldConfigs';
 import { PROP_ACCESS_TYPE } from '../utils/prop/PropAccess';
 import { type UnvalidatedBindTargetDeclaration } from '../parsers/bindTargetParser/BindTargetDeclaration';
+import { type IPlugin } from '../IPlugin';
 
 export class InputFieldAPI {
-	private readonly api: IAPI;
+	private readonly plugin: IPlugin;
 
-	constructor(api: IAPI) {
-		this.api = api;
+	constructor(plugin: IPlugin) {
+		this.plugin = plugin;
 	}
 
 	/**
@@ -48,7 +47,7 @@ export class InputFieldAPI {
 	 * @param fullDeclaration
 	 */
 	public createInputFieldDeclarationFromString(fullDeclaration: string): UnvalidatedInputFieldDeclaration {
-		return this.api.inputFieldParser.parseStringWithoutValidation(fullDeclaration);
+		return this.plugin.api.inputFieldParser.parseStringWithoutValidation(fullDeclaration);
 	}
 
 	/**
@@ -189,7 +188,7 @@ export class InputFieldAPI {
 	 * @param unvalidatedDeclaration
 	 */
 	public applyTemplate(unvalidatedDeclaration: UnvalidatedInputFieldDeclaration): UnvalidatedInputFieldDeclaration {
-		return this.api.inputFieldParser.applyTemplate(unvalidatedDeclaration);
+		return this.plugin.api.inputFieldParser.applyTemplate(unvalidatedDeclaration);
 	}
 
 	/**
@@ -198,7 +197,7 @@ export class InputFieldAPI {
 	 * @param templateName
 	 */
 	public getTemplate(templateName: string): Readonly<UnvalidatedInputFieldDeclaration> | undefined {
-		return this.api.inputFieldParser.getTemplate(templateName);
+		return this.plugin.api.inputFieldParser.getTemplate(templateName);
 	}
 
 	/**

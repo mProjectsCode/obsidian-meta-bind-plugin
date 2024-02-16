@@ -4,14 +4,13 @@ import { type SvelteComponent } from 'svelte';
 import InlineSelectComponent from './InlineSelectComponent.svelte';
 import { InputFieldArgumentType } from '../../../../config/FieldConfigs';
 import { type MBLiteral, parseUnknownToLiteral } from '../../../../utils/Literal';
-
-import { type IInputFieldBase } from '../../InputFieldBase';
+import { type InputFieldBase } from '../../InputFieldBase';
 
 export class InlineSelectIPF extends AbstractInputField<MBLiteral, MBLiteral> {
 	options: OptionInputFieldArgument[];
 
-	constructor(renderChild: IInputFieldBase) {
-		super(renderChild);
+	constructor(base: InputFieldBase) {
+		super(base);
 
 		this.options = this.base.getArguments(InputFieldArgumentType.OPTION);
 	}
