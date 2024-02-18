@@ -5,7 +5,6 @@ import { type SyntaxNode } from '@lezer/common';
 import { Component, editorLivePreviewField, type TFile } from 'obsidian';
 import type MetaBindPlugin from '../main';
 import { Cm6_Util, MB_WidgetType } from './Cm6_Util';
-import { MDRCWidgetUtils } from './MDRCWidgetUtils';
 import { summary } from 'itertools-ts/es';
 import { type FieldType } from '../api/API';
 
@@ -235,7 +234,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				const content = Cm6_Util.getContent(view.state, from, to);
 				return {
 					content: content,
-					widgetType: MDRCWidgetUtils.isDeclarationAndGetMDRCType(content),
+					widgetType: plugin.api.isInlineFieldDeclarationAndGetType(content),
 				};
 			}
 
@@ -318,7 +317,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				currentFile: TFile,
 			): Range<Decoration> | Range<Decoration>[] {
 				if (widgetType === MB_WidgetType.FIELD) {
-					const widget = MDRCWidgetUtils.constructMDRCWidget(
+					const widget = plugin.api.constructMDRCWidget(
 						mdrcType,
 						content,
 						currentFile.path,

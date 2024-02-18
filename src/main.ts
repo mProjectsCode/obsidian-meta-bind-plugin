@@ -13,7 +13,6 @@ import { EMBED_MAX_DEPTH, EmbedMDRC } from './renderChildren/EmbedMDRC';
 import { ObsidianInternalAPI } from './api/ObsidianInternalAPI';
 import { RenderChildType } from './config/FieldConfigs';
 import { ButtonBuilderModal } from './fields/button/ButtonBuilderModal';
-import { MDRCWidgetUtils } from './cm6/MDRCWidgetUtils';
 import { registerCm5HLModes } from './cm6/Cm5_Modes';
 import { DependencyManager } from './utils/dependencies/DependencyManager';
 import { Version } from './utils/dependencies/Version';
@@ -171,7 +170,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				}
 
 				const content = codeBlock.innerText;
-				const mdrcType = MDRCWidgetUtils.isDeclarationAndGetMDRCType(content);
+				const mdrcType = this.api.isInlineFieldDeclarationAndGetType(content);
 				if (mdrcType === undefined) {
 					continue;
 				}
@@ -186,7 +185,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			const content = source.trim();
 			const filePath = ctx.sourcePath;
 
-			const mdrcType = MDRCWidgetUtils.isDeclarationAndGetMDRCType(content);
+			const mdrcType = this.api.isInlineFieldDeclarationAndGetType(content);
 			if (mdrcType === undefined) {
 				return;
 			}

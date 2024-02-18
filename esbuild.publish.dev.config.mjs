@@ -18,8 +18,8 @@ if you want to view the source, please visit the github repository of this plugi
 */
 `;
 
-esbuild
-	.build({
+const context = await esbuild
+	.context({
 		banner: {
 			js: banner,
 		},
@@ -57,7 +57,6 @@ esbuild
 		logLevel: 'info',
 		sourcemap: false,
 		treeShaking: true,
-		minify: true,
 		outfile: './Publish.js',
 		define: {
 			MB_GLOBAL_CONFIG_DEV_BUILD: 'false',
@@ -74,3 +73,5 @@ esbuild
 		],
 	})
 	.catch(() => process.exit(1));
+
+await context.watch();

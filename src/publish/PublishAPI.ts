@@ -1,48 +1,33 @@
-import { PublishInputFieldMDRC } from './PublishInputFieldMDRC';
-import { PublishViewFieldMDRC } from './PublishViewFieldMDRC';
-import { type MarkdownPostProcessorContext } from 'obsidian/publish';
-import { API } from '../api/API';
-import { type InputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
-import { type ViewFieldDeclaration } from '../parsers/viewFieldParser/ViewFieldDeclaration';
-import { getUUID } from '../utils/Utils';
+import { API, type FieldType } from '../api/API';
 import { type MetaBindPublishPlugin } from './Publish';
+import { type RenderChildType } from '../config/FieldConfigs';
+import type { BindTargetScope } from '../metadata/BindTargetScope';
+import { type ComponentLike } from '../api/ObsidianAPI';
+import { PublishFieldMDRC } from './PublishFieldMDRC';
 
 export class PublishAPI extends API<MetaBindPublishPlugin> {
 	constructor(plugin: MetaBindPublishPlugin) {
 		super(plugin);
 	}
 
-	public createInputFieldFromString(
+	public createMDRC(
+		type: FieldType,
 		fullDeclaration: string,
+		renderType: RenderChildType,
 		filePath: string,
-		metadata: Record<string, unknown> | undefined,
-		container: HTMLElement,
-		component: MarkdownPostProcessorContext,
-	): PublishInputFieldMDRC {
-		const declaration: InputFieldDeclaration = this.inputFieldParser.parseString(
-			fullDeclaration,
-			filePath,
-			undefined,
-		);
+		containerEl: HTMLElement,
+		component: ComponentLike,
+		scope?: BindTargetScope | undefined,
+	): PublishFieldMDRC {
+		// if (this.plugin.isFilePathExcluded(filePath)) {
+		// 	return this.createExcludedField(containerEl, filePath, component);
+		// }
 
-		const inputField = new PublishInputFieldMDRC(container, this, declaration, filePath, metadata, getUUID());
-		component.addChild(inputField);
+		const base = this.createField(type, filePath, renderType, fullDeclaration, scope);
 
-		return inputField;
-	}
+		const mdrc = new PublishFieldMDRC(this.plugin, base, containerEl);
+		component.addChild(mdrc);
 
-	public createViewFieldFromString(
-		fullDeclaration: string,
-		filePath: string,
-		metadata: Record<string, unknown> | undefined,
-		container: HTMLElement,
-		component: MarkdownPostProcessorContext,
-	): PublishViewFieldMDRC {
-		const declaration: ViewFieldDeclaration = this.viewFieldParser.parseString(fullDeclaration, filePath);
-
-		const viewField = new PublishViewFieldMDRC(container, this, declaration, filePath, metadata, getUUID());
-		component.addChild(viewField);
-
-		return viewField;
+		return mdrc;
 	}
 }

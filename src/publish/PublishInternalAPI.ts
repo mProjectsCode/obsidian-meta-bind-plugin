@@ -32,8 +32,9 @@ export class PublishInternalAPI implements IInternalAPI {
 		_onCancel: () => void,
 	): void {}
 
-	public renderMarkdown(_markdown: string, _element: HTMLElement, _filePath: string): Promise<() => void> {
-		return Promise.resolve(function () {});
+	public async renderMarkdown(markdown: string, element: HTMLElement, _filePath: string): Promise<() => void> {
+		element.innerText += markdown;
+		return () => {};
 	}
 
 	public executeCommandById(_id: string): boolean {

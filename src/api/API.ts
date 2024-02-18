@@ -17,6 +17,7 @@ import { type FieldBase } from '../fields/IFieldBase';
 import { JsViewField } from '../fields/viewFields/JsViewField';
 import { InlineButtonBase } from '../fields/button/InlineButtonBase';
 import { ButtonBase } from '../fields/button/ButtonBase';
+import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
 
 export enum FieldType {
 	INPUT_FIELD = 'INPUT_FIELD',
@@ -89,5 +90,63 @@ export class API<Plugin extends IPlugin> {
 
 		// TODO: Nice error message
 		throw new Error(`Unknown field type: ${type}`);
+	}
+
+	/**
+	 * Gets the prefix of a given widget type. (e.g. INPUT or VIEW)
+	 *
+	 * @param mdrcType
+	 */
+	public getInlineFieldDeclarationPrefix(mdrcType: FieldType): string {
+		if (mdrcType === FieldType.INPUT_FIELD) {
+			return 'INPUT';
+		} else if (mdrcType === FieldType.VIEW_FIELD) {
+			return 'VIEW';
+		} else if (mdrcType === FieldType.INLINE_BUTTON) {
+			return 'BUTTON';
+		}
+
+		throw new MetaBindInternalError({
+			errorLevel: ErrorLevel.CRITICAL,
+			effect: 'failed to get declaration prefix',
+			cause: `Invalid inline mdrc type "${mdrcType}"`,
+		});
+	}
+
+	/**
+	 * Checks if a string is a declaration of a given widget type.
+	 *
+	 * @param mdrcType
+	 * @param str
+	 */
+	public isInlineFieldDeclaration(mdrcType: FieldType, str: string): boolean {
+		const startStr: string = this.getInlineFieldDeclarationPrefix(mdrcType) + '[';
+		const endStr: string = ']';
+
+		return str.startsWith(startStr) && str.endsWith(endStr);
+	}
+
+	/**
+	 * Checks if a string is any declaration and if yes returns the widget type.
+	 * This does not use {@link isInlineFieldDeclaration} because of performance reasons.
+	 *
+	 * @param str
+	 */
+	public isInlineFieldDeclarationAndGetType(str: string): FieldType | undefined {
+		if (!str.endsWith(']')) {
+			return undefined;
+		}
+
+		for (const widgetType of Object.values(FieldType)) {
+			if (!isFieldTypeAllowedInline(widgetType)) {
+				continue;
+			}
+			const startStr: string = this.getInlineFieldDeclarationPrefix(widgetType) + '[';
+			if (str.startsWith(startStr)) {
+				return widgetType;
+			}
+		}
+
+		return undefined;
 	}
 }

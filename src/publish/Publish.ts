@@ -6,6 +6,7 @@ import { PublishInternalAPI } from './PublishInternalAPI';
 import { MetadataManager } from '../metadata/MetadataManager';
 import { BindTargetStorageType } from '../parsers/bindTargetParser/BindTargetDeclaration';
 import { GlobalMetadataSource, InternalMetadataSource } from '../metadata/InternalMetadataSources';
+import { RenderChildType } from '../config/FieldConfigs';
 
 export class MetaBindPublishPlugin implements IPlugin {
 	settings: MetaBindPluginSettings;
@@ -25,20 +26,16 @@ export class MetaBindPublishPlugin implements IPlugin {
 	}
 
 	setUpMetadataManager(): void {
-		const obsidianMetadataSource = new InternalMetadataSource(
-			BindTargetStorageType.FRONTMATTER,
-			this.metadataManager,
+		this.metadataManager.registerSource(
+			new InternalMetadataSource(BindTargetStorageType.FRONTMATTER, this.metadataManager),
 		);
-		this.metadataManager.registerSource(obsidianMetadataSource);
-
-		const memoryMetadataSource = new InternalMetadataSource(BindTargetStorageType.MEMORY, this.metadataManager);
-		this.metadataManager.registerSource(memoryMetadataSource);
-
-		const globalMemoryMetadataSource = new GlobalMetadataSource(
-			BindTargetStorageType.GLOBAL_MEMORY,
-			this.metadataManager,
+		this.metadataManager.registerSource(
+			new InternalMetadataSource(BindTargetStorageType.MEMORY, this.metadataManager),
 		);
-		this.metadataManager.registerSource(globalMemoryMetadataSource);
+		this.metadataManager.registerSource(
+			new GlobalMetadataSource(BindTargetStorageType.GLOBAL_MEMORY, this.metadataManager),
+		);
+		this.metadataManager.setDefaultSource(BindTargetStorageType.FRONTMATTER);
 
 		window.setInterval(() => this.metadataManager.cycle(), this.settings.syncInterval);
 	}
@@ -48,36 +45,37 @@ export class MetaBindPublishPlugin implements IPlugin {
 
 		console.log(publish);
 
-		publish.registerMarkdownPostProcessor((el: HTMLElement, ctx: MarkdownPostProcessorContext): void => {
+		publish.registerMarkdownPostProcessor((el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
 			const codeBlocks = el.querySelectorAll('code');
+			const filePath = ctx.sourcePath;
+
 			for (let index = 0; index < codeBlocks.length; index++) {
 				const codeBlock = codeBlocks.item(index);
-				const fullDeclaration = codeBlock.innerText;
-				const isInputField = fullDeclaration.startsWith('INPUT[') && fullDeclaration.endsWith(']');
-				const isViewField = fullDeclaration.startsWith('VIEW[') && fullDeclaration.endsWith(']');
 
-				if (isInputField) {
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-					this.api.createInputFieldFromString(
-						fullDeclaration,
-						ctx.sourcePath,
-						ctx.frontmatter as Record<string, unknown> | undefined,
-						codeBlock,
-						ctx,
-					);
+				if (codeBlock.hasClass('mb-none')) {
+					continue;
 				}
-				if (isViewField) {
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-					this.api.createViewFieldFromString(
-						fullDeclaration,
-						ctx.sourcePath,
-						ctx.frontmatter as Record<string, unknown> | undefined,
-						codeBlock,
-						ctx,
-					);
+
+				const content = codeBlock.innerText;
+				const mdrcType = this.api.isInlineFieldDeclarationAndGetType(content);
+
+				console.log(content, mdrcType);
+				if (mdrcType === undefined) {
+					continue;
 				}
+				// console.log(content, ctx.getSectionInfo(codeBlock)?.lineStart, ctx.getSectionInfo(codeBlock)?.lineEnd);
+				const mdrc = this.api.createMDRC(
+					mdrcType,
+					content,
+					RenderChildType.INLINE,
+					filePath,
+					codeBlock,
+					ctx,
+					undefined,
+				);
+				mdrc.load();
 			}
-		}, 100);
+		}, 1);
 	}
 
 	onUnload(): void {

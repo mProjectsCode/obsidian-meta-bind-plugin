@@ -1,6 +1,6 @@
 import type MetaBindPlugin from '../main';
 import { type Component } from 'obsidian';
-import { API, FieldType } from './API';
+import { API, FieldType, isFieldTypeAllowedInline } from './API';
 import { ExcludedMDRC } from '../renderChildren/ExcludedMDRC';
 import { type UnvalidatedInputFieldDeclaration } from '../parsers/inputFieldParser/InputFieldDeclaration';
 import { Signal } from '../utils/Signal';
@@ -26,6 +26,8 @@ import {
 import { validateArgs } from '../utils/ZodUtils';
 import { InputFieldBase } from '../fields/inputFields/InputFieldBase';
 import { FieldMDRC } from '../renderChildren/FieldMDRC';
+import { MarkdownRenderChildWidget } from '../cm6/Cm6_Widgets';
+import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
 
 export interface ComponentLike {
 	addChild(child: Component): void;
@@ -337,5 +339,32 @@ export class ObsidianAPI extends API<MetaBindPlugin> {
 		validateArgs(V_API_createBindTarget, [fullDeclaration, currentFilePath]);
 
 		return this.bindTargetParser.parseAndValidateBindTarget(fullDeclaration, currentFilePath);
+	}
+
+	/**
+	 * Creates a MDRC widget from a given widget type.
+	 *
+	 * @param mdrcType
+	 * @param content
+	 * @param filePath
+	 * @param component
+	 * @param plugin
+	 */
+	public constructMDRCWidget(
+		mdrcType: FieldType,
+		content: string,
+		filePath: string,
+		component: Component,
+		plugin: MetaBindPlugin,
+	): MarkdownRenderChildWidget {
+		if (isFieldTypeAllowedInline(mdrcType)) {
+			return new MarkdownRenderChildWidget(mdrcType, content, filePath, component, plugin);
+		}
+
+		throw new MetaBindInternalError({
+			errorLevel: ErrorLevel.CRITICAL,
+			effect: 'failed to construct mdrc',
+			cause: `Invalid inline mdrc type "${mdrcType}"`,
+		});
 	}
 }

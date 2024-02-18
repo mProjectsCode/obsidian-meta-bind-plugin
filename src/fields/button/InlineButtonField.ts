@@ -47,7 +47,6 @@ export class InlineButtonField {
 				this.filePath,
 				buttonId,
 				(buttonConfig: ButtonConfig) => {
-					console.warn('Button loaded', buttonConfig);
 					initialButton?.$destroy();
 					button = new ButtonField(this.plugin, buttonConfig, this.filePath, true, false);
 					button.mount(wrapperEl);

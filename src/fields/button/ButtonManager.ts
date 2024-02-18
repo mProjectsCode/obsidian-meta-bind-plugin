@@ -59,8 +59,6 @@ export class ButtonManager {
 		buttonId: string,
 		callback: (config: ButtonConfig) => void,
 	): () => void {
-		console.warn('registerButtonLoadListener', filePath, buttonId, callback);
-
 		const config = this.getButton(filePath, buttonId);
 		if (config) {
 			callback(config);

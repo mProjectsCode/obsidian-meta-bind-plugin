@@ -71,7 +71,6 @@ export class ButtonField {
 
 		if (!this.inline && !this.isPreview) {
 			if (this.config.id) {
-				console.warn('registering button', this.filePath, this.config);
 				this.plugin.api.buttonManager.addButton(this.filePath, this.config);
 			}
 			if (this.config.hidden) {
