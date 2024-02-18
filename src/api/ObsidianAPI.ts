@@ -28,6 +28,7 @@ import { InputFieldBase } from '../fields/inputFields/InputFieldBase';
 import { FieldMDRC } from '../renderChildren/FieldMDRC';
 import { MarkdownRenderChildWidget } from '../cm6/Cm6_Widgets';
 import { ErrorLevel, MetaBindInternalError } from '../utils/errors/MetaBindErrors';
+import { ObsidianButtonActionRunner } from '../fields/button/ObsidianButtonActionRunner';
 
 export interface ComponentLike {
 	addChild(child: Component): void;
@@ -35,7 +36,9 @@ export interface ComponentLike {
 
 export class ObsidianAPI extends API<MetaBindPlugin> {
 	constructor(plugin: MetaBindPlugin) {
-		super(plugin);
+		super(plugin, {
+			buttonActionRunner: new ObsidianButtonActionRunner(plugin),
+		});
 	}
 
 	public createMDRC(

@@ -3,15 +3,20 @@ import { getUUID } from '../../utils/Utils';
 import { ErrorCollection } from '../../utils/errors/ErrorCollection';
 import { ErrorLevel, MetaBindButtonError } from '../../utils/errors/MetaBindErrors';
 import { RefCounter } from '../../utils/RefCounter';
+import { type IPlugin } from '../../IPlugin';
 
 export class ButtonManager {
+	readonly plugin: IPlugin;
+
 	// filePath -> buttonId -> ref counter of buttonConfig
 	buttons: Map<string, Map<string, RefCounter<ButtonConfig>>>;
 	// filePath -> buttonId -> listenerId -> callback
 	buttonLoadListeners: Map<string, Map<string, Map<string, (config: ButtonConfig) => void>>>;
 	buttonTemplates: Map<string, ButtonConfig>;
 
-	constructor() {
+	constructor(plugin: IPlugin) {
+		this.plugin = plugin;
+
 		this.buttons = new Map();
 		this.buttonLoadListeners = new Map();
 		this.buttonTemplates = new Map();

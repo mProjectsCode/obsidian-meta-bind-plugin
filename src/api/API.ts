@@ -31,7 +31,18 @@ export function isFieldTypeAllowedInline(type: FieldType): boolean {
 	return type === FieldType.INPUT_FIELD || type === FieldType.VIEW_FIELD || type === FieldType.INLINE_BUTTON;
 }
 
-export class API<Plugin extends IPlugin> {
+export interface APIFieldOverrides {
+	inputFieldParser?: InputFieldDeclarationParser;
+	viewFieldParser?: ViewFieldParser;
+	bindTargetParser?: BindTargetParser;
+	inputFieldFactory?: InputFieldFactory;
+	viewFieldFactory?: ViewFieldFactory;
+	buttonActionRunner?: ButtonActionRunner;
+	buttonManager?: ButtonManager;
+	syntaxHighlighting?: SyntaxHighlightingAPI;
+}
+
+export abstract class API<Plugin extends IPlugin> {
 	readonly plugin: Plugin;
 	readonly inputField: InputFieldAPI;
 
@@ -47,21 +58,21 @@ export class API<Plugin extends IPlugin> {
 
 	readonly syntaxHighlighting: SyntaxHighlightingAPI;
 
-	constructor(plugin: Plugin) {
+	constructor(plugin: Plugin, overrides?: APIFieldOverrides) {
 		this.plugin = plugin;
 		this.inputField = new InputFieldAPI(plugin);
 
-		this.inputFieldParser = new InputFieldDeclarationParser(plugin);
-		this.viewFieldParser = new ViewFieldParser(plugin);
-		this.bindTargetParser = new BindTargetParser(plugin);
+		this.inputFieldParser = overrides?.inputFieldParser ?? new InputFieldDeclarationParser(plugin);
+		this.viewFieldParser = overrides?.viewFieldParser ?? new ViewFieldParser(plugin);
+		this.bindTargetParser = overrides?.bindTargetParser ?? new BindTargetParser(plugin);
 
-		this.inputFieldFactory = new InputFieldFactory(plugin);
-		this.viewFieldFactory = new ViewFieldFactory(plugin);
+		this.inputFieldFactory = overrides?.inputFieldFactory ?? new InputFieldFactory(plugin);
+		this.viewFieldFactory = overrides?.viewFieldFactory ?? new ViewFieldFactory(plugin);
 
-		this.buttonActionRunner = new ButtonActionRunner(plugin);
-		this.buttonManager = new ButtonManager();
+		this.buttonActionRunner = overrides?.buttonActionRunner ?? new ButtonActionRunner(plugin);
+		this.buttonManager = overrides?.buttonManager ?? new ButtonManager(plugin);
 
-		this.syntaxHighlighting = new SyntaxHighlightingAPI(plugin);
+		this.syntaxHighlighting = overrides?.syntaxHighlighting ?? new SyntaxHighlightingAPI(plugin);
 	}
 
 	public createField(
