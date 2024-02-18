@@ -1,5 +1,15 @@
 # Obsidian Meta Bind Changelog
 
+# 0.12.2
+
+Bug Fixes
+
+-   Fixed not cloning the metadata object given by the Obsidian API
+
+Changes
+
+-   A lot of internal changes while working on the publish plugin. This should not change anything for users.
+
 # 0.12.1
 
 Bug Fixes
