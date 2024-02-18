@@ -1,5 +1,11 @@
 # Obsidian Meta Bind Changelog
 
+# 0.12.3
+
+Bug Fixes
+
+-   Fixed templater create note button action not working [#221](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/221)
+
 # 0.12.2
 
 Bug Fixes
