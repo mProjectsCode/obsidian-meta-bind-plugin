@@ -3,7 +3,7 @@ list:
   - 1
   - 2
   - 3
-index: 2
+index: 0
 options:
   - "1"
   - "2"

@@ -5,6 +5,7 @@ import { getJsEnginePluginAPI } from '../../../utils/ObsUtils';
 import { type JsExecution } from 'jsEngine/engine/JsExecution';
 import { type ResultRenderer } from 'jsEngine/engine/ResultRenderer';
 import { type IJsRenderer } from './IJsRenderer';
+import { DomHelpers } from '../../../utils/Utils';
 
 export class ObsidianJsRenderer implements IJsRenderer {
 	readonly plugin: MetaBindPlugin;
@@ -13,7 +14,6 @@ export class ObsidianJsRenderer implements IJsRenderer {
 	jsEngine: API;
 	code: string;
 	renderComponent: Component;
-	renderer: ResultRenderer;
 
 	constructor(plugin: MetaBindPlugin, containerEl: HTMLElement, filePath: string, code: string) {
 		this.plugin = plugin;
@@ -28,14 +28,9 @@ export class ObsidianJsRenderer implements IJsRenderer {
 
 		this.jsEngine = getJsEnginePluginAPI(this.plugin);
 		this.renderComponent = new Component();
-		this.renderer = this.jsEngine.internal.createRenderer(this.containerEl, this.file.path, this.renderComponent);
 	}
 
 	private async evaluateCode(context: Record<string, unknown>): Promise<JsExecution> {
-		this.renderComponent.unload();
-		this.renderComponent = new Component();
-		this.renderComponent.load();
-
 		return this.jsEngine.internal.execute({
 			code: this.code,
 			context: {
@@ -51,17 +46,26 @@ export class ObsidianJsRenderer implements IJsRenderer {
 
 	async evaluate(context: Record<string, unknown>): Promise<unknown> {
 		try {
-			this.containerEl.classList.remove('mb-error');
-			this.containerEl.innerHTML = '';
+			DomHelpers.empty(this.containerEl);
+			DomHelpers.removeClass(this.containerEl, 'mb-error');
+
+			this.renderComponent.unload();
+			this.renderComponent = new Component();
+			this.renderComponent.load();
 
 			const execution = await this.evaluateCode(context);
-			await this.renderer.render(execution.result);
+			const renderer = this.jsEngine.internal.createRenderer(
+				this.containerEl,
+				this.file.path,
+				this.renderComponent,
+			);
+			await renderer.render(execution.result);
 
-			return this.renderer.convertToSimpleObject(execution.result);
+			return renderer.convertToSimpleObject(execution.result);
 		} catch (e) {
 			if (e instanceof Error) {
 				this.containerEl.innerText = e.message;
-				this.containerEl.classList.add('mb-error');
+				DomHelpers.addClass(this.containerEl, 'mb-error');
 			}
 
 			return undefined;

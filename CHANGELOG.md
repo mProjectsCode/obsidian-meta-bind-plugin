@@ -1,5 +1,11 @@
 # Obsidian Meta Bind Changelog
 
+# 0.12.4
+
+Bug Fixes
+
+-   Fixed an issue with JS View Fields not correctly handling the lifecycle of rendered markdown [#222](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/222)
+
 # 0.12.3
 
 Bug Fixes
