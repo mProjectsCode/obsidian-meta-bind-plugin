@@ -3,7 +3,6 @@ import { Component, TFile } from 'obsidian';
 import { type API } from 'jsEngine/api/API';
 import { getJsEnginePluginAPI } from '../../../utils/ObsUtils';
 import { type JsExecution } from 'jsEngine/engine/JsExecution';
-import { type ResultRenderer } from 'jsEngine/engine/ResultRenderer';
 import { type IJsRenderer } from './IJsRenderer';
 import { DomHelpers } from '../../../utils/Utils';
 
