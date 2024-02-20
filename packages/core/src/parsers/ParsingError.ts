@@ -1,6 +1,6 @@
-import { ErrorLevel, ErrorType, MetaBindError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { type ParseFailure, type ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
 import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
+import { ErrorLevel, ErrorType, MetaBindError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 export function runParser<T>(parser: Parser<T>, str: string): T {
 	const result = parser.tryParse(str);

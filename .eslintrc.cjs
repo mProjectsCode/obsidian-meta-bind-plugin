@@ -42,6 +42,28 @@ const config = {
 		'@typescript-eslint/explicit-function-return-type': ['warn'],
 		'@typescript-eslint/require-await': 'off',
 	},
+	overrides: [
+		{
+			files: ['packages/core/src/**/*.ts'],
+			rules: {
+				'no-restricted-imports': [
+					'error',
+					{
+						patterns: [
+							{
+								group: ['packages/obsidian/*'],
+								message: 'Core should not import from the Obsidian Adapter.',
+							},
+							{
+								group: ['packages/publish/*'],
+								message: 'Core should not import from the Obsidian Publish Adapter.',
+							},
+						],
+					},
+				],
+			},
+		},
+	],
 };
 
 module.exports = config;

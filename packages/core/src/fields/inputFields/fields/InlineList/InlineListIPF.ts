@@ -1,7 +1,7 @@
 import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
+import InlineListComponent from 'packages/core/src/fields/inputFields/fields/InlineList/InlineListComponent.svelte';
 import { type MBLiteral, parseUnknownToLiteralArray } from 'packages/core/src/utils/Literal';
 import { type SvelteComponent } from 'svelte';
-import InlineListComponent from 'packages/core/src/fields/inputFields/fields/InlineList/InlineListComponent.svelte';
 
 export class InlineListIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> {
 	protected filterValue(value: unknown): MBLiteral[] | undefined {

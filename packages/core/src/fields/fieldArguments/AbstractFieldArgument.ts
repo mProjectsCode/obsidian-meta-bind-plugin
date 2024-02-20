@@ -1,7 +1,7 @@
-import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
-import { ErrorLevel, MetaBindArgumentError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { type FieldArgumentConfig, type FieldArgumentValueConfig } from 'packages/core/src/config/FieldConfigs';
+import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
+import { ErrorLevel, MetaBindArgumentError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 export abstract class AbstractFieldArgument<
 	FieldType extends string,

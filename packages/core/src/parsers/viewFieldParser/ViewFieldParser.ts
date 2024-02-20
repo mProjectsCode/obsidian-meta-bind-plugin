@@ -1,16 +1,19 @@
-import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
-import { JS_VIEW_FIELD_DECLARATION, VIEW_FIELD_FULL_DECLARATION } from 'packages/core/src/parsers/nomParsers/ViewFieldNomParsers';
 import { type IPlugin } from 'packages/core/src/IPlugin';
+import { ViewFieldType } from 'packages/core/src/config/FieldConfigs';
+import { ViewFieldArgumentContainer } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
 import { type BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
+import { runParser } from 'packages/core/src/parsers/ParsingError';
+import {
+	JS_VIEW_FIELD_DECLARATION,
+	VIEW_FIELD_FULL_DECLARATION,
+} from 'packages/core/src/parsers/nomParsers/ViewFieldNomParsers';
 import {
 	type JsViewFieldDeclaration,
 	type UnvalidatedViewFieldDeclaration,
 	type ViewFieldDeclaration,
 } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
 import { ViewFieldDeclarationValidator } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclarationValidator';
-import { ViewFieldArgumentContainer } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
-import { ViewFieldType } from 'packages/core/src/config/FieldConfigs';
-import { runParser } from 'packages/core/src/parsers/ParsingError';
+import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 
 export class ViewFieldParser {
 	plugin: IPlugin;

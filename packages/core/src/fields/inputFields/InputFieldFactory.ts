@@ -1,27 +1,32 @@
-import { ErrorLevel, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { type IPlugin } from 'packages/core/src/IPlugin';
-import { ToggleIPF } from 'packages/core/src/fields/inputFields/fields/Toggle/ToggleIPF';
-import { TextIPF } from 'packages/core/src/fields/inputFields/fields/Text/TextIPF';
-import { SliderIPF } from 'packages/core/src/fields/inputFields/fields/Slider/SliderIPF';
-import { TextAreaIPF } from 'packages/core/src/fields/inputFields/fields/TextArea/TextAreaIPF';
-import { SelectIPF } from 'packages/core/src/fields/inputFields/fields/Select/SelectIPF';
-import { MultiSelectIPF } from 'packages/core/src/fields/inputFields/fields/MultiSelect/MultiSelectIPF';
+import {
+	type InputFieldConfig,
+	InputFieldConfigs,
+	InputFieldType,
+	RenderChildType,
+} from 'packages/core/src/config/FieldConfigs';
+import { type InputFieldBase } from 'packages/core/src/fields/inputFields/InputFieldBase';
+import { DateIPF } from 'packages/core/src/fields/inputFields/fields/Date/DateIPF';
 import { DatePickerIPF } from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePickerIPF';
-import { NumberIPF } from 'packages/core/src/fields/inputFields/fields/Number/NumberIPF';
-import { SuggesterIPF } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterIPF';
 import { EditorIPF } from 'packages/core/src/fields/inputFields/fields/Editor/EditorIPF';
-import { ProgressBarIPF } from 'packages/core/src/fields/inputFields/fields/ProgressBar/ProgressBarIPF';
-import { InlineSelectIPF } from 'packages/core/src/fields/inputFields/fields/InlineSelect/InlineSelectIPF';
 import { ImageSuggesterIPF } from 'packages/core/src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
+import { InlineListIPF } from 'packages/core/src/fields/inputFields/fields/InlineList/InlineListIPF';
+import { InlineListSuggesterIPF } from 'packages/core/src/fields/inputFields/fields/InlineListSuggester/InlineListSuggesterIPF';
+import { InlineSelectIPF } from 'packages/core/src/fields/inputFields/fields/InlineSelect/InlineSelectIPF';
 import { ListIPF } from 'packages/core/src/fields/inputFields/fields/List/ListIPF';
 import { ListSuggesterIPF } from 'packages/core/src/fields/inputFields/fields/ListSuggester/ListSuggesterIPF';
-import { DateIPF } from 'packages/core/src/fields/inputFields/fields/Date/DateIPF';
+import { MultiSelectIPF } from 'packages/core/src/fields/inputFields/fields/MultiSelect/MultiSelectIPF';
+import { NumberIPF } from 'packages/core/src/fields/inputFields/fields/Number/NumberIPF';
+import { ProgressBarIPF } from 'packages/core/src/fields/inputFields/fields/ProgressBar/ProgressBarIPF';
+import { SelectIPF } from 'packages/core/src/fields/inputFields/fields/Select/SelectIPF';
+import { SliderIPF } from 'packages/core/src/fields/inputFields/fields/Slider/SliderIPF';
+import { SuggesterIPF } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterIPF';
+import { TextIPF } from 'packages/core/src/fields/inputFields/fields/Text/TextIPF';
+import { TextAreaIPF } from 'packages/core/src/fields/inputFields/fields/TextArea/TextAreaIPF';
 import { TimeIPF } from 'packages/core/src/fields/inputFields/fields/Time/TimeIPF';
-import { type InputFieldConfig, InputFieldConfigs, InputFieldType, RenderChildType } from 'packages/core/src/config/FieldConfigs';
+import { ToggleIPF } from 'packages/core/src/fields/inputFields/fields/Toggle/ToggleIPF';
 import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
-import { InlineListSuggesterIPF } from 'packages/core/src/fields/inputFields/fields/InlineListSuggester/InlineListSuggesterIPF';
-import { InlineListIPF } from 'packages/core/src/fields/inputFields/fields/InlineList/InlineListIPF';
-import { type InputFieldBase } from 'packages/core/src/fields/inputFields/InputFieldBase';
+import { ErrorLevel, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 export type InputField =
 	| ToggleIPF

@@ -1,11 +1,11 @@
-import { AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractViewField';
-import { Signal } from 'packages/core/src/utils/Signal';
-import { ErrorLevel, MetaBindExpressionError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import { DomHelpers, getUUID } from 'packages/core/src/utils/Utils';
 import { ViewFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
-import { stringifyUnknown } from 'packages/core/src/utils/Literal';
-import { type ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
+import { AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractViewField';
 import { type ViewFieldBase } from 'packages/core/src/fields/viewFields/ViewFieldBase';
+import { type ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
+import { stringifyUnknown } from 'packages/core/src/utils/Literal';
+import { Signal } from 'packages/core/src/utils/Signal';
+import { DomHelpers, getUUID } from 'packages/core/src/utils/Utils';
+import { ErrorLevel, MetaBindExpressionError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 export class TextVF extends AbstractViewField {
 	textParts?: (string | number)[];

@@ -1,3 +1,4 @@
+import { type IPlugin } from 'packages/core/src/IPlugin';
 import {
 	InputFieldArgumentType,
 	InputFieldConfigs,
@@ -5,7 +6,6 @@ import {
 	type ViewFieldType,
 } from 'packages/core/src/config/FieldConfigs';
 import { type UnvalidatedInputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
-import { type IPlugin } from 'packages/core/src/IPlugin';
 
 export const INPUT_FIELD_EXAMPLE_DECLARATIONS: Record<InputFieldType, string> = {
 	date: 'date',

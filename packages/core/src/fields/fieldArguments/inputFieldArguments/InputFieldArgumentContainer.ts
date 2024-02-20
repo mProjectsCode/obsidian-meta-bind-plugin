@@ -1,10 +1,10 @@
-import { AbstractFieldArgumentContainer } from 'packages/core/src/fields/fieldArguments/AbstractFieldArgumentContainer';
-import { type InputFieldArgumentMapType } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
 import {
 	type InputFieldArgumentConfig,
 	type InputFieldArgumentType,
 	type InputFieldType,
 } from 'packages/core/src/config/FieldConfigs';
+import { AbstractFieldArgumentContainer } from 'packages/core/src/fields/fieldArguments/AbstractFieldArgumentContainer';
+import { type InputFieldArgumentMapType } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
 
 export class InputFieldArgumentContainer extends AbstractFieldArgumentContainer<
 	InputFieldType,

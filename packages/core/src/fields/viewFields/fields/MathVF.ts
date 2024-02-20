@@ -1,11 +1,11 @@
+import { compile as MathJsCompile, type EvalFunction } from 'mathjs';
 import { AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractViewField';
-import { ErrorLevel, MetaBindExpressionError } from 'packages/core/src/utils/errors/MetaBindErrors';
+import { type ViewFieldBase } from 'packages/core/src/fields/viewFields/ViewFieldBase';
+import { type ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
+import { parseLiteral } from 'packages/core/src/utils/Literal';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { DomHelpers, getUUID } from 'packages/core/src/utils/Utils';
-import { compile as MathJsCompile, type EvalFunction } from 'mathjs';
-import { parseLiteral } from 'packages/core/src/utils/Literal';
-import { type ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
-import { type ViewFieldBase } from 'packages/core/src/fields/viewFields/ViewFieldBase';
+import { ErrorLevel, MetaBindExpressionError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 export class MathVF extends AbstractViewField {
 	container?: HTMLElement;

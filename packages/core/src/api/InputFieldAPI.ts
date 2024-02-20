@@ -1,12 +1,12 @@
-import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
+import { type IPlugin } from 'packages/core/src/IPlugin';
+import { type InputFieldArgumentType, type InputFieldType } from 'packages/core/src/config/FieldConfigs';
+import { type UnvalidatedBindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import {
 	type UnvalidatedFieldArgument,
 	type UnvalidatedInputFieldDeclaration,
 } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
-import { type InputFieldArgumentType, type InputFieldType } from 'packages/core/src/config/FieldConfigs';
+import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { PROP_ACCESS_TYPE } from 'packages/core/src/utils/prop/PropAccess';
-import { type UnvalidatedBindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { type IPlugin } from 'packages/core/src/IPlugin';
 
 export class InputFieldAPI {
 	private readonly plugin: IPlugin;

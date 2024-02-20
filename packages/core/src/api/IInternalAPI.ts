@@ -1,9 +1,12 @@
-import { type SuggesterLikeIFP, type SuggesterOption } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
-import { type MBLiteral } from 'packages/core/src/utils/Literal';
-import { type ImageSuggesterIPF } from 'packages/core/src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
 import { type DatePickerIPF } from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePickerIPF';
-import type { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
+import { type ImageSuggesterIPF } from 'packages/core/src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
+import {
+	type SuggesterLikeIFP,
+	type SuggesterOption,
+} from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
 import { type IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
+import { type MBLiteral } from 'packages/core/src/utils/Literal';
+import type { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 
 export interface ErrorIndicatorProps {
 	errorCollection: ErrorCollection;

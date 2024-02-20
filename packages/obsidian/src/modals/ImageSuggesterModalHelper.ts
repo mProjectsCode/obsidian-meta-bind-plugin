@@ -1,13 +1,13 @@
-import { SuggesterOption } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
+import { Notice, type TAbstractFile, TFile, TFolder } from 'obsidian';
+import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import { type OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 import { type OptionQueryInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionQueryInputFieldArgument';
+import { type ImageSuggesterIPF } from 'packages/core/src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
+import { SuggesterOption } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
+import { stringifyLiteral } from 'packages/core/src/utils/Literal';
 import { ErrorLevel, MetaBindArgumentError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import { Notice, type TAbstractFile, TFile, TFolder } from 'obsidian';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 import { ImageSuggesterInputModal } from 'packages/obsidian/src/modals/ImageSuggesterInputModal';
-import { type ImageSuggesterIPF } from 'packages/core/src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
-import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
-import { stringifyLiteral } from 'packages/core/src/utils/Literal';
 
 function recSearchFolder(folder: TFolder): SuggesterOption<string>[] {
 	const ret = [];

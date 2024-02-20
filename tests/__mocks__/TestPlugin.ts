@@ -1,16 +1,16 @@
-import { IPlugin } from '../../packages/core/src/IPlugin';
-import { TestInternalAPI } from './TestInternalAPI';
-import { DEFAULT_SETTINGS, MetaBindPluginSettings } from '../../packages/core/src/Settings';
-import { TestAPI } from './TestAPI';
 import { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
-import { DateParser } from '../../packages/core/src/parsers/DateParser';
-import { setFirstWeekday } from '../../packages/core/src/utils/DatePickerUtils';
-import { BindTargetStorageType } from '../../packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { IPlugin } from '../../packages/core/src/IPlugin';
+import { DEFAULT_SETTINGS, MetaBindPluginSettings } from '../../packages/core/src/Settings';
 import {
 	GlobalMetadataSource,
 	InternalMetadataSource,
 	ScopeMetadataSource,
 } from '../../packages/core/src/metadata/InternalMetadataSources';
+import { DateParser } from '../../packages/core/src/parsers/DateParser';
+import { BindTargetStorageType } from '../../packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { setFirstWeekday } from '../../packages/core/src/utils/DatePickerUtils';
+import { TestAPI } from './TestAPI';
+import { TestInternalAPI } from './TestInternalAPI';
 
 export class TestPlugin implements IPlugin {
 	public api: TestAPI;

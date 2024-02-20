@@ -1,7 +1,7 @@
-import esbuild from 'esbuild';
-import process from 'process';
 import builtins from 'builtin-modules';
+import esbuild from 'esbuild';
 import esbuildSvelte from 'esbuild-svelte';
+import process from 'process';
 import sveltePreprocess from 'svelte-preprocess';
 import manifest from './manifest.json' assert { type: 'json' };
 

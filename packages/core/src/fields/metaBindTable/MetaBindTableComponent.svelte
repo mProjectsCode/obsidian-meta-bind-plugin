@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { MetaBindTable, MetaBindTableRow } from './MetaBindTable';
-	import MetaBindTableCellComponent from './MetaBindTableCellComponent.svelte';
+	import { MetaBindTable, MetaBindTableRow } from 'packages/core/src/fields/metaBindTable/MetaBindTable';
+	import MetaBindTableCellComponent from 'packages/core/src/fields/metaBindTable/MetaBindTableCellComponent.svelte';
 	import Icon from 'packages/core/src/utils/components/Icon.svelte';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 

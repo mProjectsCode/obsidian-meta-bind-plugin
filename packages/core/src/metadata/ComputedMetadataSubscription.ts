@@ -1,10 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-import { type Signal } from 'packages/core/src/utils/Signal';
 import { type IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
 import { type MetadataManager } from 'packages/core/src/metadata/MetadataManager';
 import { type MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
-import { getUUID } from 'packages/core/src/utils/Utils';
 import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { type Signal } from 'packages/core/src/utils/Signal';
+import { getUUID } from 'packages/core/src/utils/Utils';
 
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 export type ComputeFunction = (values: unknown[]) => Promise<unknown> | unknown;

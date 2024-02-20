@@ -1,5 +1,3 @@
-import { oneOf, schemaForType } from 'packages/core/src/utils/ZodUtils';
-import { z } from 'zod';
 import {
 	type ButtonAction,
 	ButtonActionType,
@@ -13,6 +11,8 @@ import {
 	type TemplaterCreateNoteButtonAction,
 	type UpdateMetadataButtonAction,
 } from 'packages/core/src/config/ButtonConfig';
+import { oneOf, schemaForType } from 'packages/core/src/utils/ZodUtils';
+import { z } from 'zod';
 
 export const V_CommandButtonAction = schemaForType<CommandButtonAction>()(
 	z.object({

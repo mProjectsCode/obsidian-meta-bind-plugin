@@ -1,22 +1,22 @@
-import { InputFieldDeclarationParser } from 'packages/core/src/parsers/inputFieldParser/InputFieldParser';
-import { ViewFieldParser } from 'packages/core/src/parsers/viewFieldParser/ViewFieldParser';
-import { BindTargetParser } from 'packages/core/src/parsers/bindTargetParser/BindTargetParser';
 import { type IPlugin } from 'packages/core/src/IPlugin';
 import { InputFieldAPI } from 'packages/core/src/api/InputFieldAPI';
-import { InputFieldFactory } from 'packages/core/src/fields/inputFields/InputFieldFactory';
-import { ButtonActionRunner } from 'packages/core/src/fields/button/ButtonActionRunner';
-import { ButtonManager } from 'packages/core/src/fields/button/ButtonManager';
 import { SyntaxHighlightingAPI } from 'packages/core/src/api/SyntaxHighlightingAPI';
-import { ViewFieldFactory } from 'packages/core/src/fields/viewFields/ViewFieldFactory';
 import { type RenderChildType } from 'packages/core/src/config/FieldConfigs';
-import { getUUID } from 'packages/core/src/utils/Utils';
-import { InputFieldBase } from 'packages/core/src/fields/inputFields/InputFieldBase';
-import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
-import { ViewFieldBase } from 'packages/core/src/fields/viewFields/ViewFieldBase';
-import { type FieldBase } from 'packages/core/src/fields/IFieldBase';
-import { JsViewField } from 'packages/core/src/fields/viewFields/JsViewField';
-import { InlineButtonBase } from 'packages/core/src/fields/button/InlineButtonBase';
+import { type FieldBase } from 'packages/core/src/fields/FieldBase';
+import { ButtonActionRunner } from 'packages/core/src/fields/button/ButtonActionRunner';
 import { ButtonBase } from 'packages/core/src/fields/button/ButtonBase';
+import { ButtonManager } from 'packages/core/src/fields/button/ButtonManager';
+import { InlineButtonBase } from 'packages/core/src/fields/button/InlineButtonBase';
+import { InputFieldBase } from 'packages/core/src/fields/inputFields/InputFieldBase';
+import { InputFieldFactory } from 'packages/core/src/fields/inputFields/InputFieldFactory';
+import { JsViewField } from 'packages/core/src/fields/viewFields/JsViewField';
+import { ViewFieldBase } from 'packages/core/src/fields/viewFields/ViewFieldBase';
+import { ViewFieldFactory } from 'packages/core/src/fields/viewFields/ViewFieldFactory';
+import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
+import { BindTargetParser } from 'packages/core/src/parsers/bindTargetParser/BindTargetParser';
+import { InputFieldDeclarationParser } from 'packages/core/src/parsers/inputFieldParser/InputFieldParser';
+import { ViewFieldParser } from 'packages/core/src/parsers/viewFieldParser/ViewFieldParser';
+import { expectType, getUUID } from 'packages/core/src/utils/Utils';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 export enum FieldType {
@@ -98,6 +98,8 @@ export abstract class API<Plugin extends IPlugin> {
 		} else if (type === FieldType.BUTTON) {
 			return new ButtonBase(this.plugin, uuid, filePath, content, false);
 		}
+
+		expectType<never>(type);
 
 		// TODO: Nice error message
 		throw new Error(`Unknown field type: ${type}`);

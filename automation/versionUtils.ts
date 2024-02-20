@@ -1,8 +1,8 @@
-import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
-import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { Parser } from '@lemons_dev/parsinom/lib/Parser';
-import { UserError } from 'utils';
+import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
+import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import Moment from 'moment';
+import { UserError } from 'utils';
 
 export class Version {
 	major: number;

@@ -1,7 +1,7 @@
 import { Modal } from 'obsidian';
+import { type ButtonConfig } from 'packages/core/src/config/ButtonConfig';
 import type MetaBindPlugin from 'packages/obsidian/src/main.ts';
 import ButtonBuilderModalComponent from 'packages/obsidian/src/modals/ButtonBuilderModalComponent.svelte';
-import { type ButtonConfig } from 'packages/core/src/config/ButtonConfig';
 
 export interface ButtonBuilderModalOptions {
 	plugin: MetaBindPlugin;

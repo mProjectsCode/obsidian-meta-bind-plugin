@@ -1,8 +1,8 @@
-import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
 import { type Moment } from 'moment';
-import { type SvelteComponent } from 'svelte';
-import { DateParser } from 'packages/core/src/parsers/DateParser';
+import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
 import DateComponent from 'packages/core/src/fields/inputFields/fields/Date/DateComponent.svelte';
+import { DateParser } from 'packages/core/src/parsers/DateParser';
+import { type SvelteComponent } from 'svelte';
 
 export class DateIPF extends AbstractInputField<string, Moment> {
 	protected filterValue(value: unknown): string | undefined {

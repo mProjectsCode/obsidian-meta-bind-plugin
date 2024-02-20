@@ -1,21 +1,21 @@
-import type MetaBindPlugin from 'packages/obsidian/src/main.ts';
-import { type App, Component, MarkdownRenderer, Notice, TFile, parseYaml, setIcon } from 'obsidian';
+import { type App, Component, MarkdownRenderer, Notice, parseYaml, setIcon, TFile } from 'obsidian';
 import { type ErrorIndicatorProps, type IInternalAPI } from 'packages/core/src/api/IInternalAPI';
 import { type DatePickerIPF } from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePickerIPF';
-import { DatePickerInputModal } from 'packages/obsidian/src/modals/DatePickerInputModal';
-import { openImageSuggesterModalForInputField } from 'packages/obsidian/src/modals/ImageSuggesterModalHelper.js';
 import { type ImageSuggesterIPF } from 'packages/core/src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
 import {
 	type SuggesterLikeIFP,
 	type SuggesterOption,
 } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
+import { type IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
 import { type MBLiteral } from 'packages/core/src/utils/Literal';
-import { openSuggesterModalForInputField } from 'packages/obsidian/src/modals/SuggesterModalHelper';
-import { TextPromptModal } from 'packages/obsidian/src/modals/TextPromptModal';
+import ErrorIndicatorComponent from 'packages/obsidian/src/ErrorIndicatorComponent.svelte';
 import { getJsEnginePluginAPI } from 'packages/obsidian/src/ObsUtils';
 import { ObsidianJsRenderer } from 'packages/obsidian/src/ObsidianJsRenderer';
-import { type IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
-import ErrorIndicatorComponent from 'packages/obsidian/src/ErrorIndicatorComponent.svelte';
+import type MetaBindPlugin from 'packages/obsidian/src/main.ts';
+import { DatePickerInputModal } from 'packages/obsidian/src/modals/DatePickerInputModal';
+import { openImageSuggesterModalForInputField } from 'packages/obsidian/src/modals/ImageSuggesterModalHelper.js';
+import { openSuggesterModalForInputField } from 'packages/obsidian/src/modals/SuggesterModalHelper';
+import { TextPromptModal } from 'packages/obsidian/src/modals/TextPromptModal';
 
 export class ObsidianInternalAPI implements IInternalAPI {
 	readonly plugin: MetaBindPlugin;

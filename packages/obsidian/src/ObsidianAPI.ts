@@ -1,5 +1,5 @@
-import type MetaBindPlugin from 'packages/obsidian/src/main.ts';
-import { type Component } from 'obsidian';
+import { type Component, stringifyYaml } from 'obsidian';
+import type MetaBindPlugin from 'packages/obsidian/src/main';
 import { ExcludedMDRC } from 'packages/obsidian/src/renderChildren/ExcludedMDRC';
 
 import {
@@ -15,25 +15,26 @@ import {
 	V_API_listenToMetadata,
 } from 'packages/obsidian/src/APIValidators';
 
-import { FieldMDRC } from 'packages/obsidian/src/renderChildren/FieldMDRC';
-import { MarkdownRenderChildWidget } from 'packages/obsidian/src/cm6/Cm6_Widgets';
-import { ObsidianButtonActionRunner } from 'packages/obsidian/src/ObsidianButtonActionRunner';
 import { API, FieldType, isFieldTypeAllowedInline } from 'packages/core/src/api/API.js';
 import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
-import { type BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import { InputFieldBase } from 'packages/core/src/fields/inputFields/InputFieldBase';
-import { validateArgs } from 'packages/core/src/utils/ZodUtils';
-import { type UnvalidatedInputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
-import { getUUID } from 'packages/core/src/utils/Utils';
-import { Signal } from 'packages/core/src/utils/Signal';
+import { MetaBindTable } from 'packages/core/src/fields/metaBindTable/MetaBindTable';
+import { type BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import {
 	type BindTargetDeclaration,
 	BindTargetStorageType,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
+import { type UnvalidatedInputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
 import { type UnvalidatedViewFieldDeclaration } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
-import { MetaBindTable } from 'packages/obsidian/src/metaBindTable/MetaBindTable';
+import { Signal } from 'packages/core/src/utils/Signal';
+import { getUUID } from 'packages/core/src/utils/Utils';
+import { validateArgs } from 'packages/core/src/utils/ZodUtils';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
+import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
+import { ObsidianButtonActionRunner } from 'packages/obsidian/src/ObsidianButtonActionRunner';
+import { MarkdownRenderChildWidget } from 'packages/obsidian/src/cm6/Cm6_Widgets';
+import { FieldMDRC } from 'packages/obsidian/src/renderChildren/FieldMDRC';
+import { type ButtonConfig } from 'packages/core/src/config/ButtonConfig';
 
 export interface ComponentLike {
 	addChild(child: Component): void;
@@ -241,6 +242,15 @@ export class ObsidianAPI extends API<MetaBindPlugin> {
 		);
 	}
 
+	public createButton(
+		declaration: ButtonConfig,
+		filePath: string,
+		containerEl: HTMLElement,
+		component: ComponentLike,
+	): FieldMDRC | ExcludedMDRC {
+		return this.createButtonFromString(stringifyYaml(declaration), filePath, containerEl, component);
+	}
+
 	public createInlineButtonFromString(
 		fullDeclaration: string,
 		filePath: string,
@@ -334,13 +344,14 @@ export class ObsidianAPI extends API<MetaBindPlugin> {
 		bindTarget: BindTargetDeclaration,
 		tableHead: string[],
 		columns: (UnvalidatedInputFieldDeclaration | UnvalidatedViewFieldDeclaration)[],
-	): MetaBindTable {
+	): FieldMDRC {
 		validateArgs(V_API_createTable, [containerEl, filePath, component, bindTarget, tableHead, columns]);
 
-		const table = new MetaBindTable(this.plugin, filePath, containerEl, bindTarget, tableHead, columns);
-		component.addChild(table);
+		const table = new MetaBindTable(this.plugin, getUUID(), filePath, bindTarget, tableHead, columns);
+		const mdrc = new FieldMDRC(this.plugin, table, containerEl);
+		component.addChild(mdrc);
 
-		return table;
+		return mdrc;
 	}
 
 	public createBindTarget(fullDeclaration: string, currentFilePath: string): BindTargetDeclaration {

@@ -1,6 +1,6 @@
-import { type SvelteComponent } from 'svelte';
-import { type Listener, Notifier } from 'packages/core/src/utils/Signal';
 import { type IPlugin } from 'packages/core/src/IPlugin';
+import { type Listener, Notifier } from 'packages/core/src/utils/Signal';
+import { type SvelteComponent } from 'svelte';
 
 export class InputFieldComponent<Value> extends Notifier<Value, Listener<Value>> {
 	readonly plugin: IPlugin;

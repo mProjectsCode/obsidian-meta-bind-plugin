@@ -1,5 +1,5 @@
-import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
+import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 
 export class Time {
 	private _hour: number;

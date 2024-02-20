@@ -1,22 +1,19 @@
 <script lang="ts">
-	import { MetaBindTable, MetaBindTableCell } from './MetaBindTable';
+	import { MetaBindTable, MetaBindTableCell } from 'packages/core/src/fields/metaBindTable/MetaBindTable';
 	import { onDestroy, onMount } from 'svelte';
-	import { Component } from 'obsidian';
 
 	export let table: MetaBindTable;
 	export let cell: MetaBindTableCell;
 
 	let element: HTMLElement;
-	let component: Component;
+	let onUnmount: () => void;
 
 	onMount(() => {
-		component = new Component();
-		component.load();
-		table.createCell(cell, element, component);
+		onUnmount = table.createCell(cell, element);
 	});
 
 	onDestroy(() => {
-		component.unload();
+		onUnmount?.();
 	});
 </script>
 

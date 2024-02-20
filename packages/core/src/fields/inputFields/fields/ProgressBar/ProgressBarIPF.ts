@@ -1,11 +1,11 @@
-import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
-import { optClamp } from 'packages/core/src/utils/Utils';
-import { type SvelteComponent } from 'svelte';
-import ProgressBarComponent from 'packages/core/src/fields/inputFields/fields/ProgressBar/ProgressBarComponent.svelte';
-import { ErrorLevel, MetaBindArgumentError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
-import { parseUnknownToFloat } from 'packages/core/src/utils/Literal';
+import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
 import { type InputFieldBase } from 'packages/core/src/fields/inputFields/InputFieldBase';
+import ProgressBarComponent from 'packages/core/src/fields/inputFields/fields/ProgressBar/ProgressBarComponent.svelte';
+import { parseUnknownToFloat } from 'packages/core/src/utils/Literal';
+import { optClamp } from 'packages/core/src/utils/Utils';
+import { ErrorLevel, MetaBindArgumentError } from 'packages/core/src/utils/errors/MetaBindErrors';
+import { type SvelteComponent } from 'svelte';
 
 export class ProgressBarIPF extends AbstractInputField<number, number> {
 	minValue: number;

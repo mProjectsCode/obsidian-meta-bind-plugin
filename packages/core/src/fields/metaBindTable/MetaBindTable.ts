@@ -1,26 +1,25 @@
+import MetaBindTableComponent from 'packages/core/src/fields/metaBindTable/MetaBindTableComponent.svelte';
+import { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import {
 	type InputFieldDeclaration,
 	type UnvalidatedInputFieldDeclaration,
 } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
-import { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
-import { type Listener, Signal } from 'packages/core/src/utils/Signal';
-import MetaBindTableComponent from 'packages/obsidian/src/metaBindTable/MetaBindTableComponent.svelte';
-import { type Component } from 'obsidian';
 import {
 	type UnvalidatedViewFieldDeclaration,
 	type ViewFieldDeclaration,
 } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
+import { type Listener, Signal } from 'packages/core/src/utils/Signal';
 
-import { type MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
-import { type MBExtendedLiteral } from 'packages/core/src/utils/Literal';
-import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
+import { type IPlugin } from 'packages/core/src/IPlugin';
 import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
-import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { FieldBase } from 'packages/core/src/fields/FieldBase';
 import { InputFieldBase } from 'packages/core/src/fields/inputFields/InputFieldBase';
 import { ViewFieldBase } from 'packages/core/src/fields/viewFields/ViewFieldBase';
-import { getUUID } from 'packages/core/src/utils/Utils';
-import { AbstractMDRC } from 'packages/obsidian/src/renderChildren/AbstractMDRC';
+import { type MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
+import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { type MBExtendedLiteral } from 'packages/core/src/utils/Literal';
+import { getUUID, showUnloadedMessage } from 'packages/core/src/utils/Utils';
+import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
 
 export type MetaBindTableCell = InputFieldDeclaration | ViewFieldDeclaration;
 
@@ -35,7 +34,7 @@ export interface MetaBindTableRow {
 
 type T = Record<string, MBExtendedLiteral>[];
 
-export class MetaBindTable extends AbstractMDRC {
+export class MetaBindTable extends FieldBase {
 	bindTarget: BindTargetDeclaration;
 	tableHead: string[];
 	columns: MetaBindColumnDeclaration[];
@@ -57,14 +56,14 @@ export class MetaBindTable extends AbstractMDRC {
 	private value: T | undefined;
 
 	constructor(
-		plugin: MetaBindPlugin,
+		plugin: IPlugin,
+		uuid: string,
 		filePath: string,
-		containerEl: HTMLElement,
 		bindTarget: BindTargetDeclaration,
 		tableHead: string[],
 		columns: MetaBindColumnDeclaration[],
 	) {
-		super(plugin, filePath, containerEl);
+		super(plugin, uuid, filePath);
 		this.bindTarget = bindTarget;
 		this.tableHead = tableHead;
 		this.columns = columns;
@@ -81,10 +80,10 @@ export class MetaBindTable extends AbstractMDRC {
 		});
 
 		this.metadataSubscription = this.plugin.metadataManager.subscribe(
-			this.uuid,
+			this.getUuid(),
 			this.inputSignal,
 			this.bindTarget,
-			() => this.unload(),
+			() => this.unmount(),
 		);
 	}
 
@@ -115,10 +114,9 @@ export class MetaBindTable extends AbstractMDRC {
 
 				const cells = this.columns.map(x => {
 					if ('inputFieldType' in x) {
-						// console.log('validate', x, this.filePath, scope);
-						return this.plugin.api.inputFieldParser.validateDeclaration(x, this.filePath, scope);
+						return this.plugin.api.inputFieldParser.validateDeclaration(x, this.getFilePath(), scope);
 					} else {
-						return this.plugin.api.viewFieldParser.validateDeclaration(x, this.filePath, scope);
+						return this.plugin.api.viewFieldParser.validateDeclaration(x, this.getFilePath(), scope);
 					}
 				});
 
@@ -142,20 +140,18 @@ export class MetaBindTable extends AbstractMDRC {
 		this.tableComponent?.updateTable(tableRows);
 	}
 
-	createCell(cell: MetaBindTableCell, element: HTMLElement, cellComponent: Component): void {
+	createCell(cell: MetaBindTableCell, element: HTMLElement): () => void {
 		const uuid = getUUID();
+		let field: FieldBase;
 
 		if ('inputFieldType' in cell) {
-			const field = new InputFieldBase(this.plugin, uuid, this.filePath, RenderChildType.INLINE, cell);
-
-			field.mount(element);
-			cellComponent.register(() => field.unmount());
+			field = new InputFieldBase(this.plugin, uuid, this.getFilePath(), RenderChildType.INLINE, cell);
 		} else {
-			const field = new ViewFieldBase(this.plugin, uuid, this.filePath, RenderChildType.INLINE, cell);
-
-			field.mount(element);
-			cellComponent.register(() => field.unmount());
+			field = new ViewFieldBase(this.plugin, uuid, this.getFilePath(), RenderChildType.INLINE, cell);
 		}
+
+		field.mount(element);
+		return () => field.unmount();
 	}
 
 	removeColumn(index: number): void {
@@ -172,11 +168,9 @@ export class MetaBindTable extends AbstractMDRC {
 		this.outputSignal.set(this.value);
 	}
 
-	onload(): void {
-		this.plugin.mdrcManager.registerMDRC(this);
-
+	protected onMount(targetEl: HTMLElement): void {
 		this.tableComponent = new MetaBindTableComponent({
-			target: this.containerEl,
+			target: targetEl,
 			props: {
 				table: this,
 				tableHead: this.tableHead,
@@ -193,9 +187,10 @@ export class MetaBindTable extends AbstractMDRC {
 		this.registerSelfToMetadataManager();
 	}
 
-	public onunload(): void {
-		this.plugin.mdrcManager.unregisterMDRC(this);
+	protected onUnmount(targetEl: HTMLElement): void {
 		this.unregisterSelfFromMetadataManager();
 		this.tableComponent?.$destroy();
+
+		showUnloadedMessage(targetEl, 'table');
 	}
 }

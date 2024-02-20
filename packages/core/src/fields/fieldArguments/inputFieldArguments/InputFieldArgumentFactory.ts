@@ -1,20 +1,20 @@
-import { ClassInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/ClassInputFieldArgument';
+import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import { AddLabelsInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/AddLabelsInputFieldArgument';
-import { MinValueInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/MinValueInputFieldArgument';
+import { ClassInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/ClassInputFieldArgument';
+import { DefaultValueInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/DefaultValueInputFieldArgument';
+import { LimitInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/LimitInputFieldArgument';
 import { MaxValueInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/MaxValueInputFieldArgument';
-import { OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
-import { TitleInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/TitleInputFieldArgument';
-import { OptionQueryInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionQueryInputFieldArgument';
-import { ErrorLevel, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import { ShowcaseInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/ShowcaseInputFieldArgument';
+import { MinValueInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/MinValueInputFieldArgument';
 import { OffValueInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OffValueInputFieldArgument';
 import { OnValueInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OnValueInputFieldArgument';
-import { DefaultValueInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/DefaultValueInputFieldArgument';
+import { OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
+import { OptionQueryInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionQueryInputFieldArgument';
 import { PlaceholderInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/PlaceholderInputFieldArgument';
-import { UseLinksInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/UseLinksInputFieldArgument';
+import { ShowcaseInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/ShowcaseInputFieldArgument';
 import { StepSizeValueInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/StepSizeValueInputFieldArgument';
-import { LimitInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/LimitInputFieldArgument';
-import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
+import { TitleInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/TitleInputFieldArgument';
+import { UseLinksInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/UseLinksInputFieldArgument';
+import { ErrorLevel, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 export const INPUT_FIELD_ARGUMENT_MAP = {
 	[InputFieldArgumentType.CLASS]: ClassInputFieldArgument,

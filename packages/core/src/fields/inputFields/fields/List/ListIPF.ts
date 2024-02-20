@@ -1,8 +1,8 @@
-import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
-import { type SvelteComponent } from 'svelte';
-import ListComponent from 'packages/core/src/fields/inputFields/fields/List/ListComponent.svelte';
 import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
+import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
+import ListComponent from 'packages/core/src/fields/inputFields/fields/List/ListComponent.svelte';
 import { type MBLiteral, parseUnknownToLiteralArray } from 'packages/core/src/utils/Literal';
+import { type SvelteComponent } from 'svelte';
 
 export class ListIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> {
 	protected filterValue(value: unknown): MBLiteral[] | undefined {

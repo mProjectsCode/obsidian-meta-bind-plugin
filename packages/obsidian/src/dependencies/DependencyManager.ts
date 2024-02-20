@@ -1,10 +1,10 @@
 import { type Plugin } from 'obsidian';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
-import { ErrorCollectionViewModal } from 'packages/obsidian/src/modals/ErrorCollectionViewModal';
+import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
+import { ErrorLevel, MetaBindDependencyError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { type Dependency } from 'packages/obsidian/src/dependencies/Dependency';
 import { Version } from 'packages/obsidian/src/dependencies/Version';
-import { ErrorLevel, MetaBindDependencyError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
+import type MetaBindPlugin from 'packages/obsidian/src/main';
+import { ErrorCollectionViewModal } from 'packages/obsidian/src/modals/ErrorCollectionViewModal';
 
 export class DependencyManager {
 	readonly plugin: MetaBindPlugin;

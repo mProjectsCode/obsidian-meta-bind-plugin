@@ -1,10 +1,10 @@
-import { type ButtonConfig } from 'packages/core/src/config/ButtonConfig';
-import ButtonComponent from 'packages/core/src/utils/components/ButtonComponent.svelte';
 import { type IPlugin } from 'packages/core/src/IPlugin';
+import { type ButtonConfig } from 'packages/core/src/config/ButtonConfig';
 import { V_ButtonConfig } from 'packages/core/src/config/ButtonConfigValidators';
-import { ErrorLevel, MetaBindButtonError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
 import { DomHelpers, isTruthy } from 'packages/core/src/utils/Utils';
+import ButtonComponent from 'packages/core/src/utils/components/ButtonComponent.svelte';
+import { ErrorLevel, MetaBindButtonError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { fromZodError } from 'zod-validation-error';
 
 export class ButtonField {

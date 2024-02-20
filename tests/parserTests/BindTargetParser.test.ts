@@ -1,13 +1,13 @@
 import { describe, expect, test } from 'bun:test';
-import { TestPlugin } from '../__mocks__/TestPlugin';
 import { set } from 'itertools-ts/es';
+import { BindTargetScope } from '../../packages/core/src/metadata/BindTargetScope';
 import {
 	BindTargetDeclaration,
 	BindTargetStorageType,
 } from '../../packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { parsePropPath } from '../../packages/core/src/utils/prop/PropParser';
-import { BindTargetScope } from '../../packages/core/src/metadata/BindTargetScope';
 import { PropPath } from '../../packages/core/src/utils/prop/PropPath';
+import { TestPlugin } from '../__mocks__/TestPlugin';
 
 const plugin = new TestPlugin();
 const parser = plugin.api.bindTargetParser;

@@ -1,8 +1,8 @@
 import { type IPlugin } from 'packages/core/src/IPlugin';
-import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
+import { FieldBase } from 'packages/core/src/fields/FieldBase';
 import { InlineButtonField } from 'packages/core/src/fields/button/InlineButtonField';
 import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
-import { FieldBase } from 'packages/core/src/fields/IFieldBase';
+import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 
 export class InlineButtonBase extends FieldBase {
 	errorCollection: ErrorCollection;

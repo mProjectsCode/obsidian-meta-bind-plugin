@@ -1,12 +1,15 @@
-import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { type IPlugin } from 'packages/core/src/IPlugin';
-import { BIND_TARGET } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';
-import { ParsingValidationError, runParser } from 'packages/core/src/parsers/ParsingError';
 import { type BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
+import { ParsingValidationError, runParser } from 'packages/core/src/parsers/ParsingError';
+import {
+	type BindTargetDeclaration,
+	type UnvalidatedBindTargetDeclaration,
+} from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { BIND_TARGET } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';
+import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
+import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { PropAccess } from 'packages/core/src/utils/prop/PropAccess';
 import { PropPath } from 'packages/core/src/utils/prop/PropPath';
-import { type BindTargetDeclaration, type UnvalidatedBindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 
 export class BindTargetParser {
 	plugin: IPlugin;

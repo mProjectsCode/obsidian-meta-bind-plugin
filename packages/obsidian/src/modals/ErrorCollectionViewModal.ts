@@ -1,6 +1,6 @@
 import { type App, Modal } from 'obsidian';
-import ErrorCollectionComponent from 'packages/core/src/utils/errors/ErrorCollectionComponent.svelte';
 import { type ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
+import ErrorCollectionComponent from 'packages/core/src/utils/errors/ErrorCollectionComponent.svelte';
 
 export interface ErrorCollectionModalSettings {
 	errorCollection: ErrorCollection;

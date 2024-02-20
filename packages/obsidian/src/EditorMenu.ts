@@ -1,6 +1,9 @@
 import { type Editor, type Menu, stringifyYaml } from 'obsidian';
+import {
+	createInputFieldInsertExamples,
+	createViewFieldInsertExamples,
+} from 'packages/core/src/utils/InputFieldExamples';
 import type MetaBindPlugin from 'packages/obsidian/src/main.ts';
-import { createInputFieldInsertExamples, createViewFieldInsertExamples } from 'packages/core/src/utils/InputFieldExamples';
 import { ButtonBuilderModal } from 'packages/obsidian/src/modals/ButtonBuilderModal';
 
 export function createEditorMenu(menu: Menu, editor: Editor, plugin: MetaBindPlugin): void {

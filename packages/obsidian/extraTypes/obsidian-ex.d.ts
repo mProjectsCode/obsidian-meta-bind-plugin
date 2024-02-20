@@ -1,5 +1,4 @@
 import { type Plugin, type PluginManifest } from 'obsidian';
-import { getUUID } from '../packages/utils/Utils';
 
 declare module 'obsidian' {
 	interface App {

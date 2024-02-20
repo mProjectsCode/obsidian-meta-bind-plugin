@@ -1,6 +1,6 @@
 import { MarkdownRenderChild } from 'obsidian';
-import type MetaBindPlugin from 'packages/obsidian/src/main.ts';
 import { getUUID } from 'packages/core/src/utils/Utils';
+import type MetaBindPlugin from 'packages/obsidian/src/main.ts';
 
 export class AbstractMDRC extends MarkdownRenderChild {
 	readonly plugin: MetaBindPlugin;

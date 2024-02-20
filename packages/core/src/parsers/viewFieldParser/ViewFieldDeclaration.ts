@@ -1,12 +1,12 @@
-import { type UnvalidatedFieldArgument } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
-import { type ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
-import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
-import { type ViewFieldArgumentContainer } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
 import { type ViewFieldType } from 'packages/core/src/config/FieldConfigs';
+import { type ViewFieldArgumentContainer } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
 import {
 	type BindTargetDeclaration,
 	type UnvalidatedBindTargetDeclaration,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { type UnvalidatedFieldArgument } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
+import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
+import { type ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 
 export interface PartialUnvalidatedViewFieldDeclaration {
 	/**

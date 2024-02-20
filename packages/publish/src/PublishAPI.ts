@@ -1,9 +1,9 @@
 import { API, type FieldType } from 'packages/core/src/api/API';
-import { type MetaBindPublishPlugin } from 'packages/publish/src/main';
 import { type RenderChildType } from 'packages/core/src/config/FieldConfigs';
 import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import { type ComponentLike } from 'packages/obsidian/src/ObsidianAPI';
 import { PublishFieldMDRC } from 'packages/publish/src/PublishFieldMDRC';
+import { type MetaBindPublishPlugin } from 'packages/publish/src/main';
 
 export class PublishAPI extends API<MetaBindPublishPlugin> {
 	constructor(plugin: MetaBindPublishPlugin) {

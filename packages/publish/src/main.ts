@@ -1,12 +1,12 @@
-import { type MetaBindPluginSettings } from 'packages/core/src/Settings';
-import { type IPlugin } from 'packages/core/src/IPlugin';
-import { PublishAPI } from 'packages/publish/src/PublishAPI';
 import { type MarkdownPostProcessorContext } from 'obsidian/publish';
-import { PublishInternalAPI } from 'packages/publish/src/PublishInternalAPI';
+import { type IPlugin } from 'packages/core/src/IPlugin';
+import { type MetaBindPluginSettings } from 'packages/core/src/Settings';
+import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
+import { GlobalMetadataSource, InternalMetadataSource } from 'packages/core/src/metadata/InternalMetadataSources';
 import { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
 import { BindTargetStorageType } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { GlobalMetadataSource, InternalMetadataSource } from 'packages/core/src/metadata/InternalMetadataSources';
-import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
+import { PublishAPI } from 'packages/publish/src/PublishAPI';
+import { PublishInternalAPI } from 'packages/publish/src/PublishInternalAPI';
 
 export class MetaBindPublishPlugin implements IPlugin {
 	settings: MetaBindPluginSettings;

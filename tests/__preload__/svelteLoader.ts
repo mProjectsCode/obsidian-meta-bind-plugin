@@ -1,6 +1,6 @@
 import { plugin } from 'bun';
-import sveltePreprocess from 'svelte-preprocess';
 import esbuildSvelte from 'esbuild-svelte';
+import sveltePreprocess from 'svelte-preprocess';
 
 plugin(
 	// @ts-ignore

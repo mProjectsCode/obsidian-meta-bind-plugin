@@ -1,7 +1,7 @@
 import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
+import InlineListSuggesterComponent from 'packages/core/src/fields/inputFields/fields/InlineListSuggester/InlineListSuggesterComponent.svelte';
 import { type MBLiteral, parseUnknownToLiteralArray } from 'packages/core/src/utils/Literal';
 import { type SvelteComponent } from 'svelte';
-import InlineListSuggesterComponent from 'packages/core/src/fields/inputFields/fields/InlineListSuggester/InlineListSuggesterComponent.svelte';
 
 export class InlineListSuggesterIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> {
 	protected filterValue(value: unknown): MBLiteral[] | undefined {

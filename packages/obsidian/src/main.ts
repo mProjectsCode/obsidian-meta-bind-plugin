@@ -1,30 +1,30 @@
 import { loadPrism, type MarkdownPostProcessorContext, Plugin, stringifyYaml, type WorkspaceLeaf } from 'obsidian';
-import { MetaBindSettingTab } from 'packages/obsidian/src/settings/SettingsTab';
-import { createMarkdownRenderChildWidgetEditorPlugin } from 'packages/obsidian/src/cm6/Cm6_ViewPlugin';
-import { FaqView, MB_FAQ_VIEW_TYPE } from 'packages/obsidian/src/faq/FaqView';
-import { EMBED_MAX_DEPTH, EmbedMDRC } from 'packages/obsidian/src/renderChildren/EmbedMDRC';
 import { type IPlugin } from 'packages/core/src/IPlugin';
 import { DEFAULT_SETTINGS, type MetaBindPluginSettings } from 'packages/core/src/Settings';
-import { MDRCManager } from 'packages/obsidian/src/MDRCManager';
-import { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
-import { ObsidianAPI } from 'packages/obsidian/src/ObsidianAPI';
-import { ObsidianInternalAPI } from 'packages/obsidian/src/ObsidianInternalAPI';
-import { DependencyManager } from 'packages/obsidian/src/dependencies/DependencyManager';
-import { Version } from 'packages/obsidian/src/dependencies/Version';
-import { registerCm5HLModes } from 'packages/obsidian/src/cm6/Cm5_Modes';
-import { createEditorMenu } from 'packages/obsidian/src/EditorMenu';
-import { ObsidianMetadataSource } from 'packages/obsidian/src/ObsidianMetadataSource';
+import { FieldType } from 'packages/core/src/api/API';
+import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
 import {
 	GlobalMetadataSource,
 	InternalMetadataSource,
 	ScopeMetadataSource,
 } from 'packages/core/src/metadata/InternalMetadataSources';
-import { BindTargetStorageType } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
-import { FieldType } from 'packages/core/src/api/API';
-import { ButtonBuilderModal } from 'packages/obsidian/src/modals/ButtonBuilderModal';
+import { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
 import { DateParser } from 'packages/core/src/parsers/DateParser';
+import { BindTargetStorageType } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { setFirstWeekday } from 'packages/core/src/utils/DatePickerUtils';
+import { createEditorMenu } from 'packages/obsidian/src/EditorMenu';
+import { MDRCManager } from 'packages/obsidian/src/MDRCManager';
+import { ObsidianAPI } from 'packages/obsidian/src/ObsidianAPI';
+import { ObsidianInternalAPI } from 'packages/obsidian/src/ObsidianInternalAPI';
+import { ObsidianMetadataSource } from 'packages/obsidian/src/ObsidianMetadataSource';
+import { registerCm5HLModes } from 'packages/obsidian/src/cm6/Cm5_Modes';
+import { createMarkdownRenderChildWidgetEditorPlugin } from 'packages/obsidian/src/cm6/Cm6_ViewPlugin';
+import { DependencyManager } from 'packages/obsidian/src/dependencies/DependencyManager';
+import { Version } from 'packages/obsidian/src/dependencies/Version';
+import { FaqView, MB_FAQ_VIEW_TYPE } from 'packages/obsidian/src/faq/FaqView';
+import { ButtonBuilderModal } from 'packages/obsidian/src/modals/ButtonBuilderModal';
+import { EMBED_MAX_DEPTH, EmbedMDRC } from 'packages/obsidian/src/renderChildren/EmbedMDRC';
+import { MetaBindSettingTab } from 'packages/obsidian/src/settings/SettingsTab';
 
 export enum MetaBindBuild {
 	DEV = 'dev',

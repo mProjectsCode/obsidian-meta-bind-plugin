@@ -1,4 +1,4 @@
-import { type FieldBase } from 'packages/core/src/fields/IFieldBase';
+import { type FieldBase } from 'packages/core/src/fields/FieldBase';
 import { PublishAbstractMDRC } from 'packages/publish/src/PublishAbstractMDRC';
 import { type MetaBindPublishPlugin } from 'packages/publish/src/main';
 

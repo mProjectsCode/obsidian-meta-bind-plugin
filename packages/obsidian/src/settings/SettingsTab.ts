@@ -1,12 +1,12 @@
 import { type App, ButtonComponent, PluginSettingTab, Setting } from 'obsidian';
+import { DEFAULT_SETTINGS, weekdays } from 'packages/core/src/Settings';
+import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
+import { MB_FAQ_VIEW_TYPE } from 'packages/obsidian/src/faq/FaqView';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 import { MetaBindBuild } from 'packages/obsidian/src/main';
+import { ButtonTemplatesSettingModal } from 'packages/obsidian/src/settings/buttonTemplateSetting/ButtonTemplatesSettingModal';
 import { ExcludedFoldersSettingModal } from 'packages/obsidian/src/settings/excludedFoldersSetting/ExcludedFoldersSettingModal';
 import { InputFieldTemplatesSettingModal } from 'packages/obsidian/src/settings/inputFieldTemplateSetting/InputFieldTemplatesSettingModal';
-import { MB_FAQ_VIEW_TYPE } from 'packages/obsidian/src/faq/FaqView';
-import { ButtonTemplatesSettingModal } from 'packages/obsidian/src/settings/buttonTemplateSetting/ButtonTemplatesSettingModal';
-import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
-import { DEFAULT_SETTINGS, weekdays } from 'packages/core/src/Settings';
 
 export class MetaBindSettingTab extends PluginSettingTab {
 	plugin: MetaBindPlugin;

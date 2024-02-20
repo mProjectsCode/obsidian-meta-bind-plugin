@@ -1,5 +1,5 @@
-import { type PROP_ACCESS_TYPE } from 'packages/core/src/utils/prop/PropAccess';
 import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
+import { type PROP_ACCESS_TYPE } from 'packages/core/src/utils/prop/PropAccess';
 import { type PropPath } from 'packages/core/src/utils/prop/PropPath';
 
 export interface UnvalidatedBindTargetDeclaration {

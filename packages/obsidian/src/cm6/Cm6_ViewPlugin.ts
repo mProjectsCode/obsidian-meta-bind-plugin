@@ -1,12 +1,12 @@
-import { Decoration, type DecorationSet, type EditorView, ViewPlugin, type ViewUpdate } from '@codemirror/view';
-import { type EditorState, type Range, type RangeSet } from '@codemirror/state';
 import { syntaxTree } from '@codemirror/language';
+import { type EditorState, type Range, type RangeSet } from '@codemirror/state';
+import { Decoration, type DecorationSet, type EditorView, ViewPlugin, type ViewUpdate } from '@codemirror/view';
 import { type SyntaxNode } from '@lezer/common';
-import { Component, editorLivePreviewField, type TFile } from 'obsidian';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
-import { Cm6_Util, MB_WidgetType } from 'packages/obsidian/src/cm6/Cm6_Util';
 import { summary } from 'itertools-ts/es';
+import { Component, editorLivePreviewField, type TFile } from 'obsidian';
 import { type FieldType } from 'packages/core/src/api/API';
+import { Cm6_Util, MB_WidgetType } from 'packages/obsidian/src/cm6/Cm6_Util';
+import type MetaBindPlugin from 'packages/obsidian/src/main';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlugin): ViewPlugin<any> {

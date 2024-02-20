@@ -1,16 +1,20 @@
-import { type Signal } from 'packages/core/src/utils/Signal';
-import { ErrorLevel, MetaBindBindTargetError, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import { type IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
-import { MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
 import {
 	ComputedMetadataSubscription,
 	type ComputedSubscriptionDependency,
 	type ComputeFunction,
 } from 'packages/core/src/metadata/ComputedMetadataSubscription';
-import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { type IMetadataSource, type Metadata } from 'packages/core/src/metadata/MetadataSource';
+import { type IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
 import { type IMetadataCacheItem } from 'packages/core/src/metadata/MetadataCacheItem';
+import { type IMetadataSource, type Metadata } from 'packages/core/src/metadata/MetadataSource';
+import { MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
+import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { type Signal } from 'packages/core/src/utils/Signal';
 import { areArraysEqual, arrayStartsWith } from 'packages/core/src/utils/Utils';
+import {
+	ErrorLevel,
+	MetaBindBindTargetError,
+	MetaBindInternalError,
+} from 'packages/core/src/utils/errors/MetaBindErrors';
 
 export const METADATA_CACHE_UPDATE_CYCLE_THRESHOLD = 5; // {syncInterval (200)} * 5 = 1s
 export const METADATA_CACHE_INACTIVE_CYCLE_THRESHOLD = 5 * 60; // {syncInterval (200)} * 5 * 60 = 1 minute

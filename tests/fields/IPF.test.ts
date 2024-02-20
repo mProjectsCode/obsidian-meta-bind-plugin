@@ -1,16 +1,16 @@
 import { describe, expect, spyOn, test } from 'bun:test';
-import { multi, Stream } from 'itertools-ts/es';
-import { TestPlugin } from '../__mocks__/TestPlugin';
+import { Stream, multi } from 'itertools-ts/es';
 import { InputFieldType, RenderChildType } from '../../packages/core/src/config/FieldConfigs';
-import { stringifyLiteral } from '../../packages/core/src/utils/Literal';
 import { InputFieldBase } from '../../packages/core/src/fields/inputFields/InputFieldBase';
 import { InputField } from '../../packages/core/src/fields/inputFields/InputFieldFactory';
-import { getUUID } from '../../packages/core/src/utils/Utils';
-import { Signal } from '../../packages/core/src/utils/Signal';
-import { Metadata } from '../../packages/core/src/metadata/MetadataSource';
-import { parsePropPath } from '../../packages/core/src/utils/prop/PropParser';
-import { BindTargetStorageType } from '../../packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { METADATA_CACHE_UPDATE_CYCLE_THRESHOLD } from '../../packages/core/src/metadata/MetadataManager';
+import { Metadata } from '../../packages/core/src/metadata/MetadataSource';
+import { BindTargetStorageType } from '../../packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { stringifyLiteral } from '../../packages/core/src/utils/Literal';
+import { Signal } from '../../packages/core/src/utils/Signal';
+import { getUUID } from '../../packages/core/src/utils/Utils';
+import { parsePropPath } from '../../packages/core/src/utils/prop/PropParser';
+import { TestPlugin } from '../__mocks__/TestPlugin';
 
 const TEST_FILE_PATH = 'testFile';
 const TEST_PROP = 'testProp';

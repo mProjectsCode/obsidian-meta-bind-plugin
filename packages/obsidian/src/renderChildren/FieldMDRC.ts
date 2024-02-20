@@ -1,6 +1,6 @@
-import { AbstractMDRC } from 'packages/obsidian/src/renderChildren/AbstractMDRC';
+import { type FieldBase } from 'packages/core/src/fields/FieldBase';
 import type MetaBindPlugin from 'packages/obsidian/src/main.ts';
-import { type FieldBase } from 'packages/core/src/fields/IFieldBase';
+import { AbstractMDRC } from 'packages/obsidian/src/renderChildren/AbstractMDRC';
 
 export class FieldMDRC extends AbstractMDRC {
 	readonly base: FieldBase;

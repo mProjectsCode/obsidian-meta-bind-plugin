@@ -1,10 +1,10 @@
 import { InputFieldComponent } from 'packages/core/src/fields/inputFields/InputFieldComponent';
-import { type SvelteComponent } from 'svelte';
 import { ComputedSignal, Signal } from 'packages/core/src/utils/Signal';
+import { type SvelteComponent } from 'svelte';
 
 import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
-import { type MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
 import { type InputFieldBase } from 'packages/core/src/fields/inputFields/InputFieldBase';
+import { type MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
 import { Mountable } from 'packages/core/src/utils/Mountable';
 
 export abstract class AbstractInputField<MetadataValueType, ComponentValueType> extends Mountable {

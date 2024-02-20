@@ -1,6 +1,6 @@
 import Moment from 'moment/moment';
-import { mod } from 'packages/core/src/utils/Utils';
 import { monthNames, type Weekday, weekdays } from 'packages/core/src/Settings';
+import { mod } from 'packages/core/src/utils/Utils';
 
 export let firstWeekday: Weekday = weekdays[1];
 

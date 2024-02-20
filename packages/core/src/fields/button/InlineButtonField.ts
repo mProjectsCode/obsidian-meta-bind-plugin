@@ -1,9 +1,9 @@
-import { ButtonParser } from 'packages/core/src/parsers/ButtonParser';
-import { ButtonField } from 'packages/core/src/fields/button/ButtonField';
-import ButtonComponent from 'packages/core/src/utils/components/ButtonComponent.svelte';
-import { type ButtonConfig, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 import { type IPlugin } from 'packages/core/src/IPlugin';
+import { type ButtonConfig, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+import { ButtonField } from 'packages/core/src/fields/button/ButtonField';
+import { ButtonParser } from 'packages/core/src/parsers/ButtonParser';
 import { DomHelpers } from 'packages/core/src/utils/Utils';
+import ButtonComponent from 'packages/core/src/utils/components/ButtonComponent.svelte';
 
 export class InlineButtonField {
 	plugin: IPlugin;

@@ -1,13 +1,13 @@
 import { ViewFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
-import { stringifyUnknown } from 'packages/core/src/utils/Literal';
+import { type ViewFieldBase } from 'packages/core/src/fields/viewFields/ViewFieldBase';
+import { type ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
 import {
 	type ComputedMetadataSubscription,
 	type ComputedSubscriptionDependency,
 } from 'packages/core/src/metadata/ComputedMetadataSubscription';
-import { Signal } from 'packages/core/src/utils/Signal';
-import { type ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
-import { type ViewFieldBase } from 'packages/core/src/fields/viewFields/ViewFieldBase';
+import { stringifyUnknown } from 'packages/core/src/utils/Literal';
 import { Mountable } from 'packages/core/src/utils/Mountable';
+import { Signal } from 'packages/core/src/utils/Signal';
 import { DomHelpers } from 'packages/core/src/utils/Utils';
 
 export abstract class AbstractViewField extends Mountable {

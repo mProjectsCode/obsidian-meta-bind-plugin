@@ -1,7 +1,7 @@
 import { type App, Modal } from 'obsidian';
+import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 import ExcludedFoldersSettingComponent from 'packages/obsidian/src/settings/excludedFoldersSetting/ExcludedFoldersSettingComponent.svelte';
-import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 
 export class ExcludedFoldersSettingModal extends Modal {
 	private readonly plugin: MetaBindPlugin;

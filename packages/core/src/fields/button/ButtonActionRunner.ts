@@ -1,3 +1,4 @@
+import { type IPlugin } from 'packages/core/src/IPlugin';
 import {
 	type ButtonAction,
 	ButtonActionType,
@@ -12,9 +13,8 @@ import {
 	type UpdateMetadataButtonAction,
 } from 'packages/core/src/config/ButtonConfig';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
-import { type IPlugin } from 'packages/core/src/IPlugin';
-import { getUUID, openURL } from 'packages/core/src/utils/Utils';
 import { Signal } from 'packages/core/src/utils/Signal';
+import { getUUID, openURL } from 'packages/core/src/utils/Utils';
 
 export class ButtonActionRunner {
 	plugin: IPlugin;

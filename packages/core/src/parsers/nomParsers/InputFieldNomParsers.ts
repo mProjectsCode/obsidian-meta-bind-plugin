@@ -1,12 +1,17 @@
-import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
-import { createResultNode, fieldArguments, ident, identWithSpaces } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
+import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import {
 	type PartialUnvalidatedInputFieldDeclaration,
 	type UnvalidatedFieldArgument,
 } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
 import { BIND_TARGET } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';
+import {
+	createResultNode,
+	fieldArguments,
+	ident,
+	identWithSpaces,
+} from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 
 export const INPUT_FIELD_DECLARATION: Parser<PartialUnvalidatedInputFieldDeclaration> = P.sequenceMap(
 	(type, args, b) => {

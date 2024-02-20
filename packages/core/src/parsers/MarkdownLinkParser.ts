@@ -1,8 +1,8 @@
-import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
-import { filePath } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';
 import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
-import { runParser } from 'packages/core/src/parsers/ParsingError';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
+import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
+import { runParser } from 'packages/core/src/parsers/ParsingError';
+import { filePath } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';
 import { isUrl } from 'packages/core/src/utils/Utils';
 
 const mdWikiLinkInnerParser: Parser<[string, string | undefined, string | undefined]> = P.sequence(

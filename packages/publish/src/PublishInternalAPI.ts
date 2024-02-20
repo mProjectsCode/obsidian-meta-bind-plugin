@@ -1,13 +1,13 @@
 import { type ErrorIndicatorProps, type IInternalAPI } from 'packages/core/src/api/IInternalAPI';
-import { type MetaBindPublishPlugin } from 'packages/publish/src/main';
 import { type DatePickerIPF } from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePickerIPF';
+import { type ImageSuggesterIPF } from 'packages/core/src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
 import {
 	type SuggesterLikeIFP,
 	type SuggesterOption,
 } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
-import { type MBLiteral } from 'packages/core/src/utils/Literal';
 import { type IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
-import { type ImageSuggesterIPF } from 'packages/core/src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
+import { type MBLiteral } from 'packages/core/src/utils/Literal';
+import { type MetaBindPublishPlugin } from 'packages/publish/src/main';
 
 // TODO: implement
 export class PublishInternalAPI implements IInternalAPI {

@@ -1,7 +1,7 @@
-import { type App, Modal } from 'obsidian';
 import DatePickerInput from 'meta-bind-core/src/fields/inputFields/fields/DatePicker/DatePicker.svelte';
-import { type DatePickerIPF } from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePickerIPF';
 import type { Moment } from 'moment';
+import { type App, Modal } from 'obsidian';
+import { type DatePickerIPF } from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePickerIPF';
 
 export class DatePickerInputModal extends Modal {
 	datePickerInput: DatePickerInput | undefined;

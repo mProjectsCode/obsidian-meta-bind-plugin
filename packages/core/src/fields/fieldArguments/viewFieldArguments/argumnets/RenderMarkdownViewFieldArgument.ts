@@ -1,6 +1,6 @@
-import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
-import { AbstractViewFieldArgument } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/AbstractViewFieldArgument';
 import { type ViewFieldArgumentConfig, ViewFieldArgumentConfigs } from 'packages/core/src/config/FieldConfigs';
+import { AbstractViewFieldArgument } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/AbstractViewFieldArgument';
+import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 
 export class RenderMarkdownViewFieldArgument extends AbstractViewFieldArgument {
 	value: boolean = true;

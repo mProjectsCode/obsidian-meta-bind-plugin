@@ -1,26 +1,26 @@
-import { z } from 'zod';
 import { type ParsingPosition, type ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
 import { Component } from 'obsidian';
-import { schemaForType } from 'packages/core/src/utils/ZodUtils';
 import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
 import { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
-import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
-import {
-	type UnvalidatedFieldArgument,
-	type UnvalidatedInputFieldDeclaration,
-} from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
 import {
 	type BindTargetDeclaration,
 	BindTargetStorageType,
 	type UnvalidatedBindTargetDeclaration,
 	type UnvalidatedPropAccess,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { PROP_ACCESS_TYPE } from 'packages/core/src/utils/prop/PropAccess';
+import {
+	type UnvalidatedFieldArgument,
+	type UnvalidatedInputFieldDeclaration,
+} from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
+import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import { type UnvalidatedViewFieldDeclaration } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
-import { PropPath } from 'packages/core/src/utils/prop/PropPath';
 import { Signal } from 'packages/core/src/utils/Signal';
-import { type ComponentLike, type ObsidianAPI } from 'packages/obsidian/src/ObsidianAPI';
+import { schemaForType } from 'packages/core/src/utils/ZodUtils';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
+import { PROP_ACCESS_TYPE } from 'packages/core/src/utils/prop/PropAccess';
+import { PropPath } from 'packages/core/src/utils/prop/PropPath';
+import { type ComponentLike, type ObsidianAPI } from 'packages/obsidian/src/ObsidianAPI';
+import { z } from 'zod';
 
 export const V_FilePath = schemaForType<string>()(z.string());
 

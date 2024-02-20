@@ -1,5 +1,5 @@
-import esbuild, { analyzeMetafile } from 'esbuild';
 import builtins from 'builtin-modules';
+import esbuild from 'esbuild';
 import esbuildSvelte from 'esbuild-svelte';
 import sveltePreprocess from 'svelte-preprocess';
 import manifest from './manifest.json' assert { type: 'json' };

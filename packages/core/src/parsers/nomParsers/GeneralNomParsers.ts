@@ -1,7 +1,7 @@
-import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
-import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
-import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { type ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
+import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
+import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
+import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { type UnvalidatedFieldArgument } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
 
 export const ident: Parser<string> = P.sequence(

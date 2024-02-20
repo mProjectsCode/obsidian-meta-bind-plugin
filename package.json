@@ -12,14 +12,15 @@
 		"test": "LOG_TESTS=false bun test",
 		"test:log": "LOG_TESTS=true bun test",
 		"format": "prettier --write --plugin prettier-plugin-svelte .",
-		"format:check": "prettier --check --plugin prettier-plugin-svelte .",
+		"format:check": "prettier --check --plugin prettier-plugin-svelte.",
 		"lint": "eslint --max-warnings=0 packages/**",
 		"lint:fix": "eslint --max-warnings=0 --fix packages/**",
 		"types": "tsc -p \"./tsconfig.types.json\"",
 		"check": "bun run format:check && bun run lint && bun run tsc && bun run test",
 		"check:fix": "bun run format && bun run lint:fix && bun run tsc && bun run test",
 		"release": "bun run automation/release.ts",
-		"serve-publish": "bun --watch automation/publishServer.ts"
+		"serve-publish": "bun --watch automation/publishServer.ts",
+		"stats": "bun run automation/stats.ts"
 	},
 	"keywords": [],
 	"author": "Moritz Jung",

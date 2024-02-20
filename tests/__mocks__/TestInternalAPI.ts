@@ -1,13 +1,13 @@
 import { ErrorIndicatorProps, IInternalAPI } from '../../packages/core/src/api/IInternalAPI';
-import { TestPlugin } from './TestPlugin';
 import { DatePickerIPF } from '../../packages/core/src/fields/inputFields/fields/DatePicker/DatePickerIPF';
 import { ImageSuggesterIPF } from '../../packages/core/src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
 import {
 	SuggesterLikeIFP,
 	SuggesterOption,
 } from '../../packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
-import { MBLiteral } from '../../packages/core/src/utils/Literal';
 import { IJsRenderer } from '../../packages/core/src/utils/IJsRenderer';
+import { MBLiteral } from '../../packages/core/src/utils/Literal';
+import { TestPlugin } from './TestPlugin';
 
 export class TestInternalAPI implements IInternalAPI {
 	plugin: TestPlugin;

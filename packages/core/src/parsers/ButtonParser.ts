@@ -1,6 +1,6 @@
+import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { runParser } from 'packages/core/src/parsers/ParsingError';
-import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 
 const buttonParser = P.sequenceMap(
 	(_, b) => b,

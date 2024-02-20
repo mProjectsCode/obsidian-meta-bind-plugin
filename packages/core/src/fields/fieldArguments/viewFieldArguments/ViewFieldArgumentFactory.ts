@@ -1,7 +1,7 @@
-import { RenderMarkdownViewFieldArgument } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/argumnets/RenderMarkdownViewFieldArgument';
-import { HiddenViewFieldArgument } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/argumnets/HiddenViewFieldArgument';
-import { ErrorLevel, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { ViewFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
+import { HiddenViewFieldArgument } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/argumnets/HiddenViewFieldArgument';
+import { RenderMarkdownViewFieldArgument } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/argumnets/RenderMarkdownViewFieldArgument';
+import { ErrorLevel, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 /**
  * Maps the view field argument types to the view field constructors.

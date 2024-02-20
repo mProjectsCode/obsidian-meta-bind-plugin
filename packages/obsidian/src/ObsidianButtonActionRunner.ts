@@ -1,7 +1,7 @@
 import { TFile, TFolder } from 'obsidian';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
-import { ButtonActionRunner } from 'packages/core/src/fields/button/ButtonActionRunner';
 import { type TemplaterCreateNoteButtonAction } from 'packages/core/src/config/ButtonConfig';
+import { ButtonActionRunner } from 'packages/core/src/fields/button/ButtonActionRunner';
+import type MetaBindPlugin from 'packages/obsidian/src/main';
 
 export class ObsidianButtonActionRunner extends ButtonActionRunner {
 	plugin: MetaBindPlugin;

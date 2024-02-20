@@ -1,10 +1,10 @@
-import type MetaBindPlugin from 'packages/obsidian/src/main.ts';
-import { Component, TFile } from 'obsidian';
 import { type API } from 'jsEngine/api/API';
-import { getJsEnginePluginAPI } from 'packages/obsidian/src/ObsUtils';
 import { type JsExecution } from 'jsEngine/engine/JsExecution';
-import { DomHelpers } from 'packages/core/src/utils/Utils';
+import { Component, TFile } from 'obsidian';
 import { type IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
+import { DomHelpers } from 'packages/core/src/utils/Utils';
+import { getJsEnginePluginAPI } from 'packages/obsidian/src/ObsUtils';
+import type MetaBindPlugin from 'packages/obsidian/src/main.ts';
 
 export class ObsidianJsRenderer implements IJsRenderer {
 	readonly plugin: MetaBindPlugin;

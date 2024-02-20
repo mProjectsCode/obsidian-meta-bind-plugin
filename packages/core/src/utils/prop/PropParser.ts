@@ -1,6 +1,6 @@
-import { PropPath } from 'packages/core/src/utils/prop/PropPath';
-import { PROP_ACCESS_TYPE, PropAccess } from 'packages/core/src/utils/prop/PropAccess';
 import { intParser } from 'packages/core/src/utils/Literal';
+import { PROP_ACCESS_TYPE, PropAccess } from 'packages/core/src/utils/prop/PropAccess';
+import { PropPath } from 'packages/core/src/utils/prop/PropPath';
 
 export function parsePropPath(arr: string[]): PropPath {
 	return new PropPath(

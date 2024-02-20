@@ -1,8 +1,8 @@
-import { FieldBase } from 'packages/core/src/fields/IFieldBase';
 import { type IPlugin } from 'packages/core/src/IPlugin';
-import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
-import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
+import { FieldBase } from 'packages/core/src/fields/FieldBase';
 import { ButtonField } from 'packages/core/src/fields/button/ButtonField';
+import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
+import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 
 export class ButtonBase extends FieldBase {
 	errorCollection: ErrorCollection;

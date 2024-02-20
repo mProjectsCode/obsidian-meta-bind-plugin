@@ -1,11 +1,11 @@
+import { type InputFieldType } from 'packages/core/src/config/FieldConfigs';
 import { type InputFieldArgumentContainer } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/InputFieldArgumentContainer';
-import { type ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
-import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import {
 	type BindTargetDeclaration,
 	type UnvalidatedBindTargetDeclaration,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { type InputFieldType } from 'packages/core/src/config/FieldConfigs';
+import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
+import { type ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 
 export interface InputFieldDeclaration {
 	/**

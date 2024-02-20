@@ -1,9 +1,9 @@
-import { AbstractMDRC } from 'packages/obsidian/src/renderChildren/AbstractMDRC';
-import type MetaBindPlugin from 'packages/obsidian/src/main.ts';
 import { MarkdownRenderer } from 'obsidian';
+import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import { getUUID, showUnloadedMessage } from 'packages/core/src/utils/Utils';
 import { ErrorLevel, MetaBindEmbedError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
+import type MetaBindPlugin from 'packages/obsidian/src/main.ts';
+import { AbstractMDRC } from 'packages/obsidian/src/renderChildren/AbstractMDRC';
 
 export const EMBED_MAX_DEPTH = 8;
 

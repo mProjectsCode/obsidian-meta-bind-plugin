@@ -1,5 +1,4 @@
-import { type Moment } from 'moment';
-import moment from 'moment';
+import moment, { type Moment } from 'moment';
 
 export class DateParser {
 	public static dateFormat: string;

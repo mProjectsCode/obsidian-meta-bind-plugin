@@ -1,8 +1,8 @@
 import { type App, Modal } from 'obsidian';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
-import InputFieldTemplatesSettingComponent from 'packages/obsidian/src/settings/inputFieldTemplateSetting/InputFieldTemplatesSettingComponent.svelte';
 import { type InputFieldTemplate } from 'packages/core/src/Settings';
 import { type ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
+import type MetaBindPlugin from 'packages/obsidian/src/main';
+import InputFieldTemplatesSettingComponent from 'packages/obsidian/src/settings/inputFieldTemplateSetting/InputFieldTemplatesSettingComponent.svelte';
 
 export class InputFieldTemplatesSettingModal extends Modal {
 	readonly plugin: MetaBindPlugin;

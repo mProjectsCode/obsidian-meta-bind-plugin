@@ -1,10 +1,10 @@
 import { type EditorView, WidgetType } from '@codemirror/view';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
 import { type Component } from 'obsidian';
-import { type ExcludedMDRC } from 'packages/obsidian/src/renderChildren/ExcludedMDRC';
-import { type FieldMDRC } from 'packages/obsidian/src/renderChildren/FieldMDRC';
 import { type FieldType } from 'packages/core/src/api/API';
 import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
+import type MetaBindPlugin from 'packages/obsidian/src/main';
+import { type ExcludedMDRC } from 'packages/obsidian/src/renderChildren/ExcludedMDRC';
+import { type FieldMDRC } from 'packages/obsidian/src/renderChildren/FieldMDRC';
 
 export class MarkdownRenderChildWidget extends WidgetType {
 	type: FieldType;

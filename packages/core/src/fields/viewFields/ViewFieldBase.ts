@@ -1,12 +1,12 @@
 import { type IPlugin } from 'packages/core/src/IPlugin';
 import { RenderChildType, type ViewFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
-import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
-import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
+import { FieldBase } from 'packages/core/src/fields/FieldBase';
+import { type ViewFieldArgumentMapType } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
 import { type AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractViewField';
 import type { ViewFieldDeclaration } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
-import { type ViewFieldArgumentMapType } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
+import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
+import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import { FieldBase } from 'packages/core/src/fields/IFieldBase';
 
 export class ViewFieldBase extends FieldBase {
 	renderChildType: RenderChildType;
