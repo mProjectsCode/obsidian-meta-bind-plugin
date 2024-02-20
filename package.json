@@ -13,8 +13,8 @@
 		"test:log": "LOG_TESTS=true bun test",
 		"format": "prettier --write --plugin prettier-plugin-svelte .",
 		"format:check": "prettier --check --plugin prettier-plugin-svelte .",
-		"lint": "eslint --max-warnings=0 src/**",
-		"lint:fix": "eslint --max-warnings=0 --fix src/**",
+		"lint": "eslint --max-warnings=0 packages/**",
+		"lint:fix": "eslint --max-warnings=0 --fix packages/**",
 		"types": "tsc -p \"./tsconfig.types.json\"",
 		"check": "bun run format:check && bun run lint && bun run tsc && bun run test",
 		"check:fix": "bun run format && bun run lint:fix && bun run tsc && bun run test",
@@ -25,10 +25,6 @@
 	"author": "Moritz Jung",
 	"license": "GPL-3.0",
 	"devDependencies": {
-		"@codemirror/lang-javascript": "^6.2.1",
-		"@codemirror/language": "6.9.2",
-		"@codemirror/state": "6.3.1",
-		"@codemirror/view": "6.22.0",
 		"@happy-dom/global-registrator": "^13.3.8",
 		"@tsconfig/svelte": "^5.0.2",
 		"@types/bun": "^1.0.5",
@@ -42,9 +38,9 @@
 		"eslint": "^8.56.0",
 		"eslint-plugin-import": "^2.29.1",
 		"eslint-plugin-isaacscript": "^3.12.2",
+		"eslint-plugin-no-relative-import-paths": "^1.5.3",
 		"eslint-plugin-only-warn": "^1.1.0",
-		"obsidian": "latest",
-		"obsidian-dataview": "0.5.56",
+		"itertools-ts": "^1.27.0",
 		"prettier": "^3.2.5",
 		"prettier-plugin-svelte": "^3.2.1",
 		"string-argv": "^0.3.2",
@@ -53,12 +49,5 @@
 		"tslib": "2.6.2",
 		"typescript": "^5.3.3"
 	},
-	"dependencies": {
-		"@codemirror/legacy-modes": "^6.3.3",
-		"@lemons_dev/parsinom": "^0.0.12",
-		"itertools-ts": "^1.27.0",
-		"mathjs": "^12.0.0",
-		"zod": "^3.22.4",
-		"zod-validation-error": "^2.1.0"
-	}
+	"private": true
 }

@@ -1,0 +1,71 @@
+import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
+import { type OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
+import { type SvelteComponent } from 'svelte';
+import { type Moment } from 'moment';
+import DatePickerComponent from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePickerComponent.svelte';
+import { DateParser } from 'packages/core/src/parsers/DateParser';
+import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
+
+import { type InputFieldBase } from 'packages/core/src/fields/inputFields/InputFieldBase';
+
+export class DatePickerIPF extends AbstractInputField<string | null, Moment | null> {
+	options: OptionInputFieldArgument[];
+
+	constructor(base: InputFieldBase) {
+		super(base);
+
+		this.options = this.base.getArguments(InputFieldArgumentType.OPTION);
+	}
+
+	protected filterValue(value: unknown): string | null | undefined {
+		if (value === null) {
+			return null;
+		}
+		if (value === undefined || typeof value !== 'string') {
+			return undefined;
+		}
+		const date = DateParser.parse(value);
+		if (date.isValid()) {
+			return DateParser.stringify(date);
+		} else {
+			return undefined;
+		}
+	}
+
+	protected getFallbackDefaultValue(): Moment {
+		return DateParser.getDefaultDate();
+	}
+
+	protected getSvelteComponent(): typeof SvelteComponent {
+		// @ts-ignore
+		return DatePickerComponent;
+	}
+
+	protected rawMapValue(value: Moment | null): string | null {
+		if (value === null) {
+			return null;
+		}
+		return DateParser.stringify(value);
+	}
+
+	protected rawReverseMapValue(value: string | null): Moment | null | undefined {
+		if (value === null) {
+			return null;
+		}
+		const date = DateParser.parse(value);
+		if (date.isValid()) {
+			return date;
+		} else {
+			return undefined;
+		}
+	}
+
+	protected getMountArgs(): Record<string, unknown> {
+		return {
+			dateFormat: this.base.plugin.settings.preferredDateFormat,
+			showDatePicker: (): void => {
+				this.base.plugin.internal.openDatePickerModal(this);
+			},
+		};
+	}
+}

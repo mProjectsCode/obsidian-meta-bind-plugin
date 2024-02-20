@@ -8,12 +8,12 @@
 		"strict": true,
 		"strictNullChecks": true,
 		"noImplicitReturns": true,
-		"moduleResolution": "node",
+		"moduleResolution": "Node",
 		"importHelpers": true,
 		"isolatedModules": true,
 		"lib": ["DOM", "ESNext"],
 		"types": ["svelte"],
 		"allowSyntheticDefaultImports": true
 	},
-	"include": ["src/**/*.ts", "tests/**/*.ts", "node_modules/obsidian/publish.d.ts", "extraTypes/**/*.ts"]
+	"include": ["packages/core/**/*.ts", "tests/**/*.ts", "node_modules/obsidian/publish.d.ts"]
 }

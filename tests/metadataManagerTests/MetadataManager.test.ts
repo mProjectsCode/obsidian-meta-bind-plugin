@@ -1,12 +1,15 @@
-import { MetadataManager } from '../../src/metadata/MetadataManager';
-import { MetadataSubscription } from '../../src/metadata/MetadataSubscription';
-import { getUUID } from '../../src/utils/Utils';
-import { ListenerCallback, Signal } from '../../src/utils/Signal';
 import { beforeEach, describe, expect, Mock, spyOn, test } from 'bun:test';
-import { parsePropPath } from '../../src/utils/prop/PropParser';
-import { BindTargetDeclaration, BindTargetStorageType } from '../../src/parsers/bindTargetParser/BindTargetDeclaration';
-import { InternalMetadataSource } from '../../src/metadata/InternalMetadataSources';
-import { Metadata } from '../../src/metadata/MetadataSource';
+import {
+	BindTargetDeclaration,
+	BindTargetStorageType,
+} from '../../packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { MetadataManager } from '../../packages/core/src/metadata/MetadataManager';
+import { MetadataSubscription } from '../../packages/core/src/metadata/MetadataSubscription';
+import { ListenerCallback, Signal } from '../../packages/core/src/utils/Signal';
+import { getUUID } from '../../packages/core/src/utils/Utils';
+import { parsePropPath } from '../../packages/core/src/utils/prop/PropParser';
+import { Metadata } from '../../packages/core/src/metadata/MetadataSource';
+import { InternalMetadataSource } from '../../packages/core/src/metadata/InternalMetadataSources';
 
 const testFilePath = 'testFile';
 

@@ -1,5 +1,4 @@
 import esbuild, { analyzeMetafile } from 'esbuild';
-import process from 'process';
 import builtins from 'builtin-modules';
 import esbuildSvelte from 'esbuild-svelte';
 import sveltePreprocess from 'svelte-preprocess';
@@ -22,7 +21,7 @@ const build = await esbuild.build({
 	banner: {
 		js: banner,
 	},
-	entryPoints: ['src/main.ts'],
+	entryPoints: ['packages/obsidian/src/main.ts'],
 	bundle: true,
 	external: [
 		'obsidian',
@@ -65,4 +64,5 @@ const build = await esbuild.build({
 
 const file = Bun.file('meta.txt');
 await Bun.write(file, JSON.stringify(build.metafile, null, '\t'));
+
 process.exit(0);

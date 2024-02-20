@@ -1,9 +1,3 @@
-import { mock } from 'bun:test';
-import Moment from 'moment';
+// import { mock } from 'bun:test';
 
-mock.module('obsidian', () => ({
-	setIcon(iconEl: HTMLElement, iconName: string): void {
-		// do nothing
-	},
-	moment: Moment,
-}));
+// mock.module('obsidian', () => ({}));

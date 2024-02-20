@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from 'bun:test';
-import { PropPath } from '../../src/utils/prop/PropPath';
-import { PROP_ACCESS_TYPE, PropAccess } from '../../src/utils/prop/PropAccess';
-import { PropUtils } from '../../src/utils/prop/PropUtils';
+import { PropUtils } from '../../packages/core/src/utils/prop/PropUtils';
+import { PropPath } from '../../packages/core/src/utils/prop/PropPath';
+import { PROP_ACCESS_TYPE, PropAccess } from '../../packages/core/src/utils/prop/PropAccess';
 
 describe('PropUtils', () => {
 	describe('get', () => {

@@ -1,10 +1,13 @@
-import { type ErrorIndicatorProps, IInternalAPI } from '../../src/api/IInternalAPI';
-import { DatePickerIPF } from '../../src/fields/inputFields/fields/DatePicker/DatePickerIPF';
-import { ImageSuggesterIPF } from '../../src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
-import { SuggesterLikeIFP, SuggesterOption } from '../../src/fields/inputFields/fields/Suggester/SuggesterHelper';
-import { MBLiteral } from '../../src/utils/Literal';
+import { ErrorIndicatorProps, IInternalAPI } from '../../packages/core/src/api/IInternalAPI';
 import { TestPlugin } from './TestPlugin';
-import { IJsRenderer } from '../../src/fields/viewFields/jsRenderer/IJsRenderer';
+import { DatePickerIPF } from '../../packages/core/src/fields/inputFields/fields/DatePicker/DatePickerIPF';
+import { ImageSuggesterIPF } from '../../packages/core/src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
+import {
+	SuggesterLikeIFP,
+	SuggesterOption,
+} from '../../packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
+import { MBLiteral } from '../../packages/core/src/utils/Literal';
+import { IJsRenderer } from '../../packages/core/src/utils/IJsRenderer';
 
 export class TestInternalAPI implements IInternalAPI {
 	plugin: TestPlugin;
@@ -69,5 +72,11 @@ export class TestInternalAPI implements IInternalAPI {
 
 	public parseYaml(_yaml: string): unknown {
 		return {};
+	}
+
+	public setIcon(_element: HTMLElement, _icon: string): void {}
+
+	public imagePathToUri(imagePath: string): string {
+		return imagePath;
 	}
 }

@@ -9,7 +9,7 @@ import {
 	parseUnknownToString,
 	stringifyLiteral,
 	stringifyUnknown,
-} from 'src/utils/Literal';
+} from 'packages/core/src/utils/Literal';
 
 describe('parseLiteral function', () => {
 	test('should return null when given "null"', () => {

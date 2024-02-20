@@ -23,7 +23,7 @@ esbuild
 		banner: {
 			js: banner,
 		},
-		entryPoints: ['src/publish/Publish.ts'],
+		entryPoints: ['packages/publish/src/main.ts'],
 		bundle: true,
 		external: [
 			'obsidian',

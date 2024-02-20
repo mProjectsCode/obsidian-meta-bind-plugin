@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { MDLinkParser } from '../../src/parsers/MarkdownLinkParser';
+import { MDLinkParser } from '../../packages/core/src/parsers/MarkdownLinkParser';
 
 describe('markdown link parser', () => {
 	describe('parse markdown link', () => {

@@ -3,3 +3,4 @@ build
 main.js
 Publish.js
 *.svelte
+extraTypes
