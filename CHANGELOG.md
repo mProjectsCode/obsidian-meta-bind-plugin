@@ -1,5 +1,11 @@
 # Obsidian Meta Bind Changelog
 
+# 0.12.5
+
+Bug Fixes
+
+-   Fixed an issue with the Button Builder throwing an error when closed [#224](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/224)
+
 # 0.12.4
 
 Bug Fixes

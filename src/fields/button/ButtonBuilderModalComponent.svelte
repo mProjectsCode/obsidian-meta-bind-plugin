@@ -24,21 +24,21 @@
 	export let buttonConfig: ButtonConfig;
 
 	let buttonEl: HTMLElement;
-	let buttonMDRC: ButtonBase;
+	let buttonBase: ButtonBase;
 	let addActionType: ButtonActionType;
 
 	$: updatePreviewButton(buttonConfig, buttonEl);
 
 	onDestroy(() => {
-		buttonMDRC?.unload();
+		buttonBase?.unmount();
 	});
 
 	function updatePreviewButton(config: ButtonConfig, el: HTMLElement) {
-		buttonMDRC?.unmount();
+		buttonBase?.unmount();
 		if (el) {
 			el.empty();
-			buttonMDRC = new ButtonBase(modal.plugin, getUUID(), '', stringifyYaml(config), true);
-			buttonMDRC.mount(el);
+			buttonBase = new ButtonBase(modal.plugin, getUUID(), '', stringifyYaml(config), true);
+			buttonBase.mount(el);
 		}
 	}
 
