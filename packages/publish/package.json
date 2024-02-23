@@ -1,8 +1,7 @@
 {
 	"name": "meta-bind-publish",
 	"devDependencies": {
-		"svelte": "^4.2.11",
-		"typescript": "^5.0.0",
-		"obsidian": "latest"
+		"obsidian": "latest",
+		"svelte": "^4.2.11"
 	}
 }

@@ -1,7 +1,7 @@
 import { UserError } from 'utils';
 import { CanaryVersion, Version, getIncrementOptions, parseVersion, stringifyVersion } from 'versionUtils';
 import config from './config.json';
-import { $choise as $choice, $confirm, $seq, CMD_FMT, Verboseness } from './shellUtils';
+import { $choice as $choice, $confirm, $seq, CMD_FMT, Verboseness } from './shellUtils';
 
 async function runPreconditions(): Promise<void> {
 	// run preconditions
@@ -11,6 +11,7 @@ async function runPreconditions(): Promise<void> {
 			throw new UserError(`precondition "${cmd}" failed`);
 		},
 		() => {},
+		undefined,
 		Verboseness.VERBOSE,
 	);
 
@@ -21,6 +22,7 @@ async function runPreconditions(): Promise<void> {
 			throw new UserError('failed to add preconditions changes to git');
 		},
 		() => {},
+		undefined,
 		Verboseness.NORMAL,
 	);
 
@@ -32,6 +34,7 @@ async function runPreconditions(): Promise<void> {
 			changesToCommit = true;
 		},
 		() => {},
+		undefined,
 		Verboseness.QUITET,
 	);
 
@@ -43,6 +46,7 @@ async function runPreconditions(): Promise<void> {
 				throw new UserError('failed to add preconditions changes to git');
 			},
 			() => {},
+			undefined,
 			Verboseness.NORMAL,
 		);
 	}
@@ -58,6 +62,7 @@ async function run() {
 			throw new UserError('there are still untracked changes');
 		},
 		() => {},
+		undefined,
 		Verboseness.QUITET,
 	);
 
@@ -123,6 +128,7 @@ async function run() {
 			throw new UserError('failed to add preconditions changes to git');
 		},
 		() => {},
+		undefined,
 		Verboseness.NORMAL,
 	);
 
@@ -143,6 +149,7 @@ async function run() {
 			throw new UserError('failed to merge or create tag');
 		},
 		() => {},
+		undefined,
 		Verboseness.NORMAL,
 	);
 

@@ -7,19 +7,24 @@ export enum Verboseness {
 	VERBOSE,
 }
 
-function exec(c: string): Subprocess<'ignore', 'pipe', 'inherit'> {
-	return Bun.spawn(stringArgv(c));
+function exec(c: string, cwd?: string): Subprocess<'ignore', 'pipe', 'inherit'> {
+	return Bun.spawn(stringArgv(c), { cwd: cwd });
 }
 
 export async function $(
 	cmd: string,
+	cwd?: string | undefined,
 	verboseness: Verboseness = Verboseness.NORMAL,
 ): Promise<{ stdout: string; stderr: string; exit: number }> {
 	if (verboseness === Verboseness.NORMAL || verboseness === Verboseness.VERBOSE) {
-		console.log(`\n${CMD_FMT.Bright}running${CMD_FMT.Reset} - ${cmd}\n`);
+		if (cwd !== undefined) {
+			console.log(`\n${CMD_FMT.Bright}running${CMD_FMT.Reset} in ${cwd} - ${cmd}\n`);
+		} else {
+			console.log(`\n${CMD_FMT.Bright}running${CMD_FMT.Reset} - ${cmd}\n`);
+		}
 	}
 
-	const proc = exec(cmd);
+	const proc = exec(cmd, cwd);
 	const stdout = await new Response(proc.stdout).text();
 	const stderr = await new Response(proc.stderr).text();
 
@@ -64,12 +69,13 @@ export async function $seq(
 	cmds: string[],
 	onError: (cmd: string, index: number) => void,
 	onSuccess: () => void,
+	cwd?: string | undefined,
 	verboseness: Verboseness = Verboseness.NORMAL,
 ): Promise<void> {
 	const results = [];
 	for (let i = 0; i < cmds.length; i += 1) {
 		const cmd = cmds[i];
-		const result = await $(cmd, verboseness);
+		const result = await $(cmd, cwd, verboseness);
 
 		if (result.exit !== 0) {
 			onError(cmd, i);
@@ -91,7 +97,7 @@ export async function $input(message: string): Promise<string> {
 	return text.trim();
 }
 
-export async function $choise(message: string, options: string[]): Promise<number> {
+export async function $choice(message: string, options: string[]): Promise<number> {
 	console.log(`${message} `);
 
 	let optionNumbers = new Map<string, number>();
