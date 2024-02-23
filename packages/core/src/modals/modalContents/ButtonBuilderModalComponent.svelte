@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ButtonBuilderModal } from './ButtonBuilderModal.ts';
+	import { ButtonBuilderModal } from 'packages/core/src/modals/modalContents/ButtonBuilderModal.ts';
 	import {
 		ButtonActionType,
 		ButtonConfig,
@@ -9,17 +9,15 @@
 	} from 'packages/core/src/config/ButtonConfig';
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
 	import { onDestroy } from 'svelte';
-	import { Command, stringifyYaml, TFile, TFolder } from 'obsidian';
 	import { getUUID } from 'packages/core/src/utils/Utils';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import Icon from 'packages/core/src/utils/components/Icon.svelte';
-	import { CommandSelectModal } from './CommandSelectModal';
 	import ModalButtonGroup from 'packages/core/src/utils/components/ModalButtonGroup.svelte';
-	import { FolderSelectModal } from './FolderSelectModal';
-	import { FileSelectModal } from './FileSelectModal';
 	import Toggle from 'packages/core/src/utils/components/Toggle.svelte';
 	import { ButtonBase } from 'packages/core/src/fields/button/ButtonBase';
+	import { IPlugin } from 'packages/core/src/IPlugin';
 
+	export let plugin: IPlugin;
 	export let modal: ButtonBuilderModal;
 	export let buttonConfig: ButtonConfig;
 
@@ -37,13 +35,13 @@
 		buttonBase?.unmount();
 		if (el) {
 			el.empty();
-			buttonBase = new ButtonBase(modal.plugin, getUUID(), '', stringifyYaml(config), true);
+			buttonBase = new ButtonBase(plugin, getUUID(), '', plugin.internal.stringifyYaml(config), true);
 			buttonBase.mount(el);
 		}
 	}
 
 	function addAction() {
-		buttonConfig.actions?.push(modal.plugin.api.buttonActionRunner.createDefaultAction(addActionType));
+		buttonConfig.actions?.push(plugin.api.buttonActionRunner.createDefaultAction(addActionType));
 
 		buttonConfig.actions = buttonConfig.actions;
 	}
@@ -54,24 +52,24 @@
 	}
 
 	function commandActionChangeCommand(action: CommandButtonAction) {
-		new CommandSelectModal(modal.plugin, (command: Command) => {
+		plugin.internal.openCommandSelectModal((command: Command) => {
 			action.command = command.id;
 			buttonConfig.actions = buttonConfig.actions;
-		}).open();
+		});
 	}
 
 	function templaterCreateNoteActionChangeTemplateFile(action: TemplaterCreateNoteButtonAction) {
-		new FileSelectModal(modal.plugin, (file: TFile) => {
-			action.templateFile = file.path;
+		plugin.internal.openFileSelectModal((file: string) => {
+			action.templateFile = file;
 			buttonConfig.actions = buttonConfig.actions;
-		}).open();
+		});
 	}
 
 	function templaterCreateNoteActionChangeFolderPath(action: TemplaterCreateNoteButtonAction) {
-		new FolderSelectModal(modal.plugin, (folder: TFolder) => {
-			action.folderPath = folder.path;
+		plugin.internal.openFolderSelectModal((folder: string) => {
+			action.folderPath = folder;
 			buttonConfig.actions = buttonConfig.actions;
-		}).open();
+		});
 	}
 
 	function getActionLabel(actionType: ButtonActionType): string {
@@ -94,8 +92,6 @@
 		return 'CHANGE ME';
 	}
 </script>
-
-<h2>Meta Bind Button Builder</h2>
 
 <SettingComponent name="Label" description="The label shown on the button.">
 	<input type="text" bind:value={buttonConfig.label} />
@@ -246,6 +242,6 @@ Add action of type
 <div bind:this={buttonEl}></div>
 
 <ModalButtonGroup>
-	<Button variant="primary" on:click={() => modal.okay(buttonConfig)}>{modal.submitText}</Button>
+	<Button variant="primary" on:click={() => modal.okay(buttonConfig)}>{modal.options.submitText}</Button>
 	<Button variant="default" on:click={() => modal.cancel()}>Cancel</Button>
 </ModalButtonGroup>

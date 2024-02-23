@@ -1,45 +1,25 @@
-import { ErrorIndicatorProps, IInternalAPI } from '../../packages/core/src/api/IInternalAPI';
-import { DatePickerIPF } from '../../packages/core/src/fields/inputFields/fields/DatePicker/DatePickerIPF';
-import { ImageSuggesterIPF } from '../../packages/core/src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
+import { Command, InternalAPI, ModalOptions } from 'packages/core/src/api/InternalAPI';
+import { ImageSuggesterIPF } from 'packages/core/src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
 import {
 	SuggesterLikeIFP,
 	SuggesterOption,
-} from '../../packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
-import { IJsRenderer } from '../../packages/core/src/utils/IJsRenderer';
-import { MBLiteral } from '../../packages/core/src/utils/Literal';
+} from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
+import { IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
+import { MBLiteral } from 'packages/core/src/utils/Literal';
 import { TestPlugin } from './TestPlugin';
+import { IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
+import { ModalContent } from 'packages/core/src/modals/ModalContent';
+import { IModal } from 'packages/core/src/modals/IModal';
+import { SelectModalContent } from 'packages/core/src/modals/SelectModalContent';
 
-export class TestInternalAPI implements IInternalAPI {
-	plugin: TestPlugin;
-
-	constructor(plugin: TestPlugin) {
-		this.plugin = plugin;
-	}
-
-	public openDatePickerModal(_inputField: DatePickerIPF): void {}
-
-	public openImageSuggesterModal(_inputField: ImageSuggesterIPF, _selectCallback: (selected: string) => void): void {}
-
-	public openSuggesterModal(
-		_inputField: SuggesterLikeIFP,
-		_selectCallback: (selected: SuggesterOption<MBLiteral>) => void,
-	): void {}
-
-	public openTextPromptModal(
-		_value: string,
-		_title: string,
-		_subTitle: string,
-		_description: string,
-		_onSubmit: (value: string) => void,
-		_onCancel: () => void,
-	): void {}
-
-	public renderMarkdown(_markdown: string, _element: HTMLElement, _filePath: string): Promise<() => void> {
-		return Promise.resolve(function () {});
+export class TestInternalAPI extends InternalAPI<TestPlugin> {
+	public async renderMarkdown(markdown: string, element: HTMLElement, _filePath: string): Promise<() => void> {
+		element.innerText += markdown;
+		return () => {};
 	}
 
 	public executeCommandById(_id: string): boolean {
-		return true;
+		throw new Error('not implemented');
 	}
 
 	public isJsEngineAvailable(): boolean {
@@ -68,15 +48,49 @@ export class TestInternalAPI implements IInternalAPI {
 
 	public showNotice(_: string): void {}
 
-	public createErrorIndicator(_: HTMLElement, _props: ErrorIndicatorProps): void {}
-
 	public parseYaml(_yaml: string): unknown {
 		return {};
+	}
+
+	public stringifyYaml(_yaml: unknown): string {
+		return '';
 	}
 
 	public setIcon(_element: HTMLElement, _icon: string): void {}
 
 	public imagePathToUri(imagePath: string): string {
 		return imagePath;
+	}
+
+	public createFuzzySearch(): IFuzzySearch {
+		throw new Error('not implemented');
+	}
+
+	public createModal(_content: ModalContent, _options: ModalOptions | undefined): IModal {
+		throw new Error('not implemented');
+	}
+
+	public createSearchModal<T>(_content: SelectModalContent<T>): IModal {
+		throw new Error('not implemented');
+	}
+
+	public getAllCommands(): Command[] {
+		return [];
+	}
+
+	public getAllFiles(): string[] {
+		return [];
+	}
+
+	public getAllFolders(): string[] {
+		return [];
+	}
+
+	public getImageSuggesterOptions(_inputField: ImageSuggesterIPF): SuggesterOption<string>[] {
+		return [];
+	}
+
+	public getSuggesterOptions(_inputField: SuggesterLikeIFP): SuggesterOption<MBLiteral>[] {
+		return [];
 	}
 }

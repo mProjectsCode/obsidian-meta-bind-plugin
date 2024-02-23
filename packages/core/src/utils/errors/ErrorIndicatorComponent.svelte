@@ -1,30 +1,16 @@
 <script lang="ts">
-	import { ErrorCollectionViewModal } from './modals/ErrorCollectionViewModal.ts';
-	import { App } from 'obsidian';
-	import { ErrorIndicatorProps } from 'packages/core/src/api/IInternalAPI';
-	import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
+	import { ErrorIndicatorProps } from 'packages/core/src/api/InternalAPI';
+	import { IPlugin } from 'packages/core/src/IPlugin';
 
-	export let app: App;
-
-	export let props: ErrorIndicatorProps;
-
-	let errorCollection: ErrorCollection = props.errorCollection;
+	export let plugin: IPlugin;
+	export let settings: ErrorIndicatorProps;
 
 	function openModal() {
-		// const modal = new ErrorCollectionViewModal(app, {
-		// 	errorCollection: errorCollection,
-		// 	errorText:
-		// 		'Errors caused the creation of the field to fail. Sometimes one error only occurs because of another.',
-		// 	warningText:
-		// 		'Warnings will not cause the creation of a field to fail, but they indicate that a part of the declaration was invalid or uses deprecated functionality.',
-		// 	code: declaration,
-		// });
-		const modal = new ErrorCollectionViewModal(app, props);
-		modal.open();
+		plugin.internal.openErrorCollectionViewModal(settings);
 	}
 </script>
 
-{#if !errorCollection.isEmpty()}
+{#if !settings.errorCollection.isEmpty()}
 	<div
 		class="mb-error-collection"
 		on:click={() => openModal()}
@@ -36,7 +22,7 @@
 		role="button"
 		tabindex="0"
 	>
-		{#if errorCollection.hasErrors()}
+		{#if settings.errorCollection.hasErrors()}
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				width="24"
@@ -54,7 +40,7 @@
 				<line x1="12" x2="12.01" y1="16" y2="16" />
 			</svg>
 			<span class="mb-error">[META_BIND_ERROR]</span>
-		{:else if errorCollection.hasWarnings()}
+		{:else if settings.errorCollection.hasWarnings()}
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				width="24"

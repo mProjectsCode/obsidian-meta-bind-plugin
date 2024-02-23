@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ErrorIndicatorComponent from 'packages/obsidian/src/ErrorIndicatorComponent.svelte';
+	import ErrorIndicatorComponent from 'packages/core/src/utils/errors/ErrorIndicatorComponent.svelte';
 	import { App } from 'obsidian';
 	import { onMount } from 'svelte';
 	import { createInputFieldFAQExamples } from 'packages/core/src/utils/InputFieldExamples';

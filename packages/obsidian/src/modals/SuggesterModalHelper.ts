@@ -11,7 +11,6 @@ import {
 import { type MBLiteral } from 'packages/core/src/utils/Literal';
 import { getDataViewPluginAPI } from 'packages/obsidian/src/ObsUtils';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
-import { SuggesterInputModal } from 'packages/obsidian/src/modals/SuggesterInputModal';
 import { z } from 'zod';
 
 export function getSuggesterOptions(
@@ -69,8 +68,8 @@ export function getSuggesterOptions(
 }
 
 export function getSuggesterOptionsForInputField(
-	inputField: SuggesterLikeIFP,
 	plugin: MetaBindPlugin,
+	inputField: SuggesterLikeIFP,
 ): SuggesterOption<MBLiteral>[] {
 	const optionArgs = inputField.base.getArguments(InputFieldArgumentType.OPTION);
 	const optionQueryArgs = inputField.base.getArguments(InputFieldArgumentType.OPTION_QUERY);
@@ -83,12 +82,4 @@ export function getSuggesterOptionsForInputField(
 		optionQueryArgs,
 		useLinksArg === undefined ? UseLinksInputFieldArgumentValue.TRUE : useLinksArg.value,
 	);
-}
-
-export function openSuggesterModalForInputField(
-	inputField: SuggesterLikeIFP,
-	selectCallback: (selected: SuggesterOption<MBLiteral>) => void,
-	plugin: MetaBindPlugin,
-): void {
-	new SuggesterInputModal(plugin.app, getSuggesterOptionsForInputField(inputField, plugin), selectCallback).open();
 }

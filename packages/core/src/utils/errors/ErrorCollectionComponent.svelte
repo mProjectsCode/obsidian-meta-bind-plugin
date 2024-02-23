@@ -1,6 +1,6 @@
 <script lang="ts">
 	import MetaBindErrorComponent from './MetaBindErrorComponent.svelte';
-	import { ErrorIndicatorProps } from '../../api/IInternalAPI';
+	import { ErrorIndicatorProps } from 'packages/core/src/api/InternalAPI';
 
 	export let settings: ErrorIndicatorProps;
 </script>

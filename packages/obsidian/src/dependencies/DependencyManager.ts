@@ -4,7 +4,6 @@ import { ErrorLevel, MetaBindDependencyError } from 'packages/core/src/utils/err
 import { type Dependency } from 'packages/obsidian/src/dependencies/Dependency';
 import { Version } from 'packages/obsidian/src/dependencies/Version';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
-import { ErrorCollectionViewModal } from 'packages/obsidian/src/modals/ErrorCollectionViewModal';
 
 export class DependencyManager {
 	readonly plugin: MetaBindPlugin;
@@ -103,11 +102,10 @@ export class DependencyManager {
 		}
 
 		if (errorCollection.hasErrors()) {
-			const modal = new ErrorCollectionViewModal(this.plugin.app, {
-				errorCollection: errorCollection,
+			this.plugin.internal.openErrorCollectionViewModal({
 				text: "The following errors were detected during dependency validation. The plugin won't load until these errors have been resolved. Please install the required plugins and restart Obsidian.",
+				errorCollection: errorCollection,
 			});
-			modal.open();
 			return true;
 		}
 

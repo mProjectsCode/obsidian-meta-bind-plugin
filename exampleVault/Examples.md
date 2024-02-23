@@ -1,5 +1,5 @@
 ---
-slider1: 2
+slider1: 7
 suggest: test
 toggle1: false
 Domestic_tasks:
@@ -13,7 +13,7 @@ inlineSelect: 0
 nested:
   object: test
 number1: 2
-number2: 4
+number2: 14
 ---
 
 ## Fields Work Everywhere
@@ -95,10 +95,10 @@ Inline input fields should not cause line breaks.
 Lorem ipsum dolor sit amet, `INPUT[date():other note#date]` consectetur adipiscing elit. Pellentesque sit amet porttitor arcu. Quisque scelerisque dolor augue, et posuere nulla bibendum nec. `INPUT[date():other note#date]` Curabitur sed rhoncus nisl. Maecenas nisi justo, viverra vel tempus vel, hendrerit at metus. `INPUT[datePicker():other note#date]` asdasd asdasdasd
 
 
-| test | table |  |
-| ---- | ---- | ---- |
-| `INPUT[datePicker():other note#date]` | `VIEW[{other note#date}][text]` |  |
-| `INPUT[number:number1]` | `VIEW[{slider1} * {number1}][math:number2]` |  |
+| test                                  | table                                       |     |
+| ------------------------------------- | ------------------------------------------- | --- |
+| `INPUT[datePicker():other note#date]` | `VIEW[{other note#date}][text]`             |     |
+| `INPUT[number:number1]`               | `VIEW[{slider1} * {number1}][math:number2]` |     |
 
 ## Templates
 

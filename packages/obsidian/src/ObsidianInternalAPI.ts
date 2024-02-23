@@ -1,6 +1,15 @@
-import { type App, Component, MarkdownRenderer, Notice, parseYaml, setIcon, TFile } from 'obsidian';
-import { type ErrorIndicatorProps, type IInternalAPI } from 'packages/core/src/api/IInternalAPI';
-import { type DatePickerIPF } from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePickerIPF';
+import {
+	type App,
+	Component,
+	MarkdownRenderer,
+	Notice,
+	parseYaml,
+	setIcon,
+	TFile,
+	TFolder,
+	stringifyYaml,
+} from 'obsidian';
+import { InternalAPI, type Command, type ModalOptions } from 'packages/core/src/api/InternalAPI';
 import { type ImageSuggesterIPF } from 'packages/core/src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
 import {
 	type SuggesterLikeIFP,
@@ -8,48 +17,33 @@ import {
 } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
 import { type IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
 import { type MBLiteral } from 'packages/core/src/utils/Literal';
-import ErrorIndicatorComponent from 'packages/obsidian/src/ErrorIndicatorComponent.svelte';
 import { getJsEnginePluginAPI } from 'packages/obsidian/src/ObsUtils';
 import { ObsidianJsRenderer } from 'packages/obsidian/src/ObsidianJsRenderer';
-import type MetaBindPlugin from 'packages/obsidian/src/main.ts';
-import { DatePickerInputModal } from 'packages/obsidian/src/modals/DatePickerInputModal';
-import { openImageSuggesterModalForInputField } from 'packages/obsidian/src/modals/ImageSuggesterModalHelper.js';
-import { openSuggesterModalForInputField } from 'packages/obsidian/src/modals/SuggesterModalHelper';
-import { TextPromptModal } from 'packages/obsidian/src/modals/TextPromptModal';
+import type MetaBindPlugin from 'packages/obsidian/src/main';
+import { type ModalContent } from 'packages/core/src/modals/ModalContent';
+import { ObsidianModal } from 'packages/obsidian/src/modals/ObsidianModal';
+import { ObsidianSearchModal } from 'packages/obsidian/src/modals/ObsidianSearchModal';
+import { type SelectModalContent } from 'packages/core/src/modals/SelectModalContent';
+import { getImageSuggesterOptionsForInputField } from 'packages/obsidian/src/modals/ImageSuggesterModalHelper';
+import { getSuggesterOptionsForInputField } from 'packages/obsidian/src/modals/SuggesterModalHelper';
+import { type IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
+import { FuzzySearch } from 'packages/obsidian/src/FuzzySearch';
 
-export class ObsidianInternalAPI implements IInternalAPI {
-	readonly plugin: MetaBindPlugin;
+export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 	readonly app: App;
 
 	constructor(plugin: MetaBindPlugin) {
-		this.plugin = plugin;
+		super(plugin);
+
 		this.app = plugin.app;
 	}
 
-	public openDatePickerModal(inputField: DatePickerIPF): void {
-		new DatePickerInputModal(this.app, inputField).open();
+	public getImageSuggesterOptions(inputField: ImageSuggesterIPF): SuggesterOption<string>[] {
+		return getImageSuggesterOptionsForInputField(this.plugin, inputField);
 	}
 
-	public openImageSuggesterModal(inputField: ImageSuggesterIPF, selectCallback: (selected: string) => void): void {
-		openImageSuggesterModalForInputField(inputField, selectCallback, this.plugin);
-	}
-
-	public openSuggesterModal(
-		inputField: SuggesterLikeIFP,
-		selectCallback: (selected: SuggesterOption<MBLiteral>) => void,
-	): void {
-		openSuggesterModalForInputField(inputField, selectCallback, this.plugin);
-	}
-
-	public openTextPromptModal(
-		value: string,
-		title: string,
-		subTitle: string,
-		description: string,
-		onSubmit: (value: string) => void,
-		onCancel: () => void,
-	): void {
-		new TextPromptModal(this.app, value, title, subTitle, description, onSubmit, onCancel).open();
+	public getSuggesterOptions(inputField: SuggesterLikeIFP): SuggesterOption<MBLiteral>[] {
+		return getSuggesterOptionsForInputField(this.plugin, inputField);
 	}
 
 	public async renderMarkdown(markdown: string, element: HTMLElement, filePath: string): Promise<() => void> {
@@ -138,18 +132,12 @@ export class ObsidianInternalAPI implements IInternalAPI {
 		new Notice(message);
 	}
 
-	public createErrorIndicator(element: HTMLElement, props: ErrorIndicatorProps): void {
-		new ErrorIndicatorComponent({
-			target: element,
-			props: {
-				app: this.plugin.app,
-				props: props,
-			},
-		});
-	}
-
 	public parseYaml(yaml: string): unknown {
 		return parseYaml(yaml);
+	}
+
+	public stringifyYaml(yaml: unknown): string {
+		return stringifyYaml(yaml);
 	}
 
 	public setIcon(element: HTMLElement, icon: string): void {
@@ -158,5 +146,38 @@ export class ObsidianInternalAPI implements IInternalAPI {
 
 	public imagePathToUri(imagePath: string): string {
 		return this.app.vault.adapter.getResourcePath(imagePath);
+	}
+
+	public createModal(content: ModalContent, options: ModalOptions): ObsidianModal {
+		return new ObsidianModal(this.plugin, content, options);
+	}
+
+	public createSearchModal<T>(content: SelectModalContent<T>): ObsidianSearchModal<T> {
+		return new ObsidianSearchModal(this.plugin, content);
+	}
+
+	public getAllCommands(): Command[] {
+		return this.app.commands.listCommands().map(command => ({
+			id: command.id,
+			name: command.name,
+		}));
+	}
+
+	public getAllFiles(): string[] {
+		return this.app.vault
+			.getAllLoadedFiles()
+			.filter(file => file instanceof TFile)
+			.map(file => file.path);
+	}
+
+	public getAllFolders(): string[] {
+		return this.app.vault
+			.getAllLoadedFiles()
+			.filter(file => file instanceof TFolder)
+			.map(file => file.path);
+	}
+
+	public createFuzzySearch(): IFuzzySearch {
+		return new FuzzySearch();
 	}
 }

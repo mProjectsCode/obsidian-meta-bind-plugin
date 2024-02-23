@@ -9,6 +9,9 @@ export class FieldMDRC extends AbstractMDRC {
 		super(plugin, base.getFilePath(), containerEl);
 
 		this.base = base;
+		this.base.addOnUnmountCb(() => {
+			this.unload();
+		});
 	}
 
 	onload(): void {

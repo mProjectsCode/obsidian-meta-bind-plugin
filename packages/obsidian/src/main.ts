@@ -22,7 +22,6 @@ import { createMarkdownRenderChildWidgetEditorPlugin } from 'packages/obsidian/s
 import { DependencyManager } from 'packages/obsidian/src/dependencies/DependencyManager';
 import { Version } from 'packages/obsidian/src/dependencies/Version';
 import { FaqView, MB_FAQ_VIEW_TYPE } from 'packages/obsidian/src/faq/FaqView';
-import { ButtonBuilderModal } from 'packages/obsidian/src/modals/ButtonBuilderModal';
 import { EMBED_MAX_DEPTH, EmbedMDRC } from 'packages/obsidian/src/renderChildren/EmbedMDRC';
 import { MetaBindSettingTab } from 'packages/obsidian/src/settings/SettingsTab';
 
@@ -263,15 +262,14 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			id: 'open-button-builder',
 			name: 'Open Button Builder',
 			callback: () => {
-				new ButtonBuilderModal({
-					plugin: this,
+				this.internal.openButtonBuilderModal({
 					onOkay: (config): void => {
 						void window.navigator.clipboard.writeText(
 							`\`\`\`meta-bind-button\n${stringifyYaml(config)}\n\`\`\``,
 						);
 					},
 					submitText: 'Copy to Clipboard',
-				}).open();
+				});
 			},
 		});
 	}

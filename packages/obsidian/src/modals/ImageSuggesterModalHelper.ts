@@ -7,7 +7,6 @@ import { SuggesterOption } from 'packages/core/src/fields/inputFields/fields/Sug
 import { stringifyLiteral } from 'packages/core/src/utils/Literal';
 import { ErrorLevel, MetaBindArgumentError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
-import { ImageSuggesterInputModal } from 'packages/obsidian/src/modals/ImageSuggesterInputModal';
 
 function recSearchFolder(folder: TFolder): SuggesterOption<string>[] {
 	const ret = [];
@@ -137,22 +136,10 @@ function isImageExtension(extension: string): boolean {
 }
 
 export function getImageSuggesterOptionsForInputField(
-	inputField: ImageSuggesterIPF,
 	plugin: MetaBindPlugin,
+	inputField: ImageSuggesterIPF,
 ): SuggesterOption<string>[] {
 	const optionArgs = inputField.base.getArguments(InputFieldArgumentType.OPTION);
 	const optionQueryArgs = inputField.base.getArguments(InputFieldArgumentType.OPTION_QUERY);
 	return getImageSuggesterOptions(optionArgs, optionQueryArgs, plugin);
-}
-
-export function openImageSuggesterModalForInputField(
-	inputField: ImageSuggesterIPF,
-	selectCallback: (selected: string) => void,
-	plugin: MetaBindPlugin,
-): void {
-	new ImageSuggesterInputModal(
-		plugin.app,
-		getImageSuggesterOptionsForInputField(inputField, plugin),
-		selectCallback,
-	).open();
 }

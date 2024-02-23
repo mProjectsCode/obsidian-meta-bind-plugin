@@ -1,3 +1,64 @@
+const projectConfig = require('./automation/config.json');
+
+const overrides = [];
+
+for (const corePackage of projectConfig.corePackages) {
+	const patterns = [];
+
+	for (const nonCorePackage of projectConfig.packages) {
+		patterns.push({
+			group: [`packages/${nonCorePackage}/*`],
+			message: `Core package "${corePackage}" should not import from the non core "${nonCorePackage}" package.`,
+		});
+	}
+
+	overrides.push({
+		files: [`packages/${corePackage}/src/**/*.ts`],
+		rules: {
+			'no-restricted-imports': [
+				'error',
+				{
+					patterns: patterns,
+				},
+			],
+		},
+	});
+}
+
+for (const nonCorePackage of projectConfig.packages) {
+	const patterns = [];
+
+	for (const otherNonCorePackage of projectConfig.packages) {
+		if (otherNonCorePackage === nonCorePackage) {
+			continue;
+		}
+		patterns.push({
+			group: [`packages/${otherNonCorePackage}/*`],
+			message: `Non core package "${nonCorePackage}" should not import from the non core "${otherNonCorePackage}" package.`,
+		});
+	}
+
+	overrides.push({
+		files: [`packages/${nonCorePackage}/src/**/*.ts`],
+		rules: {
+			'no-restricted-imports': [
+				'error',
+				{
+					patterns: patterns,
+				},
+			],
+		},
+	});
+}
+
+const flatOverrides = overrides.map(o => ({
+	files: o.files,
+	restrictedImports: o.rules['no-restricted-imports'][1].patterns.map(p => p.group).flat(),
+}));
+
+console.log('Import restrictions:');
+console.log(flatOverrides);
+
 /** @type {import('eslint').Linter.Config} */
 const config = {
 	root: true,
@@ -42,28 +103,7 @@ const config = {
 		'@typescript-eslint/explicit-function-return-type': ['warn'],
 		'@typescript-eslint/require-await': 'off',
 	},
-	overrides: [
-		{
-			files: ['packages/core/src/**/*.ts'],
-			rules: {
-				'no-restricted-imports': [
-					'error',
-					{
-						patterns: [
-							{
-								group: ['packages/obsidian/*'],
-								message: 'Core should not import from the Obsidian Adapter.',
-							},
-							{
-								group: ['packages/publish/*'],
-								message: 'Core should not import from the Obsidian Publish Adapter.',
-							},
-						],
-					},
-				],
-			},
-		},
-	],
+	overrides: [...overrides],
 };
 
 module.exports = config;

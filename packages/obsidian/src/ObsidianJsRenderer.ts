@@ -4,7 +4,7 @@ import { Component, TFile } from 'obsidian';
 import { type IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
 import { DomHelpers } from 'packages/core/src/utils/Utils';
 import { getJsEnginePluginAPI } from 'packages/obsidian/src/ObsUtils';
-import type MetaBindPlugin from 'packages/obsidian/src/main.ts';
+import type MetaBindPlugin from 'packages/obsidian/src/main';
 
 export class ObsidianJsRenderer implements IJsRenderer {
 	readonly plugin: MetaBindPlugin;

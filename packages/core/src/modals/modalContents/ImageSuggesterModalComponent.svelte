@@ -1,13 +1,15 @@
 <script lang="ts">
 	import ImageSuggesterCard from 'packages/core/src/fields/inputFields/fields/ImageSuggester/ImageSuggesterCard.svelte';
 	import { SuggesterOption } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
-	import { prepareFuzzySearch } from 'obsidian';
+	import { IPlugin } from 'packages/core/src/IPlugin';
 
+	export let plugin: IPlugin;
 	export let options: SuggesterOption<string>[];
 	export let onSelect: (item: string) => void;
 
 	let search = '';
 	let filteredOptions: SuggesterOption<string>[];
+	let fuzzySearch = plugin.internal.createFuzzySearch();
 
 	$: runSearch(search);
 
@@ -17,16 +19,9 @@
 			return;
 		}
 
-		const searchFn = prepareFuzzySearch(search);
+		fuzzySearch.setSearch(search);
 
-		let x: SuggesterOption<string>[] = [];
-		for (const option of options) {
-			if (searchFn(option.value)?.score !== undefined) {
-				x.push(option);
-			}
-		}
-
-		filteredOptions = x;
+		filteredOptions = fuzzySearch.filterItems(options, x => x.value);
 	}
 </script>
 

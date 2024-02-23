@@ -37,7 +37,7 @@ export class InlineListIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> 
 			'Meta Bind List',
 			'New List Element',
 			'',
-			newElement => {
+			(newElement: MBLiteral) => {
 				const value = this.getInternalValue();
 				value.push(newElement);
 				this.setInternalValue(value);

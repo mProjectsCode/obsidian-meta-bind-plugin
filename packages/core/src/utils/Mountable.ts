@@ -1,9 +1,12 @@
 export abstract class Mountable {
 	private mounted: boolean;
 	private targetEl: HTMLElement | undefined;
+	private onUnmountCbs: (() => void)[];
 
 	protected constructor() {
 		this.mounted = false;
+		this.targetEl = undefined;
+		this.onUnmountCbs = [];
 	}
 
 	public isMounted(): boolean {
@@ -37,6 +40,14 @@ export abstract class Mountable {
 		this.mounted = false;
 		this.onUnmount(this.targetEl);
 
+		for (const cb of this.onUnmountCbs) {
+			cb();
+		}
+
 		this.targetEl = undefined;
+	}
+
+	public addOnUnmountCb(cb: () => void): void {
+		this.onUnmountCbs.push(cb);
 	}
 }
