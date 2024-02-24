@@ -21,6 +21,18 @@ export interface BindTargetDeclaration {
 	listenToChildren: boolean;
 }
 
+export interface SimpleBindTargetDeclaration {
+	storageType?: string;
+	storagePath?: string;
+	storageProp: SimplePropAccess[];
+	listenToChildren: boolean;
+}
+
+export interface SimplePropAccess {
+	type: PROP_ACCESS_TYPE;
+	prop: string;
+}
+
 export enum BindTargetStorageType {
 	FRONTMATTER = 'frontmatter',
 	MEMORY = 'memory',

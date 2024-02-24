@@ -29,7 +29,7 @@ export class MathVF extends AbstractViewField {
 
 		this.variables = [];
 
-		for (const entry of this.base.getDeclaration().templateDeclaration ?? []) {
+		for (const entry of this.base.getDeclaration().declarationArray ?? []) {
 			if (typeof entry !== 'string') {
 				const variable: ViewFieldVariable = {
 					bindTargetDeclaration: entry,

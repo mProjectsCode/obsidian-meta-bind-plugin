@@ -5,11 +5,11 @@ import {
 	Notice,
 	parseYaml,
 	setIcon,
+	stringifyYaml,
 	TFile,
 	TFolder,
-	stringifyYaml,
 } from 'obsidian';
-import { InternalAPI, type Command, type ModalOptions } from 'packages/core/src/api/InternalAPI';
+import { type Command, InternalAPI, type ModalOptions } from 'packages/core/src/api/InternalAPI';
 import { type ImageSuggesterIPF } from 'packages/core/src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
 import {
 	type SuggesterLikeIFP,
@@ -124,8 +124,8 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 		void this.app.workspace.openLinkText(filePath, callingFilePath, newTab);
 	}
 
-	public getFilePathByName(name: string): string | undefined {
-		return this.app.metadataCache.getFirstLinkpathDest(name, '')?.path;
+	public getFilePathByName(name: string, relativeTo: string = ''): string | undefined {
+		return this.app.metadataCache.getFirstLinkpathDest(name, relativeTo)?.path;
 	}
 
 	public showNotice(message: string): void {

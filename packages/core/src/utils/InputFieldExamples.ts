@@ -46,15 +46,24 @@ export function createInputFieldFAQExamples(plugin: IPlugin): [InputFieldType, U
 			continue;
 		}
 
-		let parsedDeclaration = plugin.api.inputField.createInputFieldDeclarationFromString(`INPUT[${declaration}]`);
-		parsedDeclaration = plugin.api.inputField.addArgument(parsedDeclaration, {
-			name: InputFieldArgumentType.SHOWCASE,
-			value: ['true'],
+		let parsedDeclaration = plugin.api.inputFieldParser.fromString(`INPUT[${declaration}]`);
+		const overrides = plugin.api.inputFieldParser.fromSimpleDeclaration({
+			inputFieldType: undefined,
+			templateName: undefined,
+			bindTarget: undefined,
+			arguments: [
+				{
+					name: InputFieldArgumentType.SHOWCASE,
+					value: ['true'],
+				},
+				{
+					name: InputFieldArgumentType.TITLE,
+					value: [type],
+				},
+			],
 		});
-		parsedDeclaration = plugin.api.inputField.addArgument(parsedDeclaration, {
-			name: InputFieldArgumentType.TITLE,
-			value: [type],
-		});
+
+		parsedDeclaration = plugin.api.inputFieldParser.merge(parsedDeclaration, overrides);
 
 		ret.push([type as InputFieldType, parsedDeclaration]);
 	}

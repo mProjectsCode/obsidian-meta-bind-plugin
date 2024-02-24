@@ -1,7 +1,6 @@
 import { type IPlugin } from 'packages/core/src/IPlugin';
 import { type InputFieldTemplate } from 'packages/core/src/Settings';
 import { InputFieldType } from 'packages/core/src/config/FieldConfigs';
-import { InputFieldArgumentContainer } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/InputFieldArgumentContainer';
 import { type BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import { ParsingValidationError, runParser } from 'packages/core/src/parsers/ParsingError';
 import {
@@ -10,6 +9,9 @@ import {
 } from 'packages/core/src/parsers/inputFieldParser/ITemplateSupplier';
 import {
 	type InputFieldDeclaration,
+	type PartialUnvalidatedInputFieldDeclaration,
+	type SimpleInputFieldDeclaration,
+	type UnvalidatedFieldArgument,
 	type UnvalidatedInputFieldDeclaration,
 } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
 import { InputFieldDeclarationValidator } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclarationValidator';
@@ -20,10 +22,11 @@ import {
 import { deepFreeze } from 'packages/core/src/utils/Utils';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { ErrorLevel } from 'packages/core/src/utils/errors/MetaBindErrors';
+import { type UnvalidatedBindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 
 export type InputFieldDeclarationTemplate = TemplateSupplierTemplate<UnvalidatedInputFieldDeclaration>;
 
-export class InputFieldDeclarationParser implements ITemplateSupplier<UnvalidatedInputFieldDeclaration> {
+export class InputFieldParser implements ITemplateSupplier<UnvalidatedInputFieldDeclaration> {
 	plugin: IPlugin;
 	templates: InputFieldDeclarationTemplate[];
 
@@ -32,59 +35,22 @@ export class InputFieldDeclarationParser implements ITemplateSupplier<Unvalidate
 		this.templates = [];
 	}
 
-	public parseString(
-		fullDeclaration: string,
-		filePath: string,
-		scope: BindTargetScope | undefined,
-	): InputFieldDeclaration {
-		const errorCollection = new ErrorCollection('InputFieldParser');
+	public fromString(declarationString: string): UnvalidatedInputFieldDeclaration {
+		const errorCollection = new ErrorCollection('InputField');
 
 		try {
-			let parserResult = runParser(
-				INPUT_FIELD_FULL_DECLARATION,
-				fullDeclaration,
-			) as UnvalidatedInputFieldDeclaration;
-			parserResult.fullDeclaration = fullDeclaration;
-			parserResult.errorCollection = errorCollection;
-			parserResult.arguments = [...parserResult.arguments]; // copy argument array to avoid modifying the original
+			const parserResult = runParser(INPUT_FIELD_FULL_DECLARATION, declarationString);
 
-			parserResult = this.applyTemplate(parserResult);
+			let declaration = this.partialToFullDeclaration(parserResult, declarationString, errorCollection);
+			declaration = this.applyTemplate(declaration);
 
-			const declarationValidator = new InputFieldDeclarationValidator(this.plugin, parserResult, filePath);
-
-			return declarationValidator.validate(scope);
+			return declaration;
 		} catch (e) {
 			errorCollection.add(e);
 		}
 
 		return {
-			fullDeclaration: fullDeclaration,
-			inputFieldType: InputFieldType.INVALID,
-			bindTarget: undefined,
-			argumentContainer: new InputFieldArgumentContainer(),
-			errorCollection: errorCollection,
-		};
-	}
-
-	public parseStringWithoutValidation(fullDeclaration: string): UnvalidatedInputFieldDeclaration {
-		const errorCollection = new ErrorCollection('InputFieldParser');
-
-		try {
-			const parserResult = runParser(
-				INPUT_FIELD_FULL_DECLARATION,
-				fullDeclaration,
-			) as UnvalidatedInputFieldDeclaration;
-			parserResult.fullDeclaration = fullDeclaration;
-			parserResult.errorCollection = errorCollection;
-			parserResult.arguments = [...parserResult.arguments]; // copy argument array to avoid modifying the original
-
-			return parserResult;
-		} catch (e) {
-			errorCollection.add(e);
-		}
-
-		return {
-			fullDeclaration: fullDeclaration,
+			declarationString: declarationString,
 			inputFieldType: { value: InputFieldType.INVALID },
 			bindTarget: undefined,
 			arguments: [],
@@ -92,7 +58,65 @@ export class InputFieldDeclarationParser implements ITemplateSupplier<Unvalidate
 		};
 	}
 
-	public validateDeclaration(
+	public fromStringAndValidate(
+		declarationString: string,
+		filePath: string,
+		scope: BindTargetScope | undefined,
+	): InputFieldDeclaration {
+		return this.validate(this.fromString(declarationString), filePath, scope);
+	}
+
+	/**
+	 * Convert a simple declaration to an unvalidated declaration.
+	 *
+	 * @param simpleDeclaration
+	 */
+	public fromSimpleDeclaration(simpleDeclaration: SimpleInputFieldDeclaration): UnvalidatedInputFieldDeclaration {
+		const errorCollection = new ErrorCollection('InputField');
+
+		return {
+			declarationString: undefined,
+			inputFieldType: simpleDeclaration.inputFieldType ? { value: simpleDeclaration.inputFieldType } : undefined,
+			bindTarget: simpleDeclaration.bindTarget
+				? this.plugin.api.bindTargetParser.fromSimpleDeclaration(simpleDeclaration.bindTarget)
+				: undefined,
+			arguments: (simpleDeclaration.arguments ?? []).map(x => ({
+				name: { value: x.name },
+				value: x.value.map(y => ({ value: y })),
+			})),
+			errorCollection: errorCollection,
+		};
+	}
+
+	public fromSimpleDeclarationAndValidate(
+		simpleDeclaration: SimpleInputFieldDeclaration,
+		filePath: string,
+		scope: BindTargetScope | undefined,
+	): InputFieldDeclaration {
+		return this.validate(this.fromSimpleDeclaration(simpleDeclaration), filePath, scope);
+	}
+
+	/**
+	 * Convert a partial unvalidated declaration to a full unvalidated declaration.
+	 *
+	 * @param unvalidatedDeclaration
+	 * @param fullDeclaration
+	 * @param errorCollection
+	 * @private
+	 */
+	private partialToFullDeclaration(
+		unvalidatedDeclaration: PartialUnvalidatedInputFieldDeclaration,
+		fullDeclaration: string | undefined,
+		errorCollection: ErrorCollection,
+	): UnvalidatedInputFieldDeclaration {
+		return {
+			...structuredClone(unvalidatedDeclaration),
+			declarationString: fullDeclaration,
+			errorCollection: errorCollection,
+		};
+	}
+
+	public validate(
 		unvalidatedDeclaration: UnvalidatedInputFieldDeclaration,
 		filePath: string,
 		scope: BindTargetScope | undefined,
@@ -102,25 +126,66 @@ export class InputFieldDeclarationParser implements ITemplateSupplier<Unvalidate
 		return declarationValidator.validate(scope);
 	}
 
+	/**
+	 * Merge two input field declarations.
+	 *
+	 * @param unvalidatedDeclaration
+	 * @param override
+	 */
+	public merge(
+		unvalidatedDeclaration: UnvalidatedInputFieldDeclaration,
+		override: UnvalidatedInputFieldDeclaration,
+	): UnvalidatedInputFieldDeclaration {
+		let bindTarget: UnvalidatedBindTargetDeclaration | undefined;
+
+		if (unvalidatedDeclaration.bindTarget === undefined) {
+			bindTarget = override.bindTarget;
+		} else {
+			bindTarget = unvalidatedDeclaration.bindTarget;
+			if (override.bindTarget?.storagePath !== undefined) {
+				bindTarget.storagePath = override.bindTarget.storagePath;
+			}
+			if (override.bindTarget?.storageProp !== undefined) {
+				bindTarget.storageProp = override.bindTarget.storageProp;
+			}
+		}
+
+		return {
+			declarationString: override.declarationString,
+			inputFieldType: override.inputFieldType ?? unvalidatedDeclaration.inputFieldType,
+			bindTarget: bindTarget,
+			arguments: override.arguments
+				.concat(unvalidatedDeclaration.arguments)
+				.reduce<UnvalidatedFieldArgument[]>((arr, currentValue) => {
+					// filter out duplicates
+					if (arr.find(x => x.name === currentValue.name) === undefined) {
+						arr.push(currentValue);
+					}
+					return arr;
+				}, []),
+			errorCollection: new ErrorCollection('input field declaration')
+				.merge(unvalidatedDeclaration.errorCollection)
+				.merge(override.errorCollection),
+		};
+	}
+
+	// ---
+	// Template supplier
+	// ---
+
 	private parseTemplateString(template: string): UnvalidatedInputFieldDeclaration {
 		const errorCollection = new ErrorCollection('InputFieldParser');
 
 		try {
-			const parserResult = runParser(
-				TEMPLATE_INPUT_FIELD_FULL_DECLARATION,
-				template,
-			) as UnvalidatedInputFieldDeclaration;
-			parserResult.fullDeclaration = template;
-			parserResult.errorCollection = errorCollection;
-			parserResult.arguments = [...parserResult.arguments]; // copy argument array to avoid modifying the original
+			const parserResult = runParser(TEMPLATE_INPUT_FIELD_FULL_DECLARATION, template);
 
-			return parserResult;
+			return this.partialToFullDeclaration(parserResult, template, errorCollection);
 		} catch (e) {
 			errorCollection.add(e);
 		}
 
 		return {
-			fullDeclaration: template,
+			declarationString: template,
 			inputFieldType: { value: InputFieldType.INVALID },
 			bindTarget: undefined,
 			arguments: [],
@@ -165,7 +230,7 @@ export class InputFieldDeclarationParser implements ITemplateSupplier<Unvalidate
 					ErrorLevel.WARNING,
 					'Input Field Parser',
 					`Invalid template name. Could not find template with name '${declaration.templateName.value}'`,
-					declaration.fullDeclaration,
+					declaration.declarationString,
 					declaration.templateName.position,
 					['https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/guides/templates/'],
 				),
@@ -174,6 +239,6 @@ export class InputFieldDeclarationParser implements ITemplateSupplier<Unvalidate
 			return declaration;
 		}
 
-		return this.plugin.api.inputField.merge(template, declaration);
+		return this.merge(template, declaration);
 	}
 }

@@ -1,14 +1,11 @@
 import { type IPlugin } from 'packages/core/src/IPlugin';
 import { ViewFieldType } from 'packages/core/src/config/FieldConfigs';
-import { ViewFieldArgumentContainer } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
 import { type BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import { runParser } from 'packages/core/src/parsers/ParsingError';
+import { VIEW_FIELD_FULL_DECLARATION } from 'packages/core/src/parsers/nomParsers/ViewFieldNomParsers';
 import {
-	JS_VIEW_FIELD_DECLARATION,
-	VIEW_FIELD_FULL_DECLARATION,
-} from 'packages/core/src/parsers/nomParsers/ViewFieldNomParsers';
-import {
-	type JsViewFieldDeclaration,
+	type PartialUnvalidatedViewFieldDeclaration,
+	type SimpleViewFieldDeclaration,
 	type UnvalidatedViewFieldDeclaration,
 	type ViewFieldDeclaration,
 } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
@@ -22,52 +19,19 @@ export class ViewFieldParser {
 		this.plugin = plugin;
 	}
 
-	parseString(fullDeclaration: string, filePath: string, scope?: BindTargetScope | undefined): ViewFieldDeclaration {
+	fromString(fullDeclaration: string): UnvalidatedViewFieldDeclaration {
 		const errorCollection = new ErrorCollection('ViewFieldDeclaration');
 
 		try {
-			const parserResult = runParser(
-				VIEW_FIELD_FULL_DECLARATION,
-				fullDeclaration,
-			) as UnvalidatedViewFieldDeclaration;
-			parserResult.fullDeclaration = fullDeclaration;
-			parserResult.errorCollection = errorCollection;
-			parserResult.arguments = [...parserResult.arguments]; // copy argument array to avoid modifying the original
+			const parserResult = runParser(VIEW_FIELD_FULL_DECLARATION, fullDeclaration);
 
-			return this.validateDeclaration(parserResult, filePath, scope);
+			return this.partialToFullDeclaration(parserResult, fullDeclaration, errorCollection);
 		} catch (e) {
 			errorCollection.add(e);
 		}
 
 		return {
-			fullDeclaration: fullDeclaration,
-			errorCollection: errorCollection,
-			templateDeclaration: [],
-			viewFieldType: ViewFieldType.INVALID,
-			argumentContainer: new ViewFieldArgumentContainer(),
-			writeToBindTarget: undefined,
-		};
-	}
-
-	parseStringWithoutValidation(fullDeclaration: string): UnvalidatedViewFieldDeclaration {
-		const errorCollection = new ErrorCollection('ViewFieldDeclaration');
-
-		try {
-			const parserResult = runParser(
-				VIEW_FIELD_FULL_DECLARATION,
-				fullDeclaration,
-			) as UnvalidatedViewFieldDeclaration;
-			parserResult.fullDeclaration = fullDeclaration;
-			parserResult.errorCollection = errorCollection;
-			parserResult.arguments = [...parserResult.arguments]; // copy argument array to avoid modifying the original
-
-			return parserResult;
-		} catch (e) {
-			errorCollection.add(e);
-		}
-
-		return {
-			fullDeclaration: fullDeclaration,
+			declarationString: fullDeclaration,
 			errorCollection: errorCollection,
 			viewFieldType: { value: ViewFieldType.INVALID },
 			writeToBindTarget: undefined,
@@ -76,7 +40,59 @@ export class ViewFieldParser {
 		};
 	}
 
-	validateDeclaration(
+	fromStringAndValidate(
+		declarationString: string,
+		filePath: string,
+		scope?: BindTargetScope | undefined,
+	): ViewFieldDeclaration {
+		return this.validate(this.fromString(declarationString), filePath, scope);
+	}
+
+	fromSimpleDeclaration(simpleDeclaration: SimpleViewFieldDeclaration): UnvalidatedViewFieldDeclaration {
+		const errorCollection = new ErrorCollection('ViewFieldDeclaration');
+
+		return {
+			declarationString: undefined,
+			templateDeclaration: (simpleDeclaration.templateDeclaration ?? []).map(x => {
+				if (typeof x === 'string') {
+					return x;
+				} else {
+					return this.plugin.api.bindTargetParser.fromSimpleDeclaration(x);
+				}
+			}),
+			viewFieldType: simpleDeclaration.viewFieldType ? { value: simpleDeclaration.viewFieldType } : undefined,
+			arguments: (simpleDeclaration.arguments ?? []).map(x => ({
+				name: { value: x.name },
+				value: x.value.map(y => ({ value: y })),
+			})),
+			writeToBindTarget: simpleDeclaration.writeToBindTarget
+				? this.plugin.api.bindTargetParser.fromSimpleDeclaration(simpleDeclaration.writeToBindTarget)
+				: undefined,
+			errorCollection: errorCollection,
+		};
+	}
+
+	fromSimpleDeclarationAndValidate(
+		simpleDeclaration: SimpleViewFieldDeclaration,
+		filePath: string,
+		scope?: BindTargetScope | undefined,
+	): ViewFieldDeclaration {
+		return this.validate(this.fromSimpleDeclaration(simpleDeclaration), filePath, scope);
+	}
+
+	private partialToFullDeclaration(
+		unvalidatedDeclaration: PartialUnvalidatedViewFieldDeclaration,
+		declarationString: string | undefined,
+		errorCollection: ErrorCollection,
+	): UnvalidatedViewFieldDeclaration {
+		return {
+			...structuredClone(unvalidatedDeclaration),
+			declarationString: declarationString,
+			errorCollection: errorCollection,
+		};
+	}
+
+	validate(
 		unvalidatedDeclaration: UnvalidatedViewFieldDeclaration,
 		filePath: string,
 		scope?: BindTargetScope | undefined,
@@ -84,40 +100,5 @@ export class ViewFieldParser {
 		const validator = new ViewFieldDeclarationValidator(unvalidatedDeclaration, filePath, this.plugin);
 
 		return validator.validate(scope);
-	}
-
-	parseJsString(fullDeclaration: string, filePath: string): JsViewFieldDeclaration {
-		const declaration: JsViewFieldDeclaration = {} as JsViewFieldDeclaration;
-		declaration.errorCollection = new ErrorCollection('JsViewFieldDeclaration');
-
-		declaration.fullDeclaration = fullDeclaration;
-
-		try {
-			const unvalidatedDeclaration = runParser(JS_VIEW_FIELD_DECLARATION, fullDeclaration);
-			declaration.bindTargetMappings = unvalidatedDeclaration.bindTargetMappings.map(x => {
-				return {
-					bindTarget: this.plugin.api.bindTargetParser.validateBindTarget(
-						fullDeclaration,
-						x.bindTarget,
-						filePath,
-					),
-					name: x.name,
-				};
-			});
-
-			if (unvalidatedDeclaration.writeToBindTarget !== undefined) {
-				declaration.writeToBindTarget = this.plugin.api.bindTargetParser.validateBindTarget(
-					fullDeclaration,
-					unvalidatedDeclaration.writeToBindTarget,
-					filePath,
-				);
-			}
-
-			declaration.code = unvalidatedDeclaration.code;
-		} catch (e) {
-			declaration.errorCollection.add(e);
-		}
-
-		return declaration;
 	}
 }

@@ -18,7 +18,7 @@ export interface IMetadataSource<T extends IMetadataCacheItem> {
 	validateStoragePath(
 		storagePath: ParsingResultNode,
 		hadStoragePath: boolean,
-		bindTargetDeclaration: string,
+		bindTargetDeclaration: string | undefined,
 		parser: BindTargetParser,
 	): string;
 

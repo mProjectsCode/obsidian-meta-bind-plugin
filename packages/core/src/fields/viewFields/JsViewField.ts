@@ -1,5 +1,4 @@
 import { type IPlugin } from 'packages/core/src/IPlugin';
-import { type RenderChildType } from 'packages/core/src/config/FieldConfigs';
 import { FieldBase } from 'packages/core/src/fields/FieldBase';
 import { type ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
 import type {
@@ -14,7 +13,6 @@ import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection'
 import { ErrorLevel, MetaBindJsError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 export class JsViewField extends FieldBase {
-	renderChildType: RenderChildType;
 	errorCollection: ErrorCollection;
 
 	declarationString: string | undefined;
@@ -24,19 +22,12 @@ export class JsViewField extends FieldBase {
 	metadataSubscription: ComputedMetadataSubscription | undefined;
 	jsRenderer: IJsRenderer | undefined;
 
-	constructor(
-		plugin: IPlugin,
-		uuid: string,
-		filePath: string,
-		renderChildType: RenderChildType,
-		declaration: JsViewFieldDeclaration,
-	) {
+	constructor(plugin: IPlugin, uuid: string, filePath: string, declaration: JsViewFieldDeclaration) {
 		super(plugin, uuid, filePath);
 
-		this.renderChildType = renderChildType;
 		this.declaration = declaration;
 
-		this.declarationString = declaration.fullDeclaration;
+		this.declarationString = declaration.declarationString;
 
 		this.errorCollection = new ErrorCollection(this.getUuid());
 		this.errorCollection.merge(declaration.errorCollection);

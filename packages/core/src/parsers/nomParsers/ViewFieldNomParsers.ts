@@ -6,9 +6,9 @@ import { type UnvalidatedFieldArgument } from 'packages/core/src/parsers/inputFi
 import { BIND_TARGET } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';
 import { createResultNode, fieldArguments, ident } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import {
+	type PartialUnvalidatedJsViewFieldDeclaration,
 	type PartialUnvalidatedViewFieldDeclaration,
 	type UnvalidatedJsViewFieldBindTargetMapping,
-	type UnvalidatedJsViewFieldDeclaration,
 } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
 
 export const viewFieldContentEscapeCharacter = P.string('\\')
@@ -104,13 +104,13 @@ const jsViewFieldBindTargetMapping: Parser<UnvalidatedJsViewFieldBindTargetMappi
 	ident,
 );
 
-export const JS_VIEW_FIELD_DECLARATION: Parser<UnvalidatedJsViewFieldDeclaration> = P.sequenceMap(
+export const JS_VIEW_FIELD_DECLARATION: Parser<PartialUnvalidatedJsViewFieldDeclaration> = P.sequenceMap(
 	(bindTargetMappings, writeToBindTarget, code) => {
 		return {
 			bindTargetMappings: bindTargetMappings,
 			writeToBindTarget: writeToBindTarget,
 			code: code,
-		} satisfies UnvalidatedJsViewFieldDeclaration;
+		} satisfies PartialUnvalidatedJsViewFieldDeclaration;
 	},
 	jsViewFieldBindTargetMapping.separateBy(P_UTILS.whitespace()).skip(P_UTILS.whitespace()),
 	P.string('save to ').then(BIND_TARGET.wrapString('{', '}')).skip(P_UTILS.whitespace()).optional(),

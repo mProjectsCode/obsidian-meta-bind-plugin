@@ -114,9 +114,13 @@ export class MetaBindTable extends FieldBase {
 
 				const cells = this.columns.map(x => {
 					if ('inputFieldType' in x) {
-						return this.plugin.api.inputFieldParser.validateDeclaration(x, this.getFilePath(), scope);
+						return this.plugin.api.inputFieldParser.validate(x, this.getFilePath(), scope);
 					} else {
-						return this.plugin.api.viewFieldParser.validateDeclaration(x, this.getFilePath(), scope);
+						return this.plugin.api.viewFieldParser.validate(
+							x as UnvalidatedViewFieldDeclaration,
+							this.getFilePath(),
+							scope,
+						);
 					}
 				});
 

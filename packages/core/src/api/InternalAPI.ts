@@ -70,7 +70,7 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 
 	abstract openFile(filePath: string, callingFilePath: string, newTab: boolean): void;
 
-	abstract getFilePathByName(name: string): string | undefined;
+	abstract getFilePathByName(name: string, relativeTo?: string): string | undefined;
 
 	abstract showNotice(message: string): void;
 
@@ -93,6 +93,8 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	abstract createModal(content: ModalContent, options?: ModalOptions): IModal;
 
 	abstract createFuzzySearch(): IFuzzySearch;
+
+	abstract readFilePath(filePath: string): Promise<string>;
 
 	openCommandSelectModal(selectCallback: (selected: Command) => void): void {
 		this.createSearchModal(new CommandSelectModal(this.plugin, selectCallback)).open();
@@ -194,5 +196,23 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 				settings: settings,
 			},
 		});
+	}
+
+	isFilePathExcluded(filePath: string): boolean {
+		for (const excludedFolder of this.plugin.settings.excludedFolders) {
+			if (filePath.startsWith(excludedFolder)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	safeParseYaml(yaml: string): unknown {
+		try {
+			return this.parseYaml(yaml);
+		} catch (e) {
+			return undefined;
+		}
 	}
 }

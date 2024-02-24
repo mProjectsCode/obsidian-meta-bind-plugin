@@ -1,7 +1,6 @@
 import { type MarkdownPostProcessorContext } from 'obsidian/publish';
 import { type IPlugin } from 'packages/core/src/IPlugin';
 import { type MetaBindPluginSettings } from 'packages/core/src/Settings';
-import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
 import { GlobalMetadataSource, InternalMetadataSource } from 'packages/core/src/metadata/InternalMetadataSources';
 import { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
 import { BindTargetStorageType } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
@@ -57,22 +56,21 @@ export class MetaBindPublishPlugin implements IPlugin {
 				}
 
 				const content = codeBlock.innerText;
-				const mdrcType = this.api.isInlineFieldDeclarationAndGetType(content);
+				const fieldType = this.api.isInlineFieldDeclarationAndGetType(content);
 
-				console.log(content, mdrcType);
-				if (mdrcType === undefined) {
+				if (fieldType === undefined) {
 					continue;
 				}
 				// console.log(content, ctx.getSectionInfo(codeBlock)?.lineStart, ctx.getSectionInfo(codeBlock)?.lineEnd);
-				const mdrc = this.api.createMDRC(
-					mdrcType,
+				const mdrc = this.api.createInlineMDRCOfTypeFromString(
+					fieldType,
 					content,
-					RenderChildType.INLINE,
+					undefined,
 					filePath,
 					codeBlock,
 					ctx,
-					undefined,
 				);
+
 				mdrc.load();
 			}
 		}, 1);
@@ -88,10 +86,6 @@ export class MetaBindPublishPlugin implements IPlugin {
 
 	unload(): void {
 		this.onUnload();
-	}
-
-	public getFilePathsByName(name: string): string[] {
-		return [name];
 	}
 }
 

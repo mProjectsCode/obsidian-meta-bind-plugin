@@ -3,6 +3,7 @@ import { type BindTargetScope } from 'packages/core/src/metadata/BindTargetScope
 import { ParsingValidationError, runParser } from 'packages/core/src/parsers/ParsingError';
 import {
 	type BindTargetDeclaration,
+	type SimpleBindTargetDeclaration,
 	type UnvalidatedBindTargetDeclaration,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { BIND_TARGET } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';
@@ -18,20 +19,37 @@ export class BindTargetParser {
 		this.plugin = plugin;
 	}
 
-	parseAndValidateBindTarget(
+	fromString(declarationString: string): UnvalidatedBindTargetDeclaration {
+		return runParser(BIND_TARGET, declarationString);
+	}
+
+	fromStringAndValidate(
 		bindTargetString: string,
 		filePath: string,
 		scope?: BindTargetScope | undefined,
 	): BindTargetDeclaration {
-		return this.validateBindTarget(bindTargetString, this.parseBindTarget(bindTargetString), filePath, scope);
+		return this.validate(bindTargetString, this.fromString(bindTargetString), filePath, scope);
 	}
 
-	parseBindTarget(bindTargetString: string): UnvalidatedBindTargetDeclaration {
-		return runParser(BIND_TARGET, bindTargetString);
+	fromSimpleDeclaration(simpleDeclaration: SimpleBindTargetDeclaration): UnvalidatedBindTargetDeclaration {
+		return {
+			storageType: simpleDeclaration.storageType ? { value: simpleDeclaration.storageType } : undefined,
+			storagePath: simpleDeclaration.storagePath ? { value: simpleDeclaration.storagePath } : undefined,
+			storageProp: simpleDeclaration.storageProp.map(x => ({ type: x.type, prop: { value: x.prop } })),
+			listenToChildren: simpleDeclaration.listenToChildren,
+		};
 	}
 
-	validateBindTarget(
-		fullDeclaration: string,
+	fromSimpleDeclarationAndValidate(
+		simpleDeclaration: SimpleBindTargetDeclaration,
+		filePath: string,
+		scope?: BindTargetScope | undefined,
+	): BindTargetDeclaration {
+		return this.validate(undefined, this.fromSimpleDeclaration(simpleDeclaration), filePath, scope);
+	}
+
+	validate(
+		fullDeclaration: string | undefined,
 		unvalidatedBindTargetDeclaration: UnvalidatedBindTargetDeclaration,
 		filePath: string,
 		scope?: BindTargetScope | undefined,
@@ -94,8 +112,6 @@ export class BindTargetParser {
 				'Failed to resolve bind target scope, no scope provided',
 			);
 		} else {
-			// console.log('resolve scope', bindTarget, scope.scope);
-
 			bindTarget.storageType = scope.scope.storageType;
 			bindTarget.storagePath = scope.scope.storagePath;
 			bindTarget.storageProp = scope.scope.storageProp.concat(bindTarget.storageProp);
@@ -103,19 +119,12 @@ export class BindTargetParser {
 		}
 	}
 
-	public validateStorageType(storageType: ParsingResultNode, fullDeclaration: string): string {
+	public validateStorageType(storageType: ParsingResultNode, fullDeclaration: string | undefined): string {
 		for (const source of this.plugin.metadataManager.iterateSources()) {
 			if (source === storageType.value) {
 				return source;
 			}
 		}
-
-		// for (const entry of Object.entries(BindTargetStorageType)) {
-		// 	// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-		// 	if (entry[1] === storageType?.value) {
-		// 		return entry[1];
-		// 	}
-		// }
 
 		throw new ParsingValidationError(
 			ErrorLevel.ERROR,
@@ -128,7 +137,7 @@ export class BindTargetParser {
 
 	public validateStoragePathAsFilePath(
 		storagePathResultNode: ParsingResultNode | undefined,
-		fullDeclaration: string,
+		fullDeclaration: string | undefined,
 	): string {
 		const storagePath = storagePathResultNode?.value;
 		if (storagePath === undefined) {

@@ -35,11 +35,11 @@ export class ViewFieldDeclarationValidator {
 		const templateDeclaration = this.validateTemplateDeclaration(scope);
 
 		const declaration: ViewFieldDeclaration = {
-			fullDeclaration: this.unvalidatedDeclaration.fullDeclaration,
+			declarationString: this.unvalidatedDeclaration.declarationString,
 			viewFieldType: viewFieldType,
 			writeToBindTarget: writeToBindTarget,
 			argumentContainer: argumentContainer,
-			templateDeclaration: templateDeclaration,
+			declarationArray: templateDeclaration,
 			errorCollection: this.errorCollection.merge(this.unvalidatedDeclaration.errorCollection),
 		};
 
@@ -67,7 +67,7 @@ export class ViewFieldDeclarationValidator {
 				ErrorLevel.ERROR,
 				'Declaration Validator',
 				`Encountered invalid identifier. Expected token to be a view field type but received '${viewFieldType.value}'.`,
-				this.unvalidatedDeclaration.fullDeclaration,
+				this.unvalidatedDeclaration.declarationString,
 				viewFieldType.position,
 			),
 		);
@@ -79,8 +79,8 @@ export class ViewFieldDeclarationValidator {
 
 	private validateBindTarget(scope: BindTargetScope | undefined): BindTargetDeclaration | undefined {
 		if (this.unvalidatedDeclaration.writeToBindTarget !== undefined) {
-			return this.plugin.api.bindTargetParser.validateBindTarget(
-				this.unvalidatedDeclaration.fullDeclaration,
+			return this.plugin.api.bindTargetParser.validate(
+				this.unvalidatedDeclaration.declarationString,
 				this.unvalidatedDeclaration.writeToBindTarget,
 				this.filePath,
 				scope,
@@ -110,7 +110,7 @@ export class ViewFieldDeclarationValidator {
 						`Failed to parse view field arguments. Argument "${
 							argument.name.value
 						}" is only applicable to "${viewFieldArgument.getAllowedFieldsAsString()}" view fields.`,
-						this.unvalidatedDeclaration.fullDeclaration,
+						this.unvalidatedDeclaration.declarationString,
 						argument.name.position,
 					),
 				);
@@ -150,7 +150,7 @@ export class ViewFieldDeclarationValidator {
 				ErrorLevel.WARNING,
 				'Declaration Validator',
 				`Encountered invalid identifier. Expected identifier to be a view field argument type but received '${argumentType.value}'.`,
-				this.unvalidatedDeclaration.fullDeclaration,
+				this.unvalidatedDeclaration.declarationString,
 				argumentType.position,
 			),
 		);
@@ -165,8 +165,8 @@ export class ViewFieldDeclarationValidator {
 					if (typeof x === 'string') {
 						return x;
 					} else {
-						return this.plugin.api.bindTargetParser.validateBindTarget(
-							this.unvalidatedDeclaration.fullDeclaration,
+						return this.plugin.api.bindTargetParser.validate(
+							this.unvalidatedDeclaration.declarationString,
 							x,
 							this.filePath,
 							scope,

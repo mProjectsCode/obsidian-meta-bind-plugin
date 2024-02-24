@@ -27,7 +27,7 @@ export class ViewFieldBase extends FieldBase {
 
 		this.renderChildType = renderChildType;
 		this.declaration = declaration;
-		this.declarationString = declaration.fullDeclaration;
+		this.declarationString = declaration.declarationString;
 
 		this.errorCollection = new ErrorCollection(this.getUuid());
 		this.errorCollection.merge(declaration.errorCollection);

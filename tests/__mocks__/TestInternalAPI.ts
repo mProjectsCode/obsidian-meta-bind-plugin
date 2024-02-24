@@ -42,7 +42,7 @@ export class TestInternalAPI extends InternalAPI<TestPlugin> {
 		throw new Error('not implemented');
 	}
 
-	public getFilePathByName(name: string): string | undefined {
+	public getFilePathByName(name: string, _relativeTo: string = ''): string | undefined {
 		return name;
 	}
 
@@ -92,5 +92,9 @@ export class TestInternalAPI extends InternalAPI<TestPlugin> {
 
 	public getSuggesterOptions(_inputField: SuggesterLikeIFP): SuggesterOption<MBLiteral>[] {
 		return [];
+	}
+
+	public readFilePath(_filePath: string): Promise<string> {
+		return Promise.resolve('');
 	}
 }

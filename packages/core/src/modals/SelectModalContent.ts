@@ -10,6 +10,7 @@ export abstract class SelectModalContent<T> {
 	}
 
 	abstract getItemText(item: T): string;
+
 	abstract getItems(): T[];
 
 	public onSelected(item: T): void {

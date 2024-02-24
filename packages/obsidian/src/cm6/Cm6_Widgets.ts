@@ -1,7 +1,6 @@
 import { type EditorView, WidgetType } from '@codemirror/view';
 import { type Component } from 'obsidian';
 import { type FieldType } from 'packages/core/src/api/API';
-import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 import { type ExcludedMDRC } from 'packages/obsidian/src/renderChildren/ExcludedMDRC';
 import { type FieldMDRC } from 'packages/obsidian/src/renderChildren/FieldMDRC';
@@ -32,14 +31,12 @@ export class MarkdownRenderChildWidget extends WidgetType {
 		const span = document.createElement('span');
 		span.addClass('cm-inline-code');
 
-		this.renderChild = this.plugin.api.createMDRC(
-			this.type,
+		this.renderChild = this.plugin.api.createInlineMDRCFromString(
 			this.content,
-			RenderChildType.INLINE,
+			undefined,
 			this.filePath,
 			span,
 			this.parentComponent,
-			undefined,
 		);
 
 		return span;

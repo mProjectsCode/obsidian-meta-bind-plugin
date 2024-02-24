@@ -1,4 +1,4 @@
-import { InputFieldArgumentConfigs, type InputFieldArgumentConfig } from 'packages/core/src/config/FieldConfigs';
+import { type InputFieldArgumentConfig, InputFieldArgumentConfigs } from 'packages/core/src/config/FieldConfigs';
 import { AbstractInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/AbstractInputFieldArgument';
 import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import { DocsUtils } from 'packages/core/src/utils/DocsUtils';

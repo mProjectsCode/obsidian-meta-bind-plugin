@@ -147,7 +147,7 @@ export class ButtonActionRunner {
 	}
 
 	async runUpdateMetadataAction(action: UpdateMetadataButtonAction, filePath: string): Promise<void> {
-		const bindTarget = this.plugin.api.bindTargetParser.parseAndValidateBindTarget(action.bindTarget, filePath);
+		const bindTarget = this.plugin.api.bindTargetParser.fromStringAndValidate(action.bindTarget, filePath);
 		const uuid = getUUID();
 		const signal = new Signal<unknown>(undefined);
 		const subscription = this.plugin.metadataManager.subscribe(uuid, signal, bindTarget, () => {});

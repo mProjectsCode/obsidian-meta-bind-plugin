@@ -1,7 +1,6 @@
 import { type IPlugin } from 'packages/core/src/IPlugin';
-import { InputFieldAPI } from 'packages/core/src/api/InputFieldAPI';
 import { SyntaxHighlightingAPI } from 'packages/core/src/api/SyntaxHighlightingAPI';
-import { type RenderChildType } from 'packages/core/src/config/FieldConfigs';
+import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
 import { type FieldBase } from 'packages/core/src/fields/FieldBase';
 import { ButtonActionRunner } from 'packages/core/src/fields/button/ButtonActionRunner';
 import { ButtonBase } from 'packages/core/src/fields/button/ButtonBase';
@@ -14,10 +13,30 @@ import { ViewFieldBase } from 'packages/core/src/fields/viewFields/ViewFieldBase
 import { ViewFieldFactory } from 'packages/core/src/fields/viewFields/ViewFieldFactory';
 import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import { BindTargetParser } from 'packages/core/src/parsers/bindTargetParser/BindTargetParser';
-import { InputFieldDeclarationParser } from 'packages/core/src/parsers/inputFieldParser/InputFieldParser';
+import { InputFieldParser } from 'packages/core/src/parsers/inputFieldParser/InputFieldParser';
 import { ViewFieldParser } from 'packages/core/src/parsers/viewFieldParser/ViewFieldParser';
 import { expectType, getUUID } from 'packages/core/src/utils/Utils';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
+import { EmbedBase } from 'packages/core/src/fields/embed/EmbedBase';
+import { ExcludedBase } from 'packages/core/src/fields/excluded/ExcludedBase';
+import {
+	type InputFieldDeclaration,
+	type SimpleInputFieldDeclaration,
+} from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
+import {
+	type JsViewFieldDeclaration,
+	type SimpleJsViewFieldDeclaration,
+	type SimpleViewFieldDeclaration,
+	type ViewFieldDeclaration,
+} from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
+import { type ButtonConfig } from 'packages/core/src/config/ButtonConfig';
+import {
+	type ButtonDeclaration,
+	ButtonParser,
+	type InlineButtonDeclaration,
+	type SimpleInlineButtonDeclaration,
+} from 'packages/core/src/parsers/ButtonParser';
+import { JsViewFieldParser } from 'packages/core/src/parsers/viewFieldParser/JsViewFieldParser';
 
 export enum FieldType {
 	INPUT_FIELD = 'INPUT_FIELD',
@@ -25,15 +44,61 @@ export enum FieldType {
 	JS_VIEW_FIELD = 'JS_VIEW_FIELD',
 	INLINE_BUTTON = 'INLINE_BUTTON',
 	BUTTON = 'BUTTON',
+	EMBED = 'EMBED',
+	EXCLUDED = 'EXCLUDED',
 }
 
-export function isFieldTypeAllowedInline(type: FieldType): boolean {
+export interface InputFieldOptions {
+	renderChildType: RenderChildType;
+	declaration: SimpleInputFieldDeclaration | string;
+	scope: BindTargetScope | undefined;
+}
+
+export interface ViewFieldOptions {
+	renderChildType: RenderChildType;
+	declaration: SimpleViewFieldDeclaration | string;
+	scope: BindTargetScope | undefined;
+}
+
+export interface JsViewFieldOptions {
+	declaration: SimpleJsViewFieldDeclaration | string;
+}
+
+export interface InlineButtonOptions {
+	declaration: SimpleInlineButtonDeclaration | string;
+}
+
+export interface ButtonOptions {
+	declaration: ButtonConfig | string;
+	isPreview: boolean;
+}
+
+export interface EmbedOptions {
+	depth: number;
+	content: string;
+}
+
+export interface FieldOptionMap {
+	[FieldType.INPUT_FIELD]: InputFieldOptions;
+	[FieldType.VIEW_FIELD]: ViewFieldOptions;
+	[FieldType.JS_VIEW_FIELD]: JsViewFieldOptions;
+	[FieldType.INLINE_BUTTON]: InlineButtonOptions;
+	[FieldType.BUTTON]: ButtonOptions;
+	[FieldType.EMBED]: EmbedOptions;
+	[FieldType.EXCLUDED]: undefined;
+}
+
+export type InlineFieldType = FieldType.INPUT_FIELD | FieldType.VIEW_FIELD | FieldType.INLINE_BUTTON;
+
+export function isFieldTypeAllowedInline(type: FieldType): type is InlineFieldType {
 	return type === FieldType.INPUT_FIELD || type === FieldType.VIEW_FIELD || type === FieldType.INLINE_BUTTON;
 }
 
 export interface APIFieldOverrides {
-	inputFieldParser?: InputFieldDeclarationParser;
+	inputFieldParser?: InputFieldParser;
 	viewFieldParser?: ViewFieldParser;
+	jsViewFieldParser?: JsViewFieldParser;
+	buttonParser?: ButtonParser;
 	bindTargetParser?: BindTargetParser;
 	inputFieldFactory?: InputFieldFactory;
 	viewFieldFactory?: ViewFieldFactory;
@@ -44,10 +109,11 @@ export interface APIFieldOverrides {
 
 export abstract class API<Plugin extends IPlugin> {
 	readonly plugin: Plugin;
-	readonly inputField: InputFieldAPI;
 
-	readonly inputFieldParser: InputFieldDeclarationParser;
+	readonly inputFieldParser: InputFieldParser;
 	readonly viewFieldParser: ViewFieldParser;
+	readonly jsViewFieldParser: JsViewFieldParser;
+	readonly buttonParser: ButtonParser;
 	readonly bindTargetParser: BindTargetParser;
 
 	readonly inputFieldFactory: InputFieldFactory;
@@ -60,10 +126,11 @@ export abstract class API<Plugin extends IPlugin> {
 
 	constructor(plugin: Plugin, overrides?: APIFieldOverrides) {
 		this.plugin = plugin;
-		this.inputField = new InputFieldAPI(plugin);
 
-		this.inputFieldParser = overrides?.inputFieldParser ?? new InputFieldDeclarationParser(plugin);
+		this.inputFieldParser = overrides?.inputFieldParser ?? new InputFieldParser(plugin);
 		this.viewFieldParser = overrides?.viewFieldParser ?? new ViewFieldParser(plugin);
+		this.jsViewFieldParser = overrides?.jsViewFieldParser ?? new JsViewFieldParser(plugin);
+		this.buttonParser = overrides?.buttonParser ?? new ButtonParser(plugin);
 		this.bindTargetParser = overrides?.bindTargetParser ?? new BindTargetParser(plugin);
 
 		this.inputFieldFactory = overrides?.inputFieldFactory ?? new InputFieldFactory(plugin);
@@ -75,28 +142,30 @@ export abstract class API<Plugin extends IPlugin> {
 		this.syntaxHighlighting = overrides?.syntaxHighlighting ?? new SyntaxHighlightingAPI(plugin);
 	}
 
-	public createField(
-		type: FieldType,
+	public createField<Type extends FieldType>(
+		type: Type,
 		filePath: string,
-		renderChildType: RenderChildType,
-		content: string,
-		scope?: BindTargetScope | undefined,
+		options: FieldOptionMap[Type],
+		honorExcludedSetting: boolean = true,
 	): FieldBase {
-		const uuid = getUUID();
+		if (this.plugin.internal.isFilePathExcluded(filePath) && honorExcludedSetting) {
+			return this.createExcludedBase(filePath, undefined);
+		}
 
 		if (type === FieldType.INPUT_FIELD) {
-			const declaration = this.inputFieldParser.parseString(content, filePath, scope);
-			return new InputFieldBase(this.plugin, uuid, filePath, renderChildType, declaration);
+			return this.createInputFieldBase(filePath, options as FieldOptionMap[FieldType.INPUT_FIELD]);
 		} else if (type === FieldType.VIEW_FIELD) {
-			const declaration = this.viewFieldParser.parseString(content, filePath, scope);
-			return new ViewFieldBase(this.plugin, uuid, filePath, renderChildType, declaration);
+			return this.createViewFieldBase(filePath, options as FieldOptionMap[FieldType.VIEW_FIELD]);
 		} else if (type === FieldType.JS_VIEW_FIELD) {
-			const declaration = this.viewFieldParser.parseJsString(content, filePath);
-			return new JsViewField(this.plugin, uuid, filePath, renderChildType, declaration);
+			return this.createJsViewFieldBase(filePath, options as FieldOptionMap[FieldType.JS_VIEW_FIELD]);
 		} else if (type === FieldType.INLINE_BUTTON) {
-			return new InlineButtonBase(this.plugin, uuid, filePath, content);
+			return this.createInlineButtonBase(filePath, options as FieldOptionMap[FieldType.INLINE_BUTTON]);
 		} else if (type === FieldType.BUTTON) {
-			return new ButtonBase(this.plugin, uuid, filePath, content, false);
+			return this.createButtonBase(filePath, options as FieldOptionMap[FieldType.BUTTON]);
+		} else if (type === FieldType.EMBED) {
+			return this.createEmbedBase(filePath, options as FieldOptionMap[FieldType.EMBED]);
+		} else if (type === FieldType.EXCLUDED) {
+			return this.createExcludedBase(filePath, options as FieldOptionMap[FieldType.EXCLUDED]);
 		}
 
 		expectType<never>(type);
@@ -105,35 +174,179 @@ export abstract class API<Plugin extends IPlugin> {
 		throw new Error(`Unknown field type: ${type}`);
 	}
 
+	public createInlineFieldFromString(
+		filePath: string,
+		fieldString: string,
+		scope: BindTargetScope | undefined,
+		honorExcludedSetting: boolean = true,
+	): FieldBase {
+		const fieldType = this.isInlineFieldDeclarationAndGetType(fieldString);
+		if (fieldType === undefined) {
+			throw new MetaBindInternalError({
+				errorLevel: ErrorLevel.CRITICAL,
+				effect: 'failed to create inline field',
+				cause: `Invalid inline mdrc type "${fieldType}"`,
+			});
+		}
+
+		return this.createInlineFieldOfTypeFromString(fieldType, filePath, fieldString, scope, honorExcludedSetting);
+	}
+
+	public createInlineFieldOfTypeFromString(
+		type: InlineFieldType,
+		filePath: string,
+		fieldString: string,
+		scope: BindTargetScope | undefined,
+		honorExcludedSetting: boolean = true,
+	): FieldBase {
+		if (this.plugin.internal.isFilePathExcluded(filePath) && honorExcludedSetting) {
+			return this.createExcludedBase(filePath, undefined);
+		}
+
+		if (type === FieldType.INPUT_FIELD) {
+			return this.createInputFieldBase(filePath, {
+				renderChildType: RenderChildType.INLINE,
+				declaration: fieldString,
+				scope: scope,
+			});
+		}
+
+		if (type === FieldType.VIEW_FIELD) {
+			return this.createViewFieldBase(filePath, {
+				renderChildType: RenderChildType.INLINE,
+				declaration: fieldString,
+				scope: scope,
+			});
+		}
+
+		if (type === FieldType.INLINE_BUTTON) {
+			return this.createInlineButtonBase(filePath, { declaration: fieldString });
+		}
+
+		expectType<never>(type);
+
+		throw new MetaBindInternalError({
+			errorLevel: ErrorLevel.CRITICAL,
+			effect: 'failed to create inline field',
+			cause: `Invalid inline mdrc type "${type}"`,
+		});
+	}
+
+	public createInputFieldBase(filePath: string, options: FieldOptionMap[FieldType.INPUT_FIELD]): InputFieldBase {
+		const uuid = getUUID();
+
+		let declaration: InputFieldDeclaration;
+		if (typeof options.declaration === 'string') {
+			declaration = this.inputFieldParser.fromStringAndValidate(options.declaration, filePath, options.scope);
+		} else {
+			declaration = this.inputFieldParser.fromSimpleDeclarationAndValidate(
+				options.declaration,
+				filePath,
+				options.scope,
+			);
+		}
+
+		return new InputFieldBase(this.plugin, uuid, filePath, options.renderChildType, declaration);
+	}
+
+	public createViewFieldBase(filePath: string, options: FieldOptionMap[FieldType.VIEW_FIELD]): ViewFieldBase {
+		const uuid = getUUID();
+
+		let declaration: ViewFieldDeclaration;
+		if (typeof options.declaration === 'string') {
+			declaration = this.viewFieldParser.fromStringAndValidate(options.declaration, filePath, options.scope);
+		} else {
+			declaration = this.viewFieldParser.fromSimpleDeclarationAndValidate(
+				options.declaration,
+				filePath,
+				options.scope,
+			);
+		}
+
+		return new ViewFieldBase(this.plugin, uuid, filePath, options.renderChildType, declaration);
+	}
+
+	public createJsViewFieldBase(filePath: string, options: FieldOptionMap[FieldType.JS_VIEW_FIELD]): JsViewField {
+		const uuid = getUUID();
+
+		let declaration: JsViewFieldDeclaration;
+		if (typeof options.declaration === 'string') {
+			declaration = this.jsViewFieldParser.fromStringAndValidate(options.declaration, filePath);
+		} else {
+			declaration = this.jsViewFieldParser.fromSimpleDeclarationAndValidate(options.declaration, filePath);
+		}
+
+		return new JsViewField(this.plugin, uuid, filePath, declaration);
+	}
+
+	public createInlineButtonBase(
+		filePath: string,
+		options: FieldOptionMap[FieldType.INLINE_BUTTON],
+	): InlineButtonBase {
+		const uuid = getUUID();
+
+		let declaration: InlineButtonDeclaration;
+		if (typeof options.declaration === 'string') {
+			declaration = this.buttonParser.parseInlineString(options.declaration);
+		} else {
+			declaration = this.buttonParser.validateSimpleInlineDeclaration(options.declaration);
+		}
+
+		return new InlineButtonBase(this.plugin, uuid, filePath, declaration);
+	}
+
+	public createButtonBase(filePath: string, options: FieldOptionMap[FieldType.BUTTON]): ButtonBase {
+		const uuid = getUUID();
+
+		let declaration: ButtonDeclaration;
+		if (typeof options.declaration === 'string') {
+			declaration = this.buttonParser.parseButtonString(options.declaration);
+		} else {
+			declaration = this.buttonParser.validateSimpleButtonConfig(options.declaration);
+		}
+
+		return new ButtonBase(this.plugin, uuid, filePath, declaration, options.isPreview);
+	}
+
+	public createEmbedBase(filePath: string, options: FieldOptionMap[FieldType.EMBED]): EmbedBase {
+		const uuid = getUUID();
+		return new EmbedBase(this.plugin, uuid, filePath, options.depth, options.content);
+	}
+
+	public createExcludedBase(filePath: string, _options: FieldOptionMap[FieldType.EXCLUDED]): ExcludedBase {
+		const uuid = getUUID();
+		return new ExcludedBase(this.plugin, uuid, filePath);
+	}
+
 	/**
 	 * Gets the prefix of a given widget type. (e.g. INPUT or VIEW)
 	 *
-	 * @param mdrcType
+	 * @param fieldType
 	 */
-	public getInlineFieldDeclarationPrefix(mdrcType: FieldType): string {
-		if (mdrcType === FieldType.INPUT_FIELD) {
+	public getInlineFieldDeclarationPrefix(fieldType: FieldType): string {
+		if (fieldType === FieldType.INPUT_FIELD) {
 			return 'INPUT';
-		} else if (mdrcType === FieldType.VIEW_FIELD) {
+		} else if (fieldType === FieldType.VIEW_FIELD) {
 			return 'VIEW';
-		} else if (mdrcType === FieldType.INLINE_BUTTON) {
+		} else if (fieldType === FieldType.INLINE_BUTTON) {
 			return 'BUTTON';
 		}
 
 		throw new MetaBindInternalError({
 			errorLevel: ErrorLevel.CRITICAL,
 			effect: 'failed to get declaration prefix',
-			cause: `Invalid inline mdrc type "${mdrcType}"`,
+			cause: `Invalid inline mdrc type "${fieldType}"`,
 		});
 	}
 
 	/**
 	 * Checks if a string is a declaration of a given widget type.
 	 *
-	 * @param mdrcType
+	 * @param fieldType
 	 * @param str
 	 */
-	public isInlineFieldDeclaration(mdrcType: FieldType, str: string): boolean {
-		const startStr: string = this.getInlineFieldDeclarationPrefix(mdrcType) + '[';
+	public isInlineFieldDeclaration(fieldType: FieldType, str: string): boolean {
+		const startStr: string = this.getInlineFieldDeclarationPrefix(fieldType) + '[';
 		const endStr: string = ']';
 
 		return str.startsWith(startStr) && str.endsWith(endStr);
@@ -145,7 +358,7 @@ export abstract class API<Plugin extends IPlugin> {
 	 *
 	 * @param str
 	 */
-	public isInlineFieldDeclarationAndGetType(str: string): FieldType | undefined {
+	public isInlineFieldDeclarationAndGetType(str: string): InlineFieldType | undefined {
 		if (!str.endsWith(']')) {
 			return undefined;
 		}

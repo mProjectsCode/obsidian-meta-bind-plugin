@@ -2,36 +2,34 @@ import { type InputFieldType } from 'packages/core/src/config/FieldConfigs';
 import { type InputFieldArgumentContainer } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/InputFieldArgumentContainer';
 import {
 	type BindTargetDeclaration,
+	type SimpleBindTargetDeclaration,
 	type UnvalidatedBindTargetDeclaration,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import { type ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 
-export interface InputFieldDeclaration {
-	/**
-	 * The full declaration of the input field including the "INPUT[]".
-	 * e.g.
-	 * INPUT[input_type(argument_name(value)):bind_target]
-	 */
-	readonly fullDeclaration?: string;
+export interface FieldDeclaration {
+	declarationString: string | undefined;
+	errorCollection: ErrorCollection;
+}
+
+export interface InputFieldDeclaration extends FieldDeclaration {
 	/**
 	 * The type of the input field.
 	 * e.g.
 	 * input_type
 	 */
-	readonly inputFieldType: InputFieldType;
+	inputFieldType: InputFieldType;
 	/**
 	 * The frontmatter field the input field is bound to.
 	 * e.g.
 	 * `bind_target` or `file#bind.target`
 	 */
-	readonly bindTarget?: BindTargetDeclaration;
+	bindTarget: BindTargetDeclaration | undefined;
 	/**
 	 * A collection of the input field arguments.
 	 */
-	readonly argumentContainer: InputFieldArgumentContainer;
-
-	readonly errorCollection: ErrorCollection;
+	argumentContainer: InputFieldArgumentContainer;
 }
 
 export interface UnvalidatedFieldArgument {
@@ -46,7 +44,16 @@ export interface PartialUnvalidatedInputFieldDeclaration {
 	arguments: UnvalidatedFieldArgument[];
 }
 
-export interface UnvalidatedInputFieldDeclaration extends PartialUnvalidatedInputFieldDeclaration {
-	fullDeclaration: string;
-	errorCollection: ErrorCollection;
+export interface UnvalidatedInputFieldDeclaration extends PartialUnvalidatedInputFieldDeclaration, FieldDeclaration {}
+
+export interface SimpleFieldArgument {
+	name: string;
+	value: string[];
+}
+
+export interface SimpleInputFieldDeclaration {
+	inputFieldType: InputFieldType | undefined;
+	templateName: string | undefined;
+	bindTarget: SimpleBindTargetDeclaration | undefined;
+	arguments: SimpleFieldArgument[] | undefined;
 }

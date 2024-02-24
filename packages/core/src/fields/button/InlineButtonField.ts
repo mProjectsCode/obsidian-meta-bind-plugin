@@ -1,21 +1,21 @@
 import { type IPlugin } from 'packages/core/src/IPlugin';
 import { type ButtonConfig, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 import { ButtonField } from 'packages/core/src/fields/button/ButtonField';
-import { ButtonParser } from 'packages/core/src/parsers/ButtonParser';
 import { DomHelpers } from 'packages/core/src/utils/Utils';
 import ButtonComponent from 'packages/core/src/utils/components/ButtonComponent.svelte';
+import { Mountable } from 'packages/core/src/utils/Mountable';
 
-export class InlineButtonField {
+export class InlineButtonField extends Mountable {
 	plugin: IPlugin;
-	content: string;
+	referencedIds: string[];
 	filePath: string;
-	cleanupCallbacks: (() => void)[] = [];
 
-	constructor(plugin: IPlugin, content: string, filePath: string) {
+	constructor(plugin: IPlugin, referencedIds: string[], filePath: string) {
+		super();
+
 		this.plugin = plugin;
-		this.content = content;
+		this.referencedIds = referencedIds;
 		this.filePath = filePath;
-		this.cleanupCallbacks = [];
 	}
 
 	private renderInitialButton(element: HTMLElement, buttonId: string): ButtonComponent {
@@ -31,13 +31,11 @@ export class InlineButtonField {
 		});
 	}
 
-	public mount(targetEl: HTMLElement): void {
+	protected onMount(targetEl: HTMLElement): void {
 		DomHelpers.empty(targetEl);
 		DomHelpers.addClass(targetEl, 'mb-button-group');
 
-		const buttonIds: string[] = ButtonParser.parseString(this.content);
-
-		for (const buttonId of buttonIds) {
+		for (const buttonId of this.referencedIds) {
 			const wrapperEl = DomHelpers.createElement(targetEl, 'span', { class: 'mb-button mb-button-inline' });
 
 			const initialButton: ButtonComponent | undefined = this.renderInitialButton(wrapperEl, buttonId);
@@ -53,7 +51,7 @@ export class InlineButtonField {
 				},
 			);
 
-			this.cleanupCallbacks.push(() => {
+			this.addOnUnmountCb(() => {
 				initialButton?.$destroy();
 				button?.unmount();
 				loadListenerCleanup();
@@ -61,9 +59,7 @@ export class InlineButtonField {
 		}
 	}
 
-	public unmount(): void {
-		for (const cleanupCallback of this.cleanupCallbacks) {
-			cleanupCallback();
-		}
+	protected onUnmount(targetEl: HTMLElement): void {
+		DomHelpers.empty(targetEl);
 	}
 }

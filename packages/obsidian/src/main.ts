@@ -1,8 +1,7 @@
 import { loadPrism, type MarkdownPostProcessorContext, Plugin, stringifyYaml, type WorkspaceLeaf } from 'obsidian';
 import { type IPlugin } from 'packages/core/src/IPlugin';
 import { DEFAULT_SETTINGS, type MetaBindPluginSettings } from 'packages/core/src/Settings';
-import { FieldType } from 'packages/core/src/api/API';
-import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
+import { EMBED_MAX_DEPTH } from 'packages/core/src/config/FieldConfigs';
 import {
 	GlobalMetadataSource,
 	InternalMetadataSource,
@@ -22,7 +21,6 @@ import { createMarkdownRenderChildWidgetEditorPlugin } from 'packages/obsidian/s
 import { DependencyManager } from 'packages/obsidian/src/dependencies/DependencyManager';
 import { Version } from 'packages/obsidian/src/dependencies/Version';
 import { FaqView, MB_FAQ_VIEW_TYPE } from 'packages/obsidian/src/faq/FaqView';
-import { EMBED_MAX_DEPTH, EmbedMDRC } from 'packages/obsidian/src/renderChildren/EmbedMDRC';
 import { MetaBindSettingTab } from 'packages/obsidian/src/settings/SettingsTab';
 
 export enum MetaBindBuild {
@@ -173,12 +171,12 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				}
 
 				const content = codeBlock.innerText;
-				const mdrcType = this.api.isInlineFieldDeclarationAndGetType(content);
-				if (mdrcType === undefined) {
+				const fieldType = this.api.isInlineFieldDeclarationAndGetType(content);
+				if (fieldType === undefined) {
 					continue;
 				}
 				// console.log(content, ctx.getSectionInfo(codeBlock)?.lineStart, ctx.getSectionInfo(codeBlock)?.lineEnd);
-				this.api.createMDRC(mdrcType, content, RenderChildType.INLINE, filePath, codeBlock, ctx, undefined);
+				this.api.createInlineMDRCOfTypeFromString(fieldType, content, undefined, filePath, codeBlock, ctx);
 			}
 		}, 1);
 
@@ -188,48 +186,52 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			const content = source.trim();
 			const filePath = ctx.sourcePath;
 
-			const mdrcType = this.api.isInlineFieldDeclarationAndGetType(content);
-			if (mdrcType === undefined) {
+			const fieldType = this.api.isInlineFieldDeclarationAndGetType(content);
+			if (fieldType === undefined) {
 				return;
 			}
 
-			this.api.createMDRC(mdrcType, content, RenderChildType.BLOCK, filePath, codeBlock, ctx, undefined);
+			this.api.createInlineMDRCOfTypeFromString(fieldType, content, undefined, filePath, codeBlock, ctx);
 		});
 
 		// "meta-bind-js-view" code blocks
 		this.registerMarkdownCodeBlockProcessor('meta-bind-js-view', (source, el, ctx) => {
-			const codeBlock = el;
-			const content = source.trim();
-			const filePath = ctx.sourcePath;
+			const field = this.api.createJsViewFieldBase(ctx.sourcePath, {
+				declaration: source,
+			});
 
-			this.api.createMDRC(
-				FieldType.JS_VIEW_FIELD,
-				content,
-				RenderChildType.BLOCK,
-				filePath,
-				codeBlock,
-				ctx,
-				undefined,
-			);
+			this.api.wrapInMDRC(field, el, ctx);
 		});
 
 		// "meta-bind-embed" code blocks
 		this.registerMarkdownCodeBlockProcessor('meta-bind-embed', (source, el, ctx) => {
-			const embed = new EmbedMDRC(this, ctx.sourcePath, el, source, 0);
-			ctx.addChild(embed);
+			const field = this.api.createEmbedBase(ctx.sourcePath, {
+				content: source,
+				depth: 0,
+			});
+
+			this.api.wrapInMDRC(field, el, ctx);
 		});
 
 		for (let i = 1; i <= EMBED_MAX_DEPTH; i++) {
 			this.registerMarkdownCodeBlockProcessor(`meta-bind-embed-internal-${i}`, (source, el, ctx) => {
-				const embed = new EmbedMDRC(this, ctx.sourcePath, el, source, i);
-				ctx.addChild(embed);
+				const field = this.api.createEmbedBase(ctx.sourcePath, {
+					content: source,
+					depth: i,
+				});
+
+				this.api.wrapInMDRC(field, el, ctx);
 			});
 		}
 
 		// "meta-bind-button" code blocks
 		this.registerMarkdownCodeBlockProcessor('meta-bind-button', (source, el, ctx) => {
-			console.log(ctx.getSectionInfo(el));
-			this.api.createButtonFromString(source, ctx.sourcePath, el, ctx);
+			const field = this.api.createButtonBase(ctx.sourcePath, {
+				declaration: source,
+				isPreview: false,
+			});
+
+			this.api.wrapInMDRC(field, el, ctx);
 		});
 	}
 
@@ -304,17 +306,6 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		if (buttonTemplateParseErrorCollection.hasErrors()) {
 			console.warn('meta-bind | failed to parse button templates', buttonTemplateParseErrorCollection);
 		}
-	}
-
-	// TODO: move to internal API
-	isFilePathExcluded(path: string): boolean {
-		for (const excludedFolder of this.settings.excludedFolders) {
-			if (path.startsWith(excludedFolder)) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	async loadSettings(): Promise<void> {

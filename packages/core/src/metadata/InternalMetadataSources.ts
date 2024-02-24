@@ -47,7 +47,7 @@ export class GlobalMetadataSource implements IMetadataSource<GlobalMetadataCache
 	public validateStoragePath(
 		storagePath: ParsingResultNode,
 		hadStoragePath: boolean,
-		bindTargetDeclaration: string,
+		bindTargetDeclaration: string | undefined,
 		_parser: BindTargetParser,
 	): string {
 		if (hadStoragePath) {
@@ -148,7 +148,7 @@ export class ScopeMetadataSource implements IMetadataSource<IMetadataCacheItem> 
 	public validateStoragePath(
 		storagePath: ParsingResultNode,
 		hadStoragePath: boolean,
-		bindTargetDeclaration: string,
+		bindTargetDeclaration: string | undefined,
 		_parser: BindTargetParser,
 	): string {
 		if (hadStoragePath) {

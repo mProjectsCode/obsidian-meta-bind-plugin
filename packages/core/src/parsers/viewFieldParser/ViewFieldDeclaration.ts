@@ -2,73 +2,80 @@ import { type ViewFieldType } from 'packages/core/src/config/FieldConfigs';
 import { type ViewFieldArgumentContainer } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
 import {
 	type BindTargetDeclaration,
+	type SimpleBindTargetDeclaration,
 	type UnvalidatedBindTargetDeclaration,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { type UnvalidatedFieldArgument } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
+import {
+	type FieldDeclaration,
+	type SimpleFieldArgument,
+	type UnvalidatedFieldArgument,
+} from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
 import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
-import { type ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 
 export interface PartialUnvalidatedViewFieldDeclaration {
 	/**
 	 * Declaration array.
 	 */
-	templateDeclaration?: (string | UnvalidatedBindTargetDeclaration)[];
-	viewFieldType?: ParsingResultNode;
+	templateDeclaration: (string | UnvalidatedBindTargetDeclaration)[] | undefined;
+	viewFieldType: ParsingResultNode | undefined;
 	arguments: UnvalidatedFieldArgument[];
-	writeToBindTarget?: UnvalidatedBindTargetDeclaration;
+	writeToBindTarget: UnvalidatedBindTargetDeclaration | undefined;
 }
 
-export interface UnvalidatedViewFieldDeclaration extends PartialUnvalidatedViewFieldDeclaration {
-	/**
-	 * The full declaration of the view field including the "VIEW[]".
-	 * e.g.
-	 * VIEW[{x} * 2]
-	 */
-	fullDeclaration: string;
+export interface UnvalidatedViewFieldDeclaration extends PartialUnvalidatedViewFieldDeclaration, FieldDeclaration {}
 
-	errorCollection: ErrorCollection;
-}
-
-export interface ViewFieldDeclaration {
-	/**
-	 * The full declaration of the view field including the "VIEW[]".
-	 * e.g.
-	 * VIEW[{x} * 2]
-	 */
-	fullDeclaration: string;
+export interface ViewFieldDeclaration extends FieldDeclaration {
 	/**
 	 * Declaration array.
 	 */
-	templateDeclaration: (string | BindTargetDeclaration)[];
+	declarationArray: (string | BindTargetDeclaration)[];
 	viewFieldType: ViewFieldType;
 	argumentContainer: ViewFieldArgumentContainer;
-	writeToBindTarget?: BindTargetDeclaration;
-
-	errorCollection: ErrorCollection;
+	writeToBindTarget: BindTargetDeclaration | undefined;
 }
+
+export interface SimpleViewFieldDeclaration {
+	viewFieldType: string | undefined;
+	templateDeclaration: (string | SimpleBindTargetDeclaration)[] | undefined;
+	arguments: SimpleFieldArgument[] | undefined;
+	writeToBindTarget: SimpleBindTargetDeclaration | undefined;
+}
+
+// ---
+// JS View Field
+// ---
 
 export interface UnvalidatedJsViewFieldBindTargetMapping {
 	bindTarget: UnvalidatedBindTargetDeclaration;
 	name: string;
 }
 
-export interface UnvalidatedJsViewFieldDeclaration {
+export interface PartialUnvalidatedJsViewFieldDeclaration {
 	bindTargetMappings: UnvalidatedJsViewFieldBindTargetMapping[];
 	writeToBindTarget: UnvalidatedBindTargetDeclaration | undefined;
 	code: string;
 }
+
+export interface UnvalidatedJsViewFieldDeclaration extends PartialUnvalidatedJsViewFieldDeclaration, FieldDeclaration {}
 
 export interface JsViewFieldBindTargetMapping {
 	bindTarget: BindTargetDeclaration;
 	name: string;
 }
 
-export interface JsViewFieldDeclaration {
-	fullDeclaration: string;
-
+export interface JsViewFieldDeclaration extends FieldDeclaration {
 	bindTargetMappings: JsViewFieldBindTargetMapping[];
-	writeToBindTarget?: BindTargetDeclaration;
+	writeToBindTarget: BindTargetDeclaration | undefined;
 	code: string;
+}
 
-	errorCollection: ErrorCollection;
+export interface SimpleJsViewFieldBindTargetMapping {
+	bindTarget: SimpleBindTargetDeclaration;
+	name: string;
+}
+
+export interface SimpleJsViewFieldDeclaration {
+	bindTargetMappings: SimpleJsViewFieldBindTargetMapping[];
+	writeToBindTarget: SimpleBindTargetDeclaration | undefined;
+	code: string;
 }

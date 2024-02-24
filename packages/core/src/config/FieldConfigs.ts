@@ -504,3 +504,5 @@ export enum RenderChildType {
 	INLINE = 'inline',
 	BLOCK = 'block',
 }
+
+export const EMBED_MAX_DEPTH = 8;

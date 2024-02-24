@@ -142,9 +142,7 @@ describe('bind target parser', () => {
 			const testCase = generateTestCase(bindTarget);
 
 			test(testCase.str, () => {
-				expect(parser.parseAndValidateBindTarget(testCase.str, TEST_FILE, localScope)).toEqual(
-					testCase.expected,
-				);
+				expect(parser.fromStringAndValidate(testCase.str, TEST_FILE, localScope)).toEqual(testCase.expected);
 
 				// the syntax highlighting parser should not error
 				expect(

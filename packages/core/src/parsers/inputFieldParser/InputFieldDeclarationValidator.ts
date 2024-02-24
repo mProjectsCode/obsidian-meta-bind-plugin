@@ -34,7 +34,7 @@ export class InputFieldDeclarationValidator {
 		const argumentContainer = this.validateArguments(inputFieldType);
 
 		const declaration: InputFieldDeclaration = {
-			fullDeclaration: this.unvalidatedDeclaration.fullDeclaration,
+			declarationString: this.unvalidatedDeclaration.declarationString,
 			inputFieldType: inputFieldType,
 			bindTarget: bindTarget,
 			argumentContainer: argumentContainer,
@@ -61,7 +61,7 @@ export class InputFieldDeclarationValidator {
 				ErrorLevel.ERROR,
 				'Declaration Validator',
 				`Encountered invalid identifier. Expected token to be an input field type but received '${inputFieldType?.value}'.`,
-				this.unvalidatedDeclaration.fullDeclaration,
+				this.unvalidatedDeclaration.declarationString,
 				inputFieldType?.position,
 			),
 		);
@@ -75,8 +75,8 @@ export class InputFieldDeclarationValidator {
 
 	private validateBindTarget(scope: BindTargetScope | undefined): BindTargetDeclaration | undefined {
 		if (this.unvalidatedDeclaration.bindTarget !== undefined) {
-			return this.plugin.api.bindTargetParser.validateBindTarget(
-				this.unvalidatedDeclaration.fullDeclaration,
+			return this.plugin.api.bindTargetParser.validate(
+				this.unvalidatedDeclaration.declarationString,
 				this.unvalidatedDeclaration.bindTarget,
 				this.filePath,
 				scope,
@@ -106,7 +106,7 @@ export class InputFieldDeclarationValidator {
 						`Failed to parse input field arguments. Argument "${
 							argument.name.value
 						}" is only applicable to "${inputFieldArgument.getAllowedFieldsAsString()}" input fields.`,
-						this.unvalidatedDeclaration.fullDeclaration,
+						this.unvalidatedDeclaration.declarationString,
 						argument.name.position,
 					),
 				);
@@ -146,7 +146,7 @@ export class InputFieldDeclarationValidator {
 				ErrorLevel.WARNING,
 				'Declaration Validator',
 				`Encountered invalid identifier. Expected identifier to be an input field argument type but received '${argumentType.value}'.`,
-				this.unvalidatedDeclaration.fullDeclaration,
+				this.unvalidatedDeclaration.declarationString,
 				argumentType.position,
 			),
 		);

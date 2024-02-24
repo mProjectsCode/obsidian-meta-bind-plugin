@@ -43,7 +43,7 @@ export class PublishInternalAPI extends InternalAPI<MetaBindPublishPlugin> {
 		throw new Error('not implemented');
 	}
 
-	public getFilePathByName(name: string): string | undefined {
+	public getFilePathByName(name: string, _relativeTo: string = ''): string | undefined {
 		return name;
 	}
 
@@ -93,5 +93,9 @@ export class PublishInternalAPI extends InternalAPI<MetaBindPublishPlugin> {
 
 	public getSuggesterOptions(_inputField: SuggesterLikeIFP): SuggesterOption<MBLiteral>[] {
 		return [];
+	}
+
+	public readFilePath(_filePath: string): Promise<string> {
+		return Promise.resolve('');
 	}
 }
