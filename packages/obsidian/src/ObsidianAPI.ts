@@ -1,15 +1,8 @@
 import { type Component } from 'obsidian';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 import { V_API_createBindTarget, V_API_createTable, V_API_listenToMetadata } from 'packages/obsidian/src/APIValidators';
-import {
-	API,
-	type FieldOptionMap,
-	type FieldType,
-	type InlineFieldType,
-	isFieldTypeAllowedInline,
-} from 'packages/core/src/api/API.js';
+import { API, type FieldType, isFieldTypeAllowedInline } from 'packages/core/src/api/API.js';
 import { MetaBindTable } from 'packages/core/src/fields/metaBindTable/MetaBindTable';
-import { type BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import {
 	type BindTargetDeclaration,
 	BindTargetStorageType,
@@ -23,55 +16,22 @@ import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/error
 import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
 import { ObsidianButtonActionRunner } from 'packages/obsidian/src/ObsidianButtonActionRunner';
 import { MarkdownRenderChildWidget } from 'packages/obsidian/src/cm6/Cm6_Widgets';
-import { FieldMDRC } from 'packages/obsidian/src/renderChildren/FieldMDRC';
+import { FieldMDRC } from 'packages/obsidian/src/FieldMDRC';
 import { type FieldBase } from 'packages/core/src/fields/FieldBase';
 
 export interface ComponentLike {
 	addChild(child: Component): void;
 }
 
+/**
+ * Meta Bind API for Obsidian.
+ * @extends API
+ */
 export class ObsidianAPI extends API<MetaBindPlugin> {
 	constructor(plugin: MetaBindPlugin) {
 		super(plugin, {
 			buttonActionRunner: new ObsidianButtonActionRunner(plugin),
 		});
-	}
-
-	public createMDRC<Type extends FieldType>(
-		type: Type,
-		options: FieldOptionMap[Type],
-		filePath: string,
-		containerEl: HTMLElement,
-		component: ComponentLike,
-	): FieldMDRC {
-		const base = this.createField(type, filePath, options);
-
-		return this.wrapInMDRC(base, containerEl, component);
-	}
-
-	public createInlineMDRCFromString(
-		content: string,
-		scope: BindTargetScope | undefined,
-		filePath: string,
-		containerEl: HTMLElement,
-		component: ComponentLike,
-	): FieldMDRC {
-		const base = this.createInlineFieldFromString(content, filePath, scope);
-
-		return this.wrapInMDRC(base, containerEl, component);
-	}
-
-	public createInlineMDRCOfTypeFromString(
-		type: InlineFieldType,
-		content: string,
-		scope: BindTargetScope | undefined,
-		filePath: string,
-		containerEl: HTMLElement,
-		component: ComponentLike,
-	): FieldMDRC {
-		const base = this.createInlineFieldOfTypeFromString(type, content, filePath, scope);
-
-		return this.wrapInMDRC(base, containerEl, component);
 	}
 
 	public wrapInMDRC(field: FieldBase, containerEl: HTMLElement, component: ComponentLike): FieldMDRC {

@@ -16,10 +16,10 @@ export interface PartialUnvalidatedViewFieldDeclaration {
 	/**
 	 * Declaration array.
 	 */
-	templateDeclaration: (string | UnvalidatedBindTargetDeclaration)[] | undefined;
-	viewFieldType: ParsingResultNode | undefined;
+	templateDeclaration?: (string | UnvalidatedBindTargetDeclaration)[] | undefined;
+	viewFieldType?: ParsingResultNode | undefined;
 	arguments: UnvalidatedFieldArgument[];
-	writeToBindTarget: UnvalidatedBindTargetDeclaration | undefined;
+	writeToBindTarget?: UnvalidatedBindTargetDeclaration | undefined;
 }
 
 export interface UnvalidatedViewFieldDeclaration extends PartialUnvalidatedViewFieldDeclaration, FieldDeclaration {}
@@ -31,14 +31,14 @@ export interface ViewFieldDeclaration extends FieldDeclaration {
 	declarationArray: (string | BindTargetDeclaration)[];
 	viewFieldType: ViewFieldType;
 	argumentContainer: ViewFieldArgumentContainer;
-	writeToBindTarget: BindTargetDeclaration | undefined;
+	writeToBindTarget?: BindTargetDeclaration | undefined;
 }
 
 export interface SimpleViewFieldDeclaration {
-	viewFieldType: string | undefined;
-	templateDeclaration: (string | SimpleBindTargetDeclaration)[] | undefined;
-	arguments: SimpleFieldArgument[] | undefined;
-	writeToBindTarget: SimpleBindTargetDeclaration | undefined;
+	viewFieldType?: string | undefined;
+	templateDeclaration?: (string | SimpleBindTargetDeclaration)[] | undefined;
+	arguments?: SimpleFieldArgument[] | undefined;
+	writeToBindTarget?: SimpleBindTargetDeclaration | undefined;
 }
 
 // ---
@@ -52,7 +52,7 @@ export interface UnvalidatedJsViewFieldBindTargetMapping {
 
 export interface PartialUnvalidatedJsViewFieldDeclaration {
 	bindTargetMappings: UnvalidatedJsViewFieldBindTargetMapping[];
-	writeToBindTarget: UnvalidatedBindTargetDeclaration | undefined;
+	writeToBindTarget?: UnvalidatedBindTargetDeclaration | undefined;
 	code: string;
 }
 
@@ -65,7 +65,7 @@ export interface JsViewFieldBindTargetMapping {
 
 export interface JsViewFieldDeclaration extends FieldDeclaration {
 	bindTargetMappings: JsViewFieldBindTargetMapping[];
-	writeToBindTarget: BindTargetDeclaration | undefined;
+	writeToBindTarget?: BindTargetDeclaration | undefined;
 	code: string;
 }
 
@@ -76,6 +76,6 @@ export interface SimpleJsViewFieldBindTargetMapping {
 
 export interface SimpleJsViewFieldDeclaration {
 	bindTargetMappings: SimpleJsViewFieldBindTargetMapping[];
-	writeToBindTarget: SimpleBindTargetDeclaration | undefined;
+	writeToBindTarget?: SimpleBindTargetDeclaration | undefined;
 	code: string;
 }

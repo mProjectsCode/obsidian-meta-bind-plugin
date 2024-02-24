@@ -3,7 +3,6 @@ text: aasdasd
 locked: false
 ---
 
-
 Locked: `INPUT[toggle:locked]`
 ```js-engine
 const mb = engine.getPlugin('obsidian-meta-bind-plugin').api;
@@ -15,15 +14,16 @@ component.register(mb.listenToMetadata(signal, context.file.path, ['locked']));
 const comp = new obsidian.Component(component);
 
 function render() {
-	comp.unload()
-	comp.load()
+	comp.unload();
+	comp.load();
 	container.empty();
+	let field;
 	if (signal.get()) {
-		mb.createViewFieldFromString("VIEW[{text}][text]", "inline", context.file.path, container, comp);
+		field = mb.createInlineFieldFromString("VIEW[{text}][text]", context.file.path, undefined);
 	} else {
-		mb.createInputFieldFromString("INPUT[text:text]", "inline", context.file.path, container, comp);
+		field = mb.createInlineFieldFromString("INPUT[text:text]", context.file.path, undefined);
 	}
-	
+	mb.wrapInMDRC(field, container, comp);
 }
 
 const reactive = engine.reactive(render);

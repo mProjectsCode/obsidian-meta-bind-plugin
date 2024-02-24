@@ -50,26 +50,19 @@ export class MetaBindPublishPlugin implements IPlugin {
 
 			for (let index = 0; index < codeBlocks.length; index++) {
 				const codeBlock = codeBlocks.item(index);
-
 				if (codeBlock.hasClass('mb-none')) {
 					continue;
 				}
 
 				const content = codeBlock.innerText;
-				const fieldType = this.api.isInlineFieldDeclarationAndGetType(content);
 
+				const fieldType = this.api.isInlineFieldDeclarationAndGetType(content);
 				if (fieldType === undefined) {
 					continue;
 				}
-				// console.log(content, ctx.getSectionInfo(codeBlock)?.lineStart, ctx.getSectionInfo(codeBlock)?.lineEnd);
-				const mdrc = this.api.createInlineMDRCOfTypeFromString(
-					fieldType,
-					content,
-					undefined,
-					filePath,
-					codeBlock,
-					ctx,
-				);
+
+				const base = this.api.createInlineFieldOfTypeFromString(fieldType, content, filePath, undefined);
+				const mdrc = this.api.wrapInMDRC(base, codeBlock, ctx);
 
 				mdrc.load();
 			}

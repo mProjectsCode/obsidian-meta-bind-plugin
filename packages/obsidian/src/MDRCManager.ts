@@ -1,10 +1,10 @@
-import { type AbstractMDRC } from 'packages/obsidian/src/renderChildren/AbstractMDRC';
+import { type FieldMDRC } from 'packages/obsidian/src/FieldMDRC';
 
 export class MDRCManager {
-	activeMDRCs: Map<string, AbstractMDRC>;
+	activeMDRCs: Map<string, FieldMDRC>;
 
 	constructor() {
-		this.activeMDRCs = new Map<string, AbstractMDRC>();
+		this.activeMDRCs = new Map<string, FieldMDRC>();
 	}
 
 	unloadFile(filePath: string): void {
@@ -23,12 +23,12 @@ export class MDRCManager {
 		}
 	}
 
-	registerMDRC(mdrc: AbstractMDRC): void {
+	registerMDRC(mdrc: FieldMDRC): void {
 		console.debug(`meta-bind | MDRCManager >> registered MDRC ${mdrc.uuid}`);
 		this.activeMDRCs.set(mdrc.uuid, mdrc);
 	}
 
-	unregisterMDRC(mdrc: AbstractMDRC): void {
+	unregisterMDRC(mdrc: FieldMDRC): void {
 		console.debug(`meta-bind | MDRCManager >> unregistered MDRC ${mdrc.uuid}`);
 		this.activeMDRCs.delete(mdrc.uuid);
 	}

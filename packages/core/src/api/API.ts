@@ -142,6 +142,14 @@ export abstract class API<Plugin extends IPlugin> {
 		this.syntaxHighlighting = overrides?.syntaxHighlighting ?? new SyntaxHighlightingAPI(plugin);
 	}
 
+	/**
+	 * Creates a field of a given type.
+	 *
+	 * @param type
+	 * @param filePath
+	 * @param options
+	 * @param honorExcludedSetting
+	 */
 	public createField<Type extends FieldType>(
 		type: Type,
 		filePath: string,
@@ -149,7 +157,7 @@ export abstract class API<Plugin extends IPlugin> {
 		honorExcludedSetting: boolean = true,
 	): FieldBase {
 		if (this.plugin.internal.isFilePathExcluded(filePath) && honorExcludedSetting) {
-			return this.createExcludedBase(filePath, undefined);
+			return this.createExcludedBase(filePath);
 		}
 
 		if (type === FieldType.INPUT_FIELD) {
@@ -165,7 +173,7 @@ export abstract class API<Plugin extends IPlugin> {
 		} else if (type === FieldType.EMBED) {
 			return this.createEmbedBase(filePath, options as FieldOptionMap[FieldType.EMBED]);
 		} else if (type === FieldType.EXCLUDED) {
-			return this.createExcludedBase(filePath, options as FieldOptionMap[FieldType.EXCLUDED]);
+			return this.createExcludedBase(filePath);
 		}
 
 		expectType<never>(type);
@@ -174,10 +182,21 @@ export abstract class API<Plugin extends IPlugin> {
 		throw new Error(`Unknown field type: ${type}`);
 	}
 
+	/**
+	 * Creates an inline field from a string.
+	 * Will throw an error if the string is not a valid declaration.
+	 *
+	 * @param fieldString
+	 * @param filePath
+	 * @param scope
+	 * @param renderChildType
+	 * @param honorExcludedSetting
+	 */
 	public createInlineFieldFromString(
-		filePath: string,
 		fieldString: string,
+		filePath: string,
 		scope: BindTargetScope | undefined,
+		renderChildType: RenderChildType = RenderChildType.INLINE,
 		honorExcludedSetting: boolean = true,
 	): FieldBase {
 		const fieldType = this.isInlineFieldDeclarationAndGetType(fieldString);
@@ -189,38 +208,57 @@ export abstract class API<Plugin extends IPlugin> {
 			});
 		}
 
-		return this.createInlineFieldOfTypeFromString(fieldType, filePath, fieldString, scope, honorExcludedSetting);
+		return this.createInlineFieldOfTypeFromString(
+			fieldType,
+			fieldString,
+			filePath,
+			scope,
+			renderChildType,
+			honorExcludedSetting,
+		);
 	}
 
+	/**
+	 * Creates an inline field of a given type and string.
+	 * Will throw an error if the string is not a valid inline field type.
+	 *
+	 * @param type
+	 * @param filePath
+	 * @param declaration
+	 * @param scope
+	 * @param renderChildType
+	 * @param honorExcludedSetting
+	 */
 	public createInlineFieldOfTypeFromString(
 		type: InlineFieldType,
+		declaration: string,
 		filePath: string,
-		fieldString: string,
 		scope: BindTargetScope | undefined,
+		renderChildType: RenderChildType = RenderChildType.INLINE,
 		honorExcludedSetting: boolean = true,
 	): FieldBase {
 		if (this.plugin.internal.isFilePathExcluded(filePath) && honorExcludedSetting) {
-			return this.createExcludedBase(filePath, undefined);
+			return this.createExcludedBase(filePath);
 		}
 
 		if (type === FieldType.INPUT_FIELD) {
 			return this.createInputFieldBase(filePath, {
-				renderChildType: RenderChildType.INLINE,
-				declaration: fieldString,
+				renderChildType: renderChildType,
+				declaration: declaration,
 				scope: scope,
 			});
 		}
 
 		if (type === FieldType.VIEW_FIELD) {
 			return this.createViewFieldBase(filePath, {
-				renderChildType: RenderChildType.INLINE,
-				declaration: fieldString,
+				renderChildType: renderChildType,
+				declaration: declaration,
 				scope: scope,
 			});
 		}
 
 		if (type === FieldType.INLINE_BUTTON) {
-			return this.createInlineButtonBase(filePath, { declaration: fieldString });
+			return this.createInlineButtonBase(filePath, { declaration: declaration });
 		}
 
 		expectType<never>(type);
@@ -232,7 +270,7 @@ export abstract class API<Plugin extends IPlugin> {
 		});
 	}
 
-	public createInputFieldBase(filePath: string, options: FieldOptionMap[FieldType.INPUT_FIELD]): InputFieldBase {
+	public createInputFieldBase(filePath: string, options: InputFieldOptions): InputFieldBase {
 		const uuid = getUUID();
 
 		let declaration: InputFieldDeclaration;
@@ -249,7 +287,7 @@ export abstract class API<Plugin extends IPlugin> {
 		return new InputFieldBase(this.plugin, uuid, filePath, options.renderChildType, declaration);
 	}
 
-	public createViewFieldBase(filePath: string, options: FieldOptionMap[FieldType.VIEW_FIELD]): ViewFieldBase {
+	public createViewFieldBase(filePath: string, options: ViewFieldOptions): ViewFieldBase {
 		const uuid = getUUID();
 
 		let declaration: ViewFieldDeclaration;
@@ -266,7 +304,7 @@ export abstract class API<Plugin extends IPlugin> {
 		return new ViewFieldBase(this.plugin, uuid, filePath, options.renderChildType, declaration);
 	}
 
-	public createJsViewFieldBase(filePath: string, options: FieldOptionMap[FieldType.JS_VIEW_FIELD]): JsViewField {
+	public createJsViewFieldBase(filePath: string, options: JsViewFieldOptions): JsViewField {
 		const uuid = getUUID();
 
 		let declaration: JsViewFieldDeclaration;
@@ -279,10 +317,7 @@ export abstract class API<Plugin extends IPlugin> {
 		return new JsViewField(this.plugin, uuid, filePath, declaration);
 	}
 
-	public createInlineButtonBase(
-		filePath: string,
-		options: FieldOptionMap[FieldType.INLINE_BUTTON],
-	): InlineButtonBase {
+	public createInlineButtonBase(filePath: string, options: InlineButtonOptions): InlineButtonBase {
 		const uuid = getUUID();
 
 		let declaration: InlineButtonDeclaration;
@@ -295,7 +330,7 @@ export abstract class API<Plugin extends IPlugin> {
 		return new InlineButtonBase(this.plugin, uuid, filePath, declaration);
 	}
 
-	public createButtonBase(filePath: string, options: FieldOptionMap[FieldType.BUTTON]): ButtonBase {
+	public createButtonBase(filePath: string, options: ButtonOptions): ButtonBase {
 		const uuid = getUUID();
 
 		let declaration: ButtonDeclaration;
@@ -308,12 +343,12 @@ export abstract class API<Plugin extends IPlugin> {
 		return new ButtonBase(this.plugin, uuid, filePath, declaration, options.isPreview);
 	}
 
-	public createEmbedBase(filePath: string, options: FieldOptionMap[FieldType.EMBED]): EmbedBase {
+	public createEmbedBase(filePath: string, options: EmbedOptions): EmbedBase {
 		const uuid = getUUID();
 		return new EmbedBase(this.plugin, uuid, filePath, options.depth, options.content);
 	}
 
-	public createExcludedBase(filePath: string, _options: FieldOptionMap[FieldType.EXCLUDED]): ExcludedBase {
+	public createExcludedBase(filePath: string): ExcludedBase {
 		const uuid = getUUID();
 		return new ExcludedBase(this.plugin, uuid, filePath);
 	}

@@ -393,11 +393,11 @@ describe('IPF', () => {
 	function setup(testCase: IPFTestCase): void {
 		testPlugin = new TestPlugin();
 
-		ipfBase = testPlugin.api.createInputFieldFromString(
-			testCase.declaration,
-			RenderChildType.BLOCK,
-			TEST_FILE_PATH,
-		);
+		ipfBase = testPlugin.api.createInputFieldBase(TEST_FILE_PATH, {
+			declaration: testCase.declaration,
+			renderChildType: RenderChildType.BLOCK,
+			scope: undefined,
+		});
 	}
 
 	function loadIPF(): void {
@@ -408,17 +408,17 @@ describe('IPF', () => {
 	function setupTwoIPFs(testCase: IPFTestCase): void {
 		testPlugin = new TestPlugin();
 
-		ipfBase1 = testPlugin.api.createInputFieldFromString(
-			testCase.declaration,
-			RenderChildType.BLOCK,
-			TEST_FILE_PATH,
-		);
+		ipfBase1 = testPlugin.api.createInputFieldBase(TEST_FILE_PATH, {
+			declaration: testCase.declaration,
+			renderChildType: RenderChildType.BLOCK,
+			scope: undefined,
+		});
 
-		ipfBase2 = testPlugin.api.createInputFieldFromString(
-			testCase.declaration,
-			RenderChildType.BLOCK,
-			TEST_FILE_PATH,
-		);
+		ipfBase2 = testPlugin.api.createInputFieldBase(TEST_FILE_PATH, {
+			declaration: testCase.declaration,
+			renderChildType: RenderChildType.BLOCK,
+			scope: undefined,
+		});
 	}
 
 	function loadIPF1(): void {

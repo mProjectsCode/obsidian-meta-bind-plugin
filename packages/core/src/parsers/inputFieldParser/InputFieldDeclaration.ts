@@ -9,26 +9,13 @@ import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/Gen
 import { type ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 
 export interface FieldDeclaration {
-	declarationString: string | undefined;
+	declarationString?: string | undefined;
 	errorCollection: ErrorCollection;
 }
 
 export interface InputFieldDeclaration extends FieldDeclaration {
-	/**
-	 * The type of the input field.
-	 * e.g.
-	 * input_type
-	 */
 	inputFieldType: InputFieldType;
-	/**
-	 * The frontmatter field the input field is bound to.
-	 * e.g.
-	 * `bind_target` or `file#bind.target`
-	 */
 	bindTarget: BindTargetDeclaration | undefined;
-	/**
-	 * A collection of the input field arguments.
-	 */
 	argumentContainer: InputFieldArgumentContainer;
 }
 
@@ -38,9 +25,9 @@ export interface UnvalidatedFieldArgument {
 }
 
 export interface PartialUnvalidatedInputFieldDeclaration {
-	inputFieldType?: ParsingResultNode;
-	templateName?: ParsingResultNode;
-	bindTarget?: UnvalidatedBindTargetDeclaration;
+	inputFieldType?: ParsingResultNode | undefined;
+	templateName?: ParsingResultNode | undefined;
+	bindTarget?: UnvalidatedBindTargetDeclaration | undefined;
 	arguments: UnvalidatedFieldArgument[];
 }
 
@@ -52,8 +39,8 @@ export interface SimpleFieldArgument {
 }
 
 export interface SimpleInputFieldDeclaration {
-	inputFieldType: InputFieldType | undefined;
-	templateName: string | undefined;
-	bindTarget: SimpleBindTargetDeclaration | undefined;
-	arguments: SimpleFieldArgument[] | undefined;
+	inputFieldType?: InputFieldType | undefined;
+	templateName?: string | undefined;
+	bindTarget?: SimpleBindTargetDeclaration | undefined;
+	arguments?: SimpleFieldArgument[] | undefined;
 }

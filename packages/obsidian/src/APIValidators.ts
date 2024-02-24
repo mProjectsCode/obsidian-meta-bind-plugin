@@ -4,7 +4,6 @@ import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
 import { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import {
 	type BindTargetDeclaration,
-	BindTargetStorageType,
 	type UnvalidatedBindTargetDeclaration,
 	type UnvalidatedPropAccess,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
@@ -77,7 +76,7 @@ export const V_UnvalidatedBindTargetDeclaration = schemaForType<UnvalidatedBindT
 
 export const V_UnvalidatedInputFieldDeclaration = schemaForType<UnvalidatedInputFieldDeclaration>()(
 	z.object({
-		fullDeclaration: z.string(),
+		declarationString: z.string().optional(),
 		inputFieldType: V_ParsingResultNode.optional(),
 		templateName: V_ParsingResultNode.optional(),
 		bindTarget: V_UnvalidatedBindTargetDeclaration.optional(),
@@ -88,8 +87,8 @@ export const V_UnvalidatedInputFieldDeclaration = schemaForType<UnvalidatedInput
 
 export const V_UnvalidatedViewFieldDeclaration = schemaForType<UnvalidatedViewFieldDeclaration>()(
 	z.object({
-		fullDeclaration: z.string(),
-		templateDeclaration: z.array(z.union([z.string(), V_UnvalidatedBindTargetDeclaration])),
+		declarationString: z.string().optional(),
+		templateDeclaration: z.array(z.union([z.string(), V_UnvalidatedBindTargetDeclaration])).optional(),
 		viewFieldType: V_ParsingResultNode.optional(),
 		arguments: V_UnvalidatedFieldArgument.array(),
 		writeToBindTarget: V_UnvalidatedBindTargetDeclaration.optional(),
@@ -99,7 +98,7 @@ export const V_UnvalidatedViewFieldDeclaration = schemaForType<UnvalidatedViewFi
 
 export const V_BindTargetDeclaration = schemaForType<BindTargetDeclaration>()(
 	z.object({
-		storageType: z.nativeEnum(BindTargetStorageType),
+		storageType: z.string(),
 		storagePath: z.string(),
 		storageProp: z.instanceof(PropPath),
 		listenToChildren: z.boolean(),
@@ -114,33 +113,6 @@ export const V_ComponentLike = schemaForType<ComponentLike>()(
 		addChild: z.function().args(z.instanceof(Component)).returns(z.void()),
 	}),
 );
-
-export const V_API_createInputField = schemaForType<Parameters<InstanceType<typeof ObsidianAPI>['createInputField']>>()(
-	z.tuple([
-		V_UnvalidatedInputFieldDeclaration,
-		V_RenderChildType,
-		V_FilePath,
-		V_HTMLElement,
-		V_ComponentLike,
-		V_BindTargetScope.optional(),
-	]),
-);
-
-export const V_API_createInputFieldFromString = schemaForType<
-	Parameters<InstanceType<typeof ObsidianAPI>['createInputFieldFromString']>
->()(z.tuple([z.string(), V_RenderChildType, V_FilePath, V_HTMLElement, V_ComponentLike, V_BindTargetScope.optional()]));
-
-export const V_API_createViewFieldFromString = schemaForType<
-	Parameters<InstanceType<typeof ObsidianAPI>['createViewFieldFromString']>
->()(z.tuple([z.string(), V_RenderChildType, V_FilePath, V_HTMLElement, V_ComponentLike, V_BindTargetScope.optional()]));
-
-export const V_API_createJsViewFieldFromString = schemaForType<
-	Parameters<InstanceType<typeof ObsidianAPI>['createJsViewFieldFromString']>
->()(z.tuple([z.string(), V_RenderChildType, V_FilePath, V_HTMLElement, V_ComponentLike]));
-
-export const V_API_createExcludedField = schemaForType<
-	Parameters<InstanceType<typeof ObsidianAPI>['createExcludedField']>
->()(z.tuple([V_HTMLElement, V_FilePath, V_ComponentLike]));
 
 export const V_API_listenToMetadata = schemaForType<Parameters<InstanceType<typeof ObsidianAPI>['listenToMetadata']>>()(
 	z.tuple([V_Signal, V_FilePath, z.array(z.string()), z.boolean(), V_VoidFunction.optional()]),
@@ -160,11 +132,3 @@ export const V_API_createTable = schemaForType<Parameters<InstanceType<typeof Ob
 export const V_API_createBindTarget = schemaForType<Parameters<InstanceType<typeof ObsidianAPI>['createBindTarget']>>()(
 	z.tuple([z.string(), V_FilePath]),
 );
-
-export const V_API_createButtonFromString = schemaForType<
-	Parameters<InstanceType<typeof ObsidianAPI>['createButtonFromString']>
->()(z.tuple([z.string(), V_FilePath, V_HTMLElement, V_ComponentLike]));
-
-export const V_API_createInlineButtonFromString = schemaForType<
-	Parameters<InstanceType<typeof ObsidianAPI>['createInlineButtonFromString']>
->()(z.tuple([z.string(), V_FilePath, V_HTMLElement, V_ComponentLike]));

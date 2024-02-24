@@ -1,7 +1,7 @@
 import { loadPrism, type MarkdownPostProcessorContext, Plugin, stringifyYaml, type WorkspaceLeaf } from 'obsidian';
 import { type IPlugin } from 'packages/core/src/IPlugin';
 import { DEFAULT_SETTINGS, type MetaBindPluginSettings } from 'packages/core/src/Settings';
-import { EMBED_MAX_DEPTH } from 'packages/core/src/config/FieldConfigs';
+import { EMBED_MAX_DEPTH, RenderChildType } from 'packages/core/src/config/FieldConfigs';
 import {
 	GlobalMetadataSource,
 	InternalMetadataSource,
@@ -176,7 +176,8 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 					continue;
 				}
 				// console.log(content, ctx.getSectionInfo(codeBlock)?.lineStart, ctx.getSectionInfo(codeBlock)?.lineEnd);
-				this.api.createInlineMDRCOfTypeFromString(fieldType, content, undefined, filePath, codeBlock, ctx);
+				const base = this.api.createInlineFieldOfTypeFromString(fieldType, content, filePath, undefined);
+				this.api.wrapInMDRC(base, codeBlock, ctx);
 			}
 		}, 1);
 
@@ -191,7 +192,14 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				return;
 			}
 
-			this.api.createInlineMDRCOfTypeFromString(fieldType, content, undefined, filePath, codeBlock, ctx);
+			const base = this.api.createInlineFieldOfTypeFromString(
+				fieldType,
+				content,
+				filePath,
+				undefined,
+				RenderChildType.BLOCK,
+			);
+			this.api.wrapInMDRC(base, codeBlock, ctx);
 		});
 
 		// "meta-bind-js-view" code blocks

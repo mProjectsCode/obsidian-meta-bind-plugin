@@ -75,15 +75,18 @@ export class InputFieldDeclarationValidator {
 
 	private validateBindTarget(scope: BindTargetScope | undefined): BindTargetDeclaration | undefined {
 		if (this.unvalidatedDeclaration.bindTarget !== undefined) {
-			return this.plugin.api.bindTargetParser.validate(
-				this.unvalidatedDeclaration.declarationString,
-				this.unvalidatedDeclaration.bindTarget,
-				this.filePath,
-				scope,
-			);
-		} else {
-			return undefined;
+			try {
+				return this.plugin.api.bindTargetParser.validate(
+					this.unvalidatedDeclaration.declarationString,
+					this.unvalidatedDeclaration.bindTarget,
+					this.filePath,
+					scope,
+				);
+			} catch (e) {
+				this.errorCollection.add(e);
+			}
 		}
+		return undefined;
 	}
 
 	private validateArguments(inputFieldType: InputFieldType): InputFieldArgumentContainer {

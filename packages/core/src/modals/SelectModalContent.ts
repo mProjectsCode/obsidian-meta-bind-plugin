@@ -9,8 +9,16 @@ export abstract class SelectModalContent<T> {
 		this.selectCallback = selectCallback;
 	}
 
+	/**
+	 * Get the text to display for the given item.
+	 *
+	 * @param item
+	 */
 	abstract getItemText(item: T): string;
 
+	/**
+	 * Get the items to display in the select modal.
+	 */
 	abstract getItems(): T[];
 
 	public onSelected(item: T): void {

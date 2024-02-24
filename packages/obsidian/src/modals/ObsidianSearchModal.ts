@@ -4,23 +4,23 @@ import { type SelectModalContent } from 'packages/core/src/modals/SelectModalCon
 import { type IModal } from 'packages/core/src/modals/IModal';
 
 export class ObsidianSearchModal<T> extends FuzzySuggestModal<T> implements IModal {
-	private modal: SelectModalContent<T>;
+	private content: SelectModalContent<T>;
 
-	constructor(plugin: MetaBindPlugin, modal: SelectModalContent<T>) {
+	constructor(plugin: MetaBindPlugin, content: SelectModalContent<T>) {
 		super(plugin.app);
 
-		this.modal = modal;
+		this.content = content;
 	}
 
 	getItems(): T[] {
-		return this.modal.getItems();
+		return this.content.getItems();
 	}
 
 	getItemText(item: T): string {
-		return this.modal.getItemText(item);
+		return this.content.getItemText(item);
 	}
 
 	onChooseItem(item: T, _evt: MouseEvent | KeyboardEvent): void {
-		this.modal.onSelected(item);
+		this.content.onSelected(item);
 	}
 }

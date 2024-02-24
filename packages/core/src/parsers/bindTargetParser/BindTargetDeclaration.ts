@@ -3,8 +3,8 @@ import { type PROP_ACCESS_TYPE } from 'packages/core/src/utils/prop/PropAccess';
 import { type PropPath } from 'packages/core/src/utils/prop/PropPath';
 
 export interface UnvalidatedBindTargetDeclaration {
-	storageType?: ParsingResultNode;
-	storagePath?: ParsingResultNode;
+	storageType?: ParsingResultNode | undefined;
+	storagePath?: ParsingResultNode | undefined;
 	storageProp: UnvalidatedPropAccess[];
 	listenToChildren: boolean;
 }
@@ -22,8 +22,8 @@ export interface BindTargetDeclaration {
 }
 
 export interface SimpleBindTargetDeclaration {
-	storageType?: string;
-	storagePath?: string;
+	storageType?: string | undefined;
+	storagePath?: string | undefined;
 	storageProp: SimplePropAccess[];
 	listenToChildren: boolean;
 }

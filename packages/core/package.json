@@ -2,6 +2,8 @@
 	"name": "meta-bind-core",
 	"main": "src/index.ts",
 	"devDependencies": {
-		"svelte": "^4.2.11"
+		"svelte": "^4.2.11",
+		"@lemons_dev/parsinom": "^0.0.12",
+		"zod": "^3.22.4"
 	}
 }

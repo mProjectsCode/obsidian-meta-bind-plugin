@@ -35,6 +35,13 @@ export class ButtonActionRunner {
 		};
 	}
 
+	/**
+	 * Run the action(s) defined in the button config.
+	 * Will show a notice if an error occurs.
+	 *
+	 * @param buttonConfig
+	 * @param filePath
+	 */
 	async runButtonAction(buttonConfig: ButtonConfig, filePath: string): Promise<void> {
 		try {
 			if (buttonConfig.action) {
@@ -54,6 +61,11 @@ export class ButtonActionRunner {
 		}
 	}
 
+	/**
+	 * Create a default action for the given type.
+	 *
+	 * @param type
+	 */
 	createDefaultAction(type: ButtonActionType): ButtonAction {
 		if (type === ButtonActionType.COMMAND) {
 			return { type: ButtonActionType.COMMAND, command: '' } satisfies CommandButtonAction;
@@ -85,6 +97,13 @@ export class ButtonActionRunner {
 		throw new Error(`Unknown button action type: ${type}`);
 	}
 
+	/**
+	 * Run a specific button action.
+	 * Will throw.
+	 *
+	 * @param action
+	 * @param filePath
+	 */
 	async runAction(action: ButtonAction, filePath: string): Promise<void> {
 		if (action.type === ButtonActionType.COMMAND) {
 			await this.runCommandAction(action);

@@ -52,48 +52,157 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 		this.plugin = plugin;
 	}
 
+	/**
+	 * Get the options for the image suggester input field.
+	 *
+	 * @param inputField
+	 */
 	abstract getImageSuggesterOptions(inputField: ImageSuggesterIPF): SuggesterOption<string>[];
 
+	/**
+	 * Get the options for the suggester input field.
+	 *
+	 * @param inputField
+	 */
 	abstract getSuggesterOptions(inputField: SuggesterLikeIFP): SuggesterOption<MBLiteral>[];
 
+	/**
+	 * Render markdown to an element.
+	 *
+	 * @param markdown
+	 * @param element
+	 * @param filePath
+	 *
+	 * @returns Cleanup callback.
+	 */
 	abstract renderMarkdown(markdown: string, element: HTMLElement, filePath: string): Promise<() => void>;
 
+	/**
+	 * Runs a command by its id.
+	 *
+	 * @param id
+	 */
 	abstract executeCommandById(id: string): boolean;
 
+	/**
+	 * Check if the js engine plugin is available.
+	 */
 	abstract isJsEngineAvailable(): boolean;
 
+	/**
+	 *  Run a file using js engine.
+	 *
+	 * @param filePath
+	 * @param callingFilePath
+	 * @param container
+	 *
+	 * @returns Cleanup callback.
+	 */
 	abstract jsEngineRunFile(filePath: string, callingFilePath: string, container?: HTMLElement): Promise<() => void>;
 
+	/**
+	 * Run code using js engine.
+	 *
+	 * @param code
+	 * @param callingFilePath
+	 * @param container
+	 *
+	 * @returns Cleanup callback.
+	 */
 	abstract jsEngineRunCode(code: string, callingFilePath: string, container?: HTMLElement): Promise<() => void>;
 
+	/**
+	 * Creates a js renderer, used for the js view field.
+	 *
+	 * @param container
+	 * @param filePath
+	 * @param code
+	 */
 	abstract createJsRenderer(container: HTMLElement, filePath: string, code: string): IJsRenderer;
 
+	/**
+	 * Open a specific file.
+	 *
+	 * @param filePath
+	 * @param callingFilePath
+	 * @param newTab
+	 */
 	abstract openFile(filePath: string, callingFilePath: string, newTab: boolean): void;
 
+	/**
+	 * Resolves a file name to a file path.
+	 *
+	 * @param name
+	 * @param relativeTo
+	 */
 	abstract getFilePathByName(name: string, relativeTo?: string): string | undefined;
 
+	/**
+	 * Shows a notice to the user.
+	 *
+	 * @param message
+	 */
 	abstract showNotice(message: string): void;
 
 	abstract parseYaml(yaml: string): unknown;
 
 	abstract stringifyYaml(yaml: unknown): string;
 
+	/**
+	 * Add an icon to an element.
+	 *
+	 * @param element
+	 * @param icon
+	 */
 	abstract setIcon(element: HTMLElement, icon: string): void;
 
+	/**
+	 * Get the uri for a path to an image.
+	 *
+	 * @param imagePath
+	 */
 	abstract imagePathToUri(imagePath: string): string;
 
+	/**
+	 * List all files by their path.
+	 */
 	abstract getAllFiles(): string[];
 
+	/**
+	 * List all folders by their path.
+	 */
 	abstract getAllFolders(): string[];
 
+	/**
+	 * List all commands.
+	 */
 	abstract getAllCommands(): Command[];
 
+	/**
+	 * Creates a search modal with the given content.
+	 *
+	 * @param content
+	 */
 	abstract createSearchModal<T>(content: SelectModalContent<T>): IModal;
 
+	/**
+	 * Creates a modal with the given content.
+	 *
+	 * @param content
+	 * @param options
+	 */
 	abstract createModal(content: ModalContent, options?: ModalOptions): IModal;
 
+	/**
+	 * Creates a fuzzy search instance.
+	 */
 	abstract createFuzzySearch(): IFuzzySearch;
 
+	/**
+	 * Read a files content.
+	 *
+	 * @param filePath
+	 */
 	abstract readFilePath(filePath: string): Promise<string>;
 
 	openCommandSelectModal(selectCallback: (selected: Command) => void): void {
@@ -188,6 +297,12 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 		).open();
 	}
 
+	/**
+	 * Create an error indicator in the given element.
+	 *
+	 * @param element
+	 * @param settings
+	 */
 	createErrorIndicator(element: HTMLElement, settings: ErrorIndicatorProps): void {
 		new ErrorIndicatorComponent({
 			target: element,
@@ -198,6 +313,11 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 		});
 	}
 
+	/**
+	 * Checks if a file path has been excluded in the settings.
+	 *
+	 * @param filePath
+	 */
 	isFilePathExcluded(filePath: string): boolean {
 		for (const excludedFolder of this.plugin.settings.excludedFolders) {
 			if (filePath.startsWith(excludedFolder)) {
@@ -206,13 +326,5 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 		}
 
 		return false;
-	}
-
-	safeParseYaml(yaml: string): unknown {
-		try {
-			return this.parseYaml(yaml);
-		} catch (e) {
-			return undefined;
-		}
 	}
 }

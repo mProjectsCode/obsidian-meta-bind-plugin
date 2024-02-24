@@ -9,18 +9,44 @@ export abstract class Mountable {
 		this.onUnmountCbs = [];
 	}
 
+	/**
+	 * Check if the mountable is currently mounted.
+	 */
 	public isMounted(): boolean {
 		return this.mounted;
 	}
 
+	/**
+	 * Get the element that the mountable is currently mounted to.
+	 */
 	public getTargetEl(): HTMLElement | undefined {
 		return this.targetEl;
 	}
 
+	/**
+	 * Called when the mountable is mounted to an element.
+	 * ALWAYS call super.onMount() in the overriding method.
+	 *
+	 * @param targetEl
+	 * @protected
+	 */
 	protected abstract onMount(targetEl: HTMLElement): void;
 
+	/**
+	 * Called when the mountable is unmounted from an element.
+	 * ALWAYS call super.onUnmount() in the overriding method.
+	 *
+	 * @param targetEl
+	 * @protected
+	 */
 	protected abstract onUnmount(targetEl: HTMLElement): void;
 
+	/**
+	 * Mount the mountable to the given element.
+	 * Will throw an error if the mountable is already mounted.
+	 *
+	 * @param targetEl
+	 */
 	public mount(targetEl: HTMLElement): void {
 		if (this.mounted || this.targetEl) {
 			throw new Error('Mountable is already mounted');
@@ -32,6 +58,10 @@ export abstract class Mountable {
 		this.onMount(targetEl);
 	}
 
+	/**
+	 * Unmount the mountable from the current element.
+	 * Will throw an error if the mountable is not mounted.
+	 */
 	public unmount(): void {
 		if (!this.mounted || !this.targetEl) {
 			throw new Error('Mountable is not mounted');
@@ -47,7 +77,12 @@ export abstract class Mountable {
 		this.targetEl = undefined;
 	}
 
-	public addOnUnmountCb(cb: () => void): void {
+	/**
+	 * Register a callback that will be called when the mountable is unmounted.
+	 *
+	 * @param cb
+	 */
+	public registerUnmountCb(cb: () => void): void {
 		this.onUnmountCbs.push(cb);
 	}
 }

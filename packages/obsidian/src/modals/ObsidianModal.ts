@@ -13,7 +13,7 @@ export class ObsidianModal extends Modal implements IModal {
 		super(plugin.app);
 
 		this.content = content;
-		content.setCloseModalCallback(() => this.close());
+		content.setModal(this);
 		this.options = options;
 	}
 

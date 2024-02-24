@@ -167,7 +167,7 @@ export class InputFieldBase extends FieldBase {
 	}
 
 	protected onUnmount(targetEl: HTMLElement): void {
-		console.debug('meta-bind | InputFieldBase >> destroy', this.declaration);
+		console.debug('meta-bind | InputFieldBase >> unmount', this.declaration);
 
 		this.inputField?.destroy();
 

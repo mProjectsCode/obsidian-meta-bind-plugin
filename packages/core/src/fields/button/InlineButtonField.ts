@@ -51,7 +51,7 @@ export class InlineButtonField extends Mountable {
 				},
 			);
 
-			this.addOnUnmountCb(() => {
+			this.registerUnmountCb(() => {
 				initialButton?.$destroy();
 				button?.unmount();
 				loadListenerCleanup();

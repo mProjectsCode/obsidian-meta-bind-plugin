@@ -10,19 +10,4 @@ export class TestAPI extends API<TestPlugin> {
 	constructor(plugin: TestPlugin) {
 		super(plugin);
 	}
-
-	public createInputFieldFromString(
-		fullDeclaration: string,
-		renderType: RenderChildType,
-		filePath: string,
-		scope?: BindTargetScope | undefined,
-	): InputFieldBase {
-		const declaration: InputFieldDeclaration = this.inputFieldParser.fromStringAndValidate(
-			fullDeclaration,
-			filePath,
-			scope,
-		);
-
-		return new InputFieldBase(this.plugin, getUUID(), filePath, renderType, declaration);
-	}
 }
