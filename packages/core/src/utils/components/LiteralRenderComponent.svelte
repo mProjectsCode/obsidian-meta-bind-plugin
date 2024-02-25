@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { stringifyAndLinkUnknown } from '../Literal';
-	import LinkComponent from './LinkComponent.svelte';
-	import ListWrapper from './ListWrapper.svelte';
+	import { stringifyAndLinkUnknown } from 'packages/core/src/utils/Literal';
+	import LinkComponent from 'packages/core/src/utils/components/LinkComponent.svelte';
+	import ListWrapper from 'packages/core/src/utils/components/ListWrapper.svelte';
 
 	export let value = undefined;
 

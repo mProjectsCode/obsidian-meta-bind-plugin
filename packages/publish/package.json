@@ -1,8 +1,7 @@
 {
 	"name": "meta-bind-publish",
-	"devDependencies": {
+	"dependencies": {
 		"obsidian": "latest",
-		"svelte": "^4.2.11",
 		"@lemons_dev/parsinom": "^0.0.12",
 		"zod": "^3.22.4"
 	}

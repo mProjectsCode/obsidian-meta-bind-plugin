@@ -1,7 +1,7 @@
 <!-- Inspired by https://github.com/marcusolsson/obsidian-svelte -->
 
 <script lang="ts">
-	import { ButtonStyleType } from '../../config/ButtonConfig';
+	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 
 	export let variant: ButtonStyleType = ButtonStyleType.DEFAULT;
 	export let disabled: boolean = false;

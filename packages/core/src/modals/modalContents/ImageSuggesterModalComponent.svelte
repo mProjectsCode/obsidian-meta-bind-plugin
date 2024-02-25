@@ -30,7 +30,7 @@
 </div>
 <div class="mb-image-card-grid">
 	{#each filteredOptions as option}
-		<ImageSuggesterCard image={option.value} onSelect={onSelect}></ImageSuggesterCard>
+		<ImageSuggesterCard plugin={plugin} image={option.value} onSelect={onSelect}></ImageSuggesterCard>
 	{/each}
 </div>
 

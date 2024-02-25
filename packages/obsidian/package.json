@@ -1,13 +1,11 @@
 {
 	"name": "meta-bind-obsidian",
-	"devDependencies": {
+	"dependencies": {
 		"@codemirror/lang-javascript": "^6.2.1",
 		"@codemirror/language": "6.9.2",
 		"@codemirror/state": "6.3.1",
 		"@codemirror/view": "6.22.0",
 		"obsidian": "latest",
-		"obsidian-dataview": "0.5.56",
-		"svelte": "^4.2.11",
 		"@lemons_dev/parsinom": "^0.0.12",
 		"zod": "^3.22.4"
 	}

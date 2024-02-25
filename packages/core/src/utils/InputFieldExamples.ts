@@ -5,7 +5,7 @@ import {
 	type InputFieldType,
 	type ViewFieldType,
 } from 'packages/core/src/config/FieldConfigs';
-import { type UnvalidatedInputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
+import { type InputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
 
 export const INPUT_FIELD_EXAMPLE_DECLARATIONS: Record<InputFieldType, string> = {
 	date: 'date',
@@ -39,8 +39,8 @@ export const VIEW_FIELD_EXAMPLE_DECLARATIONS: Record<ViewFieldType, string> = {
 	invalid: '',
 };
 
-export function createInputFieldFAQExamples(plugin: IPlugin): [InputFieldType, UnvalidatedInputFieldDeclaration][] {
-	const ret: [InputFieldType, UnvalidatedInputFieldDeclaration][] = [];
+export function createInputFieldFAQExamples(plugin: IPlugin): [InputFieldType, InputFieldDeclaration][] {
+	const ret: [InputFieldType, InputFieldDeclaration][] = [];
 	for (const [type, declaration] of Object.entries(INPUT_FIELD_EXAMPLE_DECLARATIONS)) {
 		if (declaration === '') {
 			continue;
@@ -64,8 +64,9 @@ export function createInputFieldFAQExamples(plugin: IPlugin): [InputFieldType, U
 		});
 
 		parsedDeclaration = plugin.api.inputFieldParser.merge(parsedDeclaration, overrides);
+		const validatedDeclaration = plugin.api.inputFieldParser.validate(parsedDeclaration, '', undefined);
 
-		ret.push([type as InputFieldType, parsedDeclaration]);
+		ret.push([type as InputFieldType, validatedDeclaration]);
 	}
 	return ret;
 }

@@ -11,7 +11,7 @@ style: primary
 label: Open Meta Bind FAQ
 action:
   type: command
-  command: obsidian-meta-bind-plugin:mb-open-faq
+  command: obsidian-meta-bind-plugin:open-faq
 ```
 
 And custom JS buttons as well

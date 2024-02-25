@@ -245,6 +245,7 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 			}),
 			{
 				title: 'Meta Bind Image Suggester',
+				classes: ['mb-image-suggester-modal'],
 			},
 		).open();
 	}

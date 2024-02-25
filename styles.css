@@ -370,6 +370,10 @@ div.mb-view-wrapper {
 	gap: var(--size-4-4);
 }
 
+.mb-image-suggester-modal {
+	width: 80%;
+}
+
 /* Error */
 .mb-error {
 	color: var(--text-error) !important;

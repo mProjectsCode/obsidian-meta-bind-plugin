@@ -1,17 +1,16 @@
 <script lang="ts">
 	import ErrorIndicatorComponent from 'packages/core/src/utils/errors/ErrorIndicatorComponent.svelte';
-	import { App } from 'obsidian';
 	import { onMount } from 'svelte';
 	import { createInputFieldFAQExamples } from 'packages/core/src/utils/InputFieldExamples';
-	import MetaBindPlugin from '../main';
-	import InputFieldExampleComponent from './InputFieldExampleComponent.svelte';
+	import InputFieldExampleComponent from 'packages/core/src/utils/faq/InputFieldExampleComponent.svelte';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 	import { ErrorLevel, MetaBindExampleError } from 'packages/core/src/utils/errors/MetaBindErrors';
 	import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
+	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+	import { IPlugin } from 'packages/core/src/IPlugin';
 
-	export let app: App;
-	export let plugin: MetaBindPlugin;
+	export let plugin: IPlugin;
 
 	let exampleWarningDeclaration = 'INPUT[someInputFieldDeclaration]';
 	let exampleWarningErrorCollection = new ErrorCollection('exampleWarningErrorCollection');
@@ -46,21 +45,19 @@
 	<h2>Quick Access</h2>
 	<p>
 		<Button
-			variant="primary"
+			variant={ButtonStyleType.PRIMARY}
 			on:click={() => {
 				DocsUtils.open(DocsUtils.linkToHome());
 			}}
 			>Docs
 		</Button>
 		<Button
-			variant="default"
 			on:click={() => {
 				DocsUtils.open(DocsUtils.linkToGithub());
 			}}
 			>GitHub
 		</Button>
 		<Button
-			variant="default"
 			on:click={() => {
 				DocsUtils.open(DocsUtils.linkToIssues());
 			}}
@@ -74,15 +71,19 @@
 		<a href={DocsUtils.linkToViewFields()}>View Fields</a>
 		<strong>warnings</strong> (
 		<ErrorIndicatorComponent
-			app={app}
-			declaration={exampleWarningDeclaration}
-			errorCollection={exampleWarningErrorCollection}
+			plugin={plugin}
+			settings={{
+				errorCollection: exampleWarningErrorCollection,
+				code: exampleWarningDeclaration,
+			}}
 		></ErrorIndicatorComponent>
 		) and <strong>errors</strong> (
 		<ErrorIndicatorComponent
-			app={app}
-			declaration={exampleErrorDeclaration}
-			errorCollection={exampleErrorErrorCollection}
+			plugin={plugin}
+			settings={{
+				errorCollection: exampleErrorErrorCollection,
+				code: exampleErrorDeclaration,
+			}}
 		></ErrorIndicatorComponent>
 		) can occur. These are <strong>clickable</strong> and will show a modal with detailed information about the error
 		when clicked.
@@ -95,8 +96,7 @@
 	</p>
 
 	{#each createInputFieldFAQExamples(plugin) as example}
-		<InputFieldExampleComponent type={example[0]} declaration={example[1]} plugin={plugin}
-		></InputFieldExampleComponent>
+		<InputFieldExampleComponent declaration={example[1]} plugin={plugin}></InputFieldExampleComponent>
 	{/each}
 
 	<h2>View Fields</h2>
