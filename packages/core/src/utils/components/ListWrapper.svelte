@@ -1,5 +1,7 @@
 <script lang="ts">
-	export let elements: unknown[] = [];
+	type T = $$Generic;
+
+	export let elements: T[] = [];
 </script>
 
 {#each elements.slice(0, elements.length - 1) as element}

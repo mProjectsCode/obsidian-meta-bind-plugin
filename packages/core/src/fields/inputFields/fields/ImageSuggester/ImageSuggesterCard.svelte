@@ -24,9 +24,6 @@
 </div>
 
 <style>
-	.image-card {
-	}
-
 	.image-card-image {
 		width: 100%;
 		height: fit-content;

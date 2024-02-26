@@ -2,10 +2,12 @@
 	import { stringifyAndLinkUnknown } from 'packages/core/src/utils/Literal';
 	import LinkComponent from 'packages/core/src/utils/components/LinkComponent.svelte';
 	import ListWrapper from 'packages/core/src/utils/components/ListWrapper.svelte';
+	import { MarkdownLink } from 'packages/core/src/parsers/MarkdownLinkParser';
 
-	export let value = undefined;
+	export let value: unknown = undefined;
+	let parsedValue: string | MarkdownLink | (string | MarkdownLink)[];
 
-	$: parsedValue = stringifyAndLinkUnknown(value);
+	$: parsedValue = stringifyAndLinkUnknown(value, false);
 </script>
 
 {#if typeof parsedValue === 'string'}

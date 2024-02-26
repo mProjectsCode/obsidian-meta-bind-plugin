@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { ButtonBuilderModal } from 'packages/core/src/modals/modalContents/ButtonBuilderModal.ts';
+	import { ButtonBuilderModal } from 'packages/core/src/modals/modalContents/ButtonBuilderModal';
 	import {
+		ButtonAction,
 		ButtonActionType,
 		ButtonConfig,
 		ButtonStyleType,
@@ -9,20 +10,21 @@
 	} from 'packages/core/src/config/ButtonConfig';
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
 	import { onDestroy } from 'svelte';
-	import { getUUID } from 'packages/core/src/utils/Utils';
+	import { DomHelpers } from 'packages/core/src/utils/Utils';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import Icon from 'packages/core/src/utils/components/Icon.svelte';
 	import ModalButtonGroup from 'packages/core/src/utils/components/ModalButtonGroup.svelte';
 	import Toggle from 'packages/core/src/utils/components/Toggle.svelte';
-	import { ButtonBase } from 'packages/core/src/fields/button/ButtonBase';
 	import { IPlugin } from 'packages/core/src/IPlugin';
+	import { ButtonField } from 'packages/core/src/fields/button/ButtonField';
+	import { Command } from 'packages/core/src/api/InternalAPI';
 
 	export let plugin: IPlugin;
 	export let modal: ButtonBuilderModal;
 	export let buttonConfig: ButtonConfig;
 
 	let buttonEl: HTMLElement;
-	let buttonBase: ButtonBase;
+	let buttonBase: ButtonField;
 	let addActionType: ButtonActionType;
 
 	$: updatePreviewButton(buttonConfig, buttonEl);
@@ -34,8 +36,8 @@
 	function updatePreviewButton(config: ButtonConfig, el: HTMLElement) {
 		buttonBase?.unmount();
 		if (el) {
-			el.empty();
-			buttonBase = new ButtonBase(plugin, getUUID(), '', plugin.internal.stringifyYaml(config), true);
+			DomHelpers.empty(el);
+			buttonBase = new ButtonField(plugin, config, '', false, true);
 			buttonBase.mount(el);
 		}
 	}
@@ -47,25 +49,37 @@
 	}
 
 	function removeAction(id: number) {
-		buttonConfig.actions.splice(id, 1);
+		buttonConfig.actions?.splice(id, 1);
 		buttonConfig.actions = buttonConfig.actions;
 	}
 
-	function commandActionChangeCommand(action: CommandButtonAction) {
+	function commandActionChangeCommand(action: ButtonAction) {
+		if (action.type !== ButtonActionType.COMMAND) {
+			return;
+		}
+
 		plugin.internal.openCommandSelectModal((command: Command) => {
 			action.command = command.id;
 			buttonConfig.actions = buttonConfig.actions;
 		});
 	}
 
-	function templaterCreateNoteActionChangeTemplateFile(action: TemplaterCreateNoteButtonAction) {
+	function templaterCreateNoteActionChangeTemplateFile(action: ButtonAction) {
+		if (action.type !== ButtonActionType.TEMPLATER_CREATE_NOTE) {
+			return;
+		}
+
 		plugin.internal.openFileSelectModal((file: string) => {
 			action.templateFile = file;
 			buttonConfig.actions = buttonConfig.actions;
 		});
 	}
 
-	function templaterCreateNoteActionChangeFolderPath(action: TemplaterCreateNoteButtonAction) {
+	function templaterCreateNoteActionChangeFolderPath(action: ButtonAction) {
+		if (action.type !== ButtonActionType.TEMPLATER_CREATE_NOTE) {
+			return;
+		}
+
 		plugin.internal.openFolderSelectModal((folder: string) => {
 			action.folderPath = folder;
 			buttonConfig.actions = buttonConfig.actions;
@@ -139,9 +153,9 @@ Add action of type
 	{/each}
 </select>
 
-<Button variant="primary" on:click={() => addAction()}>Add Action</Button>
+<Button variant={ButtonStyleType.PRIMARY} on:click={() => addAction()}>Add Action</Button>
 
-{#each buttonConfig.actions as action, i (i)}
+{#each buttonConfig.actions ?? [] as action, i (i)}
 	<h5>{getActionLabel(action.type)}</h5>
 
 	{#if action.type === ButtonActionType.COMMAND}
@@ -149,8 +163,9 @@ Add action of type
 			name="Command: {action.command || 'none'}"
 			description="The command to execute when this action runs."
 		>
-			<Button variant="primary" on:click={() => commandActionChangeCommand(action)}>Change</Button>
-			<Button variant="destructive" on:click={() => removeAction(i)}>
+			<Button variant={ButtonStyleType.PRIMARY} on:click={() => commandActionChangeCommand(action)}>Change</Button
+			>
+			<Button variant={ButtonStyleType.DESTRUCTIVE} on:click={() => removeAction(i)}>
 				<Icon plugin={modal.plugin} iconName="x"></Icon>
 			</Button>
 		</SettingComponent>
@@ -159,7 +174,7 @@ Add action of type
 	{#if action.type === ButtonActionType.OPEN}
 		<SettingComponent name="Link" description="The link to open.">
 			<input type="text" bind:value={action.link} placeholder="[[Some Note]] or https://www.example.com" />
-			<Button variant="destructive" on:click={() => removeAction(i)}>
+			<Button variant={ButtonStyleType.DESTRUCTIVE} on:click={() => removeAction(i)}>
 				<Icon plugin={modal.plugin} iconName="x"></Icon>
 			</Button>
 		</SettingComponent>
@@ -168,7 +183,7 @@ Add action of type
 	{#if action.type === ButtonActionType.JS}
 		<SettingComponent name="JS File" description="The JavaScript file to run.">
 			<input type="text" bind:value={action.file} placeholder="someJsFile.js" />
-			<Button variant="destructive" on:click={() => removeAction(i)}>
+			<Button variant={ButtonStyleType.DESTRUCTIVE} on:click={() => removeAction(i)}>
 				<Icon plugin={modal.plugin} iconName="x"></Icon>
 			</Button>
 		</SettingComponent>
@@ -177,7 +192,7 @@ Add action of type
 	{#if action.type === ButtonActionType.INPUT}
 		<SettingComponent name="Text" description="The text to input at the cursor.">
 			<input type="text" bind:value={action.str} placeholder="some text" />
-			<Button variant="destructive" on:click={() => removeAction(i)}>
+			<Button variant={ButtonStyleType.DESTRUCTIVE} on:click={() => removeAction(i)}>
 				<Icon plugin={modal.plugin} iconName="x"></Icon>
 			</Button>
 		</SettingComponent>
@@ -186,20 +201,22 @@ Add action of type
 	{#if action.type === ButtonActionType.SLEEP}
 		<SettingComponent name="Sleep Time" description="The time to sleep in milliseconds.">
 			<input type="number" bind:value={action.ms} placeholder="100 ms" />
-			<Button variant="destructive" on:click={() => removeAction(i)}>
+			<Button variant={ButtonStyleType.DESTRUCTIVE} on:click={() => removeAction(i)}>
 				<Icon plugin={modal.plugin} iconName="x"></Icon>
 			</Button>
 		</SettingComponent>
 	{/if}
 
 	{#if action.type === ButtonActionType.TEMPLATER_CREATE_NOTE}
-		<Button variant="destructive" on:click={() => removeAction(i)}>Remove Action</Button>
+		<Button variant={ButtonStyleType.DESTRUCTIVE} on:click={() => removeAction(i)}>Remove Action</Button>
 
 		<SettingComponent
 			name="Template File: {action.templateFile || 'none'}"
 			description="The template file to create a new note of."
 		>
-			<Button variant="primary" on:click={() => templaterCreateNoteActionChangeTemplateFile(action)}
+			<Button
+				variant={ButtonStyleType.PRIMARY}
+				on:click={() => templaterCreateNoteActionChangeTemplateFile(action)}
 				>Change
 			</Button>
 		</SettingComponent>
@@ -208,7 +225,9 @@ Add action of type
 			name="Folder: {action.folderPath || 'none'}"
 			description="The folder to create a new note in."
 		>
-			<Button variant="primary" on:click={() => templaterCreateNoteActionChangeFolderPath(action)}>Change</Button>
+			<Button variant={ButtonStyleType.PRIMARY} on:click={() => templaterCreateNoteActionChangeFolderPath(action)}
+				>Change</Button
+			>
 		</SettingComponent>
 
 		<SettingComponent name="File Name: {action.fileName || 'default'}" description="The file name of the new note.">
@@ -221,7 +240,7 @@ Add action of type
 	{/if}
 
 	{#if action.type === ButtonActionType.UPDATE_METADATA}
-		<Button variant="destructive" on:click={() => removeAction(i)}>Remove Action</Button>
+		<Button variant={ButtonStyleType.DESTRUCTIVE} on:click={() => removeAction(i)}>Remove Action</Button>
 
 		<SettingComponent name="Metadata Property" description="The metadata property in form of a bind target.">
 			<input type="text" bind:value={action.bindTarget} placeholder="some value" />
@@ -242,6 +261,8 @@ Add action of type
 <div bind:this={buttonEl}></div>
 
 <ModalButtonGroup>
-	<Button variant="primary" on:click={() => modal.okay(buttonConfig)}>{modal.options.submitText}</Button>
-	<Button variant="default" on:click={() => modal.cancel()}>Cancel</Button>
+	<Button variant={ButtonStyleType.PRIMARY} on:click={() => modal.okay(buttonConfig)}
+		>{modal.options.submitText}</Button
+	>
+	<Button variant={ButtonStyleType.DEFAULT} on:click={() => modal.cancel()}>Cancel</Button>
 </ModalButtonGroup>
