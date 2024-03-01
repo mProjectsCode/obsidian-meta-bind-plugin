@@ -28,6 +28,8 @@ import { getImageSuggesterOptionsForInputField } from 'packages/obsidian/src/mod
 import { getSuggesterOptionsForInputField } from 'packages/obsidian/src/modals/SuggesterModalHelper';
 import { type IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
 import { FuzzySearch } from 'packages/obsidian/src/FuzzySearch';
+import { type ContextMenuItemDefinition, type IContextMenu } from 'packages/core/src/utils/IContextMenu';
+import { ObsidianContextMenu } from 'packages/obsidian/src/ObsidianContextMenu';
 
 export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 	readonly app: App;
@@ -188,5 +190,11 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 		}
 
 		return this.app.vault.cachedRead(tFile);
+	}
+
+	public createContextMenu(items: ContextMenuItemDefinition[]): IContextMenu {
+		const menu = new ObsidianContextMenu();
+		menu.setItems(items);
+		return menu;
 	}
 }

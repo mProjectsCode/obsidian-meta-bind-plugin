@@ -11,6 +11,8 @@ import { IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
 import { ModalContent } from 'packages/core/src/modals/ModalContent';
 import { IModal } from 'packages/core/src/modals/IModal';
 import { SelectModalContent } from 'packages/core/src/modals/SelectModalContent';
+import { ContextMenuItemDefinition, IContextMenu } from 'packages/core/src/utils/IContextMenu';
+import { undefined } from 'zod';
 
 export class TestInternalAPI extends InternalAPI<TestPlugin> {
 	public async renderMarkdown(markdown: string, element: HTMLElement, _filePath: string): Promise<() => void> {
@@ -94,5 +96,9 @@ export class TestInternalAPI extends InternalAPI<TestPlugin> {
 
 	public readFilePath(_filePath: string): Promise<string> {
 		return Promise.resolve('');
+	}
+
+	public createContextMenu(_items: ContextMenuItemDefinition[]): IContextMenu {
+		throw new Error('not implemented');
 	}
 }

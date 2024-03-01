@@ -26,6 +26,7 @@ import ErrorCollectionComponent from 'packages/core/src/utils/errors/ErrorCollec
 import ErrorIndicatorComponent from 'packages/core/src/utils/errors/ErrorIndicatorComponent.svelte';
 import { SuggesterSelectModal } from 'packages/core/src/modals/selectModalContents/SuggesterSelectModal';
 import { type IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
+import { type ContextMenuItemDefinition, type IContextMenu } from 'packages/core/src/utils/IContextMenu';
 
 export interface ErrorIndicatorProps {
 	errorCollection: ErrorCollection;
@@ -204,6 +205,8 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	 * @param filePath
 	 */
 	abstract readFilePath(filePath: string): Promise<string>;
+
+	abstract createContextMenu(items: ContextMenuItemDefinition[]): IContextMenu;
 
 	openCommandSelectModal(selectCallback: (selected: Command) => void): void {
 		this.createSearchModal(new CommandSelectModal(this.plugin, selectCallback)).open();

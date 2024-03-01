@@ -54,6 +54,8 @@ export enum InputFieldArgumentType {
 	PLACEHOLDER = 'placeholder',
 	USE_LINKS = 'useLinks',
 	LIMIT = 'limit',
+	MULTI_LINE = 'multiLine',
+	ALLOW_OTHER = 'allowOther',
 
 	INVALID = 'invalid',
 }
@@ -429,6 +431,38 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 					name: 'value',
 					allowed: ['number'],
 					description: 'a character limit for text fields',
+				},
+			],
+		],
+		allowMultiple: false,
+	},
+	[InputFieldArgumentType.MULTI_LINE]: {
+		type: InputFieldArgumentType.MULTI_LINE,
+		allowedFieldTypes: [InputFieldType.LIST, InputFieldType.INLINE_LIST],
+		values: [
+			[
+				{
+					name: 'value',
+					allowed: ['true', 'false'],
+					description: '',
+				},
+			],
+		],
+		allowMultiple: false,
+	},
+	[InputFieldArgumentType.ALLOW_OTHER]: {
+		type: InputFieldArgumentType.ALLOW_OTHER,
+		allowedFieldTypes: [
+			InputFieldType.SUGGESTER,
+			InputFieldType.LIST_SUGGESTER,
+			InputFieldType.INLINE_LIST_SUGGESTER,
+		],
+		values: [
+			[
+				{
+					name: 'value',
+					allowed: ['true', 'false'],
+					description: '',
 				},
 			],
 		],

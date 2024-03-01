@@ -11,6 +11,7 @@ import { type IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
 import { type ModalContent } from 'packages/core/src/modals/ModalContent';
 import { type IModal } from 'packages/core/src/modals/IModal';
 import { type SelectModalContent } from 'packages/core/src/modals/SelectModalContent';
+import { type ContextMenuItemDefinition, type IContextMenu } from 'packages/core/src/utils/IContextMenu';
 
 // TODO: implement
 export class PublishInternalAPI extends InternalAPI<MetaBindPublishPlugin> {
@@ -97,5 +98,9 @@ export class PublishInternalAPI extends InternalAPI<MetaBindPublishPlugin> {
 
 	public readFilePath(_filePath: string): Promise<string> {
 		return Promise.resolve('');
+	}
+
+	public createContextMenu(_items: ContextMenuItemDefinition[]): IContextMenu {
+		throw new Error('not implemented');
 	}
 }

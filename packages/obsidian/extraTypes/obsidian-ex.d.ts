@@ -68,6 +68,7 @@ declare module 'obsidian' {
 		dom: HTMLElement;
 		setSubmenu: () => Menu;
 		disabled: boolean;
+		setWarning: (warning: boolean) => void;
 	}
 }
 
