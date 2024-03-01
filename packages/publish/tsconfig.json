@@ -1,4 +1,4 @@
 {
 	"extends": "../../tsconfig.json",
-	"include": ["src/**/*.ts", "extraTypes/**/*.ts"]
+	"include": ["src/**/*.ts", "src/**/*.svelte", "extraTypes/**/*.ts"]
 }

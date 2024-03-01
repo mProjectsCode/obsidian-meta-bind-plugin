@@ -15,5 +15,10 @@
 		"types": ["svelte"],
 		"allowSyntheticDefaultImports": true
 	},
-	"include": ["packages/core/**/*.ts", "tests/**/*.ts", "node_modules/obsidian/publish.d.ts"]
+	"include": [
+		"packages/core/**/*.ts",
+		"packages/core/**/*.svelte",
+		"tests/**/*.ts",
+		"node_modules/obsidian/publish.d.ts"
+	]
 }

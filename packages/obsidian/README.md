@@ -1,15 +1,5 @@
 # meta-bind-obsidian
 
-To install dependencies:
+This is the meta bind adapter package for Obsidian.
 
-```bash
-bun install
-```
-
-To run:
-
-```bash
-bun run index.ts
-```
-
-This project was created using `bun init` in bun v1.0.27. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+ALL COMMANDS SHOULD BE RUN FROM THE ROOT OF THE REPO.

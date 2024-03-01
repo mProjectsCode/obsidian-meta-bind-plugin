@@ -19,7 +19,7 @@ export class TestInternalAPI extends InternalAPI<TestPlugin> {
 	}
 
 	public executeCommandById(_id: string): boolean {
-		throw new Error('not implemented');
+		return true;
 	}
 
 	public isJsEngineAvailable(): boolean {
@@ -27,20 +27,18 @@ export class TestInternalAPI extends InternalAPI<TestPlugin> {
 	}
 
 	public jsEngineRunFile(_filePath: string, _callingFilePath: string, _container?: HTMLElement): Promise<() => void> {
-		return Promise.reject(new Error('not implemented'));
+		return Promise.resolve(() => {});
 	}
 
 	public jsEngineRunCode(_code: string, _callingFilePath: string, _container?: HTMLElement): Promise<() => void> {
-		return Promise.reject(new Error('not implemented'));
+		return Promise.resolve(() => {});
 	}
 
 	public createJsRenderer(_container: HTMLElement, _filePath: string, _code: string): IJsRenderer {
 		throw new Error('not implemented');
 	}
 
-	public openFile(_filePath: string, _callingFilePath: string, _newTab: boolean): void {
-		throw new Error('not implemented');
-	}
+	public openFile(_filePath: string, _callingFilePath: string, _newTab: boolean): void {}
 
 	public getFilePathByName(name: string, _relativeTo: string = ''): string | undefined {
 		return name;

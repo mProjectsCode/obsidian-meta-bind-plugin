@@ -1,5 +1,7 @@
 ---
 count: 0
+someList:
+  - 1708945050652
 ---
 Meta Bind is getting Buttons
 
@@ -138,7 +140,6 @@ actions:
 
 ```
 
-
 ```meta-bind-button
 label: Show PF2e Examples with Delay
 hidden: false
@@ -209,6 +210,21 @@ actions:
 ```
 
 `BUTTON[count-decrement, count-reset, count-increment]` `VIEW[{count}]`
+
+```meta-bind-button
+label: Add Current Time to List
+hidden: false
+class: ""
+tooltip: ""
+id: ""
+style: primary
+actions:
+  - type: updateMetadata
+    bindTarget: someList
+    evaluate: true
+    value: "x == null ? [Date.now()] : [...x, Date.now()]"
+
+```
 
 ## Button Templates
 

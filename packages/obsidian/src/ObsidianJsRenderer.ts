@@ -60,7 +60,11 @@ export class ObsidianJsRenderer implements IJsRenderer {
 			);
 			await renderer.render(execution.result);
 
-			return renderer.convertToSimpleObject(execution.result);
+			const simpleObject = renderer.convertToSimpleObject(execution.result);
+
+			console.log(simpleObject, typeof simpleObject);
+
+			return simpleObject;
 		} catch (e) {
 			if (e instanceof Error) {
 				this.containerEl.innerText = e.message;

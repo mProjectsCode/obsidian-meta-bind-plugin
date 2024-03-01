@@ -180,4 +180,13 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 	public createFuzzySearch(): IFuzzySearch {
 		return new FuzzySearch();
 	}
+
+	public async readFilePath(filePath: string): Promise<string> {
+		const tFile = this.app.vault.getAbstractFileByPath(filePath);
+		if (!tFile || !(tFile instanceof TFile)) {
+			throw new Error(`file not found: ${filePath}`);
+		}
+
+		return this.app.vault.cachedRead(tFile);
+	}
 }

@@ -1,16 +1,16 @@
-import { describe, expect, spyOn, test } from 'bun:test';
+import { beforeEach, describe, expect, spyOn, test } from 'bun:test';
 import { Stream, multi } from 'itertools-ts/es';
-import { InputFieldType, RenderChildType } from '../../packages/core/src/config/FieldConfigs';
-import { InputFieldBase } from '../../packages/core/src/fields/inputFields/InputFieldBase';
-import { InputField } from '../../packages/core/src/fields/inputFields/InputFieldFactory';
-import { METADATA_CACHE_UPDATE_CYCLE_THRESHOLD } from '../../packages/core/src/metadata/MetadataManager';
-import { Metadata } from '../../packages/core/src/metadata/MetadataSource';
-import { BindTargetStorageType } from '../../packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { stringifyLiteral } from '../../packages/core/src/utils/Literal';
-import { Signal } from '../../packages/core/src/utils/Signal';
-import { getUUID } from '../../packages/core/src/utils/Utils';
-import { parsePropPath } from '../../packages/core/src/utils/prop/PropParser';
-import { TestPlugin } from '../__mocks__/TestPlugin';
+import { InputFieldType, RenderChildType } from 'packages/core/src/config/FieldConfigs';
+import { InputFieldBase } from 'packages/core/src/fields/inputFields/InputFieldBase';
+import { InputField } from 'packages/core/src/fields/inputFields/InputFieldFactory';
+import { METADATA_CACHE_UPDATE_CYCLE_THRESHOLD } from 'packages/core/src/metadata/MetadataManager';
+import { Metadata } from 'packages/core/src/metadata/MetadataSource';
+import { BindTargetStorageType } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { stringifyLiteral } from 'packages/core/src/utils/Literal';
+import { Signal } from 'packages/core/src/utils/Signal';
+import { getUUID } from 'packages/core/src/utils/Utils';
+import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
+import { DEFAULT_VALUE_INDICATOR, TestPlugin } from 'tests/__mocks__/TestPlugin';
 
 const TEST_FILE_PATH = 'testFile';
 const TEST_PROP = 'testProp';
@@ -481,49 +481,47 @@ describe('IPF', () => {
 	function runTestCase(TEST_CONFIG: IPFTest, TEST_CASE: IPFTestCase): void {
 		// NOTE: all signal spys have a -1 to account for the initial signal set on mount
 
+		beforeEach(() => {
+			testPlugin = new TestPlugin();
+		});
+
 		describe('load behaviour', () => {
 			describe('should load with front-matter value if front-matter value is valid for that IPF', () => {
 				for (const validValue of TEST_CASE.validValues ?? []) {
 					test(getTestName(validValue), () => {
-						setup(TEST_CASE);
-						// add some metadata to the test file
-						createInitialCache({ [TEST_PROP]: validValue });
+						testPlugin.addTestInputField(TEST_CASE.declaration);
 
-						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
+						testPlugin.initializeTest();
 
-						// load the input field
-						loadIPF();
+						testPlugin.createInitialCache({ [TEST_PROP]: validValue });
 
-						const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
+						testPlugin.initializeAllTestInputFields();
 
 						// check that the input field value is the value of the bound property in the front-matter cache
-						expect(ipf.getValue()).toEqual(validValue);
-						// check that the value of the IPF has only been set once
-						expect(ipfSignalSetSpy).toHaveBeenCalledTimes(1 - 1);
+						testPlugin.expectAllTestInputFieldValuesToEqual([validValue]);
+						// check that the value of the IPF has not been altered
+						testPlugin.expectAllTestInputFieldSpysToHaveBeenCalledTimes([0]);
 						// check that the input field did not update the metadata manager
-						expect(metadataManagerInternalUpdateSpy).toHaveBeenCalledTimes(0);
+						testPlugin.expectMetadataManagerToHaveUpdatedTimes(0);
 					});
 				}
 
 				for (const validValue of TEST_CASE.validMappedValues ?? []) {
 					test(`${getTestName(validValue[0])} reads as ${getTestName(validValue[1])}`, () => {
-						setup(TEST_CASE);
-						// add some metadata to the test file
-						createInitialCache({ [TEST_PROP]: validValue[0] });
+						testPlugin.addTestInputField(TEST_CASE.declaration);
 
-						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
+						testPlugin.initializeTest();
 
-						// load the input field
-						loadIPF();
+						testPlugin.createInitialCache({ [TEST_PROP]: validValue[0] });
 
-						const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
+						testPlugin.initializeAllTestInputFields();
 
 						// check that the input field value represents the value of the bound property in the front-matter cache
-						expect(ipf.getValue()).toEqual(validValue[1]);
-						// check that the value of the IPF has only been set once
-						expect(ipfSignalSetSpy).toHaveBeenCalledTimes(1 - 1);
+						testPlugin.expectAllTestInputFieldValuesToEqual([validValue[1]]);
+						// check that the value of the IPF has not been altered
+						testPlugin.expectAllTestInputFieldSpysToHaveBeenCalledTimes([0]);
 						// check that the input field did not update the metadata manager
-						expect(metadataManagerInternalUpdateSpy).toHaveBeenCalledTimes(0);
+						testPlugin.expectMetadataManagerToHaveUpdatedTimes(0);
 					});
 				}
 			});
@@ -531,43 +529,37 @@ describe('IPF', () => {
 			describe('should load with default value if front-matter value is invalid for that IPF', () => {
 				for (const invalidValue of TEST_CASE.invalidValues ?? []) {
 					test(getTestName(invalidValue), () => {
-						setup(TEST_CASE);
-						// add some metadata to the test file
-						createInitialCache({ [TEST_PROP]: invalidValue });
+						testPlugin.addTestInputField(TEST_CASE.declaration);
 
-						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
+						testPlugin.initializeTest();
 
-						// load the input field
-						loadIPF();
+						testPlugin.createInitialCache({ [TEST_PROP]: invalidValue });
 
-						const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
+						testPlugin.initializeAllTestInputFields();
 
 						// check that the input field value is the default value of the IPF, since the front-matter value is invalid
-						expect(ipf.getValue()).toEqual(ipf.getDefaultValue());
-						// check that the value of the IPF has only been set once
-						expect(ipfSignalSetSpy).toHaveBeenCalledTimes(1 - 1);
+						testPlugin.expectAllTestInputFieldValuesToEqual([DEFAULT_VALUE_INDICATOR]);
+						// check that the value of the IPF has not been altered
+						testPlugin.expectAllTestInputFieldSpysToHaveBeenCalledTimes([0]);
 						// check that the input field did not update the metadata manager
-						expect(metadataManagerInternalUpdateSpy).toHaveBeenCalledTimes(0);
+						testPlugin.expectMetadataManagerToHaveUpdatedTimes(0);
 					});
 				}
 			});
 
 			test('should load with default value when front-matter field not present', () => {
-				setup(TEST_CASE);
+				testPlugin.addTestInputField(TEST_CASE.declaration);
 
-				const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
+				testPlugin.initializeTest();
 
-				// load the input field without any metadata being set
-				loadIPF();
-
-				const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
+				testPlugin.initializeAllTestInputFields();
 
 				// check that the input field value is the default value
-				expect(ipf.getValue()).toEqual(ipf.getDefaultValue());
-				// check that the value of the IPF has only been set once
-				expect(ipfSignalSetSpy).toHaveBeenCalledTimes(1 - 1);
+				testPlugin.expectAllTestInputFieldValuesToEqual([DEFAULT_VALUE_INDICATOR]);
+				// check that the value of the IPF has not been altered
+				testPlugin.expectAllTestInputFieldSpysToHaveBeenCalledTimes([0]);
 				// check that the input field did not update the metadata manager
-				expect(metadataManagerInternalUpdateSpy).toHaveBeenCalledTimes(0);
+				testPlugin.expectMetadataManagerToHaveUpdatedTimes(0);
 			});
 		});
 
@@ -575,45 +567,39 @@ describe('IPF', () => {
 			describe('should update to front-matter value if front-matter value is valid for that IPF', () => {
 				for (const validValue of TEST_CASE.validValues ?? []) {
 					test(getTestName(validValue), () => {
-						setup(TEST_CASE);
+						testPlugin.addTestInputField(TEST_CASE.declaration);
 
-						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
+						testPlugin.initializeTest();
 
-						// load the input field
-						loadIPF();
+						testPlugin.initializeAllTestInputFields();
 
-						const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
-
-						setCacheExternally({ [TEST_PROP]: validValue });
+						testPlugin.setCacheExternally({ [TEST_PROP]: validValue });
 
 						// check that the input field value is the value of the bound property in the front-matter cache
-						expect(ipf.getValue()).toEqual(validValue);
+						testPlugin.expectAllTestInputFieldValuesToEqual([validValue]);
 						// check that the value of the IPF has only been set once
-						expect(ipfSignalSetSpy).toHaveBeenCalledTimes(2 - 1);
+						testPlugin.expectAllTestInputFieldSpysToHaveBeenCalledTimes([1]);
 						// check that the input field did not update the metadata manager
-						expect(metadataManagerInternalUpdateSpy).toHaveBeenCalledTimes(0);
+						testPlugin.expectMetadataManagerToHaveUpdatedTimes(0);
 					});
 				}
 
 				for (const validValue of TEST_CASE.validMappedValues ?? []) {
 					test(`${getTestName(validValue[0])} reads as ${getTestName(validValue[1])}`, () => {
-						setup(TEST_CASE);
+						testPlugin.addTestInputField(TEST_CASE.declaration);
 
-						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
+						testPlugin.initializeTest();
 
-						// load the input field
-						loadIPF();
+						testPlugin.initializeAllTestInputFields();
 
-						const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
+						testPlugin.setCacheExternally({ [TEST_PROP]: validValue[0] });
 
-						setCacheExternally({ [TEST_PROP]: validValue[0] });
-
-						// check that the input field value represents the value of the bound property in the front-matter cache
-						expect(ipf.getValue()).toEqual(validValue[1]);
+						// check that the input field value is the value of the bound property in the front-matter cache
+						testPlugin.expectAllTestInputFieldValuesToEqual([validValue[1]]);
 						// check that the value of the IPF has only been set once
-						expect(ipfSignalSetSpy).toHaveBeenCalledTimes(2 - 1);
+						testPlugin.expectAllTestInputFieldSpysToHaveBeenCalledTimes([1]);
 						// check that the input field did not update the metadata manager
-						expect(metadataManagerInternalUpdateSpy).toHaveBeenCalledTimes(0);
+						testPlugin.expectMetadataManagerToHaveUpdatedTimes(0);
 					});
 				}
 			});
@@ -621,23 +607,20 @@ describe('IPF', () => {
 			describe('should update to default value if front-matter value is invalid for that IPF', () => {
 				for (const invalidValue of TEST_CASE.invalidValues ?? []) {
 					test(getTestName(invalidValue), () => {
-						setup(TEST_CASE);
+						testPlugin.addTestInputField(TEST_CASE.declaration);
 
-						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
+						testPlugin.initializeTest();
 
-						// load the input field
-						loadIPF();
+						testPlugin.initializeAllTestInputFields();
 
-						const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
-
-						setCacheExternally({ [TEST_PROP]: invalidValue });
+						testPlugin.setCacheExternally({ [TEST_PROP]: invalidValue });
 
 						// check that the input field value is the default value of the IPF, since the front-matter value is invalid
-						expect(ipf.getValue()).toEqual(ipf.getDefaultValue());
+						testPlugin.expectAllTestInputFieldValuesToEqual([DEFAULT_VALUE_INDICATOR]);
 						// check that the value of the IPF has only been set once
-						expect(ipfSignalSetSpy).toHaveBeenCalledTimes(2 - 1);
+						testPlugin.expectAllTestInputFieldSpysToHaveBeenCalledTimes([1]);
 						// check that the input field did not update the metadata manager
-						expect(metadataManagerInternalUpdateSpy).toHaveBeenCalledTimes(0);
+						testPlugin.expectMetadataManagerToHaveUpdatedTimes(0);
 					});
 				}
 			});
@@ -647,26 +630,23 @@ describe('IPF', () => {
 			describe('should update metadata manager exactly once when user updates input field', () => {
 				for (const validValue of TEST_CASE.validValues ?? []) {
 					test(getTestName(validValue), () => {
-						setup(TEST_CASE);
+						const index = testPlugin.addTestInputField(TEST_CASE.declaration);
 
-						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
+						testPlugin.initializeTest();
 
-						// load the input field
-						loadIPF();
-
-						const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
+						testPlugin.initializeAllTestInputFields();
 
 						// emulate user updating the input field
-						ipf.setValue(validValue as never);
+						testPlugin.setTestInputFieldValue(index, validValue);
 
 						// check that the input field value has actually updated
-						expect(ipf.getValue()).toEqual(validValue);
+						testPlugin.expectAllTestInputFieldValuesToEqual([validValue]);
 						// check that the metadata manager was updated
-						expect(getCacheMetadata()?.[TEST_PROP]).toEqual(validValue);
-						// check that the value of the IPF has only been set twice, once on load and once on user update
-						expect(ipfSignalSetSpy).toHaveBeenCalledTimes(2 - 1);
-						// check that the input field did not update the metadata manager
-						expect(metadataManagerInternalUpdateSpy).toHaveBeenCalledTimes(1);
+						expect(testPlugin.getCacheMetadata()?.[TEST_PROP]).toEqual(validValue);
+						// check that the value of the IPF has only been set once
+						testPlugin.expectAllTestInputFieldSpysToHaveBeenCalledTimes([1]);
+						// check that the input field did update the metadata manager
+						testPlugin.expectMetadataManagerToHaveUpdatedTimes(1);
 					});
 				}
 			});
@@ -679,31 +659,29 @@ describe('IPF', () => {
 
 				for (const [validValue, otherValidValue] of multi.zip(valueStream1, valueStream2)) {
 					test(getTestName(validValue), () => {
-						setup(TEST_CASE);
+						const index = testPlugin.addTestInputField(TEST_CASE.declaration);
 
-						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
+						testPlugin.initializeTest();
 
-						// load the input field
-						loadIPF();
-
-						const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
+						testPlugin.initializeAllTestInputFields();
 
 						// emulate user updating the input field
-						ipf.setValue(validValue as never);
+						testPlugin.setTestInputFieldValue(index, validValue);
 
-						setCacheExternally({ [TEST_PROP]: otherValidValue });
+						// emulate external update
+						testPlugin.setCacheExternally({ [TEST_PROP]: otherValidValue });
 
 						// make sure the values are not the same, otherwise the test is pointless
 						expect(validValue).not.toEqual(otherValidValue);
 
 						// check that the input field value was not updated by the external update
-						expect(ipf.getValue()).toEqual(validValue as any);
+						testPlugin.expectAllTestInputFieldValuesToEqual([validValue]);
 						// check that the metadata manager was not updated by the external update
-						expect(getCacheMetadata()?.[TEST_PROP]).toEqual(validValue);
-						// check that the value of the IPF has only been set twice, once on load and once on user update
-						expect(ipfSignalSetSpy).toHaveBeenCalledTimes(2 - 1);
-						// check that the input field did not update the metadata manager
-						expect(metadataManagerInternalUpdateSpy).toHaveBeenCalledTimes(1);
+						expect(testPlugin.getCacheMetadata()?.[TEST_PROP]).toEqual(validValue);
+						// check that the value of the IPF has only been set once
+						testPlugin.expectAllTestInputFieldSpysToHaveBeenCalledTimes([1]);
+						// check that the input field did update the metadata manager
+						testPlugin.expectMetadataManagerToHaveUpdatedTimes(1);
 					});
 				}
 			});
@@ -714,35 +692,31 @@ describe('IPF', () => {
 
 				for (const [validValue, otherValidValue] of multi.zip(valueStream1, valueStream2)) {
 					test(getTestName(validValue), () => {
-						setup(TEST_CASE);
+						const index = testPlugin.addTestInputField(TEST_CASE.declaration);
 
-						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
+						testPlugin.initializeTest();
 
-						// load the input field
-						loadIPF();
-
-						const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
+						testPlugin.initializeAllTestInputFields();
 
 						// emulate user updating the input field
-						ipf.setValue(otherValidValue as never);
+						testPlugin.setTestInputFieldValue(index, validValue);
 
-						for (let i = 0; i < METADATA_CACHE_UPDATE_CYCLE_THRESHOLD; i++) {
-							updateMetadataManager();
-						}
+						testPlugin.cycleMetadataManagerUntilThreshold();
 
-						setCacheExternally({ [TEST_PROP]: validValue });
+						// emulate external update
+						testPlugin.setCacheExternally({ [TEST_PROP]: otherValidValue });
 
 						// make sure the values are not the same, otherwise the test is pointless
 						expect(validValue).not.toEqual(otherValidValue);
 
 						// check that the input field value was not updated by the external update
-						expect(ipf.getValue()).toEqual(validValue as any);
+						testPlugin.expectAllTestInputFieldValuesToEqual([otherValidValue]);
 						// check that the metadata manager was not updated by the external update
-						expect(getCacheMetadata()?.[TEST_PROP]).toEqual(validValue);
-						// check that the value of the IPF has only been set twice, once on load and once on user update
-						expect(ipfSignalSetSpy).toHaveBeenCalledTimes(3 - 1);
-						// check that the input field did not update the metadata manager
-						expect(metadataManagerInternalUpdateSpy).toHaveBeenCalledTimes(1);
+						expect(testPlugin.getCacheMetadata()?.[TEST_PROP]).toEqual(otherValidValue);
+						// check that the value of the IPF has only been set twice, once on user input and once on external update
+						testPlugin.expectAllTestInputFieldSpysToHaveBeenCalledTimes([2]);
+						// check that the input field did update the metadata manager
+						testPlugin.expectMetadataManagerToHaveUpdatedTimes(1);
 					});
 				}
 			});
@@ -753,31 +727,29 @@ describe('IPF', () => {
 
 				for (const [validValue, otherValidValue] of multi.zip(valueStream1, valueStream2)) {
 					test(getTestName(validValue), () => {
-						setup(TEST_CASE);
+						const index = testPlugin.addTestInputField(TEST_CASE.declaration);
 
-						const metadataManagerInternalUpdateSpy = spyOn(testPlugin.metadataManager, 'update');
+						testPlugin.initializeTest();
 
-						// load the input field
-						loadIPF();
+						testPlugin.initializeAllTestInputFields();
 
-						const ipfSignalSetSpy = spyOn(ipf.computedSignal, 'set');
-
-						setCacheExternally({ [TEST_PROP]: otherValidValue });
+						// emulate external update
+						testPlugin.setCacheExternally({ [TEST_PROP]: validValue });
 
 						// emulate user updating the input field
-						ipf.setValue(validValue as never);
+						testPlugin.setTestInputFieldValue(index, otherValidValue);
 
 						// make sure the values are not the same, otherwise the test is pointless
 						expect(validValue).not.toEqual(otherValidValue);
 
-						// check that the input field value was updated by the internal update
-						expect(ipf.getValue()).toEqual(validValue as any);
+						// check that the input field value was not updated by the external update
+						testPlugin.expectAllTestInputFieldValuesToEqual([otherValidValue]);
 						// check that the metadata manager was not updated by the external update
-						expect(getCacheMetadata()?.[TEST_PROP]).toEqual(validValue);
-						// check that the value of the IPF has only been set twice, once on load and once on user update
-						expect(ipfSignalSetSpy).toHaveBeenCalledTimes(3 - 1);
-						// check that the input field did not update the metadata manager
-						expect(metadataManagerInternalUpdateSpy).toHaveBeenCalledTimes(1);
+						expect(testPlugin.getCacheMetadata()?.[TEST_PROP]).toEqual(otherValidValue);
+						// check that the value of the IPF has only been set twice, once on external update and once on user input
+						testPlugin.expectAllTestInputFieldSpysToHaveBeenCalledTimes([2]);
+						// check that the input field did update the metadata manager
+						testPlugin.expectMetadataManagerToHaveUpdatedTimes(1);
 					});
 				}
 			});
