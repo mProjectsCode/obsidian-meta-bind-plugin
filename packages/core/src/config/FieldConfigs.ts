@@ -438,7 +438,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 	},
 	[InputFieldArgumentType.MULTI_LINE]: {
 		type: InputFieldArgumentType.MULTI_LINE,
-		allowedFieldTypes: [InputFieldType.LIST, InputFieldType.INLINE_LIST],
+		allowedFieldTypes: [InputFieldType.LIST],
 		values: [
 			[
 				{

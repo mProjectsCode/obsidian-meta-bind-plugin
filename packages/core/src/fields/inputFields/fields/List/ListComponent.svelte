@@ -5,11 +5,14 @@
 	import Button from '../../../../utils/components/Button.svelte';
 	import { IPlugin } from '../../../../IPlugin';
 	import { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
+	import { ButtonStyleType } from '../../../../config/ButtonConfig';
 
 	export let plugin: IPlugin;
 	export let value: MBLiteral[];
 	export let limit: number | undefined;
 	export let placeholder: string;
+	// TODO: implement multiLine support
+	export let multiLine: boolean;
 	export let onValueChange: (value: MBLiteral[]) => void;
 
 	let addValue: string = '';
@@ -104,7 +107,7 @@
 	{#each value as entry, i}
 		<div class="mb-list-item">
 			<LiteralRenderComponent value={entry}></LiteralRenderComponent>
-			<Button on:click={e => openContextMenuForElement(e, i)}>
+			<Button variant={ButtonStyleType.PLAIN} on:click={e => openContextMenuForElement(e, i)}>
 				<Icon plugin={plugin} iconName="more-vertical" />
 			</Button>
 		</div>

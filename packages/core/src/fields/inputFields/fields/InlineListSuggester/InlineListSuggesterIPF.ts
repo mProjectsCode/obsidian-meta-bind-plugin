@@ -2,6 +2,7 @@ import { AbstractInputField } from 'packages/core/src/fields/inputFields/Abstrac
 import InlineListSuggesterComponent from 'packages/core/src/fields/inputFields/fields/InlineListSuggester/InlineListSuggesterComponent.svelte';
 import { type MBLiteral, parseUnknownToLiteralArray } from 'packages/core/src/utils/Literal';
 import { type SvelteComponent } from 'svelte';
+import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 
 export class InlineListSuggesterIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> {
 	protected filterValue(value: unknown): MBLiteral[] | undefined {
@@ -28,6 +29,8 @@ export class InlineListSuggesterIPF extends AbstractInputField<MBLiteral[], MBLi
 	protected getMountArgs(): Record<string, unknown> {
 		return {
 			showSuggester: () => this.openModal(),
+			showTextPrompt: () => this.openTextModal(),
+			allowsOther: this.base.getArgument(InputFieldArgumentType.ALLOW_OTHER)?.value === true,
 		};
 	}
 
@@ -37,5 +40,20 @@ export class InlineListSuggesterIPF extends AbstractInputField<MBLiteral[], MBLi
 			value.push(selected.value);
 			this.setInternalValue(value);
 		});
+	}
+
+	openTextModal(): void {
+		this.base.plugin.internal.openTextPromptModal(
+			'',
+			'Meta Bind List Suggester',
+			'New List Element',
+			'',
+			(newElement: MBLiteral) => {
+				const value = this.getInternalValue();
+				value.push(newElement);
+				this.setInternalValue(value);
+			},
+			() => {},
+		);
 	}
 }

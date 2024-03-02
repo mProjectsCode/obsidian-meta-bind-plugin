@@ -30,6 +30,7 @@ export class ListIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> {
 		return {
 			placeholder: this.base.getArgument(InputFieldArgumentType.PLACEHOLDER)?.value ?? 'New Entry...',
 			limit: this.base.getArgument(InputFieldArgumentType.LIMIT)?.value,
+			multiLine: this.base.getArgument(InputFieldArgumentType.MULTI_LINE)?.value === true,
 		};
 	}
 }

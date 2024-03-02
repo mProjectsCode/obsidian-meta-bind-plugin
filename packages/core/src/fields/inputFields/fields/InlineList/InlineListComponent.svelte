@@ -28,13 +28,6 @@
 		value = value;
 	}
 
-	function input(event: MouseEvent): void {
-		// don't fire the event if user clicked on the link
-		if (!(event.target instanceof HTMLAnchorElement)) {
-			showInput();
-		}
-	}
-
 	function inputKey(event: KeyboardEvent): void {
 		if (event.key === ' ') {
 			showInput();
@@ -109,7 +102,7 @@
 			</button>
 		</div>
 	{/each}
-	<div class="mb-inline-list-add" on:click={input} on:keydown={inputKey} role="button" tabindex="0">
+	<div class="mb-inline-list-add" on:click={() => showInput()} on:keydown={inputKey} role="button" tabindex="0">
 		<!-- Alignment hack with zero width space -->
 		<span>&#x200B;</span>
 		<Icon plugin={plugin} iconName="plus" />

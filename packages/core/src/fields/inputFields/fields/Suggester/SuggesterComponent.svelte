@@ -9,6 +9,7 @@
 	export let plugin: IPlugin;
 	export let value: MBLiteral;
 	export let showSuggester: () => void;
+	// TODO: implement allowOther option
 	export let onValueChange: (value: MBLiteral) => void;
 
 	let mdLink: MarkdownLink;

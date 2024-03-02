@@ -15,6 +15,8 @@ import { StepSizeValueInputFieldArgument } from 'packages/core/src/fields/fieldA
 import { TitleInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/TitleInputFieldArgument';
 import { UseLinksInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/UseLinksInputFieldArgument';
 import { ErrorLevel, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
+import { MultiLineInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/MultiLineInputFieldArgument';
+import { AllowOtherInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/AllowOtherInputFieldArgument';
 
 export const INPUT_FIELD_ARGUMENT_MAP = {
 	[InputFieldArgumentType.CLASS]: ClassInputFieldArgument,
@@ -32,6 +34,8 @@ export const INPUT_FIELD_ARGUMENT_MAP = {
 	[InputFieldArgumentType.PLACEHOLDER]: PlaceholderInputFieldArgument,
 	[InputFieldArgumentType.USE_LINKS]: UseLinksInputFieldArgument,
 	[InputFieldArgumentType.LIMIT]: LimitInputFieldArgument,
+	[InputFieldArgumentType.ALLOW_OTHER]: AllowOtherInputFieldArgument,
+	[InputFieldArgumentType.MULTI_LINE]: MultiLineInputFieldArgument,
 } as const;
 
 export type InputFieldArgumentMapType<T extends InputFieldArgumentType> =

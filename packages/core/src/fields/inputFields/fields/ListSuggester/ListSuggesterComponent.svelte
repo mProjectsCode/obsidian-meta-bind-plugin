@@ -5,10 +5,13 @@
 	import Button from '../../../../utils/components/Button.svelte';
 	import { IPlugin } from '../../../../IPlugin';
 	import { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
+	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 
 	export let plugin: IPlugin;
 	export let value: MBLiteral[];
 	export let showSuggester: () => void;
+	export let showTextPrompt: () => void;
+	export let allowsOther: boolean;
 	export let onValueChange: (value: MBLiteral[]) => void;
 
 	export function setValue(v: MBLiteral[]): void {
@@ -27,13 +30,6 @@
 		onValueChange(value);
 		// tell svelte to update
 		value = value;
-	}
-
-	function suggest(event: MouseEvent): void {
-		// don't fire the event if user clicked on the link
-		if (!(event.target instanceof HTMLAnchorElement)) {
-			showSuggester();
-		}
 	}
 
 	function suggestKey(event: KeyboardEvent): void {
@@ -86,7 +82,7 @@
 	{#each value as entry, i}
 		<div class="mb-list-item">
 			<LiteralRenderComponent value={entry}></LiteralRenderComponent>
-			<Button on:click={e => openContextMenuForElement(e, i)}>
+			<Button variant={ButtonStyleType.PLAIN} on:click={e => openContextMenuForElement(e, i)}>
 				<Icon plugin={plugin} iconName="more-vertical" />
 			</Button>
 		</div>
@@ -95,10 +91,8 @@
 	{/each}
 </div>
 <div class="mb-list-input">
-	<div class="mb-suggest-input" on:click={suggest} on:keydown={suggestKey} role="button" tabindex="0">
-		<div class="mb-suggest-text">
-			<span>Add Element...</span>
-		</div>
-		<Icon plugin={plugin} iconName="list" />
-	</div>
+	<Button variant={ButtonStyleType.DEFAULT} on:click={() => showSuggester()}>Add new item</Button>
+	{#if allowsOther}
+		<Button variant={ButtonStyleType.DEFAULT} on:click={() => showTextPrompt()}>Add other item</Button>
+	{/if}
 </div>

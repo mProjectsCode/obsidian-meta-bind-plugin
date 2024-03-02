@@ -189,7 +189,7 @@ div.mb-view-wrapper {
 	gap: var(--size-4-2);
 }
 
-.mb-list-input > div:has(> input) {
+.mb-list-input > input {
 	flex-grow: 1;
 }
 

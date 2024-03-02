@@ -8,6 +8,8 @@
 	export let plugin: IPlugin;
 	export let value: MBLiteral[];
 	export let showSuggester: () => void;
+	export let showTextPrompt: () => void;
+	export let allowsOther: boolean;
 	export let onValueChange: (value: MBLiteral[]) => void;
 
 	export function setValue(v: MBLiteral[]): void {
@@ -29,10 +31,23 @@
 	}
 
 	function suggest(event: MouseEvent): void {
-		// don't fire the event if user clicked on the link
-		if (!(event.target instanceof HTMLAnchorElement)) {
+		if (!allowsOther) {
 			showSuggester();
+			return;
 		}
+
+		plugin.internal
+			.createContextMenu([
+				{
+					name: 'From Options',
+					onclick: () => showSuggester(),
+				},
+				{
+					name: 'From Text',
+					onclick: () => showTextPrompt(),
+				},
+			])
+			.showWithEvent(event);
 	}
 
 	function suggestKey(event: KeyboardEvent): void {
