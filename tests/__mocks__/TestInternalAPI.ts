@@ -28,7 +28,7 @@ export class TestInternalAPI extends InternalAPI<TestPlugin> {
 		return false;
 	}
 
-	public jsEngineRunFile(_filePath: string, _callingFilePath: string, _container?: HTMLElement): Promise<() => void> {
+	public jsEngineRunFile(_filePath: string, _callingFilePath: string, _scriptParams?: string,_container?: HTMLElement): Promise<() => void> {
 		return Promise.resolve(() => {});
 	}
 

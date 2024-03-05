@@ -72,7 +72,7 @@ export class ButtonActionRunner {
 		} else if (type === ButtonActionType.OPEN) {
 			return { type: ButtonActionType.OPEN, link: '' } satisfies OpenButtonAction;
 		} else if (type === ButtonActionType.JS) {
-			return { type: ButtonActionType.JS, file: '' } satisfies JSButtonAction;
+			return { type: ButtonActionType.JS, file: '', params: ''} satisfies JSButtonAction;
 		} else if (type === ButtonActionType.INPUT) {
 			return { type: ButtonActionType.INPUT, str: '' } satisfies InputButtonAction;
 		} else if (type === ButtonActionType.SLEEP) {
@@ -136,7 +136,7 @@ export class ButtonActionRunner {
 	}
 
 	async runJSAction(action: JSButtonAction, filePath: string): Promise<void> {
-		const unloadCallback = await this.plugin.internal.jsEngineRunFile(action.file, filePath);
+		const unloadCallback = await this.plugin.internal.jsEngineRunFile(action.file, filePath, action.params);
 		unloadCallback();
 	}
 
