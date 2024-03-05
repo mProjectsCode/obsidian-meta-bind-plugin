@@ -301,6 +301,10 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	}
 
 	loadTemplates(): void {
+		if (!this.api) {
+			return;
+		}
+
 		const inputFieldTemplateParseErrorCollection = this.api.inputFieldParser.parseTemplates(
 			this.settings.inputFieldTemplates,
 		);

@@ -193,6 +193,11 @@ div.mb-view-wrapper {
 	flex-grow: 1;
 }
 
+.mb-list-input > textarea {
+	flex-grow: 1;
+	resize: vertical;
+}
+
 .mb-list-empty {
 	color: var(--text-faint);
 }

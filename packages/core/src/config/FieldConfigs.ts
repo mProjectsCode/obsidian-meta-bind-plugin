@@ -440,6 +440,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 		type: InputFieldArgumentType.MULTI_LINE,
 		allowedFieldTypes: [InputFieldType.LIST],
 		values: [
+			[],
 			[
 				{
 					name: 'value',
@@ -458,6 +459,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 			InputFieldType.INLINE_LIST_SUGGESTER,
 		],
 		values: [
+			[],
 			[
 				{
 					name: 'value',

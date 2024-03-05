@@ -28,6 +28,10 @@ INPUT[list(showcase):list]
 
 `VIEW[{list}][link]`
 
+```meta-bind
+INPUT[list(showcase, multiLine):list]
+```
+
 ### List Suggester
 
 ```meta-bind

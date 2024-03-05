@@ -116,7 +116,11 @@
 	{/each}
 </div>
 <div class="mb-list-input">
-	<input type="text" tabindex="0" placeholder={placeholder} bind:value={addValue} maxlength={limit} />
+	{#if multiLine}
+		<textarea tabindex="0" placeholder={placeholder} bind:value={addValue} maxlength={limit} />
+	{:else}
+		<input type="text" tabindex="0" placeholder={placeholder} bind:value={addValue} maxlength={limit} />
+	{/if}
 	{#if limit !== undefined}
 		<span class={`mb-content-limit-indicator ${value.length > limit ? 'mb-content-limit-indicator-overflow' : ''}`}
 			>{getLimitString(value.length, limit)}</span

@@ -11,7 +11,7 @@
 </script>
 
 {#if typeof parsedValue === 'string'}
-	<span>{parsedValue}</span>
+	<span style="white-space: pre">{parsedValue}</span>
 {:else if Array.isArray(parsedValue)}
 	<span>
 		<ListWrapper elements={parsedValue} let:element>
