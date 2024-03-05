@@ -70,6 +70,18 @@ declare module 'obsidian' {
 		disabled: boolean;
 		setWarning: (warning: boolean) => void;
 	}
+
+	interface Vault {
+		/**
+		 * @internal Get path for file that does not conflict with other existing files
+		 */
+		getAvailablePath(path: string, extension: string): string;
+
+		/**
+		 * Get an abstract file by path, insensitive to case
+		 */
+		getAbstractFileByPathInsensitive(path: string): TAbstractFile | null;
+	}
 }
 
 declare global {

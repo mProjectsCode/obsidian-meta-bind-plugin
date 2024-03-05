@@ -250,3 +250,11 @@ export class DomHelpers {
 		el.innerHTML = '';
 	}
 }
+
+export function getFolderPathFromFilePath(filePath: string): string {
+	const pathSeparator = filePath.lastIndexOf('/');
+	if (pathSeparator === -1) {
+		return '';
+	}
+	return filePath.substring(0, pathSeparator);
+}

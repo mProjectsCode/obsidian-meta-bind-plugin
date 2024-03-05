@@ -168,6 +168,21 @@ actions:
 
 ```
 
+```meta-bind-button
+label: Create new Note
+hidden: false
+class: ""
+tooltip: ""
+id: ""
+style: default
+actions:
+  - type: createNote
+    folderPath: templates
+    fileName: asdasd
+    openNote: false
+
+```
+
 ### Modifying Front-matter
 
 ```meta-bind-button

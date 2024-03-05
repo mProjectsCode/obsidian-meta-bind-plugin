@@ -4,6 +4,7 @@ import {
 	type ButtonConfig,
 	ButtonStyleType,
 	type CommandButtonAction,
+	type CreateNoteButtonAction,
 	type InputButtonAction,
 	type JSButtonAction,
 	type OpenButtonAction,
@@ -69,6 +70,15 @@ export const V_UpdateMetadataButtonAction = schemaForType<UpdateMetadataButtonAc
 	}),
 );
 
+export const V_CreateNoteButtonAction = schemaForType<CreateNoteButtonAction>()(
+	z.object({
+		type: z.literal(ButtonActionType.CREATE_NOTE),
+		folderPath: z.string().optional(),
+		fileName: z.string(),
+		openNote: z.boolean().optional(),
+	}),
+);
+
 export const V_ButtonAction = schemaForType<ButtonAction>()(
 	z.union([
 		V_CommandButtonAction,
@@ -78,6 +88,7 @@ export const V_ButtonAction = schemaForType<ButtonAction>()(
 		V_SleepButtonAction,
 		V_TemplaterCreateNoteButtonAction,
 		V_UpdateMetadataButtonAction,
+		V_CreateNoteButtonAction,
 	]),
 );
 

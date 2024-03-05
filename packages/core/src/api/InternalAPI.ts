@@ -212,6 +212,8 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	 */
 	abstract readFilePath(filePath: string): Promise<string>;
 
+	abstract createFile(folderPath: string, fileName: string, extension: string, open?: boolean): Promise<string>;
+
 	abstract createContextMenu(items: ContextMenuItemDefinition[]): IContextMenu;
 
 	openCommandSelectModal(selectCallback: (selected: Command) => void): void {

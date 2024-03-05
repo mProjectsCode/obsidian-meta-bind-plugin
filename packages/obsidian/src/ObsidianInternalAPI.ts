@@ -2,6 +2,7 @@ import {
 	type App,
 	Component,
 	MarkdownRenderer,
+	normalizePath,
 	Notice,
 	parseYaml,
 	setIcon,
@@ -198,5 +199,21 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 		const menu = new ObsidianContextMenu();
 		menu.setItems(items);
 		return menu;
+	}
+
+	public async createFile(folderPath: string, fileName: string, extension: string, open?: boolean): Promise<string> {
+		const path = this.app.vault.getAvailablePath(normalizePath(folderPath + '/' + fileName), extension);
+		const newFile = await this.app.vault.create(path, '');
+
+		if (open) {
+			const activeLeaf = this.app.workspace.getLeaf(false);
+			if (activeLeaf) {
+				await activeLeaf.openFile(newFile, {
+					state: { mode: 'source' },
+				});
+			}
+		}
+
+		return newFile.path;
 	}
 }

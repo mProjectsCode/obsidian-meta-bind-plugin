@@ -103,6 +103,10 @@ export class TestInternalAPI extends InternalAPI<TestPlugin> {
 		return Promise.resolve('');
 	}
 
+	public createFile(_folderPath: string, _fileName: string, _extension: string, _open?: boolean): Promise<string> {
+		return Promise.resolve('');
+	}
+
 	public createContextMenu(_items: ContextMenuItemDefinition[]): IContextMenu {
 		throw new Error('not implemented');
 	}

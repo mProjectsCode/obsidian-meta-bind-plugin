@@ -13,6 +13,7 @@ export enum ButtonActionType {
 	SLEEP = 'sleep',
 	TEMPLATER_CREATE_NOTE = 'templaterCreateNote',
 	UPDATE_METADATA = 'updateMetadata',
+	CREATE_NOTE = 'createNote',
 }
 
 export interface CommandButtonAction {
@@ -57,6 +58,13 @@ export interface UpdateMetadataButtonAction {
 	value: string;
 }
 
+export interface CreateNoteButtonAction {
+	type: ButtonActionType.CREATE_NOTE;
+	folderPath?: string;
+	fileName: string;
+	openNote?: boolean;
+}
+
 export type ButtonAction =
 	| CommandButtonAction
 	| JSButtonAction
@@ -64,7 +72,8 @@ export type ButtonAction =
 	| InputButtonAction
 	| SleepButtonAction
 	| TemplaterCreateNoteButtonAction
-	| UpdateMetadataButtonAction;
+	| UpdateMetadataButtonAction
+	| CreateNoteButtonAction;
 
 export interface ButtonConfig {
 	label: string;

@@ -86,6 +86,17 @@
 		});
 	}
 
+	function createNoteActionChangeFolderPath(action: ButtonAction) {
+		if (action.type !== ButtonActionType.CREATE_NOTE) {
+			return;
+		}
+
+		plugin.internal.openFolderSelectModal((folder: string) => {
+			action.folderPath = folder;
+			buttonConfig.actions = buttonConfig.actions;
+		});
+	}
+
 	function getActionLabel(actionType: ButtonActionType): string {
 		if (actionType === ButtonActionType.COMMAND) {
 			return 'Run a Command';
@@ -101,6 +112,8 @@
 			return 'Create a New Note Using Templater';
 		} else if (actionType === ButtonActionType.UPDATE_METADATA) {
 			return 'Update Metadata';
+		} else if (actionType === ButtonActionType.CREATE_NOTE) {
+			return 'Create a New Note';
 		}
 
 		return 'CHANGE ME';
@@ -252,6 +265,27 @@ Add action of type
 
 		<SettingComponent name="Evaluate" description="Whether to evaluate the value as a JS expression.">
 			<Toggle bind:checked={action.evaluate}></Toggle>
+		</SettingComponent>
+	{/if}
+
+	{#if action.type === ButtonActionType.CREATE_NOTE}
+		<Button variant={ButtonStyleType.DESTRUCTIVE} on:click={() => removeAction(i)}>Remove Action</Button>
+
+		<SettingComponent
+			name="Folder: {action.folderPath || 'none'}"
+			description="The folder to create a new note in."
+		>
+			<Button variant={ButtonStyleType.PRIMARY} on:click={() => createNoteActionChangeFolderPath(action)}
+				>Change</Button
+			>
+		</SettingComponent>
+
+		<SettingComponent name="File Name: {action.fileName || 'default'}" description="The file name of the new note.">
+			<input type="text" bind:value={action.fileName} placeholder="some name" />
+		</SettingComponent>
+
+		<SettingComponent name="Open Note" description="Whether to open the new note after this action ran.">
+			<Toggle bind:checked={action.openNote}></Toggle>
 		</SettingComponent>
 	{/if}
 {/each}

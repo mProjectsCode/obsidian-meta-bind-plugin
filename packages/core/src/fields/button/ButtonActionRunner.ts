@@ -5,6 +5,7 @@ import {
 	type ButtonConfig,
 	ButtonStyleType,
 	type CommandButtonAction,
+	type CreateNoteButtonAction,
 	type InputButtonAction,
 	type JSButtonAction,
 	type OpenButtonAction,
@@ -14,7 +15,7 @@ import {
 } from 'packages/core/src/config/ButtonConfig';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import { Signal } from 'packages/core/src/utils/Signal';
-import { getUUID, openURL } from 'packages/core/src/utils/Utils';
+import { expectType, getUUID, openURL } from 'packages/core/src/utils/Utils';
 
 export class ButtonActionRunner {
 	plugin: IPlugin;
@@ -81,7 +82,7 @@ export class ButtonActionRunner {
 			return {
 				type: ButtonActionType.TEMPLATER_CREATE_NOTE,
 				templateFile: '',
-				folderPath: '',
+				folderPath: '/',
 				fileName: '',
 				openNote: true,
 			} satisfies TemplaterCreateNoteButtonAction;
@@ -92,7 +93,16 @@ export class ButtonActionRunner {
 				evaluate: false,
 				value: '',
 			} satisfies UpdateMetadataButtonAction;
+		} else if (type === ButtonActionType.CREATE_NOTE) {
+			return {
+				type: ButtonActionType.CREATE_NOTE,
+				folderPath: '/',
+				fileName: 'Untitled',
+				openNote: true,
+			} satisfies CreateNoteButtonAction;
 		}
+
+		expectType<never>(type);
 
 		throw new Error(`Unknown button action type: ${type}`);
 	}
@@ -127,7 +137,12 @@ export class ButtonActionRunner {
 		} else if (action.type === ButtonActionType.UPDATE_METADATA) {
 			await this.runUpdateMetadataAction(action, filePath);
 			return;
+		} else if (action.type === ButtonActionType.CREATE_NOTE) {
+			await this.runCreateNoteAction(action);
+			return;
 		}
+
+		expectType<never>(action);
 
 		throw new Error(`Unknown button action type`);
 	}
@@ -180,5 +195,9 @@ export class ButtonActionRunner {
 			evaluate: action.evaluate,
 		});
 		subscription.unsubscribe();
+	}
+
+	async runCreateNoteAction(action: CreateNoteButtonAction): Promise<void> {
+		await this.plugin.internal.createFile(action.folderPath ?? '', action.fileName, 'md', action.openNote ?? false);
 	}
 }
