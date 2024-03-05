@@ -652,6 +652,10 @@ declare module 'jsEngine/engine/JsExecution' {
 		 * Currently unused.
 		 */
 		line: number;
+		/**
+		 * Script parameters
+		 */
+		scriptParams?: string;
 	}
 
 	/**

@@ -70,6 +70,7 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 	public async jsEngineRunFile(
 		filePath: string,
 		callingFilePath: string,
+		scriptParams?: string,
 		container?: HTMLElement,
 	): Promise<() => void> {
 		const jsEngineAPI = getJsEnginePluginAPI(this.plugin);
@@ -88,6 +89,7 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 				metadata: metadata,
 				file: callingFile,
 				line: 0,
+				scriptParams: scriptParams
 			},
 		});
 

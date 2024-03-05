@@ -99,7 +99,7 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	 *
 	 * @returns Cleanup callback.
 	 */
-	abstract jsEngineRunFile(filePath: string, callingFilePath: string, container?: HTMLElement): Promise<() => void>;
+	abstract jsEngineRunFile(filePath: string, callingFilePath: string, scriptParams?: string, container?: HTMLElement): Promise<() => void>;
 
 	/**
 	 * Run code using js engine.
