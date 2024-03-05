@@ -329,11 +329,20 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	async saveSettings(): Promise<void> {
 		console.log(`meta-bind | Main >> settings save`);
 
-		// update all the things
+		this.updateInternalSettings();
+
+		await this.saveData(this.settings);
+	}
+
+	updateInternalSettings(): void {
 		DateParser.dateFormat = this.settings.preferredDateFormat;
 		setFirstWeekday(this.settings.firstWeekday);
 
-		await this.saveData(this.settings);
+		this.loadTemplates();
+	}
+
+	async onExternalSettingsChange(): Promise<void> {
+		await this.loadSettings();
 	}
 
 	// TODO: move to internal API

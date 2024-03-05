@@ -72,7 +72,7 @@ export class ButtonActionRunner {
 		} else if (type === ButtonActionType.OPEN) {
 			return { type: ButtonActionType.OPEN, link: '' } satisfies OpenButtonAction;
 		} else if (type === ButtonActionType.JS) {
-			return { type: ButtonActionType.JS, file: '' } satisfies JSButtonAction;
+			return { type: ButtonActionType.JS, file: '', args: {} } satisfies JSButtonAction;
 		} else if (type === ButtonActionType.INPUT) {
 			return { type: ButtonActionType.INPUT, str: '' } satisfies InputButtonAction;
 		} else if (type === ButtonActionType.SLEEP) {
