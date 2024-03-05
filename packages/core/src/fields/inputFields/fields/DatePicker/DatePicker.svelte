@@ -58,6 +58,11 @@
 		selectedDate = null;
 		dateChangeCallback(null);
 	}
+
+	function setDateToCurrent(): void {
+		selectedDate = moment();
+		dateChangeCallback(selectedDate);
+	}
 </script>
 
 <div class="date-picker">
@@ -72,6 +77,7 @@
 	<Calender on:dateChange={onDateChange} month={month} year={year} selectedDate={selectedDate}></Calender>
 	<div class="date-picker-footer">
 		<button class="none-button" on:click={setDateToNull}>Set no Date</button>
+		<button class="none-button" on:click={setDateToCurrent}>Set to Now</button>
 	</div>
 </div>
 
