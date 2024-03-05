@@ -23,6 +23,7 @@ export interface CommandButtonAction {
 export interface JSButtonAction {
 	type: ButtonActionType.JS;
 	file: string;
+	args?: Record<string, unknown>;
 }
 
 export interface OpenButtonAction {

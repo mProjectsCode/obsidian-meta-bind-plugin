@@ -39,16 +39,16 @@ export class ButtonActionRunner {
 	 * Run the action(s) defined in the button config.
 	 * Will show a notice if an error occurs.
 	 *
-	 * @param buttonConfig
+	 * @param config
 	 * @param filePath
 	 */
-	async runButtonAction(buttonConfig: ButtonConfig, filePath: string): Promise<void> {
+	async runButtonAction(config: ButtonConfig, filePath: string): Promise<void> {
 		try {
-			if (buttonConfig.action) {
-				await this.plugin.api.buttonActionRunner.runAction(buttonConfig.action, filePath);
-			} else if (buttonConfig.actions) {
-				for (const action of buttonConfig.actions) {
-					await this.plugin.api.buttonActionRunner.runAction(action, filePath);
+			if (config.action) {
+				await this.plugin.api.buttonActionRunner.runAction(config, config.action, filePath);
+			} else if (config.actions) {
+				for (const action of config.actions) {
+					await this.plugin.api.buttonActionRunner.runAction(config, action, filePath);
 				}
 			} else {
 				console.warn('meta-bind | ButtonMDRC >> no action defined');
@@ -101,15 +101,16 @@ export class ButtonActionRunner {
 	 * Run a specific button action.
 	 * Will throw.
 	 *
+	 * @param config
 	 * @param action
 	 * @param filePath
 	 */
-	async runAction(action: ButtonAction, filePath: string): Promise<void> {
+	async runAction(config: ButtonConfig, action: ButtonAction, filePath: string): Promise<void> {
 		if (action.type === ButtonActionType.COMMAND) {
 			await this.runCommandAction(action);
 			return;
 		} else if (action.type === ButtonActionType.JS) {
-			await this.runJSAction(action, filePath);
+			await this.runJSAction(config, action, filePath);
 			return;
 		} else if (action.type === ButtonActionType.OPEN) {
 			await this.runOpenAction(action, filePath);
@@ -135,8 +136,12 @@ export class ButtonActionRunner {
 		this.plugin.internal.executeCommandById(action.command);
 	}
 
-	async runJSAction(action: JSButtonAction, filePath: string): Promise<void> {
-		const unloadCallback = await this.plugin.internal.jsEngineRunFile(action.file, filePath);
+	async runJSAction(config: ButtonConfig, action: JSButtonAction, filePath: string): Promise<void> {
+		const configOverrides: Record<string, unknown> = {
+			buttonConfig: config,
+			args: action.args,
+		};
+		const unloadCallback = await this.plugin.internal.jsEngineRunFile(action.file, filePath, configOverrides);
 		unloadCallback();
 	}
 

@@ -25,6 +25,7 @@ export const V_JSButtonAction = schemaForType<JSButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.JS),
 		file: z.string(),
+		args: z.record(z.unknown()).optional(),
 	}),
 );
 

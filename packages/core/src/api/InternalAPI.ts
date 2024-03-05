@@ -95,11 +95,17 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	 *
 	 * @param filePath
 	 * @param callingFilePath
+	 * @param configOverrides
 	 * @param container
 	 *
 	 * @returns Cleanup callback.
 	 */
-	abstract jsEngineRunFile(filePath: string, callingFilePath: string, container?: HTMLElement): Promise<() => void>;
+	abstract jsEngineRunFile(
+		filePath: string,
+		callingFilePath: string,
+		configOverrides: Record<string, unknown>,
+		container?: HTMLElement,
+	): Promise<() => void>;
 
 	/**
 	 * Run code using js engine.
