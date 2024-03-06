@@ -67,18 +67,17 @@
 			name: 'Edit',
 			icon: 'pencil',
 			onclick: () => {
-				// TODO: this needs the text prompt modal
-				plugin.internal.openTextPromptModal(
-					stringifyLiteral(value[index]),
-					'Edit List Item',
-					'Edit the value of this list item.',
-					'',
-					v => {
+				plugin.internal.openTextPromptModal({
+					title: 'Meta Bind List',
+					subTitle: 'Edit the value of a list item.',
+					value: stringifyLiteral(value[index]),
+					multiline: false,
+					onSubmit: (v: MBLiteral) => {
 						value[index] = v;
 						onValueChange(value);
 					},
-					() => {},
-				);
+					onCancel: () => {},
+				});
 			},
 		});
 

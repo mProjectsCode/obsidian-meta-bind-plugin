@@ -32,17 +32,17 @@ export class InlineListIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> 
 	}
 
 	openModal(): void {
-		this.base.plugin.internal.openTextPromptModal(
-			'',
-			'Meta Bind List',
-			'New List Element',
-			'',
-			(newElement: MBLiteral) => {
+		this.base.plugin.internal.openTextPromptModal({
+			title: 'Meta Bind List',
+			subTitle: 'Create a new List Element.',
+			value: '',
+			multiline: false,
+			onSubmit: (newElement: MBLiteral) => {
 				const value = this.getInternalValue();
 				value.push(newElement);
 				this.setInternalValue(value);
 			},
-			() => {},
-		);
+			onCancel: () => {},
+		});
 	}
 }

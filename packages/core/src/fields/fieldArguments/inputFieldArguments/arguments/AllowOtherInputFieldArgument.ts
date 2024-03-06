@@ -10,6 +10,6 @@ export class AllowOtherInputFieldArgument extends AbstractInputFieldArgument {
 	}
 
 	public getConfig(): InputFieldArgumentConfig {
-		return InputFieldArgumentConfigs.multiLine;
+		return InputFieldArgumentConfigs.allowOther;
 	}
 }

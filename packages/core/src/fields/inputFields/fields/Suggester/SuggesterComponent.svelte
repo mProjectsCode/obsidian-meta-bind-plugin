@@ -5,11 +5,15 @@
 	import { onMount } from 'svelte';
 	import { MBLiteral } from '../../../../utils/Literal';
 	import { IPlugin } from '../../../../IPlugin';
+	import Button from '../../../../utils/components/Button.svelte';
+	import { ButtonStyleType } from '../../../../config/ButtonConfig';
 
 	export let plugin: IPlugin;
 	export let value: MBLiteral;
 	export let showSuggester: () => void;
+	export let showTextPrompt: () => void;
 	// TODO: implement allowOther option
+	export let allowOther: boolean;
 	export let onValueChange: (value: MBLiteral) => void;
 
 	let mdLink: MarkdownLink;
@@ -34,22 +38,9 @@
 			str = valueAsString;
 		}
 	}
-
-	function openSuggester(event: MouseEvent) {
-		// don't fire the event if user clicked on the link
-		if (!(event.target instanceof HTMLAnchorElement)) {
-			showSuggester();
-		}
-	}
-
-	function openSuggesterOnKey(event: KeyboardEvent) {
-		if (event.key === ' ') {
-			showSuggester();
-		}
-	}
 </script>
 
-<div class="mb-suggest-input" on:click={openSuggester} on:keydown={openSuggesterOnKey} role="button" tabindex="0">
+<div class="mb-suggest-input">
 	<div class="mb-suggest-text">
 		{#if isLink}
 			<LinkComponent bind:mdLink={mdLink}></LinkComponent>
@@ -57,5 +48,12 @@
 			<span>{str}</span>
 		{/if}
 	</div>
-	<Icon plugin={plugin} iconName="list" />
+	<Button variant={ButtonStyleType.PLAIN} on:click={showSuggester}>
+		<Icon plugin={plugin} iconName="list" />
+	</Button>
+	{#if allowOther}
+		<Button variant={ButtonStyleType.PLAIN} on:click={showTextPrompt}>
+			<Icon plugin={plugin} iconName="pencil" />
+		</Button>
+	{/if}
 </div>

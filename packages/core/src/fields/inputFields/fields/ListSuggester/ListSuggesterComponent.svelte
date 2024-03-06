@@ -11,7 +11,7 @@
 	export let value: MBLiteral[];
 	export let showSuggester: () => void;
 	export let showTextPrompt: () => void;
-	export let allowsOther: boolean;
+	export let allowOther: boolean;
 	export let onValueChange: (value: MBLiteral[]) => void;
 
 	export function setValue(v: MBLiteral[]): void {
@@ -92,7 +92,7 @@
 </div>
 <div class="mb-list-input">
 	<Button variant={ButtonStyleType.DEFAULT} on:click={() => showSuggester()}>Add new item</Button>
-	{#if allowsOther}
+	{#if allowOther}
 		<Button variant={ButtonStyleType.DEFAULT} on:click={() => showTextPrompt()}>Add other item</Button>
 	{/if}
 </div>

@@ -18,7 +18,7 @@ import {
 	ButtonBuilderModal,
 	type ButtonBuilderModalOptions,
 } from 'packages/core/src/modals/modalContents/ButtonBuilderModal';
-import { SvelteModal } from 'packages/core/src/modals/modalContents/SvelteModal';
+import { SvelteModalContent } from 'packages/core/src/modals/modalContents/SvelteModalContent';
 import DatePickerInput from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePicker.svelte';
 import ImageSuggesterModalComponent from 'packages/core/src/modals/modalContents/ImageSuggesterModalComponent.svelte';
 import type { Moment } from 'moment';
@@ -27,6 +27,7 @@ import ErrorIndicatorComponent from 'packages/core/src/utils/errors/ErrorIndicat
 import { SuggesterSelectModal } from 'packages/core/src/modals/selectModalContents/SuggesterSelectModal';
 import { type IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
 import { type ContextMenuItemDefinition, type IContextMenu } from 'packages/core/src/utils/IContextMenu';
+import TextPromptModalContent from 'packages/core/src/modals/modalContents/TextPromptModalContent.svelte';
 
 export interface ErrorIndicatorProps {
 	errorCollection: ErrorCollection;
@@ -44,6 +45,14 @@ export interface Command {
 export interface ModalOptions {
 	title: string;
 	classes?: string[];
+}
+
+export interface TextPromptModalOptions extends ModalOptions {
+	value: string;
+	subTitle: string;
+	multiline: boolean;
+	onSubmit: (value: string) => void;
+	onCancel: () => void;
 }
 
 export abstract class InternalAPI<Plugin extends IPlugin> {
@@ -241,7 +250,7 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 
 	openImageSuggesterModal(inputField: ImageSuggesterIPF, selectCallback: (selected: string) => void): void {
 		this.createModal(
-			new SvelteModal((modal, targetEl) => {
+			new SvelteModalContent((modal, targetEl) => {
 				return new ImageSuggesterModalComponent({
 					target: targetEl,
 					props: {
@@ -263,7 +272,7 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 
 	openDatePickerModal(inputField: DatePickerIPF): void {
 		this.createModal(
-			new SvelteModal((modal, targetEl) => {
+			new SvelteModalContent((modal, targetEl) => {
 				return new DatePickerInput({
 					target: targetEl,
 					props: {
@@ -281,20 +290,33 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 		).open();
 	}
 
-	openTextPromptModal(
-		_value: string,
-		_title: string,
-		_subTitle: string,
-		_description: string,
-		_onSubmit: (value: string) => void,
-		_onCancel: () => void,
-	): void {
-		throw new Error('Method not implemented.');
+	openTextPromptModal(options: TextPromptModalOptions): void {
+		this.createModal(
+			new SvelteModalContent((modal, targetEl) => {
+				return new TextPromptModalContent({
+					target: targetEl,
+					props: {
+						options: {
+							...options,
+							onSubmit: (value: string): void => {
+								options.onSubmit(value);
+								modal.closeModal();
+							},
+							onCancel: (): void => {
+								options.onCancel();
+								modal.closeModal();
+							},
+						},
+					},
+				});
+			}),
+			options,
+		).open();
 	}
 
 	openErrorCollectionViewModal(settings: ErrorIndicatorProps): void {
 		this.createModal(
-			new SvelteModal((_modal, targetEl) => {
+			new SvelteModalContent((_modal, targetEl) => {
 				return new ErrorCollectionComponent({
 					target: targetEl,
 					props: {

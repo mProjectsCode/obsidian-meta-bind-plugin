@@ -1,5 +1,5 @@
 ---
-suggest: option 2
+suggest: option 1
 fileSuggest: "[[Other/Example Notes/Example Note with Embeds.md|Example Note with Embeds]]"
 fileSuggest2: "[[Example Note with Embeds]]"
 fileSuggest3: Example Note with Embeds
@@ -12,6 +12,16 @@ INPUT[suggester(
 option(option 1),
 option(option 2),
 option(option 3),
+showcase
+):suggest]
+```
+
+```meta-bind
+INPUT[suggester(
+option(option 1),
+option(option 2),
+option(option 3),
+allowOther,
 showcase
 ):suggest]
 ```

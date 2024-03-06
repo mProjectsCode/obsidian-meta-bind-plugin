@@ -30,7 +30,7 @@ export class ListSuggesterIPF extends AbstractInputField<MBLiteral[], MBLiteral[
 		return {
 			showSuggester: () => this.openModal(),
 			showTextPrompt: () => this.openTextModal(),
-			allowsOther: this.base.getArgument(InputFieldArgumentType.ALLOW_OTHER)?.value === true,
+			allowOther: this.base.getArgument(InputFieldArgumentType.ALLOW_OTHER)?.value === true,
 		};
 	}
 
@@ -43,17 +43,17 @@ export class ListSuggesterIPF extends AbstractInputField<MBLiteral[], MBLiteral[
 	}
 
 	openTextModal(): void {
-		this.base.plugin.internal.openTextPromptModal(
-			'',
-			'Meta Bind List Suggester',
-			'New List Element',
-			'',
-			(newElement: MBLiteral) => {
+		this.base.plugin.internal.openTextPromptModal({
+			title: 'Meta Bind List Suggester',
+			subTitle: 'Create a new List Element.',
+			value: '',
+			multiline: false,
+			onSubmit: (newElement: MBLiteral) => {
 				const value = this.getInternalValue();
 				value.push(newElement);
 				this.setInternalValue(value);
 			},
-			() => {},
-		);
+			onCancel: () => {},
+		});
 	}
 }

@@ -1,8 +1,8 @@
 ---
 progress1: -6
-progress2: 0.2
+progress2: 0.5
 progress3: 2
-progress4: 3.6
+progress4: 2.6
 ---
 
 ```meta-bind
