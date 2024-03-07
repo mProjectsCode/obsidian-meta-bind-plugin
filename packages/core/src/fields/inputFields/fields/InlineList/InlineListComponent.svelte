@@ -4,6 +4,8 @@
 	import LiteralRenderComponent from '../../../../utils/components/LiteralRenderComponent.svelte';
 	import { IPlugin } from '../../../../IPlugin';
 	import { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
+	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+	import Button from 'packages/core/src/utils/components/Button.svelte';
 
 	export let plugin: IPlugin;
 	export let value: MBLiteral[];
@@ -96,9 +98,9 @@
 	{#each value as entry, i}
 		<div class="mb-inline-list-item">
 			<LiteralRenderComponent value={entry}></LiteralRenderComponent>
-			<button class="mb-inline-list-item-button" on:click={e => openContextMenuForElement(e, i)}>
+			<Button variant={ButtonStyleType.PLAIN} on:click={e => openContextMenuForElement(e, i)}>
 				<Icon plugin={plugin} iconName="more-vertical" />
-			</button>
+			</Button>
 		</div>
 	{/each}
 	<div class="mb-inline-list-add" on:click={() => showInput()} on:keydown={inputKey} role="button" tabindex="0">

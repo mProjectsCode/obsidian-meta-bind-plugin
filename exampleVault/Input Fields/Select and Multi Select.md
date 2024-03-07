@@ -48,15 +48,6 @@ showcase
 ### Multi Select
 
 ```meta-bind
-INPUT[multi_select(
-option(option 1), 
-option(option 2), 
-option(option 3), 
-showcase
-):multiSelect]
-```
-
-```meta-bind
 INPUT[multiSelect(
 option(option 1), 
 option(option 2), 

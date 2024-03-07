@@ -236,16 +236,9 @@ div.mb-view-wrapper {
 			margin-right: var(--size-4-2);
 		}
 
-		& > .mb-inline-list-item-button {
-			border: none;
-			background: none;
-			padding: initial;
+		& > button {
+			padding: 0;
 			height: unset;
-			box-shadow: none;
-
-			&:hover {
-				color: var(--text-error);
-			}
 		}
 	}
 

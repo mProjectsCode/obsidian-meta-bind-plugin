@@ -16,5 +16,5 @@ INPUT[text(showcase, limit(10)):text]
 ### Text Area
 
 ```meta-bind
-INPUT[text_area(showcase, class(meta-bind-full-width), class(meta-bind-high)):textArea]
+INPUT[textArea(showcase, class(meta-bind-full-width), class(meta-bind-high)):textArea]
 ```
