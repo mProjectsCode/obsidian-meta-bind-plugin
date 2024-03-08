@@ -1,7 +1,7 @@
 import { TFile } from 'obsidian';
 import { type FilePathMetadataCacheItem } from 'packages/core/src/metadata/MetadataCacheItem';
 import { type MetadataManager } from 'packages/core/src/metadata/MetadataManager';
-import { FilePathMetadataSource } from 'packages/core/src/metadata/MetadataSource';
+import { FilePathMetadataSource, type Metadata } from 'packages/core/src/metadata/MetadataSource';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 
@@ -21,6 +21,22 @@ export class ObsidianMetadataSource extends FilePathMetadataSource<ObsidianMetad
 				this.manager.onExternalUpdate(this, file.path, structuredClone(cache.frontmatter) ?? {});
 			}),
 		);
+	}
+
+	public readExternal(storagePath: string): Metadata {
+		const file = this.plugin.app.vault.getAbstractFileByPath(storagePath);
+
+		if (file == null || !(file instanceof TFile)) {
+			throw new MetaBindInternalError({
+				errorLevel: ErrorLevel.CRITICAL,
+				effect: 'can not get default cache item',
+				cause: `no file for path "${storagePath}" found or path is not a file`,
+			});
+		}
+
+		const frontmatter = this.plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+
+		return structuredClone(frontmatter) ?? {};
 	}
 
 	getDefaultCacheItem(storagePath: string): ObsidianMetadataCacheItem {

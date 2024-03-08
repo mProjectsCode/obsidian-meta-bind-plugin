@@ -37,6 +37,10 @@ import {
 	type SimpleInlineButtonDeclaration,
 } from 'packages/core/src/parsers/ButtonParser';
 import { JsViewFieldParser } from 'packages/core/src/parsers/viewFieldParser/JsViewFieldParser';
+import { Signal } from 'packages/core/src/utils/Signal';
+import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
+import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { type MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
 
 export enum FieldType {
 	INPUT_FIELD = 'INPUT_FIELD',
@@ -409,5 +413,168 @@ export abstract class API<Plugin extends IPlugin> {
 		}
 
 		return undefined;
+	}
+
+	public createSignal<T>(value: T): Signal<T> {
+		return new Signal<T>(value);
+	}
+
+	/**
+	 * Sets a property in meta binds metadata cache.
+	 *
+	 * @param storageType
+	 * @param storagePath
+	 * @param property the property path a.b.c = ['a', 'b', 'c']
+	 * @param value
+	 */
+	public setMetadata(storageType: string, storagePath: string, property: string[], value: unknown): void {
+		this.plugin.metadataManager.write(value, {
+			storageType: storageType,
+			storagePath: storagePath,
+			storageProp: parsePropPath(property),
+			listenToChildren: false,
+		});
+	}
+
+	/**
+	 * Sets a property in meta binds metadata cache.
+	 *
+	 * @param bindTarget
+	 * @param value
+	 */
+	public setMetadataWithBindTarget(bindTarget: BindTargetDeclaration, value: unknown): void {
+		this.plugin.metadataManager.write(value, bindTarget);
+	}
+
+	/**
+	 * Reads a property from meta binds metadata cache.
+	 * If the value is not present in the cache, it will check the underlying source. E.g. Obsidians metadata cache.
+	 *
+	 * @param storageType
+	 * @param storagePath
+	 * @param property the property path a.b.c = ['a', 'b', 'c']
+	 */
+	public getMetadata(storageType: string, storagePath: string, property: string[]): unknown {
+		return this.plugin.metadataManager.read({
+			storageType: storageType,
+			storagePath: storagePath,
+			storageProp: parsePropPath(property),
+			listenToChildren: false,
+		});
+	}
+
+	/**
+	 * Reads a property from meta binds metadata cache.
+	 * If the value is not present in the cache, it will check the underlying source. E.g. Obsidians metadata cache.
+	 *
+	 * @param bindTarget
+	 */
+	public getMetadataWithBindTarget(bindTarget: BindTargetDeclaration): unknown {
+		return this.plugin.metadataManager.read(bindTarget);
+	}
+
+	/**
+	 * Updates a property in meta binds metadata cache.
+	 *
+	 * @param storageType
+	 * @param storagePath
+	 * @param property the property path a.b.c = ['a', 'b', 'c']
+	 * @param updateFn a function that takes the current value and returns the new value
+	 */
+	public updateMetadata(
+		storageType: string,
+		storagePath: string,
+		property: string[],
+		updateFn: (value: unknown) => unknown,
+	): void {
+		const bindTarget: BindTargetDeclaration = {
+			storageType: storageType,
+			storagePath: storagePath,
+			storageProp: parsePropPath(property),
+			listenToChildren: false,
+		};
+
+		const value = this.plugin.metadataManager.read(bindTarget);
+		const newValue = updateFn(value);
+		this.plugin.metadataManager.write(newValue, bindTarget);
+	}
+
+	/**
+	 * Updates a property in meta binds metadata cache.
+	 *
+	 * @param bindTarget
+	 * @param updateFn a function that takes the current value and returns the new value
+	 */
+	public updateMetadataWithBindTarget(
+		bindTarget: BindTargetDeclaration,
+		updateFn: (value: unknown) => unknown,
+	): void {
+		const value = this.plugin.metadataManager.read(bindTarget);
+		const newValue = updateFn(value);
+		this.plugin.metadataManager.write(newValue, bindTarget);
+	}
+
+	/**
+	 * Subscribes to a property in meta binds metadata cache.
+	 * This returns a subscription that can be used to unsubscribe as well as update the cache.
+	 * IF YOU DON'T CALL `unsubscribe` THE SUBSCRIPTION WILL LEAK MEMORY.
+	 *
+	 * @param storageType
+	 * @param storagePath
+	 * @param property the property path a.b.c = ['a', 'b', 'c']
+	 * @param listenToChildren
+	 * @param callback
+	 */
+	public subscribeToMetadata(
+		storageType: string,
+		storagePath: string,
+		property: string[],
+		listenToChildren: boolean,
+		callback: (value: unknown) => void,
+	): MetadataSubscription {
+		const uuid = getUUID();
+		const signal = new Signal<unknown>(undefined);
+
+		signal.registerListener({
+			callback: callback,
+		});
+
+		return this.plugin.metadataManager.subscribe(
+			uuid,
+			signal,
+			{
+				storageType: storageType,
+				storagePath: storagePath,
+				storageProp: parsePropPath(property),
+				listenToChildren: listenToChildren,
+			},
+			(): void => {
+				signal.unregisterAllListeners();
+			},
+		);
+	}
+
+	/**
+	 * Subscribes to a property in meta binds metadata cache.
+	 * This returns a subscription that can be used to unsubscribe as well as update the cache.
+	 * IF YOU DON'T CALL `unsubscribe` THE SUBSCRIPTION WILL LEAK MEMORY.
+	 *
+	 * @param bindTarget
+	 * @param callback
+	 */
+	public subscribeToMetadataWithBindTarget(
+		bindTarget: BindTargetDeclaration,
+		callback: (value: unknown) => void,
+	): MetadataSubscription {
+		const uuid = getUUID();
+		const signal = new Signal<unknown>(undefined);
+
+		signal.registerListener({
+			callback: callback,
+		});
+
+		return this.plugin.metadataManager.subscribe(uuid, signal, bindTarget, (): void => {
+			signal.unregisterAllListeners();
+		});
 	}
 }

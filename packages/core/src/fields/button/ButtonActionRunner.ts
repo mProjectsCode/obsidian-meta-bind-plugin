@@ -14,8 +14,8 @@ import {
 	type UpdateMetadataButtonAction,
 } from 'packages/core/src/config/ButtonConfig';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
-import { Signal } from 'packages/core/src/utils/Signal';
-import { expectType, getUUID, openURL } from 'packages/core/src/utils/Utils';
+import { expectType, openURL } from 'packages/core/src/utils/Utils';
+import { parseLiteral } from 'packages/core/src/utils/Literal';
 
 export class ButtonActionRunner {
 	plugin: IPlugin;
@@ -187,14 +187,15 @@ export class ButtonActionRunner {
 
 	async runUpdateMetadataAction(action: UpdateMetadataButtonAction, filePath: string): Promise<void> {
 		const bindTarget = this.plugin.api.bindTargetParser.fromStringAndValidate(action.bindTarget, filePath);
-		const uuid = getUUID();
-		const signal = new Signal<unknown>(undefined);
-		const subscription = this.plugin.metadataManager.subscribe(uuid, signal, bindTarget, () => {});
-		subscription.applyUpdate({
-			value: action.value,
-			evaluate: action.evaluate,
-		});
-		subscription.unsubscribe();
+
+		if (action.evaluate) {
+			// eslint-disable-next-line @typescript-eslint/no-implied-eval
+			const func = new Function('x', `return ${action.value};`) as (value: unknown) => unknown;
+
+			this.plugin.api.updateMetadataWithBindTarget(bindTarget, func);
+		} else {
+			this.plugin.api.setMetadataWithBindTarget(bindTarget, parseLiteral(action.value));
+		}
 	}
 
 	async runCreateNoteAction(action: CreateNoteButtonAction): Promise<void> {

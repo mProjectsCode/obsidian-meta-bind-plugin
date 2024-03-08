@@ -7,6 +7,8 @@ export interface ContextMenuItemDefinition {
 
 export interface IContextMenu {
 	setItems(items: ContextMenuItemDefinition[]): void;
+
 	show(x: number, y: number): void;
+
 	showWithEvent(event: MouseEvent): void;
 }

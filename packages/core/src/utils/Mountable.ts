@@ -1,7 +1,7 @@
 export abstract class Mountable {
 	private mounted: boolean;
 	private targetEl: HTMLElement | undefined;
-	private onUnmountCbs: (() => void)[];
+	private readonly onUnmountCbs: (() => void)[];
 
 	protected constructor() {
 		this.mounted = false;

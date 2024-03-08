@@ -76,7 +76,9 @@ export class ComputedMetadataSubscription implements IMetadataSubscription {
 		const values = this.dependencySubscriptions.map(x => x.callbackSignal.get());
 		const value = await this.computeFunction(values);
 		this.callbackSignal.set(value);
-		this.metadataManager.update(value, this);
+		if (this.bindTarget !== undefined) {
+			this.metadataManager.write(value, this.bindTarget, this.uuid);
+		}
 	}
 
 	/**

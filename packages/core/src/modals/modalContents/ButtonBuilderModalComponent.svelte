@@ -5,8 +5,6 @@
 		ButtonActionType,
 		ButtonConfig,
 		ButtonStyleType,
-		CommandButtonAction,
-		TemplaterCreateNoteButtonAction,
 	} from 'packages/core/src/config/ButtonConfig';
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
 	import { onDestroy } from 'svelte';
@@ -176,8 +174,9 @@ Add action of type
 			name="Command: {action.command || 'none'}"
 			description="The command to execute when this action runs."
 		>
-			<Button variant={ButtonStyleType.PRIMARY} on:click={() => commandActionChangeCommand(action)}>Change</Button
-			>
+			<Button variant={ButtonStyleType.PRIMARY} on:click={() => commandActionChangeCommand(action)}
+				>Change
+			</Button>
 			<Button variant={ButtonStyleType.DESTRUCTIVE} on:click={() => removeAction(i)}>
 				<Icon plugin={modal.plugin} iconName="x"></Icon>
 			</Button>
@@ -239,8 +238,8 @@ Add action of type
 			description="The folder to create a new note in."
 		>
 			<Button variant={ButtonStyleType.PRIMARY} on:click={() => templaterCreateNoteActionChangeFolderPath(action)}
-				>Change</Button
-			>
+				>Change
+			</Button>
 		</SettingComponent>
 
 		<SettingComponent name="File Name: {action.fileName || 'default'}" description="The file name of the new note.">
@@ -276,8 +275,8 @@ Add action of type
 			description="The folder to create a new note in."
 		>
 			<Button variant={ButtonStyleType.PRIMARY} on:click={() => createNoteActionChangeFolderPath(action)}
-				>Change</Button
-			>
+				>Change
+			</Button>
 		</SettingComponent>
 
 		<SettingComponent name="File Name: {action.fileName || 'default'}" description="The file name of the new note.">

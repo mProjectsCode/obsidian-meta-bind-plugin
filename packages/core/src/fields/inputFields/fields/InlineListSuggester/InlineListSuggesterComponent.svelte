@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Icon from '../../../../utils/components/Icon.svelte';
-	import { MBLiteral, stringifyLiteral } from '../../../../utils/Literal';
+	import { MBLiteral } from '../../../../utils/Literal';
 	import LiteralRenderComponent from '../../../../utils/components/LiteralRenderComponent.svelte';
 	import { IPlugin } from '../../../../IPlugin';
 	import { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';

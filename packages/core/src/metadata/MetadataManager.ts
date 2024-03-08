@@ -775,7 +775,10 @@ export class MetadataManager {
 			});
 		}
 
-		source.unsubscribe(subscription);
+		const cacheItem = source.unsubscribe(subscription);
+		if (cacheItem.subscriptions.length === 0) {
+			cacheItem.inactive = true;
+		}
 	}
 
 	private subscribeSubscription(subscription: IMetadataSubscription): void {
@@ -928,37 +931,51 @@ export class MetadataManager {
 			}
 
 			for (const cacheItem of markedForDelete) {
-				source.delete(cacheItem);
+				source.deleteCache(cacheItem);
 			}
 		}
 	}
 
 	/**
-	 * Update the cache for a subscription.
+	 * Writes to the cache.
+	 * This is an internal update.
 	 *
 	 * @param value
-	 * @param subscription
+	 * @param bindTarget
+	 * @param updateSourceUuid the uuid of the subscription that initiated the update, if the update was initiated by a subscription
 	 */
-	public update(value: unknown, subscription: IMetadataSubscription): void {
-		if (subscription.bindTarget === undefined) {
-			return;
-		}
-
-		const source = this.getSource(subscription.bindTarget.storageType);
+	public write(value: unknown, bindTarget: BindTargetDeclaration, updateSourceUuid?: string): void {
+		const source = this.getSource(bindTarget.storageType);
 		if (source === undefined) {
 			throw new MetaBindInternalError({
 				errorLevel: ErrorLevel.ERROR,
 				effect: 'can not update metadata',
-				cause: `Source "${subscription.bindTarget.storageType}" does not exist`,
+				cause: `Source "${bindTarget.storageType}" does not exist`,
 			});
 		}
 
-		// console.log('meta-bind | MetadataManager >> internal update', source.id, subscription.bindTarget, value);
-
-		const cacheItem = source.update(value, subscription);
+		const cacheItem = source.updateCache(value, bindTarget);
 		cacheItem.pendingInternalChange = true;
 		cacheItem.cyclesSinceInternalChange = 0;
-		this.notifyListeners(source, subscription);
+		this.notifyListeners(bindTarget, updateSourceUuid);
+	}
+
+	/**
+	 * Reads from the cache.
+	 *
+	 * @param bindTarget
+	 */
+	public read(bindTarget: BindTargetDeclaration): unknown {
+		const source = this.getSource(bindTarget.storageType);
+		if (source === undefined) {
+			throw new MetaBindInternalError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'can not read metadata',
+				cause: `Source "${bindTarget.storageType}" does not exist`,
+			});
+		}
+
+		return source.readCache(bindTarget);
 	}
 
 	/**
@@ -972,30 +989,39 @@ export class MetadataManager {
 	}
 
 	/**
-	 * Notifies all listeners that overlap in the bind target with the subscription provided.
+	 * Notifies all listeners that overlap with the bind target provided.
+	 * Except the one where the uuid is equal to the ignoreUuid.
 	 *
-	 * @param source
-	 * @param subscription
+	 * @param bindTarget
+	 * @param ignoreUuid
 	 * @private
 	 */
-	private notifyListeners(source: MetadataSource, subscription: IMetadataSubscription): void {
-		if (subscription.bindTarget === undefined) {
-			return;
+	private notifyListeners(bindTarget: BindTargetDeclaration, ignoreUuid?: string): void {
+		const source = this.getSource(bindTarget.storageType);
+		if (source === undefined) {
+			throw new MetaBindInternalError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'can notify listeners metadata',
+				cause: `Source "${bindTarget.storageType}" does not exist`,
+			});
 		}
 
-		const cacheItem = source.getCacheItemForStoragePath(subscription.bindTarget.storagePath);
+		const cacheItem = source.getCacheItemForStoragePath(bindTarget.storagePath);
 		if (cacheItem === undefined) {
 			return;
 		}
 
 		for (const cacheSubscription of cacheItem.subscriptions) {
-			if (subscription.uuid === cacheSubscription.uuid || cacheSubscription.bindTarget === undefined) {
+			if (
+				(ignoreUuid !== undefined && ignoreUuid === cacheSubscription.uuid) ||
+				cacheSubscription.bindTarget === undefined
+			) {
 				continue;
 			}
 
 			if (
 				metadataPathHasUpdateOverlap(
-					subscription.bindTarget.storageProp.toStringArray(),
+					bindTarget.storageProp.toStringArray(),
 					cacheSubscription.bindTarget.storageProp.toStringArray(),
 					cacheSubscription.bindTarget.listenToChildren,
 				)
@@ -1035,7 +1061,7 @@ export class MetadataManager {
 				continue;
 			}
 			cacheItem.subscriptions.forEach(x => x.delete());
-			source.delete(cacheItem);
+			source.deleteCache(cacheItem);
 		}
 	}
 

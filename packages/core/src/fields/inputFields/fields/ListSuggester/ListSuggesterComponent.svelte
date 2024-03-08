@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Icon from '../../../../utils/components/Icon.svelte';
-	import { MBLiteral, stringifyLiteral } from '../../../../utils/Literal';
+	import { MBLiteral } from '../../../../utils/Literal';
 	import LiteralRenderComponent from '../../../../utils/components/LiteralRenderComponent.svelte';
 	import Button from '../../../../utils/components/Button.svelte';
 	import { IPlugin } from '../../../../IPlugin';

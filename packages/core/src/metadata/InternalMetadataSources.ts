@@ -16,6 +16,10 @@ import { type PropPath } from 'packages/core/src/utils/prop/PropPath';
 import { PropUtils } from 'packages/core/src/utils/prop/PropUtils';
 
 export class InternalMetadataSource extends FilePathMetadataSource<FilePathMetadataCacheItem> {
+	public readExternal(_storagePath: string): Metadata {
+		return {};
+	}
+
 	public getDefaultCacheItem(storagePath: string): FilePathMetadataCacheItem {
 		return {
 			data: {},
@@ -44,6 +48,14 @@ export class GlobalMetadataSource implements IMetadataSource<GlobalMetadataCache
 		};
 	}
 
+	public createCacheItem(_storagePath: string): GlobalMetadataCacheItem {
+		return this.cache;
+	}
+
+	public getOrCreateCacheItem(_storagePath: string): GlobalMetadataCacheItem {
+		return this.cache;
+	}
+
 	public validateStoragePath(
 		storagePath: ParsingResultNode,
 		hadStoragePath: boolean,
@@ -70,7 +82,7 @@ export class GlobalMetadataSource implements IMetadataSource<GlobalMetadataCache
 		return bindTargetDeclaration;
 	}
 
-	public delete(_cacheItem: GlobalMetadataCacheItem): void {
+	public deleteCache(_cacheItem: GlobalMetadataCacheItem): void {
 		// noop
 	}
 
@@ -113,16 +125,8 @@ export class GlobalMetadataSource implements IMetadataSource<GlobalMetadataCache
 		return this.cache;
 	}
 
-	public update(value: unknown, subscription: IMetadataSubscription): GlobalMetadataCacheItem {
-		if (subscription.bindTarget === undefined) {
-			throw new MetaBindInternalError({
-				errorLevel: ErrorLevel.CRITICAL,
-				effect: 'can not update metadata',
-				cause: 'subscription bind target undefined',
-			});
-		}
-
-		PropUtils.setAndCreate(this.cache.data, subscription.bindTarget.storageProp, value);
+	public updateCache(value: unknown, bindTarget: BindTargetDeclaration): GlobalMetadataCacheItem {
+		PropUtils.setAndCreate(this.cache.data, bindTarget.storageProp, value);
 
 		return this.cache;
 	}
@@ -143,6 +147,22 @@ export class ScopeMetadataSource implements IMetadataSource<IMetadataCacheItem> 
 	constructor(id: string, manager: MetadataManager) {
 		this.id = id;
 		this.manager = manager;
+	}
+
+	public createCacheItem(_storagePath: string): IMetadataCacheItem {
+		throw new MetaBindInternalError({
+			errorLevel: ErrorLevel.CRITICAL,
+			effect: 'action not permitted',
+			cause: `source 'scope' should have no cache items or subscriptions`,
+		});
+	}
+
+	public getOrCreateCacheItem(_storagePath: string): IMetadataCacheItem {
+		throw new MetaBindInternalError({
+			errorLevel: ErrorLevel.CRITICAL,
+			effect: 'action not permitted',
+			cause: `source 'scope' should have no cache items or subscriptions`,
+		});
 	}
 
 	public validateStoragePath(
@@ -171,7 +191,7 @@ export class ScopeMetadataSource implements IMetadataSource<IMetadataCacheItem> 
 		return parser.resolveScope(bindTargetDeclaration, scope);
 	}
 
-	public delete(_cacheItem: IMetadataCacheItem): void {
+	public deleteCache(_cacheItem: IMetadataCacheItem): void {
 		// noop
 	}
 
@@ -219,7 +239,7 @@ export class ScopeMetadataSource implements IMetadataSource<IMetadataCacheItem> 
 		});
 	}
 
-	public update(_value: unknown, _subscription: IMetadataSubscription): IMetadataCacheItem {
+	public updateCache(_value: unknown, _bindTarget: BindTargetDeclaration): IMetadataCacheItem {
 		throw new MetaBindInternalError({
 			errorLevel: ErrorLevel.CRITICAL,
 			effect: 'action not permitted',

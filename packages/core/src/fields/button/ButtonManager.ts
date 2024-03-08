@@ -147,15 +147,6 @@ export class ButtonManager {
 
 		const fileButtons = this.buttons.get(filePath)!;
 
-		if (fileButtons.has(button.id)) {
-			if (JSON.stringify(fileButtons.get(button.id)?.getValue()) === JSON.stringify(button)) {
-				fileButtons.get(button.id)?.increment();
-				return;
-			} else {
-				throw new Error(`ButtonManager | button with id "${button.id}" already exists`);
-			}
-		}
-
 		fileButtons.set(button.id, new RefCounter(button));
 		this.notifyButtonLoadListeners(filePath, button.id);
 	}

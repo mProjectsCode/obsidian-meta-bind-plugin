@@ -1,19 +1,14 @@
 import { type Component } from 'obsidian';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
-import { V_API_createBindTarget, V_API_createTable, V_API_listenToMetadata } from 'packages/obsidian/src/APIValidators';
+import { V_API_createBindTarget, V_API_createTable } from 'packages/obsidian/src/APIValidators';
 import { API, type FieldType, isFieldTypeAllowedInline } from 'packages/core/src/api/API.js';
 import { MetaBindTable } from 'packages/core/src/fields/metaBindTable/MetaBindTable';
-import {
-	type BindTargetDeclaration,
-	BindTargetStorageType,
-} from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { type UnvalidatedInputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
 import { type UnvalidatedViewFieldDeclaration } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
-import { Signal } from 'packages/core/src/utils/Signal';
 import { getUUID } from 'packages/core/src/utils/Utils';
 import { validateArgs } from 'packages/core/src/utils/ZodUtils';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
 import { ObsidianButtonActionRunner } from 'packages/obsidian/src/ObsidianButtonActionRunner';
 import { MarkdownRenderChildWidget } from 'packages/obsidian/src/cm6/Cm6_Widgets';
 import { FieldMDRC } from 'packages/obsidian/src/FieldMDRC';
@@ -39,47 +34,6 @@ export class ObsidianAPI extends API<MetaBindPlugin> {
 		component.addChild(mdrc);
 
 		return mdrc;
-	}
-
-	public createSignal<T>(value: T): Signal<T> {
-		return new Signal<T>(value);
-	}
-
-	/**
-	 * Registers a signal to a metadata property and returns a callback to unregister.
-	 *
-	 * @param signal a signal that will be updated with new metadata
-	 * @param filePath the file path of the metadata to listen to
-	 * @param metadataPath the object path of the metadata to listen to (e.g. ['task', '0', 'completed'])
-	 * @param listenToChildren whether to listen to updates of the children of the metadata path, useful when listening to arrays or objects
-	 * @param onDelete callback that will be called when the metadata becomes unavailable
-	 */
-	public listenToMetadata(
-		signal: Signal<unknown>,
-		filePath: string,
-		metadataPath: string[],
-		listenToChildren: boolean = false,
-		onDelete?: () => void,
-	): () => void {
-		validateArgs(V_API_listenToMetadata, [signal, filePath, metadataPath, listenToChildren, onDelete]);
-
-		const uuid = getUUID();
-
-		const subscription = this.plugin.metadataManager.subscribe(
-			uuid,
-			signal,
-			{
-				storageType: BindTargetStorageType.FRONTMATTER,
-				storagePath: filePath,
-				storageProp: parsePropPath(metadataPath),
-				listenToChildren: listenToChildren,
-			},
-			onDelete ?? ((): void => {}),
-		);
-
-		return () => {
-			subscription.unsubscribe();
-		};
 	}
 
 	/**

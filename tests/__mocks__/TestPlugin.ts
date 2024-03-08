@@ -7,7 +7,10 @@ import {
 	ScopeMetadataSource,
 } from 'packages/core/src/metadata/InternalMetadataSources';
 import { DateParser } from 'packages/core/src/parsers/DateParser';
-import { BindTargetStorageType } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import {
+	BindTargetDeclaration,
+	BindTargetStorageType,
+} from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { setFirstWeekday } from 'packages/core/src/utils/DatePickerUtils';
 import { TestAPI } from './TestAPI';
 import { TestInternalAPI } from './TestInternalAPI';
@@ -49,7 +52,7 @@ export class TestPlugin implements IPlugin {
 	public testFilePath: string = 'test/file.md';
 	public inTestSetup: boolean = true;
 	public metadataManagerInternalUpdateSpy:
-		| Mock<(value: unknown, subscription: IMetadataSubscription) => void>
+		| Mock<(value: unknown, bindTarget: BindTargetDeclaration) => void>
 		| undefined;
 
 	constructor() {
@@ -100,7 +103,7 @@ export class TestPlugin implements IPlugin {
 	initializeTest(): void {
 		this.testInputFields = new Array(this.uninitializedTestInputFields.length);
 
-		this.metadataManagerInternalUpdateSpy = spyOn(this.metadataManager, 'update');
+		this.metadataManagerInternalUpdateSpy = spyOn(this.metadataManager, 'write');
 
 		this.inTestSetup = false;
 	}

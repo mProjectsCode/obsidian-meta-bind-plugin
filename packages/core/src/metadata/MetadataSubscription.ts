@@ -1,9 +1,7 @@
 import { type IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
 import { type MetadataManager } from 'packages/core/src/metadata/MetadataManager';
 import { type Signal } from 'packages/core/src/utils/Signal';
-
 import { type ComputedSubscriptionDependency } from 'packages/core/src/metadata/ComputedMetadataSubscription';
-import { evaluateMetadataCacheUpdate, type MetadataCacheUpdate } from 'packages/core/src/metadata/MetadataCacheUpdate';
 import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 
 export class MetadataSubscription implements IMetadataSubscription {
@@ -46,13 +44,7 @@ export class MetadataSubscription implements IMetadataSubscription {
 	 * @param value
 	 */
 	public update(value: unknown): void {
-		this.metadataManager.update(value, this);
-	}
-
-	public applyUpdate(update: MetadataCacheUpdate): void {
-		const currentValue = this.callbackSignal.get();
-		const newValue = evaluateMetadataCacheUpdate(update, currentValue);
-		this.update(newValue);
+		this.metadataManager.write(value, this.bindTarget, this.uuid);
 	}
 
 	/**

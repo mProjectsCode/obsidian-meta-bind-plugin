@@ -15,6 +15,14 @@ export interface IMetadataSource<T extends IMetadataCacheItem> {
 	readonly id: string;
 	readonly manager: MetadataManager;
 
+	/**
+	 * Validates if a storage path is valid for the source.
+	 *
+	 * @param storagePath
+	 * @param hadStoragePath
+	 * @param bindTargetDeclaration
+	 * @param parser
+	 */
 	validateStoragePath(
 		storagePath: ParsingResultNode,
 		hadStoragePath: boolean,
@@ -53,6 +61,22 @@ export interface IMetadataSource<T extends IMetadataCacheItem> {
 	getCacheItemForStoragePath(storagePath: string): T | undefined;
 
 	/**
+	 * Creates a new cache item for the given storage path.
+	 * Will throw if the cache item already exists.
+	 *
+	 * @param storagePath
+	 */
+	createCacheItem(storagePath: string): T;
+
+	/**
+	 * Gets the cache item for the given storage path.
+	 * If the cache item does not exist, it is created.
+	 *
+	 * @param storagePath
+	 */
+	getOrCreateCacheItem(storagePath: string): T;
+
+	/**
 	 * Called when the cache item is cycled.
 	 *
 	 * @param cacheItem
@@ -76,7 +100,7 @@ export interface IMetadataSource<T extends IMetadataCacheItem> {
 	 *
 	 * @param cacheItem
 	 */
-	delete(cacheItem: T): void;
+	deleteCache(cacheItem: T): void;
 
 	/**
 	 * Synchronizes the cache item with the external source.
@@ -88,12 +112,13 @@ export interface IMetadataSource<T extends IMetadataCacheItem> {
 	/**
 	 * Updates the cache item with the given value.
 	 * This is an internal update.
+	 * This should **not** fail if the cache item does not exist.
 	 *
 	 * @param value
-	 * @param subscription
-	 * @returns The cache item for the subscription.
+	 * @param bindTarget
+	 * @returns The cache item for the bind target.
 	 */
-	update(value: unknown, subscription: IMetadataSubscription): T;
+	updateCache(value: unknown, bindTarget: BindTargetDeclaration): T;
 
 	/**
 	 * Updates the entire cache item with the given value.
@@ -106,6 +131,7 @@ export interface IMetadataSource<T extends IMetadataCacheItem> {
 
 	/**
 	 * Reads the cache item for the given bind target.
+	 * This should **not** fail if the cache item does not exist.
 	 *
 	 * @param bindTarget
 	 * @returns The value of the prop in the cache item that the bind target points to.
@@ -160,6 +186,36 @@ export abstract class FilePathMetadataSource<T extends FilePathMetadataCacheItem
 
 	abstract getDefaultCacheItem(storagePath: string): T;
 
+	abstract readExternal(storagePath: string): Metadata;
+
+	createCacheItem(storagePath: string): T {
+		let cacheItem = this.cache.get(storagePath);
+
+		if (cacheItem !== undefined) {
+			throw new MetaBindInternalError({
+				errorLevel: ErrorLevel.CRITICAL,
+				effect: 'can not create cache item',
+				cause: 'cache item already exists',
+			});
+		}
+
+		cacheItem = this.getDefaultCacheItem(storagePath);
+		this.cache.set(storagePath, cacheItem);
+
+		return cacheItem;
+	}
+
+	getOrCreateCacheItem(storagePath: string): T {
+		let cacheItem = this.getCacheItemForStoragePath(storagePath);
+
+		if (cacheItem === undefined) {
+			cacheItem = this.getDefaultCacheItem(storagePath);
+			this.cache.set(storagePath, cacheItem);
+		}
+
+		return cacheItem;
+	}
+
 	subscribe(subscription: IMetadataSubscription): T {
 		if (subscription.bindTarget === undefined) {
 			throw new MetaBindInternalError({
@@ -169,11 +225,7 @@ export abstract class FilePathMetadataSource<T extends FilePathMetadataCacheItem
 			});
 		}
 
-		let cacheItem = this.cache.get(subscription.bindTarget.storagePath);
-		if (cacheItem === undefined) {
-			cacheItem = this.getDefaultCacheItem(subscription.bindTarget.storagePath);
-			this.cache.set(subscription.bindTarget.storagePath, cacheItem);
-		}
+		const cacheItem = this.getOrCreateCacheItem(subscription.bindTarget.storagePath);
 
 		cacheItem.subscriptions.push(subscription);
 
@@ -219,31 +271,16 @@ export abstract class FilePathMetadataSource<T extends FilePathMetadataCacheItem
 		return true;
 	}
 
-	delete(cacheItem: T): void {
+	deleteCache(cacheItem: T): void {
 		this.cache.delete(cacheItem.storagePath);
 	}
 
 	abstract syncExternal(cacheItem: T): void;
 
-	update(value: unknown, subscription: IMetadataSubscription): T {
-		if (subscription.bindTarget === undefined) {
-			throw new MetaBindInternalError({
-				errorLevel: ErrorLevel.CRITICAL,
-				effect: 'can not update metadata',
-				cause: 'subscription bind target undefined',
-			});
-		}
+	updateCache(value: unknown, bindTarget: BindTargetDeclaration): T {
+		const cacheItem = this.getOrCreateCacheItem(bindTarget.storagePath);
 
-		const cacheItem = this.cache.get(subscription.bindTarget.storagePath);
-		if (cacheItem === undefined) {
-			throw new MetaBindInternalError({
-				errorLevel: ErrorLevel.CRITICAL,
-				effect: 'can not update metadata',
-				cause: 'cache item does not exist',
-			});
-		}
-
-		PropUtils.setAndCreate(cacheItem.data, subscription.bindTarget.storageProp, value);
+		PropUtils.setAndCreate(cacheItem.data, bindTarget.storageProp, value);
 
 		return cacheItem;
 	}
@@ -265,11 +302,7 @@ export abstract class FilePathMetadataSource<T extends FilePathMetadataCacheItem
 		const cacheItem = this.getCacheItemForStoragePath(bindTarget.storagePath);
 
 		if (cacheItem === undefined) {
-			throw new MetaBindInternalError({
-				errorLevel: ErrorLevel.ERROR,
-				effect: 'can not read cache',
-				cause: `Cache item for path "${bindTarget.storagePath}" does not exist or is not loaded`,
-			});
+			return PropUtils.tryGet(this.readExternal(bindTarget.storagePath), bindTarget.storageProp);
 		}
 
 		return this.readCacheItem(cacheItem, bindTarget.storageProp);
