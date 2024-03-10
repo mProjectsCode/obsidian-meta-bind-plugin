@@ -484,6 +484,7 @@ export enum ViewFieldType {
 	MATH = 'math',
 	TEXT = 'text',
 	LINK = 'link',
+	IMAGE = 'image',
 
 	INVALID = 'invalid',
 }

@@ -13,27 +13,12 @@
 </script>
 
 <div
-	class="image-card"
+	class="mb-image-card"
 	on:click={() => onSelect(image)}
 	on:keydown={event => keySelect(event, image)}
 	role="button"
 	tabindex="0"
 >
-	<img class="image-card-image" src={plugin.internal.imagePathToUri(image)} alt={image} />
-	<span class="image-card-text">{image}</span>
+	<img class="mb-image-card-image" src={plugin.internal.imagePathToUri(image)} alt={image} />
+	<span class="mb-image-card-text">{image}</span>
 </div>
-
-<style>
-	.image-card-image {
-		width: 100%;
-		height: fit-content;
-		max-height: 500px;
-		object-fit: contain;
-	}
-
-	.image-card-text {
-		display: block;
-		margin: var(--size-4-2);
-		margin-bottom: var(--size-4-4);
-	}
-</style>

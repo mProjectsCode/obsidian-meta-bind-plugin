@@ -33,6 +33,3 @@
 		<ImageSuggesterCard plugin={plugin} image={option.value} onSelect={onSelect}></ImageSuggesterCard>
 	{/each}
 </div>
-
-<style>
-</style>

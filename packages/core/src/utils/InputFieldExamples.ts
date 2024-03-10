@@ -35,6 +35,7 @@ export const VIEW_FIELD_EXAMPLE_DECLARATIONS: Record<ViewFieldType, string> = {
 	math: 'VIEW[{exampleProperty} + 2][math]',
 	text: 'VIEW[some text {exampleProperty}][text]',
 	link: 'VIEW[{exampleProperty}][link]',
+	image: 'VIEW[{exampleProperty}][image]',
 
 	invalid: '',
 };

@@ -5,6 +5,8 @@ import { type ViewFieldBase } from 'packages/core/src/fields/viewFields/ViewFiel
 import { LinkVF } from 'packages/core/src/fields/viewFields/fields/LinkVF';
 import { MathVF } from 'packages/core/src/fields/viewFields/fields/MathVF';
 import { TextVF } from 'packages/core/src/fields/viewFields/fields/TextVF';
+import { ImageVF } from 'packages/core/src/fields/viewFields/fields/ImageVF';
+import { expectType } from 'packages/core/src/utils/Utils';
 
 export class ViewFieldFactory {
 	plugin: IPlugin;
@@ -24,7 +26,11 @@ export class ViewFieldFactory {
 			return new TextVF(base);
 		} else if (type === ViewFieldType.LINK) {
 			return new LinkVF(base);
+		} else if (type === ViewFieldType.IMAGE) {
+			return new ImageVF(base);
 		}
+
+		expectType<ViewFieldType.INVALID>(type);
 
 		return undefined;
 	}

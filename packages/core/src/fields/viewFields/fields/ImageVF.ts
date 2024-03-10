@@ -4,15 +4,15 @@ import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { getUUID } from 'packages/core/src/utils/Utils';
-import LinkListComponent from 'packages/core/src/utils/components/LinkListComponent.svelte';
 import {
 	ErrorLevel,
 	MetaBindExpressionError,
 	MetaBindValidationError,
 } from 'packages/core/src/utils/errors/MetaBindErrors';
+import ImageGrid from 'packages/core/src/utils/components/ImageGrid.svelte';
 
-export class LinkVF extends AbstractViewField {
-	component?: LinkListComponent;
+export class ImageVF extends AbstractViewField {
+	component?: ImageGrid;
 
 	constructor(base: ViewFieldBase) {
 		super(base);
@@ -28,7 +28,7 @@ export class LinkVF extends AbstractViewField {
 			throw new MetaBindValidationError({
 				errorLevel: ErrorLevel.ERROR,
 				effect: 'can not create view field',
-				cause: 'link view filed only supports exactly a single bind target and not text content',
+				cause: 'image view filed only supports exactly a single bind target and not text content',
 			});
 		}
 
@@ -37,7 +37,7 @@ export class LinkVF extends AbstractViewField {
 			throw new MetaBindValidationError({
 				errorLevel: ErrorLevel.ERROR,
 				effect: 'can not create view field',
-				cause: 'link view filed only supports exactly a single bind target and not text content',
+				cause: 'image view filed only supports exactly a single bind target and not text content',
 			});
 		}
 
@@ -57,7 +57,7 @@ export class LinkVF extends AbstractViewField {
 		if (this.variables.length !== 1) {
 			throw new MetaBindExpressionError({
 				errorLevel: ErrorLevel.CRITICAL,
-				effect: 'failed to evaluate link view field',
+				effect: 'failed to evaluate image view field',
 				cause: 'there should be exactly one variable',
 			});
 		}
@@ -80,20 +80,23 @@ export class LinkVF extends AbstractViewField {
 	}
 
 	protected onInitialRender(container: HTMLElement): void {
-		this.component = new LinkListComponent({
+		this.component = new ImageGrid({
 			target: container,
 			props: {
-				mdLinkList: [],
+				images: [],
+				plugin: this.base.plugin,
 			},
 		});
 	}
 
 	protected async onRerender(container: HTMLElement, text: string): Promise<void> {
 		const linkList = MDLinkParser.parseLinkList(text);
-		this.component = new LinkListComponent({
+		this.component?.$destroy();
+		this.component = new ImageGrid({
 			target: container,
 			props: {
-				mdLinkList: linkList,
+				images: linkList.map(x => x.target),
+				plugin: this.base.plugin,
 			},
 		});
 	}

@@ -14,6 +14,11 @@ file: Example Note with Embeds
 image: Other/Images/img_butterfly.webp
 someInputValue: 1
 someComputedValue: 2
+images:
+  - Other/Images/img_flower.webp
+  - Other/Images/img_butterfly.webp
+  - Other/Images/subfolder/img_frozen_branch.jpg
+  - Other/Images/img_drops.jpg
 ---
 
 `INPUT[number:number1]`
@@ -57,8 +62,23 @@ Self Loop Error: `VIEW[**{computed}**][text():computed]`
 INPUT[imageSuggester(optionQuery("Other/Images")):image]
 ```
 
-
 `VIEW[!\[\[{image}\]\]][text(renderMarkdown)]`
+`VIEW[{image}][image]`
+
+```meta-bind
+INPUT[imageSuggester(optionQuery("Other/Images")):images[0]]
+```
+```meta-bind
+INPUT[imageSuggester(optionQuery("Other/Images")):images[1]]
+```
+```meta-bind
+INPUT[imageSuggester(optionQuery("Other/Images")):images[2]]
+```
+```meta-bind
+INPUT[imageSuggester(optionQuery("Other/Images")):images[3]]
+```
+
+`VIEW[{images}][image]`
 
 ## Arrays and Objects
 

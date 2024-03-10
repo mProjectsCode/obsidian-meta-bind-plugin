@@ -31,32 +31,3 @@
 		<button class="btn btn-active" on:click={openSuggester} on:keydown={openSuggesterOnKey}> Change Image</button>
 	</div>
 </div>
-
-<style>
-	.mb-image-suggest-input {
-		background: var(--background-secondary);
-		border-radius: var(--mb-border-radius);
-		border: var(--mb-border-width) solid var(--background-modifier-border);
-		padding: var(--size-4-2);
-		width: 100%;
-	}
-
-	.mb-image-suggest-image {
-		width: 100%;
-		height: fit-content;
-		max-height: 500px;
-		object-fit: contain;
-	}
-
-	.mb-image-suggest-footer {
-		display: flex;
-		flex-direction: row;
-		color: var(--text-normal);
-		align-items: baseline;
-	}
-
-	.mb-image-suggest-footer-text {
-		flex: 1;
-		margin-left: var(--size-4-2);
-	}
-</style>
