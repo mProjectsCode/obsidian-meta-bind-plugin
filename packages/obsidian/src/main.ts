@@ -282,6 +282,16 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				});
 			},
 		});
+
+		this.addCommand({
+			id: 'copy-command-id',
+			name: 'Select and Copy Command ID',
+			callback: () => {
+				this.internal.openCommandSelectModal(command => {
+					void window.navigator.clipboard.writeText(command.id);
+				});
+			},
+		});
 	}
 
 	addStatusBarBuildIndicator(): void {
