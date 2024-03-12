@@ -34,6 +34,7 @@ export enum InputFieldType {
 	LIST_SUGGESTER = 'listSuggester',
 	INLINE_LIST_SUGGESTER = 'inlineListSuggester',
 	INLINE_LIST = 'inlineList',
+	IMAGE_LIST_SUGGESTER = 'imageListSuggester',
 
 	INVALID = 'invalid',
 }
@@ -161,6 +162,11 @@ export const InputFieldConfigs: Record<InputFieldType, InputFieldConfig> = {
 		type: InputFieldType.INLINE_LIST,
 		allowInBlock: true,
 		allowInline: true,
+	},
+	[InputFieldType.IMAGE_LIST_SUGGESTER]: {
+		type: InputFieldType.IMAGE_LIST_SUGGESTER,
+		allowInBlock: true,
+		allowInline: false,
 	},
 	[InputFieldType.INVALID]: {
 		type: InputFieldType.INVALID,
@@ -301,6 +307,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 			InputFieldType.INLINE_SELECT,
 			InputFieldType.LIST_SUGGESTER,
 			InputFieldType.INLINE_LIST_SUGGESTER,
+			InputFieldType.IMAGE_LIST_SUGGESTER,
 		],
 		values: [
 			[
@@ -332,6 +339,7 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 			InputFieldType.IMAGE_SUGGESTER,
 			InputFieldType.LIST_SUGGESTER,
 			InputFieldType.INLINE_LIST_SUGGESTER,
+			InputFieldType.IMAGE_LIST_SUGGESTER,
 		],
 		values: [
 			[

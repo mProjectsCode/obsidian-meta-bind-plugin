@@ -12,6 +12,7 @@ export const INPUT_FIELD_EXAMPLE_DECLARATIONS: Record<InputFieldType, string> = 
 	datePicker: 'datePicker',
 	editor: 'editor',
 	imageSuggester: 'imageSuggester(optionQuery(""))',
+	imageListSuggester: 'imageListSuggester(optionQuery(""))',
 	inlineList: 'inlineList',
 	inlineListSuggester: 'inlineListSuggester(option(apple), option(banana), option(lemon))',
 	inlineSelect: 'inlineSelect(option(apple), option(banana), option(lemon))',
@@ -32,10 +33,10 @@ export const INPUT_FIELD_EXAMPLE_DECLARATIONS: Record<InputFieldType, string> = 
 };
 
 export const VIEW_FIELD_EXAMPLE_DECLARATIONS: Record<ViewFieldType, string> = {
+	image: 'VIEW[{exampleProperty}][image]',
+	link: 'VIEW[{exampleProperty}][link]',
 	math: 'VIEW[{exampleProperty} + 2][math]',
 	text: 'VIEW[some text {exampleProperty}][text]',
-	link: 'VIEW[{exampleProperty}][link]',
-	image: 'VIEW[{exampleProperty}][image]',
 
 	invalid: '',
 };

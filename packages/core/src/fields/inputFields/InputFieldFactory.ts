@@ -27,6 +27,8 @@ import { TimeIPF } from 'packages/core/src/fields/inputFields/fields/Time/TimeIP
 import { ToggleIPF } from 'packages/core/src/fields/inputFields/fields/Toggle/ToggleIPF';
 import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
 import { ErrorLevel, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
+import { expectType } from 'packages/core/src/utils/Utils';
+import { ImageListSuggesterIPF } from 'packages/core/src/fields/inputFields/fields/ImageListSuggester/ImageListSuggesterIPF';
 
 export type InputField =
 	| ToggleIPF
@@ -47,7 +49,8 @@ export type InputField =
 	| DateIPF
 	| TimeIPF
 	| InlineListSuggesterIPF
-	| InlineListIPF;
+	| InlineListIPF
+	| ImageListSuggesterIPF;
 
 export class InputFieldFactory {
 	plugin: IPlugin;
@@ -104,7 +107,11 @@ export class InputFieldFactory {
 			return new InlineListSuggesterIPF(base);
 		} else if (type === InputFieldType.INLINE_LIST) {
 			return new InlineListIPF(base);
+		} else if (type === InputFieldType.IMAGE_LIST_SUGGESTER) {
+			return new ImageListSuggesterIPF(base);
 		}
+
+		expectType<InputFieldType.INVALID>(type);
 
 		return undefined;
 	}

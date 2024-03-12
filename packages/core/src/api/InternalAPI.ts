@@ -1,6 +1,6 @@
 import { type DatePickerIPF } from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePickerIPF';
-import { type ImageSuggesterIPF } from 'packages/core/src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
 import {
+	type ImageSuggesterLikeIPF,
 	type SuggesterLikeIFP,
 	type SuggesterOption,
 } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
@@ -67,7 +67,7 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	 *
 	 * @param inputField
 	 */
-	abstract getImageSuggesterOptions(inputField: ImageSuggesterIPF): SuggesterOption<string>[];
+	abstract getImageSuggesterOptions(inputField: ImageSuggesterLikeIPF): SuggesterOption<string>[];
 
 	/**
 	 * Get the options for the suggester input field.
@@ -248,7 +248,7 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 		this.createSearchModal(new SuggesterSelectModal(this.plugin, selectCallback, inputField)).open();
 	}
 
-	openImageSuggesterModal(inputField: ImageSuggesterIPF, selectCallback: (selected: string) => void): void {
+	openImageSuggesterModal(inputField: ImageSuggesterLikeIPF, selectCallback: (selected: string) => void): void {
 		this.createModal(
 			new SvelteModalContent((modal, targetEl) => {
 				return new ImageSuggesterModalComponent({

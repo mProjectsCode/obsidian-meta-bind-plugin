@@ -389,31 +389,25 @@ div.mb-view-wrapper {
 	margin-bottom: var(--size-4-4);
 }
 
+.mb-image-card-footer {
+	display: flex;
+	align-items: center;
+
+	& > span {
+		padding-left: var(--size-4-2);
+		font-size: var(--font-ui-small);
+		min-width: 0;
+		text-overflow-ellipsis: true;
+		flex: 1;
+	}
+}
+
 .mb-image-suggest-input {
 	background: var(--background-secondary);
 	border-radius: var(--mb-border-radius);
 	border: var(--mb-border-width) solid var(--background-modifier-border);
 	padding: var(--size-4-2);
 	width: 100%;
-}
-
-.mb-image-suggest-image {
-	width: 100%;
-	height: fit-content;
-	max-height: 500px;
-	object-fit: contain;
-}
-
-.mb-image-suggest-footer {
-	display: flex;
-	flex-direction: row;
-	color: var(--text-normal);
-	align-items: baseline;
-}
-
-.mb-image-suggest-footer-text {
-	flex: 1;
-	margin-left: var(--size-4-2);
 }
 
 /* Error */

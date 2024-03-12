@@ -11,8 +11,8 @@ import {
 	TFolder,
 } from 'obsidian';
 import { type Command, InternalAPI, type ModalOptions } from 'packages/core/src/api/InternalAPI';
-import { type ImageSuggesterIPF } from 'packages/core/src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
 import {
+	type ImageSuggesterLikeIPF,
 	type SuggesterLikeIFP,
 	type SuggesterOption,
 } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
@@ -41,7 +41,7 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 		this.app = plugin.app;
 	}
 
-	public getImageSuggesterOptions(inputField: ImageSuggesterIPF): SuggesterOption<string>[] {
+	public getImageSuggesterOptions(inputField: ImageSuggesterLikeIPF): SuggesterOption<string>[] {
 		return getImageSuggesterOptionsForInputField(this.plugin, inputField);
 	}
 
