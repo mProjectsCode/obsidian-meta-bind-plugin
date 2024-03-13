@@ -4,18 +4,28 @@ import { ButtonField } from 'packages/core/src/fields/button/ButtonField';
 import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { type ButtonDeclaration } from 'packages/core/src/parsers/ButtonParser';
+import { type NotePosition } from 'packages/core/src/api/API';
 
 export class ButtonBase extends FieldBase {
 	errorCollection: ErrorCollection;
 
 	declaration: ButtonDeclaration;
+	position: NotePosition | undefined;
 	buttonField: ButtonField | undefined;
 	isPreview: boolean;
 
-	constructor(plugin: IPlugin, uuid: string, filePath: string, declaration: ButtonDeclaration, isPreview: boolean) {
+	constructor(
+		plugin: IPlugin,
+		uuid: string,
+		filePath: string,
+		declaration: ButtonDeclaration,
+		position: NotePosition | undefined,
+		isPreview: boolean,
+	) {
 		super(plugin, uuid, filePath);
 
 		this.declaration = declaration;
+		this.position = position;
 		this.isPreview = isPreview;
 
 		this.errorCollection = new ErrorCollection(this.getUuid());
@@ -43,6 +53,7 @@ export class ButtonBase extends FieldBase {
 			this.declaration.config,
 			this.getFilePath(),
 			false,
+			this.position,
 			this.isPreview,
 		);
 		this.buttonField.mount(targetEl);

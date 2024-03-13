@@ -175,6 +175,9 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				if (fieldType === undefined) {
 					continue;
 				}
+
+				console.log(ctx.getSectionInfo(codeBlock));
+
 				// console.log(content, ctx.getSectionInfo(codeBlock)?.lineStart, ctx.getSectionInfo(codeBlock)?.lineEnd);
 				const base = this.api.createInlineFieldOfTypeFromString(fieldType, content, filePath, undefined);
 				this.api.wrapInMDRC(base, codeBlock, ctx);
@@ -191,6 +194,8 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			if (fieldType === undefined) {
 				return;
 			}
+
+			console.log(ctx.getSectionInfo(codeBlock));
 
 			const base = this.api.createInlineFieldOfTypeFromString(
 				fieldType,
@@ -234,9 +239,22 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		// "meta-bind-button" code blocks
 		this.registerMarkdownCodeBlockProcessor('meta-bind-button', (source, el, ctx) => {
+			const sectionInfo = ctx.getSectionInfo(el);
+			let position = undefined;
+
+			if (sectionInfo) {
+				position = {
+					lineStart: sectionInfo.lineStart,
+					lineEnd: sectionInfo.lineEnd,
+				};
+			}
+
+			console.log(position);
+
 			const field = this.api.createButtonBase(ctx.sourcePath, {
 				declaration: source,
 				isPreview: false,
+				position: position,
 			});
 
 			this.api.wrapInMDRC(field, el, ctx);

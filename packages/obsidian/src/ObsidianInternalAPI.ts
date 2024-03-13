@@ -195,6 +195,10 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 		return this.app.vault.cachedRead(tFile);
 	}
 
+	public writeFilePath(filePath: string, content: string): Promise<void> {
+		return this.app.vault.adapter.write(filePath, content);
+	}
+
 	public createContextMenu(items: ContextMenuItemDefinition[]): IContextMenu {
 		const menu = new ObsidianContextMenu();
 		menu.setItems(items);

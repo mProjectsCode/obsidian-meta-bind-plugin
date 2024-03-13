@@ -35,7 +35,7 @@
 		buttonBase?.unmount();
 		if (el) {
 			DomHelpers.empty(el);
-			buttonBase = new ButtonField(plugin, config, '', false, true);
+			buttonBase = new ButtonField(plugin, config, '', false, undefined, true);
 			buttonBase.mount(el);
 		}
 	}

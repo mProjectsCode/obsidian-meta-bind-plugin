@@ -14,6 +14,10 @@ export enum ButtonActionType {
 	TEMPLATER_CREATE_NOTE = 'templaterCreateNote',
 	UPDATE_METADATA = 'updateMetadata',
 	CREATE_NOTE = 'createNote',
+	REPLACE_IN_NOTE = 'replaceInNote',
+	REGEXP_REPLACE_IN_NOTE = 'regexpReplaceInNote',
+	REPLACE_SELF = 'replaceSelf',
+	INSERT_INTO_NOTE = 'insertIntoNote',
 }
 
 export interface CommandButtonAction {
@@ -65,6 +69,30 @@ export interface CreateNoteButtonAction {
 	openNote?: boolean;
 }
 
+export interface ReplaceInNoteButtonAction {
+	type: ButtonActionType.REPLACE_IN_NOTE;
+	fromLine: number;
+	toLine: number;
+	replacement: string;
+}
+
+export interface ReplaceSelfButtonAction {
+	type: ButtonActionType.REPLACE_SELF;
+	replacement: string;
+}
+
+export interface RegexpReplaceInNoteButtonAction {
+	type: ButtonActionType.REGEXP_REPLACE_IN_NOTE;
+	regexp: string;
+	replacement: string;
+}
+
+export interface InsertIntoNoteButtonAction {
+	type: ButtonActionType.INSERT_INTO_NOTE;
+	line: number;
+	value: string;
+}
+
 export type ButtonAction =
 	| CommandButtonAction
 	| JSButtonAction
@@ -73,7 +101,11 @@ export type ButtonAction =
 	| SleepButtonAction
 	| TemplaterCreateNoteButtonAction
 	| UpdateMetadataButtonAction
-	| CreateNoteButtonAction;
+	| CreateNoteButtonAction
+	| ReplaceInNoteButtonAction
+	| ReplaceSelfButtonAction
+	| RegexpReplaceInNoteButtonAction
+	| InsertIntoNoteButtonAction;
 
 export interface ButtonConfig {
 	label: string;

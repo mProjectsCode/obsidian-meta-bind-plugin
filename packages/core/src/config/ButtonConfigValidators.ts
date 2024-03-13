@@ -7,10 +7,14 @@ import {
 	type CreateNoteButtonAction,
 	type InputButtonAction,
 	type JSButtonAction,
+	type ReplaceInNoteButtonAction,
 	type OpenButtonAction,
 	type SleepButtonAction,
 	type TemplaterCreateNoteButtonAction,
 	type UpdateMetadataButtonAction,
+	type ReplaceSelfButtonAction,
+	type RegexpReplaceInNoteButtonAction,
+	type InsertIntoNoteButtonAction,
 } from 'packages/core/src/config/ButtonConfig';
 import { oneOf, schemaForType } from 'packages/core/src/utils/ZodUtils';
 import { z } from 'zod';
@@ -79,6 +83,38 @@ export const V_CreateNoteButtonAction = schemaForType<CreateNoteButtonAction>()(
 	}),
 );
 
+export const V_ReplaceInNoteButtonAction = schemaForType<ReplaceInNoteButtonAction>()(
+	z.object({
+		type: z.literal(ButtonActionType.REPLACE_IN_NOTE),
+		fromLine: z.number(),
+		toLine: z.number(),
+		replacement: z.string(),
+	}),
+);
+
+export const V_ReplaceSelfButtonAction = schemaForType<ReplaceSelfButtonAction>()(
+	z.object({
+		type: z.literal(ButtonActionType.REPLACE_SELF),
+		replacement: z.string(),
+	}),
+);
+
+export const V_RegexpReplaceInNoteButtonAction = schemaForType<RegexpReplaceInNoteButtonAction>()(
+	z.object({
+		type: z.literal(ButtonActionType.REGEXP_REPLACE_IN_NOTE),
+		regexp: z.string(),
+		replacement: z.string(),
+	}),
+);
+
+export const V_InsertIntoNoteButtonAction = schemaForType<InsertIntoNoteButtonAction>()(
+	z.object({
+		type: z.literal(ButtonActionType.INSERT_INTO_NOTE),
+		line: z.number(),
+		value: z.string(),
+	}),
+);
+
 export const V_ButtonAction = schemaForType<ButtonAction>()(
 	z.union([
 		V_CommandButtonAction,
@@ -89,6 +125,10 @@ export const V_ButtonAction = schemaForType<ButtonAction>()(
 		V_TemplaterCreateNoteButtonAction,
 		V_UpdateMetadataButtonAction,
 		V_CreateNoteButtonAction,
+		V_ReplaceInNoteButtonAction,
+		V_ReplaceSelfButtonAction,
+		V_RegexpReplaceInNoteButtonAction,
+		V_InsertIntoNoteButtonAction,
 	]),
 );
 

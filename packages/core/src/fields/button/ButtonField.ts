@@ -3,22 +3,32 @@ import { type ButtonConfig } from 'packages/core/src/config/ButtonConfig';
 import { DomHelpers, isTruthy } from 'packages/core/src/utils/Utils';
 import ButtonComponent from 'packages/core/src/utils/components/ButtonComponent.svelte';
 import { Mountable } from 'packages/core/src/utils/Mountable';
+import { type NotePosition } from 'packages/core/src/api/API';
 
 export class ButtonField extends Mountable {
 	plugin: IPlugin;
 	config: ButtonConfig;
 	filePath: string;
 	inline: boolean;
+	position: NotePosition | undefined;
 	buttonComponent?: ButtonComponent;
 	isPreview: boolean;
 
-	constructor(plugin: IPlugin, config: ButtonConfig, filePath: string, inline: boolean, isPreview: boolean) {
+	constructor(
+		plugin: IPlugin,
+		config: ButtonConfig,
+		filePath: string,
+		inline: boolean,
+		position: NotePosition | undefined,
+		isPreview: boolean,
+	) {
 		super();
 
 		this.plugin = plugin;
 		this.config = config;
 		this.filePath = filePath;
 		this.inline = inline;
+		this.position = position;
 		this.isPreview = isPreview;
 	}
 
@@ -49,7 +59,12 @@ export class ButtonField extends Mountable {
 				label: this.config.label,
 				tooltip: isTruthy(this.config.tooltip) ? this.config.tooltip : this.config.label,
 				onClick: async (): Promise<void> => {
-					await this.plugin.api.buttonActionRunner.runButtonAction(this.config, this.filePath);
+					await this.plugin.api.buttonActionRunner.runButtonAction(
+						this.config,
+						this.filePath,
+						this.inline,
+						this.position,
+					);
 				},
 			},
 		});

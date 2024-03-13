@@ -46,7 +46,7 @@ export class InlineButtonField extends Mountable {
 				buttonId,
 				(buttonConfig: ButtonConfig) => {
 					initialButton?.$destroy();
-					button = new ButtonField(this.plugin, buttonConfig, this.filePath, true, false);
+					button = new ButtonField(this.plugin, buttonConfig, this.filePath, true, undefined, false);
 					button.mount(wrapperEl);
 				},
 			);

@@ -8,14 +8,19 @@ import {
 	type CreateNoteButtonAction,
 	type InputButtonAction,
 	type JSButtonAction,
+	type ReplaceInNoteButtonAction,
 	type OpenButtonAction,
 	type SleepButtonAction,
 	type TemplaterCreateNoteButtonAction,
 	type UpdateMetadataButtonAction,
+	type InsertIntoNoteButtonAction,
+	type RegexpReplaceInNoteButtonAction,
+	type ReplaceSelfButtonAction,
 } from 'packages/core/src/config/ButtonConfig';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import { expectType, openURL } from 'packages/core/src/utils/Utils';
 import { parseLiteral } from 'packages/core/src/utils/Literal';
+import { type NotePosition } from 'packages/core/src/api/API';
 
 export class ButtonActionRunner {
 	plugin: IPlugin;
@@ -42,14 +47,21 @@ export class ButtonActionRunner {
 	 *
 	 * @param config
 	 * @param filePath
+	 * @param inline whether the button is inline
+	 * @param position the position of the button in the note
 	 */
-	async runButtonAction(config: ButtonConfig, filePath: string): Promise<void> {
+	async runButtonAction(
+		config: ButtonConfig,
+		filePath: string,
+		inline: boolean,
+		position: NotePosition | undefined,
+	): Promise<void> {
 		try {
 			if (config.action) {
-				await this.plugin.api.buttonActionRunner.runAction(config, config.action, filePath);
+				await this.plugin.api.buttonActionRunner.runAction(config, config.action, filePath, inline, position);
 			} else if (config.actions) {
 				for (const action of config.actions) {
-					await this.plugin.api.buttonActionRunner.runAction(config, action, filePath);
+					await this.plugin.api.buttonActionRunner.runAction(config, action, filePath, inline, position);
 				}
 			} else {
 				console.warn('meta-bind | ButtonMDRC >> no action defined');
@@ -100,6 +112,30 @@ export class ButtonActionRunner {
 				fileName: 'Untitled',
 				openNote: true,
 			} satisfies CreateNoteButtonAction;
+		} else if (type === ButtonActionType.REPLACE_IN_NOTE) {
+			return {
+				type: ButtonActionType.REPLACE_IN_NOTE,
+				fromLine: 0,
+				toLine: 0,
+				replacement: 'Replacement text',
+			} satisfies ReplaceInNoteButtonAction;
+		} else if (type === ButtonActionType.REPLACE_SELF) {
+			return {
+				type: ButtonActionType.REPLACE_SELF,
+				replacement: 'Replacement text',
+			} satisfies ReplaceSelfButtonAction;
+		} else if (type === ButtonActionType.REGEXP_REPLACE_IN_NOTE) {
+			return {
+				type: ButtonActionType.REGEXP_REPLACE_IN_NOTE,
+				regexp: '([A-Z])\\w+',
+				replacement: 'Replacement text',
+			} satisfies RegexpReplaceInNoteButtonAction;
+		} else if (type === ButtonActionType.INSERT_INTO_NOTE) {
+			return {
+				type: ButtonActionType.INSERT_INTO_NOTE,
+				line: 0,
+				value: 'Some text',
+			} satisfies InsertIntoNoteButtonAction;
 		}
 
 		expectType<never>(type);
@@ -114,8 +150,16 @@ export class ButtonActionRunner {
 	 * @param config
 	 * @param action
 	 * @param filePath
+	 * @param inline whether the button is inline
+	 * @param position the position of the button in the note
 	 */
-	async runAction(config: ButtonConfig, action: ButtonAction, filePath: string): Promise<void> {
+	async runAction(
+		config: ButtonConfig,
+		action: ButtonAction,
+		filePath: string,
+		inline: boolean,
+		position: NotePosition | undefined,
+	): Promise<void> {
 		if (action.type === ButtonActionType.COMMAND) {
 			await this.runCommandAction(action);
 			return;
@@ -139,6 +183,18 @@ export class ButtonActionRunner {
 			return;
 		} else if (action.type === ButtonActionType.CREATE_NOTE) {
 			await this.runCreateNoteAction(action);
+			return;
+		} else if (action.type === ButtonActionType.REPLACE_IN_NOTE) {
+			await this.runReplaceInNoteAction(action, filePath);
+			return;
+		} else if (action.type === ButtonActionType.REPLACE_SELF) {
+			await this.runReplaceSelfAction(action, filePath, inline, position);
+			return;
+		} else if (action.type === ButtonActionType.REGEXP_REPLACE_IN_NOTE) {
+			await this.runRegexpReplaceInNotAction(action, filePath);
+			return;
+		} else if (action.type === ButtonActionType.INSERT_INTO_NOTE) {
+			await this.runInsertIntoNoteAction(action, filePath);
 			return;
 		}
 
@@ -200,5 +256,72 @@ export class ButtonActionRunner {
 
 	async runCreateNoteAction(action: CreateNoteButtonAction): Promise<void> {
 		await this.plugin.internal.createFile(action.folderPath ?? '', action.fileName, 'md', action.openNote ?? false);
+	}
+
+	async runReplaceInNoteAction(action: ReplaceInNoteButtonAction, filePath: string): Promise<void> {
+		const content = await this.plugin.internal.readFilePath(filePath);
+
+		let splitContent = content.split('\n');
+
+		splitContent = [
+			...splitContent.slice(0, action.fromLine - 1),
+			action.replacement,
+			...splitContent.slice(action.toLine),
+		];
+
+		await this.plugin.internal.writeFilePath(filePath, splitContent.join('\n'));
+	}
+
+	async runReplaceSelfAction(
+		action: ReplaceSelfButtonAction,
+		filePath: string,
+		inline: boolean,
+		position: NotePosition | undefined,
+	): Promise<void> {
+		if (inline) {
+			throw new Error('Replace self action not supported for inline buttons');
+		}
+
+		if (position === undefined) {
+			throw new Error('Position of the button in the note is unknown');
+		}
+
+		const content = await this.plugin.internal.readFilePath(filePath);
+
+		let splitContent = content.split('\n');
+
+		splitContent = [
+			...splitContent.slice(0, position.lineStart),
+			action.replacement,
+			...splitContent.slice(position.lineEnd + 1),
+		];
+
+		await this.plugin.internal.writeFilePath(filePath, splitContent.join('\n'));
+	}
+
+	async runRegexpReplaceInNotAction(action: RegexpReplaceInNoteButtonAction, filePath: string): Promise<void> {
+		if (action.regexp === '') {
+			throw new Error('Regexp cannot be empty');
+		}
+
+		let content = await this.plugin.internal.readFilePath(filePath);
+
+		content = content.replace(new RegExp(action.regexp, 'g'), action.replacement);
+
+		await this.plugin.internal.writeFilePath(filePath, content);
+	}
+
+	async runInsertIntoNoteAction(action: InsertIntoNoteButtonAction, filePath: string): Promise<void> {
+		const content = await this.plugin.internal.readFilePath(filePath);
+
+		let splitContent = content.split('\n');
+
+		splitContent = [
+			...splitContent.slice(0, action.line - 1),
+			action.value,
+			...splitContent.slice(action.line - 1),
+		];
+
+		await this.plugin.internal.writeFilePath(filePath, splitContent.join('\n'));
 	}
 }

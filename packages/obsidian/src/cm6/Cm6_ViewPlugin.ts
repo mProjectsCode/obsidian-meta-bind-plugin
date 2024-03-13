@@ -317,13 +317,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				currentFile: TFile,
 			): Range<Decoration> | Range<Decoration>[] {
 				if (widgetType === MB_WidgetType.FIELD) {
-					const widget = plugin.api.constructMDRCWidget(
-						mdrcType,
-						content,
-						currentFile.path,
-						this.component,
-						plugin,
-					);
+					const widget = plugin.api.constructMDRCWidget(mdrcType, content, currentFile.path, this.component);
 
 					return Decoration.replace({
 						widget: widget,

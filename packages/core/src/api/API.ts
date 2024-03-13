@@ -74,7 +74,13 @@ export interface InlineButtonOptions {
 
 export interface ButtonOptions {
 	declaration: ButtonConfig | string;
+	position: NotePosition | undefined;
 	isPreview: boolean;
+}
+
+export interface NotePosition {
+	lineStart: number;
+	lineEnd: number;
 }
 
 export interface EmbedOptions {
@@ -344,7 +350,7 @@ export abstract class API<Plugin extends IPlugin> {
 			declaration = this.buttonParser.validateSimpleButtonConfig(options.declaration);
 		}
 
-		return new ButtonBase(this.plugin, uuid, filePath, declaration, options.isPreview);
+		return new ButtonBase(this.plugin, uuid, filePath, declaration, options.position, options.isPreview);
 	}
 
 	public createEmbedBase(filePath: string, options: EmbedOptions): EmbedBase {
