@@ -112,6 +112,14 @@
 			return 'Update Metadata';
 		} else if (actionType === ButtonActionType.CREATE_NOTE) {
 			return 'Create a New Note';
+		} else if (actionType === ButtonActionType.REPLACE_IN_NOTE) {
+			return 'Replace Text in Note';
+		} else if (actionType === ButtonActionType.REGEXP_REPLACE_IN_NOTE) {
+			return 'Replace Text in Note using Regexp';
+		} else if (actionType === ButtonActionType.REPLACE_SELF) {
+			return 'Replace Button with Text';
+		} else if (actionType === ButtonActionType.INSERT_INTO_NOTE) {
+			return 'Insert Text into the Note';
 		}
 
 		return 'CHANGE ME';
@@ -286,6 +294,59 @@ Add action of type
 		<SettingComponent name="Open Note" description="Whether to open the new note after this action ran.">
 			<Toggle bind:checked={action.openNote}></Toggle>
 		</SettingComponent>
+	{/if}
+
+	{#if action.type === ButtonActionType.REPLACE_IN_NOTE}
+		<Button variant={ButtonStyleType.DESTRUCTIVE} on:click={() => removeAction(i)}>Remove Action</Button>
+
+		<SettingComponent name="Line From" description="The line that marks the start of the area to replace.">
+			<input type="number" bind:value={action.fromLine} placeholder="0" />
+		</SettingComponent>
+
+		<SettingComponent name="Line To" description="The line that marks the end of the area to replace.">
+			<input type="number" bind:value={action.toLine} placeholder="0" />
+		</SettingComponent>
+
+		<SettingComponent name="Replacement Text" description="The text to replace the note section."
+		></SettingComponent>
+		<div class="meta-bind-full-width meta-bind-high">
+			<textarea bind:value={action.replacement}></textarea>
+		</div>
+	{/if}
+
+	{#if action.type === ButtonActionType.REGEXP_REPLACE_IN_NOTE}
+		<Button variant={ButtonStyleType.DESTRUCTIVE} on:click={() => removeAction(i)}>Remove Action</Button>
+
+		<SettingComponent name="Regexp" description="The regexp to find replacements.">
+			<input type="text" bind:value={action.regexp} />
+		</SettingComponent>
+
+		<SettingComponent name="Replacement Text" description="The text to replace the button with."></SettingComponent>
+		<div class="meta-bind-full-width meta-bind-high">
+			<textarea bind:value={action.replacement}></textarea>
+		</div>
+	{/if}
+
+	{#if action.type === ButtonActionType.REPLACE_SELF}
+		<Button variant={ButtonStyleType.DESTRUCTIVE} on:click={() => removeAction(i)}>Remove Action</Button>
+
+		<SettingComponent name="Replacement Text" description="The text to replace the match with."></SettingComponent>
+		<div class="meta-bind-full-width meta-bind-high">
+			<textarea bind:value={action.replacement}></textarea>
+		</div>
+	{/if}
+
+	{#if action.type === ButtonActionType.INSERT_INTO_NOTE}
+		<Button variant={ButtonStyleType.DESTRUCTIVE} on:click={() => removeAction(i)}>Remove Action</Button>
+
+		<SettingComponent name="Line" description="The line number to insert at.">
+			<input type="number" bind:value={action.line} placeholder="0" />
+		</SettingComponent>
+
+		<SettingComponent name="Text to Insert" description="The text to insert into the note."></SettingComponent>
+		<div class="meta-bind-full-width meta-bind-high">
+			<textarea bind:value={action.value}></textarea>
+		</div>
 	{/if}
 {/each}
 
