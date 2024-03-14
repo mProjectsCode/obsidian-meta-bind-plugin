@@ -12,9 +12,18 @@ import { ModalContent } from 'packages/core/src/modals/ModalContent';
 import { IModal } from 'packages/core/src/modals/IModal';
 import { SelectModalContent } from 'packages/core/src/modals/SelectModalContent';
 import { ContextMenuItemDefinition, IContextMenu } from 'packages/core/src/utils/IContextMenu';
-import { undefined } from 'zod';
+import { TestFileSystem } from 'tests/__mocks__/TestFileSystem';
+import YAML from 'yaml';
 
 export class TestInternalAPI extends InternalAPI<TestPlugin> {
+	fileSystem: TestFileSystem;
+
+	constructor(plugin: TestPlugin) {
+		super(plugin);
+
+		this.fileSystem = new TestFileSystem();
+	}
+
 	public async renderMarkdown(markdown: string, element: HTMLElement, _filePath: string): Promise<() => void> {
 		element.innerText += markdown;
 		return () => {};
@@ -53,12 +62,12 @@ export class TestInternalAPI extends InternalAPI<TestPlugin> {
 
 	public showNotice(_: string): void {}
 
-	public parseYaml(_yaml: string): unknown {
-		return {};
+	public parseYaml(yaml: string): unknown {
+		return YAML.parse(yaml) as unknown;
 	}
 
-	public stringifyYaml(_yaml: unknown): string {
-		return '';
+	public stringifyYaml(yaml: unknown): string {
+		return YAML.stringify(yaml);
 	}
 
 	public setIcon(_element: HTMLElement, _icon: string): void {}
@@ -84,11 +93,11 @@ export class TestInternalAPI extends InternalAPI<TestPlugin> {
 	}
 
 	public getAllFiles(): string[] {
-		return [];
+		return this.fileSystem.listFiles();
 	}
 
 	public getAllFolders(): string[] {
-		return [];
+		return this.fileSystem.listDirs();
 	}
 
 	public getImageSuggesterOptions(_inputField: ImageSuggesterIPF): SuggesterOption<string>[] {
@@ -99,16 +108,18 @@ export class TestInternalAPI extends InternalAPI<TestPlugin> {
 		return [];
 	}
 
-	public readFilePath(_filePath: string): Promise<string> {
-		return Promise.resolve('');
+	public async readFilePath(filePath: string): Promise<string> {
+		return this.fileSystem.readFile(filePath);
 	}
 
-	public writeFilePath(_filePath: string, _content: string): Promise<void> {
-		return Promise.resolve();
+	public async writeFilePath(filePath: string, content: string): Promise<void> {
+		this.fileSystem.writeFile(filePath, content);
 	}
 
-	public createFile(_folderPath: string, _fileName: string, _extension: string, _open?: boolean): Promise<string> {
-		return Promise.resolve('');
+	public async createFile(folderPath: string, fileName: string, extension: string, _open?: boolean): Promise<string> {
+		const filePath = `${folderPath}/${fileName}.${extension}`;
+		this.fileSystem.writeFile(filePath, '');
+		return filePath;
 	}
 
 	public createContextMenu(_items: ContextMenuItemDefinition[]): IContextMenu {

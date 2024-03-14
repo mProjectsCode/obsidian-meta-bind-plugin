@@ -154,7 +154,7 @@ export class ButtonActionRunner {
 	 * @param position the position of the button in the note
 	 */
 	async runAction(
-		config: ButtonConfig,
+		config: ButtonConfig | undefined,
 		action: ButtonAction,
 		filePath: string,
 		inline: boolean,
@@ -207,7 +207,7 @@ export class ButtonActionRunner {
 		this.plugin.internal.executeCommandById(action.command);
 	}
 
-	async runJSAction(config: ButtonConfig, action: JSButtonAction, filePath: string): Promise<void> {
+	async runJSAction(config: ButtonConfig | undefined, action: JSButtonAction, filePath: string): Promise<void> {
 		const configOverrides: Record<string, unknown> = {
 			buttonConfig: config,
 			args: action.args,

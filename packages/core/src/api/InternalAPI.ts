@@ -223,6 +223,17 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 
 	abstract writeFilePath(filePath: string, content: string): Promise<void>;
 
+	/**
+	 * Create a file in the given folder with the given name and extension.
+	 * If the name is already taken, a number will be appended to the name.
+	 *
+	 * @param folderPath the path to the folder
+	 * @param fileName the name of the file
+	 * @param extension the extension of the file
+	 * @param open
+	 *
+	 * @returns the path to the created file
+	 */
 	abstract createFile(folderPath: string, fileName: string, extension: string, open?: boolean): Promise<string>;
 
 	abstract createContextMenu(items: ContextMenuItemDefinition[]): IContextMenu;
