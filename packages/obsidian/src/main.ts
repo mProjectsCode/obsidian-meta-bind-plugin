@@ -72,6 +72,11 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				pluginId: 'js-engine',
 				minVersion: new Version(0, 1, 0),
 			},
+			{
+				name: 'Templater',
+				pluginId: 'templater-obsidian',
+				minVersion: new Version(2, 2, 3),
+			},
 		]);
 		if (this.dependencyManager.checkDependenciesOnStartup()) {
 			return;

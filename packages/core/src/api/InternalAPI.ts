@@ -238,6 +238,15 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 
 	abstract createContextMenu(items: ContextMenuItemDefinition[]): IContextMenu;
 
+	abstract evaluateTemplaterTemplate(templateFilePath: string, targetFilePath: string): Promise<string>;
+
+	abstract createNoteWithTemplater(
+		templateFilePath: string,
+		folderPath?: string,
+		fileName?: string,
+		openNote?: boolean,
+	): Promise<string | undefined>;
+
 	openCommandSelectModal(selectCallback: (selected: Command) => void): void {
 		this.createSearchModal(new CommandSelectModal(this.plugin, selectCallback)).open();
 	}

@@ -9,7 +9,6 @@ import { type UnvalidatedViewFieldDeclaration } from 'packages/core/src/parsers/
 import { getUUID } from 'packages/core/src/utils/Utils';
 import { validateArgs } from 'packages/core/src/utils/ZodUtils';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import { ObsidianButtonActionRunner } from 'packages/obsidian/src/ObsidianButtonActionRunner';
 import { MarkdownRenderChildWidget } from 'packages/obsidian/src/cm6/Cm6_Widgets';
 import { FieldMDRC } from 'packages/obsidian/src/FieldMDRC';
 import { type FieldBase } from 'packages/core/src/fields/FieldBase';
@@ -24,9 +23,7 @@ export interface ComponentLike {
  */
 export class ObsidianAPI extends API<MetaBindPlugin> {
 	constructor(plugin: MetaBindPlugin) {
-		super(plugin, {
-			buttonActionRunner: new ObsidianButtonActionRunner(plugin),
-		});
+		super(plugin);
 	}
 
 	public wrapInMDRC(field: FieldBase, containerEl: HTMLElement, component: ComponentLike): FieldMDRC {

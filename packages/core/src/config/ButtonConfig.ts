@@ -74,11 +74,13 @@ export interface ReplaceInNoteButtonAction {
 	fromLine: number;
 	toLine: number;
 	replacement: string;
+	templater?: boolean;
 }
 
 export interface ReplaceSelfButtonAction {
 	type: ButtonActionType.REPLACE_SELF;
 	replacement: string;
+	templater?: boolean;
 }
 
 export interface RegexpReplaceInNoteButtonAction {
@@ -91,6 +93,7 @@ export interface InsertIntoNoteButtonAction {
 	type: ButtonActionType.INSERT_INTO_NOTE;
 	line: number;
 	value: string;
+	templater?: boolean;
 }
 
 export type ButtonAction =

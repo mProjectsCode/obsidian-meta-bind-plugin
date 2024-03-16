@@ -89,6 +89,7 @@ export const V_ReplaceInNoteButtonAction = schemaForType<ReplaceInNoteButtonActi
 		fromLine: z.number(),
 		toLine: z.number(),
 		replacement: z.string(),
+		templater: z.boolean().optional(),
 	}),
 );
 
@@ -96,6 +97,7 @@ export const V_ReplaceSelfButtonAction = schemaForType<ReplaceSelfButtonAction>(
 	z.object({
 		type: z.literal(ButtonActionType.REPLACE_SELF),
 		replacement: z.string(),
+		templater: z.boolean().optional(),
 	}),
 );
 
@@ -112,6 +114,7 @@ export const V_InsertIntoNoteButtonAction = schemaForType<InsertIntoNoteButtonAc
 		type: z.literal(ButtonActionType.INSERT_INTO_NOTE),
 		line: z.number(),
 		value: z.string(),
+		templater: z.boolean().optional(),
 	}),
 );
 

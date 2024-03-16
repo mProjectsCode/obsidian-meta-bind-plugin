@@ -18,7 +18,7 @@ import {
 } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
 import { type IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
 import { type MBLiteral } from 'packages/core/src/utils/Literal';
-import { getJsEnginePluginAPI } from 'packages/obsidian/src/ObsUtils';
+import { getJsEnginePluginAPI, getTemplaterPluginAPI, Templater_RunMode } from 'packages/obsidian/src/ObsUtils';
 import { ObsidianJsRenderer } from 'packages/obsidian/src/ObsidianJsRenderer';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 import { type ModalContent } from 'packages/core/src/modals/ModalContent';
@@ -219,5 +219,59 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 		}
 
 		return newFile.path;
+	}
+
+	public async evaluateTemplaterTemplate(templateFilePath: string, targetFilePath: string): Promise<string> {
+		const templaterAPI = getTemplaterPluginAPI(this.plugin);
+
+		const templateFile = this.app.vault.getAbstractFileByPath(templateFilePath);
+		if (!templateFile || !(templateFile instanceof TFile)) {
+			throw new Error(`Template file not found: ${templateFilePath}`);
+		}
+
+		const targetFile = this.app.vault.getAbstractFileByPath(targetFilePath);
+		if (!targetFile || !(targetFile instanceof TFile)) {
+			throw new Error(`Target file not found: ${targetFilePath}`);
+		}
+
+		const runningConfig = templaterAPI.create_running_config(
+			templateFile,
+			targetFile,
+			Templater_RunMode.DynamicProcessor,
+		);
+
+		return await templaterAPI.read_and_parse_template(runningConfig);
+	}
+
+	public async createNoteWithTemplater(
+		templateFilePath: string,
+		folderPath?: string,
+		fileName?: string,
+		openNote?: boolean,
+	): Promise<string | undefined> {
+		const templaterAPI = getTemplaterPluginAPI(this.plugin);
+
+		const templateFile = this.app.vault.getAbstractFileByPath(templateFilePath);
+		if (!templateFile || !(templateFile instanceof TFile)) {
+			throw new Error(`Template file not found: ${templateFilePath}`);
+		}
+
+		let folder: TFolder | undefined;
+
+		if (folderPath !== undefined) {
+			const folderTFile = this.app.vault.getAbstractFileByPath(folderPath);
+			if (!folderTFile || !(folderTFile instanceof TFolder)) {
+				throw new Error(`Folder not found: ${folderPath}`);
+			}
+			folder = folderTFile;
+		}
+
+		const newFile = await templaterAPI.create_new_note_from_template(
+			templateFile,
+			folder,
+			fileName,
+			openNote ?? true,
+		);
+		return newFile?.path;
 	}
 }

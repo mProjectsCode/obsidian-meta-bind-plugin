@@ -237,8 +237,8 @@ export class ButtonActionRunner {
 		await new Promise(resolve => setTimeout(resolve, action.ms));
 	}
 
-	async runTemplaterCreateNoteAction(_action: TemplaterCreateNoteButtonAction): Promise<void> {
-		throw new Error('Not supported');
+	async runTemplaterCreateNoteAction(action: TemplaterCreateNoteButtonAction): Promise<void> {
+		await this.plugin.internal.createNoteWithTemplater(action.templateFile, action.folderPath, action.fileName);
 	}
 
 	async runUpdateMetadataAction(action: UpdateMetadataButtonAction, filePath: string): Promise<void> {
@@ -259,13 +259,17 @@ export class ButtonActionRunner {
 	}
 
 	async runReplaceInNoteAction(action: ReplaceInNoteButtonAction, filePath: string): Promise<void> {
+		const replacement = action.templater
+			? await this.plugin.internal.evaluateTemplaterTemplate(action.replacement, filePath)
+			: action.replacement;
+
 		const content = await this.plugin.internal.readFilePath(filePath);
 
 		let splitContent = content.split('\n');
 
 		splitContent = [
 			...splitContent.slice(0, action.fromLine - 1),
-			action.replacement,
+			replacement,
 			...splitContent.slice(action.toLine),
 		];
 
@@ -286,13 +290,17 @@ export class ButtonActionRunner {
 			throw new Error('Position of the button in the note is unknown');
 		}
 
+		const replacement = action.templater
+			? await this.plugin.internal.evaluateTemplaterTemplate(action.replacement, filePath)
+			: action.replacement;
+
 		const content = await this.plugin.internal.readFilePath(filePath);
 
 		let splitContent = content.split('\n');
 
 		splitContent = [
 			...splitContent.slice(0, position.lineStart),
-			action.replacement,
+			replacement,
 			...splitContent.slice(position.lineEnd + 1),
 		];
 
@@ -316,11 +324,11 @@ export class ButtonActionRunner {
 
 		let splitContent = content.split('\n');
 
-		splitContent = [
-			...splitContent.slice(0, action.line - 1),
-			action.value,
-			...splitContent.slice(action.line - 1),
-		];
+		const replacement = action.templater
+			? await this.plugin.internal.evaluateTemplaterTemplate(action.value, filePath)
+			: action.value;
+
+		splitContent = [...splitContent.slice(0, action.line - 1), replacement, ...splitContent.slice(action.line - 1)];
 
 		await this.plugin.internal.writeFilePath(filePath, splitContent.join('\n'));
 	}

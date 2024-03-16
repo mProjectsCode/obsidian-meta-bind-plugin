@@ -125,4 +125,17 @@ export class TestInternalAPI extends InternalAPI<TestPlugin> {
 	public createContextMenu(_items: ContextMenuItemDefinition[]): IContextMenu {
 		throw new Error('not implemented');
 	}
+
+	public evaluateTemplaterTemplate(_templateFilePath: string, _targetFilePath: string): Promise<string> {
+		return Promise.resolve('');
+	}
+
+	public async createNoteWithTemplater(
+		_templateFilePath: string,
+		folderPath?: string,
+		fileName?: string,
+		openNote?: boolean,
+	): Promise<string | undefined> {
+		return await this.createFile(folderPath ?? '', fileName ?? 'unnamed', 'md', openNote);
+	}
 }

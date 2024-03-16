@@ -116,4 +116,17 @@ export class PublishInternalAPI extends InternalAPI<MetaBindPublishPlugin> {
 	public createContextMenu(_items: ContextMenuItemDefinition[]): IContextMenu {
 		throw new Error('not implemented');
 	}
+
+	public createNoteWithTemplater(
+		_templateFilePath: string,
+		_folderPath?: string,
+		_fileName?: string,
+		_openNote?: boolean,
+	): Promise<string | undefined> {
+		throw new Error('not implemented');
+	}
+
+	public evaluateTemplaterTemplate(_templateFilePath: string, _targetFilePath: string): Promise<string> {
+		throw new Error('not implemented');
+	}
 }

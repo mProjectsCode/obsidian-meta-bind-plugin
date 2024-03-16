@@ -74,7 +74,7 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 					fileName: 'fileName',
 					openNote: false,
 				});
-			}).toThrow('Not supported');
+			}).not.toThrow();
 		});
 	},
 	[ButtonActionType.UPDATE_METADATA]: () => {
