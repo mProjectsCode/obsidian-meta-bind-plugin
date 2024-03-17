@@ -10,6 +10,8 @@ export class ExcludedBase extends FieldBase {
 	protected onMount(targetEl: HTMLElement): void {
 		console.log('meta-bind | ExcludedBase >> mount');
 
+		DomHelpers.empty(targetEl);
+
 		DomHelpers.createElement(targetEl, 'span', {
 			text: '[META_BIND] This folder has been excluded in the settings',
 			class: 'mb-error',

@@ -51,6 +51,7 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 
 	public async renderMarkdown(markdown: string, element: HTMLElement, filePath: string): Promise<() => void> {
 		const component = new Component();
+		component.load();
 		await MarkdownRenderer.render(this.app, markdown, element, filePath, component);
 		return () => component.unload();
 	}

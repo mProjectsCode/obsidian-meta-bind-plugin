@@ -181,8 +181,6 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 					continue;
 				}
 
-				console.log(ctx.getSectionInfo(codeBlock));
-
 				// console.log(content, ctx.getSectionInfo(codeBlock)?.lineStart, ctx.getSectionInfo(codeBlock)?.lineEnd);
 				const base = this.api.createInlineFieldOfTypeFromString(fieldType, content, filePath, undefined);
 				this.api.wrapInMDRC(base, codeBlock, ctx);
