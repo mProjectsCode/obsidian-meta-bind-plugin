@@ -247,7 +247,9 @@ export class DomHelpers {
 	}
 
 	static empty(el: HTMLElement): void {
-		el.innerHTML = '';
+		while (el.lastChild) {
+			el.removeChild(el.lastChild);
+		}
 	}
 }
 

@@ -41,6 +41,21 @@ import { Signal } from 'packages/core/src/utils/Signal';
 import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
 import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { type MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
+import {
+	V_BindTargetDeclaration,
+	V_BindTargetScope,
+	V_ButtonOptions,
+	V_EmbedOptions,
+	V_FieldType,
+	V_FilePath,
+	V_InlineButtonOptions,
+	V_InputFieldOptions,
+	V_JsViewFieldOptions,
+	V_RenderChildType,
+	V_ViewFieldOptions,
+} from 'packages/core/src/api/Validators';
+import { validate } from 'packages/core/src/utils/ZodUtils';
+import { z } from 'zod';
 
 export enum FieldType {
 	INPUT_FIELD = 'INPUT_FIELD',
@@ -55,13 +70,13 @@ export enum FieldType {
 export interface InputFieldOptions {
 	renderChildType: RenderChildType;
 	declaration: SimpleInputFieldDeclaration | string;
-	scope: BindTargetScope | undefined;
+	scope?: BindTargetScope | undefined;
 }
 
 export interface ViewFieldOptions {
 	renderChildType: RenderChildType;
 	declaration: SimpleViewFieldDeclaration | string;
-	scope: BindTargetScope | undefined;
+	scope?: BindTargetScope | undefined;
 }
 
 export interface JsViewFieldOptions {
@@ -74,7 +89,7 @@ export interface InlineButtonOptions {
 
 export interface ButtonOptions {
 	declaration: ButtonConfig | string;
-	position: NotePosition | undefined;
+	position?: NotePosition | undefined;
 	isPreview: boolean;
 }
 
@@ -166,6 +181,21 @@ export abstract class API<Plugin extends IPlugin> {
 		options: FieldOptionMap[Type],
 		honorExcludedSetting: boolean = true,
 	): FieldBase {
+		validate(
+			z.object({
+				type: V_FieldType,
+				filePath: V_FilePath,
+				options: z.any(),
+				honorExcludedSetting: z.boolean(),
+			}),
+			{
+				type: type,
+				filePath: filePath,
+				options: options,
+				honorExcludedSetting: honorExcludedSetting,
+			},
+		);
+
 		if (this.plugin.internal.isFilePathExcluded(filePath) && honorExcludedSetting) {
 			return this.createExcludedBase(filePath);
 		}
@@ -209,6 +239,23 @@ export abstract class API<Plugin extends IPlugin> {
 		renderChildType: RenderChildType = RenderChildType.INLINE,
 		honorExcludedSetting: boolean = true,
 	): FieldBase {
+		validate(
+			z.object({
+				fieldString: z.string(),
+				filePath: V_FilePath,
+				scope: V_BindTargetScope.optional(),
+				renderChildType: V_RenderChildType,
+				honorExcludedSetting: z.boolean(),
+			}),
+			{
+				fieldString: fieldString,
+				filePath: filePath,
+				scope: scope,
+				renderChildType: renderChildType,
+				honorExcludedSetting: honorExcludedSetting,
+			},
+		);
+
 		const fieldType = this.isInlineFieldDeclarationAndGetType(fieldString);
 		if (fieldType === undefined) {
 			throw new MetaBindInternalError({
@@ -247,6 +294,25 @@ export abstract class API<Plugin extends IPlugin> {
 		renderChildType: RenderChildType = RenderChildType.INLINE,
 		honorExcludedSetting: boolean = true,
 	): FieldBase {
+		validate(
+			z.object({
+				type: V_FieldType,
+				declaration: z.string(),
+				filePath: V_FilePath,
+				scope: V_BindTargetScope.optional(),
+				renderChildType: V_RenderChildType,
+				honorExcludedSetting: z.boolean(),
+			}),
+			{
+				type: type,
+				declaration: declaration,
+				filePath: filePath,
+				scope: scope,
+				renderChildType: renderChildType,
+				honorExcludedSetting: honorExcludedSetting,
+			},
+		);
+
 		if (this.plugin.internal.isFilePathExcluded(filePath) && honorExcludedSetting) {
 			return this.createExcludedBase(filePath);
 		}
@@ -281,6 +347,17 @@ export abstract class API<Plugin extends IPlugin> {
 	}
 
 	public createInputFieldBase(filePath: string, options: InputFieldOptions): InputFieldBase {
+		validate(
+			z.object({
+				filePath: V_FilePath,
+				options: V_InputFieldOptions,
+			}),
+			{
+				filePath: filePath,
+				options: options,
+			},
+		);
+
 		const uuid = getUUID();
 
 		let declaration: InputFieldDeclaration;
@@ -298,6 +375,17 @@ export abstract class API<Plugin extends IPlugin> {
 	}
 
 	public createViewFieldBase(filePath: string, options: ViewFieldOptions): ViewFieldBase {
+		validate(
+			z.object({
+				filePath: V_FilePath,
+				options: V_ViewFieldOptions,
+			}),
+			{
+				filePath: filePath,
+				options: options,
+			},
+		);
+
 		const uuid = getUUID();
 
 		let declaration: ViewFieldDeclaration;
@@ -315,6 +403,17 @@ export abstract class API<Plugin extends IPlugin> {
 	}
 
 	public createJsViewFieldBase(filePath: string, options: JsViewFieldOptions): JsViewField {
+		validate(
+			z.object({
+				filePath: V_FilePath,
+				options: V_JsViewFieldOptions,
+			}),
+			{
+				filePath: filePath,
+				options: options,
+			},
+		);
+
 		const uuid = getUUID();
 
 		let declaration: JsViewFieldDeclaration;
@@ -328,6 +427,17 @@ export abstract class API<Plugin extends IPlugin> {
 	}
 
 	public createInlineButtonBase(filePath: string, options: InlineButtonOptions): InlineButtonBase {
+		validate(
+			z.object({
+				filePath: V_FilePath,
+				options: V_InlineButtonOptions,
+			}),
+			{
+				filePath: filePath,
+				options: options,
+			},
+		);
+
 		const uuid = getUUID();
 
 		let declaration: InlineButtonDeclaration;
@@ -341,6 +451,17 @@ export abstract class API<Plugin extends IPlugin> {
 	}
 
 	public createButtonBase(filePath: string, options: ButtonOptions): ButtonBase {
+		validate(
+			z.object({
+				filePath: V_FilePath,
+				options: V_ButtonOptions,
+			}),
+			{
+				filePath: filePath,
+				options: options,
+			},
+		);
+
 		const uuid = getUUID();
 
 		let declaration: ButtonDeclaration;
@@ -354,11 +475,31 @@ export abstract class API<Plugin extends IPlugin> {
 	}
 
 	public createEmbedBase(filePath: string, options: EmbedOptions): EmbedBase {
+		validate(
+			z.object({
+				filePath: V_FilePath,
+				options: V_EmbedOptions,
+			}),
+			{
+				filePath: filePath,
+				options: options,
+			},
+		);
+
 		const uuid = getUUID();
 		return new EmbedBase(this.plugin, uuid, filePath, options.depth, options.content);
 	}
 
 	public createExcludedBase(filePath: string): ExcludedBase {
+		validate(
+			z.object({
+				filePath: V_FilePath,
+			}),
+			{
+				filePath: filePath,
+			},
+		);
+
 		const uuid = getUUID();
 		return new ExcludedBase(this.plugin, uuid, filePath);
 	}
@@ -369,6 +510,15 @@ export abstract class API<Plugin extends IPlugin> {
 	 * @param fieldType
 	 */
 	public getInlineFieldDeclarationPrefix(fieldType: FieldType): string {
+		validate(
+			z.object({
+				fieldType: V_FieldType,
+			}),
+			{
+				fieldType: fieldType,
+			},
+		);
+
 		if (fieldType === FieldType.INPUT_FIELD) {
 			return 'INPUT';
 		} else if (fieldType === FieldType.VIEW_FIELD) {
@@ -391,6 +541,17 @@ export abstract class API<Plugin extends IPlugin> {
 	 * @param str
 	 */
 	public isInlineFieldDeclaration(fieldType: FieldType, str: string): boolean {
+		validate(
+			z.object({
+				fieldType: V_FieldType,
+				str: z.string(),
+			}),
+			{
+				fieldType: fieldType,
+				str: str,
+			},
+		);
+
 		const startStr: string = this.getInlineFieldDeclarationPrefix(fieldType) + '[';
 		const endStr: string = ']';
 
@@ -404,6 +565,15 @@ export abstract class API<Plugin extends IPlugin> {
 	 * @param str
 	 */
 	public isInlineFieldDeclarationAndGetType(str: string): InlineFieldType | undefined {
+		validate(
+			z.object({
+				str: z.string(),
+			}),
+			{
+				str: str,
+			},
+		);
+
 		if (!str.endsWith(']')) {
 			return undefined;
 		}
@@ -426,20 +596,68 @@ export abstract class API<Plugin extends IPlugin> {
 	}
 
 	/**
-	 * Sets a property in meta binds metadata cache.
+	 * Creates a bind target declaration.
 	 *
-	 * @param storageType
-	 * @param storagePath
+	 * @param storageType the storage type (also named metadata source sometimes)
+	 * @param storagePath the storage path (usually the file path)
 	 * @param property the property path a.b.c = ['a', 'b', 'c']
-	 * @param value
+	 * @param listenToChildren whether to listen to children, only relevant for arrays and objects
 	 */
-	public setMetadata(storageType: string, storagePath: string, property: string[], value: unknown): void {
-		this.plugin.metadataManager.write(value, {
+	public createBindTarget(
+		storageType: string,
+		storagePath: string,
+		property: string[],
+		listenToChildren: boolean = false,
+	): BindTargetDeclaration {
+		validate(
+			z.object({
+				storageType: z.string(),
+				storagePath: z.string(),
+				property: z.string().array(),
+				listenToChildren: z.boolean(),
+			}),
+			{
+				storageType: storageType,
+				storagePath: storagePath,
+				property: property,
+				listenToChildren: listenToChildren,
+			},
+		);
+
+		return {
 			storageType: storageType,
 			storagePath: storagePath,
 			storageProp: parsePropPath(property),
-			listenToChildren: false,
-		});
+			listenToChildren: listenToChildren,
+		};
+	}
+
+	/**
+	 * Parses a bind target declaration from a string.
+	 *
+	 * @param declarationString the string to parse
+	 * @param filePath the file path that this bind target is relative to
+	 * @param scope optional bind target scope
+	 */
+	public parseBindTarget(
+		declarationString: string,
+		filePath: string,
+		scope?: BindTargetScope,
+	): BindTargetDeclaration {
+		validate(
+			z.object({
+				declarationString: z.string(),
+				filePath: V_FilePath,
+				scope: V_BindTargetScope.optional(),
+			}),
+			{
+				declarationString: declarationString,
+				filePath: filePath,
+				scope: scope,
+			},
+		);
+
+		return this.bindTargetParser.fromStringAndValidate(declarationString, filePath, scope);
 	}
 
 	/**
@@ -448,73 +666,55 @@ export abstract class API<Plugin extends IPlugin> {
 	 * @param bindTarget
 	 * @param value
 	 */
-	public setMetadataWithBindTarget(bindTarget: BindTargetDeclaration, value: unknown): void {
+	public setMetadata(bindTarget: BindTargetDeclaration, value: unknown): void {
+		validate(
+			z.object({
+				bindTarget: V_BindTargetDeclaration,
+			}),
+			{
+				bindTarget: bindTarget,
+			},
+		);
+
 		this.plugin.metadataManager.write(value, bindTarget);
 	}
-
-	/**
-	 * Reads a property from meta binds metadata cache.
-	 * If the value is not present in the cache, it will check the underlying source. E.g. Obsidians metadata cache.
-	 *
-	 * @param storageType
-	 * @param storagePath
-	 * @param property the property path a.b.c = ['a', 'b', 'c']
-	 */
-	public getMetadata(storageType: string, storagePath: string, property: string[]): unknown {
-		return this.plugin.metadataManager.read({
-			storageType: storageType,
-			storagePath: storagePath,
-			storageProp: parsePropPath(property),
-			listenToChildren: false,
-		});
-	}
-
 	/**
 	 * Reads a property from meta binds metadata cache.
 	 * If the value is not present in the cache, it will check the underlying source. E.g. Obsidians metadata cache.
 	 *
 	 * @param bindTarget
 	 */
-	public getMetadataWithBindTarget(bindTarget: BindTargetDeclaration): unknown {
+	public getMetadata(bindTarget: BindTargetDeclaration): unknown {
+		validate(
+			z.object({
+				bindTarget: V_BindTargetDeclaration,
+			}),
+			{
+				bindTarget: bindTarget,
+			},
+		);
+
 		return this.plugin.metadataManager.read(bindTarget);
 	}
 
 	/**
 	 * Updates a property in meta binds metadata cache.
 	 *
-	 * @param storageType
-	 * @param storagePath
-	 * @param property the property path a.b.c = ['a', 'b', 'c']
-	 * @param updateFn a function that takes the current value and returns the new value
-	 */
-	public updateMetadata(
-		storageType: string,
-		storagePath: string,
-		property: string[],
-		updateFn: (value: unknown) => unknown,
-	): void {
-		const bindTarget: BindTargetDeclaration = {
-			storageType: storageType,
-			storagePath: storagePath,
-			storageProp: parsePropPath(property),
-			listenToChildren: false,
-		};
-
-		const value = this.plugin.metadataManager.read(bindTarget);
-		const newValue = updateFn(value);
-		this.plugin.metadataManager.write(newValue, bindTarget);
-	}
-
-	/**
-	 * Updates a property in meta binds metadata cache.
-	 *
 	 * @param bindTarget
 	 * @param updateFn a function that takes the current value and returns the new value
 	 */
-	public updateMetadataWithBindTarget(
-		bindTarget: BindTargetDeclaration,
-		updateFn: (value: unknown) => unknown,
-	): void {
+	public updateMetadata(bindTarget: BindTargetDeclaration, updateFn: (value: unknown) => unknown): void {
+		validate(
+			z.object({
+				bindTarget: V_BindTargetDeclaration,
+				updateFn: z.function().args(z.any()).returns(z.any()),
+			}),
+			{
+				bindTarget: bindTarget,
+				updateFn: updateFn,
+			},
+		);
+
 		const value = this.plugin.metadataManager.read(bindTarget);
 		const newValue = updateFn(value);
 		this.plugin.metadataManager.write(newValue, bindTarget);
@@ -525,53 +725,24 @@ export abstract class API<Plugin extends IPlugin> {
 	 * This returns a subscription that can be used to unsubscribe as well as update the cache.
 	 * IF YOU DON'T CALL `unsubscribe` THE SUBSCRIPTION WILL LEAK MEMORY.
 	 *
-	 * @param storageType
-	 * @param storagePath
-	 * @param property the property path a.b.c = ['a', 'b', 'c']
-	 * @param listenToChildren
+	 * @param bindTarget
 	 * @param callback
 	 */
 	public subscribeToMetadata(
-		storageType: string,
-		storagePath: string,
-		property: string[],
-		listenToChildren: boolean,
-		callback: (value: unknown) => void,
-	): MetadataSubscription {
-		const uuid = getUUID();
-		const signal = new Signal<unknown>(undefined);
-
-		signal.registerListener({
-			callback: callback,
-		});
-
-		return this.plugin.metadataManager.subscribe(
-			uuid,
-			signal,
-			{
-				storageType: storageType,
-				storagePath: storagePath,
-				storageProp: parsePropPath(property),
-				listenToChildren: listenToChildren,
-			},
-			(): void => {
-				signal.unregisterAllListeners();
-			},
-		);
-	}
-
-	/**
-	 * Subscribes to a property in meta binds metadata cache.
-	 * This returns a subscription that can be used to unsubscribe as well as update the cache.
-	 * IF YOU DON'T CALL `unsubscribe` THE SUBSCRIPTION WILL LEAK MEMORY.
-	 *
-	 * @param bindTarget
-	 * @param callback
-	 */
-	public subscribeToMetadataWithBindTarget(
 		bindTarget: BindTargetDeclaration,
 		callback: (value: unknown) => void,
 	): MetadataSubscription {
+		validate(
+			z.object({
+				bindTarget: V_BindTargetDeclaration,
+				callback: z.function().args(z.any()).returns(z.void()),
+			}),
+			{
+				bindTarget: bindTarget,
+				callback: callback,
+			},
+		);
+
 		const uuid = getUUID();
 		const signal = new Signal<unknown>(undefined);
 

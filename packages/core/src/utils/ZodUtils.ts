@@ -43,3 +43,15 @@ export function validateArgs<T extends Tuple<unknown>>(validator: z.ZodTuple<Zod
 		});
 	}
 }
+
+export function validate<T>(validator: z.ZodType<T>, args: T): void {
+	const result = validator.safeParse(args);
+
+	if (!result.success) {
+		throw new MetaBindInternalError({
+			errorLevel: ErrorLevel.CRITICAL,
+			effect: 'invalid arguments supplied to function',
+			cause: fromZodError(result.error),
+		});
+	}
+}

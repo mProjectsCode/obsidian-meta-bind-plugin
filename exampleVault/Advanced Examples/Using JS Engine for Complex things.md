@@ -10,7 +10,7 @@ const mb = engine.getPlugin('obsidian-meta-bind-plugin').api;
 const comp = new obsidian.Component(component);
 
 // create a bind target to the property that we care about
-const bindTarget = mb.bindTargetParser.fromStringAndValidate('locked', context.file.path);
+const bindTarget = mb.parseBindTarget('locked', context.file.path);
 
 // the render function, it takes the locked value as the argument
 function render(value) {
@@ -34,10 +34,10 @@ function render(value) {
 }
 
 // we create a reactive component from the render function and the initial value will be the value of the bind target
-const reactive = engine.reactive(render, mb.getMetadataWithBindTarget(bindTarget));
+const reactive = engine.reactive(render, mb.getMetadata(bindTarget));
 
 // then we subscribe to the metadata that the bind target points to and rerender the reactive component everythime the bind target value changes
-const subscription = mb.subscribeToMetadataWithBindTarget(
+const subscription = mb.subscribeToMetadata(
 	bindTarget,
 	(value) => reactive.refresh(value)
 );
@@ -51,17 +51,16 @@ return reactive;
 ```js-engine
 const mb = engine.getPlugin('obsidian-meta-bind-plugin').api;
 
+const bindTarget = mb.parseBindTarget('text', context.file.path);
+
 function onUpdate(value) {
 	return value.toString();
 }
 
-const reactive = engine.reactive(onUpdate, context.metadata.frontmatter.text);
+const reactive = engine.reactive(onUpdate, mb.getMetadata(bindTarget));
 
 const subscription = mb.subscribeToMetadata(
-	'frontmatter',
-	context.file.path, 
-	['text'], 
-	false, 
+	bindTarget,
 	(value) => reactive.refresh(value)
 );
 

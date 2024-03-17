@@ -248,9 +248,9 @@ export class ButtonActionRunner {
 			// eslint-disable-next-line @typescript-eslint/no-implied-eval
 			const func = new Function('x', `return ${action.value};`) as (value: unknown) => unknown;
 
-			this.plugin.api.updateMetadataWithBindTarget(bindTarget, func);
+			this.plugin.api.updateMetadata(bindTarget, func);
 		} else {
-			this.plugin.api.setMetadataWithBindTarget(bindTarget, parseLiteral(action.value));
+			this.plugin.api.setMetadata(bindTarget, parseLiteral(action.value));
 		}
 	}
 

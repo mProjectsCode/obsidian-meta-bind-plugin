@@ -1,6 +1,6 @@
 import { type Component } from 'obsidian';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
-import { V_API_createBindTarget, V_API_createTable } from 'packages/obsidian/src/APIValidators';
+import { V_API_createTable } from 'packages/obsidian/src/APIValidators';
 import { API, type FieldType, isFieldTypeAllowedInline } from 'packages/core/src/api/API.js';
 import { MetaBindTable } from 'packages/core/src/fields/metaBindTable/MetaBindTable';
 import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
@@ -58,12 +58,6 @@ export class ObsidianAPI extends API<MetaBindPlugin> {
 		component.addChild(mdrc);
 
 		return mdrc;
-	}
-
-	public createBindTarget(fullDeclaration: string, currentFilePath: string): BindTargetDeclaration {
-		validateArgs(V_API_createBindTarget, [fullDeclaration, currentFilePath]);
-
-		return this.bindTargetParser.fromStringAndValidate(fullDeclaration, currentFilePath);
 	}
 
 	/**
