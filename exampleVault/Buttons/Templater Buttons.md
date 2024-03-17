@@ -1,7 +1,3 @@
-Templater Buttons
-Templater Buttons
-Templater Buttons
-
 
 ```meta-bind-button
 label: Insert Text
@@ -11,8 +7,7 @@ tooltip: ""
 id: ""
 style: default
 action:
-  type: "insertIntoNote"
-  line: 1
-  value: "templates/templater/Templater Template.md"
+  type: "replaceSelf"
+  replacement: "templates/templater/Templater Template.md"
   templater: true
 ```

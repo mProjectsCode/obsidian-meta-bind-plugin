@@ -1,8 +1,8 @@
 ### Two buttons that replace the same text
 
-some
+other
 text
-wow
+tada
 
 ```meta-bind-button
 label: Replace in Note
