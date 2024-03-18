@@ -1,23 +1,38 @@
 import { type IPlugin } from 'packages/core/src/IPlugin';
 import { FieldBase } from 'packages/core/src/fields/FieldBase';
-import { InlineButtonField } from 'packages/core/src/fields/button/InlineButtonField';
+import { ButtonGroupField } from 'packages/core/src/fields/button/ButtonGroupField';
 import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
-import { type InlineButtonDeclaration } from 'packages/core/src/parsers/ButtonParser';
+import { type ButtonGroupDeclaration } from 'packages/core/src/parsers/ButtonParser';
+import { type RenderChildType } from 'packages/core/src/config/FieldConfigs';
+import { type NotePosition } from 'packages/core/src/api/API';
 
-export class InlineButtonBase extends FieldBase {
+export class ButtonGroupBase extends FieldBase {
 	errorCollection: ErrorCollection;
 
-	declaration: InlineButtonDeclaration;
-	buttonField: InlineButtonField | undefined;
+	declaration: ButtonGroupDeclaration;
+	buttonField: ButtonGroupField | undefined;
 
-	constructor(plugin: IPlugin, uuid: string, filePath: string, declaration: InlineButtonDeclaration) {
+	renderChildType: RenderChildType;
+	position: NotePosition | undefined;
+
+	constructor(
+		plugin: IPlugin,
+		uuid: string,
+		filePath: string,
+		declaration: ButtonGroupDeclaration,
+		renderChildType: RenderChildType,
+		position: NotePosition | undefined,
+	) {
 		super(plugin, uuid, filePath);
 
 		this.declaration = declaration;
 
 		this.errorCollection = new ErrorCollection(this.getUuid());
 		this.errorCollection.merge(declaration.errorCollection);
+
+		this.renderChildType = renderChildType;
+		this.position = position;
 	}
 
 	protected onMount(targetEl: HTMLElement): void {
@@ -37,7 +52,13 @@ export class InlineButtonBase extends FieldBase {
 			return;
 		}
 
-		this.buttonField = new InlineButtonField(this.plugin, this.declaration.referencedButtonIds, this.getFilePath());
+		this.buttonField = new ButtonGroupField(
+			this.plugin,
+			this.declaration.referencedButtonIds,
+			this.getFilePath(),
+			this.renderChildType,
+			this.position,
+		);
 		this.buttonField.mount(targetEl);
 	}
 

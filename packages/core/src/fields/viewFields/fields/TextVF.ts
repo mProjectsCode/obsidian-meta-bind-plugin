@@ -24,7 +24,7 @@ export class TextVF extends AbstractViewField {
 		let varCounter = 0;
 		this.variables = [];
 
-		for (const entry of this.base.getDeclaration().declarationArray ?? []) {
+		for (const entry of this.base.getDeclaration().templateDeclaration ?? []) {
 			if (typeof entry !== 'string') {
 				const variable: ViewFieldVariable = {
 					bindTargetDeclaration: entry,

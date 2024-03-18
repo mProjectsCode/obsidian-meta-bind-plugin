@@ -36,7 +36,7 @@ export class SyntaxHighlightingAPI {
 			return this.highlightInputFieldDeclaration(str, trimWhiteSpace);
 		} else if (mdrcType === FieldType.VIEW_FIELD) {
 			return this.highlightViewFieldDeclaration(str, trimWhiteSpace);
-		} else if (mdrcType === FieldType.INLINE_BUTTON) {
+		} else if (mdrcType === FieldType.BUTTON_GROUP) {
 			return this.highlightInlineButtonDeclaration(str, trimWhiteSpace);
 		}
 

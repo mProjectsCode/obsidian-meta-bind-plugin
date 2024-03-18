@@ -6,22 +6,16 @@ import {
 	type UnvalidatedBindTargetDeclaration,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
-import { type ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
-
-export interface FieldDeclaration {
-	declarationString?: string | undefined;
-	errorCollection: ErrorCollection;
-}
+import { type FieldDeclaration } from 'packages/core/src/parsers/FieldDeclaration';
+import {
+	type SimpleFieldArgument,
+	type UnvalidatedFieldArgument,
+} from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
 
 export interface InputFieldDeclaration extends FieldDeclaration {
 	inputFieldType: InputFieldType;
 	bindTarget: BindTargetDeclaration | undefined;
 	argumentContainer: InputFieldArgumentContainer;
-}
-
-export interface UnvalidatedFieldArgument {
-	name: ParsingResultNode;
-	value: ParsingResultNode[];
 }
 
 export interface PartialUnvalidatedInputFieldDeclaration {
@@ -32,11 +26,6 @@ export interface PartialUnvalidatedInputFieldDeclaration {
 }
 
 export interface UnvalidatedInputFieldDeclaration extends PartialUnvalidatedInputFieldDeclaration, FieldDeclaration {}
-
-export interface SimpleFieldArgument {
-	name: string;
-	value: string[];
-}
 
 export interface SimpleInputFieldDeclaration {
 	inputFieldType?: InputFieldType | undefined;

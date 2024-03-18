@@ -2,9 +2,8 @@ import { type ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
 import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
-import { type UnvalidatedFieldArgument } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
 
-export const ident: Parser<string> = P.sequence(
+export const P_Ident: Parser<string> = P.sequence(
 	P.or(P_UTILS.unicodeLetter(), P.oneOf('_$')),
 	P.or(P_UTILS.unicodeAlphanumeric(), P.oneOf('-_$')).many(),
 )
@@ -13,15 +12,15 @@ export const ident: Parser<string> = P.sequence(
 	})
 	.describe('identifier');
 
-export const identWithSpaces: Parser<string> = P.sequenceMap(
+export const P_IdentWithSpaces: Parser<string> = P.sequenceMap(
 	(a, b) => {
 		return a + b.map(x => x[0] + x[1]).join('');
 	},
-	ident,
-	P.sequence(P_UTILS.optionalWhitespace(), ident).many(),
+	P_Ident,
+	P.sequence(P_UTILS.optionalWhitespace(), P_Ident).many(),
 ).describe('identifier with spaces');
 
-export const escapeCharacter: Parser<string> = P.string('\\')
+export const P_EscapeCharacter: Parser<string> = P.string('\\')
 	.then(P_UTILS.any())
 	.map(escaped => {
 		if (escaped === "'") {
@@ -33,15 +32,17 @@ export const escapeCharacter: Parser<string> = P.string('\\')
 		}
 	});
 
-function stringParserFactory(quotes: string): Parser<string> {
-	return P.or(escapeCharacter, P.noneOf(quotes + '\\'))
+function createStringParser(quotes: string): Parser<string> {
+	return P.or(P_EscapeCharacter, P.noneOf(quotes + '\\'))
 		.many()
 		.map(x => x.join(''))
 		.trim(P.string(quotes));
 }
 
-export const singleQuotedString: Parser<string> = stringParserFactory("'");
-export const doubleQuotedString: Parser<string> = stringParserFactory('"');
+export const P_SingleQuotedString: Parser<string> = createStringParser("'");
+export const P_DoubleQuotedString: Parser<string> = createStringParser('"');
+
+export const P_FilePath: Parser<string> = P.manyNotOf('{}[]#^|:?').box('file path');
 
 export interface ParsingResultNode {
 	value: string;
@@ -54,35 +55,3 @@ export function createResultNode(value: string, range: ParsingRange): ParsingRes
 		position: range,
 	};
 }
-
-export const nonStringArgumentValue: Parser<string> = P.regexp(/^[^()',]+/).describe(
-	'any character except parentheses, single quotation marks and commas',
-);
-
-export const argumentValue: Parser<ParsingResultNode> = P.or(singleQuotedString, nonStringArgumentValue).node(
-	createResultNode,
-);
-
-export const argumentValues: Parser<ParsingResultNode[]> = P.separateBy(
-	argumentValue,
-	P.string(',').describe('argument value separator ","').trim(P_UTILS.optionalWhitespace()),
-);
-
-export const fieldArgument: Parser<UnvalidatedFieldArgument> = P.sequenceMap(
-	(name, value): UnvalidatedFieldArgument => {
-		return {
-			name: name,
-			value: value,
-		};
-	},
-	ident.node(createResultNode),
-	argumentValues
-		.trim(P_UTILS.optionalWhitespace())
-		.wrap(P.string('(').describe('argument value paren "("'), P.string(')').describe('argument value paren ")"'))
-		.optional([] as ParsingResultNode[]),
-);
-
-export const fieldArguments: Parser<UnvalidatedFieldArgument[]> = P.separateBy(
-	fieldArgument,
-	P.string(',').describe('argument separator ","').trim(P_UTILS.optionalWhitespace()),
-);

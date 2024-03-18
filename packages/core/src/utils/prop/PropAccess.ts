@@ -1,4 +1,4 @@
-export enum PROP_ACCESS_TYPE {
+export enum PropAccessType {
 	OBJECT = 'object',
 	ARRAY = 'array',
 }
@@ -26,14 +26,14 @@ function accessSet(obj: unknown, prop: string, value: unknown): void {
 }
 
 export class PropAccess {
-	type: PROP_ACCESS_TYPE;
+	type: PropAccessType;
 	prop: string;
 	index: number;
 
-	constructor(type: PROP_ACCESS_TYPE, prop: string) {
+	constructor(type: PropAccessType, prop: string) {
 		this.type = type;
-		this.prop = type === PROP_ACCESS_TYPE.OBJECT ? prop : '';
-		this.index = type === PROP_ACCESS_TYPE.ARRAY ? Number(prop) : 0;
+		this.prop = type === PropAccessType.OBJECT ? prop : '';
+		this.index = type === PropAccessType.ARRAY ? Number(prop) : 0;
 
 		if (Number.isNaN(this.index)) {
 			throw new Error('can not access array with non number index');
@@ -41,7 +41,7 @@ export class PropAccess {
 	}
 
 	get(obj: unknown): PropAccessResult {
-		if (this.type === PROP_ACCESS_TYPE.OBJECT) {
+		if (this.type === PropAccessType.OBJECT) {
 			if (typeof obj !== 'object' || obj == null) {
 				throw new Error('can not access property of non-object');
 			}
@@ -57,7 +57,7 @@ export class PropAccess {
 	}
 
 	set(obj: unknown, value: unknown): void {
-		if (this.type === PROP_ACCESS_TYPE.OBJECT) {
+		if (this.type === PropAccessType.OBJECT) {
 			if (typeof obj !== 'object' || obj == null) {
 				throw new Error('can not access property of non-object');
 			}
@@ -73,7 +73,7 @@ export class PropAccess {
 	}
 
 	create(obj: unknown): void {
-		if (this.type === PROP_ACCESS_TYPE.OBJECT) {
+		if (this.type === PropAccessType.OBJECT) {
 			if (typeof obj !== 'object' || obj == null) {
 				throw new Error('can not access property of non-object');
 			}

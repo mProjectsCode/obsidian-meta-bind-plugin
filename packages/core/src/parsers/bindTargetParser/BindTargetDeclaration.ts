@@ -1,6 +1,13 @@
 import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
-import { type PROP_ACCESS_TYPE } from 'packages/core/src/utils/prop/PropAccess';
+import { type PropAccessType } from 'packages/core/src/utils/prop/PropAccess';
 import { type PropPath } from 'packages/core/src/utils/prop/PropPath';
+
+export interface BindTargetDeclaration {
+	storageType: string;
+	storagePath: string;
+	storageProp: PropPath;
+	listenToChildren: boolean;
+}
 
 export interface UnvalidatedBindTargetDeclaration {
 	storageType?: ParsingResultNode | undefined;
@@ -10,15 +17,8 @@ export interface UnvalidatedBindTargetDeclaration {
 }
 
 export interface UnvalidatedPropAccess {
-	type: PROP_ACCESS_TYPE;
+	type: PropAccessType;
 	prop: ParsingResultNode;
-}
-
-export interface BindTargetDeclaration {
-	storageType: string;
-	storagePath: string;
-	storageProp: PropPath;
-	listenToChildren: boolean;
 }
 
 export interface SimpleBindTargetDeclaration {
@@ -29,7 +29,7 @@ export interface SimpleBindTargetDeclaration {
 }
 
 export interface SimplePropAccess {
-	type: PROP_ACCESS_TYPE;
+	type: PropAccessType;
 	prop: string;
 }
 

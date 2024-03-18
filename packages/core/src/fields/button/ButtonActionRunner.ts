@@ -7,15 +7,15 @@ import {
 	type CommandButtonAction,
 	type CreateNoteButtonAction,
 	type InputButtonAction,
+	type InsertIntoNoteButtonAction,
 	type JSButtonAction,
-	type ReplaceInNoteButtonAction,
 	type OpenButtonAction,
+	type RegexpReplaceInNoteButtonAction,
+	type ReplaceInNoteButtonAction,
+	type ReplaceSelfButtonAction,
 	type SleepButtonAction,
 	type TemplaterCreateNoteButtonAction,
 	type UpdateMetadataButtonAction,
-	type InsertIntoNoteButtonAction,
-	type RegexpReplaceInNoteButtonAction,
-	type ReplaceSelfButtonAction,
 } from 'packages/core/src/config/ButtonConfig';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import { expectType, openURL } from 'packages/core/src/utils/Utils';

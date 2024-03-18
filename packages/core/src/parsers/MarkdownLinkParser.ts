@@ -2,11 +2,11 @@ import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { runParser } from 'packages/core/src/parsers/ParsingError';
-import { filePath } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';
 import { isUrl } from 'packages/core/src/utils/Utils';
+import { P_FilePath } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 
 const mdWikiLinkInnerParser: Parser<[string, string | undefined, string | undefined]> = P.sequence(
-	filePath, // the file path
+	P_FilePath, // the file path
 	P.string('#').then(P.manyNotOf('[]#|^:')).optional(), // the optional heading
 	P.string('|').then(P.manyNotOf('[]')).optional(), // the optional alias
 );

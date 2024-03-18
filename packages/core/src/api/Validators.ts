@@ -3,9 +3,7 @@ import { InputFieldType, RenderChildType } from 'packages/core/src/config/FieldC
 import { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import type { ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import type {
-	SimpleFieldArgument,
 	SimpleInputFieldDeclaration,
-	UnvalidatedFieldArgument,
 	UnvalidatedInputFieldDeclaration,
 } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
 import {
@@ -15,7 +13,7 @@ import {
 	type UnvalidatedBindTargetDeclaration,
 	type UnvalidatedPropAccess,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { PROP_ACCESS_TYPE } from 'packages/core/src/utils/prop/PropAccess';
+import { PropAccessType } from 'packages/core/src/utils/prop/PropAccess';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import {
 	type SimpleJsViewFieldBindTargetMapping,
@@ -28,17 +26,21 @@ import { Signal } from 'packages/core/src/utils/Signal';
 import { z } from 'zod';
 import { type ParsingPosition, type ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
 import {
+	type ButtonGroupOptions,
 	type ButtonOptions,
 	type EmbedOptions,
 	FieldType,
-	type InlineButtonOptions,
 	type InputFieldOptions,
 	type JsViewFieldOptions,
 	type NotePosition,
 	type ViewFieldOptions,
 } from 'packages/core/src/api/API';
-import { type SimpleInlineButtonDeclaration } from 'packages/core/src/parsers/ButtonParser';
+import { type SimpleButtonGroupDeclaration } from 'packages/core/src/parsers/ButtonParser';
 import { V_ButtonConfig } from 'packages/core/src/config/ButtonConfigValidators';
+import {
+	type SimpleFieldArgument,
+	type UnvalidatedFieldArgument,
+} from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
 
 export const V_FilePath = schemaForType<string>()(z.string());
 
@@ -87,7 +89,7 @@ export const V_UnvalidatedFieldArgument = schemaForType<UnvalidatedFieldArgument
 
 export const V_UnvalidatedPropAccess = schemaForType<UnvalidatedPropAccess>()(
 	z.object({
-		type: z.nativeEnum(PROP_ACCESS_TYPE),
+		type: z.nativeEnum(PropAccessType),
 		prop: V_ParsingResultNode,
 	}),
 );
@@ -141,7 +143,7 @@ export const V_SimpleFieldArgument = schemaForType<SimpleFieldArgument>()(
 
 export const V_SimplePropAccess = schemaForType<SimplePropAccess>()(
 	z.object({
-		type: z.nativeEnum(PROP_ACCESS_TYPE),
+		type: z.nativeEnum(PropAccessType),
 		prop: z.string(),
 	}),
 );
@@ -188,7 +190,7 @@ export const V_SimpleJsViewFieldDeclaration = schemaForType<SimpleJsViewFieldDec
 	}),
 );
 
-export const V_SimpleInlineButtonDeclaration = schemaForType<SimpleInlineButtonDeclaration>()(
+export const V_SimpleInlineButtonDeclaration = schemaForType<SimpleButtonGroupDeclaration>()(
 	z.object({
 		referencedButtonIds: z.string().array(),
 	}),
@@ -216,16 +218,18 @@ export const V_JsViewFieldOptions = schemaForType<JsViewFieldOptions>()(
 	}),
 );
 
-export const V_InlineButtonOptions = schemaForType<InlineButtonOptions>()(
-	z.object({
-		declaration: z.union([z.string(), V_SimpleInlineButtonDeclaration]),
-	}),
-);
-
 export const V_NotePosition = schemaForType<NotePosition>()(
 	z.object({
 		lineStart: z.number(),
 		lineEnd: z.number(),
+	}),
+);
+
+export const V_InlineButtonOptions = schemaForType<ButtonGroupOptions>()(
+	z.object({
+		renderChildType: V_RenderChildType,
+		declaration: z.union([z.string(), V_SimpleInlineButtonDeclaration]),
+		position: V_NotePosition.optional(),
 	}),
 );
 

@@ -1,25 +1,22 @@
 import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
-import { filePath, metadataPath } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';
-import {
-	ident,
-	nonStringArgumentValue,
-	singleQuotedString,
-} from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
-import { viewFieldContent } from 'packages/core/src/parsers/nomParsers/ViewFieldNomParsers';
+import { P_MetadataPath } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';
+import { P_FilePath, P_Ident, P_SingleQuotedString } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
+import { P_ViewFieldTemplateString } from 'packages/core/src/parsers/nomParsers/ViewFieldNomParsers';
 import { HLPUtils, MB_TokenClass } from 'packages/core/src/parsers/syntaxHighlighting/HLPUtils';
 import { type Highlight } from 'packages/core/src/parsers/syntaxHighlighting/Highlight';
+import { P_NonStringArgumentValue } from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
 
-const identHLP = HLPUtils.highlight(ident, MB_TokenClass.IDENT);
-const keywordHLP = HLPUtils.highlight(ident, MB_TokenClass.KEYWORD);
+const identHLP = HLPUtils.highlight(P_Ident, MB_TokenClass.IDENT);
+const keywordHLP = HLPUtils.highlight(P_Ident, MB_TokenClass.KEYWORD);
 const commaHLP = HLPUtils.highlightStr(',', MB_TokenClass.CONTROL);
 const parenLHLP = HLPUtils.highlightStr('(', MB_TokenClass.CONTROL);
 const parenRHLP = HLPUtils.highlightStr(')', MB_TokenClass.CONTROL);
 const bracketLHLP = HLPUtils.highlightStr('[', MB_TokenClass.CONTROL);
 const bracketRHLP = HLPUtils.highlightStr(']', MB_TokenClass.CONTROL);
-const singleQuotedStringHPL = HLPUtils.highlight(singleQuotedString, MB_TokenClass.STRING);
-const nonStringArgumentValueHLP = HLPUtils.highlight(nonStringArgumentValue, MB_TokenClass.IDENT);
+const singleQuotedStringHPL = HLPUtils.highlight(P_SingleQuotedString, MB_TokenClass.STRING);
+const nonStringArgumentValueHLP = HLPUtils.highlight(P_NonStringArgumentValue, MB_TokenClass.IDENT);
 const argumentValueHLP = P.or(nonStringArgumentValueHLP, singleQuotedStringHPL);
 const argumentValuesHLP = HLPUtils.separateBy(argumentValueHLP, commaHLP.trim(P_UTILS.optionalWhitespace()));
 const fieldArgumentHLP = HLPUtils.sequence(
@@ -30,10 +27,10 @@ const fieldArgumentsHLP = HLPUtils.separateBy(fieldArgumentHLP, commaHLP.trim(P_
 export const BIND_TARGET_HLP: Parser<Highlight[]> = HLPUtils.sequence(
 	HLPUtils.sequence(identHLP, HLPUtils.highlightStr('^', MB_TokenClass.CONTROL)).optional(),
 	HLPUtils.sequence(
-		HLPUtils.highlight(filePath, MB_TokenClass.IDENT),
+		HLPUtils.highlight(P_FilePath, MB_TokenClass.IDENT),
 		HLPUtils.highlightStr('#', MB_TokenClass.CONTROL),
 	).optional(),
-	HLPUtils.highlight(metadataPath, MB_TokenClass.IDENT),
+	HLPUtils.highlight(P_MetadataPath, MB_TokenClass.IDENT),
 );
 const inputFieldDeclarationHLP = HLPUtils.sequence(
 	keywordHLP.trim(P_UTILS.optionalWhitespace()),
@@ -76,7 +73,7 @@ export const INPUT_FIELD_DECLARATION_HLP: Parser<Highlight[]> = P.or(
 		bracketRHLP,
 	),
 );
-const viewFieldContentHLP = HLPUtils.highlight(viewFieldContent, MB_TokenClass.IDENT);
+const viewFieldContentHLP = HLPUtils.highlight(P_ViewFieldTemplateString, MB_TokenClass.IDENT);
 const wrappedBindTargetHLP = HLPUtils.sequence(
 	HLPUtils.highlightStr('{', MB_TokenClass.STRING),
 	BIND_TARGET_HLP,

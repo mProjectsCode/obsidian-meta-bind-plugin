@@ -22,7 +22,7 @@ export class LinkVF extends AbstractViewField {
 		// filter out empty strings
 		const entries: (string | BindTargetDeclaration)[] = this.base
 			.getDeclaration()
-			.declarationArray.filter(x => (typeof x === 'string' ? x : true));
+			.templateDeclaration.filter(x => (typeof x === 'string' ? x : true));
 
 		if (entries.length !== 1) {
 			throw new MetaBindValidationError({

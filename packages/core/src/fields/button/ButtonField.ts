@@ -4,6 +4,7 @@ import { DomHelpers, isTruthy } from 'packages/core/src/utils/Utils';
 import ButtonComponent from 'packages/core/src/utils/components/ButtonComponent.svelte';
 import { Mountable } from 'packages/core/src/utils/Mountable';
 import { type NotePosition } from 'packages/core/src/api/API';
+import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
 
 export class ButtonField extends Mountable {
 	plugin: IPlugin;
@@ -18,7 +19,7 @@ export class ButtonField extends Mountable {
 		plugin: IPlugin,
 		config: ButtonConfig,
 		filePath: string,
-		inline: boolean,
+		renderChildType: RenderChildType,
 		position: NotePosition | undefined,
 		isPreview: boolean,
 	) {
@@ -27,13 +28,14 @@ export class ButtonField extends Mountable {
 		this.plugin = plugin;
 		this.config = config;
 		this.filePath = filePath;
-		this.inline = inline;
+		this.inline = renderChildType === RenderChildType.INLINE;
 		this.position = position;
 		this.isPreview = isPreview;
 	}
 
 	protected onMount(targetEl: HTMLElement): void {
 		DomHelpers.empty(targetEl);
+		DomHelpers.removeAllClasses(targetEl);
 		DomHelpers.addClasses(targetEl, ['mb-button', this.inline ? 'mb-button-inline' : 'mb-button-block']);
 
 		if (!this.inline && !this.isPreview) {

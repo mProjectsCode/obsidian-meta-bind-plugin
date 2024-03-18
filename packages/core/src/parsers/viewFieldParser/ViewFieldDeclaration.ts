@@ -5,33 +5,27 @@ import {
 	type SimpleBindTargetDeclaration,
 	type UnvalidatedBindTargetDeclaration,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
+import { type FieldDeclaration } from 'packages/core/src/parsers/FieldDeclaration';
 import {
-	type FieldDeclaration,
 	type SimpleFieldArgument,
 	type UnvalidatedFieldArgument,
-} from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
-import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
+} from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
 
-export interface PartialUnvalidatedViewFieldDeclaration {
-	/**
-	 * Declaration array.
-	 */
-	templateDeclaration?: (string | UnvalidatedBindTargetDeclaration)[] | undefined;
-	viewFieldType?: ParsingResultNode | undefined;
-	arguments: UnvalidatedFieldArgument[];
-	writeToBindTarget?: UnvalidatedBindTargetDeclaration | undefined;
+export interface ViewFieldDeclaration extends FieldDeclaration {
+	templateDeclaration: (string | BindTargetDeclaration)[];
+	viewFieldType: ViewFieldType;
+	argumentContainer: ViewFieldArgumentContainer;
+	writeToBindTarget?: BindTargetDeclaration | undefined;
 }
 
 export interface UnvalidatedViewFieldDeclaration extends PartialUnvalidatedViewFieldDeclaration, FieldDeclaration {}
 
-export interface ViewFieldDeclaration extends FieldDeclaration {
-	/**
-	 * Declaration array.
-	 */
-	declarationArray: (string | BindTargetDeclaration)[];
-	viewFieldType: ViewFieldType;
-	argumentContainer: ViewFieldArgumentContainer;
-	writeToBindTarget?: BindTargetDeclaration | undefined;
+export interface PartialUnvalidatedViewFieldDeclaration {
+	templateDeclaration?: (string | UnvalidatedBindTargetDeclaration)[] | undefined;
+	viewFieldType?: ParsingResultNode | undefined;
+	arguments: UnvalidatedFieldArgument[];
+	writeToBindTarget?: UnvalidatedBindTargetDeclaration | undefined;
 }
 
 export interface SimpleViewFieldDeclaration {
@@ -45,10 +39,18 @@ export interface SimpleViewFieldDeclaration {
 // JS View Field
 // ---
 
-export interface UnvalidatedJsViewFieldBindTargetMapping {
-	bindTarget: UnvalidatedBindTargetDeclaration;
+export interface JsViewFieldDeclaration extends FieldDeclaration {
+	bindTargetMappings: JsViewFieldBindTargetMapping[];
+	writeToBindTarget?: BindTargetDeclaration | undefined;
+	code: string;
+}
+
+export interface JsViewFieldBindTargetMapping {
+	bindTarget: BindTargetDeclaration;
 	name: string;
 }
+
+export interface UnvalidatedJsViewFieldDeclaration extends PartialUnvalidatedJsViewFieldDeclaration, FieldDeclaration {}
 
 export interface PartialUnvalidatedJsViewFieldDeclaration {
 	bindTargetMappings: UnvalidatedJsViewFieldBindTargetMapping[];
@@ -56,21 +58,8 @@ export interface PartialUnvalidatedJsViewFieldDeclaration {
 	code: string;
 }
 
-export interface UnvalidatedJsViewFieldDeclaration extends PartialUnvalidatedJsViewFieldDeclaration, FieldDeclaration {}
-
-export interface JsViewFieldBindTargetMapping {
-	bindTarget: BindTargetDeclaration;
-	name: string;
-}
-
-export interface JsViewFieldDeclaration extends FieldDeclaration {
-	bindTargetMappings: JsViewFieldBindTargetMapping[];
-	writeToBindTarget?: BindTargetDeclaration | undefined;
-	code: string;
-}
-
-export interface SimpleJsViewFieldBindTargetMapping {
-	bindTarget: SimpleBindTargetDeclaration;
+export interface UnvalidatedJsViewFieldBindTargetMapping {
+	bindTarget: UnvalidatedBindTargetDeclaration;
 	name: string;
 }
 
@@ -78,4 +67,9 @@ export interface SimpleJsViewFieldDeclaration {
 	bindTargetMappings: SimpleJsViewFieldBindTargetMapping[];
 	writeToBindTarget?: SimpleBindTargetDeclaration | undefined;
 	code: string;
+}
+
+export interface SimpleJsViewFieldBindTargetMapping {
+	bindTarget: SimpleBindTargetDeclaration;
+	name: string;
 }

@@ -7,7 +7,7 @@ import type {
 } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { runParser } from 'packages/core/src/parsers/ParsingError';
-import { JS_VIEW_FIELD_DECLARATION } from 'packages/core/src/parsers/nomParsers/ViewFieldNomParsers';
+import { P_JsViewFieldDeclaration } from 'packages/core/src/parsers/nomParsers/ViewFieldNomParsers';
 
 export class JsViewFieldParser {
 	plugin: IPlugin;
@@ -20,7 +20,7 @@ export class JsViewFieldParser {
 		const errorCollection = new ErrorCollection('JsViewFieldDeclaration');
 
 		try {
-			const parserResult = runParser(JS_VIEW_FIELD_DECLARATION, fullDeclaration);
+			const parserResult = runParser(P_JsViewFieldDeclaration, fullDeclaration);
 
 			return this.partialToFullDeclaration(parserResult, fullDeclaration, errorCollection);
 		} catch (e) {

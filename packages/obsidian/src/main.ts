@@ -198,7 +198,15 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				return;
 			}
 
-			console.log(ctx.getSectionInfo(codeBlock));
+			const sectionInfo = ctx.getSectionInfo(el);
+			let position = undefined;
+
+			if (sectionInfo) {
+				position = {
+					lineStart: sectionInfo.lineStart,
+					lineEnd: sectionInfo.lineEnd,
+				};
+			}
 
 			const base = this.api.createInlineFieldOfTypeFromString(
 				fieldType,
@@ -206,6 +214,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				filePath,
 				undefined,
 				RenderChildType.BLOCK,
+				position,
 			);
 			this.api.wrapInMDRC(base, codeBlock, ctx);
 		});
@@ -251,8 +260,6 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 					lineEnd: sectionInfo.lineEnd,
 				};
 			}
-
-			console.log(position);
 
 			const field = this.api.createButtonBase(ctx.sourcePath, {
 				declaration: source,

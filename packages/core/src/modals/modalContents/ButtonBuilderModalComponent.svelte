@@ -16,6 +16,7 @@
 	import { IPlugin } from 'packages/core/src/IPlugin';
 	import { ButtonField } from 'packages/core/src/fields/button/ButtonField';
 	import { Command } from 'packages/core/src/api/InternalAPI';
+	import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
 
 	export let plugin: IPlugin;
 	export let modal: ButtonBuilderModal;
@@ -35,7 +36,7 @@
 		buttonBase?.unmount();
 		if (el) {
 			DomHelpers.empty(el);
-			buttonBase = new ButtonField(plugin, config, '', false, undefined, true);
+			buttonBase = new ButtonField(plugin, config, '', RenderChildType.BLOCK, undefined, true);
 			buttonBase.mount(el);
 		}
 	}

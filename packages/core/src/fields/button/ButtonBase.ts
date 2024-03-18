@@ -5,6 +5,7 @@ import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { type ButtonDeclaration } from 'packages/core/src/parsers/ButtonParser';
 import { type NotePosition } from 'packages/core/src/api/API';
+import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
 
 export class ButtonBase extends FieldBase {
 	errorCollection: ErrorCollection;
@@ -52,7 +53,7 @@ export class ButtonBase extends FieldBase {
 			this.plugin,
 			this.declaration.config,
 			this.getFilePath(),
-			false,
+			RenderChildType.BLOCK,
 			this.position,
 			this.isPreview,
 		);

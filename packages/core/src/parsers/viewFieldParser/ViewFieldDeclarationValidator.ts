@@ -39,7 +39,7 @@ export class ViewFieldDeclarationValidator {
 			viewFieldType: viewFieldType,
 			writeToBindTarget: writeToBindTarget,
 			argumentContainer: argumentContainer,
-			declarationArray: templateDeclaration,
+			templateDeclaration: templateDeclaration,
 			errorCollection: this.errorCollection.merge(this.unvalidatedDeclaration.errorCollection),
 		};
 

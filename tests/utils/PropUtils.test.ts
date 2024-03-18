@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from 'bun:test';
-import { PROP_ACCESS_TYPE, PropAccess } from '../../packages/core/src/utils/prop/PropAccess';
+import { PropAccessType, PropAccess } from '../../packages/core/src/utils/prop/PropAccess';
 import { PropPath } from '../../packages/core/src/utils/prop/PropPath';
 import { PropUtils } from '../../packages/core/src/utils/prop/PropUtils';
 
@@ -27,15 +27,15 @@ describe('PropUtils', () => {
 
 		describe('should get correct value on valid path', () => {
 			test('a', () => {
-				const path = new PropPath([new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a')]);
+				const path = new PropPath([new PropAccess(PropAccessType.OBJECT, 'a')]);
 
 				expect(PropUtils.get(obj, path)).toBe(obj.a);
 			});
 
 			test('a.b', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'b'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'b'),
 				]);
 
 				expect(PropUtils.get(obj, path)).toBe(obj.a.b);
@@ -43,9 +43,9 @@ describe('PropUtils', () => {
 
 			test('a.b.c', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'b'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'c'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'b'),
+					new PropAccess(PropAccessType.OBJECT, 'c'),
 				]);
 
 				expect(PropUtils.get(obj, path)).toBe(obj.a.b.c);
@@ -53,9 +53,9 @@ describe('PropUtils', () => {
 
 			test('h.l.n', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'h'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'l'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'n'),
+					new PropAccess(PropAccessType.OBJECT, 'h'),
+					new PropAccess(PropAccessType.OBJECT, 'l'),
+					new PropAccess(PropAccessType.OBJECT, 'n'),
 				]);
 
 				expect(PropUtils.get(obj, path)).toBe(obj.h.l.n);
@@ -63,9 +63,9 @@ describe('PropUtils', () => {
 
 			test('a.e[0]', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'e'),
-					new PropAccess(PROP_ACCESS_TYPE.ARRAY, '0'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'e'),
+					new PropAccess(PropAccessType.ARRAY, '0'),
 				]);
 
 				expect(PropUtils.get(obj, path)).toBe(obj.a.e[0]);
@@ -73,10 +73,10 @@ describe('PropUtils', () => {
 
 			test('a.e[1].g', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'e'),
-					new PropAccess(PROP_ACCESS_TYPE.ARRAY, '1'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'g'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'e'),
+					new PropAccess(PropAccessType.ARRAY, '1'),
+					new PropAccess(PropAccessType.OBJECT, 'g'),
 				]);
 
 				expect(PropUtils.get(obj, path)).toBe(obj.a.e[1].g);
@@ -86,15 +86,15 @@ describe('PropUtils', () => {
 		describe('should return undefined when accessing non existent property', () => {
 			test('a.c', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'c'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'c'),
 				]);
 
 				expect(PropUtils.get(obj, path)).toBe(undefined);
 			});
 
 			test('c', () => {
-				const path = new PropPath([new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'c')]);
+				const path = new PropPath([new PropAccess(PropAccessType.OBJECT, 'c')]);
 
 				expect(PropUtils.get(obj, path)).toBe(undefined);
 			});
@@ -103,9 +103,9 @@ describe('PropUtils', () => {
 		describe('should throw an error when accessing non object or array property', () => {
 			test('a.c.d', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'c'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'd'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'c'),
+					new PropAccess(PropAccessType.OBJECT, 'd'),
 				]);
 
 				expect(() => PropUtils.get(obj, path)).toThrow();
@@ -113,8 +113,8 @@ describe('PropUtils', () => {
 
 			test('c.d', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'c'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'd'),
+					new PropAccess(PropAccessType.OBJECT, 'c'),
+					new PropAccess(PropAccessType.OBJECT, 'd'),
 				]);
 
 				expect(() => PropUtils.get(obj, path)).toThrow();
@@ -122,10 +122,10 @@ describe('PropUtils', () => {
 
 			test('a.b.c.d', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'b'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'c'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'd'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'b'),
+					new PropAccess(PropAccessType.OBJECT, 'c'),
+					new PropAccess(PropAccessType.OBJECT, 'd'),
 				]);
 
 				expect(() => PropUtils.get(obj, path)).toThrow();
@@ -161,7 +161,7 @@ describe('PropUtils', () => {
 
 		describe('should set value correctly on correct path', () => {
 			test('a', () => {
-				const path = new PropPath([new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a')]);
+				const path = new PropPath([new PropAccess(PropAccessType.OBJECT, 'a')]);
 
 				PropUtils.set(obj, path, 'test');
 				// @ts-ignore
@@ -170,8 +170,8 @@ describe('PropUtils', () => {
 
 			test('a.b', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'b'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'b'),
 				]);
 
 				PropUtils.set(obj, path, 'test');
@@ -181,9 +181,9 @@ describe('PropUtils', () => {
 
 			test('a.b.c', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'b'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'c'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'b'),
+					new PropAccess(PropAccessType.OBJECT, 'c'),
 				]);
 
 				PropUtils.set(obj, path, 'test');
@@ -193,9 +193,9 @@ describe('PropUtils', () => {
 
 			test('h.l.n', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'h'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'l'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'n'),
+					new PropAccess(PropAccessType.OBJECT, 'h'),
+					new PropAccess(PropAccessType.OBJECT, 'l'),
+					new PropAccess(PropAccessType.OBJECT, 'n'),
 				]);
 
 				PropUtils.set(obj, path, 'test');
@@ -205,9 +205,9 @@ describe('PropUtils', () => {
 
 			test('a.e[0]', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'e'),
-					new PropAccess(PROP_ACCESS_TYPE.ARRAY, '0'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'e'),
+					new PropAccess(PropAccessType.ARRAY, '0'),
 				]);
 
 				PropUtils.set(obj, path, 'test');
@@ -217,10 +217,10 @@ describe('PropUtils', () => {
 
 			test('a.e[1].g', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'e'),
-					new PropAccess(PROP_ACCESS_TYPE.ARRAY, '1'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'g'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'e'),
+					new PropAccess(PropAccessType.ARRAY, '1'),
+					new PropAccess(PropAccessType.OBJECT, 'g'),
 				]);
 
 				PropUtils.set(obj, path, 'test');
@@ -231,7 +231,7 @@ describe('PropUtils', () => {
 
 		describe('should create new property on correct path', () => {
 			test('x', () => {
-				const path = new PropPath([new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'x')]);
+				const path = new PropPath([new PropAccess(PropAccessType.OBJECT, 'x')]);
 
 				PropUtils.set(obj, path, 'test');
 				// @ts-ignore
@@ -240,8 +240,8 @@ describe('PropUtils', () => {
 
 			test('a.x', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'x'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'x'),
 				]);
 
 				PropUtils.set(obj, path, 'test');
@@ -251,9 +251,9 @@ describe('PropUtils', () => {
 
 			test('a.b.x', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'b'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'x'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'b'),
+					new PropAccess(PropAccessType.OBJECT, 'x'),
 				]);
 
 				PropUtils.set(obj, path, 'test');
@@ -265,9 +265,9 @@ describe('PropUtils', () => {
 		describe('should throw an error when setting a property on a non object or array', () => {
 			test('a.c.d', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'c'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'd'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'c'),
+					new PropAccess(PropAccessType.OBJECT, 'd'),
 				]);
 
 				expect(() => PropUtils.set(obj, path, 'test')).toThrow();
@@ -275,8 +275,8 @@ describe('PropUtils', () => {
 
 			test('c.d', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'c'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'd'),
+					new PropAccess(PropAccessType.OBJECT, 'c'),
+					new PropAccess(PropAccessType.OBJECT, 'd'),
 				]);
 
 				expect(() => PropUtils.set(obj, path, 'test')).toThrow();
@@ -284,10 +284,10 @@ describe('PropUtils', () => {
 
 			test('a.b.c.d', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'b'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'c'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'd'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'b'),
+					new PropAccess(PropAccessType.OBJECT, 'c'),
+					new PropAccess(PropAccessType.OBJECT, 'd'),
 				]);
 
 				expect(() => PropUtils.set(obj, path, 'test')).toThrow();
@@ -323,7 +323,7 @@ describe('PropUtils', () => {
 
 		describe('should set value correctly on correct path', () => {
 			test('a', () => {
-				const path = new PropPath([new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a')]);
+				const path = new PropPath([new PropAccess(PropAccessType.OBJECT, 'a')]);
 
 				PropUtils.setAndCreate(obj, path, 'test');
 				// @ts-ignore
@@ -332,8 +332,8 @@ describe('PropUtils', () => {
 
 			test('a.b', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'b'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'b'),
 				]);
 
 				PropUtils.setAndCreate(obj, path, 'test');
@@ -343,9 +343,9 @@ describe('PropUtils', () => {
 
 			test('a.b.c', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'b'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'c'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'b'),
+					new PropAccess(PropAccessType.OBJECT, 'c'),
 				]);
 
 				PropUtils.setAndCreate(obj, path, 'test');
@@ -355,9 +355,9 @@ describe('PropUtils', () => {
 
 			test('h.l.n', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'h'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'l'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'n'),
+					new PropAccess(PropAccessType.OBJECT, 'h'),
+					new PropAccess(PropAccessType.OBJECT, 'l'),
+					new PropAccess(PropAccessType.OBJECT, 'n'),
 				]);
 
 				PropUtils.setAndCreate(obj, path, 'test');
@@ -367,9 +367,9 @@ describe('PropUtils', () => {
 
 			test('a.e[0]', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'e'),
-					new PropAccess(PROP_ACCESS_TYPE.ARRAY, '0'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'e'),
+					new PropAccess(PropAccessType.ARRAY, '0'),
 				]);
 
 				PropUtils.setAndCreate(obj, path, 'test');
@@ -379,10 +379,10 @@ describe('PropUtils', () => {
 
 			test('a.e[1].g', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'e'),
-					new PropAccess(PROP_ACCESS_TYPE.ARRAY, '1'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'g'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'e'),
+					new PropAccess(PropAccessType.ARRAY, '1'),
+					new PropAccess(PropAccessType.OBJECT, 'g'),
 				]);
 
 				PropUtils.setAndCreate(obj, path, 'test');
@@ -393,7 +393,7 @@ describe('PropUtils', () => {
 
 		describe('should create new property on correct path', () => {
 			test('x', () => {
-				const path = new PropPath([new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'x')]);
+				const path = new PropPath([new PropAccess(PropAccessType.OBJECT, 'x')]);
 
 				PropUtils.setAndCreate(obj, path, 'test');
 				// @ts-ignore
@@ -402,8 +402,8 @@ describe('PropUtils', () => {
 
 			test('a.x', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'x'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'x'),
 				]);
 
 				PropUtils.setAndCreate(obj, path, 'test');
@@ -413,9 +413,9 @@ describe('PropUtils', () => {
 
 			test('a.b.x', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'b'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'x'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'b'),
+					new PropAccess(PropAccessType.OBJECT, 'x'),
 				]);
 
 				PropUtils.setAndCreate(obj, path, 'test');
@@ -425,8 +425,8 @@ describe('PropUtils', () => {
 
 			test('x.y', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'x'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'y'),
+					new PropAccess(PropAccessType.OBJECT, 'x'),
+					new PropAccess(PropAccessType.OBJECT, 'y'),
 				]);
 
 				PropUtils.setAndCreate(obj, path, 'test');
@@ -436,9 +436,9 @@ describe('PropUtils', () => {
 
 			test('x.y.z', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'x'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'y'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'z'),
+					new PropAccess(PropAccessType.OBJECT, 'x'),
+					new PropAccess(PropAccessType.OBJECT, 'y'),
+					new PropAccess(PropAccessType.OBJECT, 'z'),
 				]);
 
 				PropUtils.setAndCreate(obj, path, 'test');
@@ -448,10 +448,10 @@ describe('PropUtils', () => {
 
 			test('x.y[0].z', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'x'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'y'),
-					new PropAccess(PROP_ACCESS_TYPE.ARRAY, '0'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'z'),
+					new PropAccess(PropAccessType.OBJECT, 'x'),
+					new PropAccess(PropAccessType.OBJECT, 'y'),
+					new PropAccess(PropAccessType.ARRAY, '0'),
+					new PropAccess(PropAccessType.OBJECT, 'z'),
 				]);
 
 				PropUtils.setAndCreate(obj, path, 'test');
@@ -463,10 +463,10 @@ describe('PropUtils', () => {
 		describe('should throw an error when setting a property on a non object or array', () => {
 			test('a.b.c.d', () => {
 				const path = new PropPath([
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'a'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'b'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'c'),
-					new PropAccess(PROP_ACCESS_TYPE.OBJECT, 'd'),
+					new PropAccess(PropAccessType.OBJECT, 'a'),
+					new PropAccess(PropAccessType.OBJECT, 'b'),
+					new PropAccess(PropAccessType.OBJECT, 'c'),
+					new PropAccess(PropAccessType.OBJECT, 'd'),
 				]);
 
 				expect(() => PropUtils.setAndCreate(obj, path, 'test')).toThrow();

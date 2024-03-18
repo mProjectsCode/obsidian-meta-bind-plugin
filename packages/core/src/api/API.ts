@@ -5,7 +5,7 @@ import { type FieldBase } from 'packages/core/src/fields/FieldBase';
 import { ButtonActionRunner } from 'packages/core/src/fields/button/ButtonActionRunner';
 import { ButtonBase } from 'packages/core/src/fields/button/ButtonBase';
 import { ButtonManager } from 'packages/core/src/fields/button/ButtonManager';
-import { InlineButtonBase } from 'packages/core/src/fields/button/InlineButtonBase';
+import { ButtonGroupBase } from 'packages/core/src/fields/button/ButtonGroupBase';
 import { InputFieldBase } from 'packages/core/src/fields/inputFields/InputFieldBase';
 import { InputFieldFactory } from 'packages/core/src/fields/inputFields/InputFieldFactory';
 import { JsViewField } from 'packages/core/src/fields/viewFields/JsViewField';
@@ -32,9 +32,9 @@ import {
 import { type ButtonConfig } from 'packages/core/src/config/ButtonConfig';
 import {
 	type ButtonDeclaration,
+	type ButtonGroupDeclaration,
 	ButtonParser,
-	type InlineButtonDeclaration,
-	type SimpleInlineButtonDeclaration,
+	type SimpleButtonGroupDeclaration,
 } from 'packages/core/src/parsers/ButtonParser';
 import { JsViewFieldParser } from 'packages/core/src/parsers/viewFieldParser/JsViewFieldParser';
 import { Signal } from 'packages/core/src/utils/Signal';
@@ -61,7 +61,7 @@ export enum FieldType {
 	INPUT_FIELD = 'INPUT_FIELD',
 	VIEW_FIELD = 'VIEW_FIELD',
 	JS_VIEW_FIELD = 'JS_VIEW_FIELD',
-	INLINE_BUTTON = 'INLINE_BUTTON',
+	BUTTON_GROUP = 'BUTTON_GROUP',
 	BUTTON = 'BUTTON',
 	EMBED = 'EMBED',
 	EXCLUDED = 'EXCLUDED',
@@ -83,8 +83,10 @@ export interface JsViewFieldOptions {
 	declaration: SimpleJsViewFieldDeclaration | string;
 }
 
-export interface InlineButtonOptions {
-	declaration: SimpleInlineButtonDeclaration | string;
+export interface ButtonGroupOptions {
+	renderChildType: RenderChildType;
+	declaration: SimpleButtonGroupDeclaration | string;
+	position?: NotePosition | undefined;
 }
 
 export interface ButtonOptions {
@@ -107,16 +109,16 @@ export interface FieldOptionMap {
 	[FieldType.INPUT_FIELD]: InputFieldOptions;
 	[FieldType.VIEW_FIELD]: ViewFieldOptions;
 	[FieldType.JS_VIEW_FIELD]: JsViewFieldOptions;
-	[FieldType.INLINE_BUTTON]: InlineButtonOptions;
+	[FieldType.BUTTON_GROUP]: ButtonGroupOptions;
 	[FieldType.BUTTON]: ButtonOptions;
 	[FieldType.EMBED]: EmbedOptions;
 	[FieldType.EXCLUDED]: undefined;
 }
 
-export type InlineFieldType = FieldType.INPUT_FIELD | FieldType.VIEW_FIELD | FieldType.INLINE_BUTTON;
+export type InlineFieldType = FieldType.INPUT_FIELD | FieldType.VIEW_FIELD | FieldType.BUTTON_GROUP;
 
 export function isFieldTypeAllowedInline(type: FieldType): type is InlineFieldType {
-	return type === FieldType.INPUT_FIELD || type === FieldType.VIEW_FIELD || type === FieldType.INLINE_BUTTON;
+	return type === FieldType.INPUT_FIELD || type === FieldType.VIEW_FIELD || type === FieldType.BUTTON_GROUP;
 }
 
 export interface APIFieldOverrides {
@@ -206,8 +208,8 @@ export abstract class API<Plugin extends IPlugin> {
 			return this.createViewFieldBase(filePath, options as FieldOptionMap[FieldType.VIEW_FIELD]);
 		} else if (type === FieldType.JS_VIEW_FIELD) {
 			return this.createJsViewFieldBase(filePath, options as FieldOptionMap[FieldType.JS_VIEW_FIELD]);
-		} else if (type === FieldType.INLINE_BUTTON) {
-			return this.createInlineButtonBase(filePath, options as FieldOptionMap[FieldType.INLINE_BUTTON]);
+		} else if (type === FieldType.BUTTON_GROUP) {
+			return this.createButtonGroupBase(filePath, options as FieldOptionMap[FieldType.BUTTON_GROUP]);
 		} else if (type === FieldType.BUTTON) {
 			return this.createButtonBase(filePath, options as FieldOptionMap[FieldType.BUTTON]);
 		} else if (type === FieldType.EMBED) {
@@ -230,6 +232,7 @@ export abstract class API<Plugin extends IPlugin> {
 	 * @param filePath
 	 * @param scope
 	 * @param renderChildType
+	 * @param position
 	 * @param honorExcludedSetting
 	 */
 	public createInlineFieldFromString(
@@ -237,6 +240,7 @@ export abstract class API<Plugin extends IPlugin> {
 		filePath: string,
 		scope: BindTargetScope | undefined,
 		renderChildType: RenderChildType = RenderChildType.INLINE,
+		position?: NotePosition | undefined,
 		honorExcludedSetting: boolean = true,
 	): FieldBase {
 		validate(
@@ -271,6 +275,7 @@ export abstract class API<Plugin extends IPlugin> {
 			filePath,
 			scope,
 			renderChildType,
+			position,
 			honorExcludedSetting,
 		);
 	}
@@ -284,6 +289,7 @@ export abstract class API<Plugin extends IPlugin> {
 	 * @param declaration
 	 * @param scope
 	 * @param renderChildType
+	 * @param position
 	 * @param honorExcludedSetting
 	 */
 	public createInlineFieldOfTypeFromString(
@@ -292,6 +298,7 @@ export abstract class API<Plugin extends IPlugin> {
 		filePath: string,
 		scope: BindTargetScope | undefined,
 		renderChildType: RenderChildType = RenderChildType.INLINE,
+		position?: NotePosition | undefined,
 		honorExcludedSetting: boolean = true,
 	): FieldBase {
 		validate(
@@ -333,8 +340,12 @@ export abstract class API<Plugin extends IPlugin> {
 			});
 		}
 
-		if (type === FieldType.INLINE_BUTTON) {
-			return this.createInlineButtonBase(filePath, { declaration: declaration });
+		if (type === FieldType.BUTTON_GROUP) {
+			return this.createButtonGroupBase(filePath, {
+				renderChildType: renderChildType,
+				declaration: declaration,
+				position: position,
+			});
 		}
 
 		expectType<never>(type);
@@ -426,7 +437,7 @@ export abstract class API<Plugin extends IPlugin> {
 		return new JsViewField(this.plugin, uuid, filePath, declaration);
 	}
 
-	public createInlineButtonBase(filePath: string, options: InlineButtonOptions): InlineButtonBase {
+	public createButtonGroupBase(filePath: string, options: ButtonGroupOptions): ButtonGroupBase {
 		validate(
 			z.object({
 				filePath: V_FilePath,
@@ -440,14 +451,14 @@ export abstract class API<Plugin extends IPlugin> {
 
 		const uuid = getUUID();
 
-		let declaration: InlineButtonDeclaration;
+		let declaration: ButtonGroupDeclaration;
 		if (typeof options.declaration === 'string') {
-			declaration = this.buttonParser.parseInlineString(options.declaration);
+			declaration = this.buttonParser.fromGroupString(options.declaration);
 		} else {
-			declaration = this.buttonParser.validateSimpleInlineDeclaration(options.declaration);
+			declaration = this.buttonParser.validateGroup(options.declaration);
 		}
 
-		return new InlineButtonBase(this.plugin, uuid, filePath, declaration);
+		return new ButtonGroupBase(this.plugin, uuid, filePath, declaration, options.renderChildType, options.position);
 	}
 
 	public createButtonBase(filePath: string, options: ButtonOptions): ButtonBase {
@@ -466,9 +477,9 @@ export abstract class API<Plugin extends IPlugin> {
 
 		let declaration: ButtonDeclaration;
 		if (typeof options.declaration === 'string') {
-			declaration = this.buttonParser.parseButtonString(options.declaration);
+			declaration = this.buttonParser.fromString(options.declaration);
 		} else {
-			declaration = this.buttonParser.validateSimpleButtonConfig(options.declaration);
+			declaration = this.buttonParser.validate(options.declaration);
 		}
 
 		return new ButtonBase(this.plugin, uuid, filePath, declaration, options.position, options.isPreview);
@@ -523,7 +534,7 @@ export abstract class API<Plugin extends IPlugin> {
 			return 'INPUT';
 		} else if (fieldType === FieldType.VIEW_FIELD) {
 			return 'VIEW';
-		} else if (fieldType === FieldType.INLINE_BUTTON) {
+		} else if (fieldType === FieldType.BUTTON_GROUP) {
 			return 'BUTTON';
 		}
 
@@ -678,6 +689,7 @@ export abstract class API<Plugin extends IPlugin> {
 
 		this.plugin.metadataManager.write(value, bindTarget);
 	}
+
 	/**
 	 * Reads a property from meta binds metadata cache.
 	 * If the value is not present in the cache, it will check the underlying source. E.g. Obsidians metadata cache.

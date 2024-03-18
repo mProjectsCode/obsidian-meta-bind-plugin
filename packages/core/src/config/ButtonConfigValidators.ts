@@ -6,15 +6,15 @@ import {
 	type CommandButtonAction,
 	type CreateNoteButtonAction,
 	type InputButtonAction,
+	type InsertIntoNoteButtonAction,
 	type JSButtonAction,
-	type ReplaceInNoteButtonAction,
 	type OpenButtonAction,
+	type RegexpReplaceInNoteButtonAction,
+	type ReplaceInNoteButtonAction,
+	type ReplaceSelfButtonAction,
 	type SleepButtonAction,
 	type TemplaterCreateNoteButtonAction,
 	type UpdateMetadataButtonAction,
-	type ReplaceSelfButtonAction,
-	type RegexpReplaceInNoteButtonAction,
-	type InsertIntoNoteButtonAction,
 } from 'packages/core/src/config/ButtonConfig';
 import { oneOf, schemaForType } from 'packages/core/src/utils/ZodUtils';
 import { z } from 'zod';

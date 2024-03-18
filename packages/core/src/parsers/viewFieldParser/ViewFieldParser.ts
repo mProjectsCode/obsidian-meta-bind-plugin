@@ -2,7 +2,7 @@ import { type IPlugin } from 'packages/core/src/IPlugin';
 import { ViewFieldType } from 'packages/core/src/config/FieldConfigs';
 import { type BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import { runParser } from 'packages/core/src/parsers/ParsingError';
-import { VIEW_FIELD_FULL_DECLARATION } from 'packages/core/src/parsers/nomParsers/ViewFieldNomParsers';
+import { P_ViewFieldDeclaration } from 'packages/core/src/parsers/nomParsers/ViewFieldNomParsers';
 import {
 	type PartialUnvalidatedViewFieldDeclaration,
 	type SimpleViewFieldDeclaration,
@@ -23,7 +23,7 @@ export class ViewFieldParser {
 		const errorCollection = new ErrorCollection('ViewFieldDeclaration');
 
 		try {
-			const parserResult = runParser(VIEW_FIELD_FULL_DECLARATION, fullDeclaration);
+			const parserResult = runParser(P_ViewFieldDeclaration, fullDeclaration);
 
 			return this.partialToFullDeclaration(parserResult, fullDeclaration, errorCollection);
 		} catch (e) {

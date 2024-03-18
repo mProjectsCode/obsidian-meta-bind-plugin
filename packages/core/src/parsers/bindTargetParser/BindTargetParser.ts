@@ -6,7 +6,7 @@ import {
 	type SimpleBindTargetDeclaration,
 	type UnvalidatedBindTargetDeclaration,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { BIND_TARGET } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';
+import { P_BindTarget } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';
 import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { PropAccess } from 'packages/core/src/utils/prop/PropAccess';
@@ -20,7 +20,7 @@ export class BindTargetParser {
 	}
 
 	fromString(declarationString: string): UnvalidatedBindTargetDeclaration {
-		return runParser(BIND_TARGET, declarationString);
+		return runParser(P_BindTarget, declarationString);
 	}
 
 	fromStringAndValidate(

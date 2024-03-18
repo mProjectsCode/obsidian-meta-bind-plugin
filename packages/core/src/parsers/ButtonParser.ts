@@ -9,19 +9,19 @@ import { ErrorLevel, MetaBindButtonError } from 'packages/core/src/utils/errors/
 import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
 import { fromZodError } from 'zod-validation-error';
 
-const buttonParser = P.sequenceMap(
+const P_ButtonGroupDeclaration = P.sequenceMap(
 	(_, b) => b,
 	P.string('BUTTON'),
 	P.manyNotOf('[],^').separateBy(P.string(',').trim(P_UTILS.optionalWhitespace())).wrapString('[', ']'),
 );
 
-export interface InlineButtonDeclaration {
+export interface ButtonGroupDeclaration {
 	declarationString: string | undefined;
 	referencedButtonIds: string[];
 	errorCollection: ErrorCollection;
 }
 
-export interface SimpleInlineButtonDeclaration {
+export interface SimpleButtonGroupDeclaration {
 	referencedButtonIds: string[];
 }
 
@@ -38,12 +38,12 @@ export class ButtonParser {
 		this.plugin = plugin;
 	}
 
-	public parseInlineString(input: string): InlineButtonDeclaration {
-		const errorCollection = new ErrorCollection('InlineButton');
+	public fromGroupString(input: string): ButtonGroupDeclaration {
+		const errorCollection = new ErrorCollection('ButtonGroup');
 		let referencedButtonIds: string[] = [];
 
 		try {
-			referencedButtonIds = runParser(buttonParser, input);
+			referencedButtonIds = runParser(P_ButtonGroupDeclaration, input);
 		} catch (e) {
 			errorCollection.add(e);
 		}
@@ -54,21 +54,21 @@ export class ButtonParser {
 		};
 	}
 
-	public validateSimpleInlineDeclaration(declaration: SimpleInlineButtonDeclaration): InlineButtonDeclaration {
+	public validateGroup(declaration: SimpleButtonGroupDeclaration): ButtonGroupDeclaration {
 		return {
 			declarationString: undefined,
 			referencedButtonIds: declaration.referencedButtonIds,
-			errorCollection: new ErrorCollection('InlineButton'),
+			errorCollection: new ErrorCollection('ButtonGroup'),
 		};
 	}
 
-	public parseButtonString(input: string): ButtonDeclaration {
+	public fromString(input: string): ButtonDeclaration {
 		const errorCollection = new ErrorCollection('Button');
 		let config: ButtonConfig | undefined = undefined;
 
 		try {
 			const parsedYaml = this.plugin.internal.parseYaml(input);
-			config = this.validateButtonConfig(parsedYaml);
+			config = this.validateConfig(parsedYaml);
 		} catch (e) {
 			errorCollection.add(e);
 		}
@@ -80,7 +80,7 @@ export class ButtonParser {
 		};
 	}
 
-	public validateButtonConfig(config: unknown): ButtonConfig {
+	public validateConfig(config: unknown): ButtonConfig {
 		const parsedConfig = V_ButtonConfig.safeParse(config);
 
 		if (!parsedConfig.success) {
@@ -102,12 +102,12 @@ export class ButtonParser {
 		return parsedConfig.data;
 	}
 
-	public validateSimpleButtonConfig(config: unknown): ButtonDeclaration {
+	public validate(config: unknown): ButtonDeclaration {
 		const errorCollection = new ErrorCollection('Button');
 		let validatedConfig: ButtonConfig | undefined = undefined;
 
 		try {
-			validatedConfig = this.validateButtonConfig(config);
+			validatedConfig = this.validateConfig(config);
 		} catch (e) {
 			errorCollection.add(e);
 		}

@@ -11,18 +11,18 @@ import {
 	type InputFieldDeclaration,
 	type PartialUnvalidatedInputFieldDeclaration,
 	type SimpleInputFieldDeclaration,
-	type UnvalidatedFieldArgument,
 	type UnvalidatedInputFieldDeclaration,
 } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
 import { InputFieldDeclarationValidator } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclarationValidator';
 import {
-	INPUT_FIELD_FULL_DECLARATION,
-	TEMPLATE_INPUT_FIELD_FULL_DECLARATION,
+	P_InputFieldDeclaration,
+	P_PartialInputFieldDeclaration,
 } from 'packages/core/src/parsers/nomParsers/InputFieldNomParsers';
 import { deepFreeze } from 'packages/core/src/utils/Utils';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { ErrorLevel } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { type UnvalidatedBindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { type UnvalidatedFieldArgument } from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
 
 export type InputFieldDeclarationTemplate = TemplateSupplierTemplate<UnvalidatedInputFieldDeclaration>;
 
@@ -39,7 +39,7 @@ export class InputFieldParser implements ITemplateSupplier<UnvalidatedInputField
 		const errorCollection = new ErrorCollection('InputField');
 
 		try {
-			const parserResult = runParser(INPUT_FIELD_FULL_DECLARATION, declarationString);
+			const parserResult = runParser(P_InputFieldDeclaration, declarationString);
 
 			let declaration = this.partialToFullDeclaration(parserResult, declarationString, errorCollection);
 			declaration = this.applyTemplate(declaration);
@@ -177,7 +177,7 @@ export class InputFieldParser implements ITemplateSupplier<UnvalidatedInputField
 		const errorCollection = new ErrorCollection('InputFieldParser');
 
 		try {
-			const parserResult = runParser(TEMPLATE_INPUT_FIELD_FULL_DECLARATION, template);
+			const parserResult = runParser(P_PartialInputFieldDeclaration, template);
 
 			return this.partialToFullDeclaration(parserResult, template, errorCollection);
 		} catch (e) {

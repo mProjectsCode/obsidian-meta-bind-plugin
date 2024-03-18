@@ -34,20 +34,26 @@ const mb = engine.getPlugin('obsidian-meta-bind-plugin').api;
 
 const options = ['a', 'b', 'c'];
 
-// first, create an empty declaration
-let declaration = mb.inputField.createInputFieldDeclaration();
-// set the input field type
-declaration = mb.inputField.setType(declaration, 'select');
-// bind the input field to 'select'
-declaration = mb.inputField.setBindTargetMetadataField(declaration, 'select');
+const arguments = options.map(x => ({
+	name: 'option',
+	value: [x],
+}));
 
-for (const option of options) {
-	// add all the options
-	declaration = mb.inputField.addArgument(declaration, {name: 'option', value: [option]});
-}
+arguments.push({
+	name: 'title',
+	value: ['I was created using JS Engine and the Meta Bind API'],
+});
 
-declaration = mb.inputField.addArgument(declaration, {name: 'title', value: ['I was created using JS Engine and the Meta Bind API']});
+const bindTarget = mb.parseBindTarget('select', context.file.path);
 
-// create the input field in the container and pass in the component for life cycle management (container and component are globals exposed by js engine)
-mb.createInputField(declaration, 'block', context.file.path, container, component);
+const base = mb.createInputFieldBase(context.file.path, {
+	renderChildType: 'block',
+	declaration: {
+		inputFieldType: 'select',
+		bindTarget: bindTarget,
+		arguments: arguments,
+	},
+});
+
+mb.wrapInMDRC(base, container, component);
 ```

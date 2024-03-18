@@ -1,4 +1,4 @@
-import { PROP_ACCESS_TYPE, type PropAccess, type PropAccessResult } from 'packages/core/src/utils/prop/PropAccess';
+import { type PropAccess, type PropAccessResult, PropAccessType } from 'packages/core/src/utils/prop/PropAccess';
 
 export class PropPath {
 	path: PropAccess[];
@@ -79,7 +79,7 @@ export class PropPath {
 			return value;
 		}
 
-		return nextPathElement.type === PROP_ACCESS_TYPE.OBJECT ? {} : [];
+		return nextPathElement.type === PropAccessType.OBJECT ? {} : [];
 	}
 
 	toStringArray(): string[] {
