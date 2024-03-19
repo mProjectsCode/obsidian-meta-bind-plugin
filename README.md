@@ -14,26 +14,61 @@ To learn more, check out the [docs](https://mprojectscode.github.io/obsidian-met
 > [!WARNING]
 > The next plugin version will probably be 1.0.0, which will include breaking changes to the plugins JavaScript API.
 
-### Demo
+## Demo
 
 ![](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/raw/master/images/meta-bind-plugin-demo-3-gif.gif)
 
-### Docs
+## Docs
 
 The docs for the plugin are available [here](https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs).
 The plugin provides an offline FAQ/Help page as well, which can be accessed via a command or the plugins settings page.
 
-### Problems, unexpected behavior or improvement suggestions?
+## Problems, unexpected behavior or improvement suggestions?
 
-You are more than welcome to open an issue on [GitHub](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues).
+You are more than welcome to open an issue on [GitHub](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues)
 
-### Contributions
+## Installation
+
+### Obsidian Marketplace (Recommended)
+
+1. Open `Settings -> Community Plugins` in your vault
+2. Click on the `Browse` button in the `Community plugins` section
+3. Search for `Meta Bind`
+4. Select `Meta Bind` and click first `Install`, then `Enable`
+
+### BRAT (For Canary Releases)
+
+1. Install and enable the `BRAT` plugin
+2. Run the `BRAT: Plugins: Add a beta plugin for testing` command
+3. Enter `https://github.com/mProjectsCode/obsidian-meta-bind-plugin` into the text field
+4. Click on `Add Pluign`
+
+## License
+
+[GPL-3.0](https://choosealicense.com/licenses/gpl-3.0/)
+
+## Credits
+
+I want to thank the following people:
+
+-   blacksmithgu for the Dataview type definitions
+-   Daniel (dbarenholz) for his contributions to the plugin and the docs
+-   koala (komentenstaub) for help with CodeMirror
+-   sailKite for help with CSS
+-   Sigrunixia for enabling me to work on the Obsidian Publish version of the plugin
+-   Zachatoo and SilentVoid13 for the Templater type definitions
+
+-   All the contributors to the plugin and the docs
+-   All the authors of the libraries used in the plugin
+-   Everyone who has given feedback and suggestions
+
+## Contributions
 
 Thank you for wanting to contribute to this project.
 
 Contributions are always welcome. If you have an idea, feel free to open a feature request under the issue tab or even create a pull request.
 
-#### Notes for Contributors
+### Notes for Contributors
 
 The plugin uses [Bun](https://bun.sh/) instead of Node.js/NPM to manage dependencies.
 To install the dependencies, run `bun install` and `bun run pack:i` in the root directory of the project.
