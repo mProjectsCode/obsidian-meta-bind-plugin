@@ -20,7 +20,8 @@ import {
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import { expectType, openURL } from 'packages/core/src/utils/Utils';
 import { parseLiteral } from 'packages/core/src/utils/Literal';
-import { type NotePosition } from 'packages/core/src/api/API';
+
+import { type NotePosition } from 'packages/core/src/config/FieldConfigs';
 
 export class ButtonActionRunner {
 	plugin: IPlugin;

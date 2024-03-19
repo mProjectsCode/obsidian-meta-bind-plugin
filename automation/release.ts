@@ -1,7 +1,7 @@
-import { UserError } from 'utils';
-import { CanaryVersion, Version, getIncrementOptions, parseVersion, stringifyVersion } from 'versionUtils';
+import { UserError } from 'utils/utils';
+import { CanaryVersion, Version, getIncrementOptions, parseVersion, stringifyVersion } from 'utils/versionUtils';
 import config from './config.json';
-import { $choice as $choice, $confirm, $seq, CMD_FMT, Verboseness } from './shellUtils';
+import { $choice as $choice, $confirm, $seq, CMD_FMT, Verboseness } from 'utils/shellUtils';
 
 async function runPreconditions(): Promise<void> {
 	// run preconditions

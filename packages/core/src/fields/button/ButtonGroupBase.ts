@@ -4,8 +4,7 @@ import { ButtonGroupField } from 'packages/core/src/fields/button/ButtonGroupFie
 import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { type ButtonGroupDeclaration } from 'packages/core/src/parsers/ButtonParser';
-import { type RenderChildType } from 'packages/core/src/config/FieldConfigs';
-import { type NotePosition } from 'packages/core/src/api/API';
+import { type NotePosition, type RenderChildType } from 'packages/core/src/config/FieldConfigs';
 
 export class ButtonGroupBase extends FieldBase {
 	errorCollection: ErrorCollection;

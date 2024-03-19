@@ -1,4 +1,4 @@
-import { $, Verboseness } from 'shellUtils';
+import { $, Verboseness } from 'utils/shellUtils';
 import config from './config.json';
 
 async function installScript() {

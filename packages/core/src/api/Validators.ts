@@ -1,5 +1,16 @@
 import { schemaForType } from 'packages/core/src/utils/ZodUtils';
-import { InputFieldType, RenderChildType } from 'packages/core/src/config/FieldConfigs';
+import {
+	type ButtonGroupOptions,
+	type ButtonOptions,
+	type EmbedOptions,
+	FieldType,
+	type InputFieldOptions,
+	InputFieldType,
+	type JsViewFieldOptions,
+	type NotePosition,
+	RenderChildType,
+	type ViewFieldOptions,
+} from 'packages/core/src/config/FieldConfigs';
 import { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import type { ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import type {
@@ -25,16 +36,6 @@ import { PropPath } from 'packages/core/src/utils/prop/PropPath';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { z } from 'zod';
 import { type ParsingPosition, type ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
-import {
-	type ButtonGroupOptions,
-	type ButtonOptions,
-	type EmbedOptions,
-	FieldType,
-	type InputFieldOptions,
-	type JsViewFieldOptions,
-	type NotePosition,
-	type ViewFieldOptions,
-} from 'packages/core/src/api/API';
 import { type SimpleButtonGroupDeclaration } from 'packages/core/src/parsers/ButtonParser';
 import { V_ButtonConfig } from 'packages/core/src/config/ButtonConfigValidators';
 import {

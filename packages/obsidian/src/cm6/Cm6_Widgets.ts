@@ -1,8 +1,8 @@
 import { type EditorView, WidgetType } from '@codemirror/view';
 import { type Component } from 'obsidian';
-import { type InlineFieldType } from 'packages/core/src/api/API';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 import { type FieldMDRC } from 'packages/obsidian/src/FieldMDRC';
+import { type InlineFieldType } from 'packages/core/src/config/FieldConfigs';
 
 export class MarkdownRenderChildWidget extends WidgetType {
 	type: InlineFieldType;

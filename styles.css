@@ -620,3 +620,12 @@ th.mb-html-table-button-cell {
 .meta-bind-small-width > * {
 	width: 80px;
 }
+
+/* --- PUBLISH STUFF --- */
+
+.published-container {
+	.mb-input-type-toggle > div {
+		display: inline-block;
+		vertical-align: sub;
+	}
+}

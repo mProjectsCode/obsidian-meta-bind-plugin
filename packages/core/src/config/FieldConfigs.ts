@@ -1,3 +1,12 @@
+import type {
+	SimpleJsViewFieldDeclaration,
+	SimpleViewFieldDeclaration,
+} from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
+import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
+import type { SimpleInputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
+import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
+import type { SimpleButtonGroupDeclaration } from 'packages/core/src/parsers/ButtonParser';
+
 export interface FieldArgumentValueConfig {
 	name: string;
 	// empty is any
@@ -551,3 +560,67 @@ export enum RenderChildType {
 }
 
 export const EMBED_MAX_DEPTH = 8;
+
+export enum FieldType {
+	INPUT_FIELD = 'INPUT_FIELD',
+	VIEW_FIELD = 'VIEW_FIELD',
+	JS_VIEW_FIELD = 'JS_VIEW_FIELD',
+	BUTTON_GROUP = 'BUTTON_GROUP',
+	BUTTON = 'BUTTON',
+	EMBED = 'EMBED',
+	EXCLUDED = 'EXCLUDED',
+}
+
+export interface InputFieldOptions {
+	renderChildType: RenderChildType;
+	declaration: SimpleInputFieldDeclaration | string;
+	scope?: BindTargetScope | undefined;
+}
+
+export interface ViewFieldOptions {
+	renderChildType: RenderChildType;
+	declaration: SimpleViewFieldDeclaration | string;
+	scope?: BindTargetScope | undefined;
+}
+
+export interface JsViewFieldOptions {
+	declaration: SimpleJsViewFieldDeclaration | string;
+}
+
+export interface ButtonGroupOptions {
+	renderChildType: RenderChildType;
+	declaration: SimpleButtonGroupDeclaration | string;
+	position?: NotePosition | undefined;
+}
+
+export interface ButtonOptions {
+	declaration: ButtonConfig | string;
+	position?: NotePosition | undefined;
+	isPreview: boolean;
+}
+
+export interface NotePosition {
+	lineStart: number;
+	lineEnd: number;
+}
+
+export interface EmbedOptions {
+	depth: number;
+	content: string;
+}
+
+export interface FieldOptionMap {
+	[FieldType.INPUT_FIELD]: InputFieldOptions;
+	[FieldType.VIEW_FIELD]: ViewFieldOptions;
+	[FieldType.JS_VIEW_FIELD]: JsViewFieldOptions;
+	[FieldType.BUTTON_GROUP]: ButtonGroupOptions;
+	[FieldType.BUTTON]: ButtonOptions;
+	[FieldType.EMBED]: EmbedOptions;
+	[FieldType.EXCLUDED]: undefined;
+}
+
+export type InlineFieldType = FieldType.INPUT_FIELD | FieldType.VIEW_FIELD | FieldType.BUTTON_GROUP;
+
+export function isFieldTypeAllowedInline(type: FieldType): type is InlineFieldType {
+	return type === FieldType.INPUT_FIELD || type === FieldType.VIEW_FIELD || type === FieldType.BUTTON_GROUP;
+}

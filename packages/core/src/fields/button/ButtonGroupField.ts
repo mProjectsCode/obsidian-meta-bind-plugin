@@ -4,8 +4,7 @@ import { ButtonField } from 'packages/core/src/fields/button/ButtonField';
 import { DomHelpers } from 'packages/core/src/utils/Utils';
 import ButtonComponent from 'packages/core/src/utils/components/ButtonComponent.svelte';
 import { Mountable } from 'packages/core/src/utils/Mountable';
-import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
-import { type NotePosition } from 'packages/core/src/api/API';
+import { type NotePosition, RenderChildType } from 'packages/core/src/config/FieldConfigs';
 
 export class ButtonGroupField extends Mountable {
 	plugin: IPlugin;

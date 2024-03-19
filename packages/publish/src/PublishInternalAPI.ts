@@ -12,6 +12,7 @@ import { type ModalContent } from 'packages/core/src/modals/ModalContent';
 import { type IModal } from 'packages/core/src/modals/IModal';
 import { type SelectModalContent } from 'packages/core/src/modals/SelectModalContent';
 import { type ContextMenuItemDefinition, type IContextMenu } from 'packages/core/src/utils/IContextMenu';
+import { Notice, parseYaml, stringifyYaml, setIcon } from 'obsidian/publish';
 
 // TODO: implement
 export class PublishInternalAPI extends InternalAPI<MetaBindPublishPlugin> {
@@ -53,17 +54,21 @@ export class PublishInternalAPI extends InternalAPI<MetaBindPublishPlugin> {
 		return name;
 	}
 
-	public showNotice(_: string): void {}
-
-	public parseYaml(_yaml: string): unknown {
-		return {};
+	public showNotice(message: string): void {
+		new Notice(message);
 	}
 
-	public stringifyYaml(_yaml: unknown): string {
-		return '';
+	public parseYaml(yaml: string): unknown {
+		return parseYaml(yaml);
 	}
 
-	public setIcon(_element: HTMLElement, _icon: string): void {}
+	public stringifyYaml(yaml: unknown): string {
+		return stringifyYaml(yaml);
+	}
+
+	public setIcon(element: HTMLElement, icon: string): void {
+		setIcon(element, icon);
+	}
 
 	public imagePathToUri(imagePath: string): string {
 		return imagePath;
@@ -86,11 +91,21 @@ export class PublishInternalAPI extends InternalAPI<MetaBindPublishPlugin> {
 	}
 
 	public getAllFiles(): string[] {
-		return [];
+		return Object.keys(publish.site.cache);
 	}
 
 	public getAllFolders(): string[] {
-		return [];
+		const filePaths = this.getAllFiles();
+
+		const folders = new Set<string>();
+
+		for (const filePath of filePaths) {
+			const parts = filePath.split('/');
+			parts.pop();
+			folders.add(parts.join('/'));
+		}
+
+		return Array.from(folders);
 	}
 
 	public getImageSuggesterOptions(_inputField: ImageSuggesterIPF): SuggesterOption<string>[] {

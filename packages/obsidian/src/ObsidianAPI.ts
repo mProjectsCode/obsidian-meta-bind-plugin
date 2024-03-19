@@ -1,7 +1,7 @@
 import { type Component } from 'obsidian';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 import { V_API_createTable } from 'packages/obsidian/src/APIValidators';
-import { API, type FieldType, isFieldTypeAllowedInline } from 'packages/core/src/api/API.js';
+import { API } from 'packages/core/src/api/API.js';
 import { MetaBindTable } from 'packages/core/src/fields/metaBindTable/MetaBindTable';
 import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { type UnvalidatedInputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
@@ -12,6 +12,7 @@ import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/error
 import { MarkdownRenderChildWidget } from 'packages/obsidian/src/cm6/Cm6_Widgets';
 import { FieldMDRC } from 'packages/obsidian/src/FieldMDRC';
 import { type FieldBase } from 'packages/core/src/fields/FieldBase';
+import { type FieldType, isFieldTypeAllowedInline } from 'packages/core/src/config/FieldConfigs';
 
 export interface ComponentLike {
 	addChild(child: Component): void;
