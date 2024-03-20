@@ -1,4 +1,5 @@
 import { getUUID } from 'packages/core/src/utils/Utils';
+import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 export interface NotifierInterface<T, TListener extends Listener<T>> {
 	registerListener(listener: Omit<TListener, 'uuid'>): TListener;
@@ -41,7 +42,19 @@ export class Notifier<T, TListener extends Listener<T>> implements NotifierInter
 	public notifyListeners(value: T): void {
 		for (const listener of this.listeners) {
 			// console.debug('meta-bind | calling listener callback', value);
-			listener.callback(value);
+			try {
+				listener.callback(value);
+			} catch (e) {
+				const error = e instanceof Error ? e : String(e);
+
+				console.error(
+					new MetaBindInternalError({
+						errorLevel: ErrorLevel.ERROR,
+						effect: 'error while calling listener callback',
+						cause: error,
+					}),
+				);
+			}
 		}
 	}
 }

@@ -31,6 +31,8 @@ import { type IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
 import { FuzzySearch } from 'packages/obsidian/src/FuzzySearch';
 import { type ContextMenuItemDefinition, type IContextMenu } from 'packages/core/src/utils/IContextMenu';
 import { ObsidianContextMenu } from 'packages/obsidian/src/ObsidianContextMenu';
+import { z, type ZodType } from 'zod';
+import { type LifecycleHook } from 'packages/core/src/api/API';
 
 export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 	readonly app: App;
@@ -39,6 +41,11 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 		super(plugin);
 
 		this.app = plugin.app;
+	}
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	public getLifecycleHookValidator(): ZodType<LifecycleHook, any, any> {
+		return z.instanceof(Component);
 	}
 
 	public getImageSuggesterOptions(inputField: ImageSuggesterLikeIPF): SuggesterOption<string>[] {

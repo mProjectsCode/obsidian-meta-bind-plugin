@@ -5,6 +5,7 @@ import { type MetadataSubscription } from 'packages/core/src/metadata/MetadataSu
 import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { type Signal } from 'packages/core/src/utils/Signal';
 import { getUUID } from 'packages/core/src/utils/Utils';
+import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 export type ComputeFunction = (values: unknown[]) => Promise<unknown> | unknown;
@@ -73,11 +74,23 @@ export class ComputedMetadataSubscription implements IMetadataSubscription {
 	}
 
 	private async computeValue(): Promise<void> {
-		const values = this.dependencySubscriptions.map(x => x.callbackSignal.get());
-		const value = await this.computeFunction(values);
-		this.callbackSignal.set(value);
-		if (this.bindTarget !== undefined) {
-			this.metadataManager.write(value, this.bindTarget, this.uuid);
+		try {
+			const values = this.dependencySubscriptions.map(x => x.callbackSignal.get());
+			const value = await this.computeFunction(values);
+			this.callbackSignal.set(value);
+			if (this.bindTarget !== undefined) {
+				this.metadataManager.write(value, this.bindTarget, this.uuid);
+			}
+		} catch (e) {
+			const error = e instanceof Error ? e : String(e);
+
+			console.warn(
+				new MetaBindInternalError({
+					errorLevel: ErrorLevel.ERROR,
+					effect: 'Failed to compute value of computed subscription',
+					cause: error,
+				}),
+			);
 		}
 	}
 

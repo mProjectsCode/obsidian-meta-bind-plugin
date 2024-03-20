@@ -46,7 +46,6 @@ import { JsViewFieldParser } from 'packages/core/src/parsers/viewFieldParser/JsV
 import { Signal } from 'packages/core/src/utils/Signal';
 import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
 import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { type MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
 import {
 	V_BindTargetDeclaration,
 	V_BindTargetScope,
@@ -62,6 +61,10 @@ import {
 } from 'packages/core/src/api/Validators';
 import { validate } from 'packages/core/src/utils/ZodUtils';
 import { z } from 'zod';
+
+export interface LifecycleHook {
+	register(cb: () => void): void;
+}
 
 export interface APIFieldOverrides {
 	inputFieldParser?: InputFieldParser;
@@ -680,19 +683,23 @@ export abstract class API<Plugin extends IPlugin> {
 	 * IF YOU DON'T CALL `unsubscribe` THE SUBSCRIPTION WILL LEAK MEMORY.
 	 *
 	 * @param bindTarget
+	 * @param lifecycleHook In Obsidian this is an instance of the Component class. The subscription will be automatically unsubscribed when the component is unloaded.
 	 * @param callback
 	 */
 	public subscribeToMetadata(
 		bindTarget: BindTargetDeclaration,
+		lifecycleHook: LifecycleHook,
 		callback: (value: unknown) => void,
-	): MetadataSubscription {
+	): void {
 		validate(
 			z.object({
 				bindTarget: V_BindTargetDeclaration,
+				lifecycleHook: this.plugin.internal.getLifecycleHookValidator(),
 				callback: z.function().args(z.any()).returns(z.void()),
 			}),
 			{
 				bindTarget: bindTarget,
+				lifecycleHook: lifecycleHook,
 				callback: callback,
 			},
 		);
@@ -704,8 +711,12 @@ export abstract class API<Plugin extends IPlugin> {
 			callback: callback,
 		});
 
-		return this.plugin.metadataManager.subscribe(uuid, signal, bindTarget, (): void => {
+		const subscription = this.plugin.metadataManager.subscribe(uuid, signal, bindTarget, (): void => {
 			signal.unregisterAllListeners();
+		});
+
+		lifecycleHook.register(() => {
+			subscription.unsubscribe();
 		});
 	}
 }

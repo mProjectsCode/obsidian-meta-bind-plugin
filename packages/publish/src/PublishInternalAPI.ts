@@ -12,10 +12,17 @@ import { type ModalContent } from 'packages/core/src/modals/ModalContent';
 import { type IModal } from 'packages/core/src/modals/IModal';
 import { type SelectModalContent } from 'packages/core/src/modals/SelectModalContent';
 import { type ContextMenuItemDefinition, type IContextMenu } from 'packages/core/src/utils/IContextMenu';
-import { Notice, parseYaml, stringifyYaml, setIcon } from 'obsidian/publish';
+import { Notice, parseYaml, stringifyYaml, setIcon, Component } from 'obsidian/publish';
+import { z, type ZodType } from 'zod';
+import { type LifecycleHook } from 'packages/core/src/api/API';
 
 // TODO: implement
 export class PublishInternalAPI extends InternalAPI<MetaBindPublishPlugin> {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	public getLifecycleHookValidator(): ZodType<LifecycleHook, any, any> {
+		return z.instanceof(Component);
+	}
+
 	public async renderMarkdown(markdown: string, element: HTMLElement, _filePath: string): Promise<() => void> {
 		element.innerText += markdown;
 		return () => {};

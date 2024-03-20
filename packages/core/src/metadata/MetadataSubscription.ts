@@ -3,6 +3,7 @@ import { type MetadataManager } from 'packages/core/src/metadata/MetadataManager
 import { type Signal } from 'packages/core/src/utils/Signal';
 import { type ComputedSubscriptionDependency } from 'packages/core/src/metadata/ComputedMetadataSubscription';
 import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 export class MetadataSubscription implements IMetadataSubscription {
 	readonly uuid: string;
@@ -55,7 +56,19 @@ export class MetadataSubscription implements IMetadataSubscription {
 	 * @param value
 	 */
 	public notify(value: unknown): void {
-		this.callbackSignal.set(value);
+		try {
+			this.callbackSignal.set(value);
+		} catch (e) {
+			const error = e instanceof Error ? e : String(e);
+
+			console.warn(
+				new MetaBindInternalError({
+					errorLevel: ErrorLevel.ERROR,
+					effect: 'Failed to notify subscription of updated value in the cache',
+					cause: error,
+				}),
+			);
+		}
 	}
 
 	public getDependencies(): ComputedSubscriptionDependency[] {

@@ -28,6 +28,8 @@ import { SuggesterSelectModal } from 'packages/core/src/modals/selectModalConten
 import { type IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
 import { type ContextMenuItemDefinition, type IContextMenu } from 'packages/core/src/utils/IContextMenu';
 import TextPromptModalContent from 'packages/core/src/modals/modalContents/TextPromptModalContent.svelte';
+import { type z } from 'zod';
+import { type LifecycleHook } from 'packages/core/src/api/API';
 
 export interface ErrorIndicatorProps {
 	errorCollection: ErrorCollection;
@@ -61,6 +63,9 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	constructor(plugin: Plugin) {
 		this.plugin = plugin;
 	}
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	abstract getLifecycleHookValidator(): z.ZodType<LifecycleHook, any, any>;
 
 	/**
 	 * Get the options for the image suggester input field.

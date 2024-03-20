@@ -1,6 +1,8 @@
 ---
-text: abcasdasd
+text: abcasdas
 locked: true
+from_year: a2323
+to_year: 23423dss
 ---
 
 Locked: `INPUT[toggle:locked]`
@@ -39,11 +41,9 @@ const reactive = engine.reactive(render, mb.getMetadata(bindTarget));
 // then we subscribe to the metadata that the bind target points to and rerender the reactive component everythime the bind target value changes
 const subscription = mb.subscribeToMetadata(
 	bindTarget,
+	component,
 	(value) => reactive.refresh(value)
 );
-
-// don't forget to unregister the subscription when this code block unloads
-component.register(() => subscription.unsubscribe());
 
 return reactive;
 ```
@@ -61,10 +61,47 @@ const reactive = engine.reactive(onUpdate, mb.getMetadata(bindTarget));
 
 const subscription = mb.subscribeToMetadata(
 	bindTarget,
+	component,
 	(value) => reactive.refresh(value)
 );
 
-component.register(() => subscription.unsubscribe());
+return reactive;
+```
+
+`INPUT[text:from_year]`
+`INPUT[text:to_year]`
+
+```js-engine
+// Grab metabind API and extract metadata fields
+const mb     = engine.getPlugin('obsidian-meta-bind-plugin').api;
+const mbFrom = mb.parseBindTarget('from_year', context.file.path);
+const mbTo   = mb.parseBindTarget('to_year', context.file.path);
+
+const headers = ["Date", "File"];
+
+function onUpdate(uFrom, fTo) {
+    return [uFrom, fTo];
+}
+
+const reactive = engine.reactive(
+    // update function
+    onUpdate,
+    // arguments
+    mb.getMetadata(mbFrom),
+    mb.getMetadata(mbTo)
+);
+
+const subscriptionFrom = mb.subscribeToMetadata(
+    mbFrom,
+    component,
+    (newFrom) => {console.log(newFrom); reactive.refresh(newFrom, mb.getMetadata(mbTo))}
+);
+
+const subscriptionTo = mb.subscribeToMetadata(
+    mbTo,
+    component,
+    (newTo) => {console.log(newTo); reactive.refresh(mb.getMetadata(mbFrom), newTo)}
+);
 
 return reactive;
 ```

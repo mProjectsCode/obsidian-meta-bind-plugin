@@ -14,6 +14,8 @@ import { SelectModalContent } from 'packages/core/src/modals/SelectModalContent'
 import { ContextMenuItemDefinition, IContextMenu } from 'packages/core/src/utils/IContextMenu';
 import { TestFileSystem } from 'tests/__mocks__/TestFileSystem';
 import YAML from 'yaml';
+import { z, ZodType } from 'zod';
+import { LifecycleHook } from 'packages/core/src/api/API';
 
 export class TestInternalAPI extends InternalAPI<TestPlugin> {
 	fileSystem: TestFileSystem;
@@ -22,6 +24,10 @@ export class TestInternalAPI extends InternalAPI<TestPlugin> {
 		super(plugin);
 
 		this.fileSystem = new TestFileSystem();
+	}
+
+	public getLifecycleHookValidator(): ZodType<LifecycleHook, any, any> {
+		return z.object({ register: z.function().returns(z.void()) });
 	}
 
 	public async renderMarkdown(markdown: string, element: HTMLElement, _filePath: string): Promise<() => void> {
