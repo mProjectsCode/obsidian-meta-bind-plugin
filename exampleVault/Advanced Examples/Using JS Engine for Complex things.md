@@ -1,8 +1,8 @@
 ---
 text: abcasdas
 locked: true
-from_year: a2323
-to_year: 23423dss
+from_year: a22
+to_year: "23"
 ---
 
 Locked: `INPUT[toggle:locked]`
@@ -104,4 +104,15 @@ const subscriptionTo = mb.subscribeToMetadata(
 );
 
 return reactive;
+```
+
+```js-engine
+// Grab metabind API and extract metadata fields
+const mb     = engine.getPlugin('obsidian-meta-bind-plugin').api;
+const mbFrom = mb.parseBindTarget('from_year', context.file.path);
+const mbTo   = mb.parseBindTarget('to_year', context.file.path);
+
+return mb.renderOnChanges([mbFrom, mbTo], component, (from, to) => {
+	return [from, to]
+})
 ```

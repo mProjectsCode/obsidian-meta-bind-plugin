@@ -134,6 +134,16 @@ export class MetadataManager {
 		return subscription;
 	}
 
+	/**
+	 * Subscribes a computed value to the metadata manager.
+	 *
+	 * @param uuid
+	 * @param callbackSignal The signal that will hold the computed value.
+	 * @param bindTarget The bind target that the computed value will be written to.
+	 * @param dependencies The dependencies of the computed value.
+	 * @param computeFunction The function that computes the value from the dependencies.
+	 * @param onDelete Called when the metadata manager wants to delete the subscription.
+	 */
 	public subscribeComputed(
 		uuid: string,
 		callbackSignal: Signal<unknown>,
