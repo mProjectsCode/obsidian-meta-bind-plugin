@@ -63,7 +63,6 @@ export interface MetaBindPluginSettings {
 	devMode: boolean;
 	ignoreCodeBlockRestrictions: boolean;
 	preferredDateFormat: string;
-	useUsDateInputOrder: boolean;
 	firstWeekday: Weekday;
 	syncInterval: number;
 	maxSyncInterval: number;
@@ -90,7 +89,6 @@ export const DEFAULT_SETTINGS: MetaBindPluginSettings = {
 	devMode: false,
 	ignoreCodeBlockRestrictions: false,
 	preferredDateFormat: 'YYYY-MM-DD',
-	useUsDateInputOrder: false,
 	firstWeekday: weekdays[1],
 	syncInterval: 200,
 	minSyncInterval: 50,

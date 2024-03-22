@@ -303,17 +303,17 @@ let TEST_CONFIG: IPFTest[] = [
 		testCases: [
 			{
 				declaration: `INPUT[${InputFieldType.DATE}:${TEST_PROP}]`,
-				validValues: ['2021-01-01', '2021-01-02', '2021-01-03'],
-				invalidValues: [
-					TEST_VALUES.UNDEFINED,
-					TEST_VALUES.NULL,
-					TEST_VALUES.OBJECT,
-					TEST_VALUES.ARRAY,
-					TEST_VALUES.EMPTY_STRING,
-					TEST_VALUES.STRING,
-					TEST_VALUES.POSITIVE_INT,
-					TEST_VALUES.NEGATIVE_INT,
+				validValues: [TEST_VALUES.EMPTY_STRING, TEST_VALUES.STRING],
+				validMappedValues: [
+					[TEST_VALUES.POSITIVE_INT, stringifyLiteral(TEST_VALUES.POSITIVE_INT)],
+					[TEST_VALUES.NEGATIVE_INT, stringifyLiteral(TEST_VALUES.NEGATIVE_INT)],
+					[TEST_VALUES.POSITIVE_FLOAT, stringifyLiteral(TEST_VALUES.POSITIVE_FLOAT)],
+					[TEST_VALUES.NEGATIVE_FLOAT, stringifyLiteral(TEST_VALUES.NEGATIVE_FLOAT)],
+					[TEST_VALUES.TRUE, stringifyLiteral(TEST_VALUES.TRUE)],
+					[TEST_VALUES.FALSE, stringifyLiteral(TEST_VALUES.FALSE)],
+					[TEST_VALUES.NULL, ''],
 				],
+				invalidValues: [TEST_VALUES.UNDEFINED, TEST_VALUES.OBJECT, TEST_VALUES.ARRAY],
 			},
 		],
 	},
@@ -322,17 +322,17 @@ let TEST_CONFIG: IPFTest[] = [
 		testCases: [
 			{
 				declaration: `INPUT[${InputFieldType.TIME}:${TEST_PROP}]`,
-				validValues: ['14:45', '05:03'],
-				invalidValues: [
-					TEST_VALUES.UNDEFINED,
-					TEST_VALUES.NULL,
-					TEST_VALUES.OBJECT,
-					TEST_VALUES.ARRAY,
-					TEST_VALUES.EMPTY_STRING,
-					TEST_VALUES.STRING,
-					TEST_VALUES.POSITIVE_INT,
-					TEST_VALUES.NEGATIVE_INT,
+				validValues: [TEST_VALUES.EMPTY_STRING, TEST_VALUES.STRING],
+				validMappedValues: [
+					[TEST_VALUES.POSITIVE_INT, stringifyLiteral(TEST_VALUES.POSITIVE_INT)],
+					[TEST_VALUES.NEGATIVE_INT, stringifyLiteral(TEST_VALUES.NEGATIVE_INT)],
+					[TEST_VALUES.POSITIVE_FLOAT, stringifyLiteral(TEST_VALUES.POSITIVE_FLOAT)],
+					[TEST_VALUES.NEGATIVE_FLOAT, stringifyLiteral(TEST_VALUES.NEGATIVE_FLOAT)],
+					[TEST_VALUES.TRUE, stringifyLiteral(TEST_VALUES.TRUE)],
+					[TEST_VALUES.FALSE, stringifyLiteral(TEST_VALUES.FALSE)],
+					[TEST_VALUES.NULL, ''],
 				],
+				invalidValues: [TEST_VALUES.UNDEFINED, TEST_VALUES.OBJECT, TEST_VALUES.ARRAY],
 			},
 		],
 	},
@@ -363,6 +363,40 @@ let TEST_CONFIG: IPFTest[] = [
 					[TEST_VALUES.EMPTY_STRING, [TEST_VALUES.EMPTY_STRING]],
 				],
 				invalidValues: [TEST_VALUES.UNDEFINED, TEST_VALUES.OBJECT],
+			},
+		],
+	},
+	{
+		type: InputFieldType.INLINE_LIST_SUGGESTER,
+		testCases: [
+			{
+				declaration: `INPUT[${InputFieldType.INLINE_LIST_SUGGESTER}:${TEST_PROP}]`,
+				validValues: STANDARD_OPTION_VALUES_ARRAY,
+				validMappedValues: [
+					[TEST_VALUES.NULL, [TEST_VALUES.NULL]],
+					[TEST_VALUES.STRING, [TEST_VALUES.STRING]],
+					[TEST_VALUES.EMPTY_STRING, [TEST_VALUES.EMPTY_STRING]],
+				],
+				invalidValues: [TEST_VALUES.UNDEFINED, TEST_VALUES.OBJECT],
+			},
+		],
+	},
+	{
+		type: InputFieldType.DATE_TIME,
+		testCases: [
+			{
+				declaration: `INPUT[${InputFieldType.DATE_TIME}:${TEST_PROP}]`,
+				validValues: [TEST_VALUES.EMPTY_STRING, TEST_VALUES.STRING],
+				validMappedValues: [
+					[TEST_VALUES.POSITIVE_INT, stringifyLiteral(TEST_VALUES.POSITIVE_INT)],
+					[TEST_VALUES.NEGATIVE_INT, stringifyLiteral(TEST_VALUES.NEGATIVE_INT)],
+					[TEST_VALUES.POSITIVE_FLOAT, stringifyLiteral(TEST_VALUES.POSITIVE_FLOAT)],
+					[TEST_VALUES.NEGATIVE_FLOAT, stringifyLiteral(TEST_VALUES.NEGATIVE_FLOAT)],
+					[TEST_VALUES.TRUE, stringifyLiteral(TEST_VALUES.TRUE)],
+					[TEST_VALUES.FALSE, stringifyLiteral(TEST_VALUES.FALSE)],
+					[TEST_VALUES.NULL, ''],
+				],
+				invalidValues: [TEST_VALUES.UNDEFINED, TEST_VALUES.OBJECT, TEST_VALUES.ARRAY],
 			},
 		],
 	},

@@ -158,17 +158,6 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName('Use US date input field order')
-			.setDesc(`When enabled the month input is before the day input.`)
-			.addToggle(cb => {
-				cb.setValue(this.plugin.settings.useUsDateInputOrder);
-				cb.onChange(data => {
-					this.plugin.settings.useUsDateInputOrder = data;
-					void this.plugin.saveSettings();
-				});
-			});
-
-		new Setting(containerEl)
 			.setName('First Weekday')
 			.setDesc(`Specify the first weekday for the datepicker.`)
 			.addDropdown(cb => {

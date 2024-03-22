@@ -44,6 +44,7 @@ export enum InputFieldType {
 	INLINE_LIST_SUGGESTER = 'inlineListSuggester',
 	INLINE_LIST = 'inlineList',
 	IMAGE_LIST_SUGGESTER = 'imageListSuggester',
+	DATE_TIME = 'dateTime',
 
 	INVALID = 'invalid',
 }
@@ -176,6 +177,11 @@ export const InputFieldConfigs: Record<InputFieldType, InputFieldConfig> = {
 		type: InputFieldType.IMAGE_LIST_SUGGESTER,
 		allowInBlock: true,
 		allowInline: false,
+	},
+	[InputFieldType.DATE_TIME]: {
+		type: InputFieldType.DATE_TIME,
+		allowInBlock: true,
+		allowInline: true,
 	},
 	[InputFieldType.INVALID]: {
 		type: InputFieldType.INVALID,

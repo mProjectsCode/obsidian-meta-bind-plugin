@@ -1,7 +1,8 @@
 ---
-time: 21:03
-date2: 2024-03-05
-date1: 2023-01-01
+time: 13:05
+date2: 2024-01-22
+date1: 2024-03-07
+dateTime: 2024-03-13T15:07
 ---
 
 ### Date
@@ -22,4 +23,10 @@ INPUT[datePicker(showcase, defaultValue(null)):date3]
 ### Time
 ```meta-bind
 INPUT[time(showcase):time]
+```
+
+
+### Date Time
+```meta-bind
+INPUT[dateTime(showcase):dateTime]
 ```

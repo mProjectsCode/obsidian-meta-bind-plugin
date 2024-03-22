@@ -10,6 +10,7 @@ import { type InputFieldDeclaration } from 'packages/core/src/parsers/inputField
 export const INPUT_FIELD_EXAMPLE_DECLARATIONS: Record<InputFieldType, string> = {
 	date: 'date',
 	datePicker: 'datePicker',
+	dateTime: 'dateTime',
 	editor: 'editor',
 	imageSuggester: 'imageSuggester(optionQuery(""))',
 	imageListSuggester: 'imageListSuggester(optionQuery(""))',

@@ -7,4 +7,4 @@
 	}
 </script>
 
-<input type="date" bind:value={value} on:input={() => onValueChange(value)} />
+<input type="datetime-local" bind:value={value} on:input={() => onValueChange(value)} />

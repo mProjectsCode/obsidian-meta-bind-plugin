@@ -1,24 +1,16 @@
-import { type Moment } from 'moment';
 import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
 import DateComponent from 'packages/core/src/fields/inputFields/fields/Date/DateComponent.svelte';
 import { DateParser } from 'packages/core/src/parsers/DateParser';
 import { type SvelteComponent } from 'svelte';
+import { parseUnknownToString } from 'packages/core/src/utils/Literal';
 
-export class DateIPF extends AbstractInputField<string, Moment> {
+export class DateIPF extends AbstractInputField<string, string> {
 	protected filterValue(value: unknown): string | undefined {
-		if (value === null || value === undefined || typeof value !== 'string') {
-			return undefined;
-		}
-		const date = DateParser.parse(value);
-		if (date.isValid()) {
-			return DateParser.stringify(date);
-		} else {
-			return undefined;
-		}
+		return parseUnknownToString(value);
 	}
 
-	protected getFallbackDefaultValue(): Moment {
-		return DateParser.getDefaultDate();
+	protected getFallbackDefaultValue(): string {
+		return DateParser.stringify(DateParser.getDefaultDate());
 	}
 
 	protected getSvelteComponent(): typeof SvelteComponent {
@@ -26,17 +18,11 @@ export class DateIPF extends AbstractInputField<string, Moment> {
 		return DateComponent;
 	}
 
-	protected rawMapValue(value: Moment): string {
-		return DateParser.stringify(value);
+	protected rawMapValue(value: string): string {
+		return value;
 	}
 
-	protected rawReverseMapValue(value: string): Moment | undefined {
-		return DateParser.parse(value);
-	}
-
-	protected getMountArgs(): Record<string, unknown> {
-		return {
-			useUsInputOrder: this.base.plugin.settings.useUsDateInputOrder,
-		};
+	protected rawReverseMapValue(value: string): string | undefined {
+		return value;
 	}
 }
