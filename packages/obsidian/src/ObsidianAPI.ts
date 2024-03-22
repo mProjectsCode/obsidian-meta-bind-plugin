@@ -128,18 +128,20 @@ export class ObsidianAPI extends API<MetaBindPlugin> {
 			callbackSignal: new Signal<unknown>(undefined),
 		}));
 
+		let reactive: ReactiveComponent | undefined = undefined;
+
 		const subscription = this.plugin.metadataManager.subscribeComputed(
 			uuid,
 			signal,
 			undefined,
 			dependencies,
-			(values: unknown[]) => reactive.refresh(...values),
+			(values: unknown[]) => reactive?.refresh(...values),
 			() => {},
 		);
 
 		lifecycleHook.register(() => subscription.unsubscribe());
 
-		const reactive = jsEngine.reactive(callback, ...dependencies.map(x => x.callbackSignal.get()));
+		reactive = jsEngine.reactive(callback, ...dependencies.map(x => x.callbackSignal.get()));
 
 		return reactive;
 	}

@@ -77,42 +77,7 @@ const mb     = engine.getPlugin('obsidian-meta-bind-plugin').api;
 const mbFrom = mb.parseBindTarget('from_year', context.file.path);
 const mbTo   = mb.parseBindTarget('to_year', context.file.path);
 
-const headers = ["Date", "File"];
-
-function onUpdate(uFrom, fTo) {
-    return [uFrom, fTo];
-}
-
-const reactive = engine.reactive(
-    // update function
-    onUpdate,
-    // arguments
-    mb.getMetadata(mbFrom),
-    mb.getMetadata(mbTo)
-);
-
-const subscriptionFrom = mb.subscribeToMetadata(
-    mbFrom,
-    component,
-    (newFrom) => {console.log(newFrom); reactive.refresh(newFrom, mb.getMetadata(mbTo))}
-);
-
-const subscriptionTo = mb.subscribeToMetadata(
-    mbTo,
-    component,
-    (newTo) => {console.log(newTo); reactive.refresh(mb.getMetadata(mbFrom), newTo)}
-);
-
-return reactive;
-```
-
-```js-engine
-// Grab metabind API and extract metadata fields
-const mb     = engine.getPlugin('obsidian-meta-bind-plugin').api;
-const mbFrom = mb.parseBindTarget('from_year', context.file.path);
-const mbTo   = mb.parseBindTarget('to_year', context.file.path);
-
-return mb.renderOnChanges([mbFrom, mbTo], component, (from, to) => {
+return mb.reactiveMetadata([mbFrom, mbTo], component, (from, to) => {
 	return [from, to]
 })
 ```

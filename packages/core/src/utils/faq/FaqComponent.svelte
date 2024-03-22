@@ -1,8 +1,12 @@
 <script lang="ts">
 	import ErrorIndicatorComponent from 'packages/core/src/utils/errors/ErrorIndicatorComponent.svelte';
 	import { onMount } from 'svelte';
-	import { createInputFieldFAQExamples } from 'packages/core/src/utils/InputFieldExamples';
+	import {
+		createInputFieldFAQExamples,
+		VIEW_FIELD_EXAMPLE_DECLARATIONS,
+	} from 'packages/core/src/utils/InputFieldExamples';
 	import InputFieldExampleComponent from 'packages/core/src/utils/faq/InputFieldExampleComponent.svelte';
+	import ViewFieldExampleComponent from 'packages/core/src/utils/faq/ViewFieldExampleComponent.svelte';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 	import { ErrorLevel, MetaBindExampleError } from 'packages/core/src/utils/errors/MetaBindErrors';
@@ -105,6 +109,12 @@
 		of your notes from inside of notes. They will update instantly to reflect changes to the frontmatter made by input
 		fields and as fast as obsidian allows it for changes from other sources.
 	</p>
+
+	{#each Object.values(VIEW_FIELD_EXAMPLE_DECLARATIONS) as examples}
+		{#each examples as example}
+			<ViewFieldExampleComponent declaration={example} plugin={plugin}></ViewFieldExampleComponent>
+		{/each}
+	{/each}
 
 	<h2>Bind Targets</h2>
 	<p>

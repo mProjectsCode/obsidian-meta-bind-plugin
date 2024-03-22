@@ -32,13 +32,54 @@ export const INPUT_FIELD_EXAMPLE_DECLARATIONS: Record<InputFieldType, string> = 
 	invalid: '',
 };
 
-export const VIEW_FIELD_EXAMPLE_DECLARATIONS: Record<ViewFieldType, string> = {
-	image: 'VIEW[{exampleProperty}][image]',
-	link: 'VIEW[{exampleProperty}][link]',
-	math: 'VIEW[{exampleProperty} + 2][math]',
-	text: 'VIEW[some text {exampleProperty}][text]',
+export interface ViewFieldExampleDeclaration {
+	title: string;
+	declaration: string;
+	display: string;
+	inputField: string;
+}
 
-	invalid: '',
+export const VIEW_FIELD_EXAMPLE_DECLARATIONS: Record<ViewFieldType, ViewFieldExampleDeclaration[]> = {
+	image: [
+		{
+			title: 'Image',
+			declaration: 'VIEW[{globalMemory^MB_VF_image_example}][image]',
+			display: 'VIEW[{imageExampleProperty}][image]',
+			inputField: 'INPUT[imageSuggester(optionQuery("")):globalMemory^MB_VF_image_example]',
+		},
+	],
+	link: [
+		{
+			title: 'Link',
+			declaration: 'VIEW[{globalMemory^MB_VF_link_example}][link]',
+			display: 'VIEW[{linkExampleProperty}][link]',
+			inputField: 'INPUT[suggester(optionQuery("")):globalMemory^MB_VF_link_example]',
+		},
+	],
+	math: [
+		{
+			title: 'Math',
+			declaration: 'VIEW[{globalMemory^MB_VF_math_example} + 2][math]',
+			display: 'VIEW[{mathExampleProperty} + 2][math]',
+			inputField: 'INPUT[number:globalMemory^MB_VF_math_example]',
+		},
+	],
+	text: [
+		{
+			title: 'Text',
+			declaration: 'VIEW[some text {globalMemory^MB_VF_text_example}][text]',
+			display: 'VIEW[some text {textExampleProperty}][text]',
+			inputField: 'INPUT[text:globalMemory^MB_VF_text_example]',
+		},
+		{
+			title: 'Markdown',
+			declaration: 'VIEW[**some markdown** {globalMemory^MB_VF_text_markdown_example}][text(renderMarkdown)]',
+			display: 'VIEW[**some markdown** {markdownExampleProperty}][text(renderMarkdown)]',
+			inputField: 'INPUT[text:globalMemory^MB_VF_text_markdown_example]',
+		},
+	],
+
+	invalid: [],
 };
 
 export function createInputFieldFAQExamples(plugin: IPlugin): [InputFieldType, InputFieldDeclaration][] {
@@ -66,6 +107,7 @@ export function createInputFieldFAQExamples(plugin: IPlugin): [InputFieldType, I
 		});
 
 		parsedDeclaration = plugin.api.inputFieldParser.merge(parsedDeclaration, overrides);
+		parsedDeclaration.declarationString = `INPUT[${declaration}]`;
 		const validatedDeclaration = plugin.api.inputFieldParser.validate(parsedDeclaration, '', undefined);
 
 		ret.push([type as InputFieldType, validatedDeclaration]);
@@ -99,18 +141,11 @@ export function createInputFieldInsertExamples(_plugin: IPlugin): [string, strin
 
 export function createViewFieldInsertExamples(_plugin: IPlugin): [string, string][] {
 	const ret: [string, string][] = [];
-	for (const [type, declaration] of Object.entries(VIEW_FIELD_EXAMPLE_DECLARATIONS)) {
-		if (declaration === '') {
-			continue;
+	for (const declarations of Object.values(VIEW_FIELD_EXAMPLE_DECLARATIONS)) {
+		for (const declaration of declarations) {
+			ret.push([declaration.title, `\`${declaration.declaration}]\``]);
 		}
-		const vfType = type as ViewFieldType;
-
-		const fullDeclaration = `\`${declaration}\``;
-
-		ret.push([vfType, fullDeclaration]);
 	}
-
-	ret.push(['markdown', `\`VIEW[**some markdown** {exampleProperty}][text(renderMarkdown)]\``]);
 
 	ret.sort((a, b) => a[0].localeCompare(b[0]));
 

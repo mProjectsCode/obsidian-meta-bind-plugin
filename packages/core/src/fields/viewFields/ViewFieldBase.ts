@@ -1,5 +1,5 @@
 import { type IPlugin } from 'packages/core/src/IPlugin';
-import { RenderChildType, type ViewFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
+import { RenderChildType, ViewFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import { FieldBase } from 'packages/core/src/fields/FieldBase';
 import { type ViewFieldArgumentMapType } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
 import { type AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractViewField';
@@ -112,6 +112,11 @@ export class ViewFieldBase extends FieldBase {
 
 		this.createErrorIndicator(targetEl);
 		targetEl.append(wrapperEl);
+
+		const classArguments = this.getArguments(ViewFieldArgumentType.CLASS);
+		for (const classArgument of classArguments) {
+			DomHelpers.addClasses(wrapperEl, classArgument.value);
+		}
 
 		DomHelpers.addClass(wrapperEl, `mb-view-type-${this.declaration.viewFieldType}`);
 

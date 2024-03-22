@@ -509,6 +509,7 @@ export enum ViewFieldType {
 export enum ViewFieldArgumentType {
 	RENDER_MARKDOWN = 'renderMarkdown',
 	HIDDEN = 'hidden',
+	CLASS = 'class',
 
 	INVALID = 'invalid',
 }
@@ -545,6 +546,20 @@ export const ViewFieldArgumentConfigs: Record<ViewFieldArgumentType, ViewFieldAr
 			],
 		],
 		allowMultiple: false,
+	},
+	[ViewFieldArgumentType.CLASS]: {
+		type: ViewFieldArgumentType.CLASS,
+		allowedFieldTypes: [],
+		values: [
+			[
+				{
+					name: 'className',
+					allowed: [],
+					description: 'the name of the css class to add',
+				},
+			],
+		],
+		allowMultiple: true,
 	},
 	[ViewFieldArgumentType.INVALID]: {
 		type: ViewFieldArgumentType.INVALID,
