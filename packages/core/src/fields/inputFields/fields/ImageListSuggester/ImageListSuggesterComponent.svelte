@@ -64,6 +64,18 @@
 		}
 
 		menuActions.push({
+			name: 'Copy image path',
+			icon: 'copy',
+			onclick: () => {
+				const imagePath = value[index];
+
+				navigator.clipboard.writeText(imagePath).then(() => {
+					plugin.internal.showNotice('Image path copied to clipboard');
+				});
+			},
+		});
+
+		menuActions.push({
 			name: 'Remove',
 			icon: 'x',
 			warning: true,
@@ -76,13 +88,10 @@
 
 <div class="mb-image-card-grid">
 	{#each value as image, i}
-		<div class="mb-image-card">
+		<div class="mb-image-card" on:contextmenu={e => openContextMenuForElement(e, i)}>
 			<img class="mb-image-card-image" src={plugin.internal.imagePathToUri(image)} alt={image} />
 			<div class="mb-image-card-footer">
 				<span>{image}</span>
-				<Button variant={ButtonStyleType.PLAIN} on:click={e => openContextMenuForElement(e, i)}>
-					<Icon iconName="more-vertical" plugin={plugin} />
-				</Button>
 			</div>
 		</div>
 	{/each}

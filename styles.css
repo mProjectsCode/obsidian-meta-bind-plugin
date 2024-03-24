@@ -4,6 +4,14 @@ body {
 	--mb-slider-spacing: 5px;
 	--mb-select-element-border-width: 5px;
 	--mb-date-input-year-input-width: 80px;
+
+	--mb-background-modifier-active: hsla(var(--interactive-accent-hsl), 0.1);
+	--mb-background-modifier-active-hover: hsla(var(--interactive-accent-hsl), 0.2);
+
+	--mb-input-type-select-text: var(--text-muted);
+	--mb-input-type-select-text-hover: var(--text-normal);
+	--mb-input-type-select-text-active: var(--text-normal);
+	--mb-input-type-select-text-active-hover: var(--text-normal);
 }
 
 /* Input Wrappers */
@@ -125,63 +133,40 @@ div.mb-view-wrapper {
 /* Select Input */
 .mb-select-input-element {
 	cursor: pointer;
-	padding: 5px;
-	margin: 5px 0 5px 0;
+	display: flex;
+	gap: var(--size-4-2);
+	align-items: center;
+	padding: var(--size-4-1) var(--size-4-2);
+	margin: var(--size-4-1) 0;
 	border-radius: var(--mb-border-radius);
-	border-left: var(--mb-select-element-border-width) solid transparent;
 	white-space: pre-wrap;
 	font-size: 16px;
 	min-width: 200px;
-}
+	color: var(--mb-input-type-select-text);
 
-.mb-select-input-element.is-selected {
-	border-left: var(--mb-select-element-border-width) solid var(--interactive-accent);
-	background: var(--background-secondary);
-}
+	&.is-selected {
+		color: var(--mb-input-type-select-text-active);
+		background: var(--mb-background-modifier-active);
 
-.mb-select-input-element:hover {
-	background: var(--background-secondary);
-}
+		&:hover {
+			color: var(--mb-input-type-select-text-active-hover);
+			background: var(--mb-background-modifier-active-hover);
+		}
+	}
 
-/* Date Input */
-.mb-date-input-year-input[type='number'] {
-	width: var(--mb-date-input-year-input-width);
-	height: unset;
-	align-self: stretch;
-}
+	&:hover {
+		color: var(--mb-input-type-select-text-hover);
+		background: var(--background-modifier-hover);
+	}
 
-/* Input Element Group */
-.mb-input-element-group {
-	display: inline-flex;
-	flex-direction: row;
-}
+	&:not(.mb-mod-multi) > input[type='checkbox'] {
+		border-radius: 50%;
+	}
 
-.mb-input-element-group .mb-input-element-group-element:focus {
-	z-index: 10;
+	& > input[type='checkbox'] {
+		margin: 0;
+	}
 }
-
-.mb-input-element-group .mb-input-element-group-element:first-child {
-	border-radius: var(--mb-border-radius) 0 0 var(--mb-border-radius);
-}
-
-.mb-input-element-group .mb-input-element-group-element:not(:first-child):not(:last-child) {
-	border-radius: 0;
-}
-
-.mb-input-element-group .mb-input-element-group-element:last-child {
-	border-radius: 0 var(--mb-border-radius) var(--mb-border-radius) 0;
-}
-
-/* SailKite small input fields so that line height is consistent */
-/* https://discord.com/channels/1171444840257572935/1171444840257572939/1171562547212726403 */
-/*.mb-input-element-group {*/
-/*	& > .mb-date-input-year-input[type='number'] {*/
-/*		padding-block: 0;*/
-/*	}*/
-/*	& > .mb-input-element-group-element {*/
-/*		height: 100%;*/
-/*	}*/
-/*}*/
 
 /* List Input */
 .mb-list-input {
@@ -206,15 +191,22 @@ div.mb-view-wrapper {
 	margin-bottom: var(--size-4-4);
 	display: flex;
 	flex-direction: column;
-	gap: var(--size-4-2);
+	gap: var(--size-4-1);
 }
 
 .mb-list-item {
 	display: flex;
-}
+	padding: var(--size-4-1) var(--size-4-2);
+	border-radius: var(--mb-border-radius);
+	user-select: text;
 
-.mb-list-item > span {
-	flex-grow: 1;
+	& > span {
+		flex-grow: 1;
+	}
+
+	&:hover {
+		background: var(--background-modifier-hover);
+	}
 }
 
 /* Inline List */
@@ -231,14 +223,19 @@ div.mb-view-wrapper {
 		padding-inline: var(--size-4-2);
 		padding-block: var(--size-4-1);
 		font-size: var(--font-ui-small);
+		vertical-align: bottom;
+		user-select: text;
 
 		&:not(:last-child) {
 			margin-right: var(--size-4-2);
 		}
 
-		& > button {
-			padding: 0;
-			height: unset;
+		&:hover {
+			border-color: var(--background-modifier-border-hover);
+			background-color: var(--background-modifier-hover);
+			transition:
+				box-shadow 0.15s ease-in-out,
+				border 0.15s ease-in-out;
 		}
 	}
 
@@ -252,7 +249,17 @@ div.mb-view-wrapper {
 		font-size: var(--font-ui-small);
 
 		&:hover {
-			color: var(--text-accent);
+			border-color: var(--background-modifier-border-hover);
+			background-color: var(--background-modifier-hover);
+			transition:
+				box-shadow 0.15s ease-in-out,
+				border 0.15s ease-in-out;
+		}
+
+		&:focus,
+		&:focus-visible {
+			box-shadow: 0 0 0 2px var(--background-modifier-border-focus);
+			color: var(--text-normal);
 		}
 	}
 }
@@ -268,6 +275,14 @@ div.mb-view-wrapper {
 	display: inline-flex;
 	align-items: center;
 	gap: var(--size-4-1);
+	user-select: text;
+
+	&:hover {
+		border-color: var(--background-modifier-border-hover);
+		transition:
+			box-shadow 0.15s ease-in-out,
+			border 0.15s ease-in-out;
+	}
 }
 
 .mb-suggest-input > button {
@@ -295,7 +310,7 @@ div.mb-view-wrapper {
 }
 
 .mb-progress-bar-progress {
-	height: calc(var(--input-height) - 2 * var(--mb-border-width));
+	height: 100%;
 	background: var(--color-accent);
 	border-radius: var(--mb-border-radius);
 }
@@ -319,6 +334,14 @@ div.mb-view-wrapper {
 	top: 50%;
 	transform: translate(0, -50%);
 	right: var(--size-4-2);
+}
+
+/* Text Area Input */
+
+.mb-input-textarea {
+	width: 100%;
+	height: 100px;
+	resize: vertical;
 }
 
 /* Card */
@@ -396,6 +419,7 @@ div.mb-view-wrapper {
 	& > span {
 		padding-left: var(--size-4-2);
 		font-size: var(--font-ui-small);
+		color: var(--text-muted);
 		min-width: 0;
 		text-overflow-ellipsis: true;
 		flex: 1;
@@ -436,6 +460,40 @@ div.mb-view-wrapper {
 			box-shadow: 0 0 0 2px var(--background-modifier-border-focus);
 		}
 	}
+}
+
+/* Date Picker Input */
+
+.date-picker-input {
+	background: var(--background-modifier-form-field);
+	border: var(--mb-border-width) solid var(--background-modifier-border);
+	color: var(--text-normal);
+	font-family: inherit;
+	padding: var(--size-4-1) var(--size-4-2);
+	font-size: var(--font-ui-small);
+	border-radius: var(--input-radius);
+	outline: none;
+
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+
+	&:hover {
+		border-color: var(--background-modifier-border-hover);
+		transition:
+			box-shadow 0.15s ease-in-out,
+			border 0.15s ease-in-out;
+	}
+
+	&:focus,
+	&:focus-visible {
+		box-shadow: 0 0 0 2px var(--background-modifier-border-focus);
+	}
+}
+
+.date-picker-text {
+	display: inline-block;
 }
 
 /* Error */

@@ -1,17 +1,17 @@
 ---
-select: 
-select2: false
+select: 1
 select3: 2
 multiSelect:
   - option 1
   - option 3
 multiSelect2:
-  - option 3
   - option 1
+  - option 3
 multiSelect3:
+  - 1
   - 
   - false
-  - 1
+select2: false
 ---
 
 ### Select

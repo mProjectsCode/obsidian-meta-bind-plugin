@@ -80,11 +80,8 @@
 
 <div class="mb-list-items">
 	{#each value as entry, i}
-		<div class="mb-list-item">
+		<div class="mb-list-item" on:contextmenu={e => openContextMenuForElement(e, i)}>
 			<LiteralRenderComponent value={entry}></LiteralRenderComponent>
-			<Button variant={ButtonStyleType.PLAIN} on:click={e => openContextMenuForElement(e, i)}>
-				<Icon plugin={plugin} iconName="more-vertical" />
-			</Button>
 		</div>
 	{:else}
 		<span class="mb-list-empty">Empty</span>

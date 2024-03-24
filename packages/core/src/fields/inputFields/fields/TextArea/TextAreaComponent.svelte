@@ -11,6 +11,7 @@
 </script>
 
 <textarea
+	class="mb-input-textarea"
 	tabindex="0"
 	placeholder={placeholder}
 	bind:value={value}

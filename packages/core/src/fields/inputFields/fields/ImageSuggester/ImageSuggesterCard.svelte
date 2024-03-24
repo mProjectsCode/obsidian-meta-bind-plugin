@@ -20,5 +20,7 @@
 	tabindex="0"
 >
 	<img class="mb-image-card-image" src={plugin.internal.imagePathToUri(image)} alt={image} />
-	<span class="mb-image-card-text">{image}</span>
+	<div class="mb-image-card-footer">
+		<span>{image}</span>
+	</div>
 </div>

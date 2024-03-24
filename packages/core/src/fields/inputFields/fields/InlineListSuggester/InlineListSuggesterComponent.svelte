@@ -100,11 +100,8 @@
 
 <div class="mb-inline-list">
 	{#each value as entry, i}
-		<div class="mb-inline-list-item">
+		<div class="mb-inline-list-item" on:contextmenu={e => openContextMenuForElement(e, i)}>
 			<LiteralRenderComponent value={entry}></LiteralRenderComponent>
-			<Button variant={ButtonStyleType.PLAIN} on:click={e => openContextMenuForElement(e, i)}>
-				<Icon plugin={plugin} iconName="more-vertical" />
-			</Button>
 		</div>
 	{/each}
 	<div class="mb-inline-list-add" on:click={suggest} on:keydown={suggestKey} role="button" tabindex="0">

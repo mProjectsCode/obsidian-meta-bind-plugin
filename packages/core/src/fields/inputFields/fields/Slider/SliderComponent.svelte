@@ -13,26 +13,17 @@
 
 {#if addLabels}
 	<span class="mb-slider-input-label">{minValue}</span>
-	<input
-		class="mb-slider-input"
-		type="range"
-		tabindex="0"
-		min={minValue}
-		max={maxValue}
-		step={stepSize}
-		bind:value={value}
-		on:input={() => onValueChange(value)}
-	/>
+{/if}
+<input
+	class="mb-slider-input slider"
+	type="range"
+	tabindex="0"
+	min={minValue}
+	max={maxValue}
+	step={stepSize}
+	bind:value={value}
+	on:input={() => onValueChange(value)}
+/>
+{#if addLabels}
 	<span class="mb-slider-input-label">{maxValue}</span>
-{:else}
-	<input
-		class="mb-slider-input"
-		type="range"
-		tabindex="0"
-		min={minValue}
-		max={maxValue}
-		step={stepSize}
-		bind:value={value}
-		on:input={() => onValueChange(value)}
-	/>
 {/if}

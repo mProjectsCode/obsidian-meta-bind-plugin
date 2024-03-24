@@ -104,11 +104,8 @@
 
 <div class="mb-list-items">
 	{#each value as entry, i}
-		<div class="mb-list-item">
+		<div class="mb-list-item" on:contextmenu={e => openContextMenuForElement(e, i)}>
 			<LiteralRenderComponent value={entry}></LiteralRenderComponent>
-			<Button variant={ButtonStyleType.PLAIN} on:click={e => openContextMenuForElement(e, i)}>
-				<Icon plugin={plugin} iconName="more-vertical" />
-			</Button>
 		</div>
 	{:else}
 		<span class="mb-list-empty">Empty</span>
@@ -118,7 +115,18 @@
 	{#if multiLine}
 		<textarea tabindex="0" placeholder={placeholder} bind:value={addValue} maxlength={limit} />
 	{:else}
-		<input type="text" tabindex="0" placeholder={placeholder} bind:value={addValue} maxlength={limit} />
+		<input
+			type="text"
+			tabindex="0"
+			placeholder={placeholder}
+			bind:value={addValue}
+			maxlength={limit}
+			on:keyup={e => {
+				if (e.key === 'Enter' && addValue.length > 0) {
+					add();
+				}
+			}}
+		/>
 	{/if}
 	{#if limit !== undefined}
 		<span class={`mb-content-limit-indicator ${value.length > limit ? 'mb-content-limit-indicator-overflow' : ''}`}

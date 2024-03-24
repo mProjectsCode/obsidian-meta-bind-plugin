@@ -35,9 +35,15 @@
 		class:is-selected={option.value === value}
 		role="button"
 		tabindex="0"
-		on:click={() => selectOption(option.value)}
+		on:click={e => {
+			if (e.target instanceof HTMLInputElement) {
+				return;
+			}
+			selectOption(option.value);
+		}}
 		on:keypress={event => selectOptionOnKey(event, option.value)}
 	>
+		<input type="checkbox" checked={option.value === value} on:input={() => selectOption(option.value)} />
 		<LiteralRenderComponent value={option.name}></LiteralRenderComponent>
 	</div>
 {/each}
