@@ -1,6 +1,6 @@
 ---
 progress1: -6
-progress2: 0.5
+progress2: 0.7
 progress3: 2
 progress4: 2.6
 ---

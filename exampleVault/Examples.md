@@ -1,5 +1,5 @@
 ---
-slider1: 6
+slider1: 9
 suggest: test
 toggle1: false
 Domestic_tasks:
@@ -8,12 +8,12 @@ Meditate: 100
 Slept: 00:00
 select: option d
 toggle: false
-inlineSelect: 0
+inlineSelect: 1
 こんにちは: hello
 nested:
   object: test
 number1: 2
-number2: 12
+number2: 18
 time: 
 ---
 
