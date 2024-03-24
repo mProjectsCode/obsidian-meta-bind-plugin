@@ -144,7 +144,7 @@ export function createViewFieldInsertExamples(_plugin: IPlugin): [string, string
 	const ret: [string, string][] = [];
 	for (const declarations of Object.values(VIEW_FIELD_EXAMPLE_DECLARATIONS)) {
 		for (const declaration of declarations) {
-			ret.push([declaration.title, `\`${declaration.declaration}]\``]);
+			ret.push([declaration.title, `\`${declaration.display}\``]);
 		}
 	}
 
