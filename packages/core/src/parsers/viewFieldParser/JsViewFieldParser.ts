@@ -48,13 +48,13 @@ export class JsViewFieldParser {
 			code: simpleDeclaration.code,
 			bindTargetMappings: simpleDeclaration.bindTargetMappings.map(x => {
 				return {
-					bindTarget: this.plugin.api.bindTargetParser.fromSimpleDeclaration(x.bindTarget),
+					bindTarget: this.plugin.api.bindTargetParser.fromExistingDeclaration(x.bindTarget),
 					name: x.name,
 				};
 			}),
-			writeToBindTarget: simpleDeclaration.writeToBindTarget
-				? this.plugin.api.bindTargetParser.fromSimpleDeclaration(simpleDeclaration.writeToBindTarget)
-				: undefined,
+			writeToBindTarget: this.plugin.api.bindTargetParser.fromExistingDeclaration(
+				simpleDeclaration.writeToBindTarget,
+			),
 			errorCollection: errorCollection,
 		};
 	}

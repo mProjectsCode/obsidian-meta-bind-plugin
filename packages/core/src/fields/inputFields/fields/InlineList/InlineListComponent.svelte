@@ -96,7 +96,7 @@
 
 <div class="mb-inline-list">
 	{#each value as entry, i}
-		<div class="mb-inline-list-item" on:contextmenu={e => openContextMenuForElement(e, i)}>
+		<div class="mb-inline-list-item" on:contextmenu={e => openContextMenuForElement(e, i)} role="listitem">
 			<LiteralRenderComponent value={entry}></LiteralRenderComponent>
 		</div>
 	{/each}

@@ -19,7 +19,6 @@ import type {
 } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
 import {
 	type BindTargetDeclaration,
-	type SimpleBindTargetDeclaration,
 	type SimplePropAccess,
 	type UnvalidatedBindTargetDeclaration,
 	type UnvalidatedPropAccess,
@@ -149,20 +148,11 @@ export const V_SimplePropAccess = schemaForType<SimplePropAccess>()(
 	}),
 );
 
-export const V_SimpleBindTargetDeclaration = schemaForType<SimpleBindTargetDeclaration>()(
-	z.object({
-		storageType: z.string().optional(),
-		storagePath: z.string().optional(),
-		storageProp: V_SimplePropAccess.array(),
-		listenToChildren: z.boolean(),
-	}),
-);
-
 export const V_SimpleInputFieldDeclaration = schemaForType<SimpleInputFieldDeclaration>()(
 	z.object({
 		inputFieldType: V_InputFieldType.optional(),
 		templateName: z.string().optional(),
-		bindTarget: V_SimpleBindTargetDeclaration.optional(),
+		bindTarget: V_BindTargetDeclaration.optional(),
 		arguments: V_SimpleFieldArgument.array().optional(),
 	}),
 );
@@ -170,15 +160,15 @@ export const V_SimpleInputFieldDeclaration = schemaForType<SimpleInputFieldDecla
 export const V_SimpleViewFieldDeclaration = schemaForType<SimpleViewFieldDeclaration>()(
 	z.object({
 		viewFieldType: V_InputFieldType.optional(),
-		templateDeclaration: z.union([z.string(), V_SimpleBindTargetDeclaration]).array().optional(),
+		templateDeclaration: z.union([z.string(), V_BindTargetDeclaration]).array().optional(),
 		arguments: V_SimpleFieldArgument.array().optional(),
-		writeToBindTarget: V_SimpleBindTargetDeclaration.optional(),
+		writeToBindTarget: V_BindTargetDeclaration.optional(),
 	}),
 );
 
 export const V_SimpleJsViewFieldBindTargetMapping = schemaForType<SimpleJsViewFieldBindTargetMapping>()(
 	z.object({
-		bindTarget: V_SimpleBindTargetDeclaration,
+		bindTarget: V_BindTargetDeclaration,
 		name: z.string(),
 	}),
 );
@@ -186,7 +176,7 @@ export const V_SimpleJsViewFieldBindTargetMapping = schemaForType<SimpleJsViewFi
 export const V_SimpleJsViewFieldDeclaration = schemaForType<SimpleJsViewFieldDeclaration>()(
 	z.object({
 		bindTargetMappings: V_SimpleJsViewFieldBindTargetMapping.array(),
-		writeToBindTarget: V_SimpleBindTargetDeclaration.optional(),
+		writeToBindTarget: V_BindTargetDeclaration.optional(),
 		code: z.string(),
 	}),
 );

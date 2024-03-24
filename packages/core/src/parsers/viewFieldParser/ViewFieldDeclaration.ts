@@ -2,7 +2,6 @@ import { type ViewFieldType } from 'packages/core/src/config/FieldConfigs';
 import { type ViewFieldArgumentContainer } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
 import {
 	type BindTargetDeclaration,
-	type SimpleBindTargetDeclaration,
 	type UnvalidatedBindTargetDeclaration,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
@@ -30,9 +29,9 @@ export interface PartialUnvalidatedViewFieldDeclaration {
 
 export interface SimpleViewFieldDeclaration {
 	viewFieldType?: string | undefined;
-	templateDeclaration?: (string | SimpleBindTargetDeclaration)[] | undefined;
+	templateDeclaration?: (string | BindTargetDeclaration)[] | undefined;
 	arguments?: SimpleFieldArgument[] | undefined;
-	writeToBindTarget?: SimpleBindTargetDeclaration | undefined;
+	writeToBindTarget?: BindTargetDeclaration | undefined;
 }
 
 // ---
@@ -65,11 +64,11 @@ export interface UnvalidatedJsViewFieldBindTargetMapping {
 
 export interface SimpleJsViewFieldDeclaration {
 	bindTargetMappings: SimpleJsViewFieldBindTargetMapping[];
-	writeToBindTarget?: SimpleBindTargetDeclaration | undefined;
+	writeToBindTarget?: BindTargetDeclaration | undefined;
 	code: string;
 }
 
 export interface SimpleJsViewFieldBindTargetMapping {
-	bindTarget: SimpleBindTargetDeclaration;
+	bindTarget: BindTargetDeclaration;
 	name: string;
 }

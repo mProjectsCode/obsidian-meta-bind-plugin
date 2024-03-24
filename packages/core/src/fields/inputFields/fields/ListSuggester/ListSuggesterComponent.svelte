@@ -80,7 +80,7 @@
 
 <div class="mb-list-items">
 	{#each value as entry, i}
-		<div class="mb-list-item" on:contextmenu={e => openContextMenuForElement(e, i)}>
+		<div class="mb-list-item" on:contextmenu={e => openContextMenuForElement(e, i)} role="listitem">
 			<LiteralRenderComponent value={entry}></LiteralRenderComponent>
 		</div>
 	{:else}

@@ -3,11 +3,10 @@ import { type BindTargetScope } from 'packages/core/src/metadata/BindTargetScope
 import { ParsingValidationError, runParser } from 'packages/core/src/parsers/ParsingError';
 import {
 	type BindTargetDeclaration,
-	type SimpleBindTargetDeclaration,
 	type UnvalidatedBindTargetDeclaration,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { P_BindTarget } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';
-import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
+import { type ParsingResultNode, toResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { PropAccess } from 'packages/core/src/utils/prop/PropAccess';
 import { PropPath } from 'packages/core/src/utils/prop/PropPath';
@@ -31,21 +30,25 @@ export class BindTargetParser {
 		return this.validate(bindTargetString, this.fromString(bindTargetString), filePath, scope);
 	}
 
-	fromSimpleDeclaration(simpleDeclaration: SimpleBindTargetDeclaration): UnvalidatedBindTargetDeclaration {
+	fromExistingDeclaration(declaration: BindTargetDeclaration): UnvalidatedBindTargetDeclaration;
+	fromExistingDeclaration(
+		declaration: BindTargetDeclaration | undefined,
+	): UnvalidatedBindTargetDeclaration | undefined;
+	fromExistingDeclaration(
+		declaration: BindTargetDeclaration | undefined,
+	): UnvalidatedBindTargetDeclaration | undefined {
+		if (declaration === undefined) {
+			return undefined;
+		}
 		return {
-			storageType: simpleDeclaration.storageType ? { value: simpleDeclaration.storageType } : undefined,
-			storagePath: simpleDeclaration.storagePath ? { value: simpleDeclaration.storagePath } : undefined,
-			storageProp: simpleDeclaration.storageProp.map(x => ({ type: x.type, prop: { value: x.prop } })),
-			listenToChildren: simpleDeclaration.listenToChildren,
+			storageType: toResultNode(declaration.storageType),
+			storagePath: toResultNode(declaration.storagePath),
+			storageProp: declaration.storageProp.path.map(x => ({
+				type: x.type,
+				prop: toResultNode(x.prop),
+			})),
+			listenToChildren: declaration.listenToChildren,
 		};
-	}
-
-	fromSimpleDeclarationAndValidate(
-		simpleDeclaration: SimpleBindTargetDeclaration,
-		filePath: string,
-		scope?: BindTargetScope | undefined,
-	): BindTargetDeclaration {
-		return this.validate(undefined, this.fromSimpleDeclaration(simpleDeclaration), filePath, scope);
 	}
 
 	validate(

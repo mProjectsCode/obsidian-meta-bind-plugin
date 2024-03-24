@@ -11,6 +11,7 @@ import {
 } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
 import { ViewFieldDeclarationValidator } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclarationValidator';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
+import { toResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 
 export class ViewFieldParser {
 	plugin: IPlugin;
@@ -57,17 +58,17 @@ export class ViewFieldParser {
 				if (typeof x === 'string') {
 					return x;
 				} else {
-					return this.plugin.api.bindTargetParser.fromSimpleDeclaration(x);
+					return this.plugin.api.bindTargetParser.fromExistingDeclaration(x);
 				}
 			}),
-			viewFieldType: simpleDeclaration.viewFieldType ? { value: simpleDeclaration.viewFieldType } : undefined,
+			viewFieldType: toResultNode(simpleDeclaration.viewFieldType),
 			arguments: (simpleDeclaration.arguments ?? []).map(x => ({
-				name: { value: x.name },
-				value: x.value.map(y => ({ value: y })),
+				name: toResultNode(x.name),
+				value: x.value.map(y => toResultNode(y)),
 			})),
-			writeToBindTarget: simpleDeclaration.writeToBindTarget
-				? this.plugin.api.bindTargetParser.fromSimpleDeclaration(simpleDeclaration.writeToBindTarget)
-				: undefined,
+			writeToBindTarget: this.plugin.api.bindTargetParser.fromExistingDeclaration(
+				simpleDeclaration.writeToBindTarget,
+			),
 			errorCollection: errorCollection,
 		};
 	}

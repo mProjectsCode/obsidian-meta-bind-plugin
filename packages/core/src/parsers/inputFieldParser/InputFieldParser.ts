@@ -23,6 +23,7 @@ import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection'
 import { ErrorLevel } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { type UnvalidatedBindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { type UnvalidatedFieldArgument } from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
+import { toResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 
 export type InputFieldDeclarationTemplate = TemplateSupplierTemplate<UnvalidatedInputFieldDeclaration>;
 
@@ -76,13 +77,11 @@ export class InputFieldParser implements ITemplateSupplier<UnvalidatedInputField
 
 		return {
 			declarationString: undefined,
-			inputFieldType: simpleDeclaration.inputFieldType ? { value: simpleDeclaration.inputFieldType } : undefined,
-			bindTarget: simpleDeclaration.bindTarget
-				? this.plugin.api.bindTargetParser.fromSimpleDeclaration(simpleDeclaration.bindTarget)
-				: undefined,
+			inputFieldType: toResultNode(simpleDeclaration.inputFieldType),
+			bindTarget: this.plugin.api.bindTargetParser.fromExistingDeclaration(simpleDeclaration.bindTarget),
 			arguments: (simpleDeclaration.arguments ?? []).map(x => ({
-				name: { value: x.name },
-				value: x.value.map(y => ({ value: y })),
+				name: toResultNode(x.name),
+				value: x.value.map(y => toResultNode(y)),
 			})),
 			errorCollection: errorCollection,
 		};

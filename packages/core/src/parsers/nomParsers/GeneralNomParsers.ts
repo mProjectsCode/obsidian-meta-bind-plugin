@@ -55,3 +55,17 @@ export function createResultNode(value: string, range: ParsingRange): ParsingRes
 		position: range,
 	};
 }
+
+export function toResultNode(value: ParsingResultNode | string): ParsingResultNode;
+export function toResultNode(value: ParsingResultNode | string | undefined): ParsingResultNode | undefined;
+export function toResultNode(value: ParsingResultNode | string | undefined): ParsingResultNode | undefined {
+	if (value === undefined) {
+		return undefined;
+	} else if (typeof value === 'string') {
+		return {
+			value: value,
+		};
+	} else {
+		return value;
+	}
+}

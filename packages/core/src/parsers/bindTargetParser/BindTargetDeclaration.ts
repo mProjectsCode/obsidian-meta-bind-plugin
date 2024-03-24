@@ -21,13 +21,6 @@ export interface UnvalidatedPropAccess {
 	prop: ParsingResultNode;
 }
 
-export interface SimpleBindTargetDeclaration {
-	storageType?: string | undefined;
-	storagePath?: string | undefined;
-	storageProp: SimplePropAccess[];
-	listenToChildren: boolean;
-}
-
 export interface SimplePropAccess {
 	type: PropAccessType;
 	prop: string;
