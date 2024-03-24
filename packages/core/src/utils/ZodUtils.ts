@@ -51,7 +51,7 @@ export function validate<T>(validator: z.ZodType<T>, args: T): void {
 		throw new MetaBindInternalError({
 			errorLevel: ErrorLevel.CRITICAL,
 			effect: 'invalid arguments supplied to function',
-			cause: fromZodError(result.error),
+			cause: result.error,
 		});
 	}
 }

@@ -136,6 +136,9 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 	}
 
 	protected onMount(targetEl: HTMLElement): void {
+		// fix for computed signal possibly not having the correct value, as the class might not have been fully initialized
+		this.inputSignal.set(this.inputSignal.get());
+
 		this.computedSignal.registerListener({
 			callback: value => this.inputFieldComponent.setValue(this.reverseMapValue(value)),
 		});

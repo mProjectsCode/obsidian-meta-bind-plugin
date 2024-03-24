@@ -22,5 +22,5 @@ INPUT[progressBar(showcase, minValue(0), maxValue(10), stepSize(0.1)):progress4]
 ```
 
 ```meta-bind
-INPUT[progressBar]
+INPUT[progressBar(defaultValue(53))]
 ```
