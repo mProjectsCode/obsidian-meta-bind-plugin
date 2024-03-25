@@ -1,6 +1,6 @@
 import { ViewFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import { AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractViewField';
-import { type ViewFieldBase } from 'packages/core/src/fields/viewFields/ViewFieldBase';
+import { type ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
 import { type ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
 import { stringifyUnknown } from 'packages/core/src/utils/Literal';
 import { Signal } from 'packages/core/src/utils/Signal';
@@ -12,8 +12,8 @@ export class TextVF extends AbstractViewField {
 	renderMarkdown: boolean;
 	markdownUnloadCallback?: () => void;
 
-	constructor(base: ViewFieldBase) {
-		super(base);
+	constructor(mountable: ViewFieldMountable) {
+		super(mountable);
 
 		this.renderMarkdown = false;
 	}
@@ -24,7 +24,7 @@ export class TextVF extends AbstractViewField {
 		let varCounter = 0;
 		this.variables = [];
 
-		for (const entry of this.base.getDeclaration().templateDeclaration ?? []) {
+		for (const entry of this.mountable.getDeclaration().templateDeclaration ?? []) {
 			if (typeof entry !== 'string') {
 				const variable: ViewFieldVariable = {
 					bindTargetDeclaration: entry,
@@ -57,7 +57,7 @@ export class TextVF extends AbstractViewField {
 				if (typeof x === 'number') {
 					return stringifyUnknown(
 						this.variables[x].inputSignal.get(),
-						this.base.plugin.settings.viewFieldDisplayNullAsEmpty,
+						this.mountable.plugin.settings.viewFieldDisplayNullAsEmpty,
 					);
 				} else {
 					return x;
@@ -67,7 +67,7 @@ export class TextVF extends AbstractViewField {
 	}
 
 	protected onInitialRender(container: HTMLElement): void {
-		this.renderMarkdown = this.base.getArgument(ViewFieldArgumentType.RENDER_MARKDOWN)?.value ?? false;
+		this.renderMarkdown = this.mountable.getArgument(ViewFieldArgumentType.RENDER_MARKDOWN)?.value ?? false;
 
 		if (this.renderMarkdown) {
 			DomHelpers.addClass(container, 'mb-view-markdown');
@@ -78,10 +78,10 @@ export class TextVF extends AbstractViewField {
 		if (this.renderMarkdown) {
 			this.markdownUnloadCallback?.();
 
-			this.markdownUnloadCallback = await this.base.plugin.internal.renderMarkdown(
+			this.markdownUnloadCallback = await this.mountable.plugin.internal.renderMarkdown(
 				text,
 				container,
-				this.base.getFilePath(),
+				this.mountable.getFilePath(),
 			);
 		} else {
 			container.innerText = text;

@@ -6,6 +6,8 @@ import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope
 import type { SimpleInputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
 import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
 import type { SimpleButtonGroupDeclaration } from 'packages/core/src/parsers/ButtonParser';
+import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { type MetaBindColumnDeclaration } from 'packages/core/src/fields/metaBindTable/TableMountable';
 
 export interface FieldArgumentValueConfig {
 	name: string;
@@ -583,9 +585,10 @@ export enum RenderChildType {
 export const EMBED_MAX_DEPTH = 8;
 
 export enum FieldType {
-	INPUT_FIELD = 'INPUT_FIELD',
-	VIEW_FIELD = 'VIEW_FIELD',
-	JS_VIEW_FIELD = 'JS_VIEW_FIELD',
+	INPUT = 'INPUT',
+	VIEW = 'VIEW',
+	JS_VIEW = 'JS_VIEW',
+	TABLE = 'TABLE',
 	BUTTON_GROUP = 'BUTTON_GROUP',
 	BUTTON = 'BUTTON',
 	EMBED = 'EMBED',
@@ -606,6 +609,12 @@ export interface ViewFieldOptions {
 
 export interface JsViewFieldOptions {
 	declaration: SimpleJsViewFieldDeclaration | string;
+}
+
+export interface TableFieldOptions {
+	bindTarget: BindTargetDeclaration;
+	tableHead: string[];
+	columns: MetaBindColumnDeclaration[];
 }
 
 export interface ButtonGroupOptions {
@@ -631,17 +640,18 @@ export interface EmbedOptions {
 }
 
 export interface FieldOptionMap {
-	[FieldType.INPUT_FIELD]: InputFieldOptions;
-	[FieldType.VIEW_FIELD]: ViewFieldOptions;
-	[FieldType.JS_VIEW_FIELD]: JsViewFieldOptions;
+	[FieldType.INPUT]: InputFieldOptions;
+	[FieldType.VIEW]: ViewFieldOptions;
+	[FieldType.JS_VIEW]: JsViewFieldOptions;
+	[FieldType.TABLE]: TableFieldOptions;
 	[FieldType.BUTTON_GROUP]: ButtonGroupOptions;
 	[FieldType.BUTTON]: ButtonOptions;
 	[FieldType.EMBED]: EmbedOptions;
 	[FieldType.EXCLUDED]: undefined;
 }
 
-export type InlineFieldType = FieldType.INPUT_FIELD | FieldType.VIEW_FIELD | FieldType.BUTTON_GROUP;
+export type InlineFieldType = FieldType.INPUT | FieldType.VIEW | FieldType.BUTTON_GROUP;
 
 export function isFieldTypeAllowedInline(type: FieldType): type is InlineFieldType {
-	return type === FieldType.INPUT_FIELD || type === FieldType.VIEW_FIELD || type === FieldType.BUTTON_GROUP;
+	return type === FieldType.INPUT || type === FieldType.VIEW || type === FieldType.BUTTON_GROUP;
 }

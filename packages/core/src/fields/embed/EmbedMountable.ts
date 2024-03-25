@@ -1,4 +1,4 @@
-import { FieldBase } from 'packages/core/src/fields/FieldBase';
+import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import { type IPlugin } from 'packages/core/src/IPlugin';
 import { ErrorLevel, MetaBindEmbedError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
@@ -6,7 +6,7 @@ import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection'
 import { showUnloadedMessage } from 'packages/core/src/utils/Utils';
 import { EMBED_MAX_DEPTH } from 'packages/core/src/config/FieldConfigs';
 
-export class EmbedBase extends FieldBase {
+export class EmbedMountable extends FieldMountable {
 	depth: number;
 	content: string;
 	markdownUnloadCallback: (() => void) | undefined;
@@ -91,13 +91,13 @@ export class EmbedBase extends FieldBase {
 	}
 
 	protected onMount(targetEl: HTMLElement): void {
-		console.log('meta-bind | EmbedBase >> mount', this.content);
+		console.debug('meta-bind | EmbedMountable >> mount', this.content);
 
 		void this.renderContent(targetEl);
 	}
 
 	protected onUnmount(targetEl: HTMLElement): void {
-		console.log('meta-bind | EmbedBase >> unmount', this.content);
+		console.debug('meta-bind | EmbedMountable >> unmount', this.content);
 
 		this.markdownUnloadCallback?.();
 

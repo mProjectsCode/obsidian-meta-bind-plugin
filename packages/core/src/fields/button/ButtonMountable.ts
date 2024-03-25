@@ -1,45 +1,42 @@
 import { type IPlugin } from 'packages/core/src/IPlugin';
-import { FieldBase } from 'packages/core/src/fields/FieldBase';
-import { ButtonGroupField } from 'packages/core/src/fields/button/ButtonGroupField';
+import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
+import { ButtonField } from 'packages/core/src/fields/button/ButtonField';
 import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
-import { type ButtonGroupDeclaration } from 'packages/core/src/parsers/ButtonParser';
-import { type NotePosition, type RenderChildType } from 'packages/core/src/config/FieldConfigs';
+import { type ButtonDeclaration } from 'packages/core/src/parsers/ButtonParser';
+import { type NotePosition, RenderChildType } from 'packages/core/src/config/FieldConfigs';
 
-export class ButtonGroupBase extends FieldBase {
+export class ButtonMountable extends FieldMountable {
 	errorCollection: ErrorCollection;
 
-	declaration: ButtonGroupDeclaration;
-	buttonField: ButtonGroupField | undefined;
-
-	renderChildType: RenderChildType;
+	declaration: ButtonDeclaration;
 	position: NotePosition | undefined;
+	buttonField: ButtonField | undefined;
+	isPreview: boolean;
 
 	constructor(
 		plugin: IPlugin,
 		uuid: string,
 		filePath: string,
-		declaration: ButtonGroupDeclaration,
-		renderChildType: RenderChildType,
+		declaration: ButtonDeclaration,
 		position: NotePosition | undefined,
+		isPreview: boolean,
 	) {
 		super(plugin, uuid, filePath);
 
 		this.declaration = declaration;
+		this.position = position;
+		this.isPreview = isPreview;
 
 		this.errorCollection = new ErrorCollection(this.getUuid());
-		this.errorCollection.merge(declaration.errorCollection);
-
-		this.renderChildType = renderChildType;
-		this.position = position;
 	}
 
 	protected onMount(targetEl: HTMLElement): void {
-		console.debug('meta-bind | InlineButtonBase >> mount', this.declaration);
+		console.debug('meta-bind | ButtonMountable >> mount', this.declaration.declarationString);
 
 		DomHelpers.removeAllClasses(targetEl);
 
-		if (!this.declaration.errorCollection.isEmpty()) {
+		if (!this.declaration.config || !this.declaration.errorCollection.isEmpty()) {
 			this.plugin.internal.createErrorIndicator(targetEl, {
 				errorCollection: this.declaration.errorCollection,
 				errorText:
@@ -51,21 +48,22 @@ export class ButtonGroupBase extends FieldBase {
 			return;
 		}
 
-		this.buttonField = new ButtonGroupField(
+		this.buttonField = new ButtonField(
 			this.plugin,
-			this.declaration.referencedButtonIds,
+			this.declaration.config,
 			this.getFilePath(),
-			this.renderChildType,
+			RenderChildType.BLOCK,
 			this.position,
+			this.isPreview,
 		);
 		this.buttonField.mount(targetEl);
 	}
 
 	protected onUnmount(targetEl: HTMLElement): void {
-		console.debug('meta-bind | InlineButtonBase >> destroy', this.declaration);
+		console.debug('meta-bind | ButtonMountable >> destroy', this.declaration.declarationString);
 
 		this.buttonField?.unmount();
 
-		showUnloadedMessage(targetEl, 'inline button');
+		showUnloadedMessage(targetEl, 'button');
 	}
 }

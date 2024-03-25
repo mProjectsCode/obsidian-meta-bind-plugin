@@ -1,6 +1,6 @@
 import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
-import { type InputFieldBase } from 'packages/core/src/fields/inputFields/InputFieldBase';
+import { type InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
 import ProgressBarComponent from 'packages/core/src/fields/inputFields/fields/ProgressBar/ProgressBarComponent.svelte';
 import { parseUnknownToFloat } from 'packages/core/src/utils/Literal';
 import { optClamp } from 'packages/core/src/utils/Utils';
@@ -12,12 +12,12 @@ export class ProgressBarIPF extends AbstractInputField<number, number> {
 	maxValue: number;
 	stepSize: number;
 
-	constructor(base: InputFieldBase) {
-		super(base);
+	constructor(mountable: InputFieldMountable) {
+		super(mountable);
 
-		this.minValue = this.base.getArgument(InputFieldArgumentType.MIN_VALUE)?.value ?? 0;
-		this.maxValue = this.base.getArgument(InputFieldArgumentType.MAX_VALUE)?.value ?? 100;
-		this.stepSize = this.base.getArgument(InputFieldArgumentType.STEP_SIZE)?.value ?? 1;
+		this.minValue = this.mountable.getArgument(InputFieldArgumentType.MIN_VALUE)?.value ?? 0;
+		this.maxValue = this.mountable.getArgument(InputFieldArgumentType.MAX_VALUE)?.value ?? 100;
+		this.stepSize = this.mountable.getArgument(InputFieldArgumentType.STEP_SIZE)?.value ?? 1;
 
 		if (this.minValue >= this.maxValue) {
 			throw new MetaBindArgumentError({

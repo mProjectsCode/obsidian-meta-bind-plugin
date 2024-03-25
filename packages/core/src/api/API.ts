@@ -12,17 +12,18 @@ import {
 	type JsViewFieldOptions,
 	type NotePosition,
 	RenderChildType,
+	type TableFieldOptions,
 	type ViewFieldOptions,
 } from 'packages/core/src/config/FieldConfigs';
-import { type FieldBase } from 'packages/core/src/fields/FieldBase';
+import { type FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import { ButtonActionRunner } from 'packages/core/src/fields/button/ButtonActionRunner';
-import { ButtonBase } from 'packages/core/src/fields/button/ButtonBase';
+import { ButtonMountable } from 'packages/core/src/fields/button/ButtonMountable';
 import { ButtonManager } from 'packages/core/src/fields/button/ButtonManager';
-import { ButtonGroupBase } from 'packages/core/src/fields/button/ButtonGroupBase';
-import { InputFieldBase } from 'packages/core/src/fields/inputFields/InputFieldBase';
+import { ButtonGroupMountable } from 'packages/core/src/fields/button/ButtonGroupMountable';
+import { InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
 import { InputFieldFactory } from 'packages/core/src/fields/inputFields/InputFieldFactory';
-import { JsViewField } from 'packages/core/src/fields/viewFields/JsViewField';
-import { ViewFieldBase } from 'packages/core/src/fields/viewFields/ViewFieldBase';
+import { JsViewFieldMountable } from 'packages/core/src/fields/viewFields/JsViewFieldMountable';
+import { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
 import { ViewFieldFactory } from 'packages/core/src/fields/viewFields/ViewFieldFactory';
 import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import { BindTargetParser } from 'packages/core/src/parsers/bindTargetParser/BindTargetParser';
@@ -30,8 +31,8 @@ import { InputFieldParser } from 'packages/core/src/parsers/inputFieldParser/Inp
 import { ViewFieldParser } from 'packages/core/src/parsers/viewFieldParser/ViewFieldParser';
 import { expectType, getUUID } from 'packages/core/src/utils/Utils';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import { EmbedBase } from 'packages/core/src/fields/embed/EmbedBase';
-import { ExcludedBase } from 'packages/core/src/fields/excluded/ExcludedBase';
+import { EmbedMountable } from 'packages/core/src/fields/embed/EmbedMountable';
+import { ExcludedMountable } from 'packages/core/src/fields/excluded/ExcludedMountable';
 import { type InputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
 import {
 	type JsViewFieldDeclaration,
@@ -57,10 +58,12 @@ import {
 	V_InputFieldOptions,
 	V_JsViewFieldOptions,
 	V_RenderChildType,
+	V_TableFieldOptions,
 	V_ViewFieldOptions,
 } from 'packages/core/src/api/Validators';
 import { validate } from 'packages/core/src/utils/ZodUtils';
 import { z } from 'zod';
+import { TableMountable } from 'packages/core/src/fields/metaBindTable/TableMountable';
 
 export interface LifecycleHook {
 	register(cb: () => void): void;
@@ -127,7 +130,7 @@ export abstract class API<Plugin extends IPlugin> {
 		filePath: string,
 		options: FieldOptionMap[Type],
 		honorExcludedSetting: boolean = true,
-	): FieldBase {
+	): FieldMountable {
 		validate(
 			z.object({
 				type: V_FieldType,
@@ -144,23 +147,25 @@ export abstract class API<Plugin extends IPlugin> {
 		);
 
 		if (this.plugin.internal.isFilePathExcluded(filePath) && honorExcludedSetting) {
-			return this.createExcludedBase(filePath);
+			return this.createExcludedMountable(filePath);
 		}
 
-		if (type === FieldType.INPUT_FIELD) {
-			return this.createInputFieldBase(filePath, options as FieldOptionMap[FieldType.INPUT_FIELD]);
-		} else if (type === FieldType.VIEW_FIELD) {
-			return this.createViewFieldBase(filePath, options as FieldOptionMap[FieldType.VIEW_FIELD]);
-		} else if (type === FieldType.JS_VIEW_FIELD) {
-			return this.createJsViewFieldBase(filePath, options as FieldOptionMap[FieldType.JS_VIEW_FIELD]);
+		if (type === FieldType.INPUT) {
+			return this.createInputFieldMountable(filePath, options as FieldOptionMap[FieldType.INPUT]);
+		} else if (type === FieldType.VIEW) {
+			return this.createViewFieldMountable(filePath, options as FieldOptionMap[FieldType.VIEW]);
+		} else if (type === FieldType.JS_VIEW) {
+			return this.createJsViewFieldMountable(filePath, options as FieldOptionMap[FieldType.JS_VIEW]);
+		} else if (type === FieldType.TABLE) {
+			return this.createTableFieldMountable(filePath, options as FieldOptionMap[FieldType.TABLE]);
 		} else if (type === FieldType.BUTTON_GROUP) {
-			return this.createButtonGroupBase(filePath, options as FieldOptionMap[FieldType.BUTTON_GROUP]);
+			return this.createButtonGroupMountable(filePath, options as FieldOptionMap[FieldType.BUTTON_GROUP]);
 		} else if (type === FieldType.BUTTON) {
-			return this.createButtonBase(filePath, options as FieldOptionMap[FieldType.BUTTON]);
+			return this.createButtonMountable(filePath, options as FieldOptionMap[FieldType.BUTTON]);
 		} else if (type === FieldType.EMBED) {
-			return this.createEmbedBase(filePath, options as FieldOptionMap[FieldType.EMBED]);
+			return this.createEmbedMountable(filePath, options as FieldOptionMap[FieldType.EMBED]);
 		} else if (type === FieldType.EXCLUDED) {
-			return this.createExcludedBase(filePath);
+			return this.createExcludedMountable(filePath);
 		}
 
 		expectType<never>(type);
@@ -187,7 +192,7 @@ export abstract class API<Plugin extends IPlugin> {
 		renderChildType: RenderChildType = RenderChildType.INLINE,
 		position?: NotePosition | undefined,
 		honorExcludedSetting: boolean = true,
-	): FieldBase {
+	): FieldMountable {
 		validate(
 			z.object({
 				fieldString: z.string(),
@@ -245,7 +250,7 @@ export abstract class API<Plugin extends IPlugin> {
 		renderChildType: RenderChildType = RenderChildType.INLINE,
 		position?: NotePosition | undefined,
 		honorExcludedSetting: boolean = true,
-	): FieldBase {
+	): FieldMountable {
 		validate(
 			z.object({
 				type: V_FieldType,
@@ -266,19 +271,19 @@ export abstract class API<Plugin extends IPlugin> {
 		);
 
 		if (this.plugin.internal.isFilePathExcluded(filePath) && honorExcludedSetting) {
-			return this.createExcludedBase(filePath);
+			return this.createExcludedMountable(filePath);
 		}
 
-		if (type === FieldType.INPUT_FIELD) {
-			return this.createInputFieldBase(filePath, {
+		if (type === FieldType.INPUT) {
+			return this.createInputFieldMountable(filePath, {
 				renderChildType: renderChildType,
 				declaration: declaration,
 				scope: scope,
 			});
 		}
 
-		if (type === FieldType.VIEW_FIELD) {
-			return this.createViewFieldBase(filePath, {
+		if (type === FieldType.VIEW) {
+			return this.createViewFieldMountable(filePath, {
 				renderChildType: renderChildType,
 				declaration: declaration,
 				scope: scope,
@@ -286,7 +291,7 @@ export abstract class API<Plugin extends IPlugin> {
 		}
 
 		if (type === FieldType.BUTTON_GROUP) {
-			return this.createButtonGroupBase(filePath, {
+			return this.createButtonGroupMountable(filePath, {
 				renderChildType: renderChildType,
 				declaration: declaration,
 				position: position,
@@ -302,7 +307,7 @@ export abstract class API<Plugin extends IPlugin> {
 		});
 	}
 
-	public createInputFieldBase(filePath: string, options: InputFieldOptions): InputFieldBase {
+	public createInputFieldMountable(filePath: string, options: InputFieldOptions): InputFieldMountable {
 		validate(
 			z.object({
 				filePath: V_FilePath,
@@ -327,10 +332,10 @@ export abstract class API<Plugin extends IPlugin> {
 			);
 		}
 
-		return new InputFieldBase(this.plugin, uuid, filePath, options.renderChildType, declaration);
+		return new InputFieldMountable(this.plugin, uuid, filePath, options.renderChildType, declaration);
 	}
 
-	public createViewFieldBase(filePath: string, options: ViewFieldOptions): ViewFieldBase {
+	public createViewFieldMountable(filePath: string, options: ViewFieldOptions): ViewFieldMountable {
 		validate(
 			z.object({
 				filePath: V_FilePath,
@@ -355,10 +360,10 @@ export abstract class API<Plugin extends IPlugin> {
 			);
 		}
 
-		return new ViewFieldBase(this.plugin, uuid, filePath, options.renderChildType, declaration);
+		return new ViewFieldMountable(this.plugin, uuid, filePath, options.renderChildType, declaration);
 	}
 
-	public createJsViewFieldBase(filePath: string, options: JsViewFieldOptions): JsViewField {
+	public createJsViewFieldMountable(filePath: string, options: JsViewFieldOptions): JsViewFieldMountable {
 		validate(
 			z.object({
 				filePath: V_FilePath,
@@ -379,10 +384,27 @@ export abstract class API<Plugin extends IPlugin> {
 			declaration = this.jsViewFieldParser.fromSimpleDeclarationAndValidate(options.declaration, filePath);
 		}
 
-		return new JsViewField(this.plugin, uuid, filePath, declaration);
+		return new JsViewFieldMountable(this.plugin, uuid, filePath, declaration);
 	}
 
-	public createButtonGroupBase(filePath: string, options: ButtonGroupOptions): ButtonGroupBase {
+	public createTableFieldMountable(filePath: string, options: TableFieldOptions): TableMountable {
+		validate(
+			z.object({
+				filePath: V_FilePath,
+				options: V_TableFieldOptions,
+			}),
+			{
+				filePath: filePath,
+				options: options,
+			},
+		);
+
+		const uuid = getUUID();
+
+		return new TableMountable(this.plugin, uuid, filePath, options.bindTarget, options.tableHead, options.columns);
+	}
+
+	public createButtonGroupMountable(filePath: string, options: ButtonGroupOptions): ButtonGroupMountable {
 		validate(
 			z.object({
 				filePath: V_FilePath,
@@ -403,10 +425,17 @@ export abstract class API<Plugin extends IPlugin> {
 			declaration = this.buttonParser.validateGroup(options.declaration);
 		}
 
-		return new ButtonGroupBase(this.plugin, uuid, filePath, declaration, options.renderChildType, options.position);
+		return new ButtonGroupMountable(
+			this.plugin,
+			uuid,
+			filePath,
+			declaration,
+			options.renderChildType,
+			options.position,
+		);
 	}
 
-	public createButtonBase(filePath: string, options: ButtonOptions): ButtonBase {
+	public createButtonMountable(filePath: string, options: ButtonOptions): ButtonMountable {
 		validate(
 			z.object({
 				filePath: V_FilePath,
@@ -427,10 +456,10 @@ export abstract class API<Plugin extends IPlugin> {
 			declaration = this.buttonParser.validate(options.declaration);
 		}
 
-		return new ButtonBase(this.plugin, uuid, filePath, declaration, options.position, options.isPreview);
+		return new ButtonMountable(this.plugin, uuid, filePath, declaration, options.position, options.isPreview);
 	}
 
-	public createEmbedBase(filePath: string, options: EmbedOptions): EmbedBase {
+	public createEmbedMountable(filePath: string, options: EmbedOptions): EmbedMountable {
 		validate(
 			z.object({
 				filePath: V_FilePath,
@@ -443,10 +472,10 @@ export abstract class API<Plugin extends IPlugin> {
 		);
 
 		const uuid = getUUID();
-		return new EmbedBase(this.plugin, uuid, filePath, options.depth, options.content);
+		return new EmbedMountable(this.plugin, uuid, filePath, options.depth, options.content);
 	}
 
-	public createExcludedBase(filePath: string): ExcludedBase {
+	public createExcludedMountable(filePath: string): ExcludedMountable {
 		validate(
 			z.object({
 				filePath: V_FilePath,
@@ -457,7 +486,7 @@ export abstract class API<Plugin extends IPlugin> {
 		);
 
 		const uuid = getUUID();
-		return new ExcludedBase(this.plugin, uuid, filePath);
+		return new ExcludedMountable(this.plugin, uuid, filePath);
 	}
 
 	/**
@@ -475,9 +504,9 @@ export abstract class API<Plugin extends IPlugin> {
 			},
 		);
 
-		if (fieldType === FieldType.INPUT_FIELD) {
+		if (fieldType === FieldType.INPUT) {
 			return 'INPUT';
-		} else if (fieldType === FieldType.VIEW_FIELD) {
+		} else if (fieldType === FieldType.VIEW) {
 			return 'VIEW';
 		} else if (fieldType === FieldType.BUTTON_GROUP) {
 			return 'BUTTON';

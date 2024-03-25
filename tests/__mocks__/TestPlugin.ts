@@ -14,7 +14,7 @@ import {
 import { setFirstWeekday } from 'packages/core/src/utils/DatePickerUtils';
 import { TestAPI } from './TestAPI';
 import { TestInternalAPI } from './TestInternalAPI';
-import { InputFieldBase } from 'packages/core/src/fields/inputFields/InputFieldBase';
+import { InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
 import { InputField } from 'packages/core/src/fields/inputFields/InputFieldFactory';
 import { expect, Mock, spyOn } from 'bun:test';
 import { getUUID } from 'packages/core/src/utils/Utils';
@@ -30,11 +30,11 @@ import type { IMetadataSubscription } from 'packages/core/src/metadata/IMetadata
 export const DEFAULT_VALUE_INDICATOR = '$$default$$';
 
 export interface UninitializedTestInputField {
-	base: InputFieldBase;
+	mountable: InputFieldMountable;
 }
 
 export interface TestInputField {
-	base: InputFieldBase;
+	mountable: InputFieldMountable;
 	field: InputField;
 	fieldSignalSetSpy: Mock<(value: any) => void>;
 }
@@ -87,13 +87,13 @@ export class TestPlugin implements IPlugin {
 			throw new Error('Cannot add test input field outside of test setup');
 		}
 
-		const base = this.api.createInputFieldBase(filePath ?? this.testFilePath, {
+		const mountable = this.api.createInputFieldMountable(filePath ?? this.testFilePath, {
 			declaration: declaration,
 			renderChildType: RenderChildType.BLOCK,
 			scope: undefined,
 		});
 
-		const test: UninitializedTestInputField = { base };
+		const test: UninitializedTestInputField = { mountable: mountable };
 
 		this.uninitializedTestInputFields.push(test);
 
@@ -124,11 +124,11 @@ export class TestPlugin implements IPlugin {
 		}
 
 		const test = this.uninitializedTestInputFields[index];
-		test.base.mount(document.body);
+		test.mountable.mount(document.body);
 
-		const field = test.base.inputField as InputField;
+		const field = test.mountable.inputField as InputField;
 		const fieldSignalSetSpy = spyOn(field.computedSignal, 'set');
-		this.testInputFields[index] = { base: test.base, field, fieldSignalSetSpy };
+		this.testInputFields[index] = { mountable: test.mountable, field, fieldSignalSetSpy };
 	}
 
 	getTestInputField(index: number): TestInputField {

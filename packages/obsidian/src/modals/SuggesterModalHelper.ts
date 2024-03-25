@@ -71,13 +71,13 @@ export function getSuggesterOptionsForInputField(
 	plugin: MetaBindPlugin,
 	inputField: SuggesterLikeIFP,
 ): SuggesterOption<MBLiteral>[] {
-	const optionArgs = inputField.base.getArguments(InputFieldArgumentType.OPTION);
-	const optionQueryArgs = inputField.base.getArguments(InputFieldArgumentType.OPTION_QUERY);
-	const useLinksArg = inputField.base.getArgument(InputFieldArgumentType.USE_LINKS);
+	const optionArgs = inputField.mountable.getArguments(InputFieldArgumentType.OPTION);
+	const optionQueryArgs = inputField.mountable.getArguments(InputFieldArgumentType.OPTION_QUERY);
+	const useLinksArg = inputField.mountable.getArgument(InputFieldArgumentType.USE_LINKS);
 	// in not present, we treat the use links argument as true
 	return getSuggesterOptions(
 		plugin,
-		inputField.base.getFilePath(),
+		inputField.mountable.getFilePath(),
 		optionArgs,
 		optionQueryArgs,
 		useLinksArg === undefined ? UseLinksInputFieldArgumentValue.TRUE : useLinksArg.value,

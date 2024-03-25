@@ -1,6 +1,6 @@
 import { type IPlugin } from 'packages/core/src/IPlugin';
 import { RenderChildType, ViewFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
-import { FieldBase } from 'packages/core/src/fields/FieldBase';
+import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import { type ViewFieldArgumentMapType } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
 import { type AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractViewField';
 import type { ViewFieldDeclaration } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
@@ -8,7 +8,7 @@ import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
-export class ViewFieldBase extends FieldBase {
+export class ViewFieldMountable extends FieldMountable {
 	renderChildType: RenderChildType;
 	errorCollection: ErrorCollection;
 
@@ -89,7 +89,7 @@ export class ViewFieldBase extends FieldBase {
 	}
 
 	protected onMount(targetEl: HTMLElement): void {
-		console.debug('meta-bind | ViewFieldBase >> mount', this.declaration);
+		console.debug('meta-bind | ViewFieldMountable >> mount', this.declaration);
 
 		DomHelpers.empty(targetEl);
 		DomHelpers.addClass(targetEl, 'mb-view');
@@ -128,7 +128,7 @@ export class ViewFieldBase extends FieldBase {
 	}
 
 	protected onUnmount(targetEl: HTMLElement): void {
-		console.debug('meta-bind | ViewFieldBase >> unmount', this.declaration);
+		console.debug('meta-bind | ViewFieldMountable >> unmount', this.declaration);
 
 		this.viewField?.unmount();
 

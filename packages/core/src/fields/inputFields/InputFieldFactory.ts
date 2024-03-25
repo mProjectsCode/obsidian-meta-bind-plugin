@@ -5,7 +5,7 @@ import {
 	InputFieldType,
 	RenderChildType,
 } from 'packages/core/src/config/FieldConfigs';
-import { type InputFieldBase } from 'packages/core/src/fields/inputFields/InputFieldBase';
+import { type InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
 import { DateIPF } from 'packages/core/src/fields/inputFields/fields/Date/DateIPF';
 import { DatePickerIPF } from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePickerIPF';
 import { EditorIPF } from 'packages/core/src/fields/inputFields/fields/Editor/EditorIPF';
@@ -61,9 +61,9 @@ export class InputFieldFactory {
 		this.plugin = plugin;
 	}
 
-	createInputField(base: InputFieldBase): InputField | undefined {
-		const type = base.declaration.inputFieldType;
-		const renderChildType = base.renderChildType;
+	createInputField(mountable: InputFieldMountable): InputField | undefined {
+		const type = mountable.declaration.inputFieldType;
+		const renderChildType = mountable.renderChildType;
 
 		if (type !== InputFieldType.INVALID) {
 			this.checkRenderChildTypeAllowed(type, renderChildType);
@@ -72,47 +72,47 @@ export class InputFieldFactory {
 		// Skipped: Date, Time
 
 		if (type === InputFieldType.TOGGLE) {
-			return new ToggleIPF(base);
+			return new ToggleIPF(mountable);
 		} else if (type === InputFieldType.SLIDER) {
-			return new SliderIPF(base);
+			return new SliderIPF(mountable);
 		} else if (type === InputFieldType.TEXT) {
-			return new TextIPF(base);
+			return new TextIPF(mountable);
 		} else if (type === InputFieldType.TEXT_AREA) {
-			return new TextAreaIPF(base);
+			return new TextAreaIPF(mountable);
 		} else if (type === InputFieldType.SELECT) {
-			return new SelectIPF(base);
+			return new SelectIPF(mountable);
 		} else if (type === InputFieldType.MULTI_SELECT) {
-			return new MultiSelectIPF(base);
+			return new MultiSelectIPF(mountable);
 		} else if (type === InputFieldType.DATE_PICKER) {
-			return new DatePickerIPF(base);
+			return new DatePickerIPF(mountable);
 		} else if (type === InputFieldType.NUMBER) {
-			return new NumberIPF(base);
+			return new NumberIPF(mountable);
 		} else if (type === InputFieldType.SUGGESTER) {
-			return new SuggesterIPF(base);
+			return new SuggesterIPF(mountable);
 		} else if (type === InputFieldType.EDITOR) {
-			return new EditorIPF(base);
+			return new EditorIPF(mountable);
 		} else if (type === InputFieldType.PROGRESS_BAR) {
-			return new ProgressBarIPF(base);
+			return new ProgressBarIPF(mountable);
 		} else if (type === InputFieldType.INLINE_SELECT) {
-			return new InlineSelectIPF(base);
+			return new InlineSelectIPF(mountable);
 		} else if (type === InputFieldType.IMAGE_SUGGESTER) {
-			return new ImageSuggesterIPF(base);
+			return new ImageSuggesterIPF(mountable);
 		} else if (type === InputFieldType.LIST) {
-			return new ListIPF(base);
+			return new ListIPF(mountable);
 		} else if (type === InputFieldType.LIST_SUGGESTER) {
-			return new ListSuggesterIPF(base);
+			return new ListSuggesterIPF(mountable);
 		} else if (type === InputFieldType.DATE) {
-			return new DateIPF(base);
+			return new DateIPF(mountable);
 		} else if (type === InputFieldType.TIME) {
-			return new TimeIPF(base);
+			return new TimeIPF(mountable);
 		} else if (type === InputFieldType.INLINE_LIST_SUGGESTER) {
-			return new InlineListSuggesterIPF(base);
+			return new InlineListSuggesterIPF(mountable);
 		} else if (type === InputFieldType.INLINE_LIST) {
-			return new InlineListIPF(base);
+			return new InlineListIPF(mountable);
 		} else if (type === InputFieldType.IMAGE_LIST_SUGGESTER) {
-			return new ImageListSuggesterIPF(base);
+			return new ImageListSuggesterIPF(mountable);
 		} else if (type === InputFieldType.DATE_TIME) {
-			return new DateTimeIPF(base);
+			return new DateTimeIPF(mountable);
 		}
 
 		expectType<InputFieldType.INVALID>(type);

@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { MetaBindTable, MetaBindTableCell } from 'packages/core/src/fields/metaBindTable/MetaBindTable';
+	import { TableMountable, MetaBindTableCell } from 'packages/core/src/fields/metaBindTable/TableMountable';
 	import { onDestroy, onMount } from 'svelte';
 
-	export let table: MetaBindTable;
+	export let table: TableMountable;
 	export let cell: MetaBindTableCell;
 
 	let element: HTMLElement;

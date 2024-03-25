@@ -65,8 +65,8 @@ export class MetaBindPublishPlugin implements IPlugin {
 					continue;
 				}
 
-				const base = this.api.createInlineFieldOfTypeFromString(fieldType, content, filePath, undefined);
-				const mdrc = this.api.wrapInMDRC(base, codeBlock, ctx);
+				const mountable = this.api.createInlineFieldOfTypeFromString(fieldType, content, filePath, undefined);
+				const mdrc = this.api.wrapInMDRC(mountable, codeBlock, ctx);
 
 				mdrc.load();
 			}
@@ -93,7 +93,7 @@ export class MetaBindPublishPlugin implements IPlugin {
 				};
 			}
 
-			const base = this.api.createInlineFieldOfTypeFromString(
+			const mountable = this.api.createInlineFieldOfTypeFromString(
 				fieldType,
 				content,
 				filePath,
@@ -101,42 +101,42 @@ export class MetaBindPublishPlugin implements IPlugin {
 				RenderChildType.BLOCK,
 				position,
 			);
-			const mdrc = this.api.wrapInMDRC(base, codeBlock, ctx);
+			const mdrc = this.api.wrapInMDRC(mountable, codeBlock, ctx);
 
 			mdrc.load();
 		});
 
 		// "meta-bind-js-view" code blocks
 		publish.registerMarkdownCodeBlockProcessor('meta-bind-js-view', (source, el, ctx) => {
-			const field = this.api.createJsViewFieldBase(ctx.sourcePath, {
+			const mountable = this.api.createJsViewFieldMountable(ctx.sourcePath, {
 				declaration: source,
 			});
 
-			const mdrc = this.api.wrapInMDRC(field, el, ctx);
+			const mdrc = this.api.wrapInMDRC(mountable, el, ctx);
 
 			mdrc.load();
 		});
 
 		// "meta-bind-embed" code blocks
 		publish.registerMarkdownCodeBlockProcessor('meta-bind-embed', (source, el, ctx) => {
-			const field = this.api.createEmbedBase(ctx.sourcePath, {
+			const mountable = this.api.createEmbedMountable(ctx.sourcePath, {
 				content: source,
 				depth: 0,
 			});
 
-			const mdrc = this.api.wrapInMDRC(field, el, ctx);
+			const mdrc = this.api.wrapInMDRC(mountable, el, ctx);
 
 			mdrc.load();
 		});
 
 		for (let i = 1; i <= EMBED_MAX_DEPTH; i++) {
 			publish.registerMarkdownCodeBlockProcessor(`meta-bind-embed-internal-${i}`, (source, el, ctx) => {
-				const field = this.api.createEmbedBase(ctx.sourcePath, {
+				const mountable = this.api.createEmbedMountable(ctx.sourcePath, {
 					content: source,
 					depth: i,
 				});
 
-				const mdrc = this.api.wrapInMDRC(field, el, ctx);
+				const mdrc = this.api.wrapInMDRC(mountable, el, ctx);
 
 				mdrc.load();
 			});
@@ -154,13 +154,13 @@ export class MetaBindPublishPlugin implements IPlugin {
 				};
 			}
 
-			const field = this.api.createButtonBase(ctx.sourcePath, {
+			const mountable = this.api.createButtonMountable(ctx.sourcePath, {
 				declaration: source,
 				isPreview: false,
 				position: position,
 			});
 
-			const mdrc = this.api.wrapInMDRC(field, el, ctx);
+			const mdrc = this.api.wrapInMDRC(mountable, el, ctx);
 
 			mdrc.load();
 		});

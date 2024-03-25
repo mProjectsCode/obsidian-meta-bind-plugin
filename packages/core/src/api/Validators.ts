@@ -9,6 +9,7 @@ import {
 	type JsViewFieldOptions,
 	type NotePosition,
 	RenderChildType,
+	type TableFieldOptions,
 	type ViewFieldOptions,
 } from 'packages/core/src/config/FieldConfigs';
 import { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
@@ -41,6 +42,7 @@ import {
 	type SimpleFieldArgument,
 	type UnvalidatedFieldArgument,
 } from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
+import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 
 export const V_FilePath = schemaForType<string>()(z.string());
 
@@ -57,6 +59,8 @@ export const V_BindTargetScope = schemaForType<BindTargetScope>()(z.instanceof(B
 export const V_Signal = schemaForType<Signal<unknown>>()(z.instanceof(Signal));
 
 export const V_VoidFunction = schemaForType<() => void>()(z.function().args().returns(z.void()));
+
+export const V_FieldMountable = schemaForType<FieldMountable>()(z.instanceof(FieldMountable));
 
 export const V_ParsingPosition = schemaForType<ParsingPosition>()(
 	z.object({
@@ -206,6 +210,14 @@ export const V_ViewFieldOptions = schemaForType<ViewFieldOptions>()(
 export const V_JsViewFieldOptions = schemaForType<JsViewFieldOptions>()(
 	z.object({
 		declaration: z.union([z.string(), V_SimpleJsViewFieldDeclaration]),
+	}),
+);
+
+export const V_TableFieldOptions = schemaForType<TableFieldOptions>()(
+	z.object({
+		bindTarget: V_BindTargetDeclaration,
+		tableHead: z.string().array(),
+		columns: z.array(z.union([V_UnvalidatedInputFieldDeclaration, V_UnvalidatedViewFieldDeclaration])),
 	}),
 );
 

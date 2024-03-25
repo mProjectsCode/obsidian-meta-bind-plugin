@@ -3,27 +3,27 @@ import { ComputedSignal, Signal } from 'packages/core/src/utils/Signal';
 import { type SvelteComponent } from 'svelte';
 
 import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
-import { type InputFieldBase } from 'packages/core/src/fields/inputFields/InputFieldBase';
+import { type InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
 import { type MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
 import { Mountable } from 'packages/core/src/utils/Mountable';
+import { type IPlugin } from 'packages/core/src/IPlugin';
 
 export abstract class AbstractInputField<MetadataValueType, ComponentValueType> extends Mountable {
-	readonly base: InputFieldBase;
+	readonly plugin: IPlugin;
+	readonly mountable: InputFieldMountable;
 	readonly inputFieldComponent: InputFieldComponent<ComponentValueType>;
 	readonly inputSignal: Signal<unknown>;
 	readonly computedSignal: ComputedSignal<unknown, MetadataValueType>;
 
 	private metadataSubscription?: MetadataSubscription;
 
-	constructor(base: InputFieldBase) {
+	constructor(mountable: InputFieldMountable) {
 		super();
 
-		this.base = base;
+		this.mountable = mountable;
+		this.plugin = mountable.plugin;
 		this.inputSignal = new Signal<unknown>(undefined);
-		this.inputFieldComponent = new InputFieldComponent<ComponentValueType>(
-			this.base.plugin,
-			this.getSvelteComponent(),
-		);
+		this.inputFieldComponent = new InputFieldComponent<ComponentValueType>(this.plugin, this.getSvelteComponent());
 
 		this.computedSignal = new ComputedSignal<unknown, MetadataValueType>(
 			this.inputSignal,
@@ -119,7 +119,7 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 	}
 
 	public getDefaultValue(): MetadataValueType {
-		const defaultValueArgument = this.base.getArgument(InputFieldArgumentType.DEFAULT_VALUE);
+		const defaultValueArgument = this.mountable.getArgument(InputFieldArgumentType.DEFAULT_VALUE);
 		if (defaultValueArgument === undefined) {
 			return this.mapValue(this.getFallbackDefaultValue());
 		}
@@ -143,7 +143,7 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 			callback: value => this.inputFieldComponent.setValue(this.reverseMapValue(value)),
 		});
 
-		const bindTarget = this.base.getBindTarget();
+		const bindTarget = this.mountable.getBindTarget();
 
 		if (bindTarget) {
 			this.inputFieldComponent.registerListener({
@@ -153,11 +153,11 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 				},
 			});
 
-			this.metadataSubscription = this.base.plugin.metadataManager.subscribe(
-				this.base.getUuid(),
+			this.metadataSubscription = this.mountable.plugin.metadataManager.subscribe(
+				this.mountable.getUuid(),
 				this.inputSignal,
 				bindTarget,
-				() => this.base.unmount(),
+				() => this.mountable.unmount(),
 			);
 		}
 

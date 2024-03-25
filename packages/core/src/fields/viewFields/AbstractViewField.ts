@@ -1,5 +1,5 @@
 import { ViewFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
-import { type ViewFieldBase } from 'packages/core/src/fields/viewFields/ViewFieldBase';
+import { type ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
 import { type ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
 import {
 	type ComputedMetadataSubscription,
@@ -9,9 +9,11 @@ import { stringifyUnknown } from 'packages/core/src/utils/Literal';
 import { Mountable } from 'packages/core/src/utils/Mountable';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { DomHelpers } from 'packages/core/src/utils/Utils';
+import { type IPlugin } from 'packages/core/src/IPlugin';
 
 export abstract class AbstractViewField extends Mountable {
-	readonly base: ViewFieldBase;
+	readonly plugin: IPlugin;
+	readonly mountable: ViewFieldMountable;
 	readonly inputSignal: Signal<unknown>;
 
 	private metadataSubscription?: ComputedMetadataSubscription;
@@ -21,10 +23,11 @@ export abstract class AbstractViewField extends Mountable {
 	// hidden argument
 	hidden: boolean;
 
-	protected constructor(base: ViewFieldBase) {
+	protected constructor(mountable: ViewFieldMountable) {
 		super();
 
-		this.base = base;
+		this.mountable = mountable;
+		this.plugin = mountable.plugin;
 		this.inputSignal = new Signal<unknown>(undefined);
 
 		this.variables = [];
@@ -40,7 +43,7 @@ export abstract class AbstractViewField extends Mountable {
 	private async initialRender(targetEl: HTMLElement): Promise<void> {
 		DomHelpers.addClass(targetEl, 'mb-view-text');
 
-		this.hidden = this.base.getArgument(ViewFieldArgumentType.HIDDEN)?.value ?? false;
+		this.hidden = this.mountable.getArgument(ViewFieldArgumentType.HIDDEN)?.value ?? false;
 
 		if (this.hidden) {
 			DomHelpers.addClass(targetEl, 'mb-view-hidden');
@@ -55,7 +58,7 @@ export abstract class AbstractViewField extends Mountable {
 
 	private async rerender(targetEl: HTMLElement, value: unknown): Promise<void> {
 		if (!this.hidden) {
-			const text = stringifyUnknown(value, this.base.plugin.settings.viewFieldDisplayNullAsEmpty) ?? '';
+			const text = stringifyUnknown(value, this.mountable.plugin.settings.viewFieldDisplayNullAsEmpty) ?? '';
 			DomHelpers.empty(targetEl);
 			await this.onRerender(targetEl, text);
 		}
@@ -68,10 +71,10 @@ export abstract class AbstractViewField extends Mountable {
 
 		this.inputSignal.registerListener({ callback: value => void this.rerender(targetEl, value) });
 
-		this.metadataSubscription = this.base.plugin.metadataManager.subscribeComputed(
-			this.base.getUuid(),
+		this.metadataSubscription = this.mountable.plugin.metadataManager.subscribeComputed(
+			this.mountable.getUuid(),
 			this.inputSignal,
-			this.base.getDeclaration().writeToBindTarget,
+			this.mountable.getDeclaration().writeToBindTarget,
 			this.variables.map((x): ComputedSubscriptionDependency => {
 				return {
 					bindTarget: x.bindTargetDeclaration,
@@ -79,7 +82,7 @@ export abstract class AbstractViewField extends Mountable {
 				};
 			}),
 			async () => await this.computeValue(),
-			() => this.base.unmount(),
+			() => this.mountable.unmount(),
 		);
 
 		void this.initialRender(targetEl);

@@ -3,7 +3,7 @@ export abstract class Mountable {
 	private targetEl: HTMLElement | undefined;
 	private readonly onUnmountCbs: (() => void)[];
 
-	protected constructor() {
+	constructor() {
 		this.mounted = false;
 		this.targetEl = undefined;
 		this.onUnmountCbs = [];

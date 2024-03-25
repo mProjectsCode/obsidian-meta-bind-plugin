@@ -1,6 +1,6 @@
 import { API } from 'packages/core/src/api/API';
 import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
-import { InputFieldBase } from 'packages/core/src/fields/inputFields/InputFieldBase';
+import { InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
 import { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import { InputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
 import { getUUID } from 'packages/core/src/utils/Utils';

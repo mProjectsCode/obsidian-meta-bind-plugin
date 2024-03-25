@@ -1,5 +1,5 @@
 import { type IPlugin } from 'packages/core/src/IPlugin';
-import { FieldBase } from 'packages/core/src/fields/FieldBase';
+import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import { type ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
 import type {
 	ComputedMetadataSubscription,
@@ -12,7 +12,7 @@ import { DomHelpers, getUUID, showUnloadedMessage } from 'packages/core/src/util
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { ErrorLevel, MetaBindJsError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
-export class JsViewField extends FieldBase {
+export class JsViewFieldMountable extends FieldMountable {
 	errorCollection: ErrorCollection;
 
 	declarationString: string | undefined;
@@ -107,7 +107,7 @@ export class JsViewField extends FieldBase {
 	}
 
 	protected onMount(targetEl: HTMLElement): void {
-		console.debug('meta-bind | JsViewField >> mount', this.declaration);
+		console.debug('meta-bind | JsViewFieldMountable >> mount', this.declaration);
 
 		DomHelpers.addClass(targetEl, 'mb-view');
 		DomHelpers.empty(targetEl);
@@ -147,7 +147,7 @@ export class JsViewField extends FieldBase {
 	}
 
 	protected onUnmount(targetEl: HTMLElement): void {
-		console.debug('meta-bind | JsViewField >> unmount', this.declaration);
+		console.debug('meta-bind | JsViewFieldMountable >> unmount', this.declaration);
 
 		this.unregisterSelfFromMetadataManager();
 

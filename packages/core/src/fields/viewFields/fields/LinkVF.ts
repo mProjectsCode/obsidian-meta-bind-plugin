@@ -1,5 +1,5 @@
 import { AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractViewField';
-import { type ViewFieldBase } from 'packages/core/src/fields/viewFields/ViewFieldBase';
+import { type ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { Signal } from 'packages/core/src/utils/Signal';
@@ -14,13 +14,13 @@ import {
 export class LinkVF extends AbstractViewField {
 	component?: LinkListComponent;
 
-	constructor(base: ViewFieldBase) {
-		super(base);
+	constructor(mountable: ViewFieldMountable) {
+		super(mountable);
 	}
 
 	protected buildVariables(): void {
 		// filter out empty strings
-		const entries: (string | BindTargetDeclaration)[] = this.base
+		const entries: (string | BindTargetDeclaration)[] = this.mountable
 			.getDeclaration()
 			.templateDeclaration.filter(x => (typeof x === 'string' ? x : true));
 

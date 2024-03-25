@@ -1,14 +1,14 @@
-import { FieldBase } from 'packages/core/src/fields/FieldBase';
+import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import { type IPlugin } from 'packages/core/src/IPlugin';
 import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
 
-export class ExcludedBase extends FieldBase {
+export class ExcludedMountable extends FieldMountable {
 	constructor(plugin: IPlugin, uuid: string, filePath: string) {
 		super(plugin, uuid, filePath);
 	}
 
 	protected onMount(targetEl: HTMLElement): void {
-		console.log('meta-bind | ExcludedBase >> mount');
+		console.debug('meta-bind | ExcludedMountable >> mount');
 
 		DomHelpers.empty(targetEl);
 
@@ -19,7 +19,7 @@ export class ExcludedBase extends FieldBase {
 	}
 
 	protected onUnmount(targetEl: HTMLElement): void {
-		console.log('meta-bind | ExcludedBase >> unmount');
+		console.debug('meta-bind | ExcludedMountable >> unmount');
 
 		DomHelpers.empty(targetEl);
 

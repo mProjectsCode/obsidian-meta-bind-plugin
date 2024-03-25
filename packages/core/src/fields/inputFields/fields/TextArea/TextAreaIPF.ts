@@ -28,8 +28,8 @@ export class TextAreaIPF extends AbstractInputField<string, string> {
 
 	protected getMountArgs(): Record<string, unknown> {
 		return {
-			placeholder: this.base.getArgument(InputFieldArgumentType.PLACEHOLDER)?.value ?? 'Text',
-			limit: this.base.getArgument(InputFieldArgumentType.LIMIT)?.value,
+			placeholder: this.mountable.getArgument(InputFieldArgumentType.PLACEHOLDER)?.value ?? 'Text',
+			limit: this.mountable.getArgument(InputFieldArgumentType.LIMIT)?.value,
 		};
 	}
 }

@@ -1,6 +1,6 @@
 import { type IPlugin } from 'packages/core/src/IPlugin';
 import { InputFieldArgumentType, InputFieldType, RenderChildType } from 'packages/core/src/config/FieldConfigs';
-import { FieldBase } from 'packages/core/src/fields/FieldBase';
+import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import { type InputFieldArgumentMapType } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
 import type { InputField } from 'packages/core/src/fields/inputFields/InputFieldFactory';
 import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
@@ -10,7 +10,7 @@ import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
-export class InputFieldBase extends FieldBase {
+export class InputFieldMountable extends FieldMountable {
 	renderChildType: RenderChildType;
 	errorCollection: ErrorCollection;
 
@@ -131,7 +131,7 @@ export class InputFieldBase extends FieldBase {
 	}
 
 	protected onMount(targetEl: HTMLElement): void {
-		console.debug('meta-bind | InputFieldBase >> mount', this.declaration);
+		console.debug('meta-bind | InputFieldMountable >> mount', this.declaration);
 
 		DomHelpers.empty(targetEl);
 		DomHelpers.addClass(targetEl, 'mb-input');
@@ -167,7 +167,7 @@ export class InputFieldBase extends FieldBase {
 	}
 
 	protected onUnmount(targetEl: HTMLElement): void {
-		console.debug('meta-bind | InputFieldBase >> unmount', this.declaration);
+		console.debug('meta-bind | InputFieldMountable >> unmount', this.declaration);
 
 		this.inputField?.destroy();
 

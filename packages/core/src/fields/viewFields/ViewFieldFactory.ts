@@ -1,7 +1,7 @@
 import { type IPlugin } from 'packages/core/src/IPlugin';
 import { ViewFieldType } from 'packages/core/src/config/FieldConfigs';
 import { type AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractViewField';
-import { type ViewFieldBase } from 'packages/core/src/fields/viewFields/ViewFieldBase';
+import { type ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
 import { LinkVF } from 'packages/core/src/fields/viewFields/fields/LinkVF';
 import { MathVF } from 'packages/core/src/fields/viewFields/fields/MathVF';
 import { TextVF } from 'packages/core/src/fields/viewFields/fields/TextVF';
@@ -15,19 +15,19 @@ export class ViewFieldFactory {
 		this.plugin = plugin;
 	}
 
-	createViewField(base: ViewFieldBase): AbstractViewField | undefined {
+	createViewField(mountable: ViewFieldMountable): AbstractViewField | undefined {
 		// Skipped: Date, Time, Image Suggester
 
-		const type = base.declaration.viewFieldType;
+		const type = mountable.declaration.viewFieldType;
 
 		if (type === ViewFieldType.MATH) {
-			return new MathVF(base);
+			return new MathVF(mountable);
 		} else if (type === ViewFieldType.TEXT) {
-			return new TextVF(base);
+			return new TextVF(mountable);
 		} else if (type === ViewFieldType.LINK) {
-			return new LinkVF(base);
+			return new LinkVF(mountable);
 		} else if (type === ViewFieldType.IMAGE) {
-			return new ImageVF(base);
+			return new ImageVF(mountable);
 		}
 
 		expectType<ViewFieldType.INVALID>(type);

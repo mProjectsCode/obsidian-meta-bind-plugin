@@ -12,9 +12,9 @@ import { type Listener, Signal } from 'packages/core/src/utils/Signal';
 
 import { type IPlugin } from 'packages/core/src/IPlugin';
 import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
-import { FieldBase } from 'packages/core/src/fields/FieldBase';
-import { InputFieldBase } from 'packages/core/src/fields/inputFields/InputFieldBase';
-import { ViewFieldBase } from 'packages/core/src/fields/viewFields/ViewFieldBase';
+import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
+import { InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
+import { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
 import { type MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
 import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { type MBExtendedLiteral } from 'packages/core/src/utils/Literal';
@@ -34,7 +34,7 @@ export interface MetaBindTableRow {
 
 type T = Record<string, MBExtendedLiteral>[];
 
-export class MetaBindTable extends FieldBase {
+export class TableMountable extends FieldMountable {
 	bindTarget: BindTargetDeclaration;
 	tableHead: string[];
 	columns: MetaBindColumnDeclaration[];
@@ -146,12 +146,12 @@ export class MetaBindTable extends FieldBase {
 
 	createCell(cell: MetaBindTableCell, element: HTMLElement): () => void {
 		const uuid = getUUID();
-		let field: FieldBase;
+		let field: FieldMountable;
 
 		if ('inputFieldType' in cell) {
-			field = new InputFieldBase(this.plugin, uuid, this.getFilePath(), RenderChildType.INLINE, cell);
+			field = new InputFieldMountable(this.plugin, uuid, this.getFilePath(), RenderChildType.INLINE, cell);
 		} else {
-			field = new ViewFieldBase(this.plugin, uuid, this.getFilePath(), RenderChildType.INLINE, cell);
+			field = new ViewFieldMountable(this.plugin, uuid, this.getFilePath(), RenderChildType.INLINE, cell);
 		}
 
 		field.mount(element);

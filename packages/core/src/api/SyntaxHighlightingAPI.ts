@@ -3,10 +3,10 @@ import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { type IPlugin } from 'packages/core/src/IPlugin';
 import { ParsingError, runParser } from 'packages/core/src/parsers/ParsingError';
 import {
-	BIND_TARGET_HLP,
-	INLINE_BUTTON_DECLARATION_HLP,
-	INPUT_FIELD_DECLARATION_HLP,
-	VIEW_FIELD_DECLARATION_HLP,
+	HLP_BindTarget,
+	HLP_ButtonGroupDeclaration,
+	HLP_InputFieldDeclaration,
+	HLP_ViewFieldDeclaration,
 } from 'packages/core/src/parsers/syntaxHighlighting/HLPs';
 import { type Highlight } from 'packages/core/src/parsers/syntaxHighlighting/Highlight';
 import { SyntaxHighlighting } from 'packages/core/src/parsers/syntaxHighlighting/SyntaxHighlighting';
@@ -20,21 +20,21 @@ export class SyntaxHighlightingAPI {
 	}
 
 	highlightInputFieldDeclaration(str: string, trimWhiteSpace: boolean): SyntaxHighlighting {
-		return this.highlightWithParser(str, trimWhiteSpace, INPUT_FIELD_DECLARATION_HLP);
+		return this.highlightWithParser(str, trimWhiteSpace, HLP_InputFieldDeclaration);
 	}
 
 	highlightViewFieldDeclaration(str: string, trimWhiteSpace: boolean): SyntaxHighlighting {
-		return this.highlightWithParser(str, trimWhiteSpace, VIEW_FIELD_DECLARATION_HLP);
+		return this.highlightWithParser(str, trimWhiteSpace, HLP_ViewFieldDeclaration);
 	}
 
 	highlightInlineButtonDeclaration(str: string, trimWhiteSpace: boolean): SyntaxHighlighting {
-		return this.highlightWithParser(str, trimWhiteSpace, INLINE_BUTTON_DECLARATION_HLP);
+		return this.highlightWithParser(str, trimWhiteSpace, HLP_ButtonGroupDeclaration);
 	}
 
 	highlight(str: string, mdrcType: FieldType, trimWhiteSpace: boolean): SyntaxHighlighting {
-		if (mdrcType === FieldType.INPUT_FIELD) {
+		if (mdrcType === FieldType.INPUT) {
 			return this.highlightInputFieldDeclaration(str, trimWhiteSpace);
-		} else if (mdrcType === FieldType.VIEW_FIELD) {
+		} else if (mdrcType === FieldType.VIEW) {
 			return this.highlightViewFieldDeclaration(str, trimWhiteSpace);
 		} else if (mdrcType === FieldType.BUTTON_GROUP) {
 			return this.highlightInlineButtonDeclaration(str, trimWhiteSpace);
@@ -44,7 +44,7 @@ export class SyntaxHighlightingAPI {
 	}
 
 	highlightBindTarget(str: string, trimWhiteSpace: boolean): SyntaxHighlighting {
-		return this.highlightWithParser(str, trimWhiteSpace, BIND_TARGET_HLP);
+		return this.highlightWithParser(str, trimWhiteSpace, HLP_BindTarget);
 	}
 
 	private highlightWithParser(str: string, trimWhiteSpace: boolean, parser: Parser<Highlight[]>): SyntaxHighlighting {

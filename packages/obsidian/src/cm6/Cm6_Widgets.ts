@@ -36,14 +36,14 @@ export class MarkdownRenderChildWidget extends WidgetType {
 		const span = document.createElement('span');
 		span.addClass('cm-inline-code');
 
-		const base = this.plugin.api.createInlineFieldOfTypeFromString(
+		const mountable = this.plugin.api.createInlineFieldOfTypeFromString(
 			this.type,
 			this.content,
 			this.filePath,
 			undefined,
 		);
 
-		this.renderChild = this.plugin.api.wrapInMDRC(base, span, this.parentComponent);
+		this.renderChild = this.plugin.api.wrapInMDRC(mountable, span, this.parentComponent);
 
 		return span;
 	}

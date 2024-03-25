@@ -28,9 +28,9 @@ export class ListIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> {
 
 	protected getMountArgs(): Record<string, unknown> {
 		return {
-			placeholder: this.base.getArgument(InputFieldArgumentType.PLACEHOLDER)?.value ?? 'New Entry...',
-			limit: this.base.getArgument(InputFieldArgumentType.LIMIT)?.value,
-			multiLine: this.base.getArgument(InputFieldArgumentType.MULTI_LINE)?.value === true,
+			placeholder: this.mountable.getArgument(InputFieldArgumentType.PLACEHOLDER)?.value ?? 'New Entry...',
+			limit: this.mountable.getArgument(InputFieldArgumentType.LIMIT)?.value,
+			multiLine: this.mountable.getArgument(InputFieldArgumentType.MULTI_LINE)?.value === true,
 		};
 	}
 }

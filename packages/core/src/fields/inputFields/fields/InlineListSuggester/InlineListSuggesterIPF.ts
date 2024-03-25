@@ -30,12 +30,12 @@ export class InlineListSuggesterIPF extends AbstractInputField<MBLiteral[], MBLi
 		return {
 			showSuggester: () => this.openModal(),
 			showTextPrompt: () => this.openTextModal(),
-			allowsOther: this.base.getArgument(InputFieldArgumentType.ALLOW_OTHER)?.value === true,
+			allowsOther: this.mountable.getArgument(InputFieldArgumentType.ALLOW_OTHER)?.value === true,
 		};
 	}
 
 	openModal(): void {
-		this.base.plugin.internal.openSuggesterModal(this, selected => {
+		this.mountable.plugin.internal.openSuggesterModal(this, selected => {
 			const value = this.getInternalValue();
 			value.push(selected.value);
 			this.setInternalValue(value);
@@ -43,7 +43,7 @@ export class InlineListSuggesterIPF extends AbstractInputField<MBLiteral[], MBLi
 	}
 
 	openTextModal(): void {
-		this.base.plugin.internal.openTextPromptModal({
+		this.mountable.plugin.internal.openTextPromptModal({
 			title: 'Meta Bind List Suggester',
 			subTitle: 'Create a new List Element.',
 			value: '',

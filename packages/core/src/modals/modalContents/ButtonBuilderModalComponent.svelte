@@ -23,21 +23,21 @@
 	export let buttonConfig: ButtonConfig;
 
 	let buttonEl: HTMLElement;
-	let buttonBase: ButtonField;
+	let buttonMountable: ButtonField;
 	let addActionType: ButtonActionType;
 
 	$: updatePreviewButton(buttonConfig, buttonEl);
 
 	onDestroy(() => {
-		buttonBase?.unmount();
+		buttonMountable?.unmount();
 	});
 
 	function updatePreviewButton(config: ButtonConfig, el: HTMLElement) {
-		buttonBase?.unmount();
+		buttonMountable?.unmount();
 		if (el) {
 			DomHelpers.empty(el);
-			buttonBase = new ButtonField(plugin, config, '', RenderChildType.BLOCK, undefined, true);
-			buttonBase.mount(el);
+			buttonMountable = new ButtonField(plugin, config, '', RenderChildType.BLOCK, undefined, true);
+			buttonMountable.mount(el);
 		}
 	}
 

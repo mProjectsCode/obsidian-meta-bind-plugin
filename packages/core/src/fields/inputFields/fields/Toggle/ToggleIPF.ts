@@ -1,6 +1,6 @@
 import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
-import { type InputFieldBase } from 'packages/core/src/fields/inputFields/InputFieldBase';
+import { type InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
 import ToggleComponent from 'packages/core/src/fields/inputFields/fields/Toggle/ToggleComponent.svelte';
 import { type MBLiteral, parseUnknownToLiteral } from 'packages/core/src/utils/Literal';
 import { type SvelteComponent } from 'svelte';
@@ -9,11 +9,11 @@ export class ToggleIPF extends AbstractInputField<MBLiteral, boolean> {
 	onValue: MBLiteral;
 	offValue: MBLiteral;
 
-	constructor(base: InputFieldBase) {
-		super(base);
+	constructor(mountable: InputFieldMountable) {
+		super(mountable);
 
-		this.onValue = this.base.getArgument(InputFieldArgumentType.ON_VALUE)?.value ?? true;
-		this.offValue = this.base.getArgument(InputFieldArgumentType.OFF_VALUE)?.value ?? false;
+		this.onValue = this.mountable.getArgument(InputFieldArgumentType.ON_VALUE)?.value ?? true;
+		this.offValue = this.mountable.getArgument(InputFieldArgumentType.OFF_VALUE)?.value ?? false;
 	}
 
 	protected filterValue(value: unknown): MBLiteral | undefined {

@@ -6,15 +6,15 @@ import DatePickerComponent from 'packages/core/src/fields/inputFields/fields/Dat
 import { DateParser } from 'packages/core/src/parsers/DateParser';
 import { type SvelteComponent } from 'svelte';
 
-import { type InputFieldBase } from 'packages/core/src/fields/inputFields/InputFieldBase';
+import { type InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
 
 export class DatePickerIPF extends AbstractInputField<string | null, Moment | null> {
 	options: OptionInputFieldArgument[];
 
-	constructor(base: InputFieldBase) {
-		super(base);
+	constructor(mountable: InputFieldMountable) {
+		super(mountable);
 
-		this.options = this.base.getArguments(InputFieldArgumentType.OPTION);
+		this.options = this.mountable.getArguments(InputFieldArgumentType.OPTION);
 	}
 
 	protected filterValue(value: unknown): string | null | undefined {
@@ -62,9 +62,9 @@ export class DatePickerIPF extends AbstractInputField<string | null, Moment | nu
 
 	protected getMountArgs(): Record<string, unknown> {
 		return {
-			dateFormat: this.base.plugin.settings.preferredDateFormat,
+			dateFormat: this.mountable.plugin.settings.preferredDateFormat,
 			showDatePicker: (): void => {
-				this.base.plugin.internal.openDatePickerModal(this);
+				this.mountable.plugin.internal.openDatePickerModal(this);
 			},
 		};
 	}

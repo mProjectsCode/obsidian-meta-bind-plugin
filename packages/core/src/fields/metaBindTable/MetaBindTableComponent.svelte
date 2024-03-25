@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { MetaBindTable, MetaBindTableRow } from 'packages/core/src/fields/metaBindTable/MetaBindTable';
+	import { TableMountable, MetaBindTableRow } from 'packages/core/src/fields/metaBindTable/TableMountable';
 	import MetaBindTableCellComponent from 'packages/core/src/fields/metaBindTable/MetaBindTableCellComponent.svelte';
 	import Icon from 'packages/core/src/utils/components/Icon.svelte';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 
-	export let table: MetaBindTable;
+	export let table: TableMountable;
 	export let tableHead: string[] = [];
 
 	let tableRows: MetaBindTableRow[] = [];
