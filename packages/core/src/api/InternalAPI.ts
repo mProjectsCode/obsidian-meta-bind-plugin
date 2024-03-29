@@ -17,7 +17,7 @@ import { type ModalContent } from 'packages/core/src/modals/ModalContent';
 import {
 	ButtonBuilderModal,
 	type ButtonBuilderModalOptions,
-} from 'packages/core/src/modals/modalContents/ButtonBuilderModal';
+} from 'packages/core/src/modals/modalContents/buttonBuilder/ButtonBuilderModal';
 import { SvelteModalContent } from 'packages/core/src/modals/modalContents/SvelteModalContent';
 import DatePickerInput from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePicker.svelte';
 import ImageSuggesterModalComponent from 'packages/core/src/modals/modalContents/ImageSuggesterModalComponent.svelte';

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ErrorLevel, MetaBindError } from './MetaBindErrors';
+	import { ErrorLevel, MetaBindError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 	export let error: MetaBindError | Error;
 </script>

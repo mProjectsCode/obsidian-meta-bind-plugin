@@ -56,7 +56,9 @@ const context = await esbuild.context({
 			preprocess: sveltePreprocess(),
 			filterWarnings: warning => {
 				// we don't want warnings from node modules that we can do nothing about
-				return !warning.filename?.includes('node_modules');
+				return !(
+					warning.filename?.includes('node_modules') || warning.message.includes('has unused export property')
+				);
 			},
 		}),
 	],
