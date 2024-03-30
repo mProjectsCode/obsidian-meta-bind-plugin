@@ -270,13 +270,21 @@ export class ButtonActionRunner {
 	}
 
 	async runReplaceInNoteAction(action: ReplaceInNoteButtonAction, filePath: string): Promise<void> {
-		const replacement = action.templater
-			? await this.plugin.internal.evaluateTemplaterTemplate(action.replacement, filePath)
-			: action.replacement;
+		if (action.fromLine > action.toLine) {
+			throw new Error('From line cannot be greater than to line');
+		}
 
 		const content = await this.plugin.internal.readFilePath(filePath);
 
 		let splitContent = content.split('\n');
+
+		if (action.fromLine < 0 || action.toLine > splitContent.length + 1) {
+			throw new Error('Line numbers out of bounds');
+		}
+
+		const replacement = action.templater
+			? await this.plugin.internal.evaluateTemplaterTemplate(action.replacement, filePath)
+			: action.replacement;
 
 		splitContent = [
 			...splitContent.slice(0, action.fromLine - 1),
@@ -301,13 +309,21 @@ export class ButtonActionRunner {
 			throw new Error('Position of the button in the note is unknown');
 		}
 
-		const replacement = action.templater
-			? await this.plugin.internal.evaluateTemplaterTemplate(action.replacement, filePath)
-			: action.replacement;
+		if (position.lineStart > position.lineEnd) {
+			throw new Error('Position of the button in the note is invalid');
+		}
 
 		const content = await this.plugin.internal.readFilePath(filePath);
 
 		let splitContent = content.split('\n');
+
+		if (position.lineStart < 0 || position.lineEnd > splitContent.length + 1) {
+			throw new Error('Position of the button in the note is out of bounds');
+		}
+
+		const replacement = action.templater
+			? await this.plugin.internal.evaluateTemplaterTemplate(action.replacement, filePath)
+			: action.replacement;
 
 		splitContent = [
 			...splitContent.slice(0, position.lineStart),
@@ -334,6 +350,10 @@ export class ButtonActionRunner {
 		const content = await this.plugin.internal.readFilePath(filePath);
 
 		let splitContent = content.split('\n');
+
+		if (action.line < 1 || action.line > splitContent.length + 1) {
+			throw new Error('Line number out of bounds');
+		}
 
 		const replacement = action.templater
 			? await this.plugin.internal.evaluateTemplaterTemplate(action.value, filePath)
