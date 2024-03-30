@@ -6,6 +6,7 @@ import {
 	ButtonStyleType,
 	type CommandButtonAction,
 	type CreateNoteButtonAction,
+	type InlineJsButtonAction,
 	type InputButtonAction,
 	type InsertIntoNoteButtonAction,
 	type JSButtonAction,
@@ -33,6 +34,7 @@ export class ButtonActionRunner {
 	createDefaultButtonConfig(): ButtonConfig {
 		return {
 			label: 'This is a button',
+			icon: '',
 			hidden: false,
 			class: '',
 			tooltip: '',
@@ -137,6 +139,11 @@ export class ButtonActionRunner {
 				line: 0,
 				value: 'Some text',
 			} satisfies InsertIntoNoteButtonAction;
+		} else if (type === ButtonActionType.INLINE_JS) {
+			return {
+				type: ButtonActionType.INLINE_JS,
+				code: 'console.log("Hello world")',
+			} satisfies InlineJsButtonAction;
 		}
 
 		expectType<never>(type);
@@ -197,6 +204,9 @@ export class ButtonActionRunner {
 		} else if (action.type === ButtonActionType.INSERT_INTO_NOTE) {
 			await this.runInsertIntoNoteAction(action, filePath);
 			return;
+		} else if (action.type === ButtonActionType.INLINE_JS) {
+			await this.runInlineJsAction(config, action, filePath);
+			return;
 		}
 
 		expectType<never>(action);
@@ -210,8 +220,8 @@ export class ButtonActionRunner {
 
 	async runJSAction(config: ButtonConfig | undefined, action: JSButtonAction, filePath: string): Promise<void> {
 		const configOverrides: Record<string, unknown> = {
-			buttonConfig: config,
-			args: action.args,
+			buttonConfig: structuredClone(config),
+			args: structuredClone(action.args),
 		};
 		const unloadCallback = await this.plugin.internal.jsEngineRunFile(action.file, filePath, configOverrides);
 		unloadCallback();
@@ -332,5 +342,17 @@ export class ButtonActionRunner {
 		splitContent = [...splitContent.slice(0, action.line - 1), replacement, ...splitContent.slice(action.line - 1)];
 
 		await this.plugin.internal.writeFilePath(filePath, splitContent.join('\n'));
+	}
+
+	async runInlineJsAction(
+		config: ButtonConfig | undefined,
+		action: InlineJsButtonAction,
+		filePath: string,
+	): Promise<void> {
+		const configOverrides: Record<string, unknown> = {
+			buttonConfig: structuredClone(config),
+		};
+		const unloadCallback = await this.plugin.internal.jsEngineRunCode(action.code, filePath, configOverrides);
+		unloadCallback();
 	}
 }

@@ -45,7 +45,12 @@ export class PublishInternalAPI extends InternalAPI<MetaBindPublishPlugin> {
 		return Promise.reject(new Error('not implemented'));
 	}
 
-	public jsEngineRunCode(_code: string, _callingFilePath: string, _container?: HTMLElement): Promise<() => void> {
+	public jsEngineRunCode(
+		_code: string,
+		_callingFilePath: string,
+		_contextOverrides: Record<string, unknown>,
+		_container?: HTMLElement,
+	): Promise<() => void> {
 		return Promise.reject(new Error('not implemented'));
 	}
 

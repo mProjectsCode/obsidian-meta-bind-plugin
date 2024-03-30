@@ -185,6 +185,20 @@ actions:
 
 ```
 
+```meta-bind-button
+label: Inline Js
+icon: "file-code"
+hidden: false
+class: ""
+tooltip: ""
+id: ""
+style: default
+actions:
+  - type: inlineJS
+    code: console.log("Hello world")
+
+```
+
 ### Modifying Front-matter
 
 ```meta-bind-button

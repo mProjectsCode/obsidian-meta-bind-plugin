@@ -126,11 +126,17 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	 *
 	 * @param code
 	 * @param callingFilePath
+	 * @param contextOverrides
 	 * @param container
 	 *
 	 * @returns Cleanup callback.
 	 */
-	abstract jsEngineRunCode(code: string, callingFilePath: string, container?: HTMLElement): Promise<() => void>;
+	abstract jsEngineRunCode(
+		code: string,
+		callingFilePath: string,
+		contextOverrides: Record<string, unknown>,
+		container?: HTMLElement,
+	): Promise<() => void>;
 
 	/**
 	 * Creates a js renderer, used for the js view field.

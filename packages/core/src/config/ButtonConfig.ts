@@ -18,6 +18,7 @@ export enum ButtonActionType {
 	REGEXP_REPLACE_IN_NOTE = 'regexpReplaceInNote',
 	REPLACE_SELF = 'replaceSelf',
 	INSERT_INTO_NOTE = 'insertIntoNote',
+	INLINE_JS = 'inlineJS',
 }
 
 export interface CommandButtonAction {
@@ -96,6 +97,11 @@ export interface InsertIntoNoteButtonAction {
 	templater?: boolean;
 }
 
+export interface InlineJsButtonAction {
+	type: ButtonActionType.INLINE_JS;
+	code: string;
+}
+
 export type ButtonAction =
 	| CommandButtonAction
 	| JSButtonAction
@@ -108,10 +114,12 @@ export type ButtonAction =
 	| ReplaceInNoteButtonAction
 	| ReplaceSelfButtonAction
 	| RegexpReplaceInNoteButtonAction
-	| InsertIntoNoteButtonAction;
+	| InsertIntoNoteButtonAction
+	| InlineJsButtonAction;
 
 export interface ButtonConfig {
 	label: string;
+	icon?: string;
 	style: ButtonStyleType;
 	class?: string;
 	tooltip?: string;

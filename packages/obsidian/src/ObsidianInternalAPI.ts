@@ -105,7 +105,12 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 		return () => component.unload();
 	}
 
-	public async jsEngineRunCode(code: string, callingFilePath: string, container?: HTMLElement): Promise<() => void> {
+	public async jsEngineRunCode(
+		code: string,
+		callingFilePath: string,
+		contextOverrides: Record<string, unknown>,
+		container?: HTMLElement,
+	): Promise<() => void> {
 		const jsEngineAPI = getJsEnginePluginAPI(this.plugin);
 
 		const callingFile = this.app.vault.getAbstractFileByPath(callingFilePath);
@@ -124,6 +129,7 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 				file: callingFile,
 				line: 0,
 			},
+			contextOverrides: contextOverrides,
 		});
 
 		return () => component.unload();

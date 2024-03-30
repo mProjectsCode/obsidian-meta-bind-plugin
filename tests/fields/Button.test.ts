@@ -219,6 +219,16 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 			expect(testPlugin.internal.fileSystem.readFile('test/file.md')).toBe('line1\nnewLine2\nline2\nline3\n');
 		});
 	},
+	[ButtonActionType.INLINE_JS]: () => {
+		test('does not throw', () => {
+			expect(async () => {
+				await simplifiedRunAction({
+					type: ButtonActionType.INLINE_JS,
+					code: `console.log('test')`,
+				});
+			}).not.toThrow();
+		});
+	},
 };
 
 describe('Button', () => {

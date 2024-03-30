@@ -29,6 +29,9 @@ showcase
 ### Suggester with Dataview
 
 Note, that this will error, if dataview is not enabled. 
+
+`INPUT[suggester(optionQuery(#example-note)):fileSuggest]`
+
 ```meta-bind
 INPUT[suggester(optionQuery(#example-note), showcase):fileSuggest]
 ```

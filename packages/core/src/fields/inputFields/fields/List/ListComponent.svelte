@@ -11,7 +11,6 @@
 	export let value: MBLiteral[];
 	export let limit: number | undefined;
 	export let placeholder: string;
-	// TODO: implement multiLine support
 	export let multiLine: boolean;
 	export let onValueChange: (value: MBLiteral[]) => void;
 

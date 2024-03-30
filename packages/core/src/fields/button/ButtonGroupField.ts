@@ -39,6 +39,7 @@ export class ButtonGroupField extends Mountable {
 		return new ButtonComponent({
 			target: element,
 			props: {
+				plugin: this.plugin,
 				variant: ButtonStyleType.DEFAULT,
 				label: 'Button ID not Found',
 				tooltip: `No button with id '${buttonId}' found`,

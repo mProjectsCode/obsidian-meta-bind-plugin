@@ -1,5 +1,42 @@
 # Obsidian Meta Bind Changelog
 
+# 1.0.0
+
+New Features
+
+-   Added new input field `imageListSuggester`, a list variant of the `imageSuggester` input field [#193](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/193)
+-   Added new input field `dateTime`, a combined date and time input field, using the native obsidian data time input [#193](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/193)
+-   Added new input field argument `multiLine` to add multi line support to the `list` input field [#232](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/242)
+-   Added new input field argument `allowOther` to allow non suggester values to the `suggester`, `listSuggester` and `inlineListSuggester` input fields [#234](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/234)
+-   Added new view field `ìmage` to display images in the note, it functions similar to the link view field [#246](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/246)
+-   Added new view field argument `class` to all view fields to add custom classes to the view field, similar to the `class` input field argument [#260](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/260)
+-   Added new button action `createNote` to create a new note [#206](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/206)
+-   Added new button action `replaceInNote` to replace lines in the note of the button [#206](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/206)
+-   Added new button action `regexpReplaceInNote` to replace run a regular expression replace in the note of the button [#206](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/206)
+-   Added new button action `insertIntoNote` to insert text at a specified line in the note of the button [#206](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/206)
+-   Added new button action `replaceSelf` to replace the button with a string or templater template [#206](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/206)
+-   Added new button action `inlineJS` to run a JavaScript snippet
+-   Added the option to add icons to buttons [#273](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/273)
+-   Added a command to easily copy command IDs to the clipboard [#247](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/247)
+-   Added support for reordering in all list type input fields
+-   Added support for editing in some list type input fields
+
+Changes
+
+-   **BREAKING** Completely reworked the plugins JavaScript API
+-   Restyled the following input fields: `list`, `listSuggester`, `inlineList`, `inlineListSuggester`, `imageSuggester`, `imageListSuggester`, `select` and `multiSelect` to be more in line with Obsidian's design
+-   Changed the date and time input fields to use the native obsidian date and time inputs
+-   Added the ability for the `open` button action to open the link in a new tab
+-   Added the button config and args as available variables in the JS button action [#242](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/242)
+-   Added view field examples into the FAQ [#186](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/186)
+-   Major restructuring of the plugin codebase to allow for easier development on the publish version of the plugin
+
+Bug Fixes
+
+-   Fixed FAQ not opening [#230](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/230)
+-   Fixed an issue with settings reverting when using a sync service [#235](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/235)
+-   Fixed in issue where the plugin would sometimes incorrectly complain about duplicate button ids
+
 # 0.12.5
 
 Bug Fixes

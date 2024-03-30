@@ -2,11 +2,15 @@
 
 <script lang="ts">
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+	import Icon from 'packages/core/src/utils/components/Icon.svelte';
+	import { IPlugin } from 'packages/core/src/IPlugin';
 
+	export let plugin: IPlugin;
 	export let variant: ButtonStyleType = ButtonStyleType.DEFAULT;
 	export let disabled: boolean = false;
 	export let tooltip: string = '';
 	export let label: string = '';
+	export let icon: string = '';
 	export let error: boolean = false;
 	export let onClick: () => Promise<void> = async () => {};
 
@@ -35,13 +39,16 @@
 	on:click={() => click()}
 	disabled={disabled}
 >
+	{#if icon}
+		<Icon plugin={plugin} iconName={icon}></Icon>
+	{/if}
 	{label}
 </button>
 
 <style>
 	button {
 		/* Add a gap between text and icons. */
-		gap: var(--size-4-1);
+		gap: var(--size-4-2);
 	}
 
 	.mod-plain {

@@ -5,6 +5,7 @@ import {
 	ButtonStyleType,
 	type CommandButtonAction,
 	type CreateNoteButtonAction,
+	type InlineJsButtonAction,
 	type InputButtonAction,
 	type InsertIntoNoteButtonAction,
 	type JSButtonAction,
@@ -118,6 +119,13 @@ export const V_InsertIntoNoteButtonAction = schemaForType<InsertIntoNoteButtonAc
 	}),
 );
 
+export const V_InlineJsButtonAction = schemaForType<InlineJsButtonAction>()(
+	z.object({
+		type: z.literal(ButtonActionType.INLINE_JS),
+		code: z.string(),
+	}),
+);
+
 export const V_ButtonAction = schemaForType<ButtonAction>()(
 	z.union([
 		V_CommandButtonAction,
@@ -132,6 +140,7 @@ export const V_ButtonAction = schemaForType<ButtonAction>()(
 		V_ReplaceSelfButtonAction,
 		V_RegexpReplaceInNoteButtonAction,
 		V_InsertIntoNoteButtonAction,
+		V_InlineJsButtonAction,
 	]),
 );
 
@@ -141,6 +150,7 @@ export const V_ButtonConfig = schemaForType<ButtonConfig>()(
 	z
 		.object({
 			label: z.string(),
+			icon: z.string().optional(),
 			style: V_ButtonStyleType,
 			class: z.string().optional(),
 			tooltip: z.string().optional(),

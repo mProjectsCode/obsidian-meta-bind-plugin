@@ -56,6 +56,8 @@ export class ButtonField extends Mountable {
 		this.buttonComponent = new ButtonComponent({
 			target: targetEl,
 			props: {
+				plugin: this.plugin,
+				icon: this.config.icon,
 				variant: this.config.style,
 				label: this.config.label,
 				tooltip: isTruthy(this.config.tooltip) ? this.config.tooltip : this.config.label,

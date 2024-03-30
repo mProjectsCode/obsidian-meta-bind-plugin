@@ -22,10 +22,10 @@
 	import RegexpReplaceInNoteActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/RegexpReplaceInNoteActionSettings.svelte';
 	import ReplaceSelfActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/ReplaceSelfActionSettings.svelte';
 	import InsertIntoNoteActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/InsertIntoNoteActionSettings.svelte';
-	import FlexRow from '../../../utils/components/FlexRow.svelte';
-	import Icon from '../../../utils/components/Icon.svelte';
+	import InlineJsActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/InlineJsActionSettings.svelte';
+	import FlexRow from 'packages/core/src/utils/components/FlexRow.svelte';
+	import Icon from 'packages/core/src/utils/components/Icon.svelte';
 	import { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
-	import { MBLiteral, stringifyLiteral } from 'packages/core/src/utils/Literal';
 
 	export let plugin: IPlugin;
 	export let modal: ButtonBuilderModal;
@@ -90,6 +90,8 @@
 			return 'Replace Button with Text';
 		} else if (actionType === ButtonActionType.INSERT_INTO_NOTE) {
 			return 'Insert Text into the Note';
+		} else if (actionType === ButtonActionType.INLINE_JS) {
+			return 'Run JavaScript Code';
 		}
 
 		return 'CHANGE ME';
@@ -147,6 +149,10 @@
 
 <SettingComponent name="Label" description="The label shown on the button.">
 	<input type="text" bind:value={buttonConfig.label} />
+</SettingComponent>
+
+<SettingComponent name="Icon" description="The icon shown on the button. If left empty, no icon will show">
+	<input type="text" bind:value={buttonConfig.icon} />
 </SettingComponent>
 
 <SettingComponent name="Style" description="The style variant of the button">
@@ -250,6 +256,10 @@ Add action of type
 
 	{#if action.type === ButtonActionType.INSERT_INTO_NOTE}
 		<InsertIntoNoteActionSettings action={action} plugin={plugin}></InsertIntoNoteActionSettings>
+	{/if}
+
+	{#if action.type === ButtonActionType.INLINE_JS}
+		<InlineJsActionSettings action={action} plugin={plugin}></InlineJsActionSettings>
 	{/if}
 {/each}
 
