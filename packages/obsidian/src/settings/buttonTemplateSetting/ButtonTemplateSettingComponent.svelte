@@ -20,14 +20,13 @@
 	}
 
 	function editTemplate(): void {
-		new ButtonBuilderModal({
-			plugin: plugin,
-			onOkay: _ => {
-				template = template;
-			},
+		plugin.internal.openButtonBuilderModal({
 			submitText: 'Submit',
-			config: template,
-		}).open();
+			config: structuredClone(template),
+			onOkay: newTemplate => {
+				template = newTemplate;
+			},
+		});
 	}
 
 	function copyTemplate(): void {

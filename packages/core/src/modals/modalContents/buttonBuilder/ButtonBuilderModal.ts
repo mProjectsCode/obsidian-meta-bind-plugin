@@ -16,8 +16,6 @@ export class ButtonBuilderModal extends ModalContent {
 	component?: ButtonBuilderModalComponent;
 	options: ButtonBuilderModalOptions;
 
-	config?: ButtonConfig;
-
 	constructor(plugin: IPlugin, options: ButtonBuilderModalOptions) {
 		super();
 		this.plugin = plugin;
@@ -36,7 +34,7 @@ export class ButtonBuilderModal extends ModalContent {
 			props: {
 				plugin: this.plugin,
 				modal: this,
-				buttonConfig: this.config ?? this.plugin.api.buttonActionRunner.createDefaultButtonConfig(),
+				buttonConfig: this.options.config ?? this.plugin.api.buttonActionRunner.createDefaultButtonConfig(),
 			},
 		});
 	}
