@@ -5,7 +5,8 @@
 	"minAppVersion": "1.4.0",
 	"description": "Make your notes interactive with inline input fields, metadata displays, and buttons.",
 	"author": "Moritz Jung",
-	"authorUrl": "https://mprojectscode.github.io/",
+	"authorUrl": "https://www.moritzjung.dev/",
+	"fundingUrl": "https://github.com/sponsors/mProjectsCode",
 	"helpUrl": "https://www.moritzjung.dev/obsidian-meta-bind-plugin-docs/",
 	"isDesktopOnly": false
 }

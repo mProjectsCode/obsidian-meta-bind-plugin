@@ -5,13 +5,13 @@ import { runParser } from 'packages/core/src/parsers/ParsingError';
 import { isUrl } from 'packages/core/src/utils/Utils';
 import { P_FilePath } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 
-const mdWikiLinkInnerParser: Parser<[string, string | undefined, string | undefined]> = P.sequence(
+const P_MDLinkInner: Parser<[string, string | undefined, string | undefined]> = P.sequence(
 	P_FilePath, // the file path
 	P.string('#').then(P.manyNotOf('[]#|^:')).optional(), // the optional heading
 	P.string('|').then(P.manyNotOf('[]')).optional(), // the optional alias
 );
 
-const mdLinkParser: Parser<MarkdownLink> = P.or(
+const P_MDLink: Parser<MarkdownLink> = P.or(
 	// wiki links
 	P.sequenceMap(
 		(a, b): MarkdownLink => {
@@ -24,7 +24,7 @@ const mdLinkParser: Parser<MarkdownLink> = P.or(
 			};
 		},
 		P.string('!').optional(),
-		mdWikiLinkInnerParser.wrapString('[[', ']]'),
+		P_MDLinkInner.wrapString('[[', ']]'),
 	),
 	// standard markdown links
 	P.sequenceMap(
@@ -45,10 +45,7 @@ const mdLinkParser: Parser<MarkdownLink> = P.or(
 	),
 );
 
-const mdLinkListParser: Parser<MarkdownLink[]> = P.separateBy(
-	mdLinkParser,
-	P.string(',').trim(P_UTILS.optionalWhitespace()),
-);
+const P_MDLinkList: Parser<MarkdownLink[]> = P.separateBy(P_MDLink, P.string(',').trim(P_UTILS.optionalWhitespace()));
 
 export interface MarkdownLink {
 	isEmbed: boolean;
@@ -60,15 +57,15 @@ export interface MarkdownLink {
 
 export class MDLinkParser {
 	static parseLink(link: string): MarkdownLink {
-		return runParser(mdLinkParser.thenEof(), link);
+		return runParser(P_MDLink.thenEof(), link);
 	}
 
 	static parseLinkList(link: string): MarkdownLink[] {
-		return runParser(mdLinkListParser.thenEof(), link);
+		return runParser(P_MDLinkList.thenEof(), link);
 	}
 
 	static isLink(str: string): boolean {
-		return mdLinkParser.thenEof().tryParse(str).success;
+		return P_MDLink.thenEof().tryParse(str).success;
 	}
 
 	static urlToLink(url: URL): MarkdownLink {
