@@ -18,6 +18,9 @@ images:
   - Other/Images/img_flower.webp
   - Other/Images/img_butterfly.webp
   - Other/Images/subfolder/img_frozen_branch.jpg
+otherImages:
+  - "[[Other/Images/img_flower.webp]]"
+  - "[image](Other/Images/img_flower.webp)"
 ---
 
 `INPUT[number:number1]`
@@ -68,6 +71,8 @@ INPUT[imageListSuggester(optionQuery("Other/Images")):images]
 ```
 
 `VIEW[{images}][image]`
+
+`VIEW[{otherImages}][image]`
 
 ## Arrays and Objects
 

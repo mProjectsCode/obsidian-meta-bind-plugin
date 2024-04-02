@@ -11,9 +11,6 @@ When you click the toggle, the `done` property will switch between `true` and `f
 
 To learn more, check out the [docs](https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs).
 
-> [!WARNING]
-> The next plugin version will probably be 1.0.0, which will include breaking changes to the plugins JavaScript API.
-
 ## Demo
 
 ![](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/raw/master/images/meta-bind-plugin-demo-3-gif.gif)

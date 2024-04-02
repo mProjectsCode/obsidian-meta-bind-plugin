@@ -1,6 +1,6 @@
 # Obsidian Meta Bind Changelog
 
-# 1.0.0 (UNRELEASED)
+# 1.0.0
 
 New Features
 
