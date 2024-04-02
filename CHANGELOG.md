@@ -1,5 +1,11 @@
 # Obsidian Meta Bind Changelog
 
+# 1.0.1
+
+Bug Fixes
+
+-   Fixed some issues with the button builder and the button template settings [#276](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/276)
+
 # 1.0.0
 
 New Features
