@@ -89,7 +89,7 @@
 	{#each buttonConfigs as template}
 		<ButtonTemplateSettingComponent
 			plugin={modal.plugin}
-			template={template}
+			bind:template={template}
 			on:delete-template={evt => deleteTemplate(evt.detail.template)}
 		></ButtonTemplateSettingComponent>
 	{/each}

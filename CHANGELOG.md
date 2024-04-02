@@ -1,5 +1,11 @@
 # Obsidian Meta Bind Changelog
 
+# 1.0.2
+
+Bug Fixes
+
+-   Fixed button templates not being saved correctly [#277](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/277)
+
 # 1.0.1
 
 Bug Fixes
