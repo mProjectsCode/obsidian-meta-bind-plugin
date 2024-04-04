@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-meta-bind-plugin",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "Make your notes interactive with inline input fields, metadata displays, and buttons.",
 	"main": "main.js",
 	"scripts": {
