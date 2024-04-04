@@ -1,5 +1,11 @@
 # Obsidian Meta Bind Changelog
 
+# 1.0.3
+
+Bug Fixes
+
+-   Fixed list type inputs interpreting `null` as `[null]`, now `null` is treated as an empty list [#280](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/280)
+
 # 1.0.2
 
 Bug Fixes
