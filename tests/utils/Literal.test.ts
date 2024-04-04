@@ -108,6 +108,7 @@ describe('isLiteral function', () => {
 describe('parseUnknownToLiteralArray function', () => {
 	test('should return undefined when given undefined', () => {
 		expect(parseUnknownToLiteralArray(undefined)).toBeUndefined();
+		expect(parseUnknownToLiteralArray(null)).toBeUndefined();
 	});
 
 	test('should return an array with one element when given a literal', () => {
@@ -116,7 +117,6 @@ describe('parseUnknownToLiteralArray function', () => {
 		expect(parseUnknownToLiteralArray(123)).toEqual([123]);
 		expect(parseUnknownToLiteralArray(-123.45)).toEqual([-123.45]);
 		expect(parseUnknownToLiteralArray('hello')).toEqual(['hello']);
-		expect(parseUnknownToLiteralArray(null)).toEqual([null]);
 	});
 
 	test('should return an array with all literals when given an array with literals', () => {

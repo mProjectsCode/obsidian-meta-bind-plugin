@@ -71,7 +71,7 @@ export function isLiteral(literal: unknown): literal is MBLiteral {
  * @param literal
  */
 export function parseUnknownToLiteralArray(literal: unknown): MBLiteral[] | undefined {
-	if (literal === undefined) {
+	if (literal === undefined || literal === null) {
 		return undefined;
 	}
 
