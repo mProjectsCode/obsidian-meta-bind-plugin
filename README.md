@@ -50,7 +50,7 @@ I want to thank the following people:
 
 -   blacksmithgu for the Dataview type definitions
 -   Daniel (dbarenholz) for his contributions to the plugin and the docs
--   koala (komentenstaub) for help with CodeMirror
+-   koala (kometenstaub) for help with CodeMirror
 -   sailKite for help with CSS
 -   Sigrunixia for enabling me to work on the Obsidian Publish version of the plugin
 -   Zachatoo and SilentVoid13 for the Templater type definitions
