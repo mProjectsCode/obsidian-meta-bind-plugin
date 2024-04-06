@@ -151,7 +151,7 @@ export class TestPlugin implements IPlugin {
 		return this.testInputFields.map(x => x.field.getDefaultValue());
 	}
 
-	getAllTestInputFieldSpys(): unknown[] {
+	getAllTestInputFieldSpys(): Mock<(value: any) => void>[] {
 		return this.testInputFields.map(x => x.fieldSignalSetSpy);
 	}
 
@@ -166,6 +166,16 @@ export class TestPlugin implements IPlugin {
 
 		for (const [spy, time] of this.getAllTestInputFieldSpys().map((x, i) => [x, times[i]] as const)) {
 			expect(spy).toHaveBeenCalledTimes(time);
+		}
+	}
+
+	expectAllTestInputFieldSpysToHaveBeenCalledTimesOrLess(times: number[]): void {
+		if (times.length !== this.testInputFields.length) {
+			throw new Error('Invalid times length');
+		}
+
+		for (const [spy, time] of this.getAllTestInputFieldSpys().map((x, i) => [x, times[i]] as const)) {
+			expect(spy.mock.calls.length).toBeLessThanOrEqual(time);
 		}
 	}
 

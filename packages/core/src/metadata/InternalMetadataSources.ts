@@ -125,13 +125,13 @@ export class GlobalMetadataSource implements IMetadataSource<GlobalMetadataCache
 		return this.cache;
 	}
 
-	public updateCache(value: unknown, bindTarget: BindTargetDeclaration): GlobalMetadataCacheItem {
+	public writeCache(value: unknown, bindTarget: BindTargetDeclaration): GlobalMetadataCacheItem {
 		PropUtils.setAndCreate(this.cache.data, bindTarget.storageProp, value);
 
 		return this.cache;
 	}
 
-	public updateEntireCache(value: Metadata, cacheItem: GlobalMetadataCacheItem): void {
+	public writeEntireCache(value: Metadata, cacheItem: GlobalMetadataCacheItem): void {
 		cacheItem.data = value;
 	}
 
@@ -239,7 +239,7 @@ export class ScopeMetadataSource implements IMetadataSource<IMetadataCacheItem> 
 		});
 	}
 
-	public updateCache(_value: unknown, _bindTarget: BindTargetDeclaration): IMetadataCacheItem {
+	public writeCache(_value: unknown, _bindTarget: BindTargetDeclaration): IMetadataCacheItem {
 		throw new MetaBindInternalError({
 			errorLevel: ErrorLevel.CRITICAL,
 			effect: 'action not permitted',
@@ -247,7 +247,7 @@ export class ScopeMetadataSource implements IMetadataSource<IMetadataCacheItem> 
 		});
 	}
 
-	public updateEntireCache(_value: Metadata, _cacheItem: IMetadataCacheItem): void {
+	public writeEntireCache(_value: Metadata, _cacheItem: IMetadataCacheItem): void {
 		// noop
 	}
 

@@ -118,7 +118,7 @@ export interface IMetadataSource<T extends IMetadataCacheItem> {
 	 * @param bindTarget
 	 * @returns The cache item for the bind target.
 	 */
-	updateCache(value: unknown, bindTarget: BindTargetDeclaration): T;
+	writeCache(value: unknown, bindTarget: BindTargetDeclaration): T;
 
 	/**
 	 * Updates the entire cache item with the given value.
@@ -127,7 +127,7 @@ export interface IMetadataSource<T extends IMetadataCacheItem> {
 	 * @param value
 	 * @param cacheItem
 	 */
-	updateEntireCache(value: Metadata, cacheItem: T): void;
+	writeEntireCache(value: Metadata, cacheItem: T): void;
 
 	/**
 	 * Reads the cache item for the given bind target.
@@ -277,7 +277,7 @@ export abstract class FilePathMetadataSource<T extends FilePathMetadataCacheItem
 
 	abstract syncExternal(cacheItem: T): void;
 
-	updateCache(value: unknown, bindTarget: BindTargetDeclaration): T {
+	writeCache(value: unknown, bindTarget: BindTargetDeclaration): T {
 		const cacheItem = this.getOrCreateCacheItem(bindTarget.storagePath);
 
 		PropUtils.setAndCreate(cacheItem.data, bindTarget.storageProp, value);
@@ -285,7 +285,7 @@ export abstract class FilePathMetadataSource<T extends FilePathMetadataCacheItem
 		return cacheItem;
 	}
 
-	updateEntireCache(value: Metadata, cacheItem: T): void {
+	writeEntireCache(value: Metadata, cacheItem: T): void {
 		cacheItem.data = value;
 	}
 

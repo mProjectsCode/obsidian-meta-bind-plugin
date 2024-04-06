@@ -536,8 +536,8 @@ describe('IPF', () => {
 
 						// check that the input field value is the default value of the IPF, since the front-matter value is invalid
 						testPlugin.expectAllTestInputFieldValuesToEqual([DEFAULT_VALUE_INDICATOR]);
-						// check that the value of the IPF has only been set once
-						testPlugin.expectAllTestInputFieldSpysToHaveBeenCalledTimes([1]);
+						// check that the value of the IPF has only been set once or less, if the value is equal to the default value
+						testPlugin.expectAllTestInputFieldSpysToHaveBeenCalledTimesOrLess([1]);
 						// check that the input field did not update the metadata manager
 						testPlugin.expectMetadataManagerToHaveUpdatedTimes(0);
 					});

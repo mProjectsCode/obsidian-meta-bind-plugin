@@ -9,12 +9,13 @@ import { type IMetadataSource, type Metadata } from 'packages/core/src/metadata/
 import { MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
 import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { type Signal } from 'packages/core/src/utils/Signal';
-import { areArraysEqual, arrayStartsWith } from 'packages/core/src/utils/Utils';
 import {
 	ErrorLevel,
 	MetaBindBindTargetError,
 	MetaBindInternalError,
 } from 'packages/core/src/utils/errors/MetaBindErrors';
+import { PropUtils } from 'packages/core/src/utils/prop/PropUtils';
+import { type PropPath } from 'packages/core/src/utils/prop/PropPath';
 
 export const METADATA_CACHE_UPDATE_CYCLE_THRESHOLD = 5; // {syncInterval (200)} * 5 = 1s
 export const METADATA_CACHE_INACTIVE_CYCLE_THRESHOLD = 5 * 60; // {syncInterval (200)} * 5 * 60 = 1 minute
@@ -40,34 +41,40 @@ export function hasUpdateOverlap(a: BindTargetDeclaration | undefined, b: BindTa
 		return false;
 	}
 
-	return metadataPathHasUpdateOverlap(
-		a.storageProp.toStringArray(),
-		b.storageProp.toStringArray(),
-		b.listenToChildren,
-	);
+	// TODO: this can be faster, no need to create new arrays
+	return metadataPathHasUpdateOverlap(a.storageProp, b.storageProp, b.listenToChildren);
 }
 
 /**
  * Checks if path `b` should receive an update when path `a` changes.
  * The rules are as follows:
- *  - if they are equal
- *  - if `b` starts with `a` (`a = foo.bar` and `b = foo.bar.baz`)
- *  - if `b` has `listenToChildren` and `a` starts with `b`  (`a = foo.bar.baz` and `b = foo.bar`)
+ *
+ *  - b = foo.bar.baz
+ *      - a = foo.bar -> true
+ *      - a = foo.bar.baz -> true
+ *      - a = foo.bar.baz.baz -> true
+ *      - a = foo.bar.foo -> false
+ *      - a = foo.foo -> false
  *
  * @param a
  * @param b
  * @param listenToChildren whether b listens to updates in children
  */
-export function metadataPathHasUpdateOverlap(a: string[], b: string[], listenToChildren: boolean): boolean {
-	if (areArraysEqual(a, b)) {
-		return true;
+export function metadataPathHasUpdateOverlap(a: PropPath, b: PropPath, listenToChildren: boolean): boolean {
+	const aPath = a.path;
+	const bPath = b.path;
+
+	for (let i = 0; i < Math.min(aPath.length, bPath.length); i++) {
+		if (aPath[i].type !== bPath[i].type || aPath[i].prop !== bPath[i].prop) {
+			return false;
+		}
 	}
 
-	if (arrayStartsWith(b, a)) {
+	if (aPath.length > bPath.length) {
+		return listenToChildren;
+	} else {
 		return true;
 	}
-
-	return listenToChildren && arrayStartsWith(a, b);
 }
 
 export function bindTargetToString(a: BindTargetDeclaration | undefined): string {
@@ -359,12 +366,12 @@ export class MetadataManager {
 		if (source === undefined) {
 			throw new MetaBindInternalError({
 				errorLevel: ErrorLevel.ERROR,
-				effect: 'can not update metadata',
+				effect: 'can not write to cache',
 				cause: `Source "${bindTarget.storageType}" does not exist`,
 			});
 		}
 
-		const cacheItem = source.updateCache(value, bindTarget);
+		const cacheItem = source.writeCache(value, bindTarget);
 		cacheItem.pendingInternalChange = true;
 		cacheItem.cyclesSinceInternalChange = 0;
 		this.notifyListeners(bindTarget, updateSourceUuid);
@@ -431,8 +438,8 @@ export class MetadataManager {
 
 			if (
 				metadataPathHasUpdateOverlap(
-					bindTarget.storageProp.toStringArray(),
-					cacheSubscription.bindTarget.storageProp.toStringArray(),
+					bindTarget.storageProp,
+					cacheSubscription.bindTarget.storageProp,
 					cacheSubscription.bindTarget.listenToChildren,
 				)
 			) {
@@ -501,8 +508,24 @@ export class MetadataManager {
 			return;
 		}
 
-		source.updateEntireCache(value, cacheItem);
-		this.notifyAllListeners(source, cacheItem);
+		const oldValue = source.readEntireCacheItem(cacheItem);
+
+		source.writeEntireCache(value, cacheItem);
+
+		for (const subscription of cacheItem.subscriptions) {
+			if (subscription.bindTarget === undefined) {
+				continue;
+			}
+
+			const propPath = subscription.bindTarget.storageProp;
+
+			const newBoundValue = PropUtils.tryGet(value, propPath);
+			const oldBoundValue = PropUtils.tryGet(oldValue, propPath);
+
+			if (newBoundValue !== oldBoundValue) {
+				subscription.notify(newBoundValue);
+			}
+		}
 	}
 
 	/**

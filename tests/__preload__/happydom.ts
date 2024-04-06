@@ -8,4 +8,6 @@ GlobalRegistrator.register({
 if (process.env.LOG_TESTS === 'false') {
 	console.log = () => {};
 	console.debug = () => {};
+} else {
+	console.debug = () => {};
 }

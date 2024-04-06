@@ -93,4 +93,19 @@ export class PropPath {
 	concat(path: PropPath): PropPath {
 		return new PropPath(this.path.concat(path.path));
 	}
+
+	compareDiffArray(path: (string | number)[]): boolean {
+		const len = Math.min(this.path.length, path.length);
+
+		for (let i = 0; i < len; i++) {
+			const access = this.path[i];
+			const pathElement = path[i];
+
+			if (access.prop !== pathElement.toString()) {
+				return false;
+			}
+		}
+
+		return true;
+	}
 }
