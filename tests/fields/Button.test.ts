@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, test } from 'bun:test';
 import { ButtonAction, ButtonActionType } from 'packages/core/src/config/ButtonConfig';
 import { TestPlugin } from 'tests/__mocks__/TestPlugin';
+import { NotePosition } from 'packages/core/src/config/FieldConfigs';
 
 let testPlugin: TestPlugin;
 const testFilePath = 'test/file.md';
@@ -175,11 +176,11 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 				},
 				testFilePath,
 				false,
-				{
+				new NotePosition({
 					// these line numbers start at 0
 					lineStart: 1,
 					lineEnd: 1,
-				},
+				}),
 			);
 
 			expect(testPlugin.internal.fileSystem.readFile('test/file.md')).toBe('line1\nno button\nline3\n');
@@ -196,11 +197,11 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 				},
 				testFilePath,
 				false,
-				{
+				new NotePosition({
 					// these line numbers start at 0
 					lineStart: 1,
 					lineEnd: 3,
-				},
+				}),
 			);
 
 			expect(testPlugin.internal.fileSystem.readFile('test/file.md')).toBe('line1\nno button\nline3\n');

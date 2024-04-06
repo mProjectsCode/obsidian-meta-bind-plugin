@@ -10,7 +10,7 @@ import {
 	type InputFieldOptions,
 	isFieldTypeAllowedInline,
 	type JsViewFieldOptions,
-	type NotePosition,
+	NotePosition,
 	RenderChildType,
 	type TableFieldOptions,
 	type ViewFieldOptions,
@@ -746,6 +746,24 @@ export abstract class API<Plugin extends IPlugin> {
 
 		lifecycleHook.register(() => {
 			subscription.unsubscribe();
+		});
+	}
+
+	public createNotePosition(lineStart: number, lineEnd: number): NotePosition {
+		validate(
+			z.object({
+				lineStart: z.number(),
+				lineEnd: z.number(),
+			}),
+			{
+				lineStart: lineStart,
+				lineEnd: lineEnd,
+			},
+		);
+
+		return new NotePosition({
+			lineStart: lineStart,
+			lineEnd: lineEnd,
 		});
 	}
 }

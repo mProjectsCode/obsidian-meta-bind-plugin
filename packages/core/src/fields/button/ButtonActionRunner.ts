@@ -305,11 +305,13 @@ export class ButtonActionRunner {
 			throw new Error('Replace self action not supported for inline buttons');
 		}
 
-		if (position === undefined) {
+		const linePosition = position?.getPosition();
+
+		if (linePosition === undefined) {
 			throw new Error('Position of the button in the note is unknown');
 		}
 
-		if (position.lineStart > position.lineEnd) {
+		if (linePosition.lineStart > linePosition.lineEnd) {
 			throw new Error('Position of the button in the note is invalid');
 		}
 
@@ -317,7 +319,7 @@ export class ButtonActionRunner {
 
 		let splitContent = content.split('\n');
 
-		if (position.lineStart < 0 || position.lineEnd > splitContent.length + 1) {
+		if (linePosition.lineStart < 0 || linePosition.lineEnd > splitContent.length + 1) {
 			throw new Error('Position of the button in the note is out of bounds');
 		}
 
@@ -326,9 +328,9 @@ export class ButtonActionRunner {
 			: action.replacement;
 
 		splitContent = [
-			...splitContent.slice(0, position.lineStart),
+			...splitContent.slice(0, linePosition.lineStart),
 			replacement,
-			...splitContent.slice(position.lineEnd + 1),
+			...splitContent.slice(linePosition.lineEnd + 1),
 		];
 
 		await this.plugin.internal.writeFilePath(filePath, splitContent.join('\n'));

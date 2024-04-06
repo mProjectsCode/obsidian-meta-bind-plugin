@@ -22,6 +22,7 @@ import { DependencyManager } from 'packages/obsidian/src/dependencies/Dependency
 import { Version } from 'packages/obsidian/src/dependencies/Version';
 import { FaqView, MB_FAQ_VIEW_TYPE } from 'packages/obsidian/src/faq/FaqView';
 import { MetaBindSettingTab } from 'packages/obsidian/src/settings/SettingsTab';
+import { ObsidianNotePosition } from 'packages/obsidian/src/ObsidianNotePosition';
 
 export enum MetaBindBuild {
 	DEV = 'dev',
@@ -198,23 +199,13 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				return;
 			}
 
-			const sectionInfo = ctx.getSectionInfo(el);
-			let position = undefined;
-
-			if (sectionInfo) {
-				position = {
-					lineStart: sectionInfo.lineStart,
-					lineEnd: sectionInfo.lineEnd,
-				};
-			}
-
 			const mountable = this.api.createInlineFieldOfTypeFromString(
 				fieldType,
 				content,
 				filePath,
 				undefined,
 				RenderChildType.BLOCK,
-				position,
+				new ObsidianNotePosition(ctx, el),
 			);
 			this.api.wrapInMDRC(mountable, codeBlock, ctx);
 		});
@@ -251,20 +242,10 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		// "meta-bind-button" code blocks
 		this.registerMarkdownCodeBlockProcessor('meta-bind-button', (source, el, ctx) => {
-			const sectionInfo = ctx.getSectionInfo(el);
-			let position = undefined;
-
-			if (sectionInfo) {
-				position = {
-					lineStart: sectionInfo.lineStart,
-					lineEnd: sectionInfo.lineEnd,
-				};
-			}
-
 			const mountable = this.api.createButtonMountable(ctx.sourcePath, {
 				declaration: source,
 				isPreview: false,
-				position: position,
+				position: new ObsidianNotePosition(ctx, el),
 			});
 
 			this.api.wrapInMDRC(mountable, el, ctx);

@@ -7,7 +7,7 @@ import {
 	type InputFieldOptions,
 	InputFieldType,
 	type JsViewFieldOptions,
-	type NotePosition,
+	NotePosition,
 	RenderChildType,
 	type TableFieldOptions,
 	type ViewFieldOptions,
@@ -61,6 +61,8 @@ export const V_Signal = schemaForType<Signal<unknown>>()(z.instanceof(Signal));
 export const V_VoidFunction = schemaForType<() => void>()(z.function().args().returns(z.void()));
 
 export const V_FieldMountable = schemaForType<FieldMountable>()(z.instanceof(FieldMountable));
+
+export const V_NotePosition = schemaForType<NotePosition>()(z.instanceof(NotePosition));
 
 export const V_ParsingPosition = schemaForType<ParsingPosition>()(
 	z.object({
@@ -218,13 +220,6 @@ export const V_TableFieldOptions = schemaForType<TableFieldOptions>()(
 		bindTarget: V_BindTargetDeclaration,
 		tableHead: z.string().array(),
 		columns: z.array(z.union([V_UnvalidatedInputFieldDeclaration, V_UnvalidatedViewFieldDeclaration])),
-	}),
-);
-
-export const V_NotePosition = schemaForType<NotePosition>()(
-	z.object({
-		lineStart: z.number(),
-		lineEnd: z.number(),
 	}),
 );
 

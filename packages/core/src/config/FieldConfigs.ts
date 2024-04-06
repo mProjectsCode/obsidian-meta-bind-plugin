@@ -629,7 +629,19 @@ export interface ButtonOptions {
 	isPreview: boolean;
 }
 
-export interface NotePosition {
+export class NotePosition {
+	linePosition: LinePosition | undefined;
+
+	constructor(linePosition: LinePosition | undefined) {
+		this.linePosition = linePosition;
+	}
+
+	getPosition(): LinePosition | undefined {
+		return this.linePosition;
+	}
+}
+
+export interface LinePosition {
 	lineStart: number;
 	lineEnd: number;
 }

@@ -10,6 +10,7 @@ import { PublishMetadataSource } from 'packages/publish/src/PublishMetadataSourc
 import { EMBED_MAX_DEPTH, RenderChildType } from 'packages/core/src/config/FieldConfigs';
 import { DateParser } from 'packages/core/src/parsers/DateParser';
 import { setFirstWeekday } from 'packages/core/src/utils/DatePickerUtils';
+import { PublishNotePosition } from 'packages/publish/src/PublishNotePosition';
 
 export class MetaBindPublishPlugin implements IPlugin {
 	settings: MetaBindPluginSettings;
@@ -83,23 +84,13 @@ export class MetaBindPublishPlugin implements IPlugin {
 				return;
 			}
 
-			const sectionInfo = ctx.getSectionInfo(el);
-			let position = undefined;
-
-			if (sectionInfo) {
-				position = {
-					lineStart: sectionInfo.lineStart,
-					lineEnd: sectionInfo.lineEnd,
-				};
-			}
-
 			const mountable = this.api.createInlineFieldOfTypeFromString(
 				fieldType,
 				content,
 				filePath,
 				undefined,
 				RenderChildType.BLOCK,
-				position,
+				new PublishNotePosition(ctx, el),
 			);
 			const mdrc = this.api.wrapInMDRC(mountable, codeBlock, ctx);
 
@@ -144,20 +135,10 @@ export class MetaBindPublishPlugin implements IPlugin {
 
 		// "meta-bind-button" code blocks
 		publish.registerMarkdownCodeBlockProcessor('meta-bind-button', (source, el, ctx) => {
-			const sectionInfo = ctx.getSectionInfo(el);
-			let position = undefined;
-
-			if (sectionInfo) {
-				position = {
-					lineStart: sectionInfo.lineStart,
-					lineEnd: sectionInfo.lineEnd,
-				};
-			}
-
 			const mountable = this.api.createButtonMountable(ctx.sourcePath, {
 				declaration: source,
 				isPreview: false,
-				position: position,
+				position: new PublishNotePosition(ctx, el),
 			});
 
 			const mdrc = this.api.wrapInMDRC(mountable, el, ctx);
