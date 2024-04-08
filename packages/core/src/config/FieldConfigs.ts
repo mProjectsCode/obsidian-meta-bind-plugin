@@ -611,7 +611,7 @@ export interface JsViewFieldOptions {
 	declaration: SimpleJsViewFieldDeclaration | string;
 }
 
-export interface TableFieldOptions {
+export interface TableOptions {
 	bindTarget: BindTargetDeclaration;
 	tableHead: string[];
 	columns: MetaBindColumnDeclaration[];
@@ -655,7 +655,7 @@ export interface FieldOptionMap {
 	[FieldType.INPUT]: InputFieldOptions;
 	[FieldType.VIEW]: ViewFieldOptions;
 	[FieldType.JS_VIEW]: JsViewFieldOptions;
-	[FieldType.TABLE]: TableFieldOptions;
+	[FieldType.TABLE]: TableOptions;
 	[FieldType.BUTTON_GROUP]: ButtonGroupOptions;
 	[FieldType.BUTTON]: ButtonOptions;
 	[FieldType.EMBED]: EmbedOptions;

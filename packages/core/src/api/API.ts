@@ -12,7 +12,7 @@ import {
 	type JsViewFieldOptions,
 	NotePosition,
 	RenderChildType,
-	type TableFieldOptions,
+	type TableOptions,
 	type ViewFieldOptions,
 } from 'packages/core/src/config/FieldConfigs';
 import { type FieldMountable } from 'packages/core/src/fields/FieldMountable';
@@ -157,7 +157,7 @@ export abstract class API<Plugin extends IPlugin> {
 		} else if (type === FieldType.JS_VIEW) {
 			return this.createJsViewFieldMountable(filePath, options as FieldOptionMap[FieldType.JS_VIEW]);
 		} else if (type === FieldType.TABLE) {
-			return this.createTableFieldMountable(filePath, options as FieldOptionMap[FieldType.TABLE]);
+			return this.createTableMountable(filePath, options as FieldOptionMap[FieldType.TABLE]);
 		} else if (type === FieldType.BUTTON_GROUP) {
 			return this.createButtonGroupMountable(filePath, options as FieldOptionMap[FieldType.BUTTON_GROUP]);
 		} else if (type === FieldType.BUTTON) {
@@ -387,7 +387,7 @@ export abstract class API<Plugin extends IPlugin> {
 		return new JsViewFieldMountable(this.plugin, uuid, filePath, declaration);
 	}
 
-	public createTableFieldMountable(filePath: string, options: TableFieldOptions): TableMountable {
+	public createTableMountable(filePath: string, options: TableOptions): TableMountable {
 		validate(
 			z.object({
 				filePath: V_FilePath,

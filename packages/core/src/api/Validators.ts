@@ -9,7 +9,7 @@ import {
 	type JsViewFieldOptions,
 	NotePosition,
 	RenderChildType,
-	type TableFieldOptions,
+	type TableOptions,
 	type ViewFieldOptions,
 } from 'packages/core/src/config/FieldConfigs';
 import { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
@@ -215,11 +215,11 @@ export const V_JsViewFieldOptions = schemaForType<JsViewFieldOptions>()(
 	}),
 );
 
-export const V_TableFieldOptions = schemaForType<TableFieldOptions>()(
+export const V_TableFieldOptions = schemaForType<TableOptions>()(
 	z.object({
 		bindTarget: V_BindTargetDeclaration,
 		tableHead: z.string().array(),
-		columns: z.array(z.union([V_UnvalidatedInputFieldDeclaration, V_UnvalidatedViewFieldDeclaration])),
+		columns: z.array(z.union([V_SimpleInputFieldDeclaration, V_SimpleViewFieldDeclaration, z.string()])),
 	}),
 );
 

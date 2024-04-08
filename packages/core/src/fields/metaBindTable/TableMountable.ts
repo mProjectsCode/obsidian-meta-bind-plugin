@@ -1,29 +1,32 @@
 import MetaBindTableComponent from 'packages/core/src/fields/metaBindTable/MetaBindTableComponent.svelte';
 import { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
-import {
-	type InputFieldDeclaration,
-	type UnvalidatedInputFieldDeclaration,
-} from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
-import {
-	type UnvalidatedViewFieldDeclaration,
-	type ViewFieldDeclaration,
-} from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
+import { type SimpleInputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
+import { type SimpleViewFieldDeclaration } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
 import { type Listener, Signal } from 'packages/core/src/utils/Signal';
-
 import { type IPlugin } from 'packages/core/src/IPlugin';
 import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
 import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
-import { InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
-import { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
 import { type MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
 import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { type MBExtendedLiteral } from 'packages/core/src/utils/Literal';
-import { getUUID, showUnloadedMessage } from 'packages/core/src/utils/Utils';
+import { showUnloadedMessage } from 'packages/core/src/utils/Utils';
 import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
 
-export type MetaBindTableCell = InputFieldDeclaration | ViewFieldDeclaration;
+// export type MetaBindTableCell =
+// 	| {
+// 			type: FieldType.INPUT;
+// 			declaration: InputFieldDeclaration;
+// 			scope: BindTargetScope;
+// 	  }
+// 	| {
+// 			type: FieldType.VIEW;
+// 			declaration: ViewFieldDeclaration;
+// 			scope: BindTargetScope;
+// 	  };
 
-export type MetaBindColumnDeclaration = UnvalidatedInputFieldDeclaration | UnvalidatedViewFieldDeclaration;
+export type MetaBindTableCell = FieldMountable;
+
+export type MetaBindColumnDeclaration = SimpleInputFieldDeclaration | SimpleViewFieldDeclaration | string;
 
 export interface MetaBindTableRow {
 	cells: MetaBindTableCell[];
@@ -112,15 +115,28 @@ export class TableMountable extends FieldMountable {
 					listenToChildren: false,
 				});
 
-				const cells = this.columns.map(x => {
-					if ('inputFieldType' in x) {
-						return this.plugin.api.inputFieldParser.validate(x, this.getFilePath(), scope);
-					} else {
-						return this.plugin.api.viewFieldParser.validate(
-							x as UnvalidatedViewFieldDeclaration,
+				const cells: MetaBindTableCell[] = this.columns.map(x => {
+					if (typeof x === 'string') {
+						return this.plugin.api.createInlineFieldFromString(
+							x,
 							this.getFilePath(),
 							scope,
+							RenderChildType.INLINE,
 						);
+					}
+
+					if ('inputFieldType' in x) {
+						return this.plugin.api.createInputFieldMountable(this.getFilePath(), {
+							declaration: x,
+							scope: scope,
+							renderChildType: RenderChildType.INLINE,
+						});
+					} else {
+						return this.plugin.api.createViewFieldMountable(this.getFilePath(), {
+							declaration: x as SimpleViewFieldDeclaration,
+							scope: scope,
+							renderChildType: RenderChildType.INLINE,
+						});
 					}
 				});
 
@@ -145,17 +161,8 @@ export class TableMountable extends FieldMountable {
 	}
 
 	createCell(cell: MetaBindTableCell, element: HTMLElement): () => void {
-		const uuid = getUUID();
-		let field: FieldMountable;
-
-		if ('inputFieldType' in cell) {
-			field = new InputFieldMountable(this.plugin, uuid, this.getFilePath(), RenderChildType.INLINE, cell);
-		} else {
-			field = new ViewFieldMountable(this.plugin, uuid, this.getFilePath(), RenderChildType.INLINE, cell);
-		}
-
-		field.mount(element);
-		return () => field.unmount();
+		cell.mount(element);
+		return () => cell.unmount();
 	}
 
 	removeColumn(index: number): void {
