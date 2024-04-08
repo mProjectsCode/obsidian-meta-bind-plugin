@@ -23,6 +23,7 @@ import { Metadata } from 'packages/core/src/metadata/MetadataSource';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
 import type { IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
+import { MountableManager } from 'packages/core/src/MountableManager';
 
 /**
  * A default value to indicate that a field should be it's the default value.
@@ -43,6 +44,7 @@ export class TestPlugin implements IPlugin {
 	public api: TestAPI;
 	public metadataManager: MetadataManager;
 	public internal: TestInternalAPI;
+	public mountableManager: MountableManager;
 
 	public settings: MetaBindPluginSettings;
 
@@ -60,6 +62,8 @@ export class TestPlugin implements IPlugin {
 		this.internal = new TestInternalAPI(this);
 		this.metadataManager = new MetadataManager();
 		this.setUpMetadataManager();
+
+		this.mountableManager = new MountableManager();
 
 		this.settings = DEFAULT_SETTINGS;
 

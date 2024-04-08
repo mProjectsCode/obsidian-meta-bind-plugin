@@ -43,6 +43,7 @@ import {
 	type UnvalidatedFieldArgument,
 } from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
 import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
+import { Mountable } from 'packages/core/src/utils/Mountable';
 
 export const V_FilePath = schemaForType<string>()(z.string());
 
@@ -61,6 +62,7 @@ export const V_Signal = schemaForType<Signal<unknown>>()(z.instanceof(Signal));
 export const V_VoidFunction = schemaForType<() => void>()(z.function().args().returns(z.void()));
 
 export const V_FieldMountable = schemaForType<FieldMountable>()(z.instanceof(FieldMountable));
+export const V_Mountable = schemaForType<Mountable>()(z.instanceof(Mountable));
 
 export const V_NotePosition = schemaForType<NotePosition>()(z.instanceof(NotePosition));
 

@@ -6,14 +6,14 @@ import { getUUID } from 'packages/core/src/utils/Utils';
 import { validate } from 'packages/core/src/utils/ZodUtils';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { MarkdownRenderChildWidget } from 'packages/obsidian/src/cm6/Cm6_Widgets';
-import { FieldMDRC } from 'packages/obsidian/src/FieldMDRC';
-import { type FieldMountable } from 'packages/core/src/fields/FieldMountable';
+import { MountableMDRC } from 'packages/obsidian/src/MountableMDRC';
 import { type FieldType, isFieldTypeAllowedInline } from 'packages/core/src/config/FieldConfigs';
 import { z } from 'zod';
-import { V_BindTargetDeclaration, V_FieldMountable, V_HTMLElement } from 'packages/core/src/api/Validators';
+import { V_BindTargetDeclaration, V_HTMLElement, V_Mountable } from 'packages/core/src/api/Validators';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { getJsEnginePluginAPI } from 'packages/obsidian/src/ObsUtils';
 import { type ReactiveComponent } from 'jsEngine/api/reactive/ReactiveComponent';
+import { type Mountable } from 'packages/core/src/utils/Mountable';
 
 export interface ComponentLike {
 	addChild(child: Component): void;
@@ -32,10 +32,10 @@ export class ObsidianAPI extends API<MetaBindPlugin> {
 		super(plugin);
 	}
 
-	public wrapInMDRC(field: FieldMountable, containerEl: HTMLElement, component: ComponentLike): FieldMDRC {
+	public wrapInMDRC(field: Mountable, containerEl: HTMLElement, component: ComponentLike): MountableMDRC {
 		validate(
 			z.object({
-				field: V_FieldMountable,
+				field: V_Mountable,
 				containerEl: V_HTMLElement,
 				component: V_ComponentLike,
 			}),
@@ -46,7 +46,7 @@ export class ObsidianAPI extends API<MetaBindPlugin> {
 			},
 		);
 
-		const mdrc = new FieldMDRC(this.plugin, field, containerEl);
+		const mdrc = new MountableMDRC(this.plugin, field, containerEl);
 		component.addChild(mdrc);
 
 		return mdrc;

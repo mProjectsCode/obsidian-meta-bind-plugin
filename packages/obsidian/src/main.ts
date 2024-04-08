@@ -12,7 +12,7 @@ import { DateParser } from 'packages/core/src/parsers/DateParser';
 import { BindTargetStorageType } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { setFirstWeekday } from 'packages/core/src/utils/DatePickerUtils';
 import { createEditorMenu } from 'packages/obsidian/src/EditorMenu';
-import { MDRCManager } from 'packages/obsidian/src/MDRCManager';
+import { MountableManager } from 'packages/core/src/MountableManager';
 import { ObsidianAPI } from 'packages/obsidian/src/ObsidianAPI';
 import { ObsidianInternalAPI } from 'packages/obsidian/src/ObsidianInternalAPI';
 import { ObsidianMetadataSource } from 'packages/obsidian/src/ObsidianMetadataSource';
@@ -32,23 +32,19 @@ export enum MetaBindBuild {
 
 export default class MetaBindPlugin extends Plugin implements IPlugin {
 	// @ts-expect-error TS2564
+	api: ObsidianAPI;
+	// @ts-expect-error TS2564
+	internal: ObsidianInternalAPI;
+	// @ts-expect-error TS2564
+	metadataManager: MetadataManager;
+	// @ts-expect-error TS2564
+	mountableManager: MountableManager;
+
+	// @ts-expect-error TS2564
 	settings: MetaBindPluginSettings;
 
 	// @ts-expect-error TS2564
-	mdrcManager: MDRCManager;
-
-	// @ts-expect-error TS2564
-	metadataManager: MetadataManager;
-
-	// @ts-expect-error TS2564
-	api: ObsidianAPI;
-
-	// @ts-expect-error TS2564
-	internal: ObsidianInternalAPI;
-
-	// @ts-expect-error TS2564
 	build: MetaBindBuild;
-
 	// @ts-expect-error TS2564
 	dependencyManager: DependencyManager;
 
@@ -86,7 +82,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		// create all APIs and managers
 		this.api = new ObsidianAPI(this);
 		this.internal = new ObsidianInternalAPI(this);
-		this.mdrcManager = new MDRCManager();
+		this.mountableManager = new MountableManager();
 		// const metadataAdapter = new ObsidianMetadataAdapter(this);
 
 		this.setUpMetadataManager();
@@ -118,7 +114,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 	onunload(): void {
 		console.log(`meta-bind | Main >> unload`);
-		this.mdrcManager.unload();
+		this.mountableManager.unload();
 	}
 
 	// TODO: move to internal API
@@ -148,14 +144,14 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		this.registerEvent(
 			this.app.vault.on('rename', (file, oldPath) => {
-				this.mdrcManager.unloadFile(oldPath);
+				this.mountableManager.unloadFile(oldPath);
 				this.metadataManager.onStoragePathRenamed(oldPath, file.path);
 			}),
 		);
 
 		this.registerEvent(
 			this.app.vault.on('delete', file => {
-				this.mdrcManager.unloadFile(file.path);
+				this.mountableManager.unloadFile(file.path);
 				this.metadataManager.onStoragePathDeleted(file.path);
 			}),
 		);

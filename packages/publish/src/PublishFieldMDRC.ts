@@ -1,22 +1,20 @@
-import { type FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import { type MetaBindPublishPlugin } from 'packages/publish/src/main';
-import { getUUID } from 'packages/core/src/utils/Utils';
 import { MarkdownRenderChild } from 'obsidian/publish';
+import { type Mountable } from 'packages/core/src/utils/Mountable';
 
 export class PublishFieldMDRC extends MarkdownRenderChild {
 	readonly plugin: MetaBindPublishPlugin;
-	readonly mountable: FieldMountable;
-	readonly uuid: string;
-	readonly filePath: string;
+	readonly mountable: Mountable;
 
-	constructor(plugin: MetaBindPublishPlugin, mountable: FieldMountable, containerEl: HTMLElement) {
+	constructor(plugin: MetaBindPublishPlugin, mountable: Mountable, containerEl: HTMLElement) {
 		super(containerEl);
 
 		this.plugin = plugin;
 		this.mountable = mountable;
 
-		this.uuid = getUUID();
-		this.filePath = mountable.getFilePath();
+		this.mountable.registerUnmountCb(() => {
+			this.unload();
+		});
 	}
 
 	onload(): void {

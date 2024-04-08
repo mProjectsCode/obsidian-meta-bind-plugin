@@ -1,5 +1,16 @@
 # Obsidian Meta Bind Changelog
 
+# 1.0.4
+
+Changes
+
+-   Slightly improved the syncing algorithm and reduced the amount of unnecessary updates
+
+Bug Fixes
+
+-   Fixed some issues with the `replaceSelf` button action not replacing the correct lines when the button was moved by some change in the part of the note above the button
+-   Fixed some unusable API functions for creating meta bind tables, as the required arguments weren't possible to create just using the API
+
 # 1.0.3
 
 Bug Fixes

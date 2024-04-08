@@ -11,12 +11,14 @@ import { EMBED_MAX_DEPTH, RenderChildType } from 'packages/core/src/config/Field
 import { DateParser } from 'packages/core/src/parsers/DateParser';
 import { setFirstWeekday } from 'packages/core/src/utils/DatePickerUtils';
 import { PublishNotePosition } from 'packages/publish/src/PublishNotePosition';
+import { MountableManager } from 'packages/core/src/MountableManager';
 
 export class MetaBindPublishPlugin implements IPlugin {
 	settings: MetaBindPluginSettings;
 	api: PublishAPI;
 	internal: PublishInternalAPI;
 	metadataManager: MetadataManager;
+	mountableManager: MountableManager;
 
 	constructor(settings: MetaBindPluginSettings) {
 		this.settings = settings;
@@ -25,6 +27,8 @@ export class MetaBindPublishPlugin implements IPlugin {
 		this.internal = new PublishInternalAPI(this);
 		this.metadataManager = new MetadataManager();
 		this.setUpMetadataManager();
+
+		this.mountableManager = new MountableManager();
 
 		this.load();
 	}

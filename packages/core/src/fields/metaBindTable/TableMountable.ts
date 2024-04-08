@@ -180,6 +180,8 @@ export class TableMountable extends FieldMountable {
 	}
 
 	protected onMount(targetEl: HTMLElement): void {
+		super.onMount(targetEl);
+
 		this.tableComponent = new MetaBindTableComponent({
 			target: targetEl,
 			props: {
@@ -199,6 +201,8 @@ export class TableMountable extends FieldMountable {
 	}
 
 	protected onUnmount(targetEl: HTMLElement): void {
+		super.onUnmount(targetEl);
+
 		this.unregisterSelfFromMetadataManager();
 		this.tableComponent?.$destroy();
 

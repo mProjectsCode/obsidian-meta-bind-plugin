@@ -21,4 +21,12 @@ export abstract class FieldMountable extends Mountable {
 	getFilePath(): string {
 		return this.filePath;
 	}
+
+	protected onMount(_targetEl: HTMLElement): void {
+		this.plugin.mountableManager.registerMountable(this);
+	}
+
+	protected onUnmount(_targetEl: HTMLElement): void {
+		this.plugin.mountableManager.unregisterMountable(this);
+	}
 }

@@ -132,6 +132,7 @@ export class InputFieldMountable extends FieldMountable {
 
 	protected onMount(targetEl: HTMLElement): void {
 		console.debug('meta-bind | InputFieldMountable >> mount', this.declaration);
+		super.onMount(targetEl);
 
 		DomHelpers.empty(targetEl);
 		DomHelpers.addClass(targetEl, 'mb-input');
@@ -168,6 +169,7 @@ export class InputFieldMountable extends FieldMountable {
 
 	protected onUnmount(targetEl: HTMLElement): void {
 		console.debug('meta-bind | InputFieldMountable >> unmount', this.declaration);
+		super.onUnmount(targetEl);
 
 		this.inputField?.destroy();
 

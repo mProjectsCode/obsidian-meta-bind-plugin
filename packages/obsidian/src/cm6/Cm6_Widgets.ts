@@ -1,7 +1,7 @@
 import { type EditorView, WidgetType } from '@codemirror/view';
 import { type Component } from 'obsidian';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
-import { type FieldMDRC } from 'packages/obsidian/src/FieldMDRC';
+import { type MountableMDRC } from 'packages/obsidian/src/MountableMDRC';
 import { type InlineFieldType } from 'packages/core/src/config/FieldConfigs';
 
 export class MarkdownRenderChildWidget extends WidgetType {
@@ -10,7 +10,7 @@ export class MarkdownRenderChildWidget extends WidgetType {
 	filePath: string;
 	parentComponent: Component;
 	plugin: MetaBindPlugin;
-	renderChild?: FieldMDRC;
+	renderChild?: MountableMDRC;
 
 	constructor(
 		type: InlineFieldType,
