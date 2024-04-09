@@ -22,6 +22,25 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				this.component = new Component();
 				this.component.load();
 				this.decorations = this.renderWidgets(view) ?? Decoration.none;
+
+				view.dom.addEventListener('click', e => this.handleClick(e));
+			}
+
+			handleClick(e: MouseEvent): void {
+				if (e.target instanceof HTMLElement) {
+					let parent: HTMLElement | null = e.target;
+
+					// check if the click was inside an input field
+					while (parent !== null) {
+						if (parent.classList.contains('mb-input')) {
+							e.preventDefault();
+							e.stopPropagation();
+							break;
+						}
+
+						parent = parent.parentElement;
+					}
+				}
 			}
 
 			isLivePreview(state: EditorState): boolean {

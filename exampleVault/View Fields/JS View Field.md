@@ -33,14 +33,13 @@ save to {cssclasses}
 ---
 const CLASS = 'test-class';
 
-const addClass = context.bound.n1 >= 100;
-let css = new Set(context.metadata.frontmatter.cssclasses ?? []);
+let classes = new Set(context.metadata.frontmatter.cssclasses ?? []);
 
-if (addClass) {
-    css.add(CLASS);
+if (context.bound.n1 >= 100) {
+    classes.add(CLASS);
 } else {
-    css.delete(CLASS);
+    classes.delete(CLASS);
 }
 
-return [...css.values()];
+return [...classes.values()];
 ```
