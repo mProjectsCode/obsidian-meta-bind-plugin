@@ -249,7 +249,12 @@ export class ButtonActionRunner {
 	}
 
 	async runTemplaterCreateNoteAction(action: TemplaterCreateNoteButtonAction): Promise<void> {
-		await this.plugin.internal.createNoteWithTemplater(action.templateFile, action.folderPath, action.fileName);
+		await this.plugin.internal.createNoteWithTemplater(
+			action.templateFile,
+			action.folderPath,
+			action.fileName,
+			action.openNote,
+		);
 	}
 
 	async runUpdateMetadataAction(action: UpdateMetadataButtonAction, filePath: string): Promise<void> {
