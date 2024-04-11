@@ -61,7 +61,7 @@ export class TestInternalAPI extends InternalAPI<TestPlugin> {
 		return Promise.resolve(() => {});
 	}
 
-	public createJsRenderer(_container: HTMLElement, _filePath: string, _code: string): IJsRenderer {
+	public createJsRenderer(_container: HTMLElement, _filePath: string, _code: string, _hidden: boolean): IJsRenderer {
 		throw new Error('not implemented');
 	}
 

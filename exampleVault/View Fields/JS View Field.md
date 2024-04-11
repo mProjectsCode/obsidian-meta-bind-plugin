@@ -21,6 +21,7 @@ return engine.markdown.create(`**${context.bound.n1 * context.bound.n2}** km`);
 ```meta-bind-js-view
 {number1} as n1
 save to {n1clone}
+hidden
 ---
 return context.bound.n1;
 ```

@@ -12,12 +12,14 @@ export class ObsidianJsRenderer implements IJsRenderer {
 	file: TFile;
 	jsEngine: API;
 	code: string;
+	hidden: boolean;
 	renderComponent: Component;
 
-	constructor(plugin: MetaBindPlugin, containerEl: HTMLElement, filePath: string, code: string) {
+	constructor(plugin: MetaBindPlugin, containerEl: HTMLElement, filePath: string, code: string, hidden: boolean) {
 		this.plugin = plugin;
 		this.containerEl = containerEl;
 		this.code = code;
+		this.hidden = hidden;
 
 		const file = plugin.app.vault.getAbstractFileByPath(filePath);
 		if (!(file instanceof TFile)) {
@@ -58,7 +60,9 @@ export class ObsidianJsRenderer implements IJsRenderer {
 				this.file.path,
 				this.renderComponent,
 			);
-			await renderer.render(execution.result);
+			if (!this.hidden) {
+				await renderer.render(execution.result);
+			}
 
 			const simpleObject = renderer.convertToSimpleObject(execution.result);
 

@@ -107,14 +107,16 @@ const P_JsViewFieldBindTargetMapping: Parser<UnvalidatedJsViewFieldBindTargetMap
 );
 
 export const P_JsViewFieldDeclaration: Parser<PartialUnvalidatedJsViewFieldDeclaration> = P.sequenceMap(
-	(bindTargetMappings, writeToBindTarget, code) => {
+	(bindTargetMappings, writeToBindTarget, hidden, code) => {
 		return {
 			bindTargetMappings: bindTargetMappings,
 			writeToBindTarget: writeToBindTarget,
+			hidden: hidden !== undefined,
 			code: code,
 		} satisfies PartialUnvalidatedJsViewFieldDeclaration;
 	},
 	P_JsViewFieldBindTargetMapping.separateBy(P_UTILS.whitespace()).skip(P_UTILS.whitespace()),
 	P.string('save to ').then(P_BindTarget.wrapString('{', '}')).skip(P_UTILS.whitespace()).optional(),
+	P.string('hidden').skip(P_UTILS.whitespace()).optional(),
 	P.string('---').then(P_UTILS.remaining()),
 );

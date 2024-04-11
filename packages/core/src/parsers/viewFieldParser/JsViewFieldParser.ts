@@ -32,6 +32,7 @@ export class JsViewFieldParser {
 			errorCollection: errorCollection,
 			bindTargetMappings: [],
 			writeToBindTarget: undefined,
+			hidden: false,
 			code: '',
 		};
 	}
@@ -55,6 +56,7 @@ export class JsViewFieldParser {
 			writeToBindTarget: this.plugin.api.bindTargetParser.fromExistingDeclaration(
 				simpleDeclaration.writeToBindTarget,
 			),
+			hidden: simpleDeclaration.hidden ?? false,
 			errorCollection: errorCollection,
 		};
 	}
@@ -109,6 +111,7 @@ export class JsViewFieldParser {
 			}
 
 			declaration.code = unvalidatedDeclaration.code;
+			declaration.hidden = unvalidatedDeclaration.hidden;
 
 			return declaration;
 		} catch (e) {
@@ -120,6 +123,7 @@ export class JsViewFieldParser {
 			errorCollection: declaration.errorCollection,
 			bindTargetMappings: [],
 			writeToBindTarget: undefined,
+			hidden: false,
 			code: '',
 		};
 	}

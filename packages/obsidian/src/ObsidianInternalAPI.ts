@@ -135,8 +135,8 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 		return () => component.unload();
 	}
 
-	public createJsRenderer(container: HTMLElement, filePath: string, code: string): IJsRenderer {
-		return new ObsidianJsRenderer(this.plugin, container, filePath, code);
+	public createJsRenderer(container: HTMLElement, filePath: string, code: string, hidden: boolean): IJsRenderer {
+		return new ObsidianJsRenderer(this.plugin, container, filePath, code, hidden);
 	}
 
 	public openFile(filePath: string, callingFilePath: string, newTab: boolean): void {

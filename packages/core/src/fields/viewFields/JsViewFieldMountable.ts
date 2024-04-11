@@ -140,7 +140,12 @@ export class JsViewFieldMountable extends FieldMountable {
 		const wrapperEl: HTMLDivElement = document.createElement('div');
 		DomHelpers.addClass(wrapperEl, 'mb-view-wrapper');
 
-		this.jsRenderer = this.plugin.internal.createJsRenderer(wrapperEl, this.getFilePath(), this.declaration.code);
+		this.jsRenderer = this.plugin.internal.createJsRenderer(
+			wrapperEl,
+			this.getFilePath(),
+			this.declaration.code,
+			this.declaration.hidden,
+		);
 
 		this.registerSelfToMetadataManager();
 

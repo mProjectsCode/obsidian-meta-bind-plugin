@@ -54,7 +54,7 @@ export class PublishInternalAPI extends InternalAPI<MetaBindPublishPlugin> {
 		return Promise.reject(new Error('not implemented'));
 	}
 
-	public createJsRenderer(_container: HTMLElement, _filePath: string, _code: string): IJsRenderer {
+	public createJsRenderer(_container: HTMLElement, _filePath: string, _code: string, _hidden: boolean): IJsRenderer {
 		throw new Error('not implemented');
 	}
 

@@ -144,8 +144,9 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	 * @param container
 	 * @param filePath
 	 * @param code
+	 * @param hidden
 	 */
-	abstract createJsRenderer(container: HTMLElement, filePath: string, code: string): IJsRenderer;
+	abstract createJsRenderer(container: HTMLElement, filePath: string, code: string, hidden: boolean): IJsRenderer;
 
 	/**
 	 * Open a specific file.

@@ -1,4 +1,5 @@
 import { yaml } from '@codemirror/legacy-modes/mode/yaml';
+import { javascript } from '@codemirror/legacy-modes/mode/javascript';
 import { type Mode, type StringStream } from 'codemirror';
 import { SyntaxHighlighting } from 'packages/core/src/parsers/syntaxHighlighting/SyntaxHighlighting';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
@@ -24,6 +25,25 @@ export function registerCm5HLModes(plugin: MetaBindPlugin): void {
 			},
 			token: (stream: any, state: any) => {
 				return `line-HyperMD-codeblock ${yaml.token?.(stream, state)}`;
+			},
+		};
+
+		return mode;
+	});
+
+	window.CodeMirror.defineMode('meta-bind-js-view', _config => {
+		const mode: Mode<any> = {
+			startState: () => {
+				return javascript.startState?.(4);
+			},
+			blankLine: (state: any) => {
+				return javascript.blankLine?.(state, 4);
+			},
+			copyState: (_state: any) => {
+				return javascript.startState?.(4);
+			},
+			token: (stream: any, state: any) => {
+				return `line-HyperMD-codeblock ${javascript.token?.(stream, state)}`;
 			},
 		};
 

@@ -41,6 +41,7 @@ export interface SimpleViewFieldDeclaration {
 export interface JsViewFieldDeclaration extends FieldDeclaration {
 	bindTargetMappings: JsViewFieldBindTargetMapping[];
 	writeToBindTarget?: BindTargetDeclaration | undefined;
+	hidden: boolean;
 	code: string;
 }
 
@@ -54,6 +55,7 @@ export interface UnvalidatedJsViewFieldDeclaration extends PartialUnvalidatedJsV
 export interface PartialUnvalidatedJsViewFieldDeclaration {
 	bindTargetMappings: UnvalidatedJsViewFieldBindTargetMapping[];
 	writeToBindTarget?: UnvalidatedBindTargetDeclaration | undefined;
+	hidden: boolean;
 	code: string;
 }
 
@@ -65,6 +67,7 @@ export interface UnvalidatedJsViewFieldBindTargetMapping {
 export interface SimpleJsViewFieldDeclaration {
 	bindTargetMappings: SimpleJsViewFieldBindTargetMapping[];
 	writeToBindTarget?: BindTargetDeclaration | undefined;
+	hidden?: boolean;
 	code: string;
 }
 
