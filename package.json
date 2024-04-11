@@ -35,6 +35,7 @@
 		"@typescript-eslint/parser": "^7.4.0",
 		"builtin-modules": "^3.3.0",
 		"elysia": "^0.8.17",
+		"@elysiajs/cors": "^1.0.2",
 		"esbuild": "^0.20.2",
 		"esbuild-plugin-copy-watch": "^2.1.0",
 		"esbuild-svelte": "^0.8.0",
