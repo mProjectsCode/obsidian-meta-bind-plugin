@@ -18,12 +18,12 @@ import { InputFieldMountable } from 'packages/core/src/fields/inputFields/InputF
 import { InputField } from 'packages/core/src/fields/inputFields/InputFieldFactory';
 import { expect, Mock, spyOn } from 'bun:test';
 import { getUUID } from 'packages/core/src/utils/Utils';
-import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
 import { Metadata } from 'packages/core/src/metadata/MetadataSource';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
 import type { IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
 import { MountableManager } from 'packages/core/src/MountableManager';
+import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 
 /**
  * A default value to indicate that a field should be it's the default value.

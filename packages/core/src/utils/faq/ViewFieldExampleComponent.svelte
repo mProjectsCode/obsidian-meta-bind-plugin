@@ -3,7 +3,8 @@
 	import { IPlugin } from 'packages/core/src/IPlugin';
 	import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 	import MountableComponent from 'packages/core/src/utils/components/MountableComponent.svelte';
-	import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
+
+	import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 
 	export let declaration: ViewFieldExampleDeclaration;
 

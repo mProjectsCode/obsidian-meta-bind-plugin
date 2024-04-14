@@ -1,20 +1,5 @@
 import { type IPlugin } from 'packages/core/src/IPlugin';
 import { SyntaxHighlightingAPI } from 'packages/core/src/api/SyntaxHighlightingAPI';
-import {
-	type ButtonGroupOptions,
-	type ButtonOptions,
-	type EmbedOptions,
-	type FieldOptionMap,
-	FieldType,
-	type InlineFieldType,
-	type InputFieldOptions,
-	isFieldTypeAllowedInline,
-	type JsViewFieldOptions,
-	NotePosition,
-	RenderChildType,
-	type TableOptions,
-	type ViewFieldOptions,
-} from 'packages/core/src/config/FieldConfigs';
 import { type FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import { ButtonActionRunner } from 'packages/core/src/fields/button/ButtonActionRunner';
 import { ButtonMountable } from 'packages/core/src/fields/button/ButtonMountable';
@@ -64,6 +49,21 @@ import {
 import { validate } from 'packages/core/src/utils/ZodUtils';
 import { z } from 'zod';
 import { TableMountable } from 'packages/core/src/fields/metaBindTable/TableMountable';
+import {
+	type ButtonGroupOptions,
+	type ButtonOptions,
+	type EmbedOptions,
+	type FieldOptionMap,
+	FieldType,
+	type InlineFieldType,
+	type APIConfigs,
+	isFieldTypeAllowedInline,
+	type JsViewFieldOptions,
+	NotePosition,
+	RenderChildType,
+	type TableOptions,
+	type ViewFieldOptions,
+} from 'packages/core/src/config/APIConfigs';
 
 export interface LifecycleHook {
 	register(cb: () => void): void;
@@ -307,7 +307,7 @@ export abstract class API<Plugin extends IPlugin> {
 		});
 	}
 
-	public createInputFieldMountable(filePath: string, options: InputFieldOptions): InputFieldMountable {
+	public createInputFieldMountable(filePath: string, options: APIConfigs): InputFieldMountable {
 		validate(
 			z.object({
 				filePath: V_FilePath,

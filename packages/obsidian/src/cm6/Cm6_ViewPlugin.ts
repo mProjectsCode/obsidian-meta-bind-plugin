@@ -6,7 +6,8 @@ import { summary } from 'itertools-ts/es';
 import { Component, editorLivePreviewField, type TFile } from 'obsidian';
 import { Cm6_Util, MB_WidgetType } from 'packages/obsidian/src/cm6/Cm6_Util';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
-import { type FieldType } from 'packages/core/src/config/FieldConfigs';
+
+import { type FieldType } from 'packages/core/src/config/APIConfigs';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlugin): ViewPlugin<any> {

@@ -10,7 +10,8 @@ import {
 } from 'packages/core/src/parsers/syntaxHighlighting/HLPs';
 import { type Highlight } from 'packages/core/src/parsers/syntaxHighlighting/Highlight';
 import { SyntaxHighlighting } from 'packages/core/src/parsers/syntaxHighlighting/SyntaxHighlighting';
-import { FieldType } from 'packages/core/src/config/FieldConfigs';
+
+import { FieldType } from 'packages/core/src/config/APIConfigs';
 
 export class SyntaxHighlightingAPI {
 	public readonly plugin: IPlugin;

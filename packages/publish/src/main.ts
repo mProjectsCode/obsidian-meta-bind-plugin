@@ -7,11 +7,12 @@ import { BindTargetStorageType } from 'packages/core/src/parsers/bindTargetParse
 import { PublishAPI } from 'packages/publish/src/PublishAPI';
 import { PublishInternalAPI } from 'packages/publish/src/PublishInternalAPI';
 import { PublishMetadataSource } from 'packages/publish/src/PublishMetadataSource';
-import { EMBED_MAX_DEPTH, RenderChildType } from 'packages/core/src/config/FieldConfigs';
+import { EMBED_MAX_DEPTH } from 'packages/core/src/config/FieldConfigs';
 import { DateParser } from 'packages/core/src/parsers/DateParser';
 import { setFirstWeekday } from 'packages/core/src/utils/DatePickerUtils';
 import { PublishNotePosition } from 'packages/publish/src/PublishNotePosition';
 import { MountableManager } from 'packages/core/src/MountableManager';
+import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 
 export class MetaBindPublishPlugin implements IPlugin {
 	settings: MetaBindPluginSettings;

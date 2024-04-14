@@ -1,5 +1,5 @@
 import { type IPlugin } from 'packages/core/src/IPlugin';
-import { InputFieldArgumentType, InputFieldType, RenderChildType } from 'packages/core/src/config/FieldConfigs';
+import { InputFieldArgumentType, InputFieldType } from 'packages/core/src/config/FieldConfigs';
 import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import { type InputFieldArgumentMapType } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
 import type { InputField } from 'packages/core/src/fields/inputFields/InputFieldFactory';
@@ -9,6 +9,7 @@ import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
 import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
+import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 
 export class InputFieldMountable extends FieldMountable {
 	renderChildType: RenderChildType;

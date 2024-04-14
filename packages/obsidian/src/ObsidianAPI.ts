@@ -1,4 +1,4 @@
-import { Component, type MarkdownPostProcessorContext } from 'obsidian';
+import { Component } from 'obsidian';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 import { API, type LifecycleHook } from 'packages/core/src/api/API.js';
 import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
@@ -7,13 +7,13 @@ import { validate } from 'packages/core/src/utils/ZodUtils';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { MarkdownRenderChildWidget } from 'packages/obsidian/src/cm6/Cm6_Widgets';
 import { MountableMDRC } from 'packages/obsidian/src/MountableMDRC';
-import { type FieldType, isFieldTypeAllowedInline } from 'packages/core/src/config/FieldConfigs';
 import { z } from 'zod';
 import { V_BindTargetDeclaration, V_HTMLElement, V_Mountable } from 'packages/core/src/api/Validators';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { getJsEnginePluginAPI } from 'packages/obsidian/src/ObsUtils';
 import { type ReactiveComponent } from 'jsEngine/api/reactive/ReactiveComponent';
 import { type Mountable } from 'packages/core/src/utils/Mountable';
+import { type FieldType, isFieldTypeAllowedInline } from 'packages/core/src/config/APIConfigs';
 
 /**
  * Either {@link MarkdownPostProcessorContext} or {@link Component}.

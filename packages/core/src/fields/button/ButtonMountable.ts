@@ -4,7 +4,7 @@ import { ButtonField } from 'packages/core/src/fields/button/ButtonField';
 import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { type ButtonDeclaration } from 'packages/core/src/parsers/ButtonParser';
-import { type NotePosition, RenderChildType } from 'packages/core/src/config/FieldConfigs';
+import { type NotePosition, RenderChildType } from 'packages/core/src/config/APIConfigs';
 
 export class ButtonMountable extends FieldMountable {
 	errorCollection: ErrorCollection;

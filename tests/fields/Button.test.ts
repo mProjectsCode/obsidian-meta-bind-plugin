@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, test } from 'bun:test';
 import { ButtonAction, ButtonActionType } from 'packages/core/src/config/ButtonConfig';
 import { TestPlugin } from 'tests/__mocks__/TestPlugin';
-import { NotePosition } from 'packages/core/src/config/FieldConfigs';
+
+import { NotePosition } from 'packages/core/src/config/APIConfigs';
 
 let testPlugin: TestPlugin;
 const testFilePath = 'test/file.md';

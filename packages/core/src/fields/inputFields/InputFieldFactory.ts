@@ -1,10 +1,5 @@
 import { type IPlugin } from 'packages/core/src/IPlugin';
-import {
-	type InputFieldConfig,
-	InputFieldConfigs,
-	InputFieldType,
-	RenderChildType,
-} from 'packages/core/src/config/FieldConfigs';
+import { type InputFieldConfig, InputFieldConfigs, InputFieldType } from 'packages/core/src/config/FieldConfigs';
 import { type InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
 import { DateIPF } from 'packages/core/src/fields/inputFields/fields/Date/DateIPF';
 import { DatePickerIPF } from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePickerIPF';
@@ -30,6 +25,7 @@ import { ErrorLevel, MetaBindParsingError } from 'packages/core/src/utils/errors
 import { expectType } from 'packages/core/src/utils/Utils';
 import { ImageListSuggesterIPF } from 'packages/core/src/fields/inputFields/fields/ImageListSuggester/ImageListSuggesterIPF';
 import { DateTimeIPF } from 'packages/core/src/fields/inputFields/fields/DateTime/DateTimeIPF';
+import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 
 export type InputField =
 	| ToggleIPF

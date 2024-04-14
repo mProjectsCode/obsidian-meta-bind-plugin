@@ -4,13 +4,13 @@ import { type SimpleInputFieldDeclaration } from 'packages/core/src/parsers/inpu
 import { type SimpleViewFieldDeclaration } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
 import { type Listener, Signal } from 'packages/core/src/utils/Signal';
 import { type IPlugin } from 'packages/core/src/IPlugin';
-import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
 import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import { type MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
 import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { type MBExtendedLiteral } from 'packages/core/src/utils/Literal';
 import { showUnloadedMessage } from 'packages/core/src/utils/Utils';
 import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
+import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 
 // export type MetaBindTableCell =
 // 	| {

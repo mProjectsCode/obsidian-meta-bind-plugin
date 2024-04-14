@@ -3,7 +3,7 @@ import { type ButtonConfig } from 'packages/core/src/config/ButtonConfig';
 import { DomHelpers, isTruthy } from 'packages/core/src/utils/Utils';
 import ButtonComponent from 'packages/core/src/utils/components/ButtonComponent.svelte';
 import { Mountable } from 'packages/core/src/utils/Mountable';
-import { type NotePosition, RenderChildType } from 'packages/core/src/config/FieldConfigs';
+import { type NotePosition, RenderChildType } from 'packages/core/src/config/APIConfigs';
 
 export class ButtonField extends Mountable {
 	plugin: IPlugin;

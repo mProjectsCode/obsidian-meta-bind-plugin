@@ -1,5 +1,5 @@
 import { type IPlugin } from 'packages/core/src/IPlugin';
-import { RenderChildType, ViewFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
+import { ViewFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import { type ViewFieldArgumentMapType } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
 import { type AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractViewField';
@@ -7,6 +7,7 @@ import type { ViewFieldDeclaration } from 'packages/core/src/parsers/viewFieldPa
 import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
+import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 
 export class ViewFieldMountable extends FieldMountable {
 	renderChildType: RenderChildType;

@@ -1,17 +1,5 @@
 import { schemaForType } from 'packages/core/src/utils/ZodUtils';
-import {
-	type ButtonGroupOptions,
-	type ButtonOptions,
-	type EmbedOptions,
-	FieldType,
-	type InputFieldOptions,
-	InputFieldType,
-	type JsViewFieldOptions,
-	NotePosition,
-	RenderChildType,
-	type TableOptions,
-	type ViewFieldOptions,
-} from 'packages/core/src/config/FieldConfigs';
+import { InputFieldType } from 'packages/core/src/config/FieldConfigs';
 import { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import type { ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import type {
@@ -44,6 +32,18 @@ import {
 } from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
 import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import { Mountable } from 'packages/core/src/utils/Mountable';
+import {
+	type ButtonGroupOptions,
+	type ButtonOptions,
+	type EmbedOptions,
+	FieldType,
+	type APIConfigs,
+	type JsViewFieldOptions,
+	NotePosition,
+	RenderChildType,
+	type TableOptions,
+	type ViewFieldOptions,
+} from 'packages/core/src/config/APIConfigs';
 
 export const V_FilePath = schemaForType<string>()(z.string());
 
@@ -195,7 +195,7 @@ export const V_SimpleInlineButtonDeclaration = schemaForType<SimpleButtonGroupDe
 	}),
 );
 
-export const V_InputFieldOptions = schemaForType<InputFieldOptions>()(
+export const V_InputFieldOptions = schemaForType<APIConfigs>()(
 	z.object({
 		renderChildType: V_RenderChildType,
 		declaration: z.union([z.string(), V_SimpleInputFieldDeclaration]),

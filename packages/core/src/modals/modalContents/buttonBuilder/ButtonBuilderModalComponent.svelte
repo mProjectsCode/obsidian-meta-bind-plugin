@@ -9,7 +9,6 @@
 	import Toggle from 'packages/core/src/utils/components/Toggle.svelte';
 	import { IPlugin } from 'packages/core/src/IPlugin';
 	import { ButtonField } from 'packages/core/src/fields/button/ButtonField';
-	import { RenderChildType } from 'packages/core/src/config/FieldConfigs';
 	import CommandActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/CommandActionSettings.svelte';
 	import JSActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/JSActionSettings.svelte';
 	import OpenActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/OpenActionSettings.svelte';
@@ -26,6 +25,7 @@
 	import FlexRow from 'packages/core/src/utils/components/FlexRow.svelte';
 	import Icon from 'packages/core/src/utils/components/Icon.svelte';
 	import { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
+	import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 
 	export let plugin: IPlugin;
 	export let modal: ButtonBuilderModal;

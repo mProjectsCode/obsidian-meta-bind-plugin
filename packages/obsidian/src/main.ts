@@ -1,7 +1,7 @@
 import { loadPrism, type MarkdownPostProcessorContext, Plugin, stringifyYaml, type WorkspaceLeaf } from 'obsidian';
 import { type IPlugin } from 'packages/core/src/IPlugin';
 import { DEFAULT_SETTINGS, type MetaBindPluginSettings } from 'packages/core/src/Settings';
-import { EMBED_MAX_DEPTH, RenderChildType } from 'packages/core/src/config/FieldConfigs';
+import { EMBED_MAX_DEPTH } from 'packages/core/src/config/FieldConfigs';
 import {
 	GlobalMetadataSource,
 	InternalMetadataSource,
@@ -23,6 +23,7 @@ import { Version } from 'packages/obsidian/src/dependencies/Version';
 import { FaqView, MB_FAQ_VIEW_TYPE } from 'packages/obsidian/src/faq/FaqView';
 import { MetaBindSettingTab } from 'packages/obsidian/src/settings/SettingsTab';
 import { ObsidianNotePosition } from 'packages/obsidian/src/ObsidianNotePosition';
+import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 
 export enum MetaBindBuild {
 	DEV = 'dev',
