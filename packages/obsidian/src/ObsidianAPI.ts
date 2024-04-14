@@ -1,4 +1,4 @@
-import { Component } from 'obsidian';
+import { Component, type MarkdownPostProcessorContext } from 'obsidian';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 import { API, type LifecycleHook } from 'packages/core/src/api/API.js';
 import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
@@ -15,10 +15,16 @@ import { getJsEnginePluginAPI } from 'packages/obsidian/src/ObsUtils';
 import { type ReactiveComponent } from 'jsEngine/api/reactive/ReactiveComponent';
 import { type Mountable } from 'packages/core/src/utils/Mountable';
 
+/**
+ * Either {@link MarkdownPostProcessorContext} or {@link Component}.
+ */
 export interface ComponentLike {
 	addChild(child: Component): void;
 }
 
+/**
+ * @internal
+ */
 export const V_ComponentLike = z.object({
 	addChild: z.function().args(z.instanceof(Component)).returns(z.void()),
 });

@@ -9,6 +9,9 @@ import type { SimpleButtonGroupDeclaration } from 'packages/core/src/parsers/But
 import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { type MetaBindColumnDeclaration } from 'packages/core/src/fields/metaBindTable/TableMountable';
 
+/**
+ * @internal
+ */
 export interface FieldArgumentValueConfig {
 	name: string;
 	// empty is any
@@ -16,6 +19,9 @@ export interface FieldArgumentValueConfig {
 	description: string;
 }
 
+/**
+ * @internal
+ */
 export interface FieldArgumentConfig<ArgumentType extends string, FieldType extends string> {
 	type: ArgumentType;
 	allowedFieldTypes: FieldType[];
@@ -73,12 +79,18 @@ export enum InputFieldArgumentType {
 	INVALID = 'invalid',
 }
 
+/**
+ * @internal
+ */
 export interface InputFieldConfig {
 	type: InputFieldType;
 	allowInBlock: boolean;
 	allowInline: boolean;
 }
 
+/**
+ * @internal
+ */
 export const InputFieldConfigs: Record<InputFieldType, InputFieldConfig> = {
 	[InputFieldType.TOGGLE]: {
 		type: InputFieldType.TOGGLE,
@@ -192,14 +204,23 @@ export const InputFieldConfigs: Record<InputFieldType, InputFieldConfig> = {
 	},
 } as const;
 
+/**
+ * @internal
+ */
 export enum UseLinksInputFieldArgumentValue {
 	TRUE = 'true',
 	PARTIAL = 'partial',
 	FALSE = 'false',
 }
 
+/**
+ * @internal
+ */
 export type InputFieldArgumentConfig = FieldArgumentConfig<InputFieldArgumentType, InputFieldType>;
 
+/**
+ * @internal
+ */
 export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFieldArgumentConfig> = {
 	[InputFieldArgumentType.ADD_LABELS]: {
 		type: InputFieldArgumentType.ADD_LABELS,
@@ -522,8 +543,14 @@ export enum ViewFieldArgumentType {
 	INVALID = 'invalid',
 }
 
+/**
+ * @internal
+ */
 export type ViewFieldArgumentConfig = FieldArgumentConfig<ViewFieldArgumentType, ViewFieldType>;
 
+/**
+ * @internal
+ */
 export const ViewFieldArgumentConfigs: Record<ViewFieldArgumentType, ViewFieldArgumentConfig> = {
 	[ViewFieldArgumentType.RENDER_MARKDOWN]: {
 		type: ViewFieldArgumentType.RENDER_MARKDOWN,
