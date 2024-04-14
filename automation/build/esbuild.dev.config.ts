@@ -29,7 +29,7 @@ const context = await esbuild.context({
 		'@lezer/lr',
 	],
 	format: 'cjs',
-	target: 'es2018',
+	target: 'es2022',
 	logLevel: 'info',
 	sourcemap: 'inline',
 	treeShaking: true,

@@ -42,7 +42,7 @@ esbuild
 		],
 		format: 'iife',
 		globalName: 'meta_bind_publish',
-		target: 'es2016',
+		target: 'es2020',
 		logLevel: 'info',
 		sourcemap: false,
 		treeShaking: true,

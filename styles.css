@@ -5,8 +5,8 @@ body {
 	--mb-select-element-border-width: 5px;
 	--mb-date-input-year-input-width: 80px;
 
-	--mb-background-modifier-active: hsla(var(--interactive-accent-hsl), 0.1);
-	--mb-background-modifier-active-hover: hsla(var(--interactive-accent-hsl), 0.2);
+	--mb-background-modifier-active: hsla(var(--interactive-accent-hsl), 0.15);
+	--mb-background-modifier-active-hover: hsla(var(--interactive-accent-hsl), 0.3);
 
 	--mb-input-type-select-text: var(--text-muted);
 	--mb-input-type-select-text-hover: var(--text-normal);

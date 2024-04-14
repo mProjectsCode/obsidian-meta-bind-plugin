@@ -29,7 +29,7 @@ const build = await esbuild.build({
 		...builtins,
 	],
 	format: 'cjs',
-	target: 'es2018',
+	target: 'es2022',
 	logLevel: 'info',
 	sourcemap: false,
 	treeShaking: true,
