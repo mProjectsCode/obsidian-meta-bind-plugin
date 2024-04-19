@@ -23,12 +23,27 @@ import { expectType, openURL } from 'packages/core/src/utils/Utils';
 import { parseLiteral } from 'packages/core/src/utils/Literal';
 
 import { type NotePosition } from 'packages/core/src/config/APIConfigs';
+import { ErrorLevel, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 export class ButtonActionRunner {
 	plugin: IPlugin;
 
 	constructor(plugin: IPlugin) {
 		this.plugin = plugin;
+	}
+
+	resolveFilePath(filePath: string, relativeFilePath?: string | undefined): string {
+		const targetFilePath = MDLinkParser.isLink(filePath) ? MDLinkParser.parseLink(filePath).target : filePath;
+		const resolvedFilePath = this.plugin.internal.getFilePathByName(targetFilePath, relativeFilePath);
+		if (resolvedFilePath === undefined) {
+			throw new MetaBindParsingError({
+				errorLevel: ErrorLevel.ERROR,
+				cause: 'file not found',
+				effect: `could not resolve path or link "${filePath}" relative to "${relativeFilePath}"`,
+			});
+		}
+
+		return resolvedFilePath;
 	}
 
 	createDefaultButtonConfig(): ButtonConfig {
@@ -288,7 +303,7 @@ export class ButtonActionRunner {
 		}
 
 		const replacement = action.templater
-			? await this.plugin.internal.evaluateTemplaterTemplate(action.replacement, filePath)
+			? await this.plugin.internal.evaluateTemplaterTemplate(this.resolveFilePath(action.replacement), filePath)
 			: action.replacement;
 
 		splitContent = [
@@ -329,7 +344,7 @@ export class ButtonActionRunner {
 		}
 
 		const replacement = action.templater
-			? await this.plugin.internal.evaluateTemplaterTemplate(action.replacement, filePath)
+			? await this.plugin.internal.evaluateTemplaterTemplate(this.resolveFilePath(action.replacement), filePath)
 			: action.replacement;
 
 		splitContent = [
@@ -362,11 +377,15 @@ export class ButtonActionRunner {
 			throw new Error('Line number out of bounds');
 		}
 
-		const replacement = action.templater
-			? await this.plugin.internal.evaluateTemplaterTemplate(action.value, filePath)
+		const insertString = action.templater
+			? await this.plugin.internal.evaluateTemplaterTemplate(this.resolveFilePath(action.value), filePath)
 			: action.value;
 
-		splitContent = [...splitContent.slice(0, action.line - 1), replacement, ...splitContent.slice(action.line - 1)];
+		splitContent = [
+			...splitContent.slice(0, action.line - 1),
+			insertString,
+			...splitContent.slice(action.line - 1),
+		];
 
 		await this.plugin.internal.writeFilePath(filePath, splitContent.join('\n'));
 	}

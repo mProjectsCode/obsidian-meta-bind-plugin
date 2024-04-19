@@ -1,10 +1,10 @@
 import { ItemView, type WorkspaceLeaf } from 'obsidian';
-import FaqComponent from 'packages/core/src/utils/faq/FaqComponent.svelte';
+import FaqComponent from 'packages/core/src/utils/playground/PlaygroundComponent.svelte';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 
-export const MB_FAQ_VIEW_TYPE = 'mb-faq-view-type';
+export const MB_PLAYGROUND_VIEW_TYPE = 'mb-playground-view-type';
 
-export class FaqView extends ItemView {
+export class PlaygroundView extends ItemView {
 	component: FaqComponent | undefined;
 	plugin: MetaBindPlugin;
 
@@ -14,11 +14,11 @@ export class FaqView extends ItemView {
 	}
 
 	getViewType(): string {
-		return MB_FAQ_VIEW_TYPE;
+		return MB_PLAYGROUND_VIEW_TYPE;
 	}
 
 	getDisplayText(): string {
-		return 'Meta Bind FAQ';
+		return 'Meta Bind Playground';
 	}
 
 	// eslint-disable-next-line @typescript-eslint/require-await

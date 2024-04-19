@@ -1,7 +1,7 @@
 import { type App, ButtonComponent, PluginSettingTab, Setting } from 'obsidian';
 import { DEFAULT_SETTINGS, weekdays } from 'packages/core/src/Settings';
 import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
-import { MB_FAQ_VIEW_TYPE } from 'packages/obsidian/src/faq/FaqView';
+import { MB_PLAYGROUND_VIEW_TYPE } from 'packages/obsidian/src/playground/PlaygroundView';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 import { MetaBindBuild } from 'packages/obsidian/src/main';
 import { ButtonTemplatesSettingModal } from 'packages/obsidian/src/settings/buttonTemplateSetting/ButtonTemplatesSettingModal';
@@ -46,7 +46,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			.addButton(cb => {
 				cb.setButtonText('Open FAQ');
 				cb.onClick(() => {
-					void this.plugin.activateView(MB_FAQ_VIEW_TYPE);
+					void this.plugin.activateView(MB_PLAYGROUND_VIEW_TYPE);
 				});
 			})
 			.addButton(cb => {

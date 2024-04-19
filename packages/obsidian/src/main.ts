@@ -20,7 +20,7 @@ import { registerCm5HLModes } from 'packages/obsidian/src/cm6/Cm5_Modes';
 import { createMarkdownRenderChildWidgetEditorPlugin } from 'packages/obsidian/src/cm6/Cm6_ViewPlugin';
 import { DependencyManager } from 'packages/obsidian/src/dependencies/DependencyManager';
 import { Version } from 'packages/obsidian/src/dependencies/Version';
-import { FaqView, MB_FAQ_VIEW_TYPE } from 'packages/obsidian/src/faq/FaqView';
+import { PlaygroundView, MB_PLAYGROUND_VIEW_TYPE } from 'packages/obsidian/src/playground/PlaygroundView';
 import { MetaBindSettingTab } from 'packages/obsidian/src/settings/SettingsTab';
 import { ObsidianNotePosition } from 'packages/obsidian/src/ObsidianNotePosition';
 import { RenderChildType } from 'packages/core/src/config/APIConfigs';
@@ -98,7 +98,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		registerCm5HLModes(this);
 
 		// misc
-		this.registerView(MB_FAQ_VIEW_TYPE, leaf => new FaqView(leaf, this));
+		this.registerView(MB_PLAYGROUND_VIEW_TYPE, leaf => new PlaygroundView(leaf, this));
 		this.addStatusBarBuildIndicator();
 
 		if (this.settings.enableEditorRightClickMenu) {
@@ -259,10 +259,10 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		});
 
 		this.addCommand({
-			id: 'open-faq',
-			name: 'Open Meta Bind FAQ',
+			id: 'open-playground',
+			name: 'Open Meta Bind Playground',
 			callback: () => {
-				void this.activateView(MB_FAQ_VIEW_TYPE);
+				void this.activateView(MB_PLAYGROUND_VIEW_TYPE);
 			},
 		});
 
@@ -270,7 +270,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			id: 'open-help',
 			name: 'Open Meta Bind Help',
 			callback: () => {
-				void this.activateView(MB_FAQ_VIEW_TYPE);
+				void this.activateView(MB_PLAYGROUND_VIEW_TYPE);
 			},
 		});
 

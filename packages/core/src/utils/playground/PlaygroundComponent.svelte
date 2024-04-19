@@ -5,14 +5,15 @@
 		createInputFieldFAQExamples,
 		VIEW_FIELD_EXAMPLE_DECLARATIONS,
 	} from 'packages/core/src/utils/InputFieldExamples';
-	import InputFieldExampleComponent from 'packages/core/src/utils/faq/InputFieldExampleComponent.svelte';
-	import ViewFieldExampleComponent from 'packages/core/src/utils/faq/ViewFieldExampleComponent.svelte';
+	import InputFieldExampleComponent from 'packages/core/src/utils/playground/InputFieldExampleComponent.svelte';
+	import ViewFieldExampleComponent from 'packages/core/src/utils/playground/ViewFieldExampleComponent.svelte';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 	import { ErrorLevel, MetaBindExampleError } from 'packages/core/src/utils/errors/MetaBindErrors';
 	import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 	import { IPlugin } from 'packages/core/src/IPlugin';
+	import FlexRow from '../components/FlexRow.svelte';
 
 	export let plugin: IPlugin;
 
@@ -44,32 +45,37 @@
 </script>
 
 <div class="mb-faq-view markdown-rendered">
-	<h1>Meta Bind FAQ</h1>
+	<FlexRow>
+		<h1>Meta Bind Playground</h1>
+		<span>
+			<Button
+				variant={ButtonStyleType.PRIMARY}
+				on:click={() => {
+					DocsUtils.open(DocsUtils.linkToHome());
+				}}
+			>
+				Docs
+			</Button>
+			<Button
+				on:click={() => {
+					DocsUtils.open(DocsUtils.linkToGithub());
+				}}
+			>
+				GitHub
+			</Button>
+			<Button
+				on:click={() => {
+					DocsUtils.open(DocsUtils.linkToIssues());
+				}}
+			>
+				Report Issue
+			</Button>
+		</span>
+	</FlexRow>
 
-	<h2>Quick Access</h2>
-	<p>
-		<Button
-			variant={ButtonStyleType.PRIMARY}
-			on:click={() => {
-				DocsUtils.open(DocsUtils.linkToHome());
-			}}
-			>Docs
-		</Button>
-		<Button
-			on:click={() => {
-				DocsUtils.open(DocsUtils.linkToGithub());
-			}}
-			>GitHub
-		</Button>
-		<Button
-			on:click={() => {
-				DocsUtils.open(DocsUtils.linkToIssues());
-			}}
-			>Report Issue
-		</Button>
-	</p>
+	<h2>Quick Reference</h2>
 
-	<h2>Error Messages</h2>
+	<h3>Error Messages</h3>
 	<p>
 		When creating <a href={DocsUtils.linkToInputFields()}>Input Fields</a> or
 		<a href={DocsUtils.linkToViewFields()}>View Fields</a>
@@ -93,7 +99,28 @@
 		when clicked.
 	</p>
 
-	<h2>Input Fields</h2>
+	<h3>Unloaded Message</h3>
+	<p>
+		A message like this <span class="mb-warning">[MB_UNLOADED] ...</span> means that Obsidian told Meta Bind to unload
+		the field that was once displayed there. This usually happens when Meta Bind was disabled, such as after a plugin
+		update, or when another plugin is interfering with Meta Bind.
+	</p>
+	<p>Usually reopening the note or restarting Obsidian causes the field to display normally again.</p>
+
+	<h3>Bind Targets</h3>
+	<p>
+		<a href="https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/guides/inputfields/#binding-to-metadata"
+			>Bind Targets</a
+		>
+		let the plugin know what frontmatter properties to bind
+		<a href={DocsUtils.linkToInputFields()}>Input Fields</a>
+		and
+		<a href={DocsUtils.linkToViewFields()}>View Fields</a> to.
+	</p>
+
+	<h2>Playground</h2>
+
+	<h3>Input Fields</h3>
 	<p>
 		<a href={DocsUtils.linkToInputFields()}>Input Fields</a> let you change the frontmatter of your notes from inside
 		of notes.
@@ -103,7 +130,7 @@
 		<InputFieldExampleComponent declaration={example[1]} plugin={plugin}></InputFieldExampleComponent>
 	{/each}
 
-	<h2>View Fields</h2>
+	<h3>View Fields</h3>
 	<p>
 		<a href={DocsUtils.linkToViewFields()}>View Fields</a> let you view and perform calculations using the frontmatter
 		of your notes from inside of notes. They will update instantly to reflect changes to the frontmatter made by input
@@ -115,15 +142,4 @@
 			<ViewFieldExampleComponent declaration={example} plugin={plugin}></ViewFieldExampleComponent>
 		{/each}
 	{/each}
-
-	<h2>Bind Targets</h2>
-	<p>
-		<a href="https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/guides/inputfields/#binding-to-metadata"
-			>Bind Targets</a
-		>
-		let the plugin know what frontmatter properties to bind
-		<a href={DocsUtils.linkToInputFields()}>Input Fields</a>
-		and
-		<a href={DocsUtils.linkToViewFields()}>View Fields</a> to.
-	</p>
 </div>
