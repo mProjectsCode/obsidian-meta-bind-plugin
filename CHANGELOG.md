@@ -1,5 +1,19 @@
 # Obsidian Meta Bind Changelog
 
+# 1.1.0
+
+Changes
+
+-   Added syntax highlighting for JS View Fields
+-   Added option to hide JS View Fields
+-   Button actions now accept links as file paths [#297]](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/297)
+-   Renamed the FAQ to Playground [#293]](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/293)
+
+Bug Fixes
+
+-   Fixed `templaterCreateNote` Button Action always opening the created note [#298]](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/298)
+-   Fixed not being able to click input fields inside of callouts in LP [#291]](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/291)
+
 # 1.0.4
 
 Changes
