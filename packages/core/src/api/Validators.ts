@@ -37,7 +37,7 @@ import {
 	type ButtonOptions,
 	type EmbedOptions,
 	FieldType,
-	type APIConfigs,
+	type InputFieldOptions,
 	type JsViewFieldOptions,
 	NotePosition,
 	RenderChildType,
@@ -195,7 +195,7 @@ export const V_SimpleInlineButtonDeclaration = schemaForType<SimpleButtonGroupDe
 	}),
 );
 
-export const V_InputFieldOptions = schemaForType<APIConfigs>()(
+export const V_InputFieldOptions = schemaForType<InputFieldOptions>()(
 	z.object({
 		renderChildType: V_RenderChildType,
 		declaration: z.union([z.string(), V_SimpleInputFieldDeclaration]),

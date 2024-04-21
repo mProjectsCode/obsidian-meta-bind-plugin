@@ -25,7 +25,7 @@ export enum FieldType {
 	EXCLUDED = 'EXCLUDED',
 }
 
-export interface APIConfigs {
+export interface InputFieldOptions {
 	renderChildType: RenderChildType;
 	declaration: SimpleInputFieldDeclaration | string;
 	scope?: BindTargetScope | undefined;
@@ -82,7 +82,7 @@ export interface EmbedOptions {
 }
 
 export interface FieldOptionMap {
-	[FieldType.INPUT]: APIConfigs;
+	[FieldType.INPUT]: InputFieldOptions;
 	[FieldType.VIEW]: ViewFieldOptions;
 	[FieldType.JS_VIEW]: JsViewFieldOptions;
 	[FieldType.TABLE]: TableOptions;

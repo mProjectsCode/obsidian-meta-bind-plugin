@@ -56,7 +56,7 @@ import {
 	type FieldOptionMap,
 	FieldType,
 	type InlineFieldType,
-	type APIConfigs,
+	type InputFieldOptions,
 	isFieldTypeAllowedInline,
 	type JsViewFieldOptions,
 	NotePosition,
@@ -120,10 +120,10 @@ export abstract class API<Plugin extends IPlugin> {
 	/**
 	 * Creates a field of a given type.
 	 *
-	 * @param type
-	 * @param filePath
+	 * @param type the type of the field
+	 * @param filePath the file path that the field is located in, or an empty string if it is not in a file
 	 * @param options
-	 * @param honorExcludedSetting
+	 * @param honorExcludedSetting whether to honor the excluded folders settings for this field
 	 */
 	public createField<Type extends FieldType>(
 		type: Type,
@@ -178,12 +178,12 @@ export abstract class API<Plugin extends IPlugin> {
 	 * Creates an inline field from a string.
 	 * Will throw an error if the string is not a valid declaration.
 	 *
-	 * @param fieldString
-	 * @param filePath
-	 * @param scope
-	 * @param renderChildType
-	 * @param position
-	 * @param honorExcludedSetting
+	 * @param fieldString the declaration string of the field
+	 * @param filePath the file path that the field is located in
+	 * @param scope optional bind target scope
+	 * @param renderChildType the render child type, default INLINE
+	 * @param position an optional note position
+	 * @param honorExcludedSetting whether to honor the excluded folders settings for this field
 	 */
 	public createInlineFieldFromString(
 		fieldString: string,
@@ -234,13 +234,13 @@ export abstract class API<Plugin extends IPlugin> {
 	 * Creates an inline field of a given type and string.
 	 * Will throw an error if the string is not a valid inline field type.
 	 *
-	 * @param type
-	 * @param filePath
-	 * @param declaration
-	 * @param scope
-	 * @param renderChildType
-	 * @param position
-	 * @param honorExcludedSetting
+	 * @param type the field type
+	 * @param declaration the declaration string of the field
+	 * @param filePath the file path that the field is located in
+	 * @param scope optional bind target scope
+	 * @param renderChildType the render child type, default INLINE
+	 * @param position an optional note position
+	 * @param honorExcludedSetting whether to honor the excluded folders settings for this field
 	 */
 	public createInlineFieldOfTypeFromString(
 		type: InlineFieldType,
@@ -307,7 +307,13 @@ export abstract class API<Plugin extends IPlugin> {
 		});
 	}
 
-	public createInputFieldMountable(filePath: string, options: APIConfigs): InputFieldMountable {
+	/**
+	 * Creates an input field from an options object.
+	 *
+	 * @param filePath the file path that the field is located in or an empty string
+	 * @param options
+	 */
+	public createInputFieldMountable(filePath: string, options: InputFieldOptions): InputFieldMountable {
 		validate(
 			z.object({
 				filePath: V_FilePath,
@@ -335,6 +341,12 @@ export abstract class API<Plugin extends IPlugin> {
 		return new InputFieldMountable(this.plugin, uuid, filePath, options.renderChildType, declaration);
 	}
 
+	/**
+	 * Creates a view field from an options object.
+	 *
+	 * @param filePath the file path that the field is located in or an empty string
+	 * @param options
+	 */
 	public createViewFieldMountable(filePath: string, options: ViewFieldOptions): ViewFieldMountable {
 		validate(
 			z.object({
@@ -363,6 +375,12 @@ export abstract class API<Plugin extends IPlugin> {
 		return new ViewFieldMountable(this.plugin, uuid, filePath, options.renderChildType, declaration);
 	}
 
+	/**
+	 * Creates a JS view field from an options object.
+	 *
+	 * @param filePath the file path that the field is located in or an empty string
+	 * @param options
+	 */
 	public createJsViewFieldMountable(filePath: string, options: JsViewFieldOptions): JsViewFieldMountable {
 		validate(
 			z.object({
@@ -387,6 +405,12 @@ export abstract class API<Plugin extends IPlugin> {
 		return new JsViewFieldMountable(this.plugin, uuid, filePath, declaration);
 	}
 
+	/**
+	 * Creates a table from an options object.
+	 *
+	 * @param filePath the file path that the field is located in or an empty string
+	 * @param options
+	 */
 	public createTableMountable(filePath: string, options: TableOptions): TableMountable {
 		validate(
 			z.object({
@@ -404,6 +428,12 @@ export abstract class API<Plugin extends IPlugin> {
 		return new TableMountable(this.plugin, uuid, filePath, options.bindTarget, options.tableHead, options.columns);
 	}
 
+	/**
+	 * Creates a button group from an options object.
+	 *
+	 * @param filePath the file path that the field is located in or an empty string
+	 * @param options
+	 */
 	public createButtonGroupMountable(filePath: string, options: ButtonGroupOptions): ButtonGroupMountable {
 		validate(
 			z.object({
@@ -435,6 +465,12 @@ export abstract class API<Plugin extends IPlugin> {
 		);
 	}
 
+	/**
+	 * Creates a button from an options object.
+	 *
+	 * @param filePath the file path that the field is located in or an empty string
+	 * @param options
+	 */
 	public createButtonMountable(filePath: string, options: ButtonOptions): ButtonMountable {
 		validate(
 			z.object({
@@ -459,6 +495,12 @@ export abstract class API<Plugin extends IPlugin> {
 		return new ButtonMountable(this.plugin, uuid, filePath, declaration, options.position, options.isPreview);
 	}
 
+	/**
+	 * Creates a meta bind embed fields from an options object.
+	 *
+	 * @param filePath the file path that the field is located in or an empty string
+	 * @param options
+	 */
 	public createEmbedMountable(filePath: string, options: EmbedOptions): EmbedMountable {
 		validate(
 			z.object({
@@ -475,6 +517,11 @@ export abstract class API<Plugin extends IPlugin> {
 		return new EmbedMountable(this.plugin, uuid, filePath, options.depth, options.content);
 	}
 
+	/**
+	 * Creates an excluded notification mountable for the excluded folders setting.
+	 *
+	 * @param filePath the file path that the field is located in or an empty string
+	 */
 	public createExcludedMountable(filePath: string): ExcludedMountable {
 		validate(
 			z.object({
@@ -490,7 +537,7 @@ export abstract class API<Plugin extends IPlugin> {
 	}
 
 	/**
-	 * Gets the prefix of a given widget type. (e.g. INPUT or VIEW)
+	 * Gets the prefix of a given widget type. (e.g. INPUT or VIEW).
 	 *
 	 * @param fieldType
 	 */
@@ -523,7 +570,7 @@ export abstract class API<Plugin extends IPlugin> {
 	 * Checks if a string is a declaration of a given widget type.
 	 *
 	 * @param fieldType
-	 * @param str
+	 * @param str the declaration string
 	 */
 	public isInlineFieldDeclaration(fieldType: FieldType, str: string): boolean {
 		validate(
@@ -545,9 +592,8 @@ export abstract class API<Plugin extends IPlugin> {
 
 	/**
 	 * Checks if a string is any declaration and if yes returns the widget type.
-	 * This does not use {@link isInlineFieldDeclaration} because of performance reasons.
 	 *
-	 * @param str
+	 * @param str the declaration string
 	 */
 	public isInlineFieldDeclarationAndGetType(str: string): InlineFieldType | undefined {
 		validate(
@@ -576,6 +622,11 @@ export abstract class API<Plugin extends IPlugin> {
 		return undefined;
 	}
 
+	/**
+	 * Creates a signal.
+	 *
+	 * @param value
+	 */
 	public createSignal<T>(value: T): Signal<T> {
 		return new Signal<T>(value);
 	}
@@ -749,6 +800,12 @@ export abstract class API<Plugin extends IPlugin> {
 		});
 	}
 
+	/**
+	 * Creates a note position from a line start and line end number.
+	 *
+	 * @param lineStart
+	 * @param lineEnd
+	 */
 	public createNotePosition(lineStart: number, lineEnd: number): NotePosition {
 		validate(
 			z.object({

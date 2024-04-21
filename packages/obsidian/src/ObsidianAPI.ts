@@ -13,10 +13,10 @@ import { Signal } from 'packages/core/src/utils/Signal';
 import { getJsEnginePluginAPI } from 'packages/obsidian/src/ObsUtils';
 import { type ReactiveComponent } from 'jsEngine/api/reactive/ReactiveComponent';
 import { type Mountable } from 'packages/core/src/utils/Mountable';
-import { type FieldType, isFieldTypeAllowedInline } from 'packages/core/src/config/APIConfigs';
+import { type InlineFieldType, isFieldTypeAllowedInline } from 'packages/core/src/config/APIConfigs';
 
 /**
- * Either {@link MarkdownPostProcessorContext} or {@link Component}.
+ * Either a [Component](https://docs.obsidian.md/Reference/TypeScript+API/Component) or a [MarkdownPostProcessorContext](https://docs.obsidian.md/Reference/TypeScript+API/MarkdownPostProcessorContext).
  */
 export interface ComponentLike {
 	addChild(child: Component): void;
@@ -38,7 +38,17 @@ export class ObsidianAPI extends API<MetaBindPlugin> {
 		super(plugin);
 	}
 
-	public wrapInMDRC(field: Mountable, containerEl: HTMLElement, component: ComponentLike): MountableMDRC {
+	/**
+	 * Wraps any mountable in a [MarkdownRenderChild](https://docs.obsidian.md/Reference/TypeScript+API/MarkdownRenderChild)
+	 * and adds it as a child to the passed in {@link ComponentLike}.
+	 *
+	 * A {@link ComponentLike} is either a [Component](https://docs.obsidian.md/Reference/TypeScript+API/Component) or a [MarkdownPostProcessorContext](https://docs.obsidian.md/Reference/TypeScript+API/MarkdownPostProcessorContext)
+	 *
+	 * @param mountable the mountable to wrap in a [MarkdownRenderChild](https://docs.obsidian.md/Reference/TypeScript+API/MarkdownRenderChild)
+	 * @param containerEl the element to mount the [MarkdownRenderChild](https://docs.obsidian.md/Reference/TypeScript+API/MarkdownRenderChild) to
+	 * @param component the {@link ComponentLike} to register the [MarkdownRenderChild](https://docs.obsidian.md/Reference/TypeScript+API/MarkdownRenderChild) to
+	 */
+	public wrapInMDRC(mountable: Mountable, containerEl: HTMLElement, component: ComponentLike): MountableMDRC {
 		validate(
 			z.object({
 				field: V_Mountable,
@@ -46,40 +56,42 @@ export class ObsidianAPI extends API<MetaBindPlugin> {
 				component: V_ComponentLike,
 			}),
 			{
-				field: field,
+				field: mountable,
 				containerEl: containerEl,
 				component: component,
 			},
 		);
 
-		const mdrc = new MountableMDRC(this.plugin, field, containerEl);
+		const mdrc = new MountableMDRC(this.plugin, mountable, containerEl);
 		component.addChild(mdrc);
 
 		return mdrc;
 	}
 
 	/**
-	 * Creates a MDRC widget from a given widget type.
+	 * Creates a CM6 widget from a given widget type.
 	 *
-	 * @param mdrcType
+	 * This is only useful fur use in a CodeMirror plugin.
+	 *
+	 * @param inlineFieldType
 	 * @param content
 	 * @param filePath
 	 * @param component
 	 */
 	public constructMDRCWidget(
-		mdrcType: FieldType,
+		inlineFieldType: InlineFieldType,
 		content: string,
 		filePath: string,
 		component: Component,
 	): MarkdownRenderChildWidget {
-		if (isFieldTypeAllowedInline(mdrcType)) {
-			return new MarkdownRenderChildWidget(mdrcType, content, filePath, component, this.plugin);
+		if (isFieldTypeAllowedInline(inlineFieldType)) {
+			return new MarkdownRenderChildWidget(inlineFieldType, content, filePath, component, this.plugin);
 		}
 
 		throw new MetaBindInternalError({
 			errorLevel: ErrorLevel.CRITICAL,
 			effect: 'failed to construct mdrc',
-			cause: `Invalid inline mdrc type "${mdrcType}"`,
+			cause: `Invalid inline field type "${inlineFieldType}"`,
 		});
 	}
 
@@ -88,9 +100,9 @@ export class ObsidianAPI extends API<MetaBindPlugin> {
 	 *
 	 * This requires JS Engine to be installed and enabled!
 	 *
-	 * @param bindTargets
-	 * @param lifecycleHook
-	 * @param callback
+	 * @param bindTargets the bind targets to listen to
+	 * @param lifecycleHook a [Component](https://docs.obsidian.md/Reference/TypeScript+API/Component)
+	 * @param callback the callback to call with all the values of the bind targets when one of them changes. What ever this callback returns will be rendered by the reactive component.
 	 */
 	public reactiveMetadata(
 		bindTargets: BindTargetDeclaration[],
