@@ -23,6 +23,7 @@ export class ExcludedFoldersSettingModal extends Modal {
 			props: {
 				excludedFolders: this.plugin.settings.excludedFolders.slice(),
 				modal: this,
+				plugin: this.plugin,
 			},
 		});
 	}

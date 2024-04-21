@@ -5,9 +5,12 @@
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import Icon from 'packages/core/src/utils/components/Icon.svelte';
 	import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
+	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+	import { IPlugin } from 'packages/core/src/IPlugin';
 
 	export let excludedFolders: string[];
 	export let modal: ExcludedFoldersSettingModal;
+	export let plugin: IPlugin;
 
 	let errorCollection: ErrorCollection | undefined;
 
@@ -50,7 +53,7 @@
 					</td>
 					<td>
 						<Button on:click={() => deleteFolder(folder)} tooltip="Delete">
-							<Icon plugin={modal.plugin} iconName="x"></Icon>
+							<Icon plugin={plugin} iconName="x"></Icon>
 						</Button>
 					</td>
 				</tr>
@@ -58,19 +61,20 @@
 		</tbody>
 	</table>
 
-	<Button on:click={() => addFolder()} variant="primary" tooltip="Add new excluded Folder">Add Folder</Button>
+	<Button on:click={() => addFolder()} variant={ButtonStyleType.PRIMARY} tooltip="Add new excluded Folder"
+		>Add Folder</Button
+	>
 
 	{#if errorCollection}
 		<div>
 			<h3 class="mod-error">Some Folder Paths are invalid</h3>
 
-			<ErrorCollectionComponent errorCollection={errorCollection} declaration={undefined}
-			></ErrorCollectionComponent>
+			<ErrorCollectionComponent settings={{ errorCollection: errorCollection }}></ErrorCollectionComponent>
 		</div>
 	{/if}
 
 	<ModalButtonGroup>
-		<Button on:click={() => save()} variant="primary" tooltip="Save Changes">Save</Button>
+		<Button on:click={() => save()} variant={ButtonStyleType.PRIMARY} tooltip="Save Changes">Save</Button>
 		<Button on:click={() => cancel()} tooltip="Revert Changes">Cancel</Button>
 	</ModalButtonGroup>
 </div>

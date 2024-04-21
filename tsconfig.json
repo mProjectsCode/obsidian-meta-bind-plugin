@@ -18,6 +18,10 @@
 	"include": [
 		"packages/core/**/*.ts",
 		"packages/core/**/*.svelte",
+		"packages/obsidian/**/*.ts",
+		"packages/obsidian/**/*.svelte",
+		"packages/publish/**/*.ts",
+		"packages/publish/**/*.svelte",
 		"tests/**/*.ts",
 		"node_modules/obsidian/publish.d.ts"
 	]

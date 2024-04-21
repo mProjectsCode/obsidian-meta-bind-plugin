@@ -1,11 +1,12 @@
 <script lang="ts">
-	import InputFieldTemplateSettingComponent from './InputFieldTemplateSettingComponent.svelte';
-	import { InputFieldTemplatesSettingModal } from './InputFieldTemplatesSettingModal';
+	import InputFieldTemplateSettingComponent from 'packages/obsidian/src/settings/inputFieldTemplateSetting/InputFieldTemplateSettingComponent.svelte';
+	import { InputFieldTemplatesSettingModal } from 'packages/obsidian/src/settings/inputFieldTemplateSetting/InputFieldTemplatesSettingModal';
 	import ErrorCollectionComponent from 'packages/core/src/utils/errors/ErrorCollectionComponent.svelte';
 	import ModalButtonGroup from 'packages/core/src/utils/components/ModalButtonGroup.svelte';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 	import { InputFieldTemplate } from 'packages/core/src/Settings';
+	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 
 	export let inputFieldTemplates: InputFieldTemplate[];
 	export let modal: InputFieldTemplatesSettingModal;
@@ -49,7 +50,9 @@
 		></InputFieldTemplateSettingComponent>
 	{/each}
 
-	<Button on:click={() => addTemplate()} variant="primary" tooltip="Create New Template">Add Template</Button>
+	<Button on:click={() => addTemplate()} variant={ButtonStyleType.PRIMARY} tooltip="Create New Template"
+		>Add Template</Button
+	>
 
 	{#if errorCollection}
 		<div>
@@ -64,7 +67,7 @@
 	{/if}
 
 	<ModalButtonGroup>
-		<Button on:click={() => save()} variant="primary" tooltip="Save Changes">Save</Button>
+		<Button on:click={() => save()} variant={ButtonStyleType.PRIMARY} tooltip="Save Changes">Save</Button>
 		<Button on:click={() => cancel()} tooltip="Revert Changes">Cancel</Button>
 	</ModalButtonGroup>
 </div>

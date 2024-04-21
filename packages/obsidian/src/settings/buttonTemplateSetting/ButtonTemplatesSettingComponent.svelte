@@ -3,9 +3,9 @@
 	import ErrorCollectionComponent from 'packages/core/src/utils/errors/ErrorCollectionComponent.svelte';
 	import ModalButtonGroup from 'packages/core/src/utils/components/ModalButtonGroup.svelte';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
-	import { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
-	import { ButtonTemplatesSettingModal } from './ButtonTemplatesSettingModal';
-	import ButtonTemplateSettingComponent from './ButtonTemplateSettingComponent.svelte';
+	import { ButtonConfig, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+	import { ButtonTemplatesSettingModal } from 'packages/obsidian/src/settings/buttonTemplateSetting/ButtonTemplatesSettingModal';
+	import ButtonTemplateSettingComponent from 'packages/obsidian/src/settings/buttonTemplateSetting/ButtonTemplateSettingComponent.svelte';
 	import { V_ButtonConfig } from 'packages/core/src/config/ButtonConfigValidators';
 	import { fromZodError } from 'zod-validation-error';
 	import { ErrorLevel, MetaBindButtonError } from 'packages/core/src/utils/errors/MetaBindErrors';
@@ -27,7 +27,7 @@
 		buttonConfigs = buttonConfigs;
 	}
 
-	async function addTemplateFromClipboard(): void {
+	async function addTemplateFromClipboard(): Promise<void> {
 		let unvalidatedConfig: ButtonConfig | undefined;
 		try {
 			unvalidatedConfig = parseYaml(await navigator.clipboard.readText());
@@ -94,10 +94,12 @@
 		></ButtonTemplateSettingComponent>
 	{/each}
 
-	<Button on:click={() => addTemplate()} variant="primary" tooltip="Create New Template">Add Template</Button>
+	<Button on:click={() => addTemplate()} variant={ButtonStyleType.PRIMARY} tooltip="Create New Template"
+		>Add Template</Button
+	>
 	<Button
 		on:click={() => addTemplateFromClipboard()}
-		variant="default"
+		variant={ButtonStyleType.DEFAULT}
 		tooltip="Create New Template from YAML in Clipboard"
 		>Add Template from Clipboard
 	</Button>
@@ -115,7 +117,7 @@
 	{/if}
 
 	<ModalButtonGroup>
-		<Button on:click={() => save()} variant="primary" tooltip="Save Changes">Save</Button>
+		<Button on:click={() => save()} variant={ButtonStyleType.PRIMARY} tooltip="Save Changes">Save</Button>
 		<Button on:click={() => cancel()} tooltip="Revert Changes">Cancel</Button>
 	</ModalButtonGroup>
 </div>

@@ -6,8 +6,7 @@ import { summary } from 'itertools-ts/es';
 import { Component, editorLivePreviewField, type TFile } from 'obsidian';
 import { Cm6_Util, MB_WidgetType } from 'packages/obsidian/src/cm6/Cm6_Util';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
-
-import { type FieldType } from 'packages/core/src/config/APIConfigs';
+import { type InlineFieldType } from 'packages/core/src/config/APIConfigs';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlugin): ViewPlugin<any> {
@@ -159,14 +158,14 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			 * @param view
 			 * @param content the content of the node
 			 * @param widgetType
-			 * @param mdrcType
+			 * @param inlineFieldType
 			 */
 			addDecoration(
 				node: SyntaxNode,
 				view: EditorView,
 				widgetType: MB_WidgetType,
 				content: string,
-				mdrcType: FieldType,
+				inlineFieldType: InlineFieldType,
 			): void {
 				const from = node.from - 1;
 				const to = node.to + 1;
@@ -183,7 +182,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 
 				const newDecoration: Range<Decoration> | Range<Decoration>[] = this.renderWidget(
 					node,
-					mdrcType,
+					inlineFieldType,
 					widgetType,
 					content,
 					currentFile,
@@ -211,7 +210,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				shouldRender: boolean;
 				shouldHighlight: boolean;
 				content: string | undefined;
-				widgetType: FieldType | undefined;
+				widgetType: InlineFieldType | undefined;
 			} {
 				// get the node props
 				// const propsString: string | undefined = node.type.prop<string>(tokenClassNodeProp);
@@ -250,7 +249,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				view: EditorView,
 				from: number,
 				to: number,
-			): { content: string; widgetType: FieldType | undefined } {
+			): { content: string; widgetType: InlineFieldType | undefined } {
 				const content = Cm6_Util.getContent(view.state, from, to);
 				return {
 					content: content,
@@ -324,20 +323,25 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			 * Renders a singe widget of the given widget type at a given node.
 			 *
 			 * @param node
-			 * @param mdrcType
+			 * @param inlineFieldType
 			 * @param widgetType
 			 * @param content
 			 * @param currentFile
 			 */
 			renderWidget(
 				node: SyntaxNode,
-				mdrcType: FieldType,
+				inlineFieldType: InlineFieldType,
 				widgetType: MB_WidgetType,
 				content: string,
 				currentFile: TFile,
 			): Range<Decoration> | Range<Decoration>[] {
 				if (widgetType === MB_WidgetType.FIELD) {
-					const widget = plugin.api.constructMDRCWidget(mdrcType, content, currentFile.path, this.component);
+					const widget = plugin.api.constructMDRCWidget(
+						inlineFieldType,
+						content,
+						currentFile.path,
+						this.component,
+					);
 
 					return Decoration.replace({
 						widget: widget,
@@ -347,7 +351,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 						},
 					}).range(node.from - 1, node.to + 1);
 				} else {
-					const highlight = plugin.api.syntaxHighlighting.highlight(content, mdrcType, false);
+					const highlight = plugin.api.syntaxHighlighting.highlight(content, inlineFieldType, false);
 
 					return highlight.getHighlights().map(h => {
 						// console.log(h);

@@ -27,7 +27,6 @@
 		</Button>
 	</FlexRow>
 	<textarea
-		type="text"
 		bind:value={template.declaration}
 		placeholder="INPUT[slider(addLabels)]"
 		style="width: 100%; height: 100px; resize: vertical;"
