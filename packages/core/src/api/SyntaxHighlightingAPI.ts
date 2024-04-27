@@ -11,7 +11,7 @@ import {
 import { type Highlight } from 'packages/core/src/parsers/syntaxHighlighting/Highlight';
 import { SyntaxHighlighting } from 'packages/core/src/parsers/syntaxHighlighting/SyntaxHighlighting';
 
-import { FieldType } from 'packages/core/src/config/APIConfigs';
+import { FieldType, type InlineFieldType } from 'packages/core/src/config/APIConfigs';
 
 export class SyntaxHighlightingAPI {
 	public readonly plugin: IPlugin;
@@ -32,16 +32,16 @@ export class SyntaxHighlightingAPI {
 		return this.highlightWithParser(str, trimWhiteSpace, HLP_ButtonGroupDeclaration);
 	}
 
-	highlight(str: string, mdrcType: FieldType, trimWhiteSpace: boolean): SyntaxHighlighting {
-		if (mdrcType === FieldType.INPUT) {
+	highlight(str: string, inlineFieldType: InlineFieldType, trimWhiteSpace: boolean): SyntaxHighlighting {
+		if (inlineFieldType === FieldType.INPUT) {
 			return this.highlightInputFieldDeclaration(str, trimWhiteSpace);
-		} else if (mdrcType === FieldType.VIEW) {
+		} else if (inlineFieldType === FieldType.VIEW) {
 			return this.highlightViewFieldDeclaration(str, trimWhiteSpace);
-		} else if (mdrcType === FieldType.BUTTON_GROUP) {
+		} else if (inlineFieldType === FieldType.BUTTON_GROUP) {
 			return this.highlightInlineButtonDeclaration(str, trimWhiteSpace);
 		}
 
-		throw new Error(`Unknown MDRCType ${mdrcType}`);
+		throw new Error(`Unknown MDRCType ${inlineFieldType}`);
 	}
 
 	highlightBindTarget(str: string, trimWhiteSpace: boolean): SyntaxHighlighting {

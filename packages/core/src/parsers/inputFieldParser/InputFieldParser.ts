@@ -228,7 +228,7 @@ export class InputFieldParser implements ITemplateSupplier<UnvalidatedInputField
 				new ParsingValidationError(
 					ErrorLevel.WARNING,
 					'Input Field Parser',
-					`Invalid template name. Could not find template with name '${declaration.templateName.value}'`,
+					`Invalid template name. Could not find a template with the name '${declaration.templateName.value}'.`,
 					declaration.declarationString,
 					declaration.templateName.position,
 					['https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/guides/templates/'],

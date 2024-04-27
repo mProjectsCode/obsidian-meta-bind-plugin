@@ -60,7 +60,7 @@ export class InputFieldDeclarationValidator {
 			new ParsingValidationError(
 				ErrorLevel.ERROR,
 				'Declaration Validator',
-				`Encountered invalid identifier. Expected token to be an input field type but received '${inputFieldType?.value}'.`,
+				`Encountered invalid identifier. Expected an input field type but received '${inputFieldType?.value}'.`,
 				this.unvalidatedDeclaration.declarationString,
 				inputFieldType?.position,
 			),
@@ -148,7 +148,7 @@ export class InputFieldDeclarationValidator {
 			new ParsingValidationError(
 				ErrorLevel.WARNING,
 				'Declaration Validator',
-				`Encountered invalid identifier. Expected identifier to be an input field argument type but received '${argumentType.value}'.`,
+				`Encountered invalid identifier. Expected an input field argument type but received '${argumentType.value}'.`,
 				this.unvalidatedDeclaration.declarationString,
 				argumentType.position,
 			),

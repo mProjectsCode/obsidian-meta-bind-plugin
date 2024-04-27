@@ -3,7 +3,7 @@ import type MetaBindPlugin from 'packages/obsidian/src/main';
 import { API, type LifecycleHook } from 'packages/core/src/api/API.js';
 import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { getUUID } from 'packages/core/src/utils/Utils';
-import { validate } from 'packages/core/src/utils/ZodUtils';
+import { validateAPIArgs } from 'packages/core/src/utils/ZodUtils';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { MarkdownRenderChildWidget } from 'packages/obsidian/src/cm6/Cm6_Widgets';
 import { MountableMDRC } from 'packages/obsidian/src/MountableMDRC';
@@ -49,7 +49,7 @@ export class ObsidianAPI extends API<MetaBindPlugin> {
 	 * @param component the {@link ComponentLike} to register the [MarkdownRenderChild](https://docs.obsidian.md/Reference/TypeScript+API/MarkdownRenderChild) to
 	 */
 	public wrapInMDRC(mountable: Mountable, containerEl: HTMLElement, component: ComponentLike): MountableMDRC {
-		validate(
+		validateAPIArgs(
 			z.object({
 				field: V_Mountable,
 				containerEl: V_HTMLElement,
@@ -109,7 +109,7 @@ export class ObsidianAPI extends API<MetaBindPlugin> {
 		lifecycleHook: LifecycleHook,
 		callback: (...values: unknown[]) => Promise<unknown>,
 	): ReactiveComponent {
-		validate(
+		validateAPIArgs(
 			z.object({
 				bindTargets: V_BindTargetDeclaration.array(),
 				lifecycleHook: this.plugin.internal.getLifecycleHookValidator(),

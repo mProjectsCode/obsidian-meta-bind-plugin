@@ -8,6 +8,7 @@ import { V_ButtonConfig } from 'packages/core/src/config/ButtonConfigValidators'
 import { ErrorLevel, MetaBindButtonError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
 import { fromZodError } from 'zod-validation-error';
+import { validate } from 'packages/core/src/utils/ZodUtils';
 
 const P_ButtonGroupDeclaration = P.sequenceMap(
 	(_, b) => b,
@@ -81,19 +82,20 @@ export class ButtonParser {
 	}
 
 	public validateConfig(config: unknown): ButtonConfig {
-		const parsedConfig = V_ButtonConfig.safeParse(config);
+		const parsedConfig = validate(V_ButtonConfig, config);
 
 		if (!parsedConfig.success) {
 			const niceError = fromZodError(parsedConfig.error, {
 				unionSeparator: '\nOR ',
 				issueSeparator: ' AND ',
 				prefix: null,
+				includePath: false,
 			});
 
 			throw new MetaBindButtonError({
 				errorLevel: ErrorLevel.ERROR,
-				effect: 'can not parse button config',
-				cause: 'zod validation failed. Check your button syntax',
+				effect: 'The validation for the button config failed.',
+				cause: 'Your button syntax seems to be invalid. Check that your button config follows what is described in the docs.',
 				positionContext: niceError.message,
 				docs: [DocsUtils.linkToButtonConfig()],
 			});

@@ -66,7 +66,7 @@ export class ViewFieldDeclarationValidator {
 			new ParsingValidationError(
 				ErrorLevel.ERROR,
 				'Declaration Validator',
-				`Encountered invalid identifier. Expected token to be a view field type but received '${viewFieldType.value}'.`,
+				`Encountered invalid identifier. Expected a view field type but received '${viewFieldType.value}'.`,
 				this.unvalidatedDeclaration.declarationString,
 				viewFieldType.position,
 			),
@@ -149,7 +149,7 @@ export class ViewFieldDeclarationValidator {
 			new ParsingValidationError(
 				ErrorLevel.WARNING,
 				'Declaration Validator',
-				`Encountered invalid identifier. Expected identifier to be a view field argument type but received '${argumentType.value}'.`,
+				`Encountered invalid identifier. Expected a view field argument type but received '${argumentType.value}'.`,
 				this.unvalidatedDeclaration.declarationString,
 				argumentType.position,
 			),

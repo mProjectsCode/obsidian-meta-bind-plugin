@@ -19,7 +19,7 @@ export class ParsingError extends MetaBindError {
 	constructor(errorLevel: ErrorLevel, source: string, str: string, parseFailure: ParseFailure) {
 		super({
 			errorLevel: errorLevel,
-			effect: 'failed to parse',
+			effect: 'Failed to parse. Check that your syntax is correct.',
 			cause: `expected ${parseFailure.expected.sort().join(' or ')}`,
 		});
 
@@ -72,7 +72,12 @@ export class ParsingValidationError extends MetaBindError {
 		position?: ParsingRange,
 		docs?: string[],
 	) {
-		super({ errorLevel: errorLevel, effect: 'failed to validate parser result', cause: cause, docs: docs });
+		super({
+			errorLevel: errorLevel,
+			effect: 'Failed to validate the result of the parser.',
+			cause: cause,
+			docs: docs,
+		});
 
 		this.str = str;
 		this.position = position;

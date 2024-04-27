@@ -20,17 +20,38 @@ import {
 import { oneOf, schemaForType } from 'packages/core/src/utils/ZodUtils';
 import { z } from 'zod';
 
+function numberValidator(action: string, name: string, description: string) {
+	return z.number({
+		required_error: `The ${action} action requires a specified ${description} with the '${name}' field.`,
+		invalid_type_error: `The ${action} action requires the value of the '${name}' fields to be a number.`,
+	});
+}
+
+function stringValidator(action: string, name: string, description: string) {
+	return z.string({
+		required_error: `The ${action} action requires a specified ${description} with the '${name}' field.`,
+		invalid_type_error: `The ${action} action requires the value of the '${name}' fields to be a string.`,
+	});
+}
+
+function booleanValidator(action: string, name: string, description: string) {
+	return z.boolean({
+		required_error: `The ${action} action requires a specified ${description} with the '${name}' field.`,
+		invalid_type_error: `The ${action} action requires the value of the '${name}' fields to be a boolean.`,
+	});
+}
+
 export const V_CommandButtonAction = schemaForType<CommandButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.COMMAND),
-		command: z.string(),
+		command: stringValidator('command', 'command', 'command to run'),
 	}),
 );
 
 export const V_JSButtonAction = schemaForType<JSButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.JS),
-		file: z.string(),
+		file: stringValidator('js', 'file', 'file path to the file to run'),
 		args: z.record(z.unknown()).optional(),
 	}),
 );
@@ -38,25 +59,26 @@ export const V_JSButtonAction = schemaForType<JSButtonAction>()(
 export const V_OpenButtonAction = schemaForType<OpenButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.OPEN),
-		link: z.string(),
-		newTab: z.boolean().optional(),
+		link: stringValidator('open', 'link', 'link to open'),
+		newTab: booleanValidator('open', 'newTab', '').optional(),
 	}),
 );
 
 export const V_InputButtonAction = schemaForType<InputButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.INPUT),
-		str: z.string(),
+		str: stringValidator('input', 'str', 'value to input'),
 	}),
 );
 
 export const V_SleepButtonAction = schemaForType<SleepButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.SLEEP),
-		ms: z.number(),
+		ms: numberValidator('sleep', 'ms', 'duration'),
 	}),
 );
 
+// TODO: more better error messages
 export const V_TemplaterCreateNoteButtonAction = schemaForType<TemplaterCreateNoteButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.TEMPLATER_CREATE_NOTE),
@@ -127,7 +149,7 @@ export const V_InlineJsButtonAction = schemaForType<InlineJsButtonAction>()(
 );
 
 export const V_ButtonAction = schemaForType<ButtonAction>()(
-	z.union([
+	z.discriminatedUnion('type', [
 		V_CommandButtonAction,
 		V_JSButtonAction,
 		V_OpenButtonAction,

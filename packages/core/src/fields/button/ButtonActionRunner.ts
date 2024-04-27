@@ -38,8 +38,8 @@ export class ButtonActionRunner {
 		if (resolvedFilePath === undefined) {
 			throw new MetaBindParsingError({
 				errorLevel: ErrorLevel.ERROR,
-				cause: 'file not found',
-				effect: `could not resolve path or link "${filePath}" relative to "${relativeFilePath}"`,
+				cause: 'Could not find a file that matches "${filePath}".',
+				effect: `Could not resolve path or link "${filePath}" relative to "${relativeFilePath}".`,
 			});
 		}
 

@@ -46,7 +46,7 @@ import {
 	V_TableFieldOptions,
 	V_ViewFieldOptions,
 } from 'packages/core/src/api/Validators';
-import { validate } from 'packages/core/src/utils/ZodUtils';
+import { validateAPIArgs } from 'packages/core/src/utils/ZodUtils';
 import { z } from 'zod';
 import { TableMountable } from 'packages/core/src/fields/metaBindTable/TableMountable';
 import {
@@ -131,7 +131,7 @@ export abstract class API<Plugin extends IPlugin> {
 		options: FieldOptionMap[Type],
 		honorExcludedSetting: boolean = true,
 	): FieldMountable {
-		validate(
+		validateAPIArgs(
 			z.object({
 				type: V_FieldType,
 				filePath: V_FilePath,
@@ -193,7 +193,7 @@ export abstract class API<Plugin extends IPlugin> {
 		position?: NotePosition | undefined,
 		honorExcludedSetting: boolean = true,
 	): FieldMountable {
-		validate(
+		validateAPIArgs(
 			z.object({
 				fieldString: z.string(),
 				filePath: V_FilePath,
@@ -251,7 +251,7 @@ export abstract class API<Plugin extends IPlugin> {
 		position?: NotePosition | undefined,
 		honorExcludedSetting: boolean = true,
 	): FieldMountable {
-		validate(
+		validateAPIArgs(
 			z.object({
 				type: V_FieldType,
 				declaration: z.string(),
@@ -314,7 +314,7 @@ export abstract class API<Plugin extends IPlugin> {
 	 * @param options
 	 */
 	public createInputFieldMountable(filePath: string, options: InputFieldOptions): InputFieldMountable {
-		validate(
+		validateAPIArgs(
 			z.object({
 				filePath: V_FilePath,
 				options: V_InputFieldOptions,
@@ -348,7 +348,7 @@ export abstract class API<Plugin extends IPlugin> {
 	 * @param options
 	 */
 	public createViewFieldMountable(filePath: string, options: ViewFieldOptions): ViewFieldMountable {
-		validate(
+		validateAPIArgs(
 			z.object({
 				filePath: V_FilePath,
 				options: V_ViewFieldOptions,
@@ -382,7 +382,7 @@ export abstract class API<Plugin extends IPlugin> {
 	 * @param options
 	 */
 	public createJsViewFieldMountable(filePath: string, options: JsViewFieldOptions): JsViewFieldMountable {
-		validate(
+		validateAPIArgs(
 			z.object({
 				filePath: V_FilePath,
 				options: V_JsViewFieldOptions,
@@ -412,7 +412,7 @@ export abstract class API<Plugin extends IPlugin> {
 	 * @param options
 	 */
 	public createTableMountable(filePath: string, options: TableOptions): TableMountable {
-		validate(
+		validateAPIArgs(
 			z.object({
 				filePath: V_FilePath,
 				options: V_TableFieldOptions,
@@ -435,7 +435,7 @@ export abstract class API<Plugin extends IPlugin> {
 	 * @param options
 	 */
 	public createButtonGroupMountable(filePath: string, options: ButtonGroupOptions): ButtonGroupMountable {
-		validate(
+		validateAPIArgs(
 			z.object({
 				filePath: V_FilePath,
 				options: V_InlineButtonOptions,
@@ -472,7 +472,7 @@ export abstract class API<Plugin extends IPlugin> {
 	 * @param options
 	 */
 	public createButtonMountable(filePath: string, options: ButtonOptions): ButtonMountable {
-		validate(
+		validateAPIArgs(
 			z.object({
 				filePath: V_FilePath,
 				options: V_ButtonOptions,
@@ -502,7 +502,7 @@ export abstract class API<Plugin extends IPlugin> {
 	 * @param options
 	 */
 	public createEmbedMountable(filePath: string, options: EmbedOptions): EmbedMountable {
-		validate(
+		validateAPIArgs(
 			z.object({
 				filePath: V_FilePath,
 				options: V_EmbedOptions,
@@ -523,7 +523,7 @@ export abstract class API<Plugin extends IPlugin> {
 	 * @param filePath the file path that the field is located in or an empty string
 	 */
 	public createExcludedMountable(filePath: string): ExcludedMountable {
-		validate(
+		validateAPIArgs(
 			z.object({
 				filePath: V_FilePath,
 			}),
@@ -542,7 +542,7 @@ export abstract class API<Plugin extends IPlugin> {
 	 * @param fieldType
 	 */
 	public getInlineFieldDeclarationPrefix(fieldType: FieldType): string {
-		validate(
+		validateAPIArgs(
 			z.object({
 				fieldType: V_FieldType,
 			}),
@@ -573,7 +573,7 @@ export abstract class API<Plugin extends IPlugin> {
 	 * @param str the declaration string
 	 */
 	public isInlineFieldDeclaration(fieldType: FieldType, str: string): boolean {
-		validate(
+		validateAPIArgs(
 			z.object({
 				fieldType: V_FieldType,
 				str: z.string(),
@@ -596,7 +596,7 @@ export abstract class API<Plugin extends IPlugin> {
 	 * @param str the declaration string
 	 */
 	public isInlineFieldDeclarationAndGetType(str: string): InlineFieldType | undefined {
-		validate(
+		validateAPIArgs(
 			z.object({
 				str: z.string(),
 			}),
@@ -645,7 +645,7 @@ export abstract class API<Plugin extends IPlugin> {
 		property: string[],
 		listenToChildren: boolean = false,
 	): BindTargetDeclaration {
-		validate(
+		validateAPIArgs(
 			z.object({
 				storageType: z.string(),
 				storagePath: z.string(),
@@ -680,7 +680,7 @@ export abstract class API<Plugin extends IPlugin> {
 		filePath: string,
 		scope?: BindTargetScope,
 	): BindTargetDeclaration {
-		validate(
+		validateAPIArgs(
 			z.object({
 				declarationString: z.string(),
 				filePath: V_FilePath,
@@ -703,7 +703,7 @@ export abstract class API<Plugin extends IPlugin> {
 	 * @param value
 	 */
 	public setMetadata(bindTarget: BindTargetDeclaration, value: unknown): void {
-		validate(
+		validateAPIArgs(
 			z.object({
 				bindTarget: V_BindTargetDeclaration,
 			}),
@@ -722,7 +722,7 @@ export abstract class API<Plugin extends IPlugin> {
 	 * @param bindTarget
 	 */
 	public getMetadata(bindTarget: BindTargetDeclaration): unknown {
-		validate(
+		validateAPIArgs(
 			z.object({
 				bindTarget: V_BindTargetDeclaration,
 			}),
@@ -741,7 +741,7 @@ export abstract class API<Plugin extends IPlugin> {
 	 * @param updateFn a function that takes the current value and returns the new value
 	 */
 	public updateMetadata(bindTarget: BindTargetDeclaration, updateFn: (value: unknown) => unknown): void {
-		validate(
+		validateAPIArgs(
 			z.object({
 				bindTarget: V_BindTargetDeclaration,
 				updateFn: z.function().args(z.any()).returns(z.any()),
@@ -771,7 +771,7 @@ export abstract class API<Plugin extends IPlugin> {
 		lifecycleHook: LifecycleHook,
 		callback: (value: unknown) => void,
 	): void {
-		validate(
+		validateAPIArgs(
 			z.object({
 				bindTarget: V_BindTargetDeclaration,
 				lifecycleHook: this.plugin.internal.getLifecycleHookValidator(),
@@ -807,7 +807,7 @@ export abstract class API<Plugin extends IPlugin> {
 	 * @param lineEnd
 	 */
 	public createNotePosition(lineStart: number, lineEnd: number): NotePosition {
-		validate(
+		validateAPIArgs(
 			z.object({
 				lineStart: z.number(),
 				lineEnd: z.number(),

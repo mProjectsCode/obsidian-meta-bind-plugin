@@ -275,6 +275,17 @@ actions:
 
 ```
 
+```meta-bind-button
+label: Test
+hidden: false
+id: ""
+style: default
+actions:
+  - type: aaaa
+  - type: command
+    command: obsidian-meta-bind-plugin:open-help
+
+```
 
 ```meta-bind-button
 label: Test
@@ -286,3 +297,4 @@ actions:
     command: obsidian-meta-bind-plugin:open-help
 
 ```
+
