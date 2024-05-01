@@ -25,7 +25,6 @@ import { MetaBindSettingTab } from 'packages/obsidian/src/settings/SettingsTab';
 import { ObsidianNotePosition } from 'packages/obsidian/src/ObsidianNotePosition';
 import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 import { areObjectsEqual } from 'packages/core/src/utils/Utils';
-import { log } from 'mathjs';
 
 export enum MetaBindBuild {
 	DEV = 'dev',
