@@ -340,9 +340,9 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	async loadSettings(): Promise<void> {
 		console.log(`meta-bind | Main >> settings load`);
 
-		const loadedSettings = (await this.loadData()) as MetaBindPluginSettings;
+		const loadedSettings = ((await this.loadData()) ?? {}) as MetaBindPluginSettings;
 
-		if (typeof loadedSettings === 'object') {
+		if (typeof loadedSettings === 'object' && loadedSettings != null) {
 			// @ts-expect-error TS2339 remove old config field
 			delete loadedSettings.inputTemplates;
 			// @ts-expect-error TS2339 remove old config field
