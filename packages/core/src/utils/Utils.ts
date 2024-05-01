@@ -67,6 +67,53 @@ export function areArraysEqual<T>(arr1: T[] | undefined, arr2: T[] | undefined):
 	return true;
 }
 
+export function areObjectsEqual(obj1: unknown, obj2: unknown): boolean {
+	if (obj1 == null && obj2 == null) {
+		return true;
+	}
+	if (obj1 == null || obj2 == null) {
+		return false;
+	}
+
+	if (typeof obj1 !== typeof obj2) {
+		return false;
+	}
+
+	if (typeof obj1 === 'object' && typeof obj2 === 'object') {
+		if (Array.isArray(obj1) && Array.isArray(obj2)) {
+			if (obj1.length !== obj2.length) {
+				return false;
+			}
+
+			for (let i = 0; i < obj1.length; i++) {
+				if (!areObjectsEqual(obj1[i], obj2[i])) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		const keys1 = Object.keys(obj1);
+		const keys2 = Object.keys(obj2);
+
+		if (keys1.length !== keys2.length) {
+			return false;
+		}
+
+		for (const key of keys1) {
+			// @ts-ignore
+			if (!areObjectsEqual(obj1[key], obj2[key])) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	return obj1 === obj2;
+}
+
 /**
  * Checks if arr starts with base.
  *

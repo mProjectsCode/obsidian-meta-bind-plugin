@@ -24,6 +24,7 @@ import { PlaygroundView, MB_PLAYGROUND_VIEW_TYPE } from 'packages/obsidian/src/p
 import { MetaBindSettingTab } from 'packages/obsidian/src/settings/SettingsTab';
 import { ObsidianNotePosition } from 'packages/obsidian/src/ObsidianNotePosition';
 import { RenderChildType } from 'packages/core/src/config/APIConfigs';
+import { areObjectsEqual } from 'packages/core/src/utils/Utils';
 
 export enum MetaBindBuild {
 	DEV = 'dev',
@@ -341,9 +342,17 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		const loadedSettings = (await this.loadData()) as MetaBindPluginSettings;
 
+		// @ts-expect-error TS2339 remove old config field
+		delete loadedSettings.inputTemplates;
+		// @ts-expect-error TS2339 remove old config field
+		delete loadedSettings.useUsDateInputOrder;
+
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, loadedSettings);
 
-		await this.saveSettings();
+		if (!areObjectsEqual(loadedSettings, this.settings)) {
+			// console.log(JSON.stringify(loadedSettings, null, '\t'), JSON.stringify(this.settings, null, '\t'));
+			await this.saveSettings();
+		}
 	}
 
 	async saveSettings(): Promise<void> {

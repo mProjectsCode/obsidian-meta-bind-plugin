@@ -3,8 +3,7 @@ import { javascript } from '@codemirror/legacy-modes/mode/javascript';
 import { type Mode, type StringStream } from 'codemirror';
 import { SyntaxHighlighting } from 'packages/core/src/parsers/syntaxHighlighting/SyntaxHighlighting';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
-
-import { type FieldType, type InlineFieldType } from 'packages/core/src/config/APIConfigs';
+import { type InlineFieldType } from 'packages/core/src/config/APIConfigs';
 
 export function registerCm5HLModes(plugin: MetaBindPlugin): void {
 	/* eslint-disable */

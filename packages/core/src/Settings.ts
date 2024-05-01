@@ -75,9 +75,6 @@ export interface MetaBindPluginSettings {
 	inputFieldTemplates: InputFieldTemplate[];
 	buttonTemplates: ButtonConfig[];
 	excludedFolders: string[];
-
-	// @deprecated
-	inputTemplates: string | undefined;
 }
 
 export interface InputFieldTemplate {
@@ -101,7 +98,4 @@ export const DEFAULT_SETTINGS: MetaBindPluginSettings = {
 	inputFieldTemplates: [],
 	buttonTemplates: [],
 	excludedFolders: ['templates'],
-
-	// @deprecated
-	inputTemplates: undefined,
 };
