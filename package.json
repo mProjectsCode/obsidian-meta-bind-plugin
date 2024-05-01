@@ -63,5 +63,9 @@
 		"zod": "^3.22.4",
 		"zod-validation-error": "^2.1.0"
 	},
-	"private": true
+	"private": true,
+	"trustedDependencies": [
+		"esbuild",
+		"svelte-preprocess"
+	]
 }
