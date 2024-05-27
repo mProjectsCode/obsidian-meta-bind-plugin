@@ -44,3 +44,11 @@ if (context.bound.n1 >= 100) {
 
 return [...classes.values()];
 ```
+
+## Other Note
+
+```meta-bind-js-view
+{Other Note#text} as text
+---
+return context.bound.text
+```

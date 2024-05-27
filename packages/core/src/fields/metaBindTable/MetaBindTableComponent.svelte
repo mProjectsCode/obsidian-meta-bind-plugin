@@ -47,4 +47,4 @@
 	</table>
 </div>
 
-<Button on:click={() => table.addColumn()}>Add Column</Button>
+<Button on:click={() => table.addColumn()}>Add Row</Button>
