@@ -32,4 +32,3 @@ INPUT[slider(addLabels, minValue(0), maxValue(1000), showcase):slider3]
 ```meta-bind
 INPUT[slider(addLabels, minValue(0), maxValue(10), stepSize(0.1), showcase):slider4]
 ```
-

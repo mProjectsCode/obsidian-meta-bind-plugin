@@ -96,6 +96,7 @@ div.mb-view-wrapper {
 }
 
 .mb-button-inner {
+	vertical-align: bottom;
 }
 
 /* Toggle Input */
@@ -585,10 +586,14 @@ code.mb-warning {
 /* --- Misc --- */
 
 .mb-icon-wrapper {
-	display: inline-block;
+	display: block;
 	position: relative;
 	width: 18px;
 	height: 18px;
+}
+
+.mb-icon-wrapper.mb-icon-wrapper-inline {
+	display: inline-block;
 }
 
 .mb-icon-wrapper > svg {
