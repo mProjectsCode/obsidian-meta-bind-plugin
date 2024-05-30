@@ -124,11 +124,13 @@ export class JsViewFieldMountable extends FieldMountable {
 		}
 
 		if (!this.plugin.settings.enableJs) {
-			throw new MetaBindJsError({
-				errorLevel: ErrorLevel.CRITICAL,
-				effect: "Can't evaluate expression.",
-				cause: 'JS expressions are disabled in the plugin settings.',
-			});
+			this.errorCollection.add(
+				new MetaBindJsError({
+					errorLevel: ErrorLevel.CRITICAL,
+					effect: "Can't evaluate expression.",
+					cause: 'JS evaluation is disabled in the plugin settings.',
+				}),
+			);
 		}
 
 		this.createErrorIndicator(targetEl);

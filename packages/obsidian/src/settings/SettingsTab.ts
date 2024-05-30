@@ -66,7 +66,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Enable Syntax Highlighting')
-			.setDesc(`Enable syntax highlighting for. RESTART REQUIRED.`)
+			.setDesc(`Enable syntax highlighting for meta bind syntax. RESTART REQUIRED.`)
 			.addToggle(cb => {
 				cb.setValue(this.plugin.settings.enableSyntaxHighlighting);
 				cb.onChange(data => {
@@ -130,9 +130,9 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName('Enable JS Input Fields')
+			.setName('Enable JavaScript')
 			.setDesc(
-				"Enable the processing of JavaScript input fields. This is potentially DANGEROUS, thus it's disabled by default. RESTART REQUIRED.",
+				"Enable features that run user written JavaScript. This is potentially DANGEROUS, thus it's disabled by default. RESTART REQUIRED.",
 			)
 			.addToggle(cb => {
 				cb.setValue(this.plugin.settings.enableJs);
