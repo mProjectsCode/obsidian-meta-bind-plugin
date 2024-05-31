@@ -1,5 +1,19 @@
 # Obsidian Meta Bind Changelog
 
+# 1.1.1
+
+Changes
+
+-   Better error messages especially for button configs
+-   Renamed the `Enable JS Input Fields` setting to `Enable JavaScript` and it now also affects button actions that run JavaScript
+
+Bug Fixes
+
+-   Fix settings save-load-loop when the same vault open multiple times [#311](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/311)
+-   Fix the button to add a row to the meta bind table saying "add column" instead of "add row" [#331](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/331)
+-   Fix inline buttons with icons not being correctly vertically aligned [#308](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/308)
+-   Fix missing error message when using JS View fields but not having the corresponding setting enabled [#334](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/334)
+
 # 1.1.0
 
 Changes

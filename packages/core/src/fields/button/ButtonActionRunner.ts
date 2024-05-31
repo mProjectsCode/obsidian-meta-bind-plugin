@@ -234,6 +234,14 @@ export class ButtonActionRunner {
 	}
 
 	async runJSAction(config: ButtonConfig | undefined, action: JSButtonAction, filePath: string): Promise<void> {
+		if (!this.plugin.settings.enableJs) {
+			throw new MetaBindJsError({
+				errorLevel: ErrorLevel.CRITICAL,
+				effect: "Can't run button action that requires JS evaluation.",
+				cause: 'JS evaluation is disabled in the plugin settings.',
+			});
+		}
+
 		const configOverrides: Record<string, unknown> = {
 			buttonConfig: structuredClone(config),
 			args: structuredClone(action.args),
@@ -279,7 +287,7 @@ export class ButtonActionRunner {
 			if (!this.plugin.settings.enableJs) {
 				throw new MetaBindJsError({
 					errorLevel: ErrorLevel.CRITICAL,
-					effect: "Can't evaluate expression.",
+					effect: "Can't run button action that requires JS evaluation.",
 					cause: 'JS evaluation is disabled in the plugin settings.',
 				});
 			}
@@ -403,6 +411,14 @@ export class ButtonActionRunner {
 		action: InlineJsButtonAction,
 		filePath: string,
 	): Promise<void> {
+		if (!this.plugin.settings.enableJs) {
+			throw new MetaBindJsError({
+				errorLevel: ErrorLevel.CRITICAL,
+				effect: "Can't run button action that requires JS evaluation.",
+				cause: 'JS evaluation is disabled in the plugin settings.',
+			});
+		}
+
 		const configOverrides: Record<string, unknown> = {
 			buttonConfig: structuredClone(config),
 		};

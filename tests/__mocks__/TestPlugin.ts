@@ -21,7 +21,6 @@ import { getUUID } from 'packages/core/src/utils/Utils';
 import { Metadata } from 'packages/core/src/metadata/MetadataSource';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
-import type { IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
 import { MountableManager } from 'packages/core/src/MountableManager';
 import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 
@@ -65,7 +64,8 @@ export class TestPlugin implements IPlugin {
 
 		this.mountableManager = new MountableManager();
 
-		this.settings = DEFAULT_SETTINGS;
+		this.settings = structuredClone(DEFAULT_SETTINGS);
+		this.settings.enableJs = true;
 
 		DateParser.dateFormat = this.settings.preferredDateFormat;
 		setFirstWeekday(this.settings.firstWeekday);
