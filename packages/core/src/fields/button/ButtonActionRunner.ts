@@ -23,7 +23,7 @@ import { expectType, openURL } from 'packages/core/src/utils/Utils';
 import { parseLiteral } from 'packages/core/src/utils/Literal';
 
 import { type NotePosition } from 'packages/core/src/config/APIConfigs';
-import { ErrorLevel, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
+import { ErrorLevel, MetaBindJsError, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 export class ButtonActionRunner {
 	plugin: IPlugin;
@@ -276,6 +276,14 @@ export class ButtonActionRunner {
 		const bindTarget = this.plugin.api.bindTargetParser.fromStringAndValidate(action.bindTarget, filePath);
 
 		if (action.evaluate) {
+			if (!this.plugin.settings.enableJs) {
+				throw new MetaBindJsError({
+					errorLevel: ErrorLevel.CRITICAL,
+					effect: "Can't evaluate expression.",
+					cause: 'JS evaluation is disabled in the plugin settings.',
+				});
+			}
+
 			// eslint-disable-next-line @typescript-eslint/no-implied-eval
 			const func = new Function('x', `return ${action.value};`) as (value: unknown) => unknown;
 
