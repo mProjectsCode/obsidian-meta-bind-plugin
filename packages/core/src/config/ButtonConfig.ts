@@ -92,6 +92,7 @@ export interface RegexpReplaceInNoteButtonAction {
 
 export interface InsertIntoNoteButtonAction {
 	type: ButtonActionType.INSERT_INTO_NOTE;
+	relative: boolean;
 	line: number;
 	value: string;
 	templater?: boolean;

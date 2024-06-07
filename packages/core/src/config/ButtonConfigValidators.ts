@@ -145,6 +145,11 @@ export const V_RegexpReplaceInNoteButtonAction = schemaForType<RegexpReplaceInNo
 export const V_InsertIntoNoteButtonAction = schemaForType<InsertIntoNoteButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.INSERT_INTO_NOTE),
+		relative: booleanValidator(
+			'insertIntoNote',
+			'relative',
+			'value for whether the line number is relative to the button',
+		),
 		line: numberValidator('insertIntoNote', 'line', 'line to insert at'),
 		value: stringValidator('insertIntoNote', 'value', 'string to insert'),
 		templater: booleanValidator('insertIntoNote', 'templater', 'value for whether to use Templater').optional(),

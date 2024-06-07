@@ -151,6 +151,7 @@ export class ButtonActionRunner {
 		} else if (type === ButtonActionType.INSERT_INTO_NOTE) {
 			return {
 				type: ButtonActionType.INSERT_INTO_NOTE,
+				relative: false,
 				line: 0,
 				value: 'Some text',
 			} satisfies InsertIntoNoteButtonAction;
@@ -217,7 +218,7 @@ export class ButtonActionRunner {
 			await this.runRegexpReplaceInNotAction(action, filePath);
 			return;
 		} else if (action.type === ButtonActionType.INSERT_INTO_NOTE) {
-			await this.runInsertIntoNoteAction(action, filePath);
+			await this.runInsertIntoNoteAction(action, filePath, position);
 			return;
 		} else if (action.type === ButtonActionType.INLINE_JS) {
 			await this.runInlineJsAction(config, action, filePath);
@@ -384,24 +385,46 @@ export class ButtonActionRunner {
 		await this.plugin.internal.writeFilePath(filePath, content);
 	}
 
-	async runInsertIntoNoteAction(action: InsertIntoNoteButtonAction, filePath: string): Promise<void> {
+	async runInsertIntoNoteAction(
+		action: InsertIntoNoteButtonAction,
+		filePath: string,
+		position: NotePosition | undefined,
+	): Promise<void> {
 		const content = await this.plugin.internal.readFilePath(filePath);
 
 		let splitContent = content.split('\n');
+		const linePosition = position?.getPosition();
 
-		if (action.line < 1 || action.line > splitContent.length + 1) {
+		if ((action.line < 1 && !action.relative) || action.line > splitContent.length + 1) {
 			throw new Error('Line number out of bounds');
+		}
+
+		if (linePosition === undefined) {
+			throw new Error('Position of the button in the note is unknown');
 		}
 
 		const insertString = action.templater
 			? await this.plugin.internal.evaluateTemplaterTemplate(this.resolveFilePath(action.value), filePath)
 			: action.value;
 
-		splitContent = [
-			...splitContent.slice(0, action.line - 1),
-			insertString,
-			...splitContent.slice(action.line - 1),
-		];
+		if (action.relative && action.line > 0) {
+			splitContent = [
+				...splitContent.slice(0, linePosition.lineEnd + action.line),
+				insertString,
+				...splitContent.slice(linePosition.lineEnd + action.line),
+			];
+		} else if (action.relative && action.line < 0) {
+			splitContent = [
+				...splitContent.slice(0, linePosition.lineStart - action.line - 1),
+				insertString,
+				...splitContent.slice(linePosition.lineStart + action.line + 1),
+			];
+		} else
+			splitContent = [
+				...splitContent.slice(0, action.line - 1),
+				insertString,
+				...splitContent.slice(action.line - 1),
+			];
 
 		await this.plugin.internal.writeFilePath(filePath, splitContent.join('\n'));
 	}

@@ -3,10 +3,15 @@
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
 	import { IPlugin } from 'packages/core/src/IPlugin';
+	import Toggle from 'packages/core/src/utils/components/Toggle.svelte';
 
 	export let action: InsertIntoNoteButtonAction;
 	export let plugin: IPlugin;
 </script>
+
+<SettingComponent name="Relative" description="Whether the line number is relative to the button.">
+	<Toggle bind:checked={action.relative}></Toggle>
+</SettingComponent>
 
 <SettingComponent name="Line" description="The line number to insert at.">
 	<input type="number" bind:value={action.line} placeholder="0" />

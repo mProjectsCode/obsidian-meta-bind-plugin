@@ -214,6 +214,7 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 
 			await simplifiedRunAction({
 				type: ButtonActionType.INSERT_INTO_NOTE,
+				relative: false,
 				line: 2,
 				value: 'newLine2',
 			});
