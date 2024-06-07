@@ -419,12 +419,13 @@ export class ButtonActionRunner {
 				insertString,
 				...splitContent.slice(linePosition.lineStart + action.line + 1),
 			];
-		} else
+		} else {
 			splitContent = [
 				...splitContent.slice(0, action.line - 1),
 				insertString,
 				...splitContent.slice(action.line - 1),
 			];
+		}
 
 		await this.plugin.internal.writeFilePath(filePath, splitContent.join('\n'));
 	}
