@@ -12,6 +12,7 @@ export class ButtonField extends Mountable {
 	inline: boolean;
 	position: NotePosition | undefined;
 	buttonComponent?: ButtonComponent;
+	isInGroup: boolean;
 	isPreview: boolean;
 
 	constructor(
@@ -20,6 +21,7 @@ export class ButtonField extends Mountable {
 		filePath: string,
 		renderChildType: RenderChildType,
 		position: NotePosition | undefined,
+		isInGroup: boolean,
 		isPreview: boolean,
 	) {
 		super();
@@ -29,6 +31,7 @@ export class ButtonField extends Mountable {
 		this.filePath = filePath;
 		this.inline = renderChildType === RenderChildType.INLINE;
 		this.position = position;
+		this.isInGroup = isInGroup;
 		this.isPreview = isPreview;
 	}
 
@@ -37,7 +40,7 @@ export class ButtonField extends Mountable {
 		DomHelpers.removeAllClasses(targetEl);
 		DomHelpers.addClasses(targetEl, ['mb-button', this.inline ? 'mb-button-inline' : 'mb-button-block']);
 
-		if (!this.inline && !this.isPreview) {
+		if (!this.inline && !this.isPreview && !this.isInGroup) {
 			if (this.config.id) {
 				this.plugin.api.buttonManager.addButton(this.filePath, this.config);
 			}

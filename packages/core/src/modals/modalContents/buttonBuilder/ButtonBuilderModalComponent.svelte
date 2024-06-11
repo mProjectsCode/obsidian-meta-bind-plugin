@@ -45,7 +45,7 @@
 		buttonMountable?.unmount();
 		if (el) {
 			DomHelpers.empty(el);
-			buttonMountable = new ButtonField(plugin, config, '', RenderChildType.BLOCK, undefined, true);
+			buttonMountable = new ButtonField(plugin, config, '', RenderChildType.BLOCK, undefined, false, true);
 			buttonMountable.mount(el);
 		}
 	}

@@ -10,6 +10,12 @@ Meta Bind is getting Buttons
 text `BUTTON[docs-button]` text
 text `BUTTON[docs-button, docs, open-button]` text
 
+```meta-bind
+BUTTON[docs-button]
+```
+
+asase
+
 ```meta-bind-button
 style: primary
 label: Open Meta Bind FAQ

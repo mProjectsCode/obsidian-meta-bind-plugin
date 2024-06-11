@@ -55,6 +55,7 @@ export class ButtonMountable extends FieldMountable {
 			this.getFilePath(),
 			RenderChildType.BLOCK,
 			this.position,
+			false,
 			this.isPreview,
 		);
 		this.buttonField.mount(targetEl);

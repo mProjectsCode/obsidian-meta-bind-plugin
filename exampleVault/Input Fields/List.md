@@ -18,7 +18,7 @@ list4:
 list5:
   - "[[Other/Example Notes/Example Note with Embeds.md|Example Note with Embeds]]"
   - "[[Other/Example Notes/Example Note with Callouts.md|Example Note with Callouts]]"
-list6: null
+list6: 
 ---
 
 ### List

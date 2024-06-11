@@ -59,7 +59,7 @@ export class ButtonGroupField extends Mountable {
 		for (const buttonId of this.referencedIds) {
 			const wrapperEl = DomHelpers.createElement(targetEl, 'span');
 
-			const initialButton: ButtonComponent | undefined = this.renderInitialButton(wrapperEl, buttonId);
+			let initialButton: ButtonComponent | undefined = this.renderInitialButton(wrapperEl, buttonId);
 			let button: ButtonField | undefined;
 
 			const loadListenerCleanup = this.plugin.api.buttonManager.registerButtonLoadListener(
@@ -67,12 +67,14 @@ export class ButtonGroupField extends Mountable {
 				buttonId,
 				(buttonConfig: ButtonConfig) => {
 					initialButton?.$destroy();
+					initialButton = undefined;
 					button = new ButtonField(
 						this.plugin,
 						buttonConfig,
 						this.filePath,
 						this.renderChildType,
 						this.notePosition,
+						true,
 						false,
 					);
 					button.mount(wrapperEl);
@@ -81,6 +83,7 @@ export class ButtonGroupField extends Mountable {
 
 			this.registerUnmountCb(() => {
 				initialButton?.$destroy();
+				initialButton = undefined;
 				button?.unmount();
 				loadListenerCleanup();
 			});
