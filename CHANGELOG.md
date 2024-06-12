@@ -1,5 +1,11 @@
 # Obsidian Meta Bind Changelog
 
+# 1.1.2
+
+Bug Fixes
+
+-   Fixed a bug with inline buttons in `meta-bind` code blocks causing infinite loops and thus not displaying [#348](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/348)
+
 # 1.1.1
 
 Changes
