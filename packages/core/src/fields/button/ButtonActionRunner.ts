@@ -21,7 +21,6 @@ import {
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import { expectType, openURL } from 'packages/core/src/utils/Utils';
 import { parseLiteral } from 'packages/core/src/utils/Literal';
-
 import { type NotePosition } from 'packages/core/src/config/APIConfigs';
 import { ErrorLevel, MetaBindJsError, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
@@ -293,9 +292,16 @@ export class ButtonActionRunner {
 			}
 
 			// eslint-disable-next-line @typescript-eslint/no-implied-eval
-			const func = new Function('x', `return ${action.value};`) as (value: unknown) => unknown;
+			const func = new Function('x', 'getMetadata', `return ${action.value};`) as (
+				value: unknown,
+				getMetadata: (bindTarget: string) => unknown,
+			) => unknown;
 
-			this.plugin.api.updateMetadata(bindTarget, func);
+			this.plugin.api.updateMetadata(bindTarget, value =>
+				func(value, bindTarget => {
+					return this.plugin.api.getMetadata(this.plugin.api.parseBindTarget(bindTarget, filePath));
+				}),
+			);
 		} else {
 			this.plugin.api.setMetadata(bindTarget, parseLiteral(action.value));
 		}

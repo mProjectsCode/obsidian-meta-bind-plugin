@@ -1,5 +1,5 @@
 ---
-count: -1
+count: 0
 someList:
   - 1708945050652
   - 1709918700548
@@ -246,7 +246,21 @@ actions:
 
 ```
 
-`BUTTON[count-decrement, count-reset, count-increment]` `VIEW[{count}]`
+Count: `BUTTON[count-decrement, count-reset, count-increment]` `VIEW[{count}]`
+
+```meta-bind-button
+label: "Add count to count2"
+hidden: false
+style: default
+actions:
+  - type: updateMetadata
+    bindTarget: count2
+    evaluate: true
+    value: "x + getMetadata('count')"
+
+```
+
+Count2: `VIEW[{count2}]`
 
 ```meta-bind-button
 label: Add Current Time to List
