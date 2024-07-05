@@ -87,6 +87,7 @@ export interface ReplaceSelfButtonAction {
 export interface RegexpReplaceInNoteButtonAction {
 	type: ButtonActionType.REGEXP_REPLACE_IN_NOTE;
 	regexp: string;
+	regexpFlags?: string;
 	replacement: string;
 }
 

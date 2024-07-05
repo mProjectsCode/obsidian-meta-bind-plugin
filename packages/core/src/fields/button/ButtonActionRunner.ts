@@ -385,7 +385,7 @@ export class ButtonActionRunner {
 
 		let content = await this.plugin.internal.readFilePath(filePath);
 
-		content = content.replace(new RegExp(action.regexp, 'g'), action.replacement);
+		content = content.replace(new RegExp(action.regexp, action.regexpFlags ?? 'g'), action.replacement);
 
 		await this.plugin.internal.writeFilePath(filePath, content);
 	}

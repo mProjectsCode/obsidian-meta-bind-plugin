@@ -138,6 +138,11 @@ export const V_RegexpReplaceInNoteButtonAction = schemaForType<RegexpReplaceInNo
 	z.object({
 		type: z.literal(ButtonActionType.REGEXP_REPLACE_IN_NOTE),
 		regexp: stringValidator('regexpReplaceInNote', 'regexp', 'search regular expression'),
+		regexpFlags: stringValidator(
+			'regexpReplaceInNote',
+			'regexpFlags',
+			'regular expression flags string',
+		).optional(),
 		replacement: stringValidator('regexpReplaceInNote', 'replacement', 'replacement string'),
 	}),
 );
