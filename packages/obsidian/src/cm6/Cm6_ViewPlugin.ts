@@ -33,7 +33,6 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 					// check if the click was inside an input field
 					while (parent !== null) {
 						if (parent.classList.contains('mb-input')) {
-							e.preventDefault();
 							e.stopPropagation();
 							break;
 						}
