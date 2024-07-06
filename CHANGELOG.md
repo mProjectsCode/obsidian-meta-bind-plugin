@@ -1,5 +1,16 @@
 # Obsidian Meta Bind Changelog
 
+# 1.1.3
+
+New Features
+
+-   Added the option to specify custom regexp flags for the regexp replace in note button action [#372](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/372)
+-   Other metadata fields can now be referenced in the update metadata button action via `getMetadata(bindTarget)` [#358](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/358)
+
+Bug Fixes
+
+-   Fixed being unable to interact with some input fields in live preview mode on android [#339](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/339)
+
 # 1.1.2
 
 Bug Fixes
