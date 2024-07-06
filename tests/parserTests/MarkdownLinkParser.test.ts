@@ -1,90 +1,118 @@
 import { describe, expect, test } from 'bun:test';
-import { MDLinkParser } from '../../packages/core/src/parsers/MarkdownLinkParser';
+import { MarkdownLink, MDLinkParser } from '../../packages/core/src/parsers/MarkdownLinkParser';
+
+interface LinkObj {
+	isEmbed: boolean;
+	target: string;
+	block?: string;
+	alias?: string;
+	internal: boolean;
+}
+
+function toLink(obj: LinkObj): MarkdownLink {
+	return new MarkdownLink(obj.isEmbed, obj.target, obj.block, obj.alias, obj.internal);
+}
 
 describe('markdown link parser', () => {
 	describe('parse markdown link', () => {
 		// --- wiki links ---
 
 		test('should parse wiki link', () => {
-			expect(MDLinkParser.parseLink('[[test]]')).toEqual({
-				isEmbed: false,
-				target: 'test',
-				block: undefined,
-				alias: undefined,
-				internal: true,
-			});
+			expect(MDLinkParser.parseLink('[[test]]')).toEqual(
+				toLink({
+					isEmbed: false,
+					target: 'test',
+					block: undefined,
+					alias: undefined,
+					internal: true,
+				}),
+			);
 		});
 
 		test('should parse wiki link embed', () => {
-			expect(MDLinkParser.parseLink('![[test]]')).toEqual({
-				isEmbed: true,
-				target: 'test',
-				block: undefined,
-				alias: undefined,
-				internal: true,
-			});
+			expect(MDLinkParser.parseLink('![[test]]')).toEqual(
+				toLink({
+					isEmbed: true,
+					target: 'test',
+					block: undefined,
+					alias: undefined,
+					internal: true,
+				}),
+			);
 		});
 
 		test('should parse wiki with block', () => {
-			expect(MDLinkParser.parseLink('[[test#123]]')).toEqual({
-				isEmbed: false,
-				target: 'test',
-				block: '123',
-				alias: undefined,
-				internal: true,
-			});
+			expect(MDLinkParser.parseLink('[[test#123]]')).toEqual(
+				toLink({
+					isEmbed: false,
+					target: 'test',
+					block: '123',
+					alias: undefined,
+					internal: true,
+				}),
+			);
 		});
 
 		test('should parse wiki with alias', () => {
-			expect(MDLinkParser.parseLink('[[test|something]]')).toEqual({
-				isEmbed: false,
-				target: 'test',
-				block: undefined,
-				alias: 'something',
-				internal: true,
-			});
+			expect(MDLinkParser.parseLink('[[test|something]]')).toEqual(
+				toLink({
+					isEmbed: false,
+					target: 'test',
+					block: undefined,
+					alias: 'something',
+					internal: true,
+				}),
+			);
 		});
 
 		test('should parse wiki with block and alias', () => {
-			expect(MDLinkParser.parseLink('[[test#123|something]]')).toEqual({
-				isEmbed: false,
-				target: 'test',
-				block: '123',
-				alias: 'something',
-				internal: true,
-			});
+			expect(MDLinkParser.parseLink('[[test#123|something]]')).toEqual(
+				toLink({
+					isEmbed: false,
+					target: 'test',
+					block: '123',
+					alias: 'something',
+					internal: true,
+				}),
+			);
 		});
 
 		// --- markdown links ---
 
 		test('should parse markdown link', () => {
-			expect(MDLinkParser.parseLink('[something](test)')).toEqual({
-				isEmbed: false,
-				target: 'test',
-				block: undefined,
-				alias: 'something',
-				internal: true,
-			});
+			expect(MDLinkParser.parseLink('[something](test)')).toEqual(
+				toLink({
+					isEmbed: false,
+					target: 'test',
+					block: undefined,
+					alias: 'something',
+					internal: true,
+				}),
+			);
 		});
 
 		test('should parse markdown link embed', () => {
-			expect(MDLinkParser.parseLink('![something](test)')).toEqual({
-				isEmbed: true,
-				target: 'test',
-				block: undefined,
-				alias: 'something',
-				internal: true,
-			});
+			expect(MDLinkParser.parseLink('![something](test)')).toEqual(
+				toLink({
+					isEmbed: true,
+					target: 'test',
+					block: undefined,
+					alias: 'something',
+					internal: true,
+				}),
+			);
 		});
 
 		test('should parse external markdown link', () => {
-			expect(MDLinkParser.parseLink('[github](https://github.com)')).toEqual({
-				isEmbed: false,
-				target: 'https://github.com',
-				block: undefined,
-				alias: 'github',
-				internal: false,
-			});
+			expect(MDLinkParser.parseLink('[github](https://github.com)')).toEqual(
+				toLink({
+					isEmbed: false,
+					target: 'https://github.com',
+					block: undefined,
+					alias: 'github',
+					internal: false,
+				}),
+			);
 		});
 
 		// --- errors ---

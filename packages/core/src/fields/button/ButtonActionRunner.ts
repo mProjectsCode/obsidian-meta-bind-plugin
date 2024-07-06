@@ -19,7 +19,7 @@ import {
 	type UpdateMetadataButtonAction,
 } from 'packages/core/src/config/ButtonConfig';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
-import { expectType, openURL } from 'packages/core/src/utils/Utils';
+import { expectType } from 'packages/core/src/utils/Utils';
 import { parseLiteral } from 'packages/core/src/utils/Literal';
 import { type NotePosition } from 'packages/core/src/config/APIConfigs';
 import { ErrorLevel, MetaBindJsError, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
@@ -250,12 +250,7 @@ export class ButtonActionRunner {
 	}
 
 	async runOpenAction(action: OpenButtonAction, filePath: string): Promise<void> {
-		const link = MDLinkParser.parseLinkOrUrl(action.link);
-		if (link.internal) {
-			this.plugin.internal.openFile(link.target, filePath, action.newTab ?? false);
-		} else {
-			openURL(link.target);
-		}
+		MDLinkParser.parseLinkOrUrl(action.link).open(this.plugin, filePath, action.newTab ?? false);
 	}
 
 	async runInputAction(action: InputButtonAction): Promise<void> {

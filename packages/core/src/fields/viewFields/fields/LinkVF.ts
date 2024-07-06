@@ -67,11 +67,11 @@ export class LinkVF extends AbstractViewField {
 
 		// we want the return value to be a human-readable string, since someone could save this to the frontmatter
 		if (typeof content === 'string') {
-			return MDLinkParser.convertToLinkString(content);
+			return MDLinkParser.toLinkString(content);
 		} else if (Array.isArray(content)) {
 			const strings = content.filter(x => typeof x === 'string') as string[];
 			return strings
-				.map(x => MDLinkParser.convertToLinkString(x))
+				.map(x => MDLinkParser.toLinkString(x))
 				.filter(x => x !== '')
 				.join(', ');
 		} else {
