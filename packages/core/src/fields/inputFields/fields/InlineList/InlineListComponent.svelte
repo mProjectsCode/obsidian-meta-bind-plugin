@@ -16,7 +16,7 @@
 		value = v;
 	}
 
-	export function addValue(v: MBLiteral): void {
+	export function pushValue(v: MBLiteral): void {
 		value.push(v);
 		props.onValueChange(value);
 	}

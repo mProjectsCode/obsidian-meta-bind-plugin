@@ -28,15 +28,17 @@
 	import { DomHelpers, expectType } from 'packages/core/src/utils/Utils';
 	import { onDestroy } from 'svelte';
 
-	const {
+	let {
 		plugin,
 		modal,
-		buttonConfig,
+		buttonConfig: propConfig = $bindable(),
 	}: {
 		plugin: IPlugin;
 		modal: ButtonBuilderModal;
 		buttonConfig: ButtonConfig;
 	} = $props();
+
+	let buttonConfig = $state(propConfig);
 
 	let buttonEl: HTMLElement;
 	let buttonMountable: ButtonField;
@@ -57,13 +59,10 @@
 
 	function addAction(): void {
 		buttonConfig.actions?.push(plugin.api.buttonActionRunner.createDefaultAction(addActionType));
-
-		buttonConfig.actions = buttonConfig.actions;
 	}
 
 	function removeAction(id: number): void {
 		buttonConfig.actions?.splice(id, 1);
-		buttonConfig.actions = buttonConfig.actions;
 	}
 
 	function getActionLabel(actionType: ButtonActionType): string {
@@ -269,8 +268,8 @@ Add action of type
 <div bind:this={buttonEl}></div>
 
 <ModalButtonGroup>
-	<Button variant={ButtonStyleType.PRIMARY} on:click={() => modal.okay(buttonConfig)}
+	<Button variant={ButtonStyleType.PRIMARY} onclick={() => modal.okay(buttonConfig)}
 		>{modal.options.submitText}</Button
 	>
-	<Button variant={ButtonStyleType.DEFAULT} on:click={() => modal.cancel()}>Cancel</Button>
+	<Button variant={ButtonStyleType.DEFAULT} onclick={() => modal.cancel()}>Cancel</Button>
 </ModalButtonGroup>

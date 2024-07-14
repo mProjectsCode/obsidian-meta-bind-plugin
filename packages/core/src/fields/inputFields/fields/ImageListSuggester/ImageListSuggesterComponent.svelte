@@ -14,7 +14,7 @@
 		value = v;
 	}
 
-	export function addValue(v: string): void {
+	export function pushValue(v: string): void {
 		value.push(v);
 		props.onValueChange(value);
 	}

@@ -18,7 +18,7 @@
 		value = v;
 	}
 
-	export function addValue(v: MBLiteral): void {
+	export function pushValue(v: MBLiteral): void {
 		value.push(v);
 		props.onValueChange(value);
 	}
@@ -78,8 +78,8 @@
 	{/each}
 </div>
 <div class="mb-list-input">
-	<Button variant={ButtonStyleType.DEFAULT} on:click={() => props.showSuggester()}>Add new item</Button>
+	<Button variant={ButtonStyleType.DEFAULT} onclick={() => props.showSuggester()}>Add new item</Button>
 	{#if props.allowOther}
-		<Button variant={ButtonStyleType.DEFAULT} on:click={() => props.showTextPrompt()}>Add other item</Button>
+		<Button variant={ButtonStyleType.DEFAULT} onclick={() => props.showTextPrompt()}>Add other item</Button>
 	{/if}
 </div>

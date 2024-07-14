@@ -44,7 +44,7 @@
 					{/if}
 
 					<td class="mb-html-table-button-cell">
-						<Button on:click={() => table.removeColumn(tableRow.index)}>
+						<Button onclick={() => table.removeColumn(tableRow.index)}>
 							<Icon plugin={table.plugin} iconName="x" />
 						</Button>
 					</td>
@@ -54,4 +54,4 @@
 	</table>
 </div>
 
-<Button on:click={() => table.addColumn()}>Add Row</Button>
+<Button onclick={() => table.addColumn()}>Add Row</Button>

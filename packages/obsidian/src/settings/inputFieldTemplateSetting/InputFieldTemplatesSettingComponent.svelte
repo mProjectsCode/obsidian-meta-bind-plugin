@@ -50,7 +50,7 @@
 		></InputFieldTemplateSettingComponent>
 	{/each}
 
-	<Button on:click={() => addTemplate()} variant={ButtonStyleType.PRIMARY} tooltip="Create New Template"
+	<Button onclick={() => addTemplate()} variant={ButtonStyleType.PRIMARY} tooltip="Create New Template"
 		>Add Template</Button
 	>
 
@@ -67,7 +67,7 @@
 	{/if}
 
 	<ModalButtonGroup>
-		<Button on:click={() => save()} variant={ButtonStyleType.PRIMARY} tooltip="Save Changes">Save</Button>
-		<Button on:click={() => cancel()} tooltip="Revert Changes">Cancel</Button>
+		<Button onclick={() => save()} variant={ButtonStyleType.PRIMARY} tooltip="Save Changes">Save</Button>
+		<Button onclick={() => cancel()} tooltip="Revert Changes">Cancel</Button>
 	</ModalButtonGroup>
 </div>

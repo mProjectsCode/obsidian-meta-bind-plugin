@@ -39,13 +39,13 @@
 	name="Template File: {action.templateFile || 'none'}"
 	description="The template file to create a new note of."
 >
-	<Button variant={ButtonStyleType.PRIMARY} on:click={() => templaterCreateNoteActionChangeTemplateFile(action)}
+	<Button variant={ButtonStyleType.PRIMARY} onclick={() => templaterCreateNoteActionChangeTemplateFile(action)}
 		>Change
 	</Button>
 </SettingComponent>
 
 <SettingComponent name="Folder: {action.folderPath || 'none'}" description="The folder to create a new note in.">
-	<Button variant={ButtonStyleType.PRIMARY} on:click={() => templaterCreateNoteActionChangeFolderPath(action)}
+	<Button variant={ButtonStyleType.PRIMARY} onclick={() => templaterCreateNoteActionChangeFolderPath(action)}
 		>Change
 	</Button>
 </SettingComponent>

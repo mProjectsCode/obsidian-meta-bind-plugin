@@ -21,7 +21,7 @@
 		value = v;
 	}
 
-	function add(): void {
+	function pushValue(): void {
 		value.push(addValue);
 		props.onValueChange(value);
 
@@ -118,7 +118,7 @@
 			maxlength={props.limit}
 			onkeyup={e => {
 				if (e.key === 'Enter' && addValue.length > 0) {
-					add();
+					pushValue();
 				}
 			}}
 		/>
@@ -129,7 +129,7 @@
 			>{getLimitString(value.length, props.limit)}</span
 		>
 	{/if}
-	<Button on:click={() => add()} disabled={!addValue}>
+	<Button onclick={() => pushValue()} disabled={!addValue}>
 		<Icon plugin={props.plugin} iconName="plus" />
 	</Button>
 </div>

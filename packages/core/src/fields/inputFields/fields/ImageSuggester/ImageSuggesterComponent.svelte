@@ -11,7 +11,6 @@
 	let value = $state(props.value);
 
 	export function setValue(v: string): void {
-		console.trace('setValue', v);
 		value = v;
 	}
 

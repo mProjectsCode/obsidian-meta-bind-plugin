@@ -29,5 +29,5 @@
 	name="Command: {action.command || 'none'}"
 	description="The command to execute when this action runs."
 >
-	<Button variant={ButtonStyleType.PRIMARY} on:click={() => commandActionChangeCommand(action)}>Change</Button>
+	<Button variant={ButtonStyleType.PRIMARY} onclick={() => commandActionChangeCommand(action)}>Change</Button>
 </SettingComponent>

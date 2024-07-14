@@ -26,6 +26,6 @@
 </div>
 
 <ModalButtonGroup>
-	<Button variant={ButtonStyleType.PRIMARY} on:click={() => options.onSubmit(value)}>OK</Button>
-	<Button on:click={() => options.onCancel()}>Cancel</Button>
+	<Button variant={ButtonStyleType.PRIMARY} onclick={() => options.onSubmit(value)}>OK</Button>
+	<Button onclick={() => options.onCancel()}>Cancel</Button>
 </ModalButtonGroup>

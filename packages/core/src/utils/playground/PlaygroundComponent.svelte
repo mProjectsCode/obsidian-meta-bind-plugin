@@ -52,21 +52,21 @@
 		<span>
 			<Button
 				variant={ButtonStyleType.PRIMARY}
-				on:click={() => {
+				onclick={() => {
 					DocsUtils.open(DocsUtils.linkToHome());
 				}}
 			>
 				Docs
 			</Button>
 			<Button
-				on:click={() => {
+				onclick={() => {
 					DocsUtils.open(DocsUtils.linkToGithub());
 				}}
 			>
 				GitHub
 			</Button>
 			<Button
-				on:click={() => {
+				onclick={() => {
 					DocsUtils.open(DocsUtils.linkToIssues());
 				}}
 			>

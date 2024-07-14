@@ -283,6 +283,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			callback: () => {
 				this.internal.openButtonBuilderModal({
 					onOkay: (config): void => {
+						console.log(config);
 						void window.navigator.clipboard.writeText(
 							`\`\`\`meta-bind-button\n${stringifyYaml(config)}\n\`\`\``,
 						);

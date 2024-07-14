@@ -3,6 +3,8 @@ import type { IPlugin } from 'packages/core/src/IPlugin';
 import { ModalContent } from 'packages/core/src/modals/ModalContent';
 import ButtonBuilderModalComponent from 'packages/core/src/modals/modalContents/buttonBuilder/ButtonBuilderModalComponent.svelte';
 import { DomHelpers } from 'packages/core/src/utils/Utils';
+import type { Component as SvelteComponent } from 'svelte';
+import { mount, unmount } from 'svelte';
 
 export interface ButtonBuilderModalOptions {
 	onOkay: (config: ButtonConfig) => void;
@@ -13,7 +15,7 @@ export interface ButtonBuilderModalOptions {
 export class ButtonBuilderModal extends ModalContent {
 	plugin: IPlugin;
 
-	component?: ButtonBuilderModalComponent;
+	component?: ReturnType<SvelteComponent>;
 	options: ButtonBuilderModalOptions;
 
 	constructor(plugin: IPlugin, options: ButtonBuilderModalOptions) {
@@ -26,10 +28,10 @@ export class ButtonBuilderModal extends ModalContent {
 	protected onMount(targetEl: HTMLElement): void {
 		DomHelpers.empty(targetEl);
 		if (this.component) {
-			this.component.$destroy();
+			unmount(this.component);
 		}
 
-		this.component = new ButtonBuilderModalComponent({
+		this.component = mount(ButtonBuilderModalComponent, {
 			target: targetEl,
 			props: {
 				plugin: this.plugin,
@@ -42,7 +44,7 @@ export class ButtonBuilderModal extends ModalContent {
 	protected onUnmount(targetEl: HTMLElement): void {
 		DomHelpers.empty(targetEl);
 		if (this.component) {
-			this.component.$destroy();
+			unmount(this.component);
 		}
 	}
 

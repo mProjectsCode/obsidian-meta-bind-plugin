@@ -26,7 +26,7 @@
 </script>
 
 <SettingComponent name="Folder: {action.folderPath || 'none'}" description="The folder to create a new note in.">
-	<Button variant={ButtonStyleType.PRIMARY} on:click={() => createNoteActionChangeFolderPath(action)}>Change</Button>
+	<Button variant={ButtonStyleType.PRIMARY} onclick={() => createNoteActionChangeFolderPath(action)}>Change</Button>
 </SettingComponent>
 
 <SettingComponent name="File Name: {action.fileName || 'default'}" description="The file name of the new note.">
