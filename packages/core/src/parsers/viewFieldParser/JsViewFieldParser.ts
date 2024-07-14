@@ -1,4 +1,6 @@
 import type { IPlugin } from 'packages/core/src/IPlugin';
+import { P_JsViewFieldDeclaration } from 'packages/core/src/parsers/nomParsers/ViewFieldNomParsers';
+import { runParser } from 'packages/core/src/parsers/ParsingError';
 import type {
 	JsViewFieldDeclaration,
 	PartialUnvalidatedJsViewFieldDeclaration,
@@ -6,8 +8,6 @@ import type {
 	UnvalidatedJsViewFieldDeclaration,
 } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
-import { runParser } from 'packages/core/src/parsers/ParsingError';
-import { P_JsViewFieldDeclaration } from 'packages/core/src/parsers/nomParsers/ViewFieldNomParsers';
 
 export class JsViewFieldParser {
 	plugin: IPlugin;

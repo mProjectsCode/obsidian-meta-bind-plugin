@@ -1,14 +1,10 @@
 <script lang="ts">
-	import {
-		type ButtonAction,
-		ButtonActionType,
-		ButtonStyleType,
-		type CommandButtonAction,
-	} from 'packages/core/src/config/ButtonConfig';
+	import type { Command } from 'packages/core/src/api/InternalAPI';
+	import type { ButtonAction, CommandButtonAction } from 'packages/core/src/config/ButtonConfig';
+	import { ButtonActionType, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+	import type { IPlugin } from 'packages/core/src/IPlugin';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
-	import type { IPlugin } from 'packages/core/src/IPlugin';
-	import type { Command } from 'packages/core/src/api/InternalAPI';
 
 	const {
 		plugin,
@@ -18,7 +14,7 @@
 		action: CommandButtonAction;
 	} = $props();
 
-	function commandActionChangeCommand(action: ButtonAction) {
+	function commandActionChangeCommand(action: ButtonAction): void {
 		if (action.type !== ButtonActionType.COMMAND) {
 			return;
 		}

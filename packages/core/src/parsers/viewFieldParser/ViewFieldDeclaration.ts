@@ -4,12 +4,12 @@ import type {
 	BindTargetDeclaration,
 	UnvalidatedBindTargetDeclaration,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import type { ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import type { FieldDeclaration } from 'packages/core/src/parsers/FieldDeclaration';
 import type {
 	SimpleFieldArgument,
 	UnvalidatedFieldArgument,
 } from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
+import type { ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 
 export interface ViewFieldDeclaration extends FieldDeclaration {
 	templateDeclaration: (string | BindTargetDeclaration)[];

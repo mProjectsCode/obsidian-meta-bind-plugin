@@ -1,12 +1,13 @@
 import type { IPlugin } from 'packages/core/src/IPlugin';
 import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
-import { ParsingValidationError, runParser } from 'packages/core/src/parsers/ParsingError';
 import type {
 	BindTargetDeclaration,
 	UnvalidatedBindTargetDeclaration,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { P_BindTarget } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';
-import { type ParsingResultNode, toResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
+import type { ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
+import { toResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
+import { ParsingValidationError, runParser } from 'packages/core/src/parsers/ParsingError';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { PropAccess } from 'packages/core/src/utils/prop/PropAccess';
 import { PropPath } from 'packages/core/src/utils/prop/PropPath';

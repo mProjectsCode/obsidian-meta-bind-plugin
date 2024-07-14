@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
-	import Icon from 'packages/core/src/utils/components/Icon.svelte';
 	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
+	import Button from 'packages/core/src/utils/components/Button.svelte';
+	import Icon from 'packages/core/src/utils/components/Icon.svelte';
 
 	const props: InputFieldSvelteProps<string> & {
 		showSuggester: () => void;
@@ -15,7 +15,7 @@
 		value = v;
 	}
 
-	function openSuggester(event: MouseEvent) {
+	function openSuggester(): void {
 		props.showSuggester();
 	}
 </script>

@@ -73,12 +73,15 @@ const config = {
 		'plugin:@typescript-eslint/recommended',
 		'plugin:@typescript-eslint/recommended-type-checked',
 		'plugin:@typescript-eslint/stylistic-type-checked',
+		'plugin:svelte/recommended',
+		'plugin:svelte/prettier',
 	],
 	parserOptions: {
 		sourceType: 'module',
 		tsconfigRootDir: __dirname,
 		ecmaVersion: 'latest',
 		project: ['./tsconfig.json', './packages/*/tsconfig.json'],
+		extraFileExtensions: ['.svelte'],
 	},
 	rules: {
 		'@typescript-eslint/no-explicit-any': ['warn'],
@@ -92,6 +95,15 @@ const config = {
 			{ prefer: 'type-imports', fixStyle: 'separate-type-imports' },
 		],
 
+		'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
+		'import/order': [
+			'error',
+			{
+				'newlines-between': 'never',
+				alphabetize: { order: 'asc', orderImportKind: 'asc', caseInsensitive: true },
+			},
+		],
+
 		'@typescript-eslint/no-confusing-void-expression': ['error', { ignoreArrowShorthand: true }],
 		'@typescript-eslint/restrict-template-expressions': 'off',
 
@@ -103,7 +115,32 @@ const config = {
 		'@typescript-eslint/explicit-function-return-type': ['warn'],
 		'@typescript-eslint/require-await': 'off',
 	},
-	overrides: [...overrides],
+	overrides: [
+		...overrides,
+		{
+			files: ['*.svelte'],
+			parser: 'svelte-eslint-parser',
+			parserOptions: {
+				parser: {
+					// Specify a parser for each lang.
+					ts: '@typescript-eslint/parser',
+					typescript: '@typescript-eslint/parser',
+				},
+			},
+			rules: {
+				'@typescript-eslint/no-unsafe-assignment': 'off',
+				'@typescript-eslint/explicit-function-return-type': ['warn', { allowExpressions: true }],
+				'@typescript-eslint/no-unused-vars': [
+					'error',
+					{ argsIgnorePattern: '^_', destructuredArrayIgnorePattern: '^_', varsIgnorePattern: '^_|plugin' },
+				],
+
+				'no-undef': 'off',
+
+				'@typescript-eslint/prefer-nullish-coalescing': 'off',
+			},
+		},
+	],
 };
 
 module.exports = config;

@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Button from 'packages/core/src/utils/components/Button.svelte';
-	import type { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
+	import Button from 'packages/core/src/utils/components/Button.svelte';
+	import type { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
 
 	const props: InputFieldSvelteProps<string[]> & {
 		showSuggester: () => void;
@@ -16,25 +16,15 @@
 
 	export function addValue(v: string): void {
 		value.push(v);
-
-		value = value;
-	}
-
-	function remove(i: number) {
-		value.splice(i, 1);
-		// call with copy of array
 		props.onValueChange(value);
-		// tell svelte to update
-		value = value;
 	}
 
-	function suggestKey(event: KeyboardEvent): void {
-		if (event.key === ' ') {
-			props.showSuggester();
-		}
+	function remove(i: number): void {
+		value.splice(i, 1);
+		props.onValueChange(value);
 	}
 
-	function openContextMenuForElement(e: MouseEvent, index: number) {
+	function openContextMenuForElement(e: MouseEvent, index: number): void {
 		const menuActions: ContextMenuItemDefinition[] = [];
 
 		if (index > 0) {
@@ -69,9 +59,14 @@
 			onclick: () => {
 				const imagePath = value[index];
 
-				navigator.clipboard.writeText(imagePath).then(() => {
-					props.plugin.internal.showNotice('Image path copied to clipboard');
-				});
+				navigator.clipboard
+					.writeText(imagePath)
+					.then(() => {
+						props.plugin.internal.showNotice('Image path copied to clipboard');
+					})
+					.catch(() => {
+						props.plugin.internal.showNotice('Failed to copy image to clipboard');
+					});
 			},
 		});
 
@@ -97,5 +92,5 @@
 	{/each}
 </div>
 <div class="mb-list-input">
-	<Button variant={ButtonStyleType.DEFAULT} on:click={() => props.showSuggester()}>Add new image</Button>
+	<Button variant={ButtonStyleType.DEFAULT} onclick={() => props.showSuggester()}>Add new image</Button>
 </div>

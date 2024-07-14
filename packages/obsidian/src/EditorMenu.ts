@@ -1,4 +1,5 @@
-import { type Editor, type Menu, stringifyYaml } from 'obsidian';
+import type { Editor, Menu } from 'obsidian';
+import { stringifyYaml } from 'obsidian';
 import {
 	createInputFieldInsertExamples,
 	createViewFieldInsertExamples,

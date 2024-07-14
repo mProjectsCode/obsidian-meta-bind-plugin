@@ -1,6 +1,7 @@
 import { ModalContent } from 'packages/core/src/modals/ModalContent';
-import { type Component as SvelteComponent, unmount } from 'svelte';
 import { DomHelpers } from 'packages/core/src/utils/Utils';
+import type { Component as SvelteComponent } from 'svelte';
+import { unmount } from 'svelte';
 
 export type SvelteModalComponentFn<T extends SvelteComponent> = (
 	modal: SvelteModalContent<T>,

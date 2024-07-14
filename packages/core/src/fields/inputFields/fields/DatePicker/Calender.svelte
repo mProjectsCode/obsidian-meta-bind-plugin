@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { genSvelteId, getDateRows, getWeekDays } from '../../../../utils/DatePickerUtils.js';
 	import type { Moment } from 'moment';
 	import moment from 'moment';
+	import { genSvelteId, getDateRows, getWeekDays } from 'packages/core/src/utils/DatePickerUtils.js';
 
 	let {
 		selectedDate,
@@ -18,13 +18,13 @@
 	// local vars to help in render
 	let cells = $derived(getDateRows(month, year));
 
-	function selectCell(value: number | undefined) {
+	function selectCell(value: number | undefined): void {
 		if (value) {
 			dateChange(moment(new Date(year, month, value)));
 		}
 	}
 
-	function selectCellKey(event: KeyboardEvent, date: number) {
+	function selectCellKey(event: KeyboardEvent, date: number): void {
 		if (event.key === ' ') {
 			selectCell(date);
 		}

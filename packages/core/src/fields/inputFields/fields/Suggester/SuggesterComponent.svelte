@@ -1,11 +1,11 @@
 <script lang="ts">
-	import Icon from 'packages/core/src/utils/components/Icon.svelte';
-	import LinkComponent from 'packages/core/src/utils/components/LinkComponent.svelte';
-	import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
-	import type { MBLiteral } from 'packages/core/src/utils/Literal';
-	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
+	import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
+	import Button from 'packages/core/src/utils/components/Button.svelte';
+	import Icon from 'packages/core/src/utils/components/Icon.svelte';
+	import LinkComponent from 'packages/core/src/utils/components/LinkComponent.svelte';
+	import type { MBLiteral } from 'packages/core/src/utils/Literal';
 
 	const props: InputFieldSvelteProps<MBLiteral> & {
 		showSuggester: () => void;

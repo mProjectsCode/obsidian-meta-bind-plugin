@@ -1,6 +1,6 @@
 <script lang="ts">
-	import ImageCard from 'packages/core/src/utils/components/ImageCard.svelte';
 	import type { IPlugin } from 'packages/core/src/IPlugin';
+	import ImageCard from 'packages/core/src/utils/components/ImageCard.svelte';
 
 	const {
 		plugin,

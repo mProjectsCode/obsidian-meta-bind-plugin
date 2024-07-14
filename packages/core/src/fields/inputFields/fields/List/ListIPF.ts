@@ -1,8 +1,9 @@
 import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
 import ListComponent from 'packages/core/src/fields/inputFields/fields/List/ListComponent.svelte';
-import { type MBLiteral, parseUnknownToLiteralArray } from 'packages/core/src/utils/Literal';
 import type { InputFieldSvelteComponent } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
+import type { MBLiteral } from 'packages/core/src/utils/Literal';
+import { parseUnknownToLiteralArray } from 'packages/core/src/utils/Literal';
 
 interface SvelteExports {
 	pushValue: (value: MBLiteral) => void;

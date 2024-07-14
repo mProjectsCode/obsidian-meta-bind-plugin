@@ -1,4 +1,5 @@
-import { type App, Modal } from 'obsidian';
+import type { App } from 'obsidian';
+import { Modal } from 'obsidian';
 import type { InputFieldTemplate } from 'packages/core/src/Settings';
 import type { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import type MetaBindPlugin from 'packages/obsidian/src/main';

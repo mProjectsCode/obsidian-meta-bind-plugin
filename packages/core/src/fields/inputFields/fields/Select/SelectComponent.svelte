@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
-	import type { MBLiteral } from 'packages/core/src/utils/Literal';
-	import LiteralRenderComponent from 'packages/core/src/utils/components/LiteralRenderComponent.svelte';
+	import type { OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
+	import LiteralRenderComponent from 'packages/core/src/utils/components/LiteralRenderComponent.svelte';
+	import type { MBLiteral } from 'packages/core/src/utils/Literal';
 
 	const props: InputFieldSvelteProps<MBLiteral> & {
 		options: OptionInputFieldArgument[];
@@ -14,7 +14,7 @@
 		value = v;
 	}
 
-	function selectOption(option: MBLiteral) {
+	function selectOption(option: MBLiteral): void {
 		if (value === option) {
 			value = null;
 		} else {
@@ -23,7 +23,7 @@
 		props.onValueChange(value);
 	}
 
-	function selectOptionOnKey(event: KeyboardEvent, option: MBLiteral) {
+	function selectOptionOnKey(event: KeyboardEvent, option: MBLiteral): void {
 		if (event.key === ' ') {
 			selectOption(option);
 		}

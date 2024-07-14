@@ -1,13 +1,9 @@
 <script lang="ts">
-	import {
-		type ButtonAction,
-		ButtonActionType,
-		ButtonStyleType,
-		type TemplaterCreateNoteButtonAction,
-	} from 'packages/core/src/config/ButtonConfig';
+	import type { ButtonAction, TemplaterCreateNoteButtonAction } from 'packages/core/src/config/ButtonConfig';
+	import { ButtonActionType, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+	import type { IPlugin } from 'packages/core/src/IPlugin';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
-	import type { IPlugin } from 'packages/core/src/IPlugin';
 	import Toggle from 'packages/core/src/utils/components/Toggle.svelte';
 
 	const {
@@ -18,7 +14,7 @@
 		action: TemplaterCreateNoteButtonAction;
 	} = $props();
 
-	function templaterCreateNoteActionChangeTemplateFile(action: ButtonAction) {
+	function templaterCreateNoteActionChangeTemplateFile(action: ButtonAction): void {
 		if (action.type !== ButtonActionType.TEMPLATER_CREATE_NOTE) {
 			return;
 		}
@@ -28,7 +24,7 @@
 		});
 	}
 
-	function templaterCreateNoteActionChangeFolderPath(action: ButtonAction) {
+	function templaterCreateNoteActionChangeFolderPath(action: ButtonAction): void {
 		if (action.type !== ButtonActionType.TEMPLATER_CREATE_NOTE) {
 			return;
 		}

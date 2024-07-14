@@ -1,13 +1,12 @@
-import { Notice, type TAbstractFile, TFile, TFolder } from 'obsidian';
+import type { TAbstractFile } from 'obsidian';
+import { Notice, TFile, TFolder } from 'obsidian';
 import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import type { OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 import type { OptionQueryInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionQueryInputFieldArgument';
-import {
-	type ImageSuggesterLikeIPF,
-	SuggesterOption,
-} from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
-import { stringifyLiteral } from 'packages/core/src/utils/Literal';
+import type { ImageSuggesterLikeIPF } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
+import { SuggesterOption } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
 import { ErrorLevel, MetaBindArgumentError } from 'packages/core/src/utils/errors/MetaBindErrors';
+import { stringifyLiteral } from 'packages/core/src/utils/Literal';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 
 function recSearchFolder(folder: TFolder): SuggesterOption<string>[] {

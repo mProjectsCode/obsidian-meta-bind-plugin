@@ -1,22 +1,21 @@
-import {
-	type ButtonAction,
-	ButtonActionType,
-	type ButtonConfig,
-	ButtonStyleType,
-	type CommandButtonAction,
-	type CreateNoteButtonAction,
-	type InlineJsButtonAction,
-	type InputButtonAction,
-	type InsertIntoNoteButtonAction,
-	type JSButtonAction,
-	type OpenButtonAction,
-	type RegexpReplaceInNoteButtonAction,
-	type ReplaceInNoteButtonAction,
-	type ReplaceSelfButtonAction,
-	type SleepButtonAction,
-	type TemplaterCreateNoteButtonAction,
-	type UpdateMetadataButtonAction,
+import type {
+	ButtonAction,
+	ButtonConfig,
+	CommandButtonAction,
+	CreateNoteButtonAction,
+	InlineJsButtonAction,
+	InputButtonAction,
+	InsertIntoNoteButtonAction,
+	JSButtonAction,
+	OpenButtonAction,
+	RegexpReplaceInNoteButtonAction,
+	ReplaceInNoteButtonAction,
+	ReplaceSelfButtonAction,
+	SleepButtonAction,
+	TemplaterCreateNoteButtonAction,
+	UpdateMetadataButtonAction,
 } from 'packages/core/src/config/ButtonConfig';
+import { ButtonActionType, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 import { oneOf, schemaForType } from 'packages/core/src/utils/ZodUtils';
 import { z } from 'zod';
 

@@ -1,22 +1,21 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-	import Button from 'packages/core/src/utils/components/Button.svelte';
-	import Icon from 'packages/core/src/utils/components/Icon.svelte';
-	import { type ButtonConfig, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
-	import FlexRow from 'packages/core/src/utils/components/FlexRow.svelte';
 	import { Notice, stringifyYaml } from 'obsidian';
-	import MetaBindPlugin from '../../main';
+	import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
+	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+	import type { IPlugin } from 'packages/core/src/IPlugin';
+	import Button from 'packages/core/src/utils/components/Button.svelte';
+	import FlexRow from 'packages/core/src/utils/components/FlexRow.svelte';
+	import Icon from 'packages/core/src/utils/components/Icon.svelte';
 
-	export let template: ButtonConfig;
-	export let plugin: MetaBindPlugin;
-
-	const dispatch = createEventDispatcher();
-
-	function dispatchDeleteEvent(): void {
-		dispatch('delete-template', {
-			template: template,
-		});
-	}
+	let {
+		plugin,
+		template = $bindable(),
+		onDelete,
+	}: {
+		plugin: IPlugin;
+		template: ButtonConfig;
+		onDelete: (template: ButtonConfig) => void;
+	} = $props();
 
 	function editTemplate(): void {
 		plugin.internal.openButtonBuilderModal({
@@ -38,13 +37,13 @@
 <div class="mb-card markdown-rendered">
 	<FlexRow>
 		<span>{template.id}</span>
-		<Button on:click={() => editTemplate()} variant={ButtonStyleType.PRIMARY} tooltip="Edit">
+		<Button onclick={() => editTemplate()} variant={ButtonStyleType.PRIMARY} tooltip="Edit">
 			<Icon plugin={plugin} iconName="pen-line" />
 		</Button>
-		<Button on:click={() => copyTemplate()} variant={ButtonStyleType.DEFAULT} tooltip="Copy">
+		<Button onclick={() => copyTemplate()} variant={ButtonStyleType.DEFAULT} tooltip="Copy">
 			<Icon plugin={plugin} iconName="copy" />
 		</Button>
-		<Button on:click={() => dispatchDeleteEvent()} variant={ButtonStyleType.DESTRUCTIVE} tooltip="Delete">
+		<Button onclick={() => onDelete(template)} variant={ButtonStyleType.DESTRUCTIVE} tooltip="Delete">
 			<Icon plugin={plugin} iconName="x" />
 		</Button>
 	</FlexRow>

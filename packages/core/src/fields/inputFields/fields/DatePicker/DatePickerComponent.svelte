@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Moment } from 'moment';
-	import Icon from 'packages/core/src/utils/components/Icon.svelte';
 	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
+	import Icon from 'packages/core/src/utils/components/Icon.svelte';
 
 	const props: InputFieldSvelteProps<Moment | null> & {
 		dateFormat: string;
@@ -14,11 +14,11 @@
 		value = v;
 	}
 
-	function datePicker(event: MouseEvent) {
+	function datePicker(): void {
 		props.showDatePicker();
 	}
 
-	function datePickerKey(event: KeyboardEvent) {
+	function datePickerKey(event: KeyboardEvent): void {
 		if (event.key === ' ') {
 			props.showDatePicker();
 		}

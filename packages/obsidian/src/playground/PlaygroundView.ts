@@ -1,4 +1,5 @@
-import { ItemView, type WorkspaceLeaf } from 'obsidian';
+import type { WorkspaceLeaf } from 'obsidian';
+import { ItemView } from 'obsidian';
 import FaqComponent from 'packages/core/src/utils/playground/PlaygroundComponent.svelte';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 

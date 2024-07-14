@@ -1,7 +1,8 @@
 import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
 import ImageListSuggesterComponent from 'packages/core/src/fields/inputFields/fields/ImageListSuggester/ImageListSuggesterComponent.svelte';
-import { type MBLiteral, parseUnknownToLiteralArray, stringifyLiteral } from 'packages/core/src/utils/Literal';
 import type { InputFieldSvelteComponent } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
+import type { MBLiteral } from 'packages/core/src/utils/Literal';
+import { parseUnknownToLiteralArray, stringifyLiteral } from 'packages/core/src/utils/Literal';
 
 interface SvelteExports {
 	pushValue: (value: MBLiteral) => void;

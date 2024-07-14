@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { clamp, remapRange } from 'packages/core/src/utils/Utils';
 	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
+	import { clamp, remapRange } from 'packages/core/src/utils/Utils';
 
 	const props: InputFieldSvelteProps<number> & {
 		minValue: number;
@@ -16,11 +16,11 @@
 	let keydownAcceleration: number = 0;
 	let accelerationTimer: number | undefined = undefined;
 
-	export function setValue(v: number) {
+	export function setValue(v: number): void {
 		value = v;
 	}
 
-	function setValueInternal(v: number) {
+	function setValueInternal(v: number): void {
 		value = v;
 		props.onValueChange(v);
 	}
@@ -30,21 +30,21 @@
 		return remapRange(v, props.minValue, props.maxValue, 0, 100);
 	}
 
-	function onDragStart() {
+	function onDragStart(): void {
 		drag = true;
 	}
 
-	function onDragEnd() {
+	function onDragEnd(): void {
 		drag = false;
 	}
 
-	function onTrackEvent(e: MouseEvent | TouchEvent) {
+	function onTrackEvent(e: MouseEvent | TouchEvent): void {
 		// Update value immediately before beginning drag
 		onDragStart();
 		updateValueOnEvent(e);
 	}
 
-	function updateValueOnEvent(e: MouseEvent | TouchEvent) {
+	function updateValueOnEvent(e: MouseEvent | TouchEvent): void {
 		if (!drag) {
 			return;
 		}
@@ -62,7 +62,7 @@
 		calculateNewValue(clientX);
 	}
 
-	function calculateNewValue(clientX: number) {
+	function calculateNewValue(clientX: number): void {
 		const boundingRect = progressBarEl.getBoundingClientRect();
 
 		clientX = clamp(clientX, boundingRect.left, boundingRect.right);
@@ -73,12 +73,12 @@
 		setValueInternal(value);
 	}
 
-	function round(number: number, increment: number) {
+	function round(number: number, increment: number): number {
 		// the parsing is done to fix floating point errors
 		return Number.parseFloat((Math.round(number / increment) * increment).toFixed(10));
 	}
 
-	function onKeyPress(e: KeyboardEvent) {
+	function onKeyPress(e: KeyboardEvent): void {
 		if (keydownAcceleration < 50) {
 			keydownAcceleration += 1;
 		}

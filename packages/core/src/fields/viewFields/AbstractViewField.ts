@@ -1,6 +1,7 @@
 import { ViewFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import type { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
 import type { ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
+import type { IPlugin } from 'packages/core/src/IPlugin';
 import type {
 	ComputedMetadataSubscription,
 	ComputedSubscriptionDependency,
@@ -9,7 +10,6 @@ import { stringifyUnknown } from 'packages/core/src/utils/Literal';
 import { Mountable } from 'packages/core/src/utils/Mountable';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { DomHelpers } from 'packages/core/src/utils/Utils';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 
 export abstract class AbstractViewField extends Mountable {
 	readonly plugin: IPlugin;

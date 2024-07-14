@@ -1,10 +1,11 @@
 <script lang="ts">
-	import Icon from 'packages/core/src/utils/components/Icon.svelte';
-	import { type MBLiteral, stringifyLiteral } from 'packages/core/src/utils/Literal';
-	import LiteralRenderComponent from 'packages/core/src/utils/components/LiteralRenderComponent.svelte';
-	import Button from 'packages/core/src/utils/components/Button.svelte';
-	import type { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
 	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
+	import Button from 'packages/core/src/utils/components/Button.svelte';
+	import Icon from 'packages/core/src/utils/components/Icon.svelte';
+	import LiteralRenderComponent from 'packages/core/src/utils/components/LiteralRenderComponent.svelte';
+	import type { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
+	import type { MBLiteral } from 'packages/core/src/utils/Literal';
+	import { stringifyLiteral } from 'packages/core/src/utils/Literal';
 
 	const props: InputFieldSvelteProps<MBLiteral[]> & {
 		limit: number | undefined;
@@ -20,25 +21,25 @@
 		value = v;
 	}
 
-	function add() {
+	function add(): void {
 		value.push(addValue);
 		props.onValueChange(value);
 
 		addValue = '';
 	}
 
-	function remove(i: number) {
+	function remove(i: number): void {
 		value.splice(i, 1);
 		props.onValueChange(value);
 	}
 
-	function getLimitString(length: number, limit: number) {
+	function getLimitString(length: number, limit: number): string {
 		const limitStr = limit.toString();
 		const lengthStr = length.toString().padStart(limitStr.length, '0');
 		return `${lengthStr}/${limitStr}`;
 	}
 
-	function openContextMenuForElement(e: MouseEvent, index: number) {
+	function openContextMenuForElement(e: MouseEvent, index: number): void {
 		const menuActions: ContextMenuItemDefinition[] = [];
 
 		if (index > 0) {

@@ -1,6 +1,5 @@
 import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
-
 import { Highlight } from 'packages/core/src/parsers/syntaxHighlighting/Highlight';
 
 export enum MB_TokenClass {

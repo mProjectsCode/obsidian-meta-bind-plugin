@@ -9,12 +9,12 @@
 		value = v;
 	}
 
-	function toggleValue() {
+	function toggleValue(): void {
 		value = !value;
 		props.onValueChange(value);
 	}
 
-	function toggleValueOnKey(event: KeyboardEvent) {
+	function toggleValueOnKey(event: KeyboardEvent): void {
 		if (event.key === ' ') {
 			toggleValue();
 		}

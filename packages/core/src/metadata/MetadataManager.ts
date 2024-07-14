@@ -1,21 +1,21 @@
-import {
-	ComputedMetadataSubscription,
-	type ComputedSubscriptionDependency,
-	type ComputeFunction,
+import type {
+	ComputedSubscriptionDependency,
+	ComputeFunction,
 } from 'packages/core/src/metadata/ComputedMetadataSubscription';
+import { ComputedMetadataSubscription } from 'packages/core/src/metadata/ComputedMetadataSubscription';
 import type { IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
 import type { IMetadataCacheItem } from 'packages/core/src/metadata/MetadataCacheItem';
 import type { IMetadataSource, Metadata } from 'packages/core/src/metadata/MetadataSource';
 import { MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
 import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import type { Signal } from 'packages/core/src/utils/Signal';
 import {
 	ErrorLevel,
 	MetaBindBindTargetError,
 	MetaBindInternalError,
 } from 'packages/core/src/utils/errors/MetaBindErrors';
-import { PropUtils } from 'packages/core/src/utils/prop/PropUtils';
 import type { PropPath } from 'packages/core/src/utils/prop/PropPath';
+import { PropUtils } from 'packages/core/src/utils/prop/PropUtils';
+import type { Signal } from 'packages/core/src/utils/Signal';
 
 export const METADATA_CACHE_UPDATE_CYCLE_THRESHOLD = 5; // {syncInterval (200)} * 5 = 1s
 export const METADATA_CACHE_INACTIVE_CYCLE_THRESHOLD = 5 * 60; // {syncInterval (200)} * 5 * 60 = 1 minute

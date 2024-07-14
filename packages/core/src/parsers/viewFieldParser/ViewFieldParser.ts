@@ -1,8 +1,9 @@
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import { ViewFieldType } from 'packages/core/src/config/FieldConfigs';
+import type { IPlugin } from 'packages/core/src/IPlugin';
 import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
-import { runParser } from 'packages/core/src/parsers/ParsingError';
+import { toResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import { P_ViewFieldDeclaration } from 'packages/core/src/parsers/nomParsers/ViewFieldNomParsers';
+import { runParser } from 'packages/core/src/parsers/ParsingError';
 import type {
 	PartialUnvalidatedViewFieldDeclaration,
 	SimpleViewFieldDeclaration,
@@ -11,7 +12,6 @@ import type {
 } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
 import { ViewFieldDeclarationValidator } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclarationValidator';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
-import { toResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 
 export class ViewFieldParser {
 	plugin: IPlugin;

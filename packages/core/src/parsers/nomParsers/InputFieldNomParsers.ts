@@ -3,11 +3,9 @@ import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import type { PartialUnvalidatedInputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
 import { P_BindTarget } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';
+import type { UnvalidatedFieldArgument } from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
+import { P_FieldArguments } from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
 import { createResultNode, P_Ident, P_IdentWithSpaces } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
-import {
-	P_FieldArguments,
-	type UnvalidatedFieldArgument,
-} from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
 
 export const P_InnerInputFieldDeclaration: Parser<PartialUnvalidatedInputFieldDeclaration> = P.sequenceMap(
 	(type, args, b) => {

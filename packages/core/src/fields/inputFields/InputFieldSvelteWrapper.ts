@@ -1,6 +1,8 @@
 import type { IPlugin } from 'packages/core/src/IPlugin';
-import { type Listener, Notifier } from 'packages/core/src/utils/Signal';
-import { mount, type Component as SvelteComponent, unmount } from 'svelte';
+import type { Listener } from 'packages/core/src/utils/Signal';
+import { Notifier } from 'packages/core/src/utils/Signal';
+import type { Component as SvelteComponent } from 'svelte';
+import { mount, unmount } from 'svelte';
 
 export type InputFieldSvelteComponent<Value, Exports = object> = SvelteComponent<
 	{

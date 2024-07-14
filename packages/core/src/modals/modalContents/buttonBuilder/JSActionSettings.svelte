@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { JSButtonAction } from 'packages/core/src/config/ButtonConfig';
-	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
 	import type { IPlugin } from 'packages/core/src/IPlugin';
+	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
 
 	const {
 		plugin,

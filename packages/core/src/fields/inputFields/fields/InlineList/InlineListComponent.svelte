@@ -1,9 +1,10 @@
 <script lang="ts">
+	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 	import Icon from 'packages/core/src/utils/components/Icon.svelte';
-	import { stringifyLiteral, type MBLiteral } from 'packages/core/src/utils/Literal';
 	import LiteralRenderComponent from 'packages/core/src/utils/components/LiteralRenderComponent.svelte';
 	import type { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
-	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
+	import type { MBLiteral } from 'packages/core/src/utils/Literal';
+	import { stringifyLiteral } from 'packages/core/src/utils/Literal';
 
 	const props: InputFieldSvelteProps<MBLiteral[]> & {
 		showInput: () => void;
@@ -17,16 +18,12 @@
 
 	export function addValue(v: MBLiteral): void {
 		value.push(v);
-
-		value = value;
+		props.onValueChange(value);
 	}
 
-	function remove(i: number) {
+	function remove(i: number): void {
 		value.splice(i, 1);
-		// call with copy of array
 		props.onValueChange(value);
-		// tell svelte to update
-		value = value;
 	}
 
 	function inputKey(event: KeyboardEvent): void {
@@ -35,7 +32,7 @@
 		}
 	}
 
-	function openContextMenuForElement(e: MouseEvent, index: number) {
+	function openContextMenuForElement(e: MouseEvent, index: number): void {
 		const menuActions: ContextMenuItemDefinition[] = [];
 
 		if (index > 0) {

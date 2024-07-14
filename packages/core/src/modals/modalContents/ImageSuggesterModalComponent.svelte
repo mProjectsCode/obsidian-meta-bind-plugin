@@ -1,6 +1,6 @@
 <script lang="ts">
 	import ImageSuggesterCard from 'packages/core/src/fields/inputFields/fields/ImageSuggester/ImageSuggesterCard.svelte';
-	import { SuggesterOption } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
+	import type { SuggesterOption } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
 	import type { IPlugin } from 'packages/core/src/IPlugin';
 
 	const {

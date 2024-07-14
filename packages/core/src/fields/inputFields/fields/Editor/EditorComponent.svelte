@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
+	import { onMount } from 'svelte';
 
 	const props: InputFieldSvelteProps<string> & {
 		render: (el: HTMLElement, value: string) => void;
@@ -22,20 +22,20 @@
 		props.render(renderEl, v);
 	}
 
-	function focusOut() {
+	function focusOut(): void {
 		renderEl.style.display = 'block';
 		inputEl.style.display = 'none';
 		props.render(renderEl, value);
 	}
 
-	function focusIn() {
+	function focusIn(): void {
 		// console.log('focus in');
 		renderEl.style.display = 'none';
 		inputEl.style.display = 'block';
 		inputEl.focus();
 	}
 
-	function focusInOnKey(event: KeyboardEvent) {
+	function focusInOnKey(event: KeyboardEvent): void {
 		if (event.key === ' ') {
 			focusIn();
 		}
@@ -43,7 +43,7 @@
 </script>
 
 <div
-	class="editor-input card"
+	class="mb-editor-input card"
 	onclick={() => focusIn()}
 	onkeypress={event => focusInOnKey(event)}
 	role="button"
@@ -57,32 +57,3 @@
 	></textarea>
 	<div bind:this={renderEl}></div>
 </div>
-
-<style>
-	.editor-input {
-		background: var(--background-secondary);
-		width: 100%;
-		height: 500px;
-		padding: 0;
-		position: relative;
-		margin-left: 0;
-		overflow: scroll;
-	}
-
-	.editor-input > textarea {
-		background: var(--background-secondary);
-		border: none;
-		padding: var(--size-4-4) var(--size-4-8);
-		margin: 0;
-		position: absolute;
-		inset: 0;
-		resize: none;
-		border-radius: 0;
-	}
-
-	.editor-input > div {
-		padding: var(--size-4-4) var(--size-4-8);
-		position: absolute;
-		inset: 0;
-	}
-</style>

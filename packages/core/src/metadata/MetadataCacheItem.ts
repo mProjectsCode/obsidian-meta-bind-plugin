@@ -1,5 +1,4 @@
 import type { IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
-
 import type { Metadata } from 'packages/core/src/metadata/MetadataSource';
 
 export interface IMetadataCacheItem {

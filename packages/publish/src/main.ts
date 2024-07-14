@@ -1,18 +1,18 @@
 import type { MarkdownPostProcessorContext } from 'obsidian/publish';
+import { RenderChildType } from 'packages/core/src/config/APIConfigs';
+import { EMBED_MAX_DEPTH } from 'packages/core/src/config/FieldConfigs';
 import type { IPlugin } from 'packages/core/src/IPlugin';
-import type { MetaBindPluginSettings } from 'packages/core/src/Settings';
 import { GlobalMetadataSource, InternalMetadataSource } from 'packages/core/src/metadata/InternalMetadataSources';
 import { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
+import { MountableManager } from 'packages/core/src/MountableManager';
 import { BindTargetStorageType } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { DateParser } from 'packages/core/src/parsers/DateParser';
+import type { MetaBindPluginSettings } from 'packages/core/src/Settings';
+import { setFirstWeekday } from 'packages/core/src/utils/DatePickerUtils';
 import { PublishAPI } from 'packages/publish/src/PublishAPI';
 import { PublishInternalAPI } from 'packages/publish/src/PublishInternalAPI';
 import { PublishMetadataSource } from 'packages/publish/src/PublishMetadataSource';
-import { EMBED_MAX_DEPTH } from 'packages/core/src/config/FieldConfigs';
-import { DateParser } from 'packages/core/src/parsers/DateParser';
-import { setFirstWeekday } from 'packages/core/src/utils/DatePickerUtils';
 import { PublishNotePosition } from 'packages/publish/src/PublishNotePosition';
-import { MountableManager } from 'packages/core/src/MountableManager';
-import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 
 export class MetaBindPublishPlugin implements IPlugin {
 	settings: MetaBindPluginSettings;

@@ -1,31 +1,32 @@
 <script lang="ts">
-	import { ButtonBuilderModal } from 'packages/core/src/modals/modalContents/buttonBuilder/ButtonBuilderModal';
-	import { ButtonActionType, type ButtonConfig, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
-	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
-	import { onDestroy } from 'svelte';
-	import { DomHelpers, expectType } from 'packages/core/src/utils/Utils';
-	import Button from 'packages/core/src/utils/components/Button.svelte';
-	import ModalButtonGroup from 'packages/core/src/utils/components/ModalButtonGroup.svelte';
-	import Toggle from 'packages/core/src/utils/components/Toggle.svelte';
-	import type { IPlugin } from 'packages/core/src/IPlugin';
+	import { RenderChildType } from 'packages/core/src/config/APIConfigs';
+	import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
+	import { ButtonActionType, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 	import { ButtonField } from 'packages/core/src/fields/button/ButtonField';
+	import type { IPlugin } from 'packages/core/src/IPlugin';
+	import type { ButtonBuilderModal } from 'packages/core/src/modals/modalContents/buttonBuilder/ButtonBuilderModal';
 	import CommandActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/CommandActionSettings.svelte';
+	import CreateNoteActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/CreateNoteActionSettings.svelte';
+	import InlineJsActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/InlineJsActionSettings.svelte';
+	import InputActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/InputActionSettings.svelte';
+	import InsertIntoNoteActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/InsertIntoNoteActionSettings.svelte';
 	import JSActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/JSActionSettings.svelte';
 	import OpenActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/OpenActionSettings.svelte';
-	import InputActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/InputActionSettings.svelte';
+	import RegexpReplaceInNoteActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/RegexpReplaceInNoteActionSettings.svelte';
+	import ReplaceInNoteActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/ReplaceInNoteActionSettings.svelte';
+	import ReplaceSelfActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/ReplaceSelfActionSettings.svelte';
 	import SleepActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/SleepActionSettings.svelte';
 	import TemplaterCreateNoteActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/TemplaterCreateNoteActionSettings.svelte';
 	import UpdateMetadataActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/UpdateMetadataActionSettings.svelte';
-	import CreateNoteActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/CreateNoteActionSettings.svelte';
-	import ReplaceInNoteActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/ReplaceInNoteActionSettings.svelte';
-	import RegexpReplaceInNoteActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/RegexpReplaceInNoteActionSettings.svelte';
-	import ReplaceSelfActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/ReplaceSelfActionSettings.svelte';
-	import InsertIntoNoteActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/InsertIntoNoteActionSettings.svelte';
-	import InlineJsActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/InlineJsActionSettings.svelte';
+	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import FlexRow from 'packages/core/src/utils/components/FlexRow.svelte';
 	import Icon from 'packages/core/src/utils/components/Icon.svelte';
+	import ModalButtonGroup from 'packages/core/src/utils/components/ModalButtonGroup.svelte';
+	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
+	import Toggle from 'packages/core/src/utils/components/Toggle.svelte';
 	import type { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
-	import { RenderChildType } from 'packages/core/src/config/APIConfigs';
+	import { DomHelpers, expectType } from 'packages/core/src/utils/Utils';
+	import { onDestroy } from 'svelte';
 
 	const {
 		plugin,
@@ -54,18 +55,14 @@
 		}
 	});
 
-	function addAction() {
+	function addAction(): void {
 		buttonConfig.actions?.push(plugin.api.buttonActionRunner.createDefaultAction(addActionType));
 
 		buttonConfig.actions = buttonConfig.actions;
 	}
 
-	function removeAction(id: number) {
+	function removeAction(id: number): void {
 		buttonConfig.actions?.splice(id, 1);
-		buttonConfig.actions = buttonConfig.actions;
-	}
-
-	function updateActions() {
 		buttonConfig.actions = buttonConfig.actions;
 	}
 
@@ -208,6 +205,7 @@ Add action of type
 {#each buttonConfig.actions ?? [] as action, i (i)}
 	<FlexRow>
 		<h5>{getActionLabel(action.type)}</h5>
+		<!-- eslint-disable-next-line @typescript-eslint/no-unsafe-argument -->
 		<Button variant={ButtonStyleType.PLAIN} onclick={e => openActionContextMenu(i, e)}>
 			<Icon iconName="more-vertical" plugin={plugin}></Icon>
 		</Button>

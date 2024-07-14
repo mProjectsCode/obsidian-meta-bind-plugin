@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { stringifyAndLinkUnknown } from 'packages/core/src/utils/Literal';
+	import type { MarkdownLink } from 'packages/core/src/parsers/MarkdownLinkParser';
 	import LinkComponent from 'packages/core/src/utils/components/LinkComponent.svelte';
 	import ListWrapper from 'packages/core/src/utils/components/ListWrapper.svelte';
-	import { MarkdownLink } from 'packages/core/src/parsers/MarkdownLinkParser';
+	import { stringifyAndLinkUnknown } from 'packages/core/src/utils/Literal';
 
 	const { value = undefined }: { value?: unknown } = $props();
 

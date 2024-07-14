@@ -1,9 +1,9 @@
 import { Modal } from 'obsidian';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
-import type { ModalContent } from 'packages/core/src/modals/ModalContent';
-import type { IModal } from 'packages/core/src/modals/IModal';
 import type { ModalOptions } from 'packages/core/src/api/InternalAPI';
+import type { IModal } from 'packages/core/src/modals/IModal';
+import type { ModalContent } from 'packages/core/src/modals/ModalContent';
 import { DomHelpers } from 'packages/core/src/utils/Utils';
+import type MetaBindPlugin from 'packages/obsidian/src/main';
 
 export class ObsidianModal extends Modal implements IModal {
 	content: ModalContent;

@@ -1,10 +1,10 @@
-import type { IPlugin } from 'packages/core/src/IPlugin';
-import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
-import { ButtonGroupField } from 'packages/core/src/fields/button/ButtonGroupField';
-import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
-import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
-import type { ButtonGroupDeclaration } from 'packages/core/src/parsers/ButtonParser';
 import type { NotePosition, RenderChildType } from 'packages/core/src/config/APIConfigs';
+import { ButtonGroupField } from 'packages/core/src/fields/button/ButtonGroupField';
+import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
+import type { IPlugin } from 'packages/core/src/IPlugin';
+import type { ButtonGroupDeclaration } from 'packages/core/src/parsers/ButtonParser';
+import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
+import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
 
 export class ButtonGroupMountable extends FieldMountable {
 	errorCollection: ErrorCollection;

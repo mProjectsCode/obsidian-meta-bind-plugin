@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { ViewFieldExampleDeclaration } from 'packages/core/src/utils/InputFieldExamples';
-	import type { IPlugin } from 'packages/core/src/IPlugin';
-	import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
-	import MountableComponent from 'packages/core/src/utils/components/MountableComponent.svelte';
 	import { RenderChildType } from 'packages/core/src/config/APIConfigs';
+	import type { FieldMountable } from 'packages/core/src/fields/FieldMountable';
+	import type { IPlugin } from 'packages/core/src/IPlugin';
+	import MountableComponent from 'packages/core/src/utils/components/MountableComponent.svelte';
+	import type { ViewFieldExampleDeclaration } from 'packages/core/src/utils/InputFieldExamples';
 
 	const {
 		plugin,

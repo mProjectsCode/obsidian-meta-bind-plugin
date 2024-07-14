@@ -1,5 +1,5 @@
-import type { IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
 import { prepareFuzzySearch } from 'obsidian';
+import type { IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
 
 export class FuzzySearch implements IFuzzySearch {
 	preparedSearch: ReturnType<typeof prepareFuzzySearch> | undefined;

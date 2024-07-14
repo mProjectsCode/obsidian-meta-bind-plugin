@@ -1,6 +1,6 @@
-import type { MetaBindPublishPlugin } from 'packages/publish/src/main';
 import { MarkdownRenderChild } from 'obsidian/publish';
 import type { Mountable } from 'packages/core/src/utils/Mountable';
+import type { MetaBindPublishPlugin } from 'packages/publish/src/main';
 
 export class PublishFieldMDRC extends MarkdownRenderChild {
 	readonly plugin: MetaBindPublishPlugin;

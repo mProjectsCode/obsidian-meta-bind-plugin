@@ -1,30 +1,32 @@
-import { loadPrism, type MarkdownPostProcessorContext, Plugin, stringifyYaml, type WorkspaceLeaf } from 'obsidian';
-import type { IPlugin } from 'packages/core/src/IPlugin';
-import { DEFAULT_SETTINGS, type MetaBindPluginSettings } from 'packages/core/src/Settings';
+import type { MarkdownPostProcessorContext, WorkspaceLeaf } from 'obsidian';
+import { loadPrism, Plugin, stringifyYaml } from 'obsidian';
+import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 import { EMBED_MAX_DEPTH } from 'packages/core/src/config/FieldConfigs';
+import type { IPlugin } from 'packages/core/src/IPlugin';
 import {
 	GlobalMetadataSource,
 	InternalMetadataSource,
 	ScopeMetadataSource,
 } from 'packages/core/src/metadata/InternalMetadataSources';
 import { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
-import { DateParser } from 'packages/core/src/parsers/DateParser';
-import { BindTargetStorageType } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { setFirstWeekday } from 'packages/core/src/utils/DatePickerUtils';
-import { createEditorMenu } from 'packages/obsidian/src/EditorMenu';
 import { MountableManager } from 'packages/core/src/MountableManager';
-import { ObsidianAPI } from 'packages/obsidian/src/ObsidianAPI';
-import { ObsidianInternalAPI } from 'packages/obsidian/src/ObsidianInternalAPI';
-import { ObsidianMetadataSource } from 'packages/obsidian/src/ObsidianMetadataSource';
+import { BindTargetStorageType } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { DateParser } from 'packages/core/src/parsers/DateParser';
+import type { MetaBindPluginSettings } from 'packages/core/src/Settings';
+import { DEFAULT_SETTINGS } from 'packages/core/src/Settings';
+import { setFirstWeekday } from 'packages/core/src/utils/DatePickerUtils';
+import { areObjectsEqual } from 'packages/core/src/utils/Utils';
 import { registerCm5HLModes } from 'packages/obsidian/src/cm6/Cm5_Modes';
 import { createMarkdownRenderChildWidgetEditorPlugin } from 'packages/obsidian/src/cm6/Cm6_ViewPlugin';
 import { DependencyManager } from 'packages/obsidian/src/dependencies/DependencyManager';
 import { Version } from 'packages/obsidian/src/dependencies/Version';
+import { createEditorMenu } from 'packages/obsidian/src/EditorMenu';
+import { ObsidianAPI } from 'packages/obsidian/src/ObsidianAPI';
+import { ObsidianInternalAPI } from 'packages/obsidian/src/ObsidianInternalAPI';
+import { ObsidianMetadataSource } from 'packages/obsidian/src/ObsidianMetadataSource';
+import { ObsidianNotePosition } from 'packages/obsidian/src/ObsidianNotePosition';
 import { PlaygroundView, MB_PLAYGROUND_VIEW_TYPE } from 'packages/obsidian/src/playground/PlaygroundView';
 import { MetaBindSettingTab } from 'packages/obsidian/src/settings/SettingsTab';
-import { ObsidianNotePosition } from 'packages/obsidian/src/ObsidianNotePosition';
-import { RenderChildType } from 'packages/core/src/config/APIConfigs';
-import { areObjectsEqual } from 'packages/core/src/utils/Utils';
 
 export enum MetaBindBuild {
 	DEV = 'dev',

@@ -1,7 +1,9 @@
-import { type InputFieldArgumentConfig, InputFieldArgumentConfigs } from 'packages/core/src/config/FieldConfigs';
+import type { InputFieldArgumentConfig } from 'packages/core/src/config/FieldConfigs';
+import { InputFieldArgumentConfigs } from 'packages/core/src/config/FieldConfigs';
 import { AbstractInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/AbstractInputFieldArgument';
 import type { ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
-import { type MBLiteral, parseLiteral } from 'packages/core/src/utils/Literal';
+import type { MBLiteral } from 'packages/core/src/utils/Literal';
+import { parseLiteral } from 'packages/core/src/utils/Literal';
 
 export class OptionInputFieldArgument extends AbstractInputFieldArgument {
 	value: MBLiteral = '';

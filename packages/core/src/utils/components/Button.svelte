@@ -21,9 +21,9 @@
 
 <button
 	class="mb-button-inner"
-	class:mod-cta={variant === 'primary'}
-	class:mod-warning={variant === 'destructive'}
-	class:mod-plain={variant === 'plain'}
+	class:mod-cta={variant === ButtonStyleType.PRIMARY}
+	class:mod-warning={variant === ButtonStyleType.DESTRUCTIVE}
+	class:mod-plain={variant === ButtonStyleType.PLAIN}
 	class:disabled={disabled}
 	aria-label={tooltip}
 	onclick={onclick}

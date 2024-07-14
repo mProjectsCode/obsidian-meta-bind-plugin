@@ -1,10 +1,12 @@
 import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import { AddLabelsInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/AddLabelsInputFieldArgument';
+import { AllowOtherInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/AllowOtherInputFieldArgument';
 import { ClassInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/ClassInputFieldArgument';
 import { DefaultValueInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/DefaultValueInputFieldArgument';
 import { LimitInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/LimitInputFieldArgument';
 import { MaxValueInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/MaxValueInputFieldArgument';
 import { MinValueInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/MinValueInputFieldArgument';
+import { MultiLineInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/MultiLineInputFieldArgument';
 import { OffValueInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OffValueInputFieldArgument';
 import { OnValueInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OnValueInputFieldArgument';
 import { OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
@@ -15,8 +17,6 @@ import { StepSizeValueInputFieldArgument } from 'packages/core/src/fields/fieldA
 import { TitleInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/TitleInputFieldArgument';
 import { UseLinksInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/UseLinksInputFieldArgument';
 import { ErrorLevel, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import { MultiLineInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/MultiLineInputFieldArgument';
-import { AllowOtherInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/AllowOtherInputFieldArgument';
 
 export const INPUT_FIELD_ARGUMENT_MAP = {
 	[InputFieldArgumentType.CLASS]: ClassInputFieldArgument,

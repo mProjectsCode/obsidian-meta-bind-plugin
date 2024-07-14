@@ -1,5 +1,6 @@
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import { type RefinementCtx, z } from 'zod';
+import type { RefinementCtx } from 'zod';
+import { z } from 'zod';
 
 export function oneOf<
 	A,

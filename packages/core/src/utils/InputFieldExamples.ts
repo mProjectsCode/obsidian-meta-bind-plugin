@@ -1,10 +1,6 @@
+import type { InputFieldType, ViewFieldType } from 'packages/core/src/config/FieldConfigs';
+import { InputFieldArgumentType, InputFieldConfigs } from 'packages/core/src/config/FieldConfigs';
 import type { IPlugin } from 'packages/core/src/IPlugin';
-import {
-	InputFieldArgumentType,
-	InputFieldConfigs,
-	type InputFieldType,
-	type ViewFieldType,
-} from 'packages/core/src/config/FieldConfigs';
 import type { InputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
 
 export const INPUT_FIELD_EXAMPLE_DECLARATIONS: Record<InputFieldType, string> = {

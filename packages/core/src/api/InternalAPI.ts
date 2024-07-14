@@ -1,36 +1,34 @@
+import type { Moment } from 'moment';
+import type { LifecycleHook } from 'packages/core/src/api/API';
+import DatePickerInput from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePicker.svelte';
 import type { DatePickerIPF } from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePickerIPF';
 import type {
 	ImageSuggesterLikeIPF,
 	SuggesterLikeIFP,
 	SuggesterOption,
 } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
-import type { IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
-import type { MBLiteral } from 'packages/core/src/utils/Literal';
-import type { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
-import type { SelectModalContent } from 'packages/core/src/modals/SelectModalContent';
-import type { IModal } from 'packages/core/src/modals/IModal';
-import { CommandSelectModal } from 'packages/core/src/modals/selectModalContents/CommandSelectModal';
 import type { IPlugin } from 'packages/core/src/IPlugin';
+import type { IModal } from 'packages/core/src/modals/IModal';
+import type { ModalContent } from 'packages/core/src/modals/ModalContent';
+import type { ButtonBuilderModalOptions } from 'packages/core/src/modals/modalContents/buttonBuilder/ButtonBuilderModal';
+import { ButtonBuilderModal } from 'packages/core/src/modals/modalContents/buttonBuilder/ButtonBuilderModal';
+import ImageSuggesterModalComponent from 'packages/core/src/modals/modalContents/ImageSuggesterModalComponent.svelte';
+import { SvelteModalContent } from 'packages/core/src/modals/modalContents/SvelteModalContent';
+import TextPromptModalContent from 'packages/core/src/modals/modalContents/TextPromptModalContent.svelte';
+import type { SelectModalContent } from 'packages/core/src/modals/SelectModalContent';
+import { CommandSelectModal } from 'packages/core/src/modals/selectModalContents/CommandSelectModal';
 import { FileSelectModal } from 'packages/core/src/modals/selectModalContents/FileSelectModal';
 import { FolderSelectModal } from 'packages/core/src/modals/selectModalContents/FolderSelectModal';
-import type { ModalContent } from 'packages/core/src/modals/ModalContent';
-import {
-	ButtonBuilderModal,
-	type ButtonBuilderModalOptions,
-} from 'packages/core/src/modals/modalContents/buttonBuilder/ButtonBuilderModal';
-import { SvelteModalContent } from 'packages/core/src/modals/modalContents/SvelteModalContent';
-import DatePickerInput from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePicker.svelte';
-import ImageSuggesterModalComponent from 'packages/core/src/modals/modalContents/ImageSuggesterModalComponent.svelte';
-import type { Moment } from 'moment';
+import { SuggesterSelectModal } from 'packages/core/src/modals/selectModalContents/SuggesterSelectModal';
+import type { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import ErrorCollectionComponent from 'packages/core/src/utils/errors/ErrorCollectionComponent.svelte';
 import ErrorIndicatorComponent from 'packages/core/src/utils/errors/ErrorIndicatorComponent.svelte';
-import { SuggesterSelectModal } from 'packages/core/src/modals/selectModalContents/SuggesterSelectModal';
-import type { IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
 import type { ContextMenuItemDefinition, IContextMenu } from 'packages/core/src/utils/IContextMenu';
-import TextPromptModalContent from 'packages/core/src/modals/modalContents/TextPromptModalContent.svelte';
-import type { z } from 'zod';
-import type { LifecycleHook } from 'packages/core/src/api/API';
+import type { IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
+import type { IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
+import type { MBLiteral } from 'packages/core/src/utils/Literal';
 import { mount } from 'svelte';
+import type { z } from 'zod';
 
 export interface ErrorIndicatorProps {
 	errorCollection: ErrorCollection;

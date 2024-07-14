@@ -1,37 +1,4 @@
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import { SyntaxHighlightingAPI } from 'packages/core/src/api/SyntaxHighlightingAPI';
-import type { FieldMountable } from 'packages/core/src/fields/FieldMountable';
-import { ButtonActionRunner } from 'packages/core/src/fields/button/ButtonActionRunner';
-import { ButtonMountable } from 'packages/core/src/fields/button/ButtonMountable';
-import { ButtonManager } from 'packages/core/src/fields/button/ButtonManager';
-import { ButtonGroupMountable } from 'packages/core/src/fields/button/ButtonGroupMountable';
-import { InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
-import { InputFieldFactory } from 'packages/core/src/fields/inputFields/InputFieldFactory';
-import { JsViewFieldMountable } from 'packages/core/src/fields/viewFields/JsViewFieldMountable';
-import { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
-import { ViewFieldFactory } from 'packages/core/src/fields/viewFields/ViewFieldFactory';
-import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
-import { BindTargetParser } from 'packages/core/src/parsers/bindTargetParser/BindTargetParser';
-import { InputFieldParser } from 'packages/core/src/parsers/inputFieldParser/InputFieldParser';
-import { ViewFieldParser } from 'packages/core/src/parsers/viewFieldParser/ViewFieldParser';
-import { expectType, getUUID } from 'packages/core/src/utils/Utils';
-import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import { EmbedMountable } from 'packages/core/src/fields/embed/EmbedMountable';
-import { ExcludedMountable } from 'packages/core/src/fields/excluded/ExcludedMountable';
-import type { InputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
-import type {
-	JsViewFieldDeclaration,
-	ViewFieldDeclaration,
-} from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
-import {
-	type ButtonDeclaration,
-	type ButtonGroupDeclaration,
-	ButtonParser,
-} from 'packages/core/src/parsers/ButtonParser';
-import { JsViewFieldParser } from 'packages/core/src/parsers/viewFieldParser/JsViewFieldParser';
-import { Signal } from 'packages/core/src/utils/Signal';
-import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
-import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import {
 	V_BindTargetDeclaration,
 	V_BindTargetScope,
@@ -46,24 +13,56 @@ import {
 	V_TableFieldOptions,
 	V_ViewFieldOptions,
 } from 'packages/core/src/api/Validators';
-import { validateAPIArgs } from 'packages/core/src/utils/ZodUtils';
-import { z } from 'zod';
-import { TableMountable } from 'packages/core/src/fields/metaBindTable/TableMountable';
+import type {
+	ButtonGroupOptions,
+	ButtonOptions,
+	EmbedOptions,
+	FieldOptionMap,
+	InlineFieldType,
+	InputFieldOptions,
+	JsViewFieldOptions,
+	TableOptions,
+	ViewFieldOptions,
+} from 'packages/core/src/config/APIConfigs';
 import {
-	type ButtonGroupOptions,
-	type ButtonOptions,
-	type EmbedOptions,
-	type FieldOptionMap,
 	FieldType,
-	type InlineFieldType,
-	type InputFieldOptions,
 	isFieldTypeAllowedInline,
-	type JsViewFieldOptions,
 	NotePosition,
 	RenderChildType,
-	type TableOptions,
-	type ViewFieldOptions,
 } from 'packages/core/src/config/APIConfigs';
+import { ButtonActionRunner } from 'packages/core/src/fields/button/ButtonActionRunner';
+import { ButtonGroupMountable } from 'packages/core/src/fields/button/ButtonGroupMountable';
+import { ButtonManager } from 'packages/core/src/fields/button/ButtonManager';
+import { ButtonMountable } from 'packages/core/src/fields/button/ButtonMountable';
+import { EmbedMountable } from 'packages/core/src/fields/embed/EmbedMountable';
+import { ExcludedMountable } from 'packages/core/src/fields/excluded/ExcludedMountable';
+import type { FieldMountable } from 'packages/core/src/fields/FieldMountable';
+import { InputFieldFactory } from 'packages/core/src/fields/inputFields/InputFieldFactory';
+import { InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
+import { TableMountable } from 'packages/core/src/fields/metaBindTable/TableMountable';
+import { JsViewFieldMountable } from 'packages/core/src/fields/viewFields/JsViewFieldMountable';
+import { ViewFieldFactory } from 'packages/core/src/fields/viewFields/ViewFieldFactory';
+import { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
+import type { IPlugin } from 'packages/core/src/IPlugin';
+import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
+import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { BindTargetParser } from 'packages/core/src/parsers/bindTargetParser/BindTargetParser';
+import type { ButtonDeclaration, ButtonGroupDeclaration } from 'packages/core/src/parsers/ButtonParser';
+import { ButtonParser } from 'packages/core/src/parsers/ButtonParser';
+import type { InputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
+import { InputFieldParser } from 'packages/core/src/parsers/inputFieldParser/InputFieldParser';
+import { JsViewFieldParser } from 'packages/core/src/parsers/viewFieldParser/JsViewFieldParser';
+import type {
+	JsViewFieldDeclaration,
+	ViewFieldDeclaration,
+} from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
+import { ViewFieldParser } from 'packages/core/src/parsers/viewFieldParser/ViewFieldParser';
+import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
+import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
+import { Signal } from 'packages/core/src/utils/Signal';
+import { expectType, getUUID } from 'packages/core/src/utils/Utils';
+import { validateAPIArgs } from 'packages/core/src/utils/ZodUtils';
+import { z } from 'zod';
 
 export interface LifecycleHook {
 	register(cb: () => void): void;

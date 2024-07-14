@@ -1,11 +1,11 @@
 import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
-import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
+import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
+import type { ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import {
 	createResultNode,
 	P_Ident,
 	P_SingleQuotedString,
-	type ParsingResultNode,
 } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 
 export const P_NonStringArgumentValue: Parser<string> = P.regexp(/^[^()',]+/).describe(

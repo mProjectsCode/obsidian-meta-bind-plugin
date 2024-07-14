@@ -1,9 +1,9 @@
-import { yaml } from '@codemirror/legacy-modes/mode/yaml';
 import { javascript } from '@codemirror/legacy-modes/mode/javascript';
+import { yaml } from '@codemirror/legacy-modes/mode/yaml';
 import type { Mode, StringStream } from 'codemirror';
+import type { InlineFieldType } from 'packages/core/src/config/APIConfigs';
 import { SyntaxHighlighting } from 'packages/core/src/parsers/syntaxHighlighting/SyntaxHighlighting';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
-import type { InlineFieldType } from 'packages/core/src/config/APIConfigs';
 
 export function registerCm5HLModes(plugin: MetaBindPlugin): void {
 	/* eslint-disable */

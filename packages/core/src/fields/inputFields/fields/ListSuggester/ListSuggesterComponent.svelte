@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { MBLiteral } from 'packages/core/src/utils/Literal';
-	import LiteralRenderComponent from 'packages/core/src/utils/components/LiteralRenderComponent.svelte';
-	import Button from 'packages/core/src/utils/components/Button.svelte';
-	import type { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
-	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
+	import Button from 'packages/core/src/utils/components/Button.svelte';
+	import LiteralRenderComponent from 'packages/core/src/utils/components/LiteralRenderComponent.svelte';
+	import type { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
+	import type { MBLiteral } from 'packages/core/src/utils/Literal';
 
 	const props: InputFieldSvelteProps<MBLiteral[]> & {
 		showSuggester: () => void;
@@ -23,18 +23,12 @@
 		props.onValueChange(value);
 	}
 
-	function remove(i: number) {
+	function remove(i: number): void {
 		value.splice(i, 1);
 		props.onValueChange(value);
 	}
 
-	function suggestKey(event: KeyboardEvent): void {
-		if (event.key === ' ') {
-			props.showSuggester();
-		}
-	}
-
-	function openContextMenuForElement(e: MouseEvent, index: number) {
+	function openContextMenuForElement(e: MouseEvent, index: number): void {
 		const menuActions: ContextMenuItemDefinition[] = [];
 
 		if (index > 0) {

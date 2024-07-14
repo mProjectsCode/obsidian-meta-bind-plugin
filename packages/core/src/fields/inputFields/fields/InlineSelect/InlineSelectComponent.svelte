@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
-	import type { MBLiteral } from 'packages/core/src/utils/Literal';
+	import type { OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
+	import type { MBLiteral } from 'packages/core/src/utils/Literal';
 
 	const props: InputFieldSvelteProps<MBLiteral> & {
 		options: OptionInputFieldArgument[];
@@ -13,7 +13,7 @@
 		value = v;
 	}
 
-	function selectOption() {
+	function selectOption(): void {
 		props.onValueChange(value);
 	}
 </script>

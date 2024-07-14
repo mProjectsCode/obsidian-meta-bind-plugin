@@ -363,6 +363,35 @@ div.mb-view-wrapper {
 	resize: vertical;
 }
 
+/* editor */
+
+.mb-editor-input {
+	background: var(--background-secondary);
+	width: 100%;
+	height: 500px;
+	padding: 0;
+	position: relative;
+	margin-left: 0;
+	overflow: scroll;
+}
+
+.mb-editor-input > textarea {
+	background: var(--background-secondary);
+	border: none;
+	padding: var(--size-4-4) var(--size-4-8);
+	margin: 0;
+	position: absolute;
+	inset: 0;
+	resize: none;
+	border-radius: 0;
+}
+
+.mb-editor-input > div {
+	padding: var(--size-4-4) var(--size-4-8);
+	position: absolute;
+	inset: 0;
+}
+
 /* Card */
 .mb-card {
 	padding: var(--size-4-2);

@@ -1,6 +1,7 @@
 import type { EditorSelection, EditorState } from '@codemirror/state';
 import type { DecorationSet, EditorView } from '@codemirror/view';
-import { editorInfoField, type TFile } from 'obsidian';
+import type { TFile } from 'obsidian';
+import { editorInfoField } from 'obsidian';
 
 export enum MB_WidgetType {
 	FIELD = 'field',

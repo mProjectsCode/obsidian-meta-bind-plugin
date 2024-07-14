@@ -1,11 +1,14 @@
-import type { IPlugin } from 'packages/core/src/IPlugin';
-import { type ButtonConfig, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+import type { NotePosition } from 'packages/core/src/config/APIConfigs';
+import { RenderChildType } from 'packages/core/src/config/APIConfigs';
+import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
+import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 import { ButtonField } from 'packages/core/src/fields/button/ButtonField';
-import { DomHelpers } from 'packages/core/src/utils/Utils';
+import type { IPlugin } from 'packages/core/src/IPlugin';
 import ButtonComponent from 'packages/core/src/utils/components/ButtonComponent.svelte';
 import { Mountable } from 'packages/core/src/utils/Mountable';
-import { type NotePosition, RenderChildType } from 'packages/core/src/config/APIConfigs';
-import { type Component as SvelteComponent, mount, unmount } from 'svelte';
+import { DomHelpers } from 'packages/core/src/utils/Utils';
+import type { Component as SvelteComponent } from 'svelte';
+import { mount, unmount } from 'svelte';
 
 export class ButtonGroupField extends Mountable {
 	plugin: IPlugin;

@@ -1,17 +1,22 @@
 <script lang="ts">
-	import InputFieldTemplateSettingComponent from 'packages/obsidian/src/settings/inputFieldTemplateSetting/InputFieldTemplateSettingComponent.svelte';
-	import { InputFieldTemplatesSettingModal } from 'packages/obsidian/src/settings/inputFieldTemplateSetting/InputFieldTemplatesSettingModal';
-	import ErrorCollectionComponent from 'packages/core/src/utils/errors/ErrorCollectionComponent.svelte';
-	import ModalButtonGroup from 'packages/core/src/utils/components/ModalButtonGroup.svelte';
-	import Button from 'packages/core/src/utils/components/Button.svelte';
-	import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
-	import { type InputFieldTemplate } from 'packages/core/src/Settings';
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+	import type { InputFieldTemplate } from 'packages/core/src/Settings';
+	import Button from 'packages/core/src/utils/components/Button.svelte';
+	import ModalButtonGroup from 'packages/core/src/utils/components/ModalButtonGroup.svelte';
+	import type { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
+	import ErrorCollectionComponent from 'packages/core/src/utils/errors/ErrorCollectionComponent.svelte';
+	import InputFieldTemplateSettingComponent from 'packages/obsidian/src/settings/inputFieldTemplateSetting/InputFieldTemplateSettingComponent.svelte';
+	import type { InputFieldTemplatesSettingModal } from 'packages/obsidian/src/settings/inputFieldTemplateSetting/InputFieldTemplatesSettingModal';
 
-	export let inputFieldTemplates: InputFieldTemplate[];
-	export let modal: InputFieldTemplatesSettingModal;
+	let {
+		modal,
+		inputFieldTemplates,
+	}: {
+		modal: InputFieldTemplatesSettingModal;
+		inputFieldTemplates: InputFieldTemplate[];
+	} = $props();
 
-	let errorCollection: ErrorCollection | undefined;
+	let errorCollection: ErrorCollection | undefined = $state();
 
 	function deleteTemplate(template: InputFieldTemplate): void {
 		inputFieldTemplates = inputFieldTemplates.filter(x => x !== template);
@@ -22,8 +27,6 @@
 			name: '',
 			declaration: '',
 		});
-
-		inputFieldTemplates = inputFieldTemplates;
 	}
 
 	function save(): void {
@@ -43,10 +46,7 @@
 	<h2>Meta Bind Input Field Templates</h2>
 
 	{#each inputFieldTemplates as template}
-		<InputFieldTemplateSettingComponent
-			plugin={modal.plugin}
-			template={template}
-			on:delete-template={evt => deleteTemplate(evt.detail.template)}
+		<InputFieldTemplateSettingComponent plugin={modal.plugin} template={template} onDelete={deleteTemplate}
 		></InputFieldTemplateSettingComponent>
 	{/each}
 

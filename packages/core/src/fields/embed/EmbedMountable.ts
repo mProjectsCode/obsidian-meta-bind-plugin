@@ -1,10 +1,10 @@
+import { EMBED_MAX_DEPTH } from 'packages/core/src/config/FieldConfigs';
 import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import type { IPlugin } from 'packages/core/src/IPlugin';
-import { ErrorLevel, MetaBindEmbedError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
+import { ErrorLevel, MetaBindEmbedError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { showUnloadedMessage } from 'packages/core/src/utils/Utils';
-import { EMBED_MAX_DEPTH } from 'packages/core/src/config/FieldConfigs';
 
 export class EmbedMountable extends FieldMountable {
 	depth: number;

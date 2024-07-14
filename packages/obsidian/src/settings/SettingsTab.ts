@@ -1,9 +1,10 @@
-import { type App, ButtonComponent, PluginSettingTab, Setting } from 'obsidian';
+import type { App } from 'obsidian';
+import { ButtonComponent, PluginSettingTab, Setting } from 'obsidian';
 import { DEFAULT_SETTINGS, weekdays } from 'packages/core/src/Settings';
 import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
-import { MB_PLAYGROUND_VIEW_TYPE } from 'packages/obsidian/src/playground/PlaygroundView';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 import { MetaBindBuild } from 'packages/obsidian/src/main';
+import { MB_PLAYGROUND_VIEW_TYPE } from 'packages/obsidian/src/playground/PlaygroundView';
 import { ButtonTemplatesSettingModal } from 'packages/obsidian/src/settings/buttonTemplateSetting/ButtonTemplatesSettingModal';
 import { ExcludedFoldersSettingModal } from 'packages/obsidian/src/settings/excludedFoldersSetting/ExcludedFoldersSettingModal';
 import { InputFieldTemplatesSettingModal } from 'packages/obsidian/src/settings/inputFieldTemplateSetting/InputFieldTemplatesSettingModal';

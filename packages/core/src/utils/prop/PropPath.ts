@@ -1,4 +1,5 @@
-import { type PropAccess, type PropAccessResult, PropAccessType } from 'packages/core/src/utils/prop/PropAccess';
+import type { PropAccess, PropAccessResult } from 'packages/core/src/utils/prop/PropAccess';
+import { PropAccessType } from 'packages/core/src/utils/prop/PropAccess';
 
 export class PropPath {
 	path: PropAccess[];

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { TextPromptModalOptions } from 'packages/core/src/api/InternalAPI';
-	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import ModalButtonGroup from 'packages/core/src/utils/components/ModalButtonGroup.svelte';
 
 	const {

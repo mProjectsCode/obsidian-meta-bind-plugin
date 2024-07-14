@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Calender from './Calender.svelte';
-	import { getMonthName } from '../../../../utils/DatePickerUtils.js';
 	import type { Moment } from 'moment';
 	import moment from 'moment';
+	import Calender from 'packages/core/src/fields/inputFields/fields/DatePicker/Calender.svelte';
+	import { getMonthName } from 'packages/core/src/utils/DatePickerUtils.js';
 
 	let {
 		selectedDate = moment(),
@@ -45,8 +45,10 @@
 		month -= 1;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	function changeYear(value: any): void {
-		const v = value.target.value;
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+		const v = value.target.value as string;
 		const vNum = Number.parseInt(v);
 		if (!Number.isNaN(vNum)) {
 			year = vNum;

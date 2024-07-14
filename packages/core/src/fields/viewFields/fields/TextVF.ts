@@ -2,10 +2,10 @@ import { ViewFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import { AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractViewField';
 import type { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
 import type { ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
+import { ErrorLevel, MetaBindExpressionError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { stringifyUnknown } from 'packages/core/src/utils/Literal';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { DomHelpers, getUUID } from 'packages/core/src/utils/Utils';
-import { ErrorLevel, MetaBindExpressionError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 export class TextVF extends AbstractViewField {
 	textParts?: (string | number)[];

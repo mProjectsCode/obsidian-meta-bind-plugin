@@ -2,8 +2,8 @@
 
 <script lang="ts">
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
-	import Icon from 'packages/core/src/utils/components/Icon.svelte';
 	import type { IPlugin } from 'packages/core/src/IPlugin';
+	import Icon from 'packages/core/src/utils/components/Icon.svelte';
 
 	let {
 		plugin,
@@ -25,7 +25,7 @@
 		onclick?: () => void | Promise<void>;
 	} = $props();
 
-	async function click() {
+	async function click(): Promise<void> {
 		if (!disabled) {
 			disabled = true;
 			try {
@@ -41,13 +41,13 @@
 
 <button
 	class="mb-button-inner"
-	class:mod-cta={variant === 'primary'}
-	class:mod-warning={variant === 'destructive'}
-	class:mod-plain={variant === 'plain'}
+	class:mod-cta={variant === ButtonStyleType.PRIMARY}
+	class:mod-warning={variant === ButtonStyleType.DESTRUCTIVE}
+	class:mod-plain={variant === ButtonStyleType.PLAIN}
 	class:disabled={disabled}
 	class:mb-error={error}
 	aria-label={tooltip}
-	onclick={onclick}
+	onclick={click}
 	disabled={disabled}
 >
 	{#if icon}

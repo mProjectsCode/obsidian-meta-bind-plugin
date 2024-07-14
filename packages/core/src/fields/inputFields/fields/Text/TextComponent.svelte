@@ -12,7 +12,7 @@
 		value = v;
 	}
 
-	function getLimitString(length: number, limit: number) {
+	function getLimitString(length: number, limit: number): string {
 		const limitStr = limit.toString();
 		const lengthStr = length.toString().padStart(limitStr.length, '0');
 		return `${lengthStr}/${limitStr}`;

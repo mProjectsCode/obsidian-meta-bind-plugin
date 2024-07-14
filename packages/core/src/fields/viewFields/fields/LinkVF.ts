@@ -1,16 +1,17 @@
 import { AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractViewField';
 import type { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
-import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { Signal } from 'packages/core/src/utils/Signal';
-import { getUUID } from 'packages/core/src/utils/Utils';
+import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import LinkListComponent from 'packages/core/src/utils/components/LinkListComponent.svelte';
 import {
 	ErrorLevel,
 	MetaBindExpressionError,
 	MetaBindValidationError,
 } from 'packages/core/src/utils/errors/MetaBindErrors';
-import { mount, type Component as SvelteComponent, unmount } from 'svelte';
+import { Signal } from 'packages/core/src/utils/Signal';
+import { getUUID } from 'packages/core/src/utils/Utils';
+import type { Component as SvelteComponent } from 'svelte';
+import { mount, unmount } from 'svelte';
 
 export class LinkVF extends AbstractViewField {
 	component?: ReturnType<SvelteComponent>;

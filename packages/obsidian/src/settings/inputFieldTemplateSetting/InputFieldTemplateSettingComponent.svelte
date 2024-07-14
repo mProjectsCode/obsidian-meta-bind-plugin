@@ -1,28 +1,26 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-	import Button from 'packages/core/src/utils/components/Button.svelte';
-	import Icon from 'packages/core/src/utils/components/Icon.svelte';
-	import FlexRow from 'packages/core/src/utils/components/FlexRow.svelte';
-	import { type InputFieldTemplate } from 'packages/core/src/Settings';
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 	import type { IPlugin } from 'packages/core/src/IPlugin';
+	import type { InputFieldTemplate } from 'packages/core/src/Settings';
+	import Button from 'packages/core/src/utils/components/Button.svelte';
+	import FlexRow from 'packages/core/src/utils/components/FlexRow.svelte';
+	import Icon from 'packages/core/src/utils/components/Icon.svelte';
 
-	export let plugin: IPlugin;
-	export let template: InputFieldTemplate;
-
-	const dispatch = createEventDispatcher();
-
-	function dispatchDeleteEvent(): void {
-		dispatch('delete-template', {
-			template: template,
-		});
-	}
+	let {
+		plugin,
+		template = $bindable(),
+		onDelete,
+	}: {
+		plugin: IPlugin;
+		template: InputFieldTemplate;
+		onDelete: (template: InputFieldTemplate) => void;
+	} = $props();
 </script>
 
 <div class="mb-card">
 	<FlexRow>
 		<input type="text" bind:value={template.name} placeholder="template-name" />
-		<Button on:click={() => dispatchDeleteEvent()} variant={ButtonStyleType.DESTRUCTIVE} tooltip="Delete Template">
+		<Button onclick={() => onDelete(template)} variant={ButtonStyleType.DESTRUCTIVE} tooltip="Delete Template">
 			<Icon plugin={plugin} iconName="x" />
 		</Button>
 	</FlexRow>

@@ -10,7 +10,7 @@
 		settings: ErrorIndicatorProps;
 	} = $props();
 
-	function openModal() {
+	function openModal(): void {
 		plugin.internal.openErrorCollectionViewModal(settings);
 	}
 </script>

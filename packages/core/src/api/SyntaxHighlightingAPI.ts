@@ -1,17 +1,17 @@
 import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
+import type { InlineFieldType } from 'packages/core/src/config/APIConfigs';
+import { FieldType } from 'packages/core/src/config/APIConfigs';
 import type { IPlugin } from 'packages/core/src/IPlugin';
 import { ParsingError, runParser } from 'packages/core/src/parsers/ParsingError';
+import type { Highlight } from 'packages/core/src/parsers/syntaxHighlighting/Highlight';
 import {
 	HLP_BindTarget,
 	HLP_ButtonGroupDeclaration,
 	HLP_InputFieldDeclaration,
 	HLP_ViewFieldDeclaration,
 } from 'packages/core/src/parsers/syntaxHighlighting/HLPs';
-import type { Highlight } from 'packages/core/src/parsers/syntaxHighlighting/Highlight';
 import { SyntaxHighlighting } from 'packages/core/src/parsers/syntaxHighlighting/SyntaxHighlighting';
-
-import { FieldType, type InlineFieldType } from 'packages/core/src/config/APIConfigs';
 
 export class SyntaxHighlightingAPI {
 	public readonly plugin: IPlugin;

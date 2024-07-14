@@ -6,11 +6,12 @@ import type {
 	IMetadataCacheItem,
 } from 'packages/core/src/metadata/MetadataCacheItem';
 import type { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
-import { FilePathMetadataSource, type IMetadataSource, type Metadata } from 'packages/core/src/metadata/MetadataSource';
-import { ParsingValidationError } from 'packages/core/src/parsers/ParsingError';
+import type { IMetadataSource, Metadata } from 'packages/core/src/metadata/MetadataSource';
+import { FilePathMetadataSource } from 'packages/core/src/metadata/MetadataSource';
 import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import type { BindTargetParser } from 'packages/core/src/parsers/bindTargetParser/BindTargetParser';
 import type { ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
+import { ParsingValidationError } from 'packages/core/src/parsers/ParsingError';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import type { PropPath } from 'packages/core/src/utils/prop/PropPath';
 import { PropUtils } from 'packages/core/src/utils/prop/PropUtils';

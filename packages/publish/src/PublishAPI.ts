@@ -1,8 +1,8 @@
-import { API } from 'packages/core/src/api/API';
-import { PublishFieldMDRC } from 'packages/publish/src/PublishFieldMDRC';
-import type { MetaBindPublishPlugin } from 'packages/publish/src/main';
 import type { Component } from 'obsidian/publish';
+import { API } from 'packages/core/src/api/API';
 import type { Mountable } from 'packages/core/src/utils/Mountable';
+import type { MetaBindPublishPlugin } from 'packages/publish/src/main';
+import { PublishFieldMDRC } from 'packages/publish/src/PublishFieldMDRC';
 
 export interface ComponentLike {
 	addChild(child: Component): void;

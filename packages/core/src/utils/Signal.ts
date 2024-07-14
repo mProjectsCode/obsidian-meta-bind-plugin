@@ -1,5 +1,5 @@
-import { getUUID } from 'packages/core/src/utils/Utils';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
+import { getUUID } from 'packages/core/src/utils/Utils';
 
 export interface NotifierInterface<T, TListener extends Listener<T>> {
 	registerListener(listener: Omit<TListener, 'uuid'>): TListener;

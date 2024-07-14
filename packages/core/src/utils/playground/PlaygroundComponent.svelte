@@ -1,19 +1,19 @@
 <script lang="ts">
+	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+	import type { IPlugin } from 'packages/core/src/IPlugin';
+	import Button from 'packages/core/src/utils/components/Button.svelte';
+	import FlexRow from 'packages/core/src/utils/components/FlexRow.svelte';
+	import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
+	import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 	import ErrorIndicatorComponent from 'packages/core/src/utils/errors/ErrorIndicatorComponent.svelte';
-	import { onMount } from 'svelte';
+	import { ErrorLevel, MetaBindExampleError } from 'packages/core/src/utils/errors/MetaBindErrors';
 	import {
 		createInputFieldFAQExamples,
 		VIEW_FIELD_EXAMPLE_DECLARATIONS,
 	} from 'packages/core/src/utils/InputFieldExamples';
 	import InputFieldExampleComponent from 'packages/core/src/utils/playground/InputFieldExampleComponent.svelte';
 	import ViewFieldExampleComponent from 'packages/core/src/utils/playground/ViewFieldExampleComponent.svelte';
-	import Button from 'packages/core/src/utils/components/Button.svelte';
-	import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
-	import { ErrorLevel, MetaBindExampleError } from 'packages/core/src/utils/errors/MetaBindErrors';
-	import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
-	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
-	import type { IPlugin } from 'packages/core/src/IPlugin';
-	import FlexRow from '../components/FlexRow.svelte';
+	import { onMount } from 'svelte';
 
 	const {
 		plugin,

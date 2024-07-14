@@ -3,9 +3,9 @@ import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import type { OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
 import DatePickerComponent from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePickerComponent.svelte';
-import { DateParser } from 'packages/core/src/parsers/DateParser';
 import type { InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
 import type { InputFieldSvelteComponent } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
+import { DateParser } from 'packages/core/src/parsers/DateParser';
 
 export class DatePickerIPF extends AbstractInputField<string | null, Moment | null> {
 	options: OptionInputFieldArgument[];

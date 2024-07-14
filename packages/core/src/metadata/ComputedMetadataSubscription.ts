@@ -3,9 +3,9 @@ import type { IMetadataSubscription } from 'packages/core/src/metadata/IMetadata
 import type { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
 import type { MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
 import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import type { Signal } from 'packages/core/src/utils/Signal';
 import { getUUID } from 'packages/core/src/utils/Utils';
-import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 export type ComputeFunction = (values: unknown[]) => Promise<unknown> | unknown;

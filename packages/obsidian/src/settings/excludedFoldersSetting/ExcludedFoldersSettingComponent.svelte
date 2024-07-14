@@ -1,18 +1,24 @@
 <script lang="ts">
-	import { ExcludedFoldersSettingModal } from './ExcludedFoldersSettingModal';
-	import ErrorCollectionComponent from 'packages/core/src/utils/errors/ErrorCollectionComponent.svelte';
-	import ModalButtonGroup from 'packages/core/src/utils/components/ModalButtonGroup.svelte';
-	import Button from 'packages/core/src/utils/components/Button.svelte';
-	import Icon from 'packages/core/src/utils/components/Icon.svelte';
-	import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 	import type { IPlugin } from 'packages/core/src/IPlugin';
+	import Button from 'packages/core/src/utils/components/Button.svelte';
+	import Icon from 'packages/core/src/utils/components/Icon.svelte';
+	import ModalButtonGroup from 'packages/core/src/utils/components/ModalButtonGroup.svelte';
+	import type { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
+	import ErrorCollectionComponent from 'packages/core/src/utils/errors/ErrorCollectionComponent.svelte';
+	import type { ExcludedFoldersSettingModal } from 'packages/obsidian/src/settings/excludedFoldersSetting/ExcludedFoldersSettingModal';
 
-	export let excludedFolders: string[];
-	export let modal: ExcludedFoldersSettingModal;
-	export let plugin: IPlugin;
+	let {
+		plugin,
+		modal,
+		excludedFolders,
+	}: {
+		plugin: IPlugin;
+		modal: ExcludedFoldersSettingModal;
+		excludedFolders: string[];
+	} = $props();
 
-	let errorCollection: ErrorCollection | undefined;
+	let errorCollection: ErrorCollection | undefined = $state();
 
 	function deleteFolder(name: string): void {
 		excludedFolders = excludedFolders.filter(x => x !== name);
@@ -20,8 +26,6 @@
 
 	function addFolder(): void {
 		excludedFolders.push('');
-
-		excludedFolders = excludedFolders;
 	}
 
 	function save(): void {
@@ -46,13 +50,18 @@
 			</tr>
 		</thead>
 		<tbody>
-			{#each excludedFolders as folder}
+			{#each excludedFolders as folder, i (i)}
 				<tr>
 					<td style="width: 100%">
-						<input type="text" bind:value={folder} placeholder="path/to/folder" style="width: 100%" />
+						<input
+							type="text"
+							bind:value={excludedFolders[i]}
+							placeholder="path/to/folder"
+							style="width: 100%"
+						/>
 					</td>
 					<td>
-						<Button on:click={() => deleteFolder(folder)} tooltip="Delete">
+						<Button onclick={() => deleteFolder(folder)} tooltip="Delete">
 							<Icon plugin={plugin} iconName="x"></Icon>
 						</Button>
 					</td>
@@ -61,7 +70,7 @@
 		</tbody>
 	</table>
 
-	<Button on:click={() => addFolder()} variant={ButtonStyleType.PRIMARY} tooltip="Add new excluded Folder"
+	<Button onclick={() => addFolder()} variant={ButtonStyleType.PRIMARY} tooltip="Add new excluded Folder"
 		>Add Folder</Button
 	>
 
@@ -74,7 +83,7 @@
 	{/if}
 
 	<ModalButtonGroup>
-		<Button on:click={() => save()} variant={ButtonStyleType.PRIMARY} tooltip="Save Changes">Save</Button>
-		<Button on:click={() => cancel()} tooltip="Revert Changes">Cancel</Button>
+		<Button onclick={() => save()} variant={ButtonStyleType.PRIMARY} tooltip="Save Changes">Save</Button>
+		<Button onclick={() => cancel()} tooltip="Revert Changes">Cancel</Button>
 	</ModalButtonGroup>
 </div>

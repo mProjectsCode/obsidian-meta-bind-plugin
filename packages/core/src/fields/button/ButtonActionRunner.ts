@@ -1,28 +1,27 @@
-import type { IPlugin } from 'packages/core/src/IPlugin';
-import {
-	type ButtonAction,
-	ButtonActionType,
-	type ButtonConfig,
-	ButtonStyleType,
-	type CommandButtonAction,
-	type CreateNoteButtonAction,
-	type InlineJsButtonAction,
-	type InputButtonAction,
-	type InsertIntoNoteButtonAction,
-	type JSButtonAction,
-	type OpenButtonAction,
-	type RegexpReplaceInNoteButtonAction,
-	type ReplaceInNoteButtonAction,
-	type ReplaceSelfButtonAction,
-	type SleepButtonAction,
-	type TemplaterCreateNoteButtonAction,
-	type UpdateMetadataButtonAction,
-} from 'packages/core/src/config/ButtonConfig';
-import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
-import { expectType } from 'packages/core/src/utils/Utils';
-import { parseLiteral } from 'packages/core/src/utils/Literal';
 import type { NotePosition } from 'packages/core/src/config/APIConfigs';
+import type {
+	ButtonAction,
+	ButtonConfig,
+	CommandButtonAction,
+	CreateNoteButtonAction,
+	InlineJsButtonAction,
+	InputButtonAction,
+	InsertIntoNoteButtonAction,
+	JSButtonAction,
+	OpenButtonAction,
+	RegexpReplaceInNoteButtonAction,
+	ReplaceInNoteButtonAction,
+	ReplaceSelfButtonAction,
+	SleepButtonAction,
+	TemplaterCreateNoteButtonAction,
+	UpdateMetadataButtonAction,
+} from 'packages/core/src/config/ButtonConfig';
+import { ButtonActionType, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+import type { IPlugin } from 'packages/core/src/IPlugin';
+import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import { ErrorLevel, MetaBindJsError, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
+import { parseLiteral } from 'packages/core/src/utils/Literal';
+import { expectType } from 'packages/core/src/utils/Utils';
 
 export class ButtonActionRunner {
 	plugin: IPlugin;

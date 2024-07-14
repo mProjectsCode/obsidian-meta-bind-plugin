@@ -1,7 +1,7 @@
 import type { API as JsEngineAPI } from 'jsEngine/api/API';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
 import type { DataviewApi } from 'obsidian-dataview';
 import type { Templater, TemplaterPlugin } from 'packages/obsidian/extraTypes/Templater';
+import type MetaBindPlugin from 'packages/obsidian/src/main';
 
 export function getDataViewPluginAPI(plugin: MetaBindPlugin): DataviewApi {
 	/* eslint-disable */
