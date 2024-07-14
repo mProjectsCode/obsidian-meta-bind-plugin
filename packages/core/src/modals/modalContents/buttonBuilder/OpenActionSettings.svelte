@@ -1,11 +1,16 @@
 <script lang="ts">
-	import { OpenButtonAction } from 'packages/core/src/config/ButtonConfig';
+	import type { OpenButtonAction } from 'packages/core/src/config/ButtonConfig';
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
-	import { IPlugin } from 'packages/core/src/IPlugin';
+	import type { IPlugin } from 'packages/core/src/IPlugin';
 	import Toggle from 'packages/core/src/utils/components/Toggle.svelte';
 
-	export let action: OpenButtonAction;
-	export let plugin: IPlugin;
+	const {
+		plugin,
+		action,
+	}: {
+		plugin: IPlugin;
+		action: OpenButtonAction;
+	} = $props();
 </script>
 
 <SettingComponent name="Link" description="The link to open.">

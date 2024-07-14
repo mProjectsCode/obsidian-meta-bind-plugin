@@ -1,16 +1,15 @@
 <script lang="ts">
-	import Icon from '../../../../utils/components/Icon.svelte';
-	import { MBLiteral, stringifyLiteral } from '../../../../utils/Literal';
-	import LiteralRenderComponent from '../../../../utils/components/LiteralRenderComponent.svelte';
-	import { IPlugin } from '../../../../IPlugin';
-	import { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
-	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
-	import Button from 'packages/core/src/utils/components/Button.svelte';
+	import Icon from 'packages/core/src/utils/components/Icon.svelte';
+	import { stringifyLiteral, type MBLiteral } from 'packages/core/src/utils/Literal';
+	import LiteralRenderComponent from 'packages/core/src/utils/components/LiteralRenderComponent.svelte';
+	import type { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
+	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
-	export let plugin: IPlugin;
-	export let value: MBLiteral[];
-	export let showInput: () => void;
-	export let onValueChange: (value: MBLiteral[]) => void;
+	const props: InputFieldSvelteProps<MBLiteral[]> & {
+		showInput: () => void;
+	} = $props();
+
+	let value = $state(props.value);
 
 	export function setValue(v: MBLiteral[]): void {
 		value = v;
@@ -25,14 +24,14 @@
 	function remove(i: number) {
 		value.splice(i, 1);
 		// call with copy of array
-		onValueChange(value);
+		props.onValueChange(value);
 		// tell svelte to update
 		value = value;
 	}
 
 	function inputKey(event: KeyboardEvent): void {
 		if (event.key === ' ') {
-			showInput();
+			props.showInput();
 		}
 	}
 
@@ -47,7 +46,7 @@
 					const temp = value[index - 1];
 					value[index - 1] = value[index];
 					value[index] = temp;
-					onValueChange(value);
+					props.onValueChange(value);
 				},
 			});
 		}
@@ -60,7 +59,7 @@
 					const temp = value[index + 1];
 					value[index + 1] = value[index];
 					value[index] = temp;
-					onValueChange(value);
+					props.onValueChange(value);
 				},
 			});
 		}
@@ -69,14 +68,14 @@
 			name: 'Edit',
 			icon: 'pencil',
 			onclick: () => {
-				plugin.internal.openTextPromptModal({
+				props.plugin.internal.openTextPromptModal({
 					title: 'Meta Bind List',
 					subTitle: 'Edit the value of a list item.',
 					value: stringifyLiteral(value[index]),
 					multiline: false,
 					onSubmit: (v: MBLiteral) => {
 						value[index] = v;
-						onValueChange(value);
+						props.onValueChange(value);
 					},
 					onCancel: () => {},
 				});
@@ -90,19 +89,19 @@
 			onclick: () => remove(index),
 		});
 
-		plugin.internal.createContextMenu(menuActions).showWithEvent(e);
+		props.plugin.internal.createContextMenu(menuActions).showWithEvent(e);
 	}
 </script>
 
 <div class="mb-inline-list">
 	{#each value as entry, i}
-		<div class="mb-inline-list-item" on:contextmenu={e => openContextMenuForElement(e, i)} role="listitem">
+		<div class="mb-inline-list-item" oncontextmenu={e => openContextMenuForElement(e, i)} role="listitem">
 			<LiteralRenderComponent value={entry}></LiteralRenderComponent>
 		</div>
 	{/each}
-	<div class="mb-inline-list-add" on:click={() => showInput()} on:keydown={inputKey} role="button" tabindex="0">
+	<div class="mb-inline-list-add" onclick={() => props.showInput()} onkeydown={inputKey} role="button" tabindex="0">
 		<!-- Alignment hack with zero width space -->
 		<span>&#x200B;</span>
-		<Icon plugin={plugin} iconName="plus" />
+		<Icon plugin={props.plugin} iconName="plus" />
 	</div>
 </div>

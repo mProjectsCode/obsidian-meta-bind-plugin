@@ -1,7 +1,7 @@
 import { ViewFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import { AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractViewField';
-import { type ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
-import { type ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
+import type { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
+import type { ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
 import { stringifyUnknown } from 'packages/core/src/utils/Literal';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { DomHelpers, getUUID } from 'packages/core/src/utils/Utils';

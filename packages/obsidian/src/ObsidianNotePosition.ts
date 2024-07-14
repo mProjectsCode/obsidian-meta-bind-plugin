@@ -1,4 +1,4 @@
-import { type MarkdownPostProcessorContext } from 'obsidian';
+import type { MarkdownPostProcessorContext } from 'obsidian';
 import { type LinePosition, NotePosition } from 'packages/core/src/config/APIConfigs';
 
 export class ObsidianNotePosition extends NotePosition {

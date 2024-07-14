@@ -1,12 +1,15 @@
 import builtins from 'builtin-modules';
 import esbuild from 'esbuild';
 import esbuildSvelte from 'esbuild-svelte';
-import { sveltePreprocess } from 'svelte-preprocess';
+import sveltePreprocess from 'svelte-preprocess';
 import { getBuildBanner } from 'build/buildBanner';
+
+// currently this segfaults for me, but i want to consider using bun for the build system in the future
+// https://github.com/oven-sh/bun/issues/12456
 
 const banner = getBuildBanner('Release Build', version => version);
 
-const build = await esbuild.build({
+const build = await Bun.build({
 	banner: {
 		js: banner,
 	},
@@ -28,10 +31,10 @@ const build = await esbuild.build({
 		'@lezer/lr',
 		...builtins,
 	],
-	format: 'cjs',
-	target: 'es2022',
+	format: 'esm',
+	target: 'browser',
 	logLevel: 'info',
-	sourcemap: false,
+	sourcemap: 'none',
 	treeShaking: true,
 	outfile: 'main.js',
 	minify: true,
@@ -40,6 +43,7 @@ const build = await esbuild.build({
 		MB_GLOBAL_CONFIG_DEV_BUILD: 'false',
 	},
 	plugins: [
+		// @ts-ignore
 		esbuildSvelte({
 			compilerOptions: { css: 'injected', dev: false },
 			preprocess: sveltePreprocess(),
@@ -51,7 +55,7 @@ const build = await esbuild.build({
 	],
 });
 
-const file = Bun.file('meta.txt');
-await Bun.write(file, JSON.stringify(build.metafile, null, '\t'));
+// const file = Bun.file('meta.txt');
+// await Bun.write(file, JSON.stringify(build.metafile, null, '\t'));
 
-process.exit(0);
+// process.exit(0);

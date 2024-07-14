@@ -1,14 +1,14 @@
-import { beforeEach, describe, expect, Mock, spyOn, test } from 'bun:test';
+import { beforeEach, describe, expect, type Mock, spyOn, test } from 'bun:test';
 import { InternalMetadataSource } from '../../packages/core/src/metadata/InternalMetadataSources';
 import { MetadataManager } from '../../packages/core/src/metadata/MetadataManager';
-import { Metadata } from '../../packages/core/src/metadata/MetadataSource';
+import { type Metadata } from '../../packages/core/src/metadata/MetadataSource';
 import { MetadataSubscription } from '../../packages/core/src/metadata/MetadataSubscription';
 import {
-	BindTargetDeclaration,
+	type BindTargetDeclaration,
 	BindTargetStorageType,
 } from '../../packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { parsePropPath } from '../../packages/core/src/utils/prop/PropParser';
-import { ListenerCallback, Signal } from '../../packages/core/src/utils/Signal';
+import { type ListenerCallback, Signal } from '../../packages/core/src/utils/Signal';
 import { getUUID } from '../../packages/core/src/utils/Utils';
 
 const testFilePath = 'testFile';

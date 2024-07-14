@@ -1,18 +1,22 @@
 <script lang="ts">
 	import {
-		ButtonAction,
+		type ButtonAction,
 		ButtonActionType,
 		ButtonStyleType,
-		CommandButtonAction,
+		type CommandButtonAction,
 	} from 'packages/core/src/config/ButtonConfig';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
-	import { IPlugin } from 'packages/core/src/IPlugin';
-	import { Command } from 'packages/core/src/api/InternalAPI';
+	import type { IPlugin } from 'packages/core/src/IPlugin';
+	import type { Command } from 'packages/core/src/api/InternalAPI';
 
-	export let action: CommandButtonAction;
-	export let plugin: IPlugin;
-	export let updateActions: () => void;
+	const {
+		plugin,
+		action,
+	}: {
+		plugin: IPlugin;
+		action: CommandButtonAction;
+	} = $props();
 
 	function commandActionChangeCommand(action: ButtonAction) {
 		if (action.type !== ButtonActionType.COMMAND) {
@@ -21,7 +25,6 @@
 
 		plugin.internal.openCommandSelectModal((command: Command) => {
 			action.command = command.id;
-			updateActions();
 		});
 	}
 </script>

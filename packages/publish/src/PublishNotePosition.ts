@@ -1,4 +1,4 @@
-import { type MarkdownPostProcessorContext } from 'obsidian/publish';
+import type { MarkdownPostProcessorContext } from 'obsidian/publish';
 import { type LinePosition, NotePosition } from 'packages/core/src/config/APIConfigs';
 
 export class PublishNotePosition extends NotePosition {

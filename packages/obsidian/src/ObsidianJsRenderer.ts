@@ -1,7 +1,7 @@
-import { type API } from 'jsEngine/api/API';
-import { type JsExecution } from 'jsEngine/engine/JsExecution';
+import type { API } from 'jsEngine/api/API';
+import type { JsExecution } from 'jsEngine/engine/JsExecution';
 import { Component, TFile } from 'obsidian';
-import { type IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
+import type { IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
 import { DomHelpers } from 'packages/core/src/utils/Utils';
 import { getJsEnginePluginAPI } from 'packages/obsidian/src/ObsUtils';
 import type MetaBindPlugin from 'packages/obsidian/src/main';

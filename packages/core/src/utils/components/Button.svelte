@@ -2,43 +2,32 @@
 
 <script lang="ts">
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+	import type { Snippet } from 'svelte';
 
-	export let variant: ButtonStyleType = ButtonStyleType.DEFAULT;
-	export let disabled: boolean = false;
-	export let tooltip: string = '';
+	const {
+		variant = ButtonStyleType.DEFAULT,
+		disabled = false,
+		tooltip = '',
+		onclick = () => {},
+		children,
+	}: {
+		variant?: ButtonStyleType;
+		disabled?: boolean;
+		tooltip?: string;
+		onclick?: (e: MouseEvent) => void | Promise<void>;
+		children: Snippet;
+	} = $props();
 </script>
 
 <button
+	class="mb-button-inner"
 	class:mod-cta={variant === 'primary'}
 	class:mod-warning={variant === 'destructive'}
 	class:mod-plain={variant === 'plain'}
 	class:disabled={disabled}
 	aria-label={tooltip}
-	on:click
+	onclick={onclick}
 	disabled={disabled}
 >
-	<slot />
+	{@render children()}
 </button>
-
-<style>
-	button {
-		/* Add a gap between text and icons. */
-		gap: var(--size-4-1);
-	}
-
-	.mod-plain {
-		background: none;
-		box-shadow: none;
-		border: none;
-
-		color: var(--text-muted);
-	}
-
-	.mod-plain:hover {
-		color: var(--text-normal);
-	}
-
-	.disabled {
-		opacity: 0.6;
-	}
-</style>

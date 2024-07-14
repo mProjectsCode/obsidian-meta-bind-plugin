@@ -1,7 +1,7 @@
-import {
-	type InputFieldArgumentConfig,
-	type InputFieldArgumentType,
-	type InputFieldType,
+import type {
+	InputFieldArgumentConfig,
+	InputFieldArgumentType,
+	InputFieldType,
 } from 'packages/core/src/config/FieldConfigs';
 import { AbstractFieldArgument } from 'packages/core/src/fields/fieldArguments/AbstractFieldArgument';
 

@@ -1,5 +1,5 @@
-import { type ComputedSubscriptionDependency } from 'packages/core/src/metadata/ComputedMetadataSubscription';
-import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import type { ComputedSubscriptionDependency } from 'packages/core/src/metadata/ComputedMetadataSubscription';
+import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 
 /**
  * Interface for a metadata subscription.

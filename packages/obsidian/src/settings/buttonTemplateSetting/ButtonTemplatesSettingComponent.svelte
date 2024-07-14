@@ -3,7 +3,7 @@
 	import ErrorCollectionComponent from 'packages/core/src/utils/errors/ErrorCollectionComponent.svelte';
 	import ModalButtonGroup from 'packages/core/src/utils/components/ModalButtonGroup.svelte';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
-	import { ButtonConfig, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+	import { type ButtonConfig, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 	import { ButtonTemplatesSettingModal } from 'packages/obsidian/src/settings/buttonTemplateSetting/ButtonTemplatesSettingModal';
 	import ButtonTemplateSettingComponent from 'packages/obsidian/src/settings/buttonTemplateSetting/ButtonTemplateSettingComponent.svelte';
 	import { V_ButtonConfig } from 'packages/core/src/config/ButtonConfigValidators';

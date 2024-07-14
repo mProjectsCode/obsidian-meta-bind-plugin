@@ -1,6 +1,6 @@
 import { METADATA_CACHE_UPDATE_CYCLE_THRESHOLD, MetadataManager } from 'packages/core/src/metadata/MetadataManager';
-import { IPlugin } from 'packages/core/src/IPlugin';
-import { DEFAULT_SETTINGS, MetaBindPluginSettings } from 'packages/core/src/Settings';
+import type { IPlugin } from 'packages/core/src/IPlugin';
+import { DEFAULT_SETTINGS, type MetaBindPluginSettings } from 'packages/core/src/Settings';
 import {
 	GlobalMetadataSource,
 	InternalMetadataSource,
@@ -8,17 +8,17 @@ import {
 } from 'packages/core/src/metadata/InternalMetadataSources';
 import { DateParser } from 'packages/core/src/parsers/DateParser';
 import {
-	BindTargetDeclaration,
+	type BindTargetDeclaration,
 	BindTargetStorageType,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { setFirstWeekday } from 'packages/core/src/utils/DatePickerUtils';
 import { TestAPI } from './TestAPI';
 import { TestInternalAPI } from './TestInternalAPI';
 import { InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
-import { InputField } from 'packages/core/src/fields/inputFields/InputFieldFactory';
-import { expect, Mock, spyOn } from 'bun:test';
+import type { InputField } from 'packages/core/src/fields/inputFields/InputFieldFactory';
+import { expect, type Mock, spyOn } from 'bun:test';
 import { getUUID } from 'packages/core/src/utils/Utils';
-import { Metadata } from 'packages/core/src/metadata/MetadataSource';
+import type { Metadata } from 'packages/core/src/metadata/MetadataSource';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
 import { MountableManager } from 'packages/core/src/MountableManager';

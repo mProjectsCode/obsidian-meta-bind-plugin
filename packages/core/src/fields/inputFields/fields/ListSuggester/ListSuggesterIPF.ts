@@ -1,10 +1,14 @@
 import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
 import ListSuggesterComponent from 'packages/core/src/fields/inputFields/fields/ListSuggester/ListSuggesterComponent.svelte';
 import { type MBLiteral, parseUnknownToLiteralArray } from 'packages/core/src/utils/Literal';
-import { type SvelteComponent } from 'svelte';
 import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
+import type { InputFieldSvelteComponent } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
-export class ListSuggesterIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> {
+interface SvelteExports {
+	pushValue: (value: MBLiteral) => void;
+}
+
+export class ListSuggesterIPF extends AbstractInputField<MBLiteral[], MBLiteral[], SvelteExports> {
 	protected filterValue(value: unknown): MBLiteral[] | undefined {
 		return parseUnknownToLiteralArray(value);
 	}
@@ -13,7 +17,7 @@ export class ListSuggesterIPF extends AbstractInputField<MBLiteral[], MBLiteral[
 		return [];
 	}
 
-	protected getSvelteComponent(): typeof SvelteComponent {
+	protected getSvelteComponent(): InputFieldSvelteComponent<MBLiteral[], SvelteExports> {
 		// @ts-ignore
 		return ListSuggesterComponent;
 	}
@@ -36,9 +40,7 @@ export class ListSuggesterIPF extends AbstractInputField<MBLiteral[], MBLiteral[
 
 	openModal(): void {
 		this.mountable.plugin.internal.openSuggesterModal(this, selected => {
-			const value = this.getInternalValue();
-			value.push(selected.value);
-			this.setInternalValue(value);
+			this.svelteWrapper.getInstance()?.pushValue(selected.value);
 		});
 	}
 
@@ -49,9 +51,7 @@ export class ListSuggesterIPF extends AbstractInputField<MBLiteral[], MBLiteral[
 			value: '',
 			multiline: false,
 			onSubmit: (newElement: MBLiteral) => {
-				const value = this.getInternalValue();
-				value.push(newElement);
-				this.setInternalValue(value);
+				this.svelteWrapper.getInstance()?.pushValue(newElement);
 			},
 			onCancel: () => {},
 		});

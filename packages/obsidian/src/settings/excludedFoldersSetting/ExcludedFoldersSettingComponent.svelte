@@ -6,7 +6,7 @@
 	import Icon from 'packages/core/src/utils/components/Icon.svelte';
 	import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
-	import { IPlugin } from 'packages/core/src/IPlugin';
+	import type { IPlugin } from 'packages/core/src/IPlugin';
 
 	export let excludedFolders: string[];
 	export let modal: ExcludedFoldersSettingModal;

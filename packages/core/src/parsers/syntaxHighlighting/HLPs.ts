@@ -1,11 +1,11 @@
-import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
+import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { P_MetadataPath } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';
 import { P_FilePath, P_Ident, P_SingleQuotedString } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import { P_ViewFieldTemplateString } from 'packages/core/src/parsers/nomParsers/ViewFieldNomParsers';
 import { HLPUtils, MB_TokenClass } from 'packages/core/src/parsers/syntaxHighlighting/HLPUtils';
-import { type Highlight } from 'packages/core/src/parsers/syntaxHighlighting/Highlight';
+import type { Highlight } from 'packages/core/src/parsers/syntaxHighlighting/Highlight';
 import { P_NonStringArgumentValue } from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
 
 const HLP_Ident = HLPUtils.highlight(P_Ident, MB_TokenClass.IDENT);

@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, Mock, spyOn, test } from 'bun:test';
-import { Listener, ListenerCallback, Notifier, Signal } from '../../packages/core/src/utils/Signal';
+import { beforeEach, describe, expect, type Mock, spyOn, test } from 'bun:test';
+import { type Listener, type ListenerCallback, Notifier, Signal } from '../../packages/core/src/utils/Signal';
 
 describe('notifier', () => {
 	let notifier: Notifier<number, Listener<number>>;

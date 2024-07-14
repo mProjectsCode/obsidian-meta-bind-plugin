@@ -1,13 +1,15 @@
 <script lang="ts">
-	import { clamp, remapRange } from '../../../../utils/Utils';
-	import { IPlugin } from '../../../../IPlugin';
+	import { clamp, remapRange } from 'packages/core/src/utils/Utils';
+	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
-	export let plugin: IPlugin;
-	export let onValueChange: (value: any) => void;
-	export let value: number;
-	export let minValue: number;
-	export let maxValue: number;
-	export let stepSize: number;
+	const props: InputFieldSvelteProps<number> & {
+		minValue: number;
+		maxValue: number;
+		stepSize: number;
+		addLabels: boolean;
+	} = $props();
+
+	let value = $state(props.value);
 
 	let drag: boolean = false;
 	let progressBarEl: HTMLDivElement;
@@ -20,12 +22,12 @@
 
 	function setValueInternal(v: number) {
 		value = v;
-		onValueChange(v);
+		props.onValueChange(v);
 	}
 
 	function getProgressPercent(v: number): number {
-		v = clamp(v, minValue, maxValue);
-		return remapRange(v, minValue, maxValue, 0, 100);
+		v = clamp(v, props.minValue, props.maxValue);
+		return remapRange(v, props.minValue, props.maxValue, 0, 100);
 	}
 
 	function onDragStart() {
@@ -65,8 +67,8 @@
 
 		clientX = clamp(clientX, boundingRect.left, boundingRect.right);
 
-		let value = remapRange(clientX, boundingRect.left, boundingRect.right, minValue, maxValue);
-		value = round(value, stepSize);
+		let value = remapRange(clientX, boundingRect.left, boundingRect.right, props.minValue, props.maxValue);
+		value = round(value, props.stepSize);
 
 		setValueInternal(value);
 	}
@@ -84,11 +86,11 @@
 		let throttled = Math.ceil(keydownAcceleration / 5);
 
 		if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
-			let newValue = clamp(value + throttled, minValue, maxValue);
+			let newValue = clamp(value + throttled, props.minValue, props.maxValue);
 			setValueInternal(newValue);
 		}
 		if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
-			let newValue = clamp(value - throttled, minValue, maxValue);
+			let newValue = clamp(value - throttled, props.minValue, props.maxValue);
 			setValueInternal(newValue);
 		}
 
@@ -111,21 +113,21 @@
 	tabindex="0"
 	bind:this={progressBarEl}
 	role="button"
-	on:keydown={onKeyPress}
-	on:mousedown={onTrackEvent}
-	on:touchstart={onTrackEvent}
+	onkeydown={onKeyPress}
+	onmousedown={onTrackEvent}
+	ontouchstart={onTrackEvent}
 >
 	<div
 		class="mb-progress-bar-progress"
 		style={`width: ${getProgressPercent(value)}%`}
-		on:dragstart={() => (drag = true)}
+		ondragstart={() => (drag = true)}
 		role="slider"
-		aria-valuemin={minValue}
-		aria-valuemax={maxValue}
+		aria-valuemin={props.minValue}
+		aria-valuemax={props.maxValue}
 		aria-valuenow={value}
 		tabindex="0"
 	></div>
 	<span class="mb-progress-bar-value">{value}</span>
-	<span class="mb-progress-bar-label-left">{minValue}</span>
-	<span class="mb-progress-bar-label-right">{maxValue}</span>
+	<span class="mb-progress-bar-label-left">{props.minValue}</span>
+	<span class="mb-progress-bar-label-right">{props.maxValue}</span>
 </div>

@@ -5,7 +5,7 @@
 	import ModalButtonGroup from 'packages/core/src/utils/components/ModalButtonGroup.svelte';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
-	import { InputFieldTemplate } from 'packages/core/src/Settings';
+	import { type InputFieldTemplate } from 'packages/core/src/Settings';
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 
 	export let inputFieldTemplates: InputFieldTemplate[];

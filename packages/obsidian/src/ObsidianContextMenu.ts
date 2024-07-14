@@ -1,4 +1,4 @@
-import { type ContextMenuItemDefinition, type IContextMenu } from 'packages/core/src/utils/IContextMenu';
+import type { ContextMenuItemDefinition, IContextMenu } from 'packages/core/src/utils/IContextMenu';
 import { Menu } from 'obsidian';
 
 export class ObsidianContextMenu implements IContextMenu {

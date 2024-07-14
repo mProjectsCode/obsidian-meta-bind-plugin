@@ -1,13 +1,18 @@
 <script lang="ts">
-	import { TableMountable, MetaBindTableRow } from 'packages/core/src/fields/metaBindTable/TableMountable';
-	import MetaBindTableCellComponent from 'packages/core/src/fields/metaBindTable/MetaBindTableCellComponent.svelte';
+	import { TableMountable, type MetaBindTableRow } from 'packages/core/src/fields/metaBindTable/TableMountable';
 	import Icon from 'packages/core/src/utils/components/Icon.svelte';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
+	import MountableComponent from 'packages/core/src/utils/components/MountableComponent.svelte';
 
-	export let table: TableMountable;
-	export let tableHead: string[] = [];
+	const {
+		table,
+		tableHead = [],
+	}: {
+		table: TableMountable;
+		tableHead?: string[];
+	} = $props();
 
-	let tableRows: MetaBindTableRow[] = [];
+	let tableRows: MetaBindTableRow[] = $state([]);
 
 	export function updateTable(cells: MetaBindTableRow[]): void {
 		tableRows = cells;
@@ -28,9 +33,10 @@
 			{#each tableRows as tableRow (tableRow.index)}
 				<tr>
 					{#if tableRow.isValid}
-						{#each tableRow.cells as tableCell}
-							<MetaBindTableCellComponent table={table} bind:cell={tableCell}
-							></MetaBindTableCellComponent>
+						{#each tableRow.cells as cell}
+							<td>
+								<MountableComponent mountable={cell}></MountableComponent>
+							</td>
 						{/each}
 					{:else}
 						<td class="meta-bind-error" colspan={tableHead.length}> invalid data</td>

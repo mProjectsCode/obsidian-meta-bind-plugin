@@ -1,4 +1,4 @@
-import { type IPlugin } from 'packages/core/src/IPlugin';
+import type { IPlugin } from 'packages/core/src/IPlugin';
 import {
 	type ButtonAction,
 	ButtonActionType,
@@ -21,7 +21,7 @@ import {
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import { expectType } from 'packages/core/src/utils/Utils';
 import { parseLiteral } from 'packages/core/src/utils/Literal';
-import { type NotePosition } from 'packages/core/src/config/APIConfigs';
+import type { NotePosition } from 'packages/core/src/config/APIConfigs';
 import { ErrorLevel, MetaBindJsError, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 export class ButtonActionRunner {

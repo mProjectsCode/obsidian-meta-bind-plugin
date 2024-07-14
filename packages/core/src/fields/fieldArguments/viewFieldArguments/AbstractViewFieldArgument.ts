@@ -1,7 +1,7 @@
-import {
-	type ViewFieldArgumentConfig,
-	type ViewFieldArgumentType,
-	type ViewFieldType,
+import type {
+	ViewFieldArgumentConfig,
+	ViewFieldArgumentType,
+	ViewFieldType,
 } from 'packages/core/src/config/FieldConfigs';
 import { AbstractFieldArgument } from 'packages/core/src/fields/fieldArguments/AbstractFieldArgument';
 

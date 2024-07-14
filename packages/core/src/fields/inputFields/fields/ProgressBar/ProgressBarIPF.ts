@@ -1,11 +1,11 @@
 import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
-import { type InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
+import type { InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
 import ProgressBarComponent from 'packages/core/src/fields/inputFields/fields/ProgressBar/ProgressBarComponent.svelte';
 import { parseUnknownToFloat } from 'packages/core/src/utils/Literal';
 import { optClamp } from 'packages/core/src/utils/Utils';
 import { ErrorLevel, MetaBindArgumentError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import { type SvelteComponent } from 'svelte';
+import type { InputFieldSvelteComponent } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
 export class ProgressBarIPF extends AbstractInputField<number, number> {
 	minValue: number;
@@ -36,7 +36,7 @@ export class ProgressBarIPF extends AbstractInputField<number, number> {
 		return this.minValue;
 	}
 
-	protected getSvelteComponent(): typeof SvelteComponent {
+	protected getSvelteComponent(): InputFieldSvelteComponent<number> {
 		// @ts-ignore
 		return ProgressBarComponent;
 	}

@@ -1,18 +1,22 @@
 <script lang="ts">
 	import {
-		ButtonAction,
+		type ButtonAction,
 		ButtonActionType,
 		ButtonStyleType,
-		TemplaterCreateNoteButtonAction,
+		type TemplaterCreateNoteButtonAction,
 	} from 'packages/core/src/config/ButtonConfig';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
-	import { IPlugin } from 'packages/core/src/IPlugin';
+	import type { IPlugin } from 'packages/core/src/IPlugin';
 	import Toggle from 'packages/core/src/utils/components/Toggle.svelte';
 
-	export let action: TemplaterCreateNoteButtonAction;
-	export let plugin: IPlugin;
-	export let updateActions: () => void;
+	const {
+		plugin,
+		action,
+	}: {
+		plugin: IPlugin;
+		action: TemplaterCreateNoteButtonAction;
+	} = $props();
 
 	function templaterCreateNoteActionChangeTemplateFile(action: ButtonAction) {
 		if (action.type !== ButtonActionType.TEMPLATER_CREATE_NOTE) {
@@ -21,7 +25,6 @@
 
 		plugin.internal.openFileSelectModal((file: string) => {
 			action.templateFile = file;
-			updateActions();
 		});
 	}
 
@@ -32,7 +35,6 @@
 
 		plugin.internal.openFolderSelectModal((folder: string) => {
 			action.folderPath = folder;
-			updateActions();
 		});
 	}
 </script>

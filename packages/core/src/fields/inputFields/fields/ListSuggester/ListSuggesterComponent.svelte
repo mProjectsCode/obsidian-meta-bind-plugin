@@ -1,18 +1,18 @@
 <script lang="ts">
-	import Icon from '../../../../utils/components/Icon.svelte';
-	import { MBLiteral } from '../../../../utils/Literal';
-	import LiteralRenderComponent from '../../../../utils/components/LiteralRenderComponent.svelte';
-	import Button from '../../../../utils/components/Button.svelte';
-	import { IPlugin } from '../../../../IPlugin';
-	import { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
+	import type { MBLiteral } from 'packages/core/src/utils/Literal';
+	import LiteralRenderComponent from 'packages/core/src/utils/components/LiteralRenderComponent.svelte';
+	import Button from 'packages/core/src/utils/components/Button.svelte';
+	import type { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
+	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 
-	export let plugin: IPlugin;
-	export let value: MBLiteral[];
-	export let showSuggester: () => void;
-	export let showTextPrompt: () => void;
-	export let allowOther: boolean;
-	export let onValueChange: (value: MBLiteral[]) => void;
+	const props: InputFieldSvelteProps<MBLiteral[]> & {
+		showSuggester: () => void;
+		showTextPrompt: () => void;
+		allowOther: boolean;
+	} = $props();
+
+	let value = $state(props.value);
 
 	export function setValue(v: MBLiteral[]): void {
 		value = v;
@@ -20,21 +20,17 @@
 
 	export function addValue(v: MBLiteral): void {
 		value.push(v);
-
-		value = value;
+		props.onValueChange(value);
 	}
 
 	function remove(i: number) {
 		value.splice(i, 1);
-		// call with copy of array
-		onValueChange(value);
-		// tell svelte to update
-		value = value;
+		props.onValueChange(value);
 	}
 
 	function suggestKey(event: KeyboardEvent): void {
 		if (event.key === ' ') {
-			showSuggester();
+			props.showSuggester();
 		}
 	}
 
@@ -49,7 +45,7 @@
 					const temp = value[index - 1];
 					value[index - 1] = value[index];
 					value[index] = temp;
-					onValueChange(value);
+					props.onValueChange(value);
 				},
 			});
 		}
@@ -62,7 +58,7 @@
 					const temp = value[index + 1];
 					value[index + 1] = value[index];
 					value[index] = temp;
-					onValueChange(value);
+					props.onValueChange(value);
 				},
 			});
 		}
@@ -74,13 +70,13 @@
 			onclick: () => remove(index),
 		});
 
-		plugin.internal.createContextMenu(menuActions).showWithEvent(e);
+		props.plugin.internal.createContextMenu(menuActions).showWithEvent(e);
 	}
 </script>
 
 <div class="mb-list-items">
 	{#each value as entry, i}
-		<div class="mb-list-item" on:contextmenu={e => openContextMenuForElement(e, i)} role="listitem">
+		<div class="mb-list-item" oncontextmenu={e => openContextMenuForElement(e, i)} role="listitem">
 			<LiteralRenderComponent value={entry}></LiteralRenderComponent>
 		</div>
 	{:else}
@@ -88,8 +84,8 @@
 	{/each}
 </div>
 <div class="mb-list-input">
-	<Button variant={ButtonStyleType.DEFAULT} on:click={() => showSuggester()}>Add new item</Button>
-	{#if allowOther}
-		<Button variant={ButtonStyleType.DEFAULT} on:click={() => showTextPrompt()}>Add other item</Button>
+	<Button variant={ButtonStyleType.DEFAULT} on:click={() => props.showSuggester()}>Add new item</Button>
+	{#if props.allowOther}
+		<Button variant={ButtonStyleType.DEFAULT} on:click={() => props.showTextPrompt()}>Add other item</Button>
 	{/if}
 </div>

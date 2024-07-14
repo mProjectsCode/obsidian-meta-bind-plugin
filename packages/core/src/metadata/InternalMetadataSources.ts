@@ -1,18 +1,18 @@
-import { type BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
-import { type IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
-import {
-	type FilePathMetadataCacheItem,
-	type GlobalMetadataCacheItem,
-	type IMetadataCacheItem,
+import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
+import type { IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
+import type {
+	FilePathMetadataCacheItem,
+	GlobalMetadataCacheItem,
+	IMetadataCacheItem,
 } from 'packages/core/src/metadata/MetadataCacheItem';
-import { type MetadataManager } from 'packages/core/src/metadata/MetadataManager';
+import type { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
 import { FilePathMetadataSource, type IMetadataSource, type Metadata } from 'packages/core/src/metadata/MetadataSource';
 import { ParsingValidationError } from 'packages/core/src/parsers/ParsingError';
-import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { type BindTargetParser } from 'packages/core/src/parsers/bindTargetParser/BindTargetParser';
-import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
+import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import type { BindTargetParser } from 'packages/core/src/parsers/bindTargetParser/BindTargetParser';
+import type { ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import { type PropPath } from 'packages/core/src/utils/prop/PropPath';
+import type { PropPath } from 'packages/core/src/utils/prop/PropPath';
 import { PropUtils } from 'packages/core/src/utils/prop/PropUtils';
 
 export class InternalMetadataSource extends FilePathMetadataSource<FilePathMetadataCacheItem> {

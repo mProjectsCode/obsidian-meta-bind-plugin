@@ -1,28 +1,30 @@
 <script lang="ts">
 	import ImageSuggesterCard from 'packages/core/src/fields/inputFields/fields/ImageSuggester/ImageSuggesterCard.svelte';
 	import { SuggesterOption } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
-	import { IPlugin } from 'packages/core/src/IPlugin';
+	import type { IPlugin } from 'packages/core/src/IPlugin';
 
-	export let plugin: IPlugin;
-	export let options: SuggesterOption<string>[];
-	export let onSelect: (item: string) => void;
+	const {
+		plugin,
+		options,
+		onSelect,
+	}: {
+		plugin: IPlugin;
+		options: SuggesterOption<string>[];
+		onSelect: (item: string) => void;
+	} = $props();
 
-	let search = '';
-	let filteredOptions: SuggesterOption<string>[];
+	let search = $state('');
 	let fuzzySearch = plugin.internal.createFuzzySearch();
 
-	$: runSearch(search);
-
-	function runSearch(search: string): void {
+	let filteredOptions: SuggesterOption<string>[] = $derived.by(() => {
 		if (!search) {
-			filteredOptions = options;
-			return;
+			return options;
 		}
 
 		fuzzySearch.setSearch(search);
 
-		filteredOptions = fuzzySearch.filterItems(options, x => x.value);
-	}
+		return fuzzySearch.filterItems(options, x => x.value);
+	});
 </script>
 
 <div class="mb-image-search-container">

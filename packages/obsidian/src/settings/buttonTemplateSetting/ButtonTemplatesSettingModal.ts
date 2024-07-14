@@ -1,7 +1,7 @@
 import { type App, Modal } from 'obsidian';
-import { type ButtonConfig } from 'packages/core/src/config/ButtonConfig';
+import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
 import { deepCopy } from 'packages/core/src/utils/Utils';
-import { type ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
+import type { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 import ButtonTemplatesSettingComponent from 'packages/obsidian/src/settings/buttonTemplateSetting/ButtonTemplatesSettingComponent.svelte';
 

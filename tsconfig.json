@@ -11,6 +11,7 @@
 		"moduleResolution": "Node",
 		"importHelpers": true,
 		"isolatedModules": true,
+		"verbatimModuleSyntax": true,
 		"lib": ["DOM", "ESNext"],
 		"types": ["svelte"],
 		"allowSyntheticDefaultImports": true

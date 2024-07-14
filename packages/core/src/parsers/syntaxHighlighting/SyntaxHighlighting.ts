@@ -1,5 +1,5 @@
-import { type ParsingPosition } from '@lemons_dev/parsinom/lib/HelperTypes';
-import { type ParsingError } from 'packages/core/src/parsers/ParsingError';
+import type { ParsingPosition } from '@lemons_dev/parsinom/lib/HelperTypes';
+import type { ParsingError } from 'packages/core/src/parsers/ParsingError';
 import { MB_TokenClass } from 'packages/core/src/parsers/syntaxHighlighting/HLPUtils';
 import { Highlight } from 'packages/core/src/parsers/syntaxHighlighting/Highlight';
 

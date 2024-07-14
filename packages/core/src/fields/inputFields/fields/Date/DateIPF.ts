@@ -1,8 +1,8 @@
 import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
 import DateComponent from 'packages/core/src/fields/inputFields/fields/Date/DateComponent.svelte';
 import { DateParser } from 'packages/core/src/parsers/DateParser';
-import { type SvelteComponent } from 'svelte';
 import { parseUnknownToString } from 'packages/core/src/utils/Literal';
+import type { InputFieldSvelteComponent } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
 export class DateIPF extends AbstractInputField<string, string> {
 	protected filterValue(value: unknown): string | undefined {
@@ -13,7 +13,7 @@ export class DateIPF extends AbstractInputField<string, string> {
 		return DateParser.stringify(DateParser.getDefaultDate());
 	}
 
-	protected getSvelteComponent(): typeof SvelteComponent {
+	protected getSvelteComponent(): InputFieldSvelteComponent<string> {
 		// @ts-ignore
 		return DateComponent;
 	}

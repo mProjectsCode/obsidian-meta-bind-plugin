@@ -1,9 +1,9 @@
-import { type IPlugin } from 'packages/core/src/IPlugin';
-import { type BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
+import type { IPlugin } from 'packages/core/src/IPlugin';
+import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import { ParsingValidationError, runParser } from 'packages/core/src/parsers/ParsingError';
-import {
-	type BindTargetDeclaration,
-	type UnvalidatedBindTargetDeclaration,
+import type {
+	BindTargetDeclaration,
+	UnvalidatedBindTargetDeclaration,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { P_BindTarget } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';
 import { type ParsingResultNode, toResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';

@@ -1,5 +1,5 @@
-import { type IPlugin } from 'packages/core/src/IPlugin';
-import { type ButtonConfig } from 'packages/core/src/config/ButtonConfig';
+import type { IPlugin } from 'packages/core/src/IPlugin';
+import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
 import { RefCounter } from 'packages/core/src/utils/RefCounter';
 import { getUUID } from 'packages/core/src/utils/Utils';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';

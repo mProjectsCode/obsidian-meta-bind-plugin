@@ -1,9 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-import { type IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
-import { type MetadataManager } from 'packages/core/src/metadata/MetadataManager';
-import { type MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
-import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { type Signal } from 'packages/core/src/utils/Signal';
+import type { IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
+import type { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
+import type { MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
+import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import type { Signal } from 'packages/core/src/utils/Signal';
 import { getUUID } from 'packages/core/src/utils/Utils';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 

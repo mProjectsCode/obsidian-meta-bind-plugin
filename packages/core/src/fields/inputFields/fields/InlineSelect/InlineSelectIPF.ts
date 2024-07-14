@@ -1,10 +1,10 @@
 import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
-import { type OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
+import type { OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
-import { type InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
+import type { InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
 import InlineSelectComponent from 'packages/core/src/fields/inputFields/fields/InlineSelect/InlineSelectComponent.svelte';
 import { type MBLiteral, parseUnknownToLiteral } from 'packages/core/src/utils/Literal';
-import { type SvelteComponent } from 'svelte';
+import type { InputFieldSvelteComponent } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
 export class InlineSelectIPF extends AbstractInputField<MBLiteral, MBLiteral> {
 	options: OptionInputFieldArgument[];
@@ -23,7 +23,7 @@ export class InlineSelectIPF extends AbstractInputField<MBLiteral, MBLiteral> {
 		return null;
 	}
 
-	protected getSvelteComponent(): typeof SvelteComponent {
+	protected getSvelteComponent(): InputFieldSvelteComponent<MBLiteral> {
 		// @ts-ignore
 		return InlineSelectComponent;
 	}

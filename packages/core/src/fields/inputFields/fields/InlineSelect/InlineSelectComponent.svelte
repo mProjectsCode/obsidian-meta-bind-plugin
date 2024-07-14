@@ -1,24 +1,25 @@
 <script lang="ts">
-	import { OptionInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
-	import { MBLiteral } from '../../../../utils/Literal';
-	import { IPlugin } from '../../../../IPlugin';
+	import { OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
+	import type { MBLiteral } from 'packages/core/src/utils/Literal';
+	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
-	export let plugin: IPlugin;
-	export let value: MBLiteral;
-	export let options: OptionInputFieldArgument[];
-	export let onValueChange: (value: MBLiteral) => void;
+	const props: InputFieldSvelteProps<MBLiteral> & {
+		options: OptionInputFieldArgument[];
+	} = $props();
+
+	let value = $state(props.value);
 
 	export function setValue(v: MBLiteral): void {
 		value = v;
 	}
 
 	function selectOption() {
-		onValueChange(value);
+		props.onValueChange(value);
 	}
 </script>
 
-<select class="dropdown" bind:value={value} on:change={() => selectOption()}>
-	{#each options as option}
+<select class="dropdown" bind:value={value} onchange={() => selectOption()}>
+	{#each props.options as option}
 		<option value={option.value}>{option.name}</option>
 	{/each}
 </select>

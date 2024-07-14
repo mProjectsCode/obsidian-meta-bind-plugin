@@ -1,6 +1,6 @@
-import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
-import { type PropAccessType } from 'packages/core/src/utils/prop/PropAccess';
-import { type PropPath } from 'packages/core/src/utils/prop/PropPath';
+import type { ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
+import type { PropAccessType } from 'packages/core/src/utils/prop/PropAccess';
+import type { PropPath } from 'packages/core/src/utils/prop/PropPath';
 
 export interface BindTargetDeclaration {
 	storageType: string;

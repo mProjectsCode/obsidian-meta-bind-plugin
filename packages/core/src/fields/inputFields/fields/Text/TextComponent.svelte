@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { IPlugin } from '../../../../IPlugin';
+	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
-	export let plugin: IPlugin;
-	export let value: string;
-	export let placeholder: string;
-	export let limit: number | undefined;
-	export let onValueChange: (value: string) => void;
+	const props: InputFieldSvelteProps<string> & {
+		placeholder: string;
+		limit: number | undefined;
+	} = $props();
+
+	let value = $state(props.value);
 
 	export function setValue(v: string): void {
 		value = v;
@@ -21,13 +22,14 @@
 <input
 	type="text"
 	tabindex="0"
-	placeholder={placeholder}
+	placeholder={props.placeholder}
 	bind:value={value}
-	maxlength={limit}
-	on:input={() => onValueChange(value)}
+	maxlength={props.limit}
+	oninput={() => props.onValueChange(value)}
 />
-{#if limit !== undefined}
-	<span class={`mb-content-limit-indicator ${value.length > limit ? 'mb-content-limit-indicator-overflow' : ''}`}
-		>{getLimitString(value.length, limit)}</span
+{#if props.limit !== undefined}
+	<span
+		class={`mb-content-limit-indicator ${value.length > props.limit ? 'mb-content-limit-indicator-overflow' : ''}`}
+		>{getLimitString(value.length, props.limit)}</span
 	>
 {/if}

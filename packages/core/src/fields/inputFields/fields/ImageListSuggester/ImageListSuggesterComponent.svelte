@@ -1,14 +1,14 @@
 <script lang="ts">
-	import Icon from '../../../../utils/components/Icon.svelte';
-	import Button from '../../../../utils/components/Button.svelte';
-	import { IPlugin } from '../../../../IPlugin';
-	import { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
+	import Button from 'packages/core/src/utils/components/Button.svelte';
+	import type { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
-	export let plugin: IPlugin;
-	export let value: string[];
-	export let showSuggester: () => void;
-	export let onValueChange: (value: string[]) => void;
+	const props: InputFieldSvelteProps<string[]> & {
+		showSuggester: () => void;
+	} = $props();
+
+	let value = $state(props.value);
 
 	export function setValue(v: string[]): void {
 		value = v;
@@ -23,14 +23,14 @@
 	function remove(i: number) {
 		value.splice(i, 1);
 		// call with copy of array
-		onValueChange(value);
+		props.onValueChange(value);
 		// tell svelte to update
 		value = value;
 	}
 
 	function suggestKey(event: KeyboardEvent): void {
 		if (event.key === ' ') {
-			showSuggester();
+			props.showSuggester();
 		}
 	}
 
@@ -45,7 +45,7 @@
 					const temp = value[index - 1];
 					value[index - 1] = value[index];
 					value[index] = temp;
-					onValueChange(value);
+					props.onValueChange(value);
 				},
 			});
 		}
@@ -58,7 +58,7 @@
 					const temp = value[index + 1];
 					value[index + 1] = value[index];
 					value[index] = temp;
-					onValueChange(value);
+					props.onValueChange(value);
 				},
 			});
 		}
@@ -70,7 +70,7 @@
 				const imagePath = value[index];
 
 				navigator.clipboard.writeText(imagePath).then(() => {
-					plugin.internal.showNotice('Image path copied to clipboard');
+					props.plugin.internal.showNotice('Image path copied to clipboard');
 				});
 			},
 		});
@@ -82,14 +82,14 @@
 			onclick: () => remove(index),
 		});
 
-		plugin.internal.createContextMenu(menuActions).showWithEvent(e);
+		props.plugin.internal.createContextMenu(menuActions).showWithEvent(e);
 	}
 </script>
 
 <div class="mb-image-card-grid">
 	{#each value as image, i}
-		<div class="mb-image-card" on:contextmenu={e => openContextMenuForElement(e, i)} role="listitem">
-			<img class="mb-image-card-image" src={plugin.internal.imagePathToUri(image)} alt={image} />
+		<div class="mb-image-card" oncontextmenu={e => openContextMenuForElement(e, i)} role="listitem">
+			<img class="mb-image-card-image" src={props.plugin.internal.imagePathToUri(image)} alt={image} />
 			<div class="mb-image-card-footer">
 				<span>{image}</span>
 			</div>
@@ -97,5 +97,5 @@
 	{/each}
 </div>
 <div class="mb-list-input">
-	<Button variant={ButtonStyleType.DEFAULT} on:click={() => showSuggester()}>Add new image</Button>
+	<Button variant={ButtonStyleType.DEFAULT} on:click={() => props.showSuggester()}>Add new image</Button>
 </div>

@@ -4,22 +4,25 @@
 	import ListWrapper from 'packages/core/src/utils/components/ListWrapper.svelte';
 	import { MarkdownLink } from 'packages/core/src/parsers/MarkdownLinkParser';
 
-	export let value: unknown = undefined;
-	let parsedValue: string | MarkdownLink | (string | MarkdownLink)[];
+	const { value = undefined }: { value?: unknown } = $props();
 
-	$: parsedValue = stringifyAndLinkUnknown(value, false);
+	let parsedValue: string | MarkdownLink | (string | MarkdownLink)[] = $derived(
+		stringifyAndLinkUnknown(value, false),
+	);
 </script>
 
 {#if typeof parsedValue === 'string'}
 	<span style="white-space: pre">{parsedValue}</span>
 {:else if Array.isArray(parsedValue)}
 	<span>
-		<ListWrapper elements={parsedValue} let:element>
-			{#if typeof element === 'string'}
-				<span>{element}</span>
-			{:else}
-				<LinkComponent mdLink={element}></LinkComponent>
-			{/if}
+		<ListWrapper elements={parsedValue}>
+			{#snippet children(element)}
+				{#if typeof element === 'string'}
+					<span>{element}</span>
+				{:else}
+					<LinkComponent mdLink={element}></LinkComponent>
+				{/if}
+			{/snippet}
 		</ListWrapper>
 	</span>
 {:else}

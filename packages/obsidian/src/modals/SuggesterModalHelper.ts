@@ -1,14 +1,14 @@
 import { Notice } from 'obsidian';
-import { type DataArray, type DataviewApi, type Literal } from 'obsidian-dataview';
+import type { DataArray, DataviewApi, Literal } from 'obsidian-dataview';
 import { InputFieldArgumentType, UseLinksInputFieldArgumentValue } from 'packages/core/src/config/FieldConfigs';
-import { type OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
-import { type OptionQueryInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionQueryInputFieldArgument';
+import type { OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
+import type { OptionQueryInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionQueryInputFieldArgument';
 import { applyUseLinksArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/UseLinksInputFieldArgument';
 import {
 	type SuggesterLikeIFP,
 	SuggesterOption,
 } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
-import { type MBLiteral } from 'packages/core/src/utils/Literal';
+import type { MBLiteral } from 'packages/core/src/utils/Literal';
 import { getDataViewPluginAPI } from 'packages/obsidian/src/ObsUtils';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 import { z } from 'zod';

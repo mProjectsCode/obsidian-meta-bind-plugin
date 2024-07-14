@@ -1,6 +1,6 @@
-import { type MarkdownPostProcessorContext } from 'obsidian/publish';
-import { type IPlugin } from 'packages/core/src/IPlugin';
-import { type MetaBindPluginSettings } from 'packages/core/src/Settings';
+import type { MarkdownPostProcessorContext } from 'obsidian/publish';
+import type { IPlugin } from 'packages/core/src/IPlugin';
+import type { MetaBindPluginSettings } from 'packages/core/src/Settings';
 import { GlobalMetadataSource, InternalMetadataSource } from 'packages/core/src/metadata/InternalMetadataSources';
 import { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
 import { BindTargetStorageType } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';

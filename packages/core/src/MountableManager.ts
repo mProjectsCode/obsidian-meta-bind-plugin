@@ -1,4 +1,4 @@
-import { type FieldMountable } from 'packages/core/src/fields/FieldMountable';
+import type { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 
 export class MountableManager {
 	activeMountables: Map<string, FieldMountable>;

@@ -2,7 +2,7 @@ import builtins from 'builtin-modules';
 import esbuild from 'esbuild';
 import esbuildSvelte from 'esbuild-svelte';
 import process from 'process';
-import sveltePreprocess from 'svelte-preprocess';
+import { sveltePreprocess } from 'svelte-preprocess';
 import { getBuildBanner } from 'build/buildBanner';
 
 const banner = getBuildBanner('Publish Release Build', version => `Publish Release Build (based on ${version})`);

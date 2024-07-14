@@ -1,4 +1,4 @@
-import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
+import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { type MarkdownLink, MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
@@ -80,7 +80,7 @@ export function parseUnknownToLiteralArray(literal: unknown): MBLiteral[] | unde
 	}
 
 	if (typeof literal === 'object' && Array.isArray(literal)) {
-		return literal.filter(x => isLiteral(x)) as MBLiteral[];
+		return literal.filter(x => isLiteral(x));
 	}
 
 	return undefined;

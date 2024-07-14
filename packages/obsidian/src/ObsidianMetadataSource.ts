@@ -1,6 +1,6 @@
 import { TFile } from 'obsidian';
-import { type FilePathMetadataCacheItem } from 'packages/core/src/metadata/MetadataCacheItem';
-import { type MetadataManager } from 'packages/core/src/metadata/MetadataManager';
+import type { FilePathMetadataCacheItem } from 'packages/core/src/metadata/MetadataCacheItem';
+import type { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
 import { FilePathMetadataSource, type Metadata } from 'packages/core/src/metadata/MetadataSource';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import type MetaBindPlugin from 'packages/obsidian/src/main';

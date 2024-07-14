@@ -1,7 +1,7 @@
 import { AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractViewField';
-import { type ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
+import type { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
-import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { getUUID } from 'packages/core/src/utils/Utils';
 import LinkListComponent from 'packages/core/src/utils/components/LinkListComponent.svelte';
@@ -10,9 +10,10 @@ import {
 	MetaBindExpressionError,
 	MetaBindValidationError,
 } from 'packages/core/src/utils/errors/MetaBindErrors';
+import { mount, type Component as SvelteComponent, unmount } from 'svelte';
 
 export class LinkVF extends AbstractViewField {
-	component?: LinkListComponent;
+	component?: ReturnType<SvelteComponent>;
 
 	constructor(mountable: ViewFieldMountable) {
 		super(mountable);
@@ -69,7 +70,7 @@ export class LinkVF extends AbstractViewField {
 		if (typeof content === 'string') {
 			return MDLinkParser.toLinkString(content);
 		} else if (Array.isArray(content)) {
-			const strings = content.filter(x => typeof x === 'string') as string[];
+			const strings = content.filter(x => typeof x === 'string');
 			return strings
 				.map(x => MDLinkParser.toLinkString(x))
 				.filter(x => x !== '')
@@ -80,7 +81,7 @@ export class LinkVF extends AbstractViewField {
 	}
 
 	protected onInitialRender(container: HTMLElement): void {
-		this.component = new LinkListComponent({
+		this.component = mount(LinkListComponent, {
 			target: container,
 			props: {
 				mdLinkList: [],
@@ -90,7 +91,7 @@ export class LinkVF extends AbstractViewField {
 
 	protected async onRerender(container: HTMLElement, text: string): Promise<void> {
 		const linkList = MDLinkParser.parseLinkList(text);
-		this.component = new LinkListComponent({
+		this.component = mount(LinkListComponent, {
 			target: container,
 			props: {
 				mdLinkList: linkList,
@@ -101,6 +102,8 @@ export class LinkVF extends AbstractViewField {
 	protected onUnmount(): void {
 		super.onUnmount();
 
-		this.component?.$destroy();
+		if (this.component) {
+			unmount(this.component);
+		}
 	}
 }

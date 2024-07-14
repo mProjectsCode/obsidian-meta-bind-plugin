@@ -1,20 +1,20 @@
 <script lang="ts">
-	import Icon from '../../../../utils/components/Icon.svelte';
-	import { MBLiteral, stringifyLiteral } from '../../../../utils/Literal';
-	import LiteralRenderComponent from '../../../../utils/components/LiteralRenderComponent.svelte';
-	import Button from '../../../../utils/components/Button.svelte';
-	import { IPlugin } from '../../../../IPlugin';
-	import { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
-	import { ButtonStyleType } from '../../../../config/ButtonConfig';
+	import Icon from 'packages/core/src/utils/components/Icon.svelte';
+	import { type MBLiteral, stringifyLiteral } from 'packages/core/src/utils/Literal';
+	import LiteralRenderComponent from 'packages/core/src/utils/components/LiteralRenderComponent.svelte';
+	import Button from 'packages/core/src/utils/components/Button.svelte';
+	import type { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
+	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
-	export let plugin: IPlugin;
-	export let value: MBLiteral[];
-	export let limit: number | undefined;
-	export let placeholder: string;
-	export let multiLine: boolean;
-	export let onValueChange: (value: MBLiteral[]) => void;
+	const props: InputFieldSvelteProps<MBLiteral[]> & {
+		limit: number | undefined;
+		placeholder: string;
+		multiLine: boolean;
+	} = $props();
 
-	let addValue: string = '';
+	let value = $state(props.value);
+
+	let addValue = $state('');
 
 	export function setValue(v: MBLiteral[]): void {
 		value = v;
@@ -22,19 +22,14 @@
 
 	function add() {
 		value.push(addValue);
-		// call with copy of array
-		onValueChange(value);
+		props.onValueChange(value);
+
 		addValue = '';
-		// tell svelte to update
-		value = value;
 	}
 
 	function remove(i: number) {
 		value.splice(i, 1);
-		// call with copy of array
-		onValueChange(value);
-		// tell svelte to update
-		value = value;
+		props.onValueChange(value);
 	}
 
 	function getLimitString(length: number, limit: number) {
@@ -54,7 +49,7 @@
 					const temp = value[index - 1];
 					value[index - 1] = value[index];
 					value[index] = temp;
-					onValueChange(value);
+					props.onValueChange(value);
 				},
 			});
 		}
@@ -67,7 +62,7 @@
 					const temp = value[index + 1];
 					value[index + 1] = value[index];
 					value[index] = temp;
-					onValueChange(value);
+					props.onValueChange(value);
 				},
 			});
 		}
@@ -76,14 +71,14 @@
 			name: 'Edit',
 			icon: 'pencil',
 			onclick: () => {
-				plugin.internal.openTextPromptModal({
+				props.plugin.internal.openTextPromptModal({
 					title: 'Meta Bind List',
 					subTitle: 'Edit the value of a list item.',
 					value: stringifyLiteral(value[index]),
-					multiline: multiLine,
+					multiline: props.multiLine,
 					onSubmit: (v: MBLiteral) => {
 						value[index] = v;
-						onValueChange(value);
+						props.onValueChange(value);
 					},
 					onCancel: () => {},
 				});
@@ -97,13 +92,13 @@
 			onclick: () => remove(index),
 		});
 
-		plugin.internal.createContextMenu(menuActions).showWithEvent(e);
+		props.plugin.internal.createContextMenu(menuActions).showWithEvent(e);
 	}
 </script>
 
 <div class="mb-list-items">
 	{#each value as entry, i}
-		<div class="mb-list-item" on:contextmenu={e => openContextMenuForElement(e, i)} role="listitem">
+		<div class="mb-list-item" oncontextmenu={e => openContextMenuForElement(e, i)} role="listitem">
 			<LiteralRenderComponent value={entry}></LiteralRenderComponent>
 		</div>
 	{:else}
@@ -111,28 +106,29 @@
 	{/each}
 </div>
 <div class="mb-list-input">
-	{#if multiLine}
-		<textarea tabindex="0" placeholder={placeholder} bind:value={addValue} maxlength={limit} />
+	{#if props.multiLine}
+		<textarea tabindex="0" placeholder={props.placeholder} bind:value={addValue} maxlength={props.limit}></textarea>
 	{:else}
 		<input
 			type="text"
 			tabindex="0"
-			placeholder={placeholder}
+			placeholder={props.placeholder}
 			bind:value={addValue}
-			maxlength={limit}
-			on:keyup={e => {
+			maxlength={props.limit}
+			onkeyup={e => {
 				if (e.key === 'Enter' && addValue.length > 0) {
 					add();
 				}
 			}}
 		/>
 	{/if}
-	{#if limit !== undefined}
-		<span class={`mb-content-limit-indicator ${value.length > limit ? 'mb-content-limit-indicator-overflow' : ''}`}
-			>{getLimitString(value.length, limit)}</span
+	{#if props.limit !== undefined}
+		<span
+			class={`mb-content-limit-indicator ${value.length > props.limit ? 'mb-content-limit-indicator-overflow' : ''}`}
+			>{getLimitString(value.length, props.limit)}</span
 		>
 	{/if}
 	<Button on:click={() => add()} disabled={!addValue}>
-		<Icon plugin={plugin} iconName="plus" />
+		<Icon plugin={props.plugin} iconName="plus" />
 	</Button>
 </div>

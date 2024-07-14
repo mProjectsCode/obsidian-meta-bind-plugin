@@ -1,19 +1,19 @@
-import { type DatePickerIPF } from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePickerIPF';
-import {
-	type ImageSuggesterLikeIPF,
-	type SuggesterLikeIFP,
-	type SuggesterOption,
+import type { DatePickerIPF } from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePickerIPF';
+import type {
+	ImageSuggesterLikeIPF,
+	SuggesterLikeIFP,
+	SuggesterOption,
 } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
-import { type IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
-import { type MBLiteral } from 'packages/core/src/utils/Literal';
+import type { IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
+import type { MBLiteral } from 'packages/core/src/utils/Literal';
 import type { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
-import { type SelectModalContent } from 'packages/core/src/modals/SelectModalContent';
-import { type IModal } from 'packages/core/src/modals/IModal';
+import type { SelectModalContent } from 'packages/core/src/modals/SelectModalContent';
+import type { IModal } from 'packages/core/src/modals/IModal';
 import { CommandSelectModal } from 'packages/core/src/modals/selectModalContents/CommandSelectModal';
-import { type IPlugin } from 'packages/core/src/IPlugin';
+import type { IPlugin } from 'packages/core/src/IPlugin';
 import { FileSelectModal } from 'packages/core/src/modals/selectModalContents/FileSelectModal';
 import { FolderSelectModal } from 'packages/core/src/modals/selectModalContents/FolderSelectModal';
-import { type ModalContent } from 'packages/core/src/modals/ModalContent';
+import type { ModalContent } from 'packages/core/src/modals/ModalContent';
 import {
 	ButtonBuilderModal,
 	type ButtonBuilderModalOptions,
@@ -25,11 +25,12 @@ import type { Moment } from 'moment';
 import ErrorCollectionComponent from 'packages/core/src/utils/errors/ErrorCollectionComponent.svelte';
 import ErrorIndicatorComponent from 'packages/core/src/utils/errors/ErrorIndicatorComponent.svelte';
 import { SuggesterSelectModal } from 'packages/core/src/modals/selectModalContents/SuggesterSelectModal';
-import { type IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
-import { type ContextMenuItemDefinition, type IContextMenu } from 'packages/core/src/utils/IContextMenu';
+import type { IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
+import type { ContextMenuItemDefinition, IContextMenu } from 'packages/core/src/utils/IContextMenu';
 import TextPromptModalContent from 'packages/core/src/modals/modalContents/TextPromptModalContent.svelte';
-import { type z } from 'zod';
-import { type LifecycleHook } from 'packages/core/src/api/API';
+import type { z } from 'zod';
+import type { LifecycleHook } from 'packages/core/src/api/API';
+import { mount } from 'svelte';
 
 export interface ErrorIndicatorProps {
 	errorCollection: ErrorCollection;
@@ -285,7 +286,7 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	openImageSuggesterModal(inputField: ImageSuggesterLikeIPF, selectCallback: (selected: string) => void): void {
 		this.createModal(
 			new SvelteModalContent((modal, targetEl) => {
-				return new ImageSuggesterModalComponent({
+				return mount(ImageSuggesterModalComponent, {
 					target: targetEl,
 					props: {
 						plugin: this.plugin,
@@ -307,7 +308,7 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	openDatePickerModal(inputField: DatePickerIPF): void {
 		this.createModal(
 			new SvelteModalContent((modal, targetEl) => {
-				return new DatePickerInput({
+				return mount(DatePickerInput, {
 					target: targetEl,
 					props: {
 						selectedDate: inputField.getInternalValue(),
@@ -327,7 +328,7 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	openTextPromptModal(options: TextPromptModalOptions): void {
 		this.createModal(
 			new SvelteModalContent((modal, targetEl) => {
-				return new TextPromptModalContent({
+				return mount(TextPromptModalContent, {
 					target: targetEl,
 					props: {
 						options: {
@@ -351,7 +352,7 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	openErrorCollectionViewModal(settings: ErrorIndicatorProps): void {
 		this.createModal(
 			new SvelteModalContent((_modal, targetEl) => {
-				return new ErrorCollectionComponent({
+				return mount(ErrorCollectionComponent, {
 					target: targetEl,
 					props: {
 						settings: settings,
@@ -372,7 +373,7 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	 * @param settings
 	 */
 	createErrorIndicator(element: HTMLElement, settings: ErrorIndicatorProps): void {
-		new ErrorIndicatorComponent({
+		mount(ErrorIndicatorComponent, {
 			target: element,
 			props: {
 				plugin: this.plugin,

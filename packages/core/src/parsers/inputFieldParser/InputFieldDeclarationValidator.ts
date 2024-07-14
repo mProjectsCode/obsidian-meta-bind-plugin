@@ -1,16 +1,16 @@
-import { type IPlugin } from 'packages/core/src/IPlugin';
+import type { IPlugin } from 'packages/core/src/IPlugin';
 import { InputFieldArgumentType, InputFieldType } from 'packages/core/src/config/FieldConfigs';
-import { type AbstractInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/AbstractInputFieldArgument';
+import type { AbstractInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/AbstractInputFieldArgument';
 import { InputFieldArgumentContainer } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/InputFieldArgumentContainer';
 import { InputFieldArgumentFactory } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
-import { type BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
+import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import { ParsingValidationError } from 'packages/core/src/parsers/ParsingError';
-import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import {
-	type InputFieldDeclaration,
-	type UnvalidatedInputFieldDeclaration,
+import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import type {
+	InputFieldDeclaration,
+	UnvalidatedInputFieldDeclaration,
 } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
-import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
+import type { ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { ErrorLevel } from 'packages/core/src/utils/errors/MetaBindErrors';
 

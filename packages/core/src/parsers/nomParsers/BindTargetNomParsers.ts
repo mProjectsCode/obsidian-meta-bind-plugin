@@ -1,9 +1,9 @@
-import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
+import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
-import {
-	type UnvalidatedBindTargetDeclaration,
-	type UnvalidatedPropAccess,
+import type {
+	UnvalidatedBindTargetDeclaration,
+	UnvalidatedPropAccess,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import {
 	createResultNode,

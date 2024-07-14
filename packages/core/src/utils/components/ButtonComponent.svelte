@@ -3,22 +3,33 @@
 <script lang="ts">
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 	import Icon from 'packages/core/src/utils/components/Icon.svelte';
-	import { IPlugin } from 'packages/core/src/IPlugin';
+	import type { IPlugin } from 'packages/core/src/IPlugin';
 
-	export let plugin: IPlugin;
-	export let variant: ButtonStyleType = ButtonStyleType.DEFAULT;
-	export let disabled: boolean = false;
-	export let tooltip: string = '';
-	export let label: string = '';
-	export let icon: string = '';
-	export let error: boolean = false;
-	export let onClick: () => Promise<void> = async () => {};
+	let {
+		plugin,
+		variant = ButtonStyleType.DEFAULT,
+		disabled = false,
+		tooltip = '',
+		label = '',
+		icon = '',
+		error = false,
+		onclick = () => {},
+	}: {
+		plugin: IPlugin;
+		variant?: ButtonStyleType;
+		disabled?: boolean;
+		tooltip?: string;
+		label?: string;
+		icon?: string;
+		error?: boolean;
+		onclick?: () => void | Promise<void>;
+	} = $props();
 
 	async function click() {
 		if (!disabled) {
 			disabled = true;
 			try {
-				await onClick();
+				await onclick();
 			} catch (e) {
 				console.warn('failed to run button component on click', e);
 			} finally {
@@ -36,7 +47,7 @@
 	class:disabled={disabled}
 	class:mb-error={error}
 	aria-label={tooltip}
-	on:click={() => click()}
+	onclick={onclick}
 	disabled={disabled}
 >
 	{#if icon}
@@ -44,26 +55,3 @@
 	{/if}
 	{label}
 </button>
-
-<style>
-	button {
-		/* Add a gap between text and icons. */
-		gap: var(--size-4-2);
-	}
-
-	.mod-plain {
-		background: none;
-		box-shadow: none;
-		border: none;
-
-		color: var(--text-muted);
-	}
-
-	.mod-plain:hover {
-		color: var(--text-normal);
-	}
-
-	.disabled {
-		opacity: 0.6;
-	}
-</style>

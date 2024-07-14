@@ -1,9 +1,14 @@
 <script lang="ts">
-	import { ErrorIndicatorProps } from 'packages/core/src/api/InternalAPI';
-	import { IPlugin } from 'packages/core/src/IPlugin';
+	import type { ErrorIndicatorProps } from 'packages/core/src/api/InternalAPI';
+	import type { IPlugin } from 'packages/core/src/IPlugin';
 
-	export let plugin: IPlugin;
-	export let settings: ErrorIndicatorProps;
+	const {
+		plugin,
+		settings,
+	}: {
+		plugin: IPlugin;
+		settings: ErrorIndicatorProps;
+	} = $props();
 
 	function openModal() {
 		plugin.internal.openErrorCollectionViewModal(settings);
@@ -13,8 +18,8 @@
 {#if !settings.errorCollection.isEmpty()}
 	<div
 		class="mb-error-collection"
-		on:click={() => openModal()}
-		on:keydown={e => {
+		onclick={() => openModal()}
+		onkeydown={e => {
 			if (e.key === ' ') {
 				openModal();
 			}

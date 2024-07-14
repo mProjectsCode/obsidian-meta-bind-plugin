@@ -1,14 +1,23 @@
 <script lang="ts">
-	import { RegexpReplaceInNoteButtonAction } from 'packages/core/src/config/ButtonConfig';
+	import type { RegexpReplaceInNoteButtonAction } from 'packages/core/src/config/ButtonConfig';
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
-	import { IPlugin } from 'packages/core/src/IPlugin';
+	import type { IPlugin } from 'packages/core/src/IPlugin';
 
-	export let action: RegexpReplaceInNoteButtonAction;
-	export let plugin: IPlugin;
+	const {
+		plugin,
+		action,
+	}: {
+		plugin: IPlugin;
+		action: RegexpReplaceInNoteButtonAction;
+	} = $props();
 </script>
 
 <SettingComponent name="Regexp" description="The regexp to find replacements.">
 	<input type="text" bind:value={action.regexp} />
+</SettingComponent>
+
+<SettingComponent name="Regexp Flags" description="The regexp flags for this regexp.">
+	<input type="text" bind:value={action.regexpFlags} placeholder="g" />
 </SettingComponent>
 
 <SettingComponent name="Replacement Text" description="The text to replace the button with."></SettingComponent>

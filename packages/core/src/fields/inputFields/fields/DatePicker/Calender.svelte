@@ -1,118 +1,61 @@
 <script lang="ts">
 	import { genSvelteId, getDateRows, getWeekDays } from '../../../../utils/DatePickerUtils.js';
-	import { createEventDispatcher } from 'svelte';
 	import type { Moment } from 'moment';
 	import moment from 'moment';
 
-	const dispatch = createEventDispatcher();
-
-	// props
-	export let selectedDate: Moment | null;
-	export let month: number;
-	export let year: number;
+	let {
+		selectedDate,
+		month,
+		year,
+		dateChange,
+	}: {
+		selectedDate: Moment | null;
+		month: number;
+		year: number;
+		dateChange: (date: Moment) => void;
+	} = $props();
 
 	// local vars to help in render
-	let cells: number[];
-
-	// function helpers
-	function onChange(date: number) {
-		dispatch('dateChange', moment(new Date(year, month, date)));
-	}
+	let cells = $derived(getDateRows(month, year));
 
 	function selectCell(value: number | undefined) {
 		if (value) {
-			onChange(value);
+			dateChange(moment(new Date(year, month, value)));
 		}
 	}
 
-	function selectCellKey(event: KeyboardEvent, value: number | undefined) {
+	function selectCellKey(event: KeyboardEvent, date: number) {
 		if (event.key === ' ') {
-			selectCell(value);
+			selectCell(date);
 		}
 	}
-
-	$: cells = getDateRows(month, year);
 </script>
 
-<div class="calendar">
-	<div class="calendar-header">
+<div class="mb-calendar">
+	<div class="mb-calendar-header">
 		{#each getWeekDays() as day}
-			<div class="cell header-cell">
-				<span class="cell-text">{day}</span>
+			<div class="mb-calendar-cell mb-calendar-header-cell">
+				<span class="mb-calendar-cell-text">{day}</span>
 			</div>
 		{/each}
 	</div>
 
-	<div class="calendar-content">
+	<div class="mb-calendar-content">
 		{#each cells as value (genSvelteId())}
 			<div
-				class="cell"
-				on:click={() => selectCell(value)}
-				on:keydown={event => selectCellKey(event, value)}
+				class="mb-calendar-cell"
+				onclick={() => selectCell(value)}
+				onkeydown={event => selectCellKey(event, value)}
 				role="button"
 				tabindex="0"
-				class:highlight={value}
-				class:content-cell={value}
-				class:selected={selectedDate?.year() === year &&
+				class:mb-calendar-highlight={value}
+				class:mb-calendar-content-cell={value}
+				class:mb-calendar-selected={selectedDate?.year() === year &&
 					selectedDate?.month() === month &&
 					selectedDate?.date() === value}
 			>
-				<span class="cell-text">{value || ''}</span>
+				<span class="mb-calendar-cell-text">{value || ''}</span>
 			</div>
 		{/each}
 	</div>
 </div>
-
-<style>
-	.calendar {
-		margin-top: 10px;
-	}
-
-	.calendar-header {
-		display: flex;
-		justify-content: space-around;
-		flex-wrap: wrap;
-		gap: var(--size-4-1);
-		background: var(--background-secondary);
-		border-radius: var(--mb-border-radius);
-		margin-bottom: var(--size-4-1);
-	}
-
-	.calendar-content {
-		display: grid;
-		flex-wrap: wrap;
-		grid-template-columns: repeat(7, 1fr);
-		gap: var(--size-4-1);
-	}
-
-	.cell {
-		min-width: 40px;
-		padding: var(--size-4-2);
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		border-radius: var(--mb-border-radius);
-	}
-
-	.content-cell {
-		cursor: pointer;
-	}
-
-	.cell-text {
-		margin: auto;
-		text-align: center;
-	}
-
-	.selected {
-		background: var(--interactive-accent);
-		color: var(--text-on-accent);
-	}
-
-	.highlight:hover {
-		background: var(--interactive-hover);
-	}
-
-	.selected.highlight:hover {
-		background: var(--interactive-accent-hover);
-	}
-</style>

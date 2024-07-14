@@ -1,9 +1,9 @@
-import { type IPlugin } from 'packages/core/src/IPlugin';
+import type { IPlugin } from 'packages/core/src/IPlugin';
 import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import { ButtonField } from 'packages/core/src/fields/button/ButtonField';
 import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
-import { type ButtonDeclaration } from 'packages/core/src/parsers/ButtonParser';
+import type { ButtonDeclaration } from 'packages/core/src/parsers/ButtonParser';
 import { type NotePosition, RenderChildType } from 'packages/core/src/config/APIConfigs';
 
 export class ButtonMountable extends FieldMountable {

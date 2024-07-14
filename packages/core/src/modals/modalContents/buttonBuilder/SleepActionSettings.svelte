@@ -1,10 +1,15 @@
 <script lang="ts">
-	import { SleepButtonAction } from 'packages/core/src/config/ButtonConfig';
+	import type { SleepButtonAction } from 'packages/core/src/config/ButtonConfig';
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
-	import { IPlugin } from 'packages/core/src/IPlugin';
+	import type { IPlugin } from 'packages/core/src/IPlugin';
 
-	export let action: SleepButtonAction;
-	export let plugin: IPlugin;
+	const {
+		plugin,
+		action,
+	}: {
+		plugin: IPlugin;
+		action: SleepButtonAction;
+	} = $props();
 </script>
 
 <SettingComponent name="Sleep Time" description="The time to sleep in milliseconds.">

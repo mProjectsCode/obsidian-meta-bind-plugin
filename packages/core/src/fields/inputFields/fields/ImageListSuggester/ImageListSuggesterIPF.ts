@@ -1,9 +1,13 @@
 import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
 import ImageListSuggesterComponent from 'packages/core/src/fields/inputFields/fields/ImageListSuggester/ImageListSuggesterComponent.svelte';
 import { type MBLiteral, parseUnknownToLiteralArray, stringifyLiteral } from 'packages/core/src/utils/Literal';
-import { type SvelteComponent } from 'svelte';
+import type { InputFieldSvelteComponent } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
-export class ImageListSuggesterIPF extends AbstractInputField<MBLiteral[], string[]> {
+interface SvelteExports {
+	pushValue: (value: MBLiteral) => void;
+}
+
+export class ImageListSuggesterIPF extends AbstractInputField<MBLiteral[], string[], SvelteExports> {
 	protected filterValue(value: unknown): MBLiteral[] | undefined {
 		return parseUnknownToLiteralArray(value);
 	}
@@ -12,7 +16,7 @@ export class ImageListSuggesterIPF extends AbstractInputField<MBLiteral[], strin
 		return [];
 	}
 
-	protected getSvelteComponent(): typeof SvelteComponent {
+	protected getSvelteComponent(): InputFieldSvelteComponent<string[], SvelteExports> {
 		// @ts-ignore
 		return ImageListSuggesterComponent;
 	}
@@ -33,9 +37,7 @@ export class ImageListSuggesterIPF extends AbstractInputField<MBLiteral[], strin
 
 	openModal(): void {
 		this.mountable.plugin.internal.openImageSuggesterModal(this, (selected: string) => {
-			const value = this.getInternalValue();
-			value.push(selected);
-			this.setInternalValue(value);
+			this.svelteWrapper.getInstance()?.pushValue(selected);
 		});
 	}
 }

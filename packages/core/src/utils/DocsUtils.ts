@@ -1,8 +1,8 @@
-import {
-	type InputFieldArgumentType,
-	type InputFieldType,
-	type ViewFieldArgumentType,
-	type ViewFieldType,
+import type {
+	InputFieldArgumentType,
+	InputFieldType,
+	ViewFieldArgumentType,
+	ViewFieldType,
 } from 'packages/core/src/config/FieldConfigs';
 import { openURL } from 'packages/core/src/utils/Utils';
 

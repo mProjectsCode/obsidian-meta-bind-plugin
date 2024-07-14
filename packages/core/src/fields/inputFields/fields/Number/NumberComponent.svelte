@@ -1,14 +1,21 @@
 <script lang="ts">
-	import { IPlugin } from '../../../../IPlugin';
+	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
-	export let plugin: IPlugin;
-	export let value: number;
-	export let placeholder: string;
-	export let onValueChange: (value: number) => void;
+	const props: InputFieldSvelteProps<number> & {
+		placeholder: string;
+	} = $props();
+
+	let value = $state(props.value);
 
 	export function setValue(v: number): void {
 		value = v;
 	}
 </script>
 
-<input type="number" tabindex="0" placeholder={placeholder} bind:value={value} on:input={() => onValueChange(value)} />
+<input
+	type="number"
+	tabindex="0"
+	placeholder={props.placeholder}
+	bind:value={value}
+	oninput={() => props.onValueChange(value)}
+/>

@@ -1,15 +1,15 @@
-import { type IPlugin } from 'packages/core/src/IPlugin';
+import type { IPlugin } from 'packages/core/src/IPlugin';
 import { ViewFieldArgumentType, ViewFieldType } from 'packages/core/src/config/FieldConfigs';
-import { type AbstractViewFieldArgument } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/AbstractViewFieldArgument';
+import type { AbstractViewFieldArgument } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/AbstractViewFieldArgument';
 import { ViewFieldArgumentContainer } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
 import { ViewFieldArgumentFactory } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
-import { type BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
+import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import { ParsingValidationError } from 'packages/core/src/parsers/ParsingError';
-import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
-import {
-	type UnvalidatedViewFieldDeclaration,
-	type ViewFieldDeclaration,
+import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import type { ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
+import type {
+	UnvalidatedViewFieldDeclaration,
+	ViewFieldDeclaration,
 } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { ErrorLevel } from 'packages/core/src/utils/errors/MetaBindErrors';

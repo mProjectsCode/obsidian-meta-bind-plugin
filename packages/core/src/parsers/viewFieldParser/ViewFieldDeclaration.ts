@@ -1,14 +1,14 @@
-import { type ViewFieldType } from 'packages/core/src/config/FieldConfigs';
-import { type ViewFieldArgumentContainer } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
-import {
-	type BindTargetDeclaration,
-	type UnvalidatedBindTargetDeclaration,
+import type { ViewFieldType } from 'packages/core/src/config/FieldConfigs';
+import type { ViewFieldArgumentContainer } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
+import type {
+	BindTargetDeclaration,
+	UnvalidatedBindTargetDeclaration,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
-import { type FieldDeclaration } from 'packages/core/src/parsers/FieldDeclaration';
-import {
-	type SimpleFieldArgument,
-	type UnvalidatedFieldArgument,
+import type { ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
+import type { FieldDeclaration } from 'packages/core/src/parsers/FieldDeclaration';
+import type {
+	SimpleFieldArgument,
+	UnvalidatedFieldArgument,
 } from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
 
 export interface ViewFieldDeclaration extends FieldDeclaration {

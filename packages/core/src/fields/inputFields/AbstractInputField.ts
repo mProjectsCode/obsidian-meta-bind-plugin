@@ -1,17 +1,22 @@
-import { InputFieldComponent } from 'packages/core/src/fields/inputFields/InputFieldComponent';
+import {
+	InputFieldSvelteWrapper,
+	type InputFieldSvelteComponent,
+} from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 import { ComputedSignal, Signal } from 'packages/core/src/utils/Signal';
-import { type SvelteComponent } from 'svelte';
-
 import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
-import { type InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
-import { type MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
+import type { InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
+import type { MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
 import { Mountable } from 'packages/core/src/utils/Mountable';
-import { type IPlugin } from 'packages/core/src/IPlugin';
+import type { IPlugin } from 'packages/core/src/IPlugin';
 
-export abstract class AbstractInputField<MetadataValueType, ComponentValueType> extends Mountable {
+export abstract class AbstractInputField<
+	MetadataValueType,
+	ComponentValueType,
+	SvelteExports = object,
+> extends Mountable {
 	readonly plugin: IPlugin;
 	readonly mountable: InputFieldMountable;
-	readonly inputFieldComponent: InputFieldComponent<ComponentValueType>;
+	readonly svelteWrapper: InputFieldSvelteWrapper<ComponentValueType, SvelteExports>;
 	readonly inputSignal: Signal<unknown>;
 	readonly computedSignal: ComputedSignal<unknown, MetadataValueType>;
 
@@ -23,7 +28,10 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 		this.mountable = mountable;
 		this.plugin = mountable.plugin;
 		this.inputSignal = new Signal<unknown>(undefined);
-		this.inputFieldComponent = new InputFieldComponent<ComponentValueType>(this.plugin, this.getSvelteComponent());
+		this.svelteWrapper = new InputFieldSvelteWrapper<ComponentValueType, SvelteExports>(
+			this.plugin,
+			this.getSvelteComponent(),
+		);
 
 		this.computedSignal = new ComputedSignal<unknown, MetadataValueType>(
 			this.inputSignal,
@@ -38,14 +46,15 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 		);
 	}
 
+	// TODO: What is this?
 	public destroy(): void {
 		// we don't need to unregister the listener because the component will destroy all listeners on unmount
-		if (this.inputFieldComponent.isMounted()) {
+		if (this.svelteWrapper.isMounted()) {
 			this.unmount();
 		}
 	}
 
-	protected abstract getSvelteComponent(): typeof SvelteComponent;
+	protected abstract getSvelteComponent(): InputFieldSvelteComponent<ComponentValueType, SvelteExports>;
 
 	/**
 	 * Takes in any value and returns the value if it is type of `T`, `undefined` otherwise.
@@ -140,13 +149,13 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 		this.inputSignal.set(this.inputSignal.get());
 
 		this.computedSignal.registerListener({
-			callback: value => this.inputFieldComponent.setValue(this.reverseMapValue(value)),
+			callback: value => this.svelteWrapper.setValue(this.reverseMapValue(value)),
 		});
 
 		const bindTarget = this.mountable.getBindTarget();
 
 		if (bindTarget) {
-			this.inputFieldComponent.registerListener({
+			this.svelteWrapper.registerListener({
 				callback: value => {
 					// console.log('input field component change', value);
 					this.notifySubscription(this.mapValue(value));
@@ -161,13 +170,13 @@ export abstract class AbstractInputField<MetadataValueType, ComponentValueType> 
 			);
 		}
 
-		this.inputFieldComponent.mount(targetEl, this.reverseMapValue(this.getValue()), this.getMountArgs());
+		this.svelteWrapper.mount(targetEl, this.reverseMapValue(this.getValue()), this.getMountArgs());
 	}
 
 	protected onUnmount(): void {
 		this.computedSignal.unregisterAllListeners();
 		this.metadataSubscription?.unsubscribe();
 
-		this.inputFieldComponent.unmount();
+		this.svelteWrapper.unmount();
 	}
 }

@@ -12,16 +12,20 @@
 	import { ErrorLevel, MetaBindExampleError } from 'packages/core/src/utils/errors/MetaBindErrors';
 	import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
-	import { IPlugin } from 'packages/core/src/IPlugin';
+	import type { IPlugin } from 'packages/core/src/IPlugin';
 	import FlexRow from '../components/FlexRow.svelte';
 
-	export let plugin: IPlugin;
+	const {
+		plugin,
+	}: {
+		plugin: IPlugin;
+	} = $props();
 
 	let exampleWarningDeclaration = 'INPUT[someInputFieldDeclaration]';
-	let exampleWarningErrorCollection = new ErrorCollection('exampleWarningErrorCollection');
+	let exampleWarningErrorCollection = $state(new ErrorCollection('exampleWarningErrorCollection'));
 
 	let exampleErrorDeclaration = 'INPUT[someInputFieldDeclaration]';
-	let exampleErrorErrorCollection = new ErrorCollection('exampleErrorErrorCollection');
+	let exampleErrorErrorCollection = $state(new ErrorCollection('exampleErrorErrorCollection'));
 
 	onMount(() => {
 		exampleWarningErrorCollection.add(
@@ -31,7 +35,6 @@
 				cause: 'some example reason',
 			}),
 		);
-		exampleWarningErrorCollection = exampleWarningErrorCollection;
 
 		exampleErrorErrorCollection.add(
 			new MetaBindExampleError({
@@ -40,7 +43,6 @@
 				cause: 'some example reason',
 			}),
 		);
-		exampleErrorErrorCollection = exampleErrorErrorCollection;
 	});
 </script>
 

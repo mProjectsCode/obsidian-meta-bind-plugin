@@ -1,6 +1,6 @@
-import { type ButtonConfig } from 'packages/core/src/config/ButtonConfig';
+import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
 import ButtonBuilderModalComponent from 'packages/core/src/modals/modalContents/buttonBuilder/ButtonBuilderModalComponent.svelte';
-import { type IPlugin } from 'packages/core/src/IPlugin';
+import type { IPlugin } from 'packages/core/src/IPlugin';
 import { DomHelpers } from 'packages/core/src/utils/Utils';
 import { ModalContent } from 'packages/core/src/modals/ModalContent';
 

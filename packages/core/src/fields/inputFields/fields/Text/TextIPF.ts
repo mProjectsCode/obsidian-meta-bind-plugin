@@ -2,7 +2,7 @@ import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
 import TextComponent from 'packages/core/src/fields/inputFields/fields/Text/TextComponent.svelte';
 import { parseUnknownToString } from 'packages/core/src/utils/Literal';
-import { type SvelteComponent } from 'svelte';
+import type { InputFieldSvelteComponent } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
 export class TextIPF extends AbstractInputField<string, string> {
 	protected filterValue(value: unknown): string | undefined {
@@ -13,7 +13,7 @@ export class TextIPF extends AbstractInputField<string, string> {
 		return '';
 	}
 
-	protected getSvelteComponent(): typeof SvelteComponent {
+	protected getSvelteComponent(): InputFieldSvelteComponent<string> {
 		// @ts-ignore
 		return TextComponent;
 	}

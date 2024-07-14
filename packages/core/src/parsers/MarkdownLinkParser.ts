@@ -1,10 +1,10 @@
-import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
+import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import { runParser } from 'packages/core/src/parsers/ParsingError';
 import { isUrl, openURL } from 'packages/core/src/utils/Utils';
 import { P_FilePath } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
-import { type IPlugin } from 'packages/core/src/IPlugin';
+import type { IPlugin } from 'packages/core/src/IPlugin';
 
 const P_MDLinkInner: Parser<[string, string | undefined, string | undefined]> = P.sequence(
 	P_FilePath, // the file path

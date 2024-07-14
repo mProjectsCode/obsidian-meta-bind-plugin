@@ -2,7 +2,11 @@
 	import { Mountable } from 'packages/core/src/utils/Mountable';
 	import { onDestroy, onMount } from 'svelte';
 
-	export let mountable: Mountable;
+	const {
+		mountable,
+	}: {
+		mountable: Mountable;
+	} = $props();
 
 	let element: HTMLElement;
 

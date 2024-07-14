@@ -1,6 +1,6 @@
-import { type IPlugin } from 'packages/core/src/IPlugin';
+import type { IPlugin } from 'packages/core/src/IPlugin';
 import { SyntaxHighlightingAPI } from 'packages/core/src/api/SyntaxHighlightingAPI';
-import { type FieldMountable } from 'packages/core/src/fields/FieldMountable';
+import type { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import { ButtonActionRunner } from 'packages/core/src/fields/button/ButtonActionRunner';
 import { ButtonMountable } from 'packages/core/src/fields/button/ButtonMountable';
 import { ButtonManager } from 'packages/core/src/fields/button/ButtonManager';
@@ -18,10 +18,10 @@ import { expectType, getUUID } from 'packages/core/src/utils/Utils';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { EmbedMountable } from 'packages/core/src/fields/embed/EmbedMountable';
 import { ExcludedMountable } from 'packages/core/src/fields/excluded/ExcludedMountable';
-import { type InputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
-import {
-	type JsViewFieldDeclaration,
-	type ViewFieldDeclaration,
+import type { InputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
+import type {
+	JsViewFieldDeclaration,
+	ViewFieldDeclaration,
 } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
 import {
 	type ButtonDeclaration,
@@ -31,7 +31,7 @@ import {
 import { JsViewFieldParser } from 'packages/core/src/parsers/viewFieldParser/JsViewFieldParser';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
-import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import {
 	V_BindTargetDeclaration,
 	V_BindTargetScope,

@@ -6,29 +6,29 @@ import type {
 	SimpleInputFieldDeclaration,
 	UnvalidatedInputFieldDeclaration,
 } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
-import {
-	type BindTargetDeclaration,
-	type SimplePropAccess,
-	type UnvalidatedBindTargetDeclaration,
-	type UnvalidatedPropAccess,
+import type {
+	BindTargetDeclaration,
+	SimplePropAccess,
+	UnvalidatedBindTargetDeclaration,
+	UnvalidatedPropAccess,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { PropAccessType } from 'packages/core/src/utils/prop/PropAccess';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
-import {
-	type SimpleJsViewFieldBindTargetMapping,
-	type SimpleJsViewFieldDeclaration,
-	type SimpleViewFieldDeclaration,
-	type UnvalidatedViewFieldDeclaration,
+import type {
+	SimpleJsViewFieldBindTargetMapping,
+	SimpleJsViewFieldDeclaration,
+	SimpleViewFieldDeclaration,
+	UnvalidatedViewFieldDeclaration,
 } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
 import { PropPath } from 'packages/core/src/utils/prop/PropPath';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { z } from 'zod';
-import { type ParsingPosition, type ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
-import { type SimpleButtonGroupDeclaration } from 'packages/core/src/parsers/ButtonParser';
+import type { ParsingPosition, ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
+import type { SimpleButtonGroupDeclaration } from 'packages/core/src/parsers/ButtonParser';
 import { V_ButtonConfig } from 'packages/core/src/config/ButtonConfigValidators';
-import {
-	type SimpleFieldArgument,
-	type UnvalidatedFieldArgument,
+import type {
+	SimpleFieldArgument,
+	UnvalidatedFieldArgument,
 } from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
 import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import { Mountable } from 'packages/core/src/utils/Mountable';

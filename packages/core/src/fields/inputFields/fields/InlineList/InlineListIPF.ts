@@ -1,9 +1,13 @@
 import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
 import InlineListComponent from 'packages/core/src/fields/inputFields/fields/InlineList/InlineListComponent.svelte';
 import { type MBLiteral, parseUnknownToLiteralArray } from 'packages/core/src/utils/Literal';
-import { type SvelteComponent } from 'svelte';
+import type { InputFieldSvelteComponent } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
-export class InlineListIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> {
+interface SvelteExports {
+	pushValue: (value: MBLiteral) => void;
+}
+
+export class InlineListIPF extends AbstractInputField<MBLiteral[], MBLiteral[], SvelteExports> {
 	protected filterValue(value: unknown): MBLiteral[] | undefined {
 		return parseUnknownToLiteralArray(value);
 	}
@@ -12,7 +16,7 @@ export class InlineListIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> 
 		return [];
 	}
 
-	protected getSvelteComponent(): typeof SvelteComponent {
+	protected getSvelteComponent(): InputFieldSvelteComponent<MBLiteral[], SvelteExports> {
 		// @ts-ignore
 		return InlineListComponent;
 	}
@@ -38,9 +42,7 @@ export class InlineListIPF extends AbstractInputField<MBLiteral[], MBLiteral[]> 
 			value: '',
 			multiline: false,
 			onSubmit: (newElement: MBLiteral) => {
-				const value = this.getInternalValue();
-				value.push(newElement);
-				this.setInternalValue(value);
+				this.svelteWrapper.getInstance()?.pushValue(newElement);
 			},
 			onCancel: () => {},
 		});

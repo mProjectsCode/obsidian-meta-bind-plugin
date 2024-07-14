@@ -4,7 +4,7 @@ import {
 	UseLinksInputFieldArgumentValue,
 } from 'packages/core/src/config/FieldConfigs';
 import { AbstractInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/AbstractInputFieldArgument';
-import { type ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
+import type { ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
 import { expectType, toEnumeration } from 'packages/core/src/utils/Utils';
 import { ErrorLevel, MetaBindArgumentError } from 'packages/core/src/utils/errors/MetaBindErrors';

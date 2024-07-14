@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { ErrorLevel, MetaBindError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
-	export let error: MetaBindError | Error;
+	const {
+		error,
+	}: {
+		error: MetaBindError | Error;
+	} = $props();
 </script>
 
 {#if error instanceof MetaBindError}

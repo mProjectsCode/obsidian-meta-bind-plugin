@@ -1,6 +1,6 @@
 import type MetaBindPlugin from 'packages/obsidian/src/main.ts';
 import { MarkdownRenderChild } from 'obsidian';
-import { type Mountable } from 'packages/core/src/utils/Mountable';
+import type { Mountable } from 'packages/core/src/utils/Mountable';
 
 export class MountableMDRC extends MarkdownRenderChild {
 	readonly plugin: MetaBindPlugin;

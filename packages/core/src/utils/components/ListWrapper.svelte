@@ -1,13 +1,19 @@
-<script lang="ts">
-	type T = $$Generic;
+<script lang="ts" generics="T">
+	import type { Snippet } from 'svelte';
 
-	export let elements: T[] = [];
+	const {
+		elements = [],
+		children,
+	}: {
+		elements?: T[];
+		children: Snippet<[T]>;
+	} = $props();
 </script>
 
 {#each elements.slice(0, elements.length - 1) as element}
-	<slot element={element} />
+	{@render children(element)}
 	<span>,</span>
 	<span></span>
 	<!-- some strange line breaks to get the comma seperated spacing to work -->
 {/each}
-<slot element={elements[elements.length - 1]} />
+{@render children(elements[elements.length - 1])}

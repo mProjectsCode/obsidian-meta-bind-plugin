@@ -1,6 +1,9 @@
 <script lang="ts">
-	export let value: boolean;
-	export let onValueChange: (value: boolean) => void;
+	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
+
+	const props: InputFieldSvelteProps<boolean> = $props();
+
+	let value = $state(props.value);
 
 	export function setValue(v: boolean): void {
 		value = v;
@@ -8,7 +11,7 @@
 
 	function toggleValue() {
 		value = !value;
-		onValueChange(value);
+		props.onValueChange(value);
 	}
 
 	function toggleValueOnKey(event: KeyboardEvent) {
@@ -24,8 +27,8 @@
 	role="switch"
 	tabindex="0"
 	aria-checked={value}
-	on:click={() => toggleValue()}
-	on:keypress={event => toggleValueOnKey(event)}
+	onclick={() => toggleValue()}
+	onkeypress={event => toggleValueOnKey(event)}
 >
 	<input type="checkbox" tabindex="-1" checked={value} />
 </div>

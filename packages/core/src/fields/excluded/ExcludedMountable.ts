@@ -1,5 +1,5 @@
 import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
-import { type IPlugin } from 'packages/core/src/IPlugin';
+import type { IPlugin } from 'packages/core/src/IPlugin';
 import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
 
 export class ExcludedMountable extends FieldMountable {

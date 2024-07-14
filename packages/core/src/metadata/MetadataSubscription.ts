@@ -1,8 +1,8 @@
-import { type IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
-import { type MetadataManager } from 'packages/core/src/metadata/MetadataManager';
-import { type Signal } from 'packages/core/src/utils/Signal';
-import { type ComputedSubscriptionDependency } from 'packages/core/src/metadata/ComputedMetadataSubscription';
-import { type BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import type { IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
+import type { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
+import type { Signal } from 'packages/core/src/utils/Signal';
+import type { ComputedSubscriptionDependency } from 'packages/core/src/metadata/ComputedMetadataSubscription';
+import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 export class MetadataSubscription implements IMetadataSubscription {

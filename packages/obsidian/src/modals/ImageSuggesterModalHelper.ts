@@ -1,7 +1,7 @@
 import { Notice, type TAbstractFile, TFile, TFolder } from 'obsidian';
 import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
-import { type OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
-import { type OptionQueryInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionQueryInputFieldArgument';
+import type { OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
+import type { OptionQueryInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionQueryInputFieldArgument';
 import {
 	type ImageSuggesterLikeIPF,
 	SuggesterOption,

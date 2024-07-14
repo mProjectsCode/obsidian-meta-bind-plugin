@@ -11,28 +11,28 @@ import {
 	TFolder,
 } from 'obsidian';
 import { type Command, InternalAPI, type ModalOptions } from 'packages/core/src/api/InternalAPI';
-import {
-	type ImageSuggesterLikeIPF,
-	type SuggesterLikeIFP,
-	type SuggesterOption,
+import type {
+	ImageSuggesterLikeIPF,
+	SuggesterLikeIFP,
+	SuggesterOption,
 } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
-import { type IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
-import { type MBLiteral } from 'packages/core/src/utils/Literal';
+import type { IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
+import type { MBLiteral } from 'packages/core/src/utils/Literal';
 import { getJsEnginePluginAPI, getTemplaterPluginAPI, Templater_RunMode } from 'packages/obsidian/src/ObsUtils';
 import { ObsidianJsRenderer } from 'packages/obsidian/src/ObsidianJsRenderer';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
-import { type ModalContent } from 'packages/core/src/modals/ModalContent';
+import type { ModalContent } from 'packages/core/src/modals/ModalContent';
 import { ObsidianModal } from 'packages/obsidian/src/modals/ObsidianModal';
 import { ObsidianSearchModal } from 'packages/obsidian/src/modals/ObsidianSearchModal';
-import { type SelectModalContent } from 'packages/core/src/modals/SelectModalContent';
+import type { SelectModalContent } from 'packages/core/src/modals/SelectModalContent';
 import { getImageSuggesterOptionsForInputField } from 'packages/obsidian/src/modals/ImageSuggesterModalHelper';
 import { getSuggesterOptionsForInputField } from 'packages/obsidian/src/modals/SuggesterModalHelper';
-import { type IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
+import type { IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
 import { FuzzySearch } from 'packages/obsidian/src/FuzzySearch';
-import { type ContextMenuItemDefinition, type IContextMenu } from 'packages/core/src/utils/IContextMenu';
+import type { ContextMenuItemDefinition, IContextMenu } from 'packages/core/src/utils/IContextMenu';
 import { ObsidianContextMenu } from 'packages/obsidian/src/ObsidianContextMenu';
 import { z, type ZodType } from 'zod';
-import { type LifecycleHook } from 'packages/core/src/api/API';
+import type { LifecycleHook } from 'packages/core/src/api/API';
 
 export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 	readonly app: App;

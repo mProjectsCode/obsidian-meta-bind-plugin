@@ -1,9 +1,14 @@
 <script lang="ts">
 	import ImageCard from 'packages/core/src/utils/components/ImageCard.svelte';
-	import { IPlugin } from 'packages/core/src/IPlugin';
+	import type { IPlugin } from 'packages/core/src/IPlugin';
 
-	export let images: string[] = [];
-	export let plugin: IPlugin;
+	const {
+		plugin,
+		images = [],
+	}: {
+		plugin: IPlugin;
+		images: string[];
+	} = $props();
 </script>
 
 <div class="mb-image-card-grid">

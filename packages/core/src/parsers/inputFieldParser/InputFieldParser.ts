@@ -1,17 +1,17 @@
-import { type IPlugin } from 'packages/core/src/IPlugin';
-import { type InputFieldTemplate } from 'packages/core/src/Settings';
+import type { IPlugin } from 'packages/core/src/IPlugin';
+import type { InputFieldTemplate } from 'packages/core/src/Settings';
 import { InputFieldType } from 'packages/core/src/config/FieldConfigs';
-import { type BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
+import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import { ParsingValidationError, runParser } from 'packages/core/src/parsers/ParsingError';
-import {
-	type ITemplateSupplier,
-	type TemplateSupplierTemplate,
+import type {
+	ITemplateSupplier,
+	TemplateSupplierTemplate,
 } from 'packages/core/src/parsers/inputFieldParser/ITemplateSupplier';
-import {
-	type InputFieldDeclaration,
-	type PartialUnvalidatedInputFieldDeclaration,
-	type SimpleInputFieldDeclaration,
-	type UnvalidatedInputFieldDeclaration,
+import type {
+	InputFieldDeclaration,
+	PartialUnvalidatedInputFieldDeclaration,
+	SimpleInputFieldDeclaration,
+	UnvalidatedInputFieldDeclaration,
 } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
 import { InputFieldDeclarationValidator } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclarationValidator';
 import {
@@ -21,8 +21,8 @@ import {
 import { deepFreeze } from 'packages/core/src/utils/Utils';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { ErrorLevel } from 'packages/core/src/utils/errors/MetaBindErrors';
-import { type UnvalidatedBindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { type UnvalidatedFieldArgument } from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
+import type { UnvalidatedBindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import type { UnvalidatedFieldArgument } from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
 import { toResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 
 export type InputFieldDeclarationTemplate = TemplateSupplierTemplate<UnvalidatedInputFieldDeclaration>;

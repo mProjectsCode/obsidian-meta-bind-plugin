@@ -1,8 +1,13 @@
 <script lang="ts">
-	import { IPlugin } from 'packages/core/src/IPlugin';
+	import type { IPlugin } from 'packages/core/src/IPlugin';
 
-	export let plugin: IPlugin;
-	export let image: string;
+	const {
+		plugin,
+		image,
+	}: {
+		plugin: IPlugin;
+		image: string;
+	} = $props();
 </script>
 
 <div class="mb-image-card">

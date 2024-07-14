@@ -1,29 +1,33 @@
 <script lang="ts">
-	export let value: number;
-	export let minValue: number;
-	export let maxValue: number;
-	export let stepSize: number;
-	export let addLabels: boolean;
-	export let onValueChange: (value: number) => void;
+	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
+
+	const props: InputFieldSvelteProps<number> & {
+		minValue: number;
+		maxValue: number;
+		stepSize: number;
+		addLabels: boolean;
+	} = $props();
+
+	let value = $state(props.value);
 
 	export function setValue(v: number): void {
 		value = v;
 	}
 </script>
 
-{#if addLabels}
-	<span class="mb-slider-input-label">{minValue}</span>
+{#if props.addLabels}
+	<span class="mb-slider-input-label">{props.minValue}</span>
 {/if}
 <input
 	class="mb-slider-input slider"
 	type="range"
 	tabindex="0"
-	min={minValue}
-	max={maxValue}
-	step={stepSize}
+	min={props.minValue}
+	max={props.maxValue}
+	step={props.stepSize}
 	bind:value={value}
-	on:input={() => onValueChange(value)}
+	oninput={() => props.onValueChange(value)}
 />
-{#if addLabels}
-	<span class="mb-slider-input-label">{maxValue}</span>
+{#if props.addLabels}
+	<span class="mb-slider-input-label">{props.maxValue}</span>
 {/if}

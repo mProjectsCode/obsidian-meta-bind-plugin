@@ -1,8 +1,21 @@
 <script lang="ts">
-	export let reverse: boolean = false;
-	export let stretchChildren: boolean = true;
+	import type { Snippet } from 'svelte';
+
+	const {
+		reverse = false,
+		stretchChildren = false,
+		children,
+	}: {
+		reverse?: boolean;
+		stretchChildren?: boolean;
+		children: Snippet;
+	} = $props();
+
+	const classes = $derived(
+		[reverse ? 'mb-flex-row-reverse' : 'mb-flex-row', stretchChildren ? 'mb-flex-row-stretch' : ''].join(' '),
+	);
 </script>
 
-<div class={(reverse ? 'mb-flex-row-reverse ' : 'mb-flex-row ') + (stretchChildren ? 'mb-flex-row-stretch ' : '')}>
-	<slot />
+<div class={classes}>
+	{@render children()}
 </div>

@@ -1,4 +1,4 @@
-import { type Version } from 'packages/obsidian/src/dependencies/Version';
+import type { Version } from 'packages/obsidian/src/dependencies/Version';
 
 export interface Dependency {
 	name: string;

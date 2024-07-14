@@ -1,9 +1,9 @@
 import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
-import { type InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
+import type { InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
 import ToggleComponent from 'packages/core/src/fields/inputFields/fields/Toggle/ToggleComponent.svelte';
 import { type MBLiteral, parseUnknownToLiteral } from 'packages/core/src/utils/Literal';
-import { type SvelteComponent } from 'svelte';
+import type { InputFieldSvelteComponent } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
 export class ToggleIPF extends AbstractInputField<MBLiteral, boolean> {
 	onValue: MBLiteral;
@@ -24,7 +24,7 @@ export class ToggleIPF extends AbstractInputField<MBLiteral, boolean> {
 		return false;
 	}
 
-	protected getSvelteComponent(): typeof SvelteComponent {
+	protected getSvelteComponent(): InputFieldSvelteComponent<boolean> {
 		// @ts-ignore
 		return ToggleComponent;
 	}

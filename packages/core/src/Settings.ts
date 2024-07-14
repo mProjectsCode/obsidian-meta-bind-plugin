@@ -1,4 +1,4 @@
-import { type ButtonConfig } from 'packages/core/src/config/ButtonConfig';
+import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
 
 export const monthNames = [
 	'January',

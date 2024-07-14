@@ -1,10 +1,10 @@
 import { SelectModalContent } from 'packages/core/src/modals/SelectModalContent';
-import {
-	type SuggesterLikeIFP,
-	type SuggesterOption,
+import type {
+	SuggesterLikeIFP,
+	SuggesterOption,
 } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
 import type { MBLiteral } from 'packages/core/src/utils/Literal';
-import { type IPlugin } from 'packages/core/src/IPlugin';
+import type { IPlugin } from 'packages/core/src/IPlugin';
 
 export class SuggesterSelectModal extends SelectModalContent<SuggesterOption<MBLiteral>> {
 	ipf: SuggesterLikeIFP;

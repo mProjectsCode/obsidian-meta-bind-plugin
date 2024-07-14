@@ -89,7 +89,7 @@ const config = {
 		],
 		'@typescript-eslint/consistent-type-imports': [
 			'error',
-			{ prefer: 'type-imports', fixStyle: 'inline-type-imports' },
+			{ prefer: 'type-imports', fixStyle: 'separate-type-imports' },
 		],
 
 		'@typescript-eslint/no-confusing-void-expression': ['error', { ignoreArrowShorthand: true }],

@@ -1,4 +1,4 @@
-import { type IPlugin } from 'packages/core/src/IPlugin';
+import type { IPlugin } from 'packages/core/src/IPlugin';
 
 export abstract class SelectModalContent<T> {
 	readonly plugin: IPlugin;

@@ -1,7 +1,7 @@
 import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
 import TimeComponent from 'packages/core/src/fields/inputFields/fields/Time/TimeComponent.svelte';
 import { parseUnknownToString } from 'packages/core/src/utils/Literal';
-import { type SvelteComponent } from 'svelte';
+import type { InputFieldSvelteComponent } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
 export class TimeIPF extends AbstractInputField<string, string> {
 	protected filterValue(value: unknown): string | undefined {
@@ -12,7 +12,7 @@ export class TimeIPF extends AbstractInputField<string, string> {
 		return '00:00';
 	}
 
-	protected getSvelteComponent(): typeof SvelteComponent {
+	protected getSvelteComponent(): InputFieldSvelteComponent<string> {
 		// @ts-ignore
 		return TimeComponent;
 	}

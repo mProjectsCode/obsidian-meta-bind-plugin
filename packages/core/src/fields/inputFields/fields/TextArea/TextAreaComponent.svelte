@@ -1,9 +1,12 @@
 <script lang="ts">
-	export let value: string;
-	export let placeholder: string;
-	export let limit: number | undefined;
+	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
-	export let onValueChange: (value: string) => void;
+	const props: InputFieldSvelteProps<string> & {
+		placeholder: string;
+		limit: number | undefined;
+	} = $props();
+
+	let value = $state(props.value);
 
 	export function setValue(v: string): void {
 		value = v;
@@ -13,8 +16,8 @@
 <textarea
 	class="mb-input-textarea"
 	tabindex="0"
-	placeholder={placeholder}
+	placeholder={props.placeholder}
 	bind:value={value}
-	maxlength={limit}
-	on:input={() => onValueChange(value)}
+	maxlength={props.limit}
+	oninput={() => props.onValueChange(value)}
 ></textarea>

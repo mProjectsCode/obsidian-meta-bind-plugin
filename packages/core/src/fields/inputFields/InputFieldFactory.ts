@@ -1,6 +1,6 @@
-import { type IPlugin } from 'packages/core/src/IPlugin';
+import type { IPlugin } from 'packages/core/src/IPlugin';
 import { type InputFieldConfig, InputFieldConfigs, InputFieldType } from 'packages/core/src/config/FieldConfigs';
-import { type InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
+import type { InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
 import { DateIPF } from 'packages/core/src/fields/inputFields/fields/Date/DateIPF';
 import { DatePickerIPF } from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePickerIPF';
 import { EditorIPF } from 'packages/core/src/fields/inputFields/fields/Editor/EditorIPF';

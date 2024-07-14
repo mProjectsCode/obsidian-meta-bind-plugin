@@ -1,8 +1,8 @@
 import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
 import SuggesterComponent from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterComponent.svelte';
 import { type MBLiteral, parseUnknownToLiteral } from 'packages/core/src/utils/Literal';
-import { type SvelteComponent } from 'svelte';
 import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
+import type { InputFieldSvelteComponent } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
 export class SuggesterIPF extends AbstractInputField<MBLiteral, MBLiteral> {
 	protected filterValue(value: unknown): MBLiteral | undefined {
@@ -13,7 +13,7 @@ export class SuggesterIPF extends AbstractInputField<MBLiteral, MBLiteral> {
 		return null;
 	}
 
-	protected getSvelteComponent(): typeof SvelteComponent {
+	protected getSvelteComponent(): InputFieldSvelteComponent<MBLiteral> {
 		// @ts-ignore
 		return SuggesterComponent;
 	}

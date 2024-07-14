@@ -1,5 +1,5 @@
-import { type PropAccessResult } from 'packages/core/src/utils/prop/PropAccess';
-import { type PropPath } from 'packages/core/src/utils/prop/PropPath';
+import type { PropAccessResult } from 'packages/core/src/utils/prop/PropAccess';
+import type { PropPath } from 'packages/core/src/utils/prop/PropPath';
 
 export class PropUtils {
 	static get(obj: unknown, path: PropPath): unknown {

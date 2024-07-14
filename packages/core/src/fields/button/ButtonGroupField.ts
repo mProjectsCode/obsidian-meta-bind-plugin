@@ -1,10 +1,11 @@
-import { type IPlugin } from 'packages/core/src/IPlugin';
+import type { IPlugin } from 'packages/core/src/IPlugin';
 import { type ButtonConfig, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 import { ButtonField } from 'packages/core/src/fields/button/ButtonField';
 import { DomHelpers } from 'packages/core/src/utils/Utils';
 import ButtonComponent from 'packages/core/src/utils/components/ButtonComponent.svelte';
 import { Mountable } from 'packages/core/src/utils/Mountable';
 import { type NotePosition, RenderChildType } from 'packages/core/src/config/APIConfigs';
+import { type Component as SvelteComponent, mount, unmount } from 'svelte';
 
 export class ButtonGroupField extends Mountable {
 	plugin: IPlugin;
@@ -29,14 +30,14 @@ export class ButtonGroupField extends Mountable {
 		this.notePosition = notePosition;
 	}
 
-	private renderInitialButton(element: HTMLElement, buttonId: string): ButtonComponent {
+	private renderInitialButton(element: HTMLElement, buttonId: string): ReturnType<SvelteComponent> {
 		DomHelpers.removeAllClasses(element);
 		DomHelpers.addClasses(element, [
 			'mb-button',
 			this.renderChildType === RenderChildType.INLINE ? 'mb-button-inline' : 'mb-button-block',
 		]);
 
-		return new ButtonComponent({
+		return mount(ButtonComponent, {
 			target: element,
 			props: {
 				plugin: this.plugin,
@@ -44,7 +45,7 @@ export class ButtonGroupField extends Mountable {
 				label: 'Button ID not Found',
 				tooltip: `No button with id '${buttonId}' found`,
 				error: true,
-				onClick: async (): Promise<void> => {},
+				onclick: async (): Promise<void> => {},
 			},
 		});
 	}
@@ -59,14 +60,16 @@ export class ButtonGroupField extends Mountable {
 		for (const buttonId of this.referencedIds) {
 			const wrapperEl = DomHelpers.createElement(targetEl, 'span');
 
-			let initialButton: ButtonComponent | undefined = this.renderInitialButton(wrapperEl, buttonId);
+			let initialButton: ReturnType<SvelteComponent> | undefined = this.renderInitialButton(wrapperEl, buttonId);
 			let button: ButtonField | undefined;
 
 			const loadListenerCleanup = this.plugin.api.buttonManager.registerButtonLoadListener(
 				this.filePath,
 				buttonId,
 				(buttonConfig: ButtonConfig) => {
-					initialButton?.$destroy();
+					if (initialButton) {
+						unmount(initialButton);
+					}
 					initialButton = undefined;
 					button = new ButtonField(
 						this.plugin,
@@ -82,7 +85,9 @@ export class ButtonGroupField extends Mountable {
 			);
 
 			this.registerUnmountCb(() => {
-				initialButton?.$destroy();
+				if (initialButton) {
+					unmount(initialButton);
+				}
 				initialButton = undefined;
 				button?.unmount();
 				loadListenerCleanup();

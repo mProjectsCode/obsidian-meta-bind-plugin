@@ -1,21 +1,21 @@
-import { Command, InternalAPI, ModalOptions } from 'packages/core/src/api/InternalAPI';
+import { type Command, InternalAPI, type ModalOptions } from 'packages/core/src/api/InternalAPI';
 import { ImageSuggesterIPF } from 'packages/core/src/fields/inputFields/fields/ImageSuggester/ImageSuggesterIPF';
 import {
-	SuggesterLikeIFP,
+	type SuggesterLikeIFP,
 	SuggesterOption,
 } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
-import { IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
-import { MBLiteral } from 'packages/core/src/utils/Literal';
+import type { IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
+import type { MBLiteral } from 'packages/core/src/utils/Literal';
 import { TestPlugin } from './TestPlugin';
-import { IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
+import type { IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
 import { ModalContent } from 'packages/core/src/modals/ModalContent';
-import { IModal } from 'packages/core/src/modals/IModal';
+import type { IModal } from 'packages/core/src/modals/IModal';
 import { SelectModalContent } from 'packages/core/src/modals/SelectModalContent';
-import { ContextMenuItemDefinition, IContextMenu } from 'packages/core/src/utils/IContextMenu';
+import type { ContextMenuItemDefinition, IContextMenu } from 'packages/core/src/utils/IContextMenu';
 import { TestFileSystem } from 'tests/__mocks__/TestFileSystem';
 import YAML from 'yaml';
 import { z, ZodType } from 'zod';
-import { LifecycleHook } from 'packages/core/src/api/API';
+import type { LifecycleHook } from 'packages/core/src/api/API';
 
 export class TestInternalAPI extends InternalAPI<TestPlugin> {
 	fileSystem: TestFileSystem;

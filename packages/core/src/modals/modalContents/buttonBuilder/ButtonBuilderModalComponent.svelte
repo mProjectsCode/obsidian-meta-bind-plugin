@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { ButtonBuilderModal } from 'packages/core/src/modals/modalContents/buttonBuilder/ButtonBuilderModal';
-	import { ButtonActionType, ButtonConfig, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+	import { ButtonActionType, type ButtonConfig, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
 	import { onDestroy } from 'svelte';
-	import { DomHelpers } from 'packages/core/src/utils/Utils';
+	import { DomHelpers, expectType } from 'packages/core/src/utils/Utils';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import ModalButtonGroup from 'packages/core/src/utils/components/ModalButtonGroup.svelte';
 	import Toggle from 'packages/core/src/utils/components/Toggle.svelte';
-	import { IPlugin } from 'packages/core/src/IPlugin';
+	import type { IPlugin } from 'packages/core/src/IPlugin';
 	import { ButtonField } from 'packages/core/src/fields/button/ButtonField';
 	import CommandActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/CommandActionSettings.svelte';
 	import JSActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/JSActionSettings.svelte';
@@ -24,31 +24,35 @@
 	import InlineJsActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/InlineJsActionSettings.svelte';
 	import FlexRow from 'packages/core/src/utils/components/FlexRow.svelte';
 	import Icon from 'packages/core/src/utils/components/Icon.svelte';
-	import { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
+	import type { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
 	import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 
-	export let plugin: IPlugin;
-	export let modal: ButtonBuilderModal;
-	export let buttonConfig: ButtonConfig;
+	const {
+		plugin,
+		modal,
+		buttonConfig,
+	}: {
+		plugin: IPlugin;
+		modal: ButtonBuilderModal;
+		buttonConfig: ButtonConfig;
+	} = $props();
 
 	let buttonEl: HTMLElement;
 	let buttonMountable: ButtonField;
-	let addActionType: ButtonActionType;
-
-	$: updatePreviewButton(buttonConfig, buttonEl);
+	let addActionType: ButtonActionType = $state(ButtonActionType.COMMAND);
 
 	onDestroy(() => {
 		buttonMountable?.unmount();
 	});
 
-	function updatePreviewButton(config: ButtonConfig, el: HTMLElement) {
+	$effect(() => {
 		buttonMountable?.unmount();
-		if (el) {
-			DomHelpers.empty(el);
-			buttonMountable = new ButtonField(plugin, config, '', RenderChildType.BLOCK, undefined, false, true);
-			buttonMountable.mount(el);
+		if (buttonEl) {
+			DomHelpers.empty(buttonEl);
+			buttonMountable = new ButtonField(plugin, buttonConfig, '', RenderChildType.BLOCK, undefined, false, true);
+			buttonMountable.mount(buttonEl);
 		}
-	}
+	});
 
 	function addAction() {
 		buttonConfig.actions?.push(plugin.api.buttonActionRunner.createDefaultAction(addActionType));
@@ -93,6 +97,8 @@
 		} else if (actionType === ButtonActionType.INLINE_JS) {
 			return 'Run JavaScript Code';
 		}
+
+		expectType<never>(actionType);
 
 		return 'CHANGE ME';
 	}
@@ -197,19 +203,18 @@ Add action of type
 	{/each}
 </select>
 
-<Button variant={ButtonStyleType.PRIMARY} on:click={() => addAction()}>Add Action</Button>
+<Button variant={ButtonStyleType.PRIMARY} onclick={() => addAction()}>Add Action</Button>
 
 {#each buttonConfig.actions ?? [] as action, i (i)}
 	<FlexRow>
 		<h5>{getActionLabel(action.type)}</h5>
-		<Button variant={ButtonStyleType.PLAIN} on:click={e => openActionContextMenu(i, e)}>
+		<Button variant={ButtonStyleType.PLAIN} onclick={e => openActionContextMenu(i, e)}>
 			<Icon iconName="more-vertical" plugin={plugin}></Icon>
 		</Button>
 	</FlexRow>
 
 	{#if action.type === ButtonActionType.COMMAND}
-		<CommandActionSettings action={action} plugin={plugin} updateActions={() => updateActions()}
-		></CommandActionSettings>
+		<CommandActionSettings action={action} plugin={plugin}></CommandActionSettings>
 	{/if}
 
 	{#if action.type === ButtonActionType.OPEN}
@@ -229,8 +234,7 @@ Add action of type
 	{/if}
 
 	{#if action.type === ButtonActionType.TEMPLATER_CREATE_NOTE}
-		<TemplaterCreateNoteActionSettings action={action} plugin={plugin} updateActions={() => updateActions()}
-		></TemplaterCreateNoteActionSettings>
+		<TemplaterCreateNoteActionSettings action={action} plugin={plugin}></TemplaterCreateNoteActionSettings>
 	{/if}
 
 	{#if action.type === ButtonActionType.UPDATE_METADATA}
@@ -238,8 +242,7 @@ Add action of type
 	{/if}
 
 	{#if action.type === ButtonActionType.CREATE_NOTE}
-		<CreateNoteActionSettings action={action} plugin={plugin} updateActions={() => updateActions()}
-		></CreateNoteActionSettings>
+		<CreateNoteActionSettings action={action} plugin={plugin}></CreateNoteActionSettings>
 	{/if}
 
 	{#if action.type === ButtonActionType.REPLACE_IN_NOTE}

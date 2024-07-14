@@ -1,10 +1,14 @@
 <script lang="ts">
 	import { MarkdownLink } from 'packages/core/src/parsers/MarkdownLinkParser';
 
-	export let mdLink: MarkdownLink;
+	const {
+		mdLink,
+	}: {
+		mdLink: MarkdownLink;
+	} = $props();
 
-	$: linkHref = mdLink.block ? `${mdLink.target}#${mdLink.block}` : mdLink.target;
-	$: cssClass = mdLink.internal ? 'internal-link' : 'external-link';
+	const linkHref = $derived(mdLink.block ? `${mdLink.target}#${mdLink.block}` : mdLink.target);
+	const cssClass = $derived(mdLink.internal ? 'internal-link' : 'external-link');
 </script>
 
 {#if mdLink.alias}

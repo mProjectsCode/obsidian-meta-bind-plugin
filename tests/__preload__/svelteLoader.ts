@@ -1,11 +1,11 @@
 import { plugin } from 'bun';
 import esbuildSvelte from 'esbuild-svelte';
-import sveltePreprocess from 'svelte-preprocess';
+import { sveltePreprocess } from 'svelte-preprocess';
 
 plugin(
 	// @ts-ignore
 	esbuildSvelte({
-		compilerOptions: { css: 'injected' },
+		compilerOptions: { css: 'injected', dev: true, generate: 'client' },
 		preprocess: sveltePreprocess(),
 		filterWarnings: warning => {
 			// we don't want warnings from node modules that we can do nothing about

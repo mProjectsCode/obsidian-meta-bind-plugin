@@ -1,13 +1,14 @@
 <script lang="ts">
-	import { OptionInputFieldArgument } from '../../../fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
-	import { MBLiteral } from '../../../../utils/Literal';
-	import LiteralRenderComponent from '../../../../utils/components/LiteralRenderComponent.svelte';
-	import { IPlugin } from '../../../../IPlugin';
+	import { OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
+	import type { MBLiteral } from 'packages/core/src/utils/Literal';
+	import LiteralRenderComponent from 'packages/core/src/utils/components/LiteralRenderComponent.svelte';
+	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
-	export let plugin: IPlugin;
-	export let value: MBLiteral[];
-	export let options: OptionInputFieldArgument[];
-	export let onValueChange: (value: MBLiteral[]) => void;
+	const props: InputFieldSvelteProps<MBLiteral[]> & {
+		options: OptionInputFieldArgument[];
+	} = $props();
+
+	let value = $state(props.value);
 
 	export function setValue(v: MBLiteral[]): void {
 		value = v;
@@ -18,10 +19,9 @@
 			value = value.filter(x => x !== option);
 		} else {
 			value.push(option);
-			value = value;
 		}
 
-		onValueChange(value);
+		props.onValueChange(value);
 	}
 
 	function selectOptionOnKey(event: KeyboardEvent, option: MBLiteral) {
@@ -31,21 +31,21 @@
 	}
 </script>
 
-{#each options as option}
+{#each props.options as option}
 	<div
 		class="mb-select-input-element mb-mod-multi"
 		class:is-selected={value.includes(option.value)}
 		role="button"
 		tabindex="0"
-		on:click={e => {
+		onclick={e => {
 			if (e.target instanceof HTMLInputElement) {
 				return;
 			}
 			selectOption(option.value);
 		}}
-		on:keypress={event => selectOptionOnKey(event, option.value)}
+		onkeypress={event => selectOptionOnKey(event, option.value)}
 	>
-		<input type="checkbox" checked={value.includes(option.value)} on:input={() => selectOption(option.value)} />
+		<input type="checkbox" checked={value.includes(option.value)} oninput={() => selectOption(option.value)} />
 		<LiteralRenderComponent value={option.name}></LiteralRenderComponent>
 	</div>
 {/each}

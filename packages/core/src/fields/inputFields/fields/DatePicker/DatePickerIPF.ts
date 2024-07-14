@@ -1,12 +1,11 @@
-import { type Moment } from 'moment';
+import type { Moment } from 'moment';
 import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
-import { type OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
+import type { OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 import { AbstractInputField } from 'packages/core/src/fields/inputFields/AbstractInputField';
 import DatePickerComponent from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePickerComponent.svelte';
 import { DateParser } from 'packages/core/src/parsers/DateParser';
-import { type SvelteComponent } from 'svelte';
-
-import { type InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
+import type { InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
+import type { InputFieldSvelteComponent } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
 export class DatePickerIPF extends AbstractInputField<string | null, Moment | null> {
 	options: OptionInputFieldArgument[];
@@ -36,7 +35,7 @@ export class DatePickerIPF extends AbstractInputField<string | null, Moment | nu
 		return DateParser.getDefaultDate();
 	}
 
-	protected getSvelteComponent(): typeof SvelteComponent {
+	protected getSvelteComponent(): InputFieldSvelteComponent<Moment | null> {
 		// @ts-ignore
 		return DatePickerComponent;
 	}

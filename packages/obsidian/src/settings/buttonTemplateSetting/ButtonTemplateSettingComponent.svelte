@@ -2,10 +2,9 @@
 	import { createEventDispatcher } from 'svelte';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import Icon from 'packages/core/src/utils/components/Icon.svelte';
-	import { ButtonConfig, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+	import { type ButtonConfig, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 	import FlexRow from 'packages/core/src/utils/components/FlexRow.svelte';
 	import { Notice, stringifyYaml } from 'obsidian';
-	import { ButtonBuilderModal } from 'packages/core/src/modals/modalContents/buttonBuilder/ButtonBuilderModal';
 	import MetaBindPlugin from '../../main';
 
 	export let template: ButtonConfig;

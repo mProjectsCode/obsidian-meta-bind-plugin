@@ -1,5 +1,5 @@
 import { Mountable } from 'packages/core/src/utils/Mountable';
-import { type IModal } from 'packages/core/src/modals/IModal';
+import type { IModal } from 'packages/core/src/modals/IModal';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 export abstract class ModalContent extends Mountable {

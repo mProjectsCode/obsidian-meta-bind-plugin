@@ -1,7 +1,7 @@
 import { intParser } from 'packages/core/src/utils/Literal';
 import { PropAccess, PropAccessType } from 'packages/core/src/utils/prop/PropAccess';
 import { PropPath } from 'packages/core/src/utils/prop/PropPath';
-import { type UnvalidatedPropAccess } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import type { UnvalidatedPropAccess } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { toResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 
 export function parsePropPath(arr: string[]): PropPath {

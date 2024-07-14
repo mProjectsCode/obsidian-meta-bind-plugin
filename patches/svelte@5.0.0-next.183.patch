@@ -1,0 +1,31 @@
+diff --git a/package.json b/package.json
+index 2a936024d51624cf1b72c36ea40859dd89ee624d..9b4d60ee77b5374e174fe01e81c3e05a847c4dbe 100644
+--- a/package.json
++++ b/package.json
+@@ -22,7 +22,7 @@
+     ".": {
+       "types": "./types/index.d.ts",
+       "browser": "./src/index-client.js",
+-      "default": "./src/index-server.js"
++      "default": "./src/index-client.js"
+     },
+     "./package.json": "./package.json",
+     "./action": {
+@@ -59,7 +59,7 @@
+     "./legacy": {
+       "types": "./types/index.d.ts",
+       "browser": "./src/legacy/legacy-client.js",
+-      "default": "./src/legacy/legacy-server.js"
++      "default": "./src/legacy/legacy-client.js"
+     },
+     "./motion": {
+       "types": "./types/index.d.ts",
+@@ -68,7 +68,7 @@
+     "./reactivity": {
+       "types": "./types/index.d.ts",
+       "browser": "./src/reactivity/index-client.js",
+-      "default": "./src/reactivity/index-server.js"
++      "default": "./src/reactivity/index-client.js"
+     },
+     "./server": {
+       "types": "./types/index.d.ts",

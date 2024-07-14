@@ -1,7 +1,7 @@
-import { type IPlugin } from 'packages/core/src/IPlugin';
+import type { IPlugin } from 'packages/core/src/IPlugin';
 import { ViewFieldType } from 'packages/core/src/config/FieldConfigs';
-import { type AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractViewField';
-import { type ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
+import type { AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractViewField';
+import type { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
 import { LinkVF } from 'packages/core/src/fields/viewFields/fields/LinkVF';
 import { MathVF } from 'packages/core/src/fields/viewFields/fields/MathVF';
 import { TextVF } from 'packages/core/src/fields/viewFields/fields/TextVF';

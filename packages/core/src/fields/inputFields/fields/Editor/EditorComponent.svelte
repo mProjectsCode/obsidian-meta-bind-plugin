@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { IPlugin } from '../../../../IPlugin';
+	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
-	export let plugin: IPlugin;
-	export let value: string;
-	export let onValueChange: (value: any) => void;
-	export let render: (el: HTMLElement, value: string) => void;
+	const props: InputFieldSvelteProps<string> & {
+		render: (el: HTMLElement, value: string) => void;
+	} = $props();
+
+	let value = $state(props.value);
 
 	let renderEl: HTMLElement;
 	let inputEl: HTMLElement;
@@ -13,18 +14,18 @@
 	onMount(() => {
 		renderEl.style.display = 'block';
 		inputEl.style.display = 'none';
-		render(renderEl, value);
+		props.render(renderEl, value);
 	});
 
 	export function setValue(v: string): void {
 		value = v;
-		render(renderEl, v);
+		props.render(renderEl, v);
 	}
 
 	function focusOut() {
 		renderEl.style.display = 'block';
 		inputEl.style.display = 'none';
-		render(renderEl, value);
+		props.render(renderEl, value);
 	}
 
 	function focusIn() {
@@ -43,16 +44,16 @@
 
 <div
 	class="editor-input card"
-	on:click={() => focusIn()}
-	on:keypress={event => focusInOnKey(event)}
+	onclick={() => focusIn()}
+	onkeypress={event => focusInOnKey(event)}
 	role="button"
 	tabindex="0"
 >
 	<textarea
 		bind:this={inputEl}
 		bind:value={value}
-		on:focusout={() => focusOut()}
-		on:input={() => onValueChange(value)}
+		onfocusout={() => focusOut()}
+		oninput={() => props.onValueChange(value)}
 	></textarea>
 	<div bind:this={renderEl}></div>
 </div>

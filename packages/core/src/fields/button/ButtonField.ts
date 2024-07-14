@@ -1,9 +1,10 @@
-import { type IPlugin } from 'packages/core/src/IPlugin';
-import { type ButtonConfig } from 'packages/core/src/config/ButtonConfig';
+import type { IPlugin } from 'packages/core/src/IPlugin';
+import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
 import { DomHelpers, isTruthy } from 'packages/core/src/utils/Utils';
 import ButtonComponent from 'packages/core/src/utils/components/ButtonComponent.svelte';
 import { Mountable } from 'packages/core/src/utils/Mountable';
 import { type NotePosition, RenderChildType } from 'packages/core/src/config/APIConfigs';
+import { mount, type Component as SvelteComponent, unmount } from 'svelte';
 
 export class ButtonField extends Mountable {
 	plugin: IPlugin;
@@ -11,7 +12,7 @@ export class ButtonField extends Mountable {
 	filePath: string;
 	inline: boolean;
 	position: NotePosition | undefined;
-	buttonComponent?: ButtonComponent;
+	buttonComponent?: ReturnType<SvelteComponent>;
 	isInGroup: boolean;
 	isPreview: boolean;
 
@@ -56,7 +57,7 @@ export class ButtonField extends Mountable {
 			);
 		}
 
-		this.buttonComponent = new ButtonComponent({
+		this.buttonComponent = mount(ButtonComponent, {
 			target: targetEl,
 			props: {
 				plugin: this.plugin,
@@ -64,7 +65,7 @@ export class ButtonField extends Mountable {
 				variant: this.config.style,
 				label: this.config.label,
 				tooltip: isTruthy(this.config.tooltip) ? this.config.tooltip : this.config.label,
-				onClick: async (): Promise<void> => {
+				onclick: async (): Promise<void> => {
 					await this.plugin.api.buttonActionRunner.runButtonAction(
 						this.config,
 						this.filePath,
@@ -77,7 +78,9 @@ export class ButtonField extends Mountable {
 	}
 
 	protected onUnmount(): void {
-		this.buttonComponent?.$destroy();
+		if (this.buttonComponent) {
+			unmount(this.buttonComponent);
+		}
 
 		if (!this.inline && !this.isPreview) {
 			if (this.config?.id) {
