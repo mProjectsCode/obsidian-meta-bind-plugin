@@ -2,8 +2,8 @@ import type { WorkspaceLeaf } from 'obsidian';
 import { ItemView } from 'obsidian';
 import PlaygroundComponent from 'packages/core/src/utils/playground/PlaygroundComponent.svelte';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
-import type {Component as SvelteComponent} from 'svelte';
-import { mount, unmount  } from 'svelte';
+import type { Component as SvelteComponent } from 'svelte';
+import { mount, unmount } from 'svelte';
 
 export const MB_PLAYGROUND_VIEW_TYPE = 'mb-playground-view-type';
 
