@@ -5,8 +5,6 @@ editor: |-
   **test**
 
   # Heading
-
-  [[Slider]]
 editor2: |-
   asd
 

@@ -30,6 +30,7 @@ export class EditorIPF extends AbstractInputField<string, string> {
 	protected getMountArgs(): Record<string, unknown> {
 		return {
 			render: (el: HTMLElement, value: string) => void this.renderInElement(el, value),
+			filePath: this.mountable.getFilePath(),
 		};
 	}
 
