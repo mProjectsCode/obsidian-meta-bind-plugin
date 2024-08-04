@@ -3,10 +3,12 @@ import { Modal } from 'obsidian';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 import ExcludedFoldersSettingComponent from 'packages/obsidian/src/settings/excludedFoldersSetting/ExcludedFoldersSettingComponent.svelte';
+import type { Component as SvelteComponent } from 'svelte';
+import { mount, unmount } from 'svelte';
 
 export class ExcludedFoldersSettingModal extends Modal {
 	private readonly plugin: MetaBindPlugin;
-	private component: ExcludedFoldersSettingComponent | undefined;
+	private component: ReturnType<SvelteComponent> | undefined;
 
 	constructor(app: App, plugin: MetaBindPlugin) {
 		super(app);
@@ -16,10 +18,10 @@ export class ExcludedFoldersSettingModal extends Modal {
 	public onOpen(): void {
 		this.contentEl.empty();
 		if (this.component) {
-			this.component.$destroy();
+			unmount(this.component);
 		}
 
-		this.component = new ExcludedFoldersSettingComponent({
+		this.component = mount(ExcludedFoldersSettingComponent, {
 			target: this.contentEl,
 			props: {
 				excludedFolders: this.plugin.settings.excludedFolders.slice(),
@@ -32,7 +34,7 @@ export class ExcludedFoldersSettingModal extends Modal {
 	public onClose(): void {
 		this.contentEl.empty();
 		if (this.component) {
-			this.component.$destroy();
+			unmount(this.component);
 		}
 	}
 

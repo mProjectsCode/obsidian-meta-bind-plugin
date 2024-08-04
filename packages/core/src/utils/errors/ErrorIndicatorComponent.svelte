@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { ErrorIndicatorProps } from 'packages/core/src/api/InternalAPI';
 	import type { IPlugin } from 'packages/core/src/IPlugin';
+	import { onMount } from 'svelte';
 
 	const {
 		plugin,
@@ -9,6 +10,10 @@
 		plugin: IPlugin;
 		settings: ErrorIndicatorProps;
 	} = $props();
+
+	onMount(() => {
+		console.log(settings.errorCollection.otherError);
+	});
 
 	function openModal(): void {
 		plugin.internal.openErrorCollectionViewModal(settings);

@@ -5,10 +5,12 @@ import type { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollec
 import { deepCopy } from 'packages/core/src/utils/Utils';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 import ButtonTemplatesSettingComponent from 'packages/obsidian/src/settings/buttonTemplateSetting/ButtonTemplatesSettingComponent.svelte';
+import type { Component as SvelteComponent } from 'svelte';
+import { mount, unmount } from 'svelte';
 
 export class ButtonTemplatesSettingModal extends Modal {
 	readonly plugin: MetaBindPlugin;
-	private component: ButtonTemplatesSettingComponent | undefined;
+	private component: ReturnType<SvelteComponent> | undefined;
 
 	constructor(app: App, plugin: MetaBindPlugin) {
 		super(app);
@@ -18,10 +20,10 @@ export class ButtonTemplatesSettingModal extends Modal {
 	public onOpen(): void {
 		this.contentEl.empty();
 		if (this.component) {
-			this.component.$destroy();
+			unmount(this.component);
 		}
 
-		this.component = new ButtonTemplatesSettingComponent({
+		this.component = mount(ButtonTemplatesSettingComponent, {
 			target: this.contentEl,
 			props: {
 				buttonConfigs: deepCopy(this.plugin.settings.buttonTemplates),
@@ -33,7 +35,7 @@ export class ButtonTemplatesSettingModal extends Modal {
 	public onClose(): void {
 		this.contentEl.empty();
 		if (this.component) {
-			this.component.$destroy();
+			unmount(this.component);
 		}
 	}
 

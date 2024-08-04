@@ -70,8 +70,6 @@
 		}
 
 		buttonConfigs.push(unvalidatedConfig!);
-
-		buttonConfigs = buttonConfigs;
 	}
 
 	function save(): void {

@@ -40,26 +40,34 @@ export class ButtonGroupMountable extends FieldMountable {
 
 		DomHelpers.removeAllClasses(targetEl);
 
-		if (!this.declaration.errorCollection.isEmpty()) {
-			this.plugin.internal.createErrorIndicator(targetEl, {
-				errorCollection: this.declaration.errorCollection,
-				errorText:
-					'Errors caused the creation of the field to fail. Sometimes one error only occurs because of another.',
-				warningText:
-					'Warnings will not cause the creation of a field to fail, but they indicate that a part of the declaration was invalid or uses deprecated functionality.',
-				code: this.declaration.declarationString,
-			});
-			return;
+		if (this.declaration.errorCollection.isEmpty()) {
+			try {
+				this.buttonField = new ButtonGroupField(
+					this.plugin,
+					this.declaration.referencedButtonIds,
+					this.getFilePath(),
+					this.renderChildType,
+					this.position,
+				);
+				this.buttonField.mount(targetEl);
+			} catch (e) {
+				this.errorCollection.add(e);
+				this.renderErrorIndicator(targetEl);
+			}
+		} else {
+			this.renderErrorIndicator(targetEl);
 		}
+	}
 
-		this.buttonField = new ButtonGroupField(
-			this.plugin,
-			this.declaration.referencedButtonIds,
-			this.getFilePath(),
-			this.renderChildType,
-			this.position,
-		);
-		this.buttonField.mount(targetEl);
+	private renderErrorIndicator(targetEl: HTMLElement): void {
+		this.plugin.internal.createErrorIndicator(targetEl, {
+			errorCollection: this.errorCollection,
+			errorText:
+				'Errors caused the creation of the field to fail. Sometimes one error only occurs because of another.',
+			warningText:
+				'Warnings will not cause the creation of a field to fail, but they indicate that a part of the declaration was invalid or uses deprecated functionality.',
+			code: this.declaration.declarationString,
+		});
 	}
 
 	protected onUnmount(targetEl: HTMLElement): void {

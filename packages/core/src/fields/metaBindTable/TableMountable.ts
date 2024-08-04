@@ -12,6 +12,8 @@ import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
 import type { Listener } from 'packages/core/src/utils/Signal';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { showUnloadedMessage } from 'packages/core/src/utils/Utils';
+import type { Component as SvelteComponent } from 'svelte';
+import { mount, unmount } from 'svelte';
 
 // export type MetaBindTableCell =
 // 	| {
@@ -38,11 +40,13 @@ export interface MetaBindTableRow {
 
 type T = Record<string, MBExtendedLiteral>[];
 
+type TableComponent = SvelteComponent<object, { updateTable(cells: MetaBindTableRow[]): void }>;
+
 export class TableMountable extends FieldMountable {
 	bindTarget: BindTargetDeclaration;
 	tableHead: string[];
 	columns: MetaBindColumnDeclaration[];
-	tableComponent: MetaBindTableComponent | undefined;
+	tableComponent: ReturnType<TableComponent> | undefined;
 
 	private metadataManagerOutputSignalListener: Listener<unknown> | undefined;
 
@@ -157,7 +161,6 @@ export class TableMountable extends FieldMountable {
 			}
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		this.tableComponent?.updateTable(tableRows);
 	}
 
@@ -183,7 +186,7 @@ export class TableMountable extends FieldMountable {
 	protected onMount(targetEl: HTMLElement): void {
 		super.onMount(targetEl);
 
-		this.tableComponent = new MetaBindTableComponent({
+		this.tableComponent = mount(MetaBindTableComponent as unknown as TableComponent, {
 			target: targetEl,
 			props: {
 				table: this,
@@ -205,7 +208,9 @@ export class TableMountable extends FieldMountable {
 		super.onUnmount(targetEl);
 
 		this.unregisterSelfFromMetadataManager();
-		this.tableComponent?.$destroy();
+		if (this.tableComponent) {
+			unmount(this.tableComponent);
+		}
 
 		showUnloadedMessage(targetEl, 'table');
 	}

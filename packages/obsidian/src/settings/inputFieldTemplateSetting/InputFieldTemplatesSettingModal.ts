@@ -4,10 +4,12 @@ import type { InputFieldTemplate } from 'packages/core/src/Settings';
 import type { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 import InputFieldTemplatesSettingComponent from 'packages/obsidian/src/settings/inputFieldTemplateSetting/InputFieldTemplatesSettingComponent.svelte';
+import type { Component as SvelteComponent } from 'svelte';
+import { mount, unmount } from 'svelte';
 
 export class InputFieldTemplatesSettingModal extends Modal {
 	readonly plugin: MetaBindPlugin;
-	private component: InputFieldTemplatesSettingComponent | undefined;
+	private component: ReturnType<SvelteComponent> | undefined;
 
 	constructor(app: App, plugin: MetaBindPlugin) {
 		super(app);
@@ -17,10 +19,10 @@ export class InputFieldTemplatesSettingModal extends Modal {
 	public onOpen(): void {
 		this.contentEl.empty();
 		if (this.component) {
-			this.component.$destroy();
+			unmount(this.component);
 		}
 
-		this.component = new InputFieldTemplatesSettingComponent({
+		this.component = mount(InputFieldTemplatesSettingComponent, {
 			target: this.contentEl,
 			props: {
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -33,7 +35,7 @@ export class InputFieldTemplatesSettingModal extends Modal {
 	public onClose(): void {
 		this.contentEl.empty();
 		if (this.component) {
-			this.component.$destroy();
+			unmount(this.component);
 		}
 	}
 

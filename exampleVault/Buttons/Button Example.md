@@ -1,5 +1,5 @@
 ---
-count: 0
+count: 10
 someList:
   - 1708945050652
   - 1709918700548
@@ -216,7 +216,7 @@ actions:
   - type: updateMetadata
     bindTarget: count
     evaluate: true
-    value: x + 1
+    value: Math.min(10, x + 1)
 
 ```
 
@@ -229,7 +229,7 @@ actions:
   - type: updateMetadata
     bindTarget: count
     evaluate: true
-    value: x - 1
+    value: Math.max(0, x - 1)
 
 ```
 
@@ -318,3 +318,14 @@ actions:
 
 ```
 
+```meta-bind-button
+label: This is a button
+icon: ""
+hidden: false
+class: ""
+tooltip: ""
+id: test-id
+style: default
+actions: []
+
+```
