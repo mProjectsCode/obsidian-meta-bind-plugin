@@ -66,7 +66,7 @@ export class ObsidianJsRenderer implements IJsRenderer {
 
 			const simpleObject = renderer.convertToSimpleObject(execution.result);
 
-			console.log(simpleObject, typeof simpleObject);
+			//console.log(simpleObject, typeof simpleObject);
 
 			return simpleObject;
 		} catch (e) {
