@@ -84,8 +84,4 @@ declare module 'obsidian' {
 	}
 }
 
-declare global {
-	const MB_GLOBAL_CONFIG_DEV_BUILD: boolean;
-}
-
 export {};

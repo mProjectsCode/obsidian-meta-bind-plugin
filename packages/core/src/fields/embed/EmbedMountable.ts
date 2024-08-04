@@ -91,14 +91,14 @@ export class EmbedMountable extends FieldMountable {
 	}
 
 	protected onMount(targetEl: HTMLElement): void {
-		console.debug('meta-bind | EmbedMountable >> mount', this.content);
+		MB_DEBUG && console.debug('meta-bind | EmbedMountable >> mount', this.content);
 		super.onMount(targetEl);
 
 		void this.renderContent(targetEl);
 	}
 
 	protected onUnmount(targetEl: HTMLElement): void {
-		console.debug('meta-bind | EmbedMountable >> unmount', this.content);
+		MB_DEBUG && console.debug('meta-bind | EmbedMountable >> unmount', this.content);
 		super.onUnmount(targetEl);
 
 		this.markdownUnloadCallback?.();

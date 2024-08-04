@@ -218,8 +218,6 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				// workaround until bun installs https://github.com/lishid/cm-language/ correctly
 				const props: Set<string> = new Set<string>(node.type.name?.split('_'));
 
-				// console.log(props, this.readNode(view, node.from, node.to));
-
 				// node is inline code
 				if (props.has('inline-code') && !props.has('formatting')) {
 					// check for selection or cursor overlap
@@ -355,7 +353,6 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 					const highlight = plugin.api.syntaxHighlighting.highlight(content, inlineFieldType, false);
 
 					return highlight.getHighlights().map(h => {
-						// console.log(h);
 						return Decoration.mark({
 							class: `mb-highlight-${h.tokenClass}`,
 						}).range(node.from + h.range.from.index, node.from + h.range.to.index);

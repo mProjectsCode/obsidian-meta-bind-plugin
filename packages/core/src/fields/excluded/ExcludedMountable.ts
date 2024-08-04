@@ -8,7 +8,7 @@ export class ExcludedMountable extends FieldMountable {
 	}
 
 	protected onMount(targetEl: HTMLElement): void {
-		console.debug('meta-bind | ExcludedMountable >> mount');
+		MB_DEBUG && console.debug('meta-bind | ExcludedMountable >> mount');
 		super.onMount(targetEl);
 
 		DomHelpers.empty(targetEl);
@@ -20,7 +20,7 @@ export class ExcludedMountable extends FieldMountable {
 	}
 
 	protected onUnmount(targetEl: HTMLElement): void {
-		console.debug('meta-bind | ExcludedMountable >> unmount');
+		MB_DEBUG && console.debug('meta-bind | ExcludedMountable >> unmount');
 		super.onUnmount(targetEl);
 
 		DomHelpers.empty(targetEl);

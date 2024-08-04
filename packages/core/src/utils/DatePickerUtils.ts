@@ -44,7 +44,7 @@ export function getWeekDays(): string[] {
 		.sort((a, b) => {
 			return a.index - b.index;
 		});
-	// console.log(sortedWeekdays);
+
 	return sortedWeekdays.map(x => x.shortName);
 }
 

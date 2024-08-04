@@ -501,7 +501,7 @@ export class MetadataManager {
 	 * @param value
 	 */
 	public onExternalUpdate(source: MetadataSource, storagePath: string, value: Metadata): void {
-		// console.log('meta-bind | MetadataManager >> external update', source.id, storagePath, value);
+		MB_DEBUG && console.log('meta-bind | MetadataManager >> external update', source.id, storagePath, value);
 
 		const cacheItem = source.getCacheItemForStoragePath(storagePath);
 		if (cacheItem === undefined || this.isCacheExternalWriteLocked(cacheItem)) {

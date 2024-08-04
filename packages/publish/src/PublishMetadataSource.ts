@@ -21,7 +21,8 @@ export class PublishMetadataSource extends FilePathMetadataSource<FilePathMetada
 	getDefaultCacheItem(storagePath: string): FilePathMetadataCacheItem {
 		const frontmatter = publish.site.cache.cache[storagePath]?.frontmatter;
 
-		console.log('meta-bind | Obs Source >> loaded frontmatter', structuredClone(frontmatter), storagePath);
+		MB_DEBUG &&
+			console.log('meta-bind | Obs Source >> loaded frontmatter', structuredClone(frontmatter), storagePath);
 
 		return {
 			data: structuredClone(frontmatter) ?? {},

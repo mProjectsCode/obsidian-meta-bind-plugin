@@ -36,7 +36,8 @@ const context = await esbuild.context({
 	outdir: `exampleVault/.obsidian/plugins/${manifest.id}/`,
 	outbase: 'packages/obsidian/src',
 	define: {
-		MB_GLOBAL_CONFIG_DEV_BUILD: 'true',
+		MB_DEV_BUILD: 'false',
+		MB_DEBUG: 'true',
 	},
 	plugins: [
 		copy({

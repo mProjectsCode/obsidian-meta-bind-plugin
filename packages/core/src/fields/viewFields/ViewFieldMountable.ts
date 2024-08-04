@@ -90,7 +90,7 @@ export class ViewFieldMountable extends FieldMountable {
 	}
 
 	protected onMount(targetEl: HTMLElement): void {
-		console.debug('meta-bind | ViewFieldMountable >> mount', this.declaration);
+		MB_DEBUG && console.debug('meta-bind | ViewFieldMountable >> mount', this.declaration);
 		super.onMount(targetEl);
 
 		DomHelpers.empty(targetEl);
@@ -130,7 +130,7 @@ export class ViewFieldMountable extends FieldMountable {
 	}
 
 	protected onUnmount(targetEl: HTMLElement): void {
-		console.debug('meta-bind | ViewFieldMountable >> unmount', this.declaration);
+		MB_DEBUG && console.debug('meta-bind | ViewFieldMountable >> unmount', this.declaration);
 		super.onUnmount(targetEl);
 
 		this.viewField?.unmount();

@@ -49,7 +49,8 @@ esbuild
 		minify: true,
 		outfile: './Publish.js',
 		define: {
-			MB_GLOBAL_CONFIG_DEV_BUILD: 'false',
+			MB_DEV_BUILD: 'false',
+			MB_DEBUG: 'false',
 		},
 		plugins: [
 			esbuildSvelte({

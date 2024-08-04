@@ -123,7 +123,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 	// TODO: move to internal API
 	determineBuild(): MetaBindBuild {
-		if (MB_GLOBAL_CONFIG_DEV_BUILD) {
+		if (MB_DEV_BUILD) {
 			return MetaBindBuild.DEV;
 		} else if (this.manifest.version.includes('canary')) {
 			return MetaBindBuild.CANARY;
@@ -182,7 +182,6 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 					continue;
 				}
 
-				// console.log(content, ctx.getSectionInfo(codeBlock)?.lineStart, ctx.getSectionInfo(codeBlock)?.lineEnd);
 				const mountable = this.api.createInlineFieldOfTypeFromString(fieldType, content, filePath, undefined);
 				this.api.wrapInMDRC(mountable, codeBlock, ctx);
 			}
@@ -283,7 +282,6 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			callback: () => {
 				this.internal.openButtonBuilderModal({
 					onOkay: (config): void => {
-						console.log(config);
 						void window.navigator.clipboard.writeText(
 							`\`\`\`meta-bind-button\n${stringifyYaml(config)}\n\`\`\``,
 						);
@@ -355,7 +353,6 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, loadedSettings);
 
 		if (!areObjectsEqual(loadedSettings, this.settings)) {
-			// console.log(JSON.stringify(loadedSettings, null, '\t'), JSON.stringify(this.settings, null, '\t'));
 			await this.saveSettings();
 		}
 	}

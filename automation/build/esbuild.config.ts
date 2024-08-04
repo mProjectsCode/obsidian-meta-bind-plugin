@@ -37,7 +37,8 @@ const build = await esbuild.build({
 	minify: true,
 	metafile: true,
 	define: {
-		MB_GLOBAL_CONFIG_DEV_BUILD: 'false',
+		MB_DEV_BUILD: 'false',
+		MB_DEBUG: 'false',
 	},
 	plugins: [
 		esbuildSvelte({

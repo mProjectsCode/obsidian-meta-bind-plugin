@@ -106,7 +106,6 @@ export class MathVF extends AbstractViewField {
 	protected onInitialRender(_container: HTMLElement): void {}
 
 	protected onRerender(container: HTMLElement, text: string): void {
-		// console.log('hasError', this.hasError);
 		if (this.hasError) {
 			DomHelpers.addClass(container, 'mb-error');
 		} else {

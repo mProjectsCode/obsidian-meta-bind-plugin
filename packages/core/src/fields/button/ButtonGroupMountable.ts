@@ -35,7 +35,7 @@ export class ButtonGroupMountable extends FieldMountable {
 	}
 
 	protected onMount(targetEl: HTMLElement): void {
-		console.debug('meta-bind | ButtonGroupMountable >> mount', this.declaration);
+		MB_DEBUG && console.debug('meta-bind | ButtonGroupMountable >> mount', this.declaration);
 		super.onMount(targetEl);
 
 		DomHelpers.removeAllClasses(targetEl);
@@ -71,7 +71,7 @@ export class ButtonGroupMountable extends FieldMountable {
 	}
 
 	protected onUnmount(targetEl: HTMLElement): void {
-		console.debug('meta-bind | ButtonGroupMountable >> destroy', this.declaration);
+		MB_DEBUG && console.debug('meta-bind | ButtonGroupMountable >> destroy', this.declaration);
 		super.onUnmount(targetEl);
 
 		this.buttonField?.unmount();

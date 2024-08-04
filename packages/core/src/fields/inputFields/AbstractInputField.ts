@@ -155,7 +155,6 @@ export abstract class AbstractInputField<
 		if (bindTarget) {
 			this.svelteWrapper.registerListener({
 				callback: value => {
-					// console.log('input field component change', value);
 					this.notifySubscription(this.mapValue(value));
 				},
 			});

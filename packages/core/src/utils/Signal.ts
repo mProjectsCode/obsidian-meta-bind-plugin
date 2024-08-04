@@ -41,7 +41,6 @@ export class Notifier<T, TListener extends Listener<T>> implements NotifierInter
 
 	public notifyListeners(value: T): void {
 		for (const listener of this.listeners) {
-			// console.debug('meta-bind | calling listener callback', value);
 			try {
 				listener.callback(value);
 			} catch (e) {
@@ -82,7 +81,6 @@ export class Signal<T> extends Notifier<T, Listener<T>> {
 
 	public set(value: T): void {
 		this.value = value;
-		// console.debug('meta-bind | setting signal to', value);
 		this.notifyListeners(value);
 	}
 }
@@ -107,7 +105,6 @@ export class ComputedSignal<R, T> extends Notifier<T, Listener<T>> {
 
 	public set(value: T): void {
 		this.value = value;
-		// console.debug('meta-bind | setting signal to', value);
 		this.notifyListeners(value);
 	}
 

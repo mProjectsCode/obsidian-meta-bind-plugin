@@ -24,6 +24,7 @@
 		"packages/publish/**/*.ts",
 		"packages/publish/**/*.svelte",
 		"tests/**/*.ts",
-		"node_modules/obsidian/publish.d.ts"
+		"node_modules/obsidian/publish.d.ts",
+		"packages/type-ex.d.ts"
 	]
 }

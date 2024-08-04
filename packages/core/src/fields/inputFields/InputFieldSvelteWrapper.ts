@@ -64,7 +64,6 @@ export class InputFieldSvelteWrapper<Value, SvelteExports = object> extends Noti
 				plugin: this.plugin,
 				value: initialValue,
 				onValueChange: (value: Value) => {
-					// console.log('prop value change');
 					this.notifyListeners(value);
 				},
 			},

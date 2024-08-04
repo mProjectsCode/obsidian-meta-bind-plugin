@@ -107,7 +107,7 @@ export class JsViewFieldMountable extends FieldMountable {
 	}
 
 	protected onMount(targetEl: HTMLElement): void {
-		console.debug('meta-bind | JsViewFieldMountable >> mount', this.declaration);
+		MB_DEBUG && console.debug('meta-bind | JsViewFieldMountable >> mount', this.declaration);
 		super.onMount(targetEl);
 
 		DomHelpers.addClass(targetEl, 'mb-view');
@@ -155,7 +155,7 @@ export class JsViewFieldMountable extends FieldMountable {
 	}
 
 	protected onUnmount(targetEl: HTMLElement): void {
-		console.debug('meta-bind | JsViewFieldMountable >> unmount', this.declaration);
+		MB_DEBUG && console.debug('meta-bind | JsViewFieldMountable >> unmount', this.declaration);
 		super.onUnmount(targetEl);
 
 		this.unregisterSelfFromMetadataManager();
