@@ -7,8 +7,8 @@ body:
       attributes:
           value: >-
               Thanks for taking the time to fill out this bug report!
-
-
+              
+              
               By filling out the form you are giving me a clear description of the
               bug, which helps me to fix the bug more quickly. :)
     - type: checkboxes
@@ -16,10 +16,20 @@ body:
       attributes:
           label: Please fill out these Check-boxes
           options:
+              - label: I checked for existing similar issues
+                required: true
               - label: I checked that the plugin is up to date
                 required: true
               - label: The issue persist with all other plugins and themes disabled
                 required: false
+    - type: input
+      id: plugin-version
+      attributes:
+          label: Plugin Version
+          description: Please enter the plugin version you are using in the textbox below.
+          placeholder: x.x.x
+      validations:
+          required: true
     - type: checkboxes
       id: operating-systems
       attributes:
@@ -36,12 +46,14 @@ body:
                 required: false
               - label: iOS
                 required: false
-    - type: input
-      id: plugin-version
+    - type: textarea
+      id: debug-info
       attributes:
-          label: Plugin Version
-          description: Please enter the plugin version you are using in the textbox below.
-          placeholder: x.x.x
+          label: Debug Info
+          description: >-
+              Please run the "Show debug info" command in your Obsidian Vault and copy
+              it's output here.
+          render: text
       validations:
           required: true
     - type: textarea
@@ -58,11 +70,7 @@ body:
       attributes:
           label: Steps to Reproduce
           description: Please provide simple steps to reproduce the behavior.
-          placeholder: >-
-              1. Go to '...'
-              2. Click on '....'
-              3. Scroll down to '....'
-              4. See error
+          placeholder: 1. Go to '...' 2. Click on '....' 3. Scroll down to '....' 4. See error
       validations:
           required: true
     - type: textarea
@@ -73,6 +81,11 @@ body:
           placeholder: I expected the plugin to...
       validations:
           required: true
+    - type: markdown
+      attributes:
+          value: >-
+              This template was generated with [Issue Forms
+              Creator](https://issue-forms-creator.netlify.app)
     - type: markdown
       attributes:
           value: >-

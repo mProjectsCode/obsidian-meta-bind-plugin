@@ -3,28 +3,53 @@ description: Suggest a new feature for this plugin.
 labels:
     - feature request
 body:
+    - type: checkboxes
+      id: checks
+      attributes:
+          label: Please fill out these Check-boxes
+          options:
+              - label: I checked for existing similar feature requests
+                required: true
+              - label: >-
+                    I have read the docs and checked that the feature I am requesting is
+                    not already implemented
+                required: true
+              - label: My feature request consists of only one feature
+                required: true
     - type: textarea
       id: related-problem
       attributes:
-          label: Is your Feature Request Related to a Problem?
+          label: Is your Feature Request related to a Problem or Annoyance?
           description: >-
-              If your feature request is related to a problem, please provide clear
-              and concise description the problem.
-          placeholder: " I'm always frustrated when..."
+              If your feature request is related to a problem or annoyance, please
+              describe it.
+          placeholder: ' I''m always frustrated when...'
     - type: textarea
       attributes:
-          label: Describe the Feature you'd Like
+          label: Describe the Feature you'd like
           description: >-
               Please provide a clear and concise description of the feature that you
-              would like.
+              would like, how it should function, and how it solves the above problem
+              (if applicable).
           placeholder: I would like the plugin to be able to do...
       validations:
           required: true
+    - type: textarea
+      id: alternatives
+      attributes:
+          label: Alternatives
+          description: Please describe any alternatives you have considered.
+          placeholder: Instead the plugin could...
     - type: textarea
       id: additional-context
       attributes:
           label: Additional Context
           description: Provide any additional context here.
+    - type: markdown
+      attributes:
+          value: >-
+              This template was generated with [Issue Forms
+              Creator](https://issue-forms-creator.netlify.app)
     - type: markdown
       attributes:
           value: >-

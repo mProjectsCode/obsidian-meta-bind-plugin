@@ -1,0 +1,25 @@
+name: Documentation
+description: Report an issue or enhancement for the documentation website.
+labels:
+    - documentation
+body:
+    - type: input
+      id: site
+      attributes:
+          label: Page
+          description: Please provide the link of the page.
+          placeholder: https://www.moritzjung.dev/obsidian-meta-bind-plugin-docs/...
+      validations:
+          required: true
+    - type: textarea
+      id: main
+      attributes:
+          label: Issue or Enhancement
+          description: Please describe the issue or suggested enhancement for the page above.
+      validations:
+          required: true
+    - type: markdown
+      attributes:
+          value: >-
+              This template was generated with [Issue Forms
+              Creator](https://issue-forms-creator.netlify.app)
