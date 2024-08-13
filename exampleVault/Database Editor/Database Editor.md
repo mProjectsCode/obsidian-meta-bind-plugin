@@ -17,7 +17,6 @@ const currentFilePath = context.file.path;
 const mb = engine.getPlugin('obsidian-meta-bind-plugin').api;
 const dv = engine.getPlugin('dataview').api;
 
-// Define bind targets for the frontmatter fields
 const bindTargetTitle = mb.parseBindTarget('["note title"]', currentFilePath);
 console.log(bindTargetTitle);
 const columns = ["title", "Type", "mathLink", "parent", "related", "dimensions", "staticdimensions", "Dimensions", "MKS", "CGS", "FPS", "Formula"];
@@ -51,30 +50,43 @@ return mb.reactiveMetadata([bindTargetTitle], component, async (titleList) => {
             continue;
         }
 
-        const inputFields = [
-            createWrappedInputField(`INPUT[text:${title}#title]`, currentFilePath, container, component),
-            createWrappedInputField(`INPUT[inlineSelect(option(Variable), option(Sub_Variable), option(Dimension), option(Sub_Dimension), option(Vocabulary), option(Math_Operation), option(Constant), option(Folder)):${title}#Type]`, currentFilePath, container, component),
-            createWrappedInputField(`INPUT[text:${title}#mathLink]`, currentFilePath, container, component),
-            createWrappedInputField(`INPUT[inlineListSuggester(optionQuery("Database"), useLinks(partial)):${title}#parent]`, currentFilePath, container, component),
-            createWrappedInputField(`INPUT[inlineListSuggester(optionQuery("Database"), useLinks(partial)):${title}#related]`, currentFilePath, container, component),
-            createWrappedInputField(`INPUT[inlineListSuggester(optionQuery("Database"), useLinks(partial)):${title}#dimensions]`, currentFilePath, container, component),
-            createWrappedInputField(`INPUT[inlineListSuggester(optionQuery("Database"), useLinks(partial)):${title}#staticdimensions]`, currentFilePath, container, component),
-            createWrappedInputField(`INPUT[text:${title}#mathLink-blocks.Dimensions]`, currentFilePath, container, component),
-            createWrappedInputField(`INPUT[text:${title}#mathLink-blocks.MKS]`, currentFilePath, container, component),
-            createWrappedInputField(`INPUT[text:${title}#mathLink-blocks.CGS]`, currentFilePath, container, component),
-            createWrappedInputField(`INPUT[text:${title}#mathLink-blocks.FPS]`, currentFilePath, container, component),
-            createWrappedInputField(`INPUT[text:${title}#mathLink-blocks.Formula]`, currentFilePath, container, component),
+        const inputColumns = [
+            `\`INPUT[text:${title}#title]\``,
+            `\`INPUT[inlineSelect(option(Variable), option(Sub_Variable), option(Dimension), option(Sub_Dimension), option(Vocabulary), option(Math_Operation), option(Constant), option(Folder)):${title}#Type]\``,
+            `\`INPUT[text:${title}#mathLink]\``,
+            `\`INPUT[inlineListSuggester(optionQuery("Glossary"), useLinks(partial)):${title}#parent]\``,
+            `\`INPUT[inlineListSuggester(optionQuery("Glossary"), useLinks(partial)):${title}#related]\``,
+            `\`INPUT[inlineListSuggester(optionQuery("Glossary"), useLinks(partial)):${title}#dimensions]\``,
+            `\`INPUT[inlineListSuggester(optionQuery("Glossary"), useLinks(partial)):${title}#staticdimensions]\``,
+            `\`INPUT[text:${title}#mathLink-blocks.Dimensions]\``,
+            `\`INPUT[text:${title}#mathLink-blocks.MKS]\``,
+            `\`INPUT[text:${title}#mathLink-blocks.CGS]\``,
+            `\`INPUT[text:${title}#mathLink-blocks.FPS]\``,
+            `\`INPUT[text:${title}#mathLink-blocks.Formula]\``,
         ];
 
         const viewColumns = lines.map(l => `\`VIEW[{${title}#${l}}][text(renderMarkdown)]\``);
 
-        const inputRow = inputFields.map(field => field.outerHTML).join(' | ');
+        const inputRow = inputColumns.join(' | ');
         const viewRow = viewColumns.join(' | ');
 
         markdownTable += `\n| ${inputRow} |\n| ${viewRow} |`;
     }
 
     new Notice("Markdown table generated successfully");
-    return engine.markdown.create(markdownTable);
+    const markdownElement = engine.markdown.create(markdownTable);
+
+    // Wrap each input field in MDRC after rendering
+    setTimeout(() => {
+        const inputFields = markdownElement.querySelectorAll('span.cm-inline-code');
+        inputFields.forEach(field => {
+            const div = document.createElement('div');
+            field.parentNode.insertBefore(div, field);
+            div.appendChild(field);
+            mb.wrapInMDRC(field, div, component);
+        });
+    }, 0);
+
+    return markdownElement;
 });
 ```
