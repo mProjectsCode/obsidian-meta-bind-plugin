@@ -17,21 +17,11 @@ const currentFilePath = context.file.path;
 const mb = engine.getPlugin('obsidian-meta-bind-plugin').api;
 const dv = engine.getPlugin('dataview').api;
 
+// Define bind targets for the frontmatter fields
 const bindTargetTitle = mb.parseBindTarget('["note title"]', currentFilePath);
-console.log(bindTargetTitle);
+
 const columns = ["title", "Type", "mathLink", "parent", "related", "dimensions", "staticdimensions", "Dimensions", "MKS", "CGS", "FPS", "Formula"];
 const lines = ["title", "Type", "mathLink", "parent", "related", "dimensions", "staticdimensions", "mathLink-blocks.Dimensions", "mathLink-blocks.MKS", "mathLink-blocks.CGS", "mathLink-blocks.FPS", "mathLink-blocks.Formula"];
-
-function updateFrontmatter(newContent) {
-    mb.updateMetadata(bindTargetTitle, () => newContent);
-}
-
-function createWrappedInputField(inputType, filePath, container, component) {
-    const div = container.createDiv();
-    const inputField = mb.createInlineFieldFromString(inputType, filePath, undefined);
-    mb.wrapInMDRC(inputField, div, component);
-    return div;
-}
 
 return mb.reactiveMetadata([bindTargetTitle], component, async (titleList) => {
     if (!titleList || !Array.isArray(titleList) || titleList.length === 0) {
@@ -39,10 +29,10 @@ return mb.reactiveMetadata([bindTargetTitle], component, async (titleList) => {
         return;
     }
 
-    let markdownTable = `
-| ${columns.map(c => `${c}:`).join(' | ')} |
-| ${columns.map(() => '---').join(' | ')} |`;
+    const container = component.containerEl;
 
+    // Create and store input fields
+    const inputFields = [];
     for (const title of titleList) {
         const page = dv.page(title);
         if (!page || !page.file || !page.file.path) {
@@ -50,43 +40,76 @@ return mb.reactiveMetadata([bindTargetTitle], component, async (titleList) => {
             continue;
         }
 
-        const inputColumns = [
-            `\`INPUT[text:${title}#title]\``,
-            `\`INPUT[inlineSelect(option(Variable), option(Sub_Variable), option(Dimension), option(Sub_Dimension), option(Vocabulary), option(Math_Operation), option(Constant), option(Folder)):${title}#Type]\``,
-            `\`INPUT[text:${title}#mathLink]\``,
-            `\`INPUT[inlineListSuggester(optionQuery("Glossary"), useLinks(partial)):${title}#parent]\``,
-            `\`INPUT[inlineListSuggester(optionQuery("Glossary"), useLinks(partial)):${title}#related]\``,
-            `\`INPUT[inlineListSuggester(optionQuery("Glossary"), useLinks(partial)):${title}#dimensions]\``,
-            `\`INPUT[inlineListSuggester(optionQuery("Glossary"), useLinks(partial)):${title}#staticdimensions]\``,
-            `\`INPUT[text:${title}#mathLink-blocks.Dimensions]\``,
-            `\`INPUT[text:${title}#mathLink-blocks.MKS]\``,
-            `\`INPUT[text:${title}#mathLink-blocks.CGS]\``,
-            `\`INPUT[text:${title}#mathLink-blocks.FPS]\``,
-            `\`INPUT[text:${title}#mathLink-blocks.Formula]\``,
-        ];
+        const path = page.file.path;
+        console.log(`Processing title: ${title}, Path: ${path}`);
 
-        const viewColumns = lines.map(l => `\`VIEW[{${title}#${l}}][text(renderMarkdown)]\``);
-
-        const inputRow = inputColumns.join(' | ');
-        const viewRow = viewColumns.join(' | ');
-
-        markdownTable += `\n| ${inputRow} |\n| ${viewRow} |`;
+        const titleInputs = columns.map(column => {
+            let inputString;
+            switch (column) {
+                case "Type":
+                    inputString = `INPUT[inlineSelect(option(Variable), option(Sub_Variable), option(Dimension), option(Sub_Dimension), option(Vocabulary), option(Math_Operation), option(Constant), option(Folder)):${title}#Type]`;
+                    break;
+                case "parent":
+                case "related":
+                case "dimensions":
+                case "staticdimensions":
+                    inputString = `INPUT[inlineListSuggester(optionQuery("Glossary"), useLinks(partial)):${title}#${column}]`;
+                    break;
+                default:
+                    inputString = `INPUT[text:${title}#${column.startsWith('mathLink-blocks.') ? column : column.toLowerCase()}]`;
+            }
+            
+            const div = container.createDiv();
+            try {
+                const inputField = mb.createInlineFieldFromString(inputString, path);
+                mb.wrapInMDRC(inputField, div, component);
+                return div;
+            } catch (error) {
+                console.error(`Error creating input field for ${inputString}:`, error);
+                div.textContent = `Error: ${error.message}`;
+                return div;
+            }
+        });
+        inputFields.push(titleInputs);
     }
 
-    new Notice("Markdown table generated successfully");
-    const markdownElement = engine.markdown.create(markdownTable);
+    // Create table structure
+    const table = container.createEl('table');
+    const tableHead = table.createEl('thead');
+    const headerRow = tableHead.createEl('tr');
+    columns.forEach(column => {
+        const th = headerRow.createEl('th');
+        th.textContent = column;
+    });
 
-    // Wrap each input field in MDRC after rendering
-    setTimeout(() => {
-        const inputFields = markdownElement.querySelectorAll('span.cm-inline-code');
-        inputFields.forEach(field => {
-            const div = document.createElement('div');
-            field.parentNode.insertBefore(div, field);
-            div.appendChild(field);
-            mb.wrapInMDRC(field, div, component);
+    const tableBody = table.createEl('tbody');
+
+    // Populate table with input fields and views
+    inputFields.forEach((titleInputs, index) => {
+        const inputRow = tableBody.createEl('tr');
+        titleInputs.forEach((inputDiv, colIndex) => {
+            const td = inputRow.createEl('td');
+            td.appendChild(inputDiv);
         });
-    }, 0);
 
-    return markdownElement;
+        const viewRow = tableBody.createEl('tr');
+        lines.forEach((line, colIndex) => {
+            const td = viewRow.createEl('td');
+            const title = titleList[index];
+            const viewString = `VIEW[{${title}#${line}}][text(renderMarkdown)]`;
+            const viewDiv = container.createDiv();
+            try {
+                const viewField = mb.createInlineFieldFromString(viewString, currentFilePath);
+                mb.wrapInMDRC(viewField, viewDiv, component);
+                td.appendChild(viewDiv);
+            } catch (error) {
+                console.error(`Error creating view field for ${viewString}:`, error);
+                td.textContent = `Error: ${error.message}`;
+            }
+        });
+    });
+
+    new Notice("Table generated successfully");
+    return table;
 });
 ```
