@@ -13,12 +13,8 @@ mathLink-blocks:
   Formula: $\boldsymbol{F}[\pu{N},\pu{dyn},\pu{lb_{f}}]=\frac{\boldsymbol{M}[\pu{kg},\pu{g},lb_{m}]*{\color{red}a}\left[\pu{m//s2},\pu{cm//s2},\pu{ft//s2} \right]}{{{\color{blue}g}_{c}[\pu{1kg*m//N*s2}][\pu{32.2lb_{m}*ft//lb_{f}*s2}]}}$
 parent:
   - "[[Mass#^Dimensions]]"
-  - "[[Length#^Dimensions]]"
-  - "[[Time#^Dimensions]]"
 Type: Sub_Dimension
 title: Force
 dimensions:
   - "[[Mass#^Dimensions]]"
-  - "[[Length#^Dimensions]]"
-  - "[[Time#^Dimensions]]"
 ---

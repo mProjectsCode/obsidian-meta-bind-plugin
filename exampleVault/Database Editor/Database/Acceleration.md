@@ -1,16 +1,12 @@
 ---
-parent:
-  - "[[Length#^Dimensions]]"
-  - "[[Time#^Dimensions]]"
-dimensions:
-  - "[[Length#^Dimensions]]"
-  - "[[Time#^Dimensions]]"
+parent: []
+dimensions: 
 related:
   - "[[Force]]"
   - "[[Gravitational Constant]]"
   - "[[Mass]]"
 mathLink: ${\color{red}a}\left[\pu{m//s2},\pu{cm//s2},\pu{ft//s2} \right]$
-mathLink-blocks: 
+mathLink-blocks:
   MKS: ${\color{red}a}[\pu{m//s2}]$
   CGS: ${\color{red}a}[\pu{cm//s2}]$
   FPS: ${\color{red}a}[\pu{ft//s2}]$

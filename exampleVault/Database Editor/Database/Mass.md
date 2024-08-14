@@ -1,6 +1,5 @@
 ---
-parent:
-  - "[[Glossary/Dimension/Dimension|Dimension]]"
+parent: []
 mathLink: $\boldsymbol{M}[\pu{kg},\pu{g},lb_{m}]$
 mathLink-blocks:
   MKS: $\boldsymbol{M}[\pu{kg},\pu{N*s2//m}]$
@@ -12,8 +11,6 @@ mathLink-blocks:
 Type: Dimension
 staticdimensions:
   - "[[Force#^StaticDimensions]]"
-  - "[[Time#^Dimensions]]"
-  - "[[Length#^Dimensions]]"
 title: Mass
 related:
   - "[[Force]]"
