@@ -41,11 +41,11 @@ return mb.reactiveMetadata([bindTargetTitle], component, async (titleList) => {
         }
 
         const path = page.file.path;
-        console.log(`Processing title: ${title}, Path: ${path}`);
+        //console.log(`Processing title: ${title}, Path: ${path}`);
 
-        const titleInputs = columns.map(column => {
+        const titleInputs = lines.map(lines => {
             let inputString;
-            switch (column) {
+            switch (lines) {
                 case "Type":
                     inputString = `INPUT[inlineSelect(option(Variable), option(Sub_Variable), option(Dimension), option(Sub_Dimension), option(Vocabulary), option(Math_Operation), option(Constant), option(Folder)):${title}#Type]`;
                     break;
@@ -53,10 +53,10 @@ return mb.reactiveMetadata([bindTargetTitle], component, async (titleList) => {
                 case "related":
                 case "dimensions":
                 case "staticdimensions":
-                    inputString = `INPUT[inlineListSuggester(optionQuery("Glossary"), useLinks(partial)):${title}#${column}]`;
+                    inputString = `INPUT[inlineListSuggester(optionQuery("Glossary"), useLinks(partial)):${title}#${lines}]`;
                     break;
                 default:
-                    inputString = `INPUT[text:${title}#${column.startsWith('mathLink-blocks.') ? column : column.toLowerCase()}]`;
+                    inputString = `INPUT[text:${title}#${lines}]`;
             }
             
             const div = container.createDiv();
