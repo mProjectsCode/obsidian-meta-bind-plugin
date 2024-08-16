@@ -63,8 +63,6 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				});
 			});
 
-		containerEl.createEl('h2', { text: 'General Settings' });
-
 		new Setting(containerEl)
 			.setName('Enable Syntax Highlighting')
 			.setDesc(`Enable syntax highlighting for meta bind syntax. RESTART REQUIRED.`)

@@ -254,7 +254,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	addCommands(): void {
 		this.addCommand({
 			id: 'open-docs',
-			name: 'Open Meta Bind Docs',
+			name: 'Open Docs',
 			callback: () => {
 				window.open('https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/', '_blank');
 			},
@@ -262,7 +262,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		this.addCommand({
 			id: 'open-playground',
-			name: 'Open Meta Bind Playground',
+			name: 'Open Playground',
 			callback: () => {
 				void this.activateView(MB_PLAYGROUND_VIEW_TYPE);
 			},
@@ -270,7 +270,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		this.addCommand({
 			id: 'open-help',
-			name: 'Open Meta Bind Help',
+			name: 'Open Help',
 			callback: () => {
 				void this.activateView(MB_PLAYGROUND_VIEW_TYPE);
 			},
