@@ -2,8 +2,8 @@ import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import type { UnvalidatedBindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import type { UnvalidatedFieldArgument } from 'packages/core/src/parsers/FieldDeclaration';
 import { P_BindTarget } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';
-import type { UnvalidatedFieldArgument } from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
 import { P_FieldArguments } from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
 import { createResultNode, P_Ident } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import type {

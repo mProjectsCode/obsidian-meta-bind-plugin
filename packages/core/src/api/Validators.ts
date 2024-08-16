@@ -20,14 +20,11 @@ import type {
 	UnvalidatedPropAccess,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import type { SimpleButtonGroupDeclaration } from 'packages/core/src/parsers/ButtonParser';
+import type { SimpleFieldArgument, UnvalidatedFieldArgument } from 'packages/core/src/parsers/FieldDeclaration';
 import type {
 	SimpleInputFieldDeclaration,
 	UnvalidatedInputFieldDeclaration,
 } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
-import type {
-	SimpleFieldArgument,
-	UnvalidatedFieldArgument,
-} from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
 import type { ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import type {
 	SimpleJsViewFieldBindTargetMapping,
