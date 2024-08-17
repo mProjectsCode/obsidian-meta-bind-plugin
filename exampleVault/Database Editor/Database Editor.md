@@ -129,10 +129,10 @@ const dv = engine.getPlugin('dataview').api;
 const comp = new obsidian.Component(component);
 
 // Extract unique options for each filter
-const parentOptions = Array.from(new Set(dv.pages('"Database Editor"').flatMap(p => p.file.frontmatter.parent || []).filter(Boolean)));
-const TypeOptions = Array.from(new Set(dv.pages('"Database Editor"').map(p => p.file.frontmatter.Type || '').filter(Boolean)));
-const relatedOptions = Array.from(new Set(dv.pages('"Database Editor"').flatMap(p => p.file.frontmatter.related || []).filter(Boolean)));
-const dimensionsOptions = Array.from(new Set(dv.pages('"Database Editor"').flatMap(p => p.file.frontmatter.dimensions || []).filter(Boolean)));
+const parentOptions = Array.from(new Set(dv.pages('"Database Editor/Database"').flatMap(p => p.file.frontmatter.parent || []).filter(Boolean)));
+const TypeOptions = Array.from(new Set(dv.pages('"Database Editor/Database"').map(p => p.file.frontmatter.Type || '').filter(Boolean)));
+const relatedOptions = Array.from(new Set(dv.pages('"Database Editor/Database"').flatMap(p => p.file.frontmatter.related || []).filter(Boolean)));
+const dimensionsOptions = Array.from(new Set(dv.pages('"Database Editor/Database"').flatMap(p => p.file.frontmatter.dimensions || []).filter(Boolean)));
 
 // Define bind targets for filters
 const bindTargetLocked = mb.parseBindTarget('memory^locked', currentFilePath);
@@ -214,7 +214,7 @@ async function renderTable() {
     const dimensions = await mb.getMetadata(bindTargetDimensions);
 
     // Perform query using filters
-    const query = dv.pages('"Database Editor"')
+    const query = dv.pages('"Database Editor/Database"')
         .where(p => (!fileName || p.file.name.toLowerCase().includes(fileName.toLowerCase())) &&
             (!parent || (p.file.frontmatter.parent || []).includes(parent)) &&
             (!type || p.file.frontmatter.Type === type) &&
@@ -242,7 +242,7 @@ async function renderTable() {
                 case "dimensions":
                 case "staticdimensions":
                 case "down":
-                    inputString = `INPUT[inlineListSuggester(optionQuery("Database Editor"), useLinks(partial)):${title}#${line}]`;
+                    inputString = `INPUT[inlineListSuggester(optionQuery("Database Editor/Database"), useLinks(partial)):${title}#${line}]`;
                     break;
                 default:
                     inputString = `INPUT[text:${title}#${line}]`;
@@ -312,5 +312,6 @@ mb.subscribeToMetadata(bindTargetLocked, component, () => reactive.refresh());
 
 // Initial render
 renderTable();
+
 
 ```
