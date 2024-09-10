@@ -351,6 +351,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		}
 
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, loadedSettings);
+		this.updateInternalSettings();
 
 		if (!areObjectsEqual(loadedSettings, this.settings)) {
 			await this.saveSettings();

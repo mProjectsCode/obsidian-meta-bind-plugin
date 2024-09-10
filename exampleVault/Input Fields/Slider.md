@@ -1,7 +1,7 @@
 ---
-slider1: 51
-slider2: 2
-slider3: 233
+slider1: 80
+slider2: 14
+slider3: 227
 slider4: 0.1
 ---
 

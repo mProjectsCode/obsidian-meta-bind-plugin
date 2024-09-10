@@ -44,6 +44,8 @@ export class DatePickerIPF extends AbstractInputField<string | null, Moment | nu
 		if (value === null) {
 			return null;
 		}
+		console.log('value', value, DateParser.stringify(value), DateParser.dateFormat);
+
 		return DateParser.stringify(value);
 	}
 

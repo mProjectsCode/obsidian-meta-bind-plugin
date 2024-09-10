@@ -28,7 +28,7 @@
 	tabindex="0"
 	aria-checked={value}
 	onclick={() => toggleValue()}
-	onkeypress={event => toggleValueOnKey(event)}
+	onkeydown={event => toggleValueOnKey(event)}
 >
 	<input type="checkbox" tabindex="-1" checked={value} />
 </div>
