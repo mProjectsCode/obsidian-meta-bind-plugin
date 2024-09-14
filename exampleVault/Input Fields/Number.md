@@ -1,6 +1,7 @@
 ---
 number: 
 number2: 123
+number3: 
 ---
 
 ```meta-bind
@@ -9,4 +10,8 @@ INPUT[number(showcase):number]
 
 ```meta-bind
 INPUT[number(showcase):number2]
+```
+
+```meta-bind
+INPUT[number(showcase, placeholder(test)):number3]
 ```

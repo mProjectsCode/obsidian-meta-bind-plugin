@@ -28,7 +28,7 @@ export class NumberIPF extends AbstractInputField<number, number> {
 
 	protected getMountArgs(): Record<string, unknown> {
 		return {
-			placeholder: this.mountable.getArgument(InputFieldArgumentType.PLACEHOLDER) ?? 'Number',
+			placeholder: this.mountable.getArgument(InputFieldArgumentType.PLACEHOLDER)?.value ?? 'Number',
 		};
 	}
 }
