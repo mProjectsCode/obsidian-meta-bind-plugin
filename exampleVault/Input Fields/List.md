@@ -4,6 +4,7 @@ list:
   - banana
   - berries
   - https://github.com/
+  - apple
 list2:
   - "[[Other/Example Notes/Example Note with Image.md|Example Note with Image]]"
   - "[[Other/Example Notes/Example Note with Callouts.md|Example Note with Callouts]]"

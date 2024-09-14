@@ -642,6 +642,16 @@ div.mb-view-wrapper {
 	background: var(--interactive-accent-hover);
 }
 
+/* Embed */
+
+.mb-embed > .mb-embed-message {
+	display: block;
+	width: 100%;
+	text-align: center;
+	color: var(--text-muted);
+	font-size: var(--font-smaller);
+}
+
 /* Error */
 .mb-error {
 	color: var(--text-error) !important;
