@@ -38,7 +38,7 @@ You are more than welcome to open an issue on [GitHub](https://github.com/mProje
 1. Install and enable the `BRAT` plugin
 2. Run the `BRAT: Plugins: Add a beta plugin for testing` command
 3. Enter `https://github.com/mProjectsCode/obsidian-meta-bind-plugin` into the text field
-4. Click on `Add Pluign`
+4. Click on `Add Plugin`
 
 ## License
 
