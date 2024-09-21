@@ -188,6 +188,7 @@ actions:
     folderPath: templates
     fileName: asdasd
     openNote: false
+    openIfAlreadyExists: true
 
 ```
 

@@ -88,6 +88,11 @@ export const V_TemplaterCreateNoteButtonAction = schemaForType<TemplaterCreateNo
 		folderPath: stringValidator('templaterCreateNote', 'folderPath', 'folder path').optional(),
 		fileName: stringValidator('templaterCreateNote', 'fileName', 'file name').optional(),
 		openNote: booleanValidator('templaterCreateNote', 'openNote', 'value for whether to open the note').optional(),
+		openIfAlreadyExists: booleanValidator(
+			'templaterCreateNote',
+			'openIfAlreadyExists',
+			'value for whether to open the note if it already exists',
+		).optional(),
 	}),
 );
 export const V_UpdateMetadataButtonAction = schemaForType<UpdateMetadataButtonAction>()(
@@ -112,6 +117,11 @@ export const V_CreateNoteButtonAction = schemaForType<CreateNoteButtonAction>()(
 		folderPath: stringValidator('createNote', 'folderPath', 'folder path').optional(),
 		fileName: stringValidator('createNote', 'fileName', 'file name'),
 		openNote: booleanValidator('createNote', 'openNote', 'value for whether to open the note').optional(),
+		openIfAlreadyExists: booleanValidator(
+			'createNote',
+			'openIfAlreadyExists',
+			'value for whether to open the note if it already exists',
+		).optional(),
 	}),
 );
 

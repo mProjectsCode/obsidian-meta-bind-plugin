@@ -21,7 +21,7 @@ import type { IPlugin } from 'packages/core/src/IPlugin';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import { ErrorLevel, MetaBindJsError, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { parseLiteral } from 'packages/core/src/utils/Literal';
-import { expectType } from 'packages/core/src/utils/Utils';
+import { ensureFileExtension, expectType, joinPath } from 'packages/core/src/utils/Utils';
 
 export class ButtonActionRunner {
 	plugin: IPlugin;
@@ -108,6 +108,7 @@ export class ButtonActionRunner {
 				folderPath: '/',
 				fileName: '',
 				openNote: true,
+				openIfAlreadyExists: false,
 			} satisfies TemplaterCreateNoteButtonAction;
 		} else if (type === ButtonActionType.UPDATE_METADATA) {
 			return {
@@ -122,6 +123,7 @@ export class ButtonActionRunner {
 				folderPath: '/',
 				fileName: 'Untitled',
 				openNote: true,
+				openIfAlreadyExists: false,
 			} satisfies CreateNoteButtonAction;
 		} else if (type === ButtonActionType.REPLACE_IN_NOTE) {
 			return {
@@ -265,6 +267,15 @@ export class ButtonActionRunner {
 	}
 
 	async runTemplaterCreateNoteAction(action: TemplaterCreateNoteButtonAction): Promise<void> {
+		if (action.openIfAlreadyExists && action.fileName) {
+			const filePath = ensureFileExtension(joinPath(action.folderPath ?? '', action.fileName), 'md');
+			// if the file already exists, open it in the same tab
+			if (await this.plugin.internal.existsFilePath(filePath)) {
+				this.plugin.internal.openFile(filePath, '', false);
+				return;
+			}
+		}
+
 		await this.plugin.internal.createNoteWithTemplater(
 			action.templateFile,
 			action.folderPath,
@@ -302,6 +313,15 @@ export class ButtonActionRunner {
 	}
 
 	async runCreateNoteAction(action: CreateNoteButtonAction): Promise<void> {
+		if (action.openIfAlreadyExists) {
+			const filePath = ensureFileExtension(joinPath(action.folderPath ?? '', action.fileName), 'md');
+			// if the file already exists, open it in the same tab
+			if (await this.plugin.internal.existsFilePath(filePath)) {
+				this.plugin.internal.openFile(filePath, '', false);
+				return;
+			}
+		}
+
 		await this.plugin.internal.createFile(action.folderPath ?? '', action.fileName, 'md', action.openNote ?? false);
 	}
 

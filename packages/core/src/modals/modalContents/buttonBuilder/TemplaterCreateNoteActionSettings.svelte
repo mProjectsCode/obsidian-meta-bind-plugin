@@ -57,3 +57,10 @@
 <SettingComponent name="Open Note" description="Whether to open the new note after this action ran.">
 	<Toggle bind:checked={action.openNote}></Toggle>
 </SettingComponent>
+
+<SettingComponent
+	name="Open If Note Already Exists"
+	description="Whether to open the note instead of creating a new one if the note already exists."
+>
+	<Toggle bind:checked={action.openIfAlreadyExists}></Toggle>
+</SettingComponent>

@@ -215,6 +215,10 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 		return this.app.vault.adapter.write(filePath, content);
 	}
 
+	public existsFilePath(filePath: string): Promise<boolean> {
+		return this.app.vault.adapter.exists(filePath);
+	}
+
 	public createContextMenu(items: ContextMenuItemDefinition[]): IContextMenu {
 		const menu = new ObsidianContextMenu();
 		menu.setItems(items);

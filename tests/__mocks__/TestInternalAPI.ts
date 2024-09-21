@@ -133,6 +133,10 @@ export class TestInternalAPI extends InternalAPI<TestPlugin> {
 		return filePath;
 	}
 
+	public async existsFilePath(filePath: string): Promise<boolean> {
+		return this.fileSystem.fileExists(filePath);
+	}
+
 	public createContextMenu(_items: ContextMenuItemDefinition[]): IContextMenu {
 		throw new Error('not implemented');
 	}

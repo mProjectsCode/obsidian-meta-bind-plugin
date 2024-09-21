@@ -56,6 +56,7 @@ export interface TemplaterCreateNoteButtonAction {
 	folderPath?: string;
 	fileName?: string;
 	openNote?: boolean;
+	openIfAlreadyExists?: boolean;
 }
 
 export interface UpdateMetadataButtonAction {
@@ -70,6 +71,7 @@ export interface CreateNoteButtonAction {
 	folderPath?: string;
 	fileName: string;
 	openNote?: boolean;
+	openIfAlreadyExists?: boolean;
 }
 
 export interface ReplaceInNoteButtonAction {

@@ -247,6 +247,8 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	 */
 	abstract createFile(folderPath: string, fileName: string, extension: string, open?: boolean): Promise<string>;
 
+	abstract existsFilePath(filePath: string): Promise<boolean>;
+
 	abstract createContextMenu(items: ContextMenuItemDefinition[]): IContextMenu;
 
 	abstract evaluateTemplaterTemplate(templateFilePath: string, targetFilePath: string): Promise<string>;

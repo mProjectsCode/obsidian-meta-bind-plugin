@@ -142,6 +142,10 @@ export class PublishInternalAPI extends InternalAPI<MetaBindPublishPlugin> {
 		return Promise.resolve('');
 	}
 
+	public existsFilePath(filePath: string): Promise<boolean> {
+		return Promise.resolve(this.getAllFiles().contains(filePath));
+	}
+
 	public createContextMenu(_items: ContextMenuItemDefinition[]): IContextMenu {
 		throw new Error('not implemented');
 	}

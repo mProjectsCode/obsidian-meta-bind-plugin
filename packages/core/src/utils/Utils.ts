@@ -313,3 +313,37 @@ export function getFolderPathFromFilePath(filePath: string): string {
 	}
 	return filePath.substring(0, pathSeparator);
 }
+
+/**
+ * Joins the given paths together without duplicate slashes.
+ */
+export function joinPath(...paths: string[]): string {
+	let result = paths[0];
+	for (let i = 1; i < paths.length; i++) {
+		const endsWithSlash = result.endsWith('/');
+		const startsWithSlash = paths[i].startsWith('/');
+
+		if (endsWithSlash && startsWithSlash) {
+			result = result.substring(0, result.length - 1);
+		} else if (!endsWithSlash && !startsWithSlash) {
+			result += '/';
+		}
+
+		result += paths[i];
+	}
+
+	return result;
+}
+
+/**
+ * Ensures that the file path has the given extension.
+ */
+export function ensureFileExtension(filePath: string, extension: string): string {
+	extension = extension.startsWith('.') ? extension : '.' + extension;
+
+	if (filePath.endsWith(extension)) {
+		return filePath;
+	}
+
+	return filePath + extension;
+}
