@@ -1,7 +1,7 @@
-import type { NotePosition } from 'packages/core/src/config/APIConfigs';
 import type {
 	ButtonAction,
 	ButtonConfig,
+	ButtonContext,
 	CommandButtonAction,
 	CreateNoteButtonAction,
 	InlineJsButtonAction,
@@ -66,18 +66,13 @@ export class ButtonActionRunner {
 	 * @param inline whether the button is inline
 	 * @param position the position of the button in the note
 	 */
-	async runButtonAction(
-		config: ButtonConfig,
-		filePath: string,
-		inline: boolean,
-		position: NotePosition | undefined,
-	): Promise<void> {
+	async runButtonActions(config: ButtonConfig, filePath: string, context: ButtonContext): Promise<void> {
 		try {
 			if (config.action) {
-				await this.plugin.api.buttonActionRunner.runAction(config, config.action, filePath, inline, position);
+				await this.plugin.api.buttonActionRunner.runAction(config, config.action, filePath, context);
 			} else if (config.actions) {
 				for (const action of config.actions) {
-					await this.plugin.api.buttonActionRunner.runAction(config, action, filePath, inline, position);
+					await this.plugin.api.buttonActionRunner.runAction(config, action, filePath, context);
 				}
 			} else {
 				console.warn('meta-bind | ButtonMDRC >> no action defined');
@@ -178,14 +173,13 @@ export class ButtonActionRunner {
 		config: ButtonConfig | undefined,
 		action: ButtonAction,
 		filePath: string,
-		inline: boolean,
-		position: NotePosition | undefined,
+		buttonContext: ButtonContext,
 	): Promise<void> {
 		if (action.type === ButtonActionType.COMMAND) {
 			await this.runCommandAction(action);
 			return;
 		} else if (action.type === ButtonActionType.JS) {
-			await this.runJSAction(config, action, filePath);
+			await this.runJSAction(config, action, filePath, buttonContext);
 			return;
 		} else if (action.type === ButtonActionType.OPEN) {
 			await this.runOpenAction(action, filePath);
@@ -209,16 +203,16 @@ export class ButtonActionRunner {
 			await this.runReplaceInNoteAction(action, filePath);
 			return;
 		} else if (action.type === ButtonActionType.REPLACE_SELF) {
-			await this.runReplaceSelfAction(action, filePath, inline, position);
+			await this.runReplaceSelfAction(action, filePath, buttonContext);
 			return;
 		} else if (action.type === ButtonActionType.REGEXP_REPLACE_IN_NOTE) {
-			await this.runRegexpReplaceInNotAction(action, filePath);
+			await this.runRegexpReplaceInNoteAction(action, filePath);
 			return;
 		} else if (action.type === ButtonActionType.INSERT_INTO_NOTE) {
 			await this.runInsertIntoNoteAction(action, filePath);
 			return;
 		} else if (action.type === ButtonActionType.INLINE_JS) {
-			await this.runInlineJsAction(config, action, filePath);
+			await this.runInlineJsAction(config, action, filePath, buttonContext);
 			return;
 		}
 
@@ -231,7 +225,12 @@ export class ButtonActionRunner {
 		this.plugin.internal.executeCommandById(action.command);
 	}
 
-	async runJSAction(config: ButtonConfig | undefined, action: JSButtonAction, filePath: string): Promise<void> {
+	async runJSAction(
+		config: ButtonConfig | undefined,
+		action: JSButtonAction,
+		filePath: string,
+		buttonContext: ButtonContext,
+	): Promise<void> {
 		if (!this.plugin.settings.enableJs) {
 			throw new MetaBindJsError({
 				errorLevel: ErrorLevel.CRITICAL,
@@ -243,6 +242,7 @@ export class ButtonActionRunner {
 		const configOverrides: Record<string, unknown> = {
 			buttonConfig: structuredClone(config),
 			args: structuredClone(action.args),
+			buttonContext: structuredClone(buttonContext),
 		};
 		const unloadCallback = await this.plugin.internal.jsEngineRunFile(action.file, filePath, configOverrides);
 		unloadCallback();
@@ -334,20 +334,17 @@ export class ButtonActionRunner {
 	async runReplaceSelfAction(
 		action: ReplaceSelfButtonAction,
 		filePath: string,
-		inline: boolean,
-		position: NotePosition | undefined,
+		buttonContext: ButtonContext,
 	): Promise<void> {
-		if (inline) {
+		if (buttonContext.isInline) {
 			throw new Error('Replace self action not supported for inline buttons');
 		}
 
-		const linePosition = position?.getPosition();
-
-		if (linePosition === undefined) {
+		if (buttonContext.position === undefined) {
 			throw new Error('Position of the button in the note is unknown');
 		}
 
-		if (linePosition.lineStart > linePosition.lineEnd) {
+		if (buttonContext.position.lineStart > buttonContext.position.lineEnd) {
 			throw new Error('Position of the button in the note is invalid');
 		}
 
@@ -355,7 +352,7 @@ export class ButtonActionRunner {
 
 		let splitContent = content.split('\n');
 
-		if (linePosition.lineStart < 0 || linePosition.lineEnd > splitContent.length + 1) {
+		if (buttonContext.position.lineStart < 0 || buttonContext.position.lineEnd > splitContent.length + 1) {
 			throw new Error('Position of the button in the note is out of bounds');
 		}
 
@@ -364,15 +361,15 @@ export class ButtonActionRunner {
 			: action.replacement;
 
 		splitContent = [
-			...splitContent.slice(0, linePosition.lineStart),
+			...splitContent.slice(0, buttonContext.position.lineStart),
 			replacement,
-			...splitContent.slice(linePosition.lineEnd + 1),
+			...splitContent.slice(buttonContext.position.lineEnd + 1),
 		];
 
 		await this.plugin.internal.writeFilePath(filePath, splitContent.join('\n'));
 	}
 
-	async runRegexpReplaceInNotAction(action: RegexpReplaceInNoteButtonAction, filePath: string): Promise<void> {
+	async runRegexpReplaceInNoteAction(action: RegexpReplaceInNoteButtonAction, filePath: string): Promise<void> {
 		if (action.regexp === '') {
 			throw new Error('Regexp cannot be empty');
 		}
@@ -410,6 +407,7 @@ export class ButtonActionRunner {
 		config: ButtonConfig | undefined,
 		action: InlineJsButtonAction,
 		filePath: string,
+		buttonContext: ButtonContext,
 	): Promise<void> {
 		if (!this.plugin.settings.enableJs) {
 			throw new MetaBindJsError({
@@ -421,6 +419,7 @@ export class ButtonActionRunner {
 
 		const configOverrides: Record<string, unknown> = {
 			buttonConfig: structuredClone(config),
+			buttonContext: structuredClone(buttonContext),
 		};
 		const unloadCallback = await this.plugin.internal.jsEngineRunCode(action.code, filePath, configOverrides);
 		unloadCallback();

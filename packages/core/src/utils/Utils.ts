@@ -138,7 +138,13 @@ export function isFalsy(value: unknown): boolean {
 	return !value;
 }
 
-export function deepFreeze<T extends object>(object: T): Readonly<T> {
+export function deepFreeze<T extends object>(object: T): Readonly<T>;
+export function deepFreeze<T extends object>(object: T | undefined): Readonly<T | undefined>;
+export function deepFreeze<T extends object>(object: T | undefined): Readonly<T | undefined> {
+	if (object === undefined) {
+		return object;
+	}
+
 	// Retrieve the property names defined on object
 	const propNames: (string | symbol)[] = Reflect.ownKeys(object);
 

@@ -1,3 +1,5 @@
+import type { LinePosition } from 'packages/core/src/config/APIConfigs';
+
 export enum ButtonStyleType {
 	DEFAULT = 'default',
 	PRIMARY = 'primary',
@@ -128,4 +130,10 @@ export interface ButtonConfig {
 	hidden?: boolean;
 	action?: ButtonAction;
 	actions?: ButtonAction[];
+}
+
+export interface ButtonContext {
+	position: LinePosition | undefined;
+	isInGroup: boolean;
+	isInline: boolean;
 }

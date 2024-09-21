@@ -8,7 +8,11 @@ let testPlugin: TestPlugin;
 const testFilePath = 'test/file.md';
 
 async function simplifiedRunAction(action: ButtonAction): Promise<void> {
-	await testPlugin.api.buttonActionRunner.runAction(undefined, action, testFilePath, false, undefined);
+	await testPlugin.api.buttonActionRunner.runAction(undefined, action, testFilePath, {
+		position: undefined,
+		isInline: false,
+		isInGroup: false,
+	});
 }
 
 const buttonActionTests: Record<ButtonActionType, () => void> = {
@@ -176,12 +180,15 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 					replacement: 'no button',
 				},
 				testFilePath,
-				false,
-				new NotePosition({
-					// these line numbers start at 0
-					lineStart: 1,
-					lineEnd: 1,
-				}),
+				{
+					position: {
+						// these line numbers start at 0
+						lineStart: 1,
+						lineEnd: 1,
+					},
+					isInline: false,
+					isInGroup: false,
+				},
 			);
 
 			expect(testPlugin.internal.fileSystem.readFile('test/file.md')).toBe('line1\nno button\nline3\n');
@@ -197,12 +204,15 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 					replacement: 'no button',
 				},
 				testFilePath,
-				false,
-				new NotePosition({
-					// these line numbers start at 0
-					lineStart: 1,
-					lineEnd: 3,
-				}),
+				{
+					position: {
+						// these line numbers start at 0
+						lineStart: 1,
+						lineEnd: 3,
+					},
+					isInline: false,
+					isInGroup: false,
+				},
 			);
 
 			expect(testPlugin.internal.fileSystem.readFile('test/file.md')).toBe('line1\nno button\nline3\n');
