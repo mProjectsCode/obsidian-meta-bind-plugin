@@ -758,8 +758,13 @@ export abstract class API<Plugin extends IPlugin> {
 
 	/**
 	 * Subscribes to a property in meta binds metadata cache.
-	 * This returns a subscription that can be used to unsubscribe as well as update the cache.
-	 * IF YOU DON'T CALL `unsubscribe` THE SUBSCRIPTION WILL LEAK MEMORY.
+	 * This expects some sort of lifecycle hook to be passed in.
+	 * This method will register a callback to the lifecycle hook.
+	 * To unsubscribe the subscription, the callback registered to the lifecycle hook must be called.
+	 * In the context of Obsidian, you should pass a `Component` instance as the lifecycle hook and
+	 * make sure to unload the component when you are done using the metadata subscription.
+	 *
+	 * NOT UNSUBSCRIBING WILL LEAD TO MEMORY LEAKS.
 	 *
 	 * @param bindTarget
 	 * @param lifecycleHook In Obsidian this is an instance of the Component class. The subscription will be automatically unsubscribed when the component is unloaded.
