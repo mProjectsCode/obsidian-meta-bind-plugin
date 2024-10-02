@@ -93,13 +93,13 @@
 		></ButtonTemplateSettingComponent>
 	{/each}
 
-	<Button onclick={() => addTemplate()} variant={ButtonStyleType.PRIMARY} tooltip="Create New Template"
+	<Button onclick={() => addTemplate()} variant={ButtonStyleType.PRIMARY} tooltip="Create new template"
 		>Add Template</Button
 	>
 	<Button
 		onclick={() => addTemplateFromClipboard()}
 		variant={ButtonStyleType.DEFAULT}
-		tooltip="Create New Template from YAML in Clipboard"
+		tooltip="Create new template from YAML in clipboard"
 		>Add Template from Clipboard
 	</Button>
 
@@ -116,7 +116,7 @@
 	{/if}
 
 	<ModalButtonGroup>
-		<Button onclick={() => save()} variant={ButtonStyleType.PRIMARY} tooltip="Save Changes">Save</Button>
-		<Button onclick={() => cancel()} tooltip="Revert Changes">Cancel</Button>
+		<Button onclick={() => save()} variant={ButtonStyleType.PRIMARY} tooltip="Save changes">Save</Button>
+		<Button onclick={() => cancel()} tooltip="Revert changes">Cancel</Button>
 	</ModalButtonGroup>
 </div>

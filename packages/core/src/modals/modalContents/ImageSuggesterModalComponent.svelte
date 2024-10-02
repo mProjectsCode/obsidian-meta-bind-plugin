@@ -28,7 +28,7 @@
 </script>
 
 <div class="mb-image-search-container">
-	<input type="text" bind:value={search} placeholder="Search Images..." />
+	<input type="text" bind:value={search} placeholder="Search images..." />
 </div>
 <div class="mb-image-card-grid">
 	{#each filteredOptions as option}

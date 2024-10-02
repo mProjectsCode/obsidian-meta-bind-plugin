@@ -19,7 +19,7 @@ export class DependencyManager {
 		if (dependency === undefined) {
 			throw new MetaBindDependencyError({
 				errorLevel: ErrorLevel.CRITICAL,
-				effect: `Dependency Violation Detected`,
+				effect: `Dependency violation detected`,
 				cause: `Attempted to access dependency ${pluginId} which is not a listed dependency. Please report this error.`,
 			});
 		}
@@ -33,7 +33,7 @@ export class DependencyManager {
 	private throwPluginNotFound(pluginId: string): void {
 		throw new MetaBindDependencyError({
 			errorLevel: ErrorLevel.ERROR,
-			effect: `Dependency Violation Detected`,
+			effect: `Dependency violation detected`,
 			cause: `Plugin ${pluginId} is required, but not installed. Please install the plugin.`,
 		});
 	}
@@ -42,7 +42,7 @@ export class DependencyManager {
 		if (Version.lessThan(version, dependency.minVersion)) {
 			throw new MetaBindDependencyError({
 				errorLevel: ErrorLevel.ERROR,
-				effect: `Dependency Violation Detected`,
+				effect: `Dependency violation detected`,
 				cause: `Plugin ${dependency.pluginId} is outdated. Required version is at least ${dependency.minVersion}, installed version is ${version}. Please update the plugin.`,
 			});
 		}
@@ -53,7 +53,7 @@ export class DependencyManager {
 		) {
 			throw new MetaBindDependencyError({
 				errorLevel: ErrorLevel.ERROR,
-				effect: `Dependency Violation Detected`,
+				effect: `Dependency violation detected`,
 				cause: `Plugin ${dependency.pluginId} is too new. Required version is lower than ${dependency.maxVersion}, installed version is ${version}. Please downgrade the plugin.`,
 			});
 		}

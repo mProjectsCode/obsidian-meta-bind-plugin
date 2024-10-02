@@ -740,6 +740,20 @@ code.mb-warning {
 
 /* --- Misc --- */
 
+.mb-excluded-folders-table-input-cell {
+	width: 100%;
+}
+
+.mb-excluded-folders-table-input-cell > input {
+	width: 100%;
+}
+
+.mb-textarea {
+	width: 100%;
+	height: 100px;
+	resize: vertical;
+}
+
 .mb-icon-wrapper {
 	display: block;
 	position: relative;

@@ -12,6 +12,6 @@
 	} = $props();
 </script>
 
-<SettingComponent name="Sleep Time" description="The time to sleep in milliseconds.">
+<SettingComponent name="Sleep time" description="The time to sleep in milliseconds.">
 	<input type="number" bind:value={action.ms} placeholder="100 ms" />
 </SettingComponent>

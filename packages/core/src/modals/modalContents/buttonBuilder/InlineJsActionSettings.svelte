@@ -12,7 +12,7 @@
 	} = $props();
 </script>
 
-<SettingComponent name="JS Code" description="The JavaScript code to run."></SettingComponent>
+<SettingComponent name="JS code" description="The JavaScript code to run."></SettingComponent>
 
 <div class="meta-bind-full-width meta-bind-high">
 	<textarea bind:value={action.code}></textarea>

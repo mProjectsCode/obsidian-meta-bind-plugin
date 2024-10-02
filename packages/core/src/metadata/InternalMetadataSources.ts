@@ -66,7 +66,7 @@ export class GlobalMetadataSource implements IMetadataSource<GlobalMetadataCache
 		if (hadStoragePath) {
 			throw new ParsingValidationError(
 				ErrorLevel.ERROR,
-				'Bind Target Validator',
+				'Bind target validator',
 				`Failed to parse bind target. Bind target storage type 'global_memory' does not support a storage path.`,
 				bindTargetDeclaration,
 				storagePath.position,

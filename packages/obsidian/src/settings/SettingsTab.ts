@@ -57,14 +57,14 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				});
 			})
 			.addButton(cb => {
-				cb.setButtonText('Report Issue');
+				cb.setButtonText('Report issue');
 				cb.onClick(() => {
 					DocsUtils.open(DocsUtils.linkToIssues());
 				});
 			});
 
 		new Setting(containerEl)
-			.setName('Enable Syntax Highlighting')
+			.setName('Enable syntax highlighting')
 			.setDesc(`Enable syntax highlighting for meta bind syntax. RESTART REQUIRED.`)
 			.addToggle(cb => {
 				cb.setValue(this.plugin.settings.enableSyntaxHighlighting);
@@ -75,8 +75,8 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName('Enable Editor Right Click Menu')
-			.setDesc(`Enable a meta bind menu section in the editor right click menu. RESTART REQUIRED.`)
+			.setName('Enable editor right-click menu')
+			.setDesc(`Enable a meta bind menu section in the editor right-click menu. RESTART REQUIRED.`)
 			.addToggle(cb => {
 				cb.setValue(this.plugin.settings.enableEditorRightClickMenu);
 				cb.onChange(data => {
@@ -86,39 +86,39 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName('Input Field Templates')
+			.setName('Input field templates')
 			.setDesc(
 				`You can specify input field templates here, and access them using \`INPUT[template_name][overrides (optional)]\` in your notes.`,
 			)
 			.addButton(cb => {
-				cb.setButtonText('Edit Templates');
+				cb.setButtonText('Edit templates');
 				cb.onClick(() => {
 					new InputFieldTemplatesSettingModal(this.app, this.plugin).open();
 				});
 			});
 
 		new Setting(containerEl)
-			.setName('Button Templates')
+			.setName('Button templates')
 			.setDesc(`You can specify button field templates here, and access them in inline buttons.`)
 			.addButton(cb => {
-				cb.setButtonText('Edit Templates');
+				cb.setButtonText('Edit templates');
 				cb.onClick(() => {
 					new ButtonTemplatesSettingModal(this.app, this.plugin).open();
 				});
 			});
 
 		new Setting(containerEl)
-			.setName('Excluded Folders')
+			.setName('Excluded folders')
 			.setDesc(`You can specify excluded folders here. The plugin will not work within excluded folders.`)
 			.addButton(cb => {
-				cb.setButtonText('Edit Excluded Folders');
+				cb.setButtonText('Edit excluded folders');
 				cb.onClick(() => {
 					new ExcludedFoldersSettingModal(this.app, this.plugin).open();
 				});
 			});
 
 		new Setting(containerEl)
-			.setName('View Fields display null as empty')
+			.setName('View fields display null as empty')
 			.setDesc('Display nothing instead of null, if the frontmatter value is empty, in text view fields.')
 			.addToggle(cb => {
 				cb.setValue(this.plugin.settings.viewFieldDisplayNullAsEmpty);
@@ -141,7 +141,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				});
 			});
 
-		containerEl.createEl('h2', { text: 'Date and Time Settings' });
+		containerEl.createEl('h2', { text: 'Date and time settings' });
 
 		new Setting(containerEl)
 			.setName('Date format')
@@ -157,7 +157,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName('First Weekday')
+			.setName('First weekday')
 			.setDesc(`Specify the first weekday for the datepicker.`)
 			.addDropdown(cb => {
 				for (const weekday of weekdays) {
@@ -170,10 +170,10 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				});
 			});
 
-		containerEl.createEl('h2', { text: 'Advanced Settings' });
+		containerEl.createEl('h2', { text: 'Advanced settings' });
 
 		new Setting(containerEl)
-			.setName('Dev Mode')
+			.setName('Dev mode')
 			.setDesc('Enable dev mode. Not recommended unless you want to debug this plugin.')
 			.addToggle(cb => {
 				cb.setValue(this.plugin.settings.devMode);
@@ -184,7 +184,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName('Disable Code Block Restrictions')
+			.setName('Disable code block restrictions')
 			.setDesc(
 				'Disable restrictions on which input fields can be created in which code blocks. Not recommended unless you know what you are doing.',
 			)

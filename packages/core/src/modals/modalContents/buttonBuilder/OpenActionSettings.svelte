@@ -17,6 +17,6 @@
 	<input type="text" bind:value={action.link} placeholder="[[Some Note]] or https://www.example.com" />
 </SettingComponent>
 
-<SettingComponent name="New Tab" description="Whether to open the link in a new tab.">
+<SettingComponent name="New tab" description="Whether to open the link in a new tab.">
 	<Toggle bind:checked={action.newTab}></Toggle>
 </SettingComponent>

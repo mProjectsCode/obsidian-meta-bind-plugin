@@ -36,7 +36,7 @@
 </script>
 
 <SettingComponent
-	name="Template File: {action.templateFile || 'none'}"
+	name="Template file: {action.templateFile || 'none'}"
 	description="The template file to create a new note of."
 >
 	<Button variant={ButtonStyleType.PRIMARY} onclick={() => templaterCreateNoteActionChangeTemplateFile(action)}
@@ -50,16 +50,16 @@
 	</Button>
 </SettingComponent>
 
-<SettingComponent name="File Name: {action.fileName || 'default'}" description="The file name of the new note.">
+<SettingComponent name="File name: {action.fileName || 'default'}" description="The file name of the new note.">
 	<input type="text" bind:value={action.fileName} placeholder="some name" />
 </SettingComponent>
 
-<SettingComponent name="Open Note" description="Whether to open the new note after this action ran.">
+<SettingComponent name="Open note" description="Whether to open the new note after this action ran.">
 	<Toggle bind:checked={action.openNote}></Toggle>
 </SettingComponent>
 
 <SettingComponent
-	name="Open If Note Already Exists"
+	name="Open if note already exists"
 	description="Whether to open the note instead of creating a new one if the note already exists."
 >
 	<Toggle bind:checked={action.openIfAlreadyExists}></Toggle>

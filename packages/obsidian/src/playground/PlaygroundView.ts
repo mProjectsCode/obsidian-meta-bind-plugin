@@ -21,7 +21,7 @@ export class PlaygroundView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return 'Meta Bind Playground';
+		return 'Meta Bind playground';
 	}
 
 	// eslint-disable-next-line @typescript-eslint/require-await

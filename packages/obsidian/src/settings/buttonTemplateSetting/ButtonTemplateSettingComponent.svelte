@@ -30,7 +30,7 @@
 	function copyTemplate(): void {
 		const yaml = stringifyYaml(template);
 		void navigator.clipboard.writeText(yaml);
-		new Notice('meta-bind | Copied to Clipboard');
+		new Notice('meta-bind | Copied to clipboard');
 	}
 </script>
 

@@ -12,6 +12,6 @@
 	} = $props();
 </script>
 
-<SettingComponent name="JS File" description="The JavaScript file to run.">
+<SettingComponent name="JS file" description="The JavaScript file to run.">
 	<input type="text" bind:value={action.file} placeholder="someJsFile.js" />
 </SettingComponent>

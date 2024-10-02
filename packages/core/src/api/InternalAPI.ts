@@ -299,7 +299,7 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 				});
 			}),
 			{
-				title: 'Meta Bind Image Suggester',
+				title: 'Meta Bind image suggester',
 				classes: ['mb-image-suggester-modal'],
 			},
 		).open();
@@ -320,7 +320,7 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 				});
 			}),
 			{
-				title: 'Meta Bind Date Picker',
+				title: 'Meta Bind date picker',
 			},
 		).open();
 	}
@@ -360,7 +360,7 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 				});
 			}),
 			{
-				title: 'Meta Bind Error Overview',
+				title: 'Meta Bind error overview',
 				classes: ['mb-error-collection-modal', 'markdown-rendered'],
 			},
 		).open();

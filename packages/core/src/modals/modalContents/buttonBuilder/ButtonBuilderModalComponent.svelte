@@ -67,31 +67,31 @@
 
 	function getActionLabel(actionType: ButtonActionType): string {
 		if (actionType === ButtonActionType.COMMAND) {
-			return 'Run a Command';
+			return 'Run a command';
 		} else if (actionType === ButtonActionType.OPEN) {
-			return 'Open a Link';
+			return 'Open a link';
 		} else if (actionType === ButtonActionType.JS) {
-			return 'Run a JavaScript File';
+			return 'Run a JavaScript file';
 		} else if (actionType === ButtonActionType.INPUT) {
-			return 'Insert Text at Cursor';
+			return 'Insert text at cursor';
 		} else if (actionType === ButtonActionType.SLEEP) {
-			return 'Sleep for Some Time';
+			return 'Sleep for some time';
 		} else if (actionType === ButtonActionType.TEMPLATER_CREATE_NOTE) {
-			return 'Create a New Note Using Templater';
+			return 'Create a new note using Templater';
 		} else if (actionType === ButtonActionType.UPDATE_METADATA) {
-			return 'Update Metadata';
+			return 'Update metadata';
 		} else if (actionType === ButtonActionType.CREATE_NOTE) {
-			return 'Create a New Note';
+			return 'Create a new note';
 		} else if (actionType === ButtonActionType.REPLACE_IN_NOTE) {
-			return 'Replace Text in Note';
+			return 'Replace text in note';
 		} else if (actionType === ButtonActionType.REGEXP_REPLACE_IN_NOTE) {
-			return 'Replace Text in Note using Regexp';
+			return 'Replace text in note using regexp';
 		} else if (actionType === ButtonActionType.REPLACE_SELF) {
-			return 'Replace Button with Text';
+			return 'Replace button with text';
 		} else if (actionType === ButtonActionType.INSERT_INTO_NOTE) {
-			return 'Insert Text into the Note';
+			return 'Insert text into the note';
 		} else if (actionType === ButtonActionType.INLINE_JS) {
-			return 'Run JavaScript Code';
+			return 'Run JavaScript code';
 		}
 
 		expectType<never>(actionType);
@@ -166,7 +166,7 @@
 </SettingComponent>
 
 <SettingComponent
-	name="CSS Classes"
+	name="CSS classes"
 	description="A list of CSS classes to add to the button. Multiple classes should be separated by a space."
 >
 	<input type="text" bind:value={buttonConfig.class} />
