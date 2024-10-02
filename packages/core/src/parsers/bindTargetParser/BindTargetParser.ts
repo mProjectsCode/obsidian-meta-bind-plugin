@@ -154,7 +154,7 @@ export class BindTargetParser {
 			);
 		}
 
-		const filePath: string | undefined = this.plugin.internal.getFilePathByName(storagePath);
+		const filePath: string | undefined = this.plugin.internal.file.getPathByName(storagePath);
 
 		if (filePath === undefined) {
 			throw new ParsingValidationError(

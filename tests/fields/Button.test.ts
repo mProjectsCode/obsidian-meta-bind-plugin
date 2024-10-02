@@ -126,12 +126,12 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 				openNote: false,
 			});
 
-			expect(testPlugin.internal.fileSystem.fileExists('test/otherFile.md')).toBe(true);
+			expect(await testPlugin.internal.file.exists('test/otherFile.md')).toBe(true);
 		});
 	},
 	[ButtonActionType.REPLACE_IN_NOTE]: () => {
 		test('replaces single line in note', async () => {
-			testPlugin.internal.fileSystem.writeFile('test/file.md', 'line1\nline2\nline3\n');
+			await testPlugin.internal.file.write('test/file.md', 'line1\nline2\nline3\n');
 
 			await simplifiedRunAction({
 				type: ButtonActionType.REPLACE_IN_NOTE,
@@ -140,11 +140,11 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 				replacement: 'newLine2',
 			});
 
-			expect(testPlugin.internal.fileSystem.readFile('test/file.md')).toBe('line1\nnewLine2\nline3\n');
+			expect(await testPlugin.internal.file.read('test/file.md')).toBe('line1\nnewLine2\nline3\n');
 		});
 
 		test('replaces multiple lines in note', async () => {
-			testPlugin.internal.fileSystem.writeFile('test/file.md', 'line1\nline2\nline3\n');
+			await testPlugin.internal.file.write('test/file.md', 'line1\nline2\nline3\n');
 
 			await simplifiedRunAction({
 				type: ButtonActionType.REPLACE_IN_NOTE,
@@ -153,12 +153,12 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 				replacement: 'newLine2\nnewLine3',
 			});
 
-			expect(testPlugin.internal.fileSystem.readFile('test/file.md')).toBe('line1\nnewLine2\nnewLine3\n');
+			expect(await testPlugin.internal.file.read('test/file.md')).toBe('line1\nnewLine2\nnewLine3\n');
 		});
 	},
 	[ButtonActionType.REGEXP_REPLACE_IN_NOTE]: () => {
 		test('replaces in note', async () => {
-			testPlugin.internal.fileSystem.writeFile('test/file.md', 'line1\nline2\nline3\n');
+			await testPlugin.internal.file.write('test/file.md', 'line1\nline2\nline3\n');
 
 			await simplifiedRunAction({
 				type: ButtonActionType.REGEXP_REPLACE_IN_NOTE,
@@ -166,12 +166,12 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 				replacement: 'newLine',
 			});
 
-			expect(testPlugin.internal.fileSystem.readFile('test/file.md')).toBe('newLine\nnewLine\nnewLine\n');
+			expect(await testPlugin.internal.file.read('test/file.md')).toBe('newLine\nnewLine\nnewLine\n');
 		});
 	},
 	[ButtonActionType.REPLACE_SELF]: () => {
 		test('replaces self', async () => {
-			testPlugin.internal.fileSystem.writeFile('test/file.md', 'line1\nbutton\nline3\n');
+			await testPlugin.internal.file.write('test/file.md', 'line1\nbutton\nline3\n');
 
 			await testPlugin.api.buttonActionRunner.runAction(
 				undefined,
@@ -191,11 +191,11 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 				},
 			);
 
-			expect(testPlugin.internal.fileSystem.readFile('test/file.md')).toBe('line1\nno button\nline3\n');
+			expect(await testPlugin.internal.file.read('test/file.md')).toBe('line1\nno button\nline3\n');
 		});
 
 		test('replaces multiline self', async () => {
-			testPlugin.internal.fileSystem.writeFile('test/file.md', 'line1\nbutton\n\nalso button\nline3\n');
+			await testPlugin.internal.file.write('test/file.md', 'line1\nbutton\n\nalso button\nline3\n');
 
 			await testPlugin.api.buttonActionRunner.runAction(
 				undefined,
@@ -215,12 +215,12 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 				},
 			);
 
-			expect(testPlugin.internal.fileSystem.readFile('test/file.md')).toBe('line1\nno button\nline3\n');
+			expect(await testPlugin.internal.file.read('test/file.md')).toBe('line1\nno button\nline3\n');
 		});
 	},
 	[ButtonActionType.INSERT_INTO_NOTE]: () => {
 		test('inserts into note', async () => {
-			testPlugin.internal.fileSystem.writeFile('test/file.md', 'line1\nline2\nline3\n');
+			await testPlugin.internal.file.write('test/file.md', 'line1\nline2\nline3\n');
 
 			await simplifiedRunAction({
 				type: ButtonActionType.INSERT_INTO_NOTE,
@@ -228,7 +228,7 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 				value: 'newLine2',
 			});
 
-			expect(testPlugin.internal.fileSystem.readFile('test/file.md')).toBe('line1\nnewLine2\nline2\nline3\n');
+			expect(await testPlugin.internal.file.read('test/file.md')).toBe('line1\nnewLine2\nline2\nline3\n');
 		});
 	},
 	[ButtonActionType.INLINE_JS]: () => {

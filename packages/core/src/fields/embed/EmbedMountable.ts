@@ -35,11 +35,11 @@ export class EmbedMountable extends FieldMountable {
 		if (!link.internal) {
 			return { error: `${firstLine} is not an internal link` };
 		}
-		const filePath = this.plugin.internal.getFilePathByName(link.target, this.getFilePath());
+		const filePath = this.plugin.internal.file.getPathByName(link.target, this.getFilePath());
 		if (filePath === undefined) {
 			return { error: `"${link.target}" is not created yet` };
 		}
-		return { content: await this.plugin.internal.readFilePath(filePath) };
+		return { content: await this.plugin.internal.file.read(filePath) };
 	}
 
 	exceedsMaxDepth(): boolean {

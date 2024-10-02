@@ -145,7 +145,7 @@ export abstract class API<Plugin extends IPlugin> {
 			},
 		);
 
-		if (this.plugin.internal.isFilePathExcluded(filePath) && honorExcludedSetting) {
+		if (this.plugin.internal.file.isExcludedFromRendering(filePath) && honorExcludedSetting) {
 			return this.createExcludedMountable(filePath);
 		}
 
@@ -269,7 +269,7 @@ export abstract class API<Plugin extends IPlugin> {
 			},
 		);
 
-		if (this.plugin.internal.isFilePathExcluded(filePath) && honorExcludedSetting) {
+		if (this.plugin.internal.file.isExcludedFromRendering(filePath) && honorExcludedSetting) {
 			return this.createExcludedMountable(filePath);
 		}
 

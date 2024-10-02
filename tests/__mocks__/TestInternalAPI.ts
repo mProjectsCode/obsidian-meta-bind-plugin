@@ -16,14 +16,11 @@ import { TestFileSystem } from 'tests/__mocks__/TestFileSystem';
 import YAML from 'yaml';
 import { z, ZodType } from 'zod';
 import type { LifecycleHook } from 'packages/core/src/api/API';
+import { TestFileAPI } from './TestFileAPI';
 
 export class TestInternalAPI extends InternalAPI<TestPlugin> {
-	fileSystem: TestFileSystem;
-
 	constructor(plugin: TestPlugin) {
-		super(plugin);
-
-		this.fileSystem = new TestFileSystem();
+		super(plugin, new TestFileAPI(plugin));
 	}
 
 	public getLifecycleHookValidator(): ZodType<LifecycleHook, any, any> {
@@ -65,12 +62,6 @@ export class TestInternalAPI extends InternalAPI<TestPlugin> {
 		throw new Error('not implemented');
 	}
 
-	public openFile(_filePath: string, _callingFilePath: string, _newTab: boolean): void {}
-
-	public getFilePathByName(name: string, _relativeTo: string = ''): string | undefined {
-		return name;
-	}
-
 	public showNotice(_: string): void {}
 
 	public parseYaml(yaml: string): unknown {
@@ -103,38 +94,12 @@ export class TestInternalAPI extends InternalAPI<TestPlugin> {
 		return [];
 	}
 
-	public getAllFiles(): string[] {
-		return this.fileSystem.listFiles();
-	}
-
-	public getAllFolders(): string[] {
-		return this.fileSystem.listDirs();
-	}
-
 	public getImageSuggesterOptions(_inputField: ImageSuggesterIPF): SuggesterOption<string>[] {
 		return [];
 	}
 
 	public getSuggesterOptions(_inputField: SuggesterLikeIFP): SuggesterOption<MBLiteral>[] {
 		return [];
-	}
-
-	public async readFilePath(filePath: string): Promise<string> {
-		return this.fileSystem.readFile(filePath);
-	}
-
-	public async writeFilePath(filePath: string, content: string): Promise<void> {
-		this.fileSystem.writeFile(filePath, content);
-	}
-
-	public async createFile(folderPath: string, fileName: string, extension: string, _open?: boolean): Promise<string> {
-		const filePath = `${folderPath}/${fileName}.${extension}`;
-		this.fileSystem.writeFile(filePath, '');
-		return filePath;
-	}
-
-	public async existsFilePath(filePath: string): Promise<boolean> {
-		return this.fileSystem.fileExists(filePath);
 	}
 
 	public createContextMenu(_items: ContextMenuItemDefinition[]): IContextMenu {
@@ -151,6 +116,6 @@ export class TestInternalAPI extends InternalAPI<TestPlugin> {
 		fileName?: string,
 		openNote?: boolean,
 	): Promise<string | undefined> {
-		return await this.createFile(folderPath ?? '', fileName ?? 'unnamed', 'md', openNote);
+		return await this.file.create(folderPath ?? '', fileName ?? 'unnamed', 'md', openNote);
 	}
 }

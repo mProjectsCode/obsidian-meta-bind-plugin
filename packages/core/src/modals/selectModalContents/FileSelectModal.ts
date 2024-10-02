@@ -6,6 +6,6 @@ export class FileSelectModal extends SelectModalContent<string> {
 	}
 
 	public getItems(): string[] {
-		return this.plugin.internal.getAllFiles();
+		return this.plugin.internal.file.getAllFiles();
 	}
 }

@@ -1,5 +1,6 @@
 import type { Moment } from 'moment';
 import type { LifecycleHook } from 'packages/core/src/api/API';
+import type { FileAPI } from 'packages/core/src/api/FileAPI';
 import DatePickerInput from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePicker.svelte';
 import type { DatePickerIPF } from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePickerIPF';
 import type {
@@ -57,10 +58,12 @@ export interface TextPromptModalOptions extends ModalOptions {
 }
 
 export abstract class InternalAPI<Plugin extends IPlugin> {
-	plugin: Plugin;
+	readonly plugin: Plugin;
+	readonly file: FileAPI<Plugin>;
 
-	constructor(plugin: Plugin) {
+	constructor(plugin: Plugin, fileAPI: FileAPI<Plugin>) {
 		this.plugin = plugin;
+		this.file = fileAPI;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -148,23 +151,6 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	abstract createJsRenderer(container: HTMLElement, filePath: string, code: string, hidden: boolean): IJsRenderer;
 
 	/**
-	 * Open a specific file.
-	 *
-	 * @param filePath
-	 * @param callingFilePath
-	 * @param newTab
-	 */
-	abstract openFile(filePath: string, callingFilePath: string, newTab: boolean): void;
-
-	/**
-	 * Resolves a file name to a file path.
-	 *
-	 * @param name
-	 * @param relativeTo
-	 */
-	abstract getFilePathByName(name: string, relativeTo?: string): string | undefined;
-
-	/**
 	 * Shows a notice to the user.
 	 *
 	 * @param message
@@ -191,16 +177,6 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	abstract imagePathToUri(imagePath: string): string;
 
 	/**
-	 * List all files by their path.
-	 */
-	abstract getAllFiles(): string[];
-
-	/**
-	 * List all folders by their path.
-	 */
-	abstract getAllFolders(): string[];
-
-	/**
 	 * List all commands.
 	 */
 	abstract getAllCommands(): Command[];
@@ -224,30 +200,6 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	 * Creates a fuzzy search instance.
 	 */
 	abstract createFuzzySearch(): IFuzzySearch;
-
-	/**
-	 * Read a files content.
-	 *
-	 * @param filePath
-	 */
-	abstract readFilePath(filePath: string): Promise<string>;
-
-	abstract writeFilePath(filePath: string, content: string): Promise<void>;
-
-	/**
-	 * Create a file in the given folder with the given name and extension.
-	 * If the name is already taken, a number will be appended to the name.
-	 *
-	 * @param folderPath the path to the folder
-	 * @param fileName the name of the file
-	 * @param extension the extension of the file
-	 * @param open
-	 *
-	 * @returns the path to the created file
-	 */
-	abstract createFile(folderPath: string, fileName: string, extension: string, open?: boolean): Promise<string>;
-
-	abstract existsFilePath(filePath: string): Promise<boolean>;
 
 	abstract createContextMenu(items: ContextMenuItemDefinition[]): IContextMenu;
 
@@ -380,20 +332,5 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 				settings: settings,
 			},
 		});
-	}
-
-	/**
-	 * Checks if a file path has been excluded in the settings.
-	 *
-	 * @param filePath
-	 */
-	isFilePathExcluded(filePath: string): boolean {
-		for (const excludedFolder of this.plugin.settings.excludedFolders) {
-			if (filePath.startsWith(excludedFolder)) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 }

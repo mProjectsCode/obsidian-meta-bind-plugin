@@ -1,15 +1,5 @@
 import type { App } from 'obsidian';
-import {
-	Component,
-	MarkdownRenderer,
-	normalizePath,
-	Notice,
-	parseYaml,
-	setIcon,
-	stringifyYaml,
-	TFile,
-	TFolder,
-} from 'obsidian';
+import { Component, MarkdownRenderer, Notice, parseYaml, setIcon, stringifyYaml, TFile, TFolder } from 'obsidian';
 import type { LifecycleHook } from 'packages/core/src/api/API';
 import type { Command, ModalOptions } from 'packages/core/src/api/InternalAPI';
 import { InternalAPI } from 'packages/core/src/api/InternalAPI';
@@ -31,6 +21,7 @@ import { ObsidianModal } from 'packages/obsidian/src/modals/ObsidianModal';
 import { ObsidianSearchModal } from 'packages/obsidian/src/modals/ObsidianSearchModal';
 import { getSuggesterOptionsForInputField } from 'packages/obsidian/src/modals/SuggesterModalHelper';
 import { ObsidianContextMenu } from 'packages/obsidian/src/ObsidianContextMenu';
+import { ObsidianFileAPI } from 'packages/obsidian/src/ObsidianFileAPI';
 import { ObsidianJsRenderer } from 'packages/obsidian/src/ObsidianJsRenderer';
 import { getJsEnginePluginAPI, getTemplaterPluginAPI, Templater_RunMode } from 'packages/obsidian/src/ObsUtils';
 import type { ZodType } from 'zod';
@@ -40,7 +31,7 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 	readonly app: App;
 
 	constructor(plugin: MetaBindPlugin) {
-		super(plugin);
+		super(plugin, new ObsidianFileAPI(plugin));
 
 		this.app = plugin.app;
 	}
@@ -141,14 +132,6 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 		return new ObsidianJsRenderer(this.plugin, container, filePath, code, hidden);
 	}
 
-	public openFile(filePath: string, callingFilePath: string, newTab: boolean): void {
-		void this.app.workspace.openLinkText(filePath, callingFilePath, newTab);
-	}
-
-	public getFilePathByName(name: string, relativeTo: string = ''): string | undefined {
-		return this.app.metadataCache.getFirstLinkpathDest(name, relativeTo)?.path;
-	}
-
 	public showNotice(message: string): void {
 		new Notice(message);
 	}
@@ -184,61 +167,14 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 		}));
 	}
 
-	public getAllFiles(): string[] {
-		return this.app.vault
-			.getAllLoadedFiles()
-			.filter(file => file instanceof TFile)
-			.map(file => file.path);
-	}
-
-	public getAllFolders(): string[] {
-		return this.app.vault
-			.getAllLoadedFiles()
-			.filter(file => file instanceof TFolder)
-			.map(file => file.path);
-	}
-
 	public createFuzzySearch(): IFuzzySearch {
 		return new FuzzySearch();
-	}
-
-	public async readFilePath(filePath: string): Promise<string> {
-		const tFile = this.app.vault.getAbstractFileByPath(filePath);
-		if (!tFile || !(tFile instanceof TFile)) {
-			throw new Error(`file not found: ${filePath}`);
-		}
-
-		return this.app.vault.cachedRead(tFile);
-	}
-
-	public writeFilePath(filePath: string, content: string): Promise<void> {
-		return this.app.vault.adapter.write(filePath, content);
-	}
-
-	public existsFilePath(filePath: string): Promise<boolean> {
-		return this.app.vault.adapter.exists(filePath);
 	}
 
 	public createContextMenu(items: ContextMenuItemDefinition[]): IContextMenu {
 		const menu = new ObsidianContextMenu();
 		menu.setItems(items);
 		return menu;
-	}
-
-	public async createFile(folderPath: string, fileName: string, extension: string, open?: boolean): Promise<string> {
-		const path = this.app.vault.getAvailablePath(normalizePath(folderPath + '/' + fileName), extension);
-		const newFile = await this.app.vault.create(path, '');
-
-		if (open) {
-			const activeLeaf = this.app.workspace.getLeaf(false);
-			if (activeLeaf) {
-				await activeLeaf.openFile(newFile, {
-					state: { mode: 'source' },
-				});
-			}
-		}
-
-		return newFile.path;
 	}
 
 	public async evaluateTemplaterTemplate(templateFilePath: string, targetFilePath: string): Promise<string> {

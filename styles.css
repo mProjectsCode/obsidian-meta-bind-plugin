@@ -740,6 +740,10 @@ code.mb-warning {
 
 /* --- Misc --- */
 
+.mb-whitespace-pre {
+	white-space: pre;
+}
+
 .mb-excluded-folders-table-input-cell {
 	width: 100%;
 }

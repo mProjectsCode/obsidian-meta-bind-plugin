@@ -32,7 +32,7 @@ export class ButtonActionRunner {
 
 	resolveFilePath(filePath: string, relativeFilePath?: string | undefined): string {
 		const targetFilePath = MDLinkParser.isLink(filePath) ? MDLinkParser.parseLink(filePath).target : filePath;
-		const resolvedFilePath = this.plugin.internal.getFilePathByName(targetFilePath, relativeFilePath);
+		const resolvedFilePath = this.plugin.internal.file.getPathByName(targetFilePath, relativeFilePath);
 		if (resolvedFilePath === undefined) {
 			throw new MetaBindParsingError({
 				errorLevel: ErrorLevel.ERROR,
@@ -270,8 +270,8 @@ export class ButtonActionRunner {
 		if (action.openIfAlreadyExists && action.fileName) {
 			const filePath = ensureFileExtension(joinPath(action.folderPath ?? '', action.fileName), 'md');
 			// if the file already exists, open it in the same tab
-			if (await this.plugin.internal.existsFilePath(filePath)) {
-				this.plugin.internal.openFile(filePath, '', false);
+			if (await this.plugin.internal.file.exists(filePath)) {
+				this.plugin.internal.file.open(filePath, '', false);
 				return;
 			}
 		}
@@ -316,13 +316,18 @@ export class ButtonActionRunner {
 		if (action.openIfAlreadyExists) {
 			const filePath = ensureFileExtension(joinPath(action.folderPath ?? '', action.fileName), 'md');
 			// if the file already exists, open it in the same tab
-			if (await this.plugin.internal.existsFilePath(filePath)) {
-				this.plugin.internal.openFile(filePath, '', false);
+			if (await this.plugin.internal.file.exists(filePath)) {
+				this.plugin.internal.file.open(filePath, '', false);
 				return;
 			}
 		}
 
-		await this.plugin.internal.createFile(action.folderPath ?? '', action.fileName, 'md', action.openNote ?? false);
+		await this.plugin.internal.file.create(
+			action.folderPath ?? '',
+			action.fileName,
+			'md',
+			action.openNote ?? false,
+		);
 	}
 
 	async runReplaceInNoteAction(action: ReplaceInNoteButtonAction, filePath: string): Promise<void> {
@@ -330,25 +335,25 @@ export class ButtonActionRunner {
 			throw new Error('From line cannot be greater than to line');
 		}
 
-		const content = await this.plugin.internal.readFilePath(filePath);
-
-		let splitContent = content.split('\n');
-
-		if (action.fromLine < 0 || action.toLine > splitContent.length + 1) {
-			throw new Error('Line numbers out of bounds');
-		}
-
 		const replacement = action.templater
 			? await this.plugin.internal.evaluateTemplaterTemplate(this.resolveFilePath(action.replacement), filePath)
 			: action.replacement;
 
-		splitContent = [
-			...splitContent.slice(0, action.fromLine - 1),
-			replacement,
-			...splitContent.slice(action.toLine),
-		];
+		await this.plugin.internal.file.atomicModify(filePath, content => {
+			let splitContent = content.split('\n');
 
-		await this.plugin.internal.writeFilePath(filePath, splitContent.join('\n'));
+			if (action.fromLine < 0 || action.toLine > splitContent.length + 1) {
+				throw new Error('Line numbers out of bounds');
+			}
+
+			splitContent = [
+				...splitContent.slice(0, action.fromLine - 1),
+				replacement,
+				...splitContent.slice(action.toLine),
+			];
+
+			return splitContent.join('\n');
+		});
 	}
 
 	async runReplaceSelfAction(
@@ -368,25 +373,27 @@ export class ButtonActionRunner {
 			throw new Error('Position of the button in the note is invalid');
 		}
 
-		const content = await this.plugin.internal.readFilePath(filePath);
-
-		let splitContent = content.split('\n');
-
-		if (buttonContext.position.lineStart < 0 || buttonContext.position.lineEnd > splitContent.length + 1) {
-			throw new Error('Position of the button in the note is out of bounds');
-		}
+		const position = buttonContext.position;
 
 		const replacement = action.templater
 			? await this.plugin.internal.evaluateTemplaterTemplate(this.resolveFilePath(action.replacement), filePath)
 			: action.replacement;
 
-		splitContent = [
-			...splitContent.slice(0, buttonContext.position.lineStart),
-			replacement,
-			...splitContent.slice(buttonContext.position.lineEnd + 1),
-		];
+		await this.plugin.internal.file.atomicModify(filePath, content => {
+			let splitContent = content.split('\n');
 
-		await this.plugin.internal.writeFilePath(filePath, splitContent.join('\n'));
+			if (position.lineStart < 0 || position.lineEnd > splitContent.length + 1) {
+				throw new Error('Position of the button in the note is out of bounds');
+			}
+
+			splitContent = [
+				...splitContent.slice(0, position.lineStart),
+				replacement,
+				...splitContent.slice(position.lineEnd + 1),
+			];
+
+			return splitContent.join('\n');
+		});
 	}
 
 	async runRegexpReplaceInNoteAction(action: RegexpReplaceInNoteButtonAction, filePath: string): Promise<void> {
@@ -394,33 +401,31 @@ export class ButtonActionRunner {
 			throw new Error('Regexp cannot be empty');
 		}
 
-		let content = await this.plugin.internal.readFilePath(filePath);
-
-		content = content.replace(new RegExp(action.regexp, action.regexpFlags ?? 'g'), action.replacement);
-
-		await this.plugin.internal.writeFilePath(filePath, content);
+		await this.plugin.internal.file.atomicModify(filePath, content => {
+			return content.replace(new RegExp(action.regexp, action.regexpFlags ?? 'g'), action.replacement);
+		});
 	}
 
 	async runInsertIntoNoteAction(action: InsertIntoNoteButtonAction, filePath: string): Promise<void> {
-		const content = await this.plugin.internal.readFilePath(filePath);
-
-		let splitContent = content.split('\n');
-
-		if (action.line < 1 || action.line > splitContent.length + 1) {
-			throw new Error('Line number out of bounds');
-		}
-
 		const insertString = action.templater
 			? await this.plugin.internal.evaluateTemplaterTemplate(this.resolveFilePath(action.value), filePath)
 			: action.value;
 
-		splitContent = [
-			...splitContent.slice(0, action.line - 1),
-			insertString,
-			...splitContent.slice(action.line - 1),
-		];
+		await this.plugin.internal.file.atomicModify(filePath, content => {
+			let splitContent = content.split('\n');
 
-		await this.plugin.internal.writeFilePath(filePath, splitContent.join('\n'));
+			if (action.line < 1 || action.line > splitContent.length + 1) {
+				throw new Error('Line number out of bounds');
+			}
+
+			splitContent = [
+				...splitContent.slice(0, action.line - 1),
+				insertString,
+				...splitContent.slice(action.line - 1),
+			];
+
+			return splitContent.join('\n');
+		});
 	}
 
 	async runInlineJsAction(

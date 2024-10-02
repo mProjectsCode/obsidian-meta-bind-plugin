@@ -61,7 +61,7 @@ export class MarkdownLink {
 
 	open(plugin: IPlugin, relativeFilePath: string, newTab: boolean): void {
 		if (this.internal) {
-			plugin.internal.openFile(this.fullTarget(), relativeFilePath, newTab);
+			plugin.internal.file.open(this.fullTarget(), relativeFilePath, newTab);
 		} else {
 			openURL(this.target);
 		}
