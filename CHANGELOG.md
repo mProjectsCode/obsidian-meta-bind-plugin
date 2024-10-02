@@ -1,5 +1,26 @@
 # Obsidian Meta Bind Changelog
 
+# 1.2.0
+
+New Features
+
+-   Button actions that run JS now get more context about the button via `context.buttonContext` [#414](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/414)
+-   Button actions that create notes now have the option to open the file if it already exists [#405](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/405)
+-   Improved error messages for the meta bind embed
+
+Bug Fixes
+
+-   The open link button action will now respect the link fragment parameters (the stuff behind a `#`) [#374](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/374)
+-   Fixed notes failing to render in reading mode when the note contained a button with an ID that is already present in the button templates [#390](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/390)
+-   Removed unnecessary logging [#384](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/384)
+-   Fixed the date picker input field not always following the date format set in the settings [#402](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/402)
+-   Fixed placeholders set with the `placeholder` argument not showing correctly for number input fields
+
+Misc
+
+-   Migrated to Svelte 5
+-   Made some initial progress on the [O_O 2024 plugin self-critique checklist](https://docs.obsidian.md/oo24/plugin)
+
 # 1.1.3
 
 New Features
@@ -37,13 +58,13 @@ Changes
 
 -   Added syntax highlighting for JS View Fields
 -   Added option to hide JS View Fields
--   Button actions now accept links as file paths [#297]](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/297)
--   Renamed the FAQ to Playground [#293]](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/293)
+-   Button actions now accept links as file paths [#297](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/297)
+-   Renamed the FAQ to Playground [#293](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/293)
 
 Bug Fixes
 
--   Fixed `templaterCreateNote` Button Action always opening the created note [#298]](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/298)
--   Fixed not being able to click input fields inside of callouts in LP [#291]](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/291)
+-   Fixed `templaterCreateNote` Button Action always opening the created note [#298](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/298)
+-   Fixed not being able to click input fields inside of callouts in LP [#291](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/291)
 
 # 1.0.4
 

@@ -38,10 +38,10 @@ Please only complete this section if you have `isDesktopOnly` set to false in yo
 
 ## API usage
 
-- [ ] Don't use `Vault.modify`. If you want to edit the active file, prefer using the `Editor` interface. If you want to edit it in the background, use `Vault.process`.
+- [x] Don't use `Vault.modify`. If you want to edit the active file, prefer using the `Editor` interface. If you want to edit it in the background, use `Vault.process`.
 - [x] Don't manually read and write frontmatter. Instead, use `FileManager.processFrontMatter`. [Learn more](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines#Prefer+%60FileManager.processFrontMatter%60+to+modify+frontmatter+of+a+note).
 - [x] Don't use `vault.delete` to delete files. Use `trashFile` instead to make sure the file is deleted according to the users preferences. [Learn more](https://docs.obsidian.md/Reference/TypeScript+API/FileManager/trashFile).
-- [ ] Don't use the `Adapter` API whenever possible. Use `Vault` API instead. [Learn more](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines#Prefer+the+Vault+API+over+the+Adapter+API).
+- [x] Don't use the `Adapter` API whenever possible. Use `Vault` API instead. [Learn more](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines#Prefer+the+Vault+API+over+the+Adapter+API).
 - [x] Don't manage reading and write plugin data yourself. Use `Plugin.loadData()` and `Plugin.saveData()` instead.
 - [ ] Do use `normalizePath()` if you take user defined paths. [Learn more](https://docs.obsidian.md/Reference/TypeScript+API/normalizePath).
 
@@ -58,6 +58,6 @@ Please only complete this section if you have `isDesktopOnly` set to false in yo
 
 - [x] Don't use setting headings unless you have more than one section. [Learn more](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines#Only+use+headings+under+settings+if+you+have+more+than+one+section).
 - [x] Don't include the word "setting" or "option" in setting headings. [Learn more](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines#Avoid+%22settings%22+in+settings+headings).
-- [ ] Do use sentence case in all text in UI elements to be consistent with rest of Obsidian UI. [Learn more](https://en.wiktionary.org/wiki/sentence_case).
+- [x] Do use sentence case in all text in UI elements to be consistent with rest of Obsidian UI. [Learn more](https://en.wiktionary.org/wiki/sentence_case).
 - [x] Don't use `<h1>` or `<h2>` for setting header. Use Obsidian API instead. [Learn more](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines#Use+%60setHeading%60+instead+of+a+%60%3Ch1%3E%60%2C+%60%3Ch2%3E%60).
 - [x] Don't do `console.log` unless they are absolutely necessarily. Remove testing console logs that are not needed for production.
