@@ -59,13 +59,14 @@
 			onclick: () => {
 				const imagePath = value[index];
 
+				// in this case, using `.then()` is nicer than `await` and a try-catch block
 				navigator.clipboard
 					.writeText(imagePath)
 					.then(() => {
 						props.plugin.internal.showNotice('Image path copied to clipboard');
 					})
 					.catch(() => {
-						props.plugin.internal.showNotice('Failed to copy image to clipboard');
+						props.plugin.internal.showNotice('Failed to copy image path to clipboard');
 					});
 			},
 		});
