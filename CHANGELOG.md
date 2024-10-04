@@ -1,5 +1,11 @@
 # Obsidian Meta Bind Changelog
 
+# 1.2.1
+
+Bug Fixes
+
+-   Fixed UI not updating after adding a new button or input field template
+
 # 1.2.0
 
 New Features
