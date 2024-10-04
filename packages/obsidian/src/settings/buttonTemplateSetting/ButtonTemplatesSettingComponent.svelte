@@ -15,13 +15,14 @@
 
 	let {
 		modal,
-		buttonConfigs,
+		buttonConfigs: propButtonConfigs,
 	}: {
 		modal: ButtonTemplatesSettingModal;
 		buttonConfigs: ButtonConfig[];
 	} = $props();
 
 	let errorCollection: ErrorCollection | undefined = $state();
+	let buttonConfigs: ButtonConfig[] = $state(propButtonConfigs);
 
 	function deleteTemplate(template: ButtonConfig): void {
 		buttonConfigs = buttonConfigs.filter(x => x !== template);

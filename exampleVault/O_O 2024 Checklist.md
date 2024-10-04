@@ -4,7 +4,7 @@
 - [x] Don't include the word "Obsidian" in your name unless it absolutely makes sense. Most of the time it's redundant.
 - [x] Don't include your plugin name in command names. Obsidian adds this for you.
 - [x] Don't prefix commands with your plugin ID. Obsidian adds this for you.
-- [ ] Don't include `main.js` in your repo. Only include it in your releases.
+- [x] Don't include `main.js` in your repo. Only include it in your releases.
 - [x] If you haven't, consider add a `fundingUrl` so that users of your plugin can show some support. [Learn more](https://docs.obsidian.md/Reference/Manifest#fundingUrl).
 
 ## Compatibility
@@ -12,7 +12,7 @@
 - [x] Don't provide default hotkeys when possible. [Learn more](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines#Avoid+setting+a+default+hotkey+for+commands).
 - [x] Don't override core styling. If needed, add your own class and make the styling only apply to your class.
 - [x] Do scan your code for deprecated methods (they usually show up as strikeout text in IDEs).
-- [ ] Don't assign styles via JavaScript or in HTML. [Learn more](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines#No+hardcoded+styling).
+- [x] Don't assign styles via JavaScript or in HTML. [Learn more](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines#No+hardcoded+styling).
 - [x] Don't access the hardcoded `.obsidian` folder if you need to access the configuration directory. The location could be customized, so please use `Vault.configDir` instead.
 
 ## Mobile support
@@ -30,10 +30,10 @@ Please only complete this section if you have `isDesktopOnly` set to false in yo
 - [x] Don't use `var`. Use `let` or `const` instead. [Learn more](https://javascript.plainenglish.io/4-reasons-why-var-is-considered-obsolete-in-modern-javascript-a30296b5f08f).
 - [x] Don't use the global `app` instance. Use `this.app` provided to your plugin instance instead. [Learn more](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines#Avoid%20using%20global%20app%20instance).
 - [x] Do break up your `main.ts` into smaller files or even folders if it gets big to make code easier to find.
-- [ ] Don't use `Promise`. Use `async` and `await` instead. [Learn more](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines#Prefer+async%2Fawait+over+Promise).
-- [ ] Don't use global variables. Try to keep variables either in the scope of classes or functions. [Learn more](http://wiki.c2.com/?GlobalVariablesAreBad).
+- [x] Don't use `Promise`. Use `async` and `await` instead. [Learn more](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines#Prefer+async%2Fawait+over+Promise).
+- [x] Don't use global variables. Try to keep variables either in the scope of classes or functions. [Learn more](http://wiki.c2.com/?GlobalVariablesAreBad).
 - [x] Do test with `instanceof` before casting into other types such as `TFile`, `TFolder`, or `FileSystemAdapter`, 
-- [ ] Don't use use `as any` and use proper typing instead.
+- [x] Don't use use `as any` and use proper typing instead.
 
 
 ## API usage

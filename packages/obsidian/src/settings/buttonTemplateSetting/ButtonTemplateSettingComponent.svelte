@@ -35,7 +35,7 @@
 </script>
 
 <div class="mb-card markdown-rendered">
-	<FlexRow>
+	<FlexRow stretchChildren={true}>
 		<span>{template.id}</span>
 		<Button onclick={() => editTemplate()} variant={ButtonStyleType.PRIMARY} tooltip="Edit">
 			<Icon plugin={plugin} iconName="pen-line" />

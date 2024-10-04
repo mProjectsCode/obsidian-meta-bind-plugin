@@ -10,13 +10,14 @@
 
 	let {
 		modal,
-		inputFieldTemplates,
+		inputFieldTemplates: propInputFieldTemplates,
 	}: {
 		modal: InputFieldTemplatesSettingModal;
 		inputFieldTemplates: InputFieldTemplate[];
 	} = $props();
 
 	let errorCollection: ErrorCollection | undefined = $state();
+	let inputFieldTemplates: InputFieldTemplate[] = $state(propInputFieldTemplates);
 
 	function deleteTemplate(template: InputFieldTemplate): void {
 		inputFieldTemplates = inputFieldTemplates.filter(x => x !== template);
