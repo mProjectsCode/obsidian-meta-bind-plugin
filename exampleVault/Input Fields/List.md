@@ -60,7 +60,7 @@ INPUT[inlineListSuggester(optionQuery(#example-note), option(something, other), 
 
 Some text: `INPUT[inlineListSuggester(optionQuery(#example-note), option(something, other), useLinks(false)):list4]` some more text
 
-`INPUT[inlineListSuggester(optionQuery(#example-note), option(something, other)):list5]` 
+`INPUT[inlineListSuggester(optionQuery(#example-note), option(something, other), allowOther):list5]` 
 
 ### Null Values
 
