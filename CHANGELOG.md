@@ -1,5 +1,11 @@
 # Obsidian Meta Bind Changelog
 
+# 1.2.2
+
+Bug Fixes
+
+-   Fixed multiple issues with the button template settings and the button builder caused by svelte 5 proxies [#431](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/431) and [#434](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/434)
+
 # 1.2.1
 
 Bug Fixes
