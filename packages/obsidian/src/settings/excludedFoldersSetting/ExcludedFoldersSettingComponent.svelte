@@ -11,7 +11,7 @@
 	let {
 		plugin,
 		modal,
-		excludedFolders,
+		excludedFolders: propExcludedFolders,
 	}: {
 		plugin: IPlugin;
 		modal: ExcludedFoldersSettingModal;
@@ -19,6 +19,7 @@
 	} = $props();
 
 	let errorCollection: ErrorCollection | undefined = $state();
+	let excludedFolders: string[] = $state(propExcludedFolders);
 
 	function deleteFolder(name: string): void {
 		excludedFolders = excludedFolders.filter(x => x !== name);
@@ -29,7 +30,7 @@
 	}
 
 	function save(): void {
-		errorCollection = modal.save(excludedFolders);
+		errorCollection = modal.save($state.snapshot(excludedFolders));
 
 		if (errorCollection === undefined) {
 			modal.close();

@@ -20,7 +20,7 @@
 	function editTemplate(): void {
 		plugin.internal.openButtonBuilderModal({
 			submitText: 'Submit',
-			config: structuredClone(template),
+			config: $state.snapshot(template),
 			onOkay: newTemplate => {
 				template = newTemplate;
 			},
@@ -28,7 +28,7 @@
 	}
 
 	function copyTemplate(): void {
-		const yaml = stringifyYaml(template);
+		const yaml = stringifyYaml($state.snapshot(template));
 		void navigator.clipboard.writeText(yaml);
 		new Notice('meta-bind | Copied to clipboard');
 	}

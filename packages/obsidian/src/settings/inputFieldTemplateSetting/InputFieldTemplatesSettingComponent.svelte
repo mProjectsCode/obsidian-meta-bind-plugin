@@ -31,7 +31,7 @@
 	}
 
 	function save(): void {
-		errorCollection = modal.save(inputFieldTemplates);
+		errorCollection = modal.save($state.snapshot(inputFieldTemplates));
 
 		if (errorCollection === undefined) {
 			modal.close();

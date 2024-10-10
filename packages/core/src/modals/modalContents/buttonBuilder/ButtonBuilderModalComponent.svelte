@@ -268,7 +268,7 @@ Add action of type
 <div bind:this={buttonEl}></div>
 
 <ModalButtonGroup>
-	<Button variant={ButtonStyleType.PRIMARY} onclick={() => modal.okay(buttonConfig)}
+	<Button variant={ButtonStyleType.PRIMARY} onclick={() => modal.okay($state.snapshot(buttonConfig))}
 		>{modal.options.submitText}</Button
 	>
 	<Button variant={ButtonStyleType.DEFAULT} onclick={() => modal.cancel()}>Cancel</Button>

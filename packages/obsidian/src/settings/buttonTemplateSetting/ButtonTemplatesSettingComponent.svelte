@@ -74,7 +74,7 @@
 	}
 
 	function save(): void {
-		errorCollection = modal.save(buttonConfigs);
+		errorCollection = modal.save($state.snapshot(buttonConfigs));
 
 		if (errorCollection === undefined) {
 			modal.close();
