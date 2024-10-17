@@ -52,7 +52,15 @@
 		buttonMountable?.unmount();
 		if (buttonEl) {
 			DomHelpers.empty(buttonEl);
-			buttonMountable = new ButtonField(plugin, buttonConfig, '', RenderChildType.BLOCK, undefined, false, true);
+			buttonMountable = new ButtonField(
+				plugin,
+				$state.snapshot(buttonConfig),
+				'',
+				RenderChildType.BLOCK,
+				undefined,
+				false,
+				true,
+			);
 			buttonMountable.mount(buttonEl);
 		}
 	});

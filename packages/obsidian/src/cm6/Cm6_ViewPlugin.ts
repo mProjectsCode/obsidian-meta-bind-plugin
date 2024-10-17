@@ -7,7 +7,8 @@ import { summary } from 'itertools-ts/es';
 import type { TFile } from 'obsidian';
 import { Component, editorLivePreviewField } from 'obsidian';
 import type { InlineFieldType } from 'packages/core/src/config/APIConfigs';
-import { Cm6_Util, MB_WidgetType } from 'packages/obsidian/src/cm6/Cm6_Util';
+import type {MB_WidgetSpec} from 'packages/obsidian/src/cm6/Cm6_Util';
+import { Cm6_Util, MB_WidgetType  } from 'packages/obsidian/src/cm6/Cm6_Util';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -68,6 +69,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 			 */
 			updateWidgets(view: EditorView): void {
 				// remove all decorations that are not visible and call unload manually
+				// this is needed because otherwise some decorations are not unloaded correctly
 				this.decorations = this.decorations.update({
 					filter: (fromA, toA, decoration) => {
 						const inVisibleRange = summary.anyMatch(view.visibleRanges, range =>
@@ -76,11 +78,12 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 
 						if (inVisibleRange) {
 							return true;
-						}
+						} else {
+							const spec = decoration.spec as MB_WidgetSpec;
 
-						// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-						decoration.spec.mb_unload?.();
-						return false;
+							spec.mb_unload?.();
+							return false;
+						}
 					},
 				});
 
@@ -135,17 +138,13 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 						filterFrom: from,
 						filterTo: to,
 						filter: (_from, _to, decoration) => {
-							if (widgetTypeToKeep) {
-								// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-								const widgetType = decoration.spec.mb_widgetType;
+							const spec = decoration.spec as MB_WidgetSpec;
 
-								if (widgetType === widgetTypeToKeep) {
-									return true;
-								}
+							if (widgetTypeToKeep && spec.mb_widgetType === widgetTypeToKeep) {
+								return true;
 							}
 
-							// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-							decoration.spec.mb_unload?.();
+							spec.mb_unload?.();
 							return false;
 						},
 					});
@@ -171,11 +170,12 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				const from = node.from - 1;
 				const to = node.to + 1;
 
-				// check if the decoration already exists and only add it if it does not exist
+				// we check if there already is a decoration of the same type in the range
 				if (Cm6_Util.existsDecorationOfTypeBetween(this.decorations, widgetType, from, to)) {
 					return;
 				}
 
+				// we can only render widgets if we have a current file
 				const currentFile = Cm6_Util.getCurrentFile(view);
 				if (!currentFile) {
 					return;
@@ -189,6 +189,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 					currentFile,
 				);
 				const newDecorations = Array.isArray(newDecoration) ? newDecoration : [newDecoration];
+				// the render widget function might return an empty array if the widget is not supposed to be rendered
 				if (newDecorations.length === 0) {
 					return;
 				}
@@ -221,15 +222,22 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				// node is inline code
 				if (props.has('inline-code') && !props.has('formatting')) {
 					// check for selection or cursor overlap
-					const selection = view.state.selection;
-					const hasSelectionOverlap = Cm6_Util.checkSelectionOverlap(selection, node.from - 1, node.to + 1);
+					const hasSelectionOverlap = Cm6_Util.checkSelectionOverlap(
+						view.state.selection,
+						node.from - 1,
+						node.to + 1,
+					);
 					const content = this.readNode(view, node.from, node.to);
 					const isLivePreview = this.isLivePreview(view.state);
+					// if we are in live preview mode, we only render the widget if there is no selection overlap
+					// otherwise the user has it's cursor within the bounds of the code for the field and we do syntax highlighting
+					// if we are not in live preview, so in source mode, we always do syntax highlighting
+					const shouldRenderField = !hasSelectionOverlap && isLivePreview;
 
 					return {
-						shouldRender: !hasSelectionOverlap && isLivePreview,
-						shouldHighlight:
-							(hasSelectionOverlap || !isLivePreview) && plugin.settings.enableSyntaxHighlighting,
+						shouldRender: shouldRenderField,
+						// we need to also check that the user has highlighting enabled in the settings
+						shouldHighlight: !shouldRenderField && plugin.settings.enableSyntaxHighlighting,
 						content: content.content,
 						widgetType: content.widgetType,
 					};
