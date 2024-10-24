@@ -7,8 +7,8 @@ import { summary } from 'itertools-ts/es';
 import type { TFile } from 'obsidian';
 import { Component, editorLivePreviewField } from 'obsidian';
 import type { InlineFieldType } from 'packages/core/src/config/APIConfigs';
-import type {MB_WidgetSpec} from 'packages/obsidian/src/cm6/Cm6_Util';
-import { Cm6_Util, MB_WidgetType  } from 'packages/obsidian/src/cm6/Cm6_Util';
+import type { MB_WidgetSpec } from 'packages/obsidian/src/cm6/Cm6_Util';
+import { Cm6_Util, MB_WidgetType } from 'packages/obsidian/src/cm6/Cm6_Util';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
