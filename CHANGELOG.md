@@ -1,5 +1,11 @@
 # Obsidian Meta Bind Changelog
 
+# 1.2.3
+
+Bug Fixes
+
+-   Fixed another issue with the button builder caused by svelte 5 proxies
+
 # 1.2.2
 
 Bug Fixes
