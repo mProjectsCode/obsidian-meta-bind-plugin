@@ -14,11 +14,12 @@ text `BUTTON[docs-button, docs, open-button]` text
 BUTTON[docs-button]
 ```
 
-asase
+With a custom class and a CSS snippet we can change the button to be green.
 
 ```meta-bind-button
 style: primary
 label: Open Meta Bind FAQ
+class: green-button
 action:
   type: command
   command: obsidian-meta-bind-plugin:open-faq

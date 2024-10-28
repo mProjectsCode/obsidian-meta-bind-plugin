@@ -21,6 +21,8 @@ INPUT[progressBar(showcase, minValue(0), maxValue(10), stepSize(-1)):progress3]
 INPUT[progressBar(showcase, minValue(0), maxValue(10), stepSize(0.1)):progress4]
 ```
 
+With some snippets we can change the color of the progress bar.
+
 ```meta-bind
-INPUT[progressBar(defaultValue(53), class(red))]
+INPUT[progressBar(defaultValue(53), class(red-progress-bar))]
 ```
