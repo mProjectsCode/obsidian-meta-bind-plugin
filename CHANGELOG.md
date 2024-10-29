@@ -1,5 +1,15 @@
 # Obsidian Meta Bind Changelog
 
+# 1.2.4
+
+Changes
+
+-   Reduced load times by 100+ms by not waiting on Prism to load (I hope this does not break anything)
+
+Bug Fixes
+
+-   Fixed another issue with the button builder (Hopefully the last one)
+
 # 1.2.3
 
 Bug Fixes
