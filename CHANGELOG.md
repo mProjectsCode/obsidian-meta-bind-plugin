@@ -1,5 +1,11 @@
 # Obsidian Meta Bind Changelog
 
+# 1.2.5
+
+Bug Fixes
+
+-   A better fix for the button builder issue fixed in 1.2.4
+
 # 1.2.4
 
 Changes
