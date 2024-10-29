@@ -5,7 +5,7 @@
 	let element: HTMLElement;
 
 	const {
-		value = $bindable(''),
+		value,
 		plugin,
 		filePath,
 	}: {

@@ -40,7 +40,7 @@
 		<textarea bind:value={value} onfocusout={() => focusOut()} oninput={() => props.onValueChange(value)}
 		></textarea>
 	{:else}
-		<MarkdownRenderComponent bind:value={value} plugin={props.plugin} filePath={props.filePath}
+		<MarkdownRenderComponent value={value} plugin={props.plugin} filePath={props.filePath}
 		></MarkdownRenderComponent>
 	{/if}
 </div>

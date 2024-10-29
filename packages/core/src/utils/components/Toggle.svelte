@@ -1,23 +1,25 @@
 <script lang="ts">
 	let {
-		checked = $bindable(false),
+		checked = $bindable(),
 	}: {
 		checked?: boolean;
 	} = $props();
+
+	let boolChecked = $derived(checked ?? false);
 </script>
 
 <div
 	class="checkbox-container"
-	class:is-enabled={checked}
+	class:is-enabled={boolChecked}
 	role="switch"
 	tabindex="0"
-	aria-checked={checked}
-	onclick={() => (checked = !checked)}
+	aria-checked={boolChecked}
+	onclick={() => (checked = !boolChecked)}
 	onkeydown={e => {
 		if (e.key === ' ') {
-			checked = !checked;
+			checked = !boolChecked;
 		}
 	}}
 >
-	<input type="checkbox" tabindex="-1" checked={checked} />
+	<input type="checkbox" tabindex="-1" checked={boolChecked} />
 </div>
