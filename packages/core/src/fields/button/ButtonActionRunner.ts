@@ -92,15 +92,15 @@ export class ButtonActionRunner {
 	 */
 	createDefaultAction(type: ButtonActionType): ButtonAction {
 		if (type === ButtonActionType.COMMAND) {
-			return { type: ButtonActionType.COMMAND, command: '' } satisfies CommandButtonAction;
+			return { type: ButtonActionType.COMMAND, command: '' } satisfies Required<CommandButtonAction>;
 		} else if (type === ButtonActionType.OPEN) {
-			return { type: ButtonActionType.OPEN, link: '' } satisfies OpenButtonAction;
+			return { type: ButtonActionType.OPEN, link: '', newTab: true } satisfies Required<OpenButtonAction>;
 		} else if (type === ButtonActionType.JS) {
-			return { type: ButtonActionType.JS, file: '', args: {} } satisfies JSButtonAction;
+			return { type: ButtonActionType.JS, file: '', args: {} } satisfies Required<JSButtonAction>;
 		} else if (type === ButtonActionType.INPUT) {
-			return { type: ButtonActionType.INPUT, str: '' } satisfies InputButtonAction;
+			return { type: ButtonActionType.INPUT, str: '' } satisfies Required<InputButtonAction>;
 		} else if (type === ButtonActionType.SLEEP) {
-			return { type: ButtonActionType.SLEEP, ms: 0 } satisfies SleepButtonAction;
+			return { type: ButtonActionType.SLEEP, ms: 0 } satisfies Required<SleepButtonAction>;
 		} else if (type === ButtonActionType.TEMPLATER_CREATE_NOTE) {
 			return {
 				type: ButtonActionType.TEMPLATER_CREATE_NOTE,
@@ -109,14 +109,14 @@ export class ButtonActionRunner {
 				fileName: '',
 				openNote: true,
 				openIfAlreadyExists: false,
-			} satisfies TemplaterCreateNoteButtonAction;
+			} satisfies Required<TemplaterCreateNoteButtonAction>;
 		} else if (type === ButtonActionType.UPDATE_METADATA) {
 			return {
 				type: ButtonActionType.UPDATE_METADATA,
 				bindTarget: '',
 				evaluate: false,
 				value: '',
-			} satisfies UpdateMetadataButtonAction;
+			} satisfies Required<UpdateMetadataButtonAction>;
 		} else if (type === ButtonActionType.CREATE_NOTE) {
 			return {
 				type: ButtonActionType.CREATE_NOTE,
@@ -124,36 +124,40 @@ export class ButtonActionRunner {
 				fileName: 'Untitled',
 				openNote: true,
 				openIfAlreadyExists: false,
-			} satisfies CreateNoteButtonAction;
+			} satisfies Required<CreateNoteButtonAction>;
 		} else if (type === ButtonActionType.REPLACE_IN_NOTE) {
 			return {
 				type: ButtonActionType.REPLACE_IN_NOTE,
 				fromLine: 0,
 				toLine: 0,
 				replacement: 'Replacement text',
-			} satisfies ReplaceInNoteButtonAction;
+				templater: false,
+			} satisfies Required<ReplaceInNoteButtonAction>;
 		} else if (type === ButtonActionType.REPLACE_SELF) {
 			return {
 				type: ButtonActionType.REPLACE_SELF,
 				replacement: 'Replacement text',
-			} satisfies ReplaceSelfButtonAction;
+				templater: false,
+			} satisfies Required<ReplaceSelfButtonAction>;
 		} else if (type === ButtonActionType.REGEXP_REPLACE_IN_NOTE) {
 			return {
 				type: ButtonActionType.REGEXP_REPLACE_IN_NOTE,
 				regexp: '([A-Z])\\w+',
 				replacement: 'Replacement text',
-			} satisfies RegexpReplaceInNoteButtonAction;
+				regexpFlags: 'g',
+			} satisfies Required<RegexpReplaceInNoteButtonAction>;
 		} else if (type === ButtonActionType.INSERT_INTO_NOTE) {
 			return {
 				type: ButtonActionType.INSERT_INTO_NOTE,
 				line: 0,
 				value: 'Some text',
-			} satisfies InsertIntoNoteButtonAction;
+				templater: false,
+			} satisfies Required<InsertIntoNoteButtonAction>;
 		} else if (type === ButtonActionType.INLINE_JS) {
 			return {
 				type: ButtonActionType.INLINE_JS,
 				code: 'console.log("Hello world")',
-			} satisfies InlineJsButtonAction;
+			} satisfies Required<InlineJsButtonAction>;
 		}
 
 		expectType<never>(type);

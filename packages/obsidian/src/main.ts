@@ -1,5 +1,5 @@
 import type { MarkdownPostProcessorContext, WorkspaceLeaf } from 'obsidian';
-import { loadPrism, Plugin, stringifyYaml } from 'obsidian';
+import { Plugin, stringifyYaml } from 'obsidian';
 import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 import { EMBED_MAX_DEPTH } from 'packages/core/src/config/FieldConfigs';
 import type { IPlugin } from 'packages/core/src/IPlugin';
@@ -53,7 +53,8 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	dependencyManager: DependencyManager;
 
 	async onload(): Promise<void> {
-		console.log(`meta-bind | Main >> load`);
+		console.log(`meta-bind | Main >> loading`);
+		console.time('meta-bind | Main >> load-time');
 
 		this.build = this.determineBuild();
 
@@ -112,8 +113,10 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			);
 		}
 
+		console.timeEnd('meta-bind | Main >> load-time');
+		// TODO: not sure if this is still needed, but it adds 100+ms to the load time, so I disabled it for now
 		// we need to wait for prism to load first, otherwise prism will cause problems by highlighting things that it shouldn't
-		await loadPrism();
+		// await loadPrism();
 	}
 
 	onunload(): void {
@@ -339,7 +342,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	}
 
 	async loadSettings(): Promise<void> {
-		console.log(`meta-bind | Main >> settings load`);
+		console.log(`meta-bind | Main >> loading settings`);
 
 		const loadedSettings = ((await this.loadData()) ?? {}) as MetaBindPluginSettings;
 
