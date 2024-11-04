@@ -26,6 +26,7 @@
 		}}
 		role="button"
 		tabindex="0"
+		aria-label="Click to view errors and warnings"
 	>
 		{#if settings.errorCollection.hasErrors()}
 			<svg
