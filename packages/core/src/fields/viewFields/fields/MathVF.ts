@@ -79,7 +79,6 @@ export class MathVF extends AbstractViewField {
 
 		const context = this.buildMathJSContext();
 		try {
-			// eslint-disable-next-line
 			const value: unknown = this.expression.evaluate(context);
 			return typeof value === 'string' ? parseLiteral(value) : value;
 		} catch (e) {

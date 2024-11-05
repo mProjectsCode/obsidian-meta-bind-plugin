@@ -28,7 +28,6 @@ export class MarkdownRenderChildWidget extends WidgetType {
 		this.plugin = plugin;
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	eq(other: MarkdownRenderChildWidget): boolean {
 		return other.content === this.content;
 	}

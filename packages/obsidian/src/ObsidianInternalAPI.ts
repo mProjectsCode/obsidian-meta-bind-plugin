@@ -64,7 +64,7 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 		try {
 			getJsEnginePluginAPI(this.plugin);
 			return true;
-		} catch (e) {
+		} catch (_e) {
 			return false;
 		}
 	}

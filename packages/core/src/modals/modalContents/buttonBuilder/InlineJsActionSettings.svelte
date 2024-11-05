@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { InlineJsButtonAction } from 'packages/core/src/config/ButtonConfig';
+	import type { InlineJSButtonAction } from 'packages/core/src/config/ButtonConfig';
 	import type { IPlugin } from 'packages/core/src/IPlugin';
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
 
@@ -8,7 +8,7 @@
 		action,
 	}: {
 		plugin: IPlugin;
-		action: InlineJsButtonAction;
+		action: InlineJSButtonAction;
 	} = $props();
 </script>
 

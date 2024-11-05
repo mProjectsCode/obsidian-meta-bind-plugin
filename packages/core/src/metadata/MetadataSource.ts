@@ -290,7 +290,6 @@ export abstract class FilePathMetadataSource<T extends FilePathMetadataCacheItem
 	}
 
 	readCache(bindTarget: BindTargetDeclaration): unknown {
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
 		if (bindTarget.storageType !== this.id) {
 			throw new MetaBindInternalError({
 				errorLevel: ErrorLevel.ERROR,

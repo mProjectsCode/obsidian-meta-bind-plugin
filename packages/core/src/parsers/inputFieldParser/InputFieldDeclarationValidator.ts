@@ -50,7 +50,6 @@ export class InputFieldDeclarationValidator {
 		const inputFieldType = this.unvalidatedDeclaration.inputFieldType;
 
 		for (const entry of Object.entries(InputFieldType)) {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
 			if (entry[1] === inputFieldType?.value) {
 				return entry[1];
 			}

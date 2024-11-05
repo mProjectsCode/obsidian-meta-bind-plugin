@@ -189,7 +189,7 @@ export abstract class API<Plugin extends IPlugin> {
 		filePath: string,
 		scope: BindTargetScope | undefined,
 		renderChildType: RenderChildType = RenderChildType.INLINE,
-		position?: NotePosition | undefined,
+		position?: NotePosition,
 		honorExcludedSetting: boolean = true,
 	): FieldMountable {
 		validateAPIArgs(
@@ -247,7 +247,7 @@ export abstract class API<Plugin extends IPlugin> {
 		filePath: string,
 		scope: BindTargetScope | undefined,
 		renderChildType: RenderChildType = RenderChildType.INLINE,
-		position?: NotePosition | undefined,
+		position?: NotePosition,
 		honorExcludedSetting: boolean = true,
 	): FieldMountable {
 		validateAPIArgs(

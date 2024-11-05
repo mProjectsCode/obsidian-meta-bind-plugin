@@ -23,11 +23,7 @@ export class BindTargetParser {
 		return runParser(P_BindTarget, declarationString);
 	}
 
-	fromStringAndValidate(
-		bindTargetString: string,
-		filePath: string,
-		scope?: BindTargetScope | undefined,
-	): BindTargetDeclaration {
+	fromStringAndValidate(bindTargetString: string, filePath: string, scope?: BindTargetScope): BindTargetDeclaration {
 		return this.validate(bindTargetString, this.fromString(bindTargetString), filePath, scope);
 	}
 
@@ -56,7 +52,7 @@ export class BindTargetParser {
 		fullDeclaration: string | undefined,
 		unvalidatedBindTargetDeclaration: UnvalidatedBindTargetDeclaration,
 		filePath: string,
-		scope?: BindTargetScope | undefined,
+		scope?: BindTargetScope,
 	): BindTargetDeclaration {
 		const bindTargetDeclaration: BindTargetDeclaration = {} as BindTargetDeclaration;
 
@@ -108,7 +104,7 @@ export class BindTargetParser {
 		return source.resolveBindTargetScope(bindTargetDeclaration, scope, this);
 	}
 
-	public resolveScope(bindTarget: BindTargetDeclaration, scope?: BindTargetScope | undefined): BindTargetDeclaration {
+	public resolveScope(bindTarget: BindTargetDeclaration, scope?: BindTargetScope): BindTargetDeclaration {
 		if (scope === undefined) {
 			throw new ParsingValidationError(
 				ErrorLevel.ERROR,

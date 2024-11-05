@@ -9,6 +9,6 @@ declare module 'obsidian-dataview' {
 		forEach: (callback: (value: T) => void) => void;
 	}
 
-	export type DataObject = { [key: string]: Literal };
-	export type Literal = boolean | number | string | Array<Literal> | DataObject | Function | null | HTMLElement;
+	export type DataObject = Record<string, Literal>;
+	export type Literal = boolean | number | string | Literal[] | DataObject | Function | null | HTMLElement;
 }

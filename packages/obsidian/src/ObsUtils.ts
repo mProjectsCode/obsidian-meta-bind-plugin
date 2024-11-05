@@ -6,13 +6,11 @@ import type { Templater, TemplaterPlugin } from 'packages/obsidian/extraTypes/Te
 import type MetaBindPlugin from 'packages/obsidian/src/main';
 
 export function getDataViewPluginAPI(plugin: MetaBindPlugin): DataviewApi {
-	/* eslint-disable */
 	const dataViewPlugin = plugin.dependencyManager.checkDependency('dataview');
 	return (dataViewPlugin as Plugin & { api: DataviewApi }).api;
 }
 
 export function getJsEnginePluginAPI(plugin: MetaBindPlugin): JsEngineAPI {
-	/* eslint-disable */
 	const jsEnginePlugin = plugin.dependencyManager.checkDependency('js-engine');
 	return (jsEnginePlugin as JsEnginePlugin).api;
 }
@@ -27,7 +25,6 @@ export enum Templater_RunMode {
 }
 
 export function getTemplaterPluginAPI(plugin: MetaBindPlugin): Templater {
-	/* eslint-disable */
 	const templaterPlugin = plugin.dependencyManager.checkDependency('templater-obsidian');
 	return (templaterPlugin as TemplaterPlugin).templater;
 }

@@ -52,6 +52,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	// @ts-expect-error TS2564
 	dependencyManager: DependencyManager;
 
+	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	async onload(): Promise<void> {
 		console.log(`meta-bind | Main >> loading`);
 		console.time('meta-bind | Main >> load-time');

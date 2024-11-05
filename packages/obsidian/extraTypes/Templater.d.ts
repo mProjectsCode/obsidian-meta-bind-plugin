@@ -1,5 +1,5 @@
-import { Plugin, TFile, TFolder } from 'obsidian';
-import { Templater_RunMode } from 'packages/obsidian/src/ObsUtils';
+import type { Plugin, TFile, TFolder } from 'obsidian';
+import type { Templater_RunMode } from 'packages/obsidian/src/ObsUtils';
 
 export type TemplaterPlugin = Plugin & {
 	templater: Templater;

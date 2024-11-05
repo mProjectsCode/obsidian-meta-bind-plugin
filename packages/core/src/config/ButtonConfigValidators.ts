@@ -3,7 +3,7 @@ import type {
 	ButtonConfig,
 	CommandButtonAction,
 	CreateNoteButtonAction,
-	InlineJsButtonAction,
+	InlineJSButtonAction,
 	InputButtonAction,
 	InsertIntoNoteButtonAction,
 	JSButtonAction,
@@ -165,7 +165,7 @@ export const V_InsertIntoNoteButtonAction = schemaForType<InsertIntoNoteButtonAc
 	}),
 );
 
-export const V_InlineJsButtonAction = schemaForType<InlineJsButtonAction>()(
+export const V_InlineJsButtonAction = schemaForType<InlineJSButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.INLINE_JS),
 		code: stringValidator('inlineJS', 'code', 'code string to run'),

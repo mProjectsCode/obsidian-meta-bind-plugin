@@ -74,37 +74,7 @@
 	}
 
 	function getActionLabel(actionType: ButtonActionType): string {
-		if (actionType === ButtonActionType.COMMAND) {
-			return 'Run a command';
-		} else if (actionType === ButtonActionType.OPEN) {
-			return 'Open a link';
-		} else if (actionType === ButtonActionType.JS) {
-			return 'Run a JavaScript file';
-		} else if (actionType === ButtonActionType.INPUT) {
-			return 'Insert text at cursor';
-		} else if (actionType === ButtonActionType.SLEEP) {
-			return 'Sleep for some time';
-		} else if (actionType === ButtonActionType.TEMPLATER_CREATE_NOTE) {
-			return 'Create a new note using Templater';
-		} else if (actionType === ButtonActionType.UPDATE_METADATA) {
-			return 'Update metadata';
-		} else if (actionType === ButtonActionType.CREATE_NOTE) {
-			return 'Create a new note';
-		} else if (actionType === ButtonActionType.REPLACE_IN_NOTE) {
-			return 'Replace text in note';
-		} else if (actionType === ButtonActionType.REGEXP_REPLACE_IN_NOTE) {
-			return 'Replace text in note using regexp';
-		} else if (actionType === ButtonActionType.REPLACE_SELF) {
-			return 'Replace button with text';
-		} else if (actionType === ButtonActionType.INSERT_INTO_NOTE) {
-			return 'Insert text into the note';
-		} else if (actionType === ButtonActionType.INLINE_JS) {
-			return 'Run JavaScript code';
-		}
-
-		expectType<never>(actionType);
-
-		return 'CHANGE ME';
+		return plugin.api.buttonActionRunner.getActionLabel(actionType);
 	}
 
 	function openActionContextMenu(index: number, e: MouseEvent): void {

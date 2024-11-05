@@ -29,7 +29,7 @@ export class InternalMetadataSource extends FilePathMetadataSource<FilePathMetad
 		};
 	}
 
-	public async syncExternal(_cacheItem: FilePathMetadataCacheItem): Promise<void> {
+	public syncExternal(_cacheItem: FilePathMetadataCacheItem): void {
 		// Do nothing
 	}
 }

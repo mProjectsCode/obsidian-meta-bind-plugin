@@ -84,8 +84,8 @@ export class ObsidianMetadataSource extends FilePathMetadataSource<ObsidianMetad
 		return Array.from(new Set(tags));
 	}
 
-	async syncExternal(cacheItem: ObsidianMetadataCacheItem): Promise<void> {
-		await this.plugin.app.fileManager.processFrontMatter(cacheItem.file, frontmatter => {
+	syncExternal(cacheItem: ObsidianMetadataCacheItem): void {
+		void this.plugin.app.fileManager.processFrontMatter(cacheItem.file, frontmatter => {
 			Object.assign(frontmatter, cacheItem.data);
 		});
 	}

@@ -102,7 +102,7 @@ export interface InsertIntoNoteButtonAction {
 	templater?: boolean;
 }
 
-export interface InlineJsButtonAction {
+export interface InlineJSButtonAction {
 	type: ButtonActionType.INLINE_JS;
 	code: string;
 }
@@ -120,7 +120,7 @@ export type ButtonAction =
 	| ReplaceSelfButtonAction
 	| RegexpReplaceInNoteButtonAction
 	| InsertIntoNoteButtonAction
-	| InlineJsButtonAction;
+	| InlineJSButtonAction;
 
 export interface ButtonConfig {
 	label: string;
@@ -138,4 +138,32 @@ export interface ButtonContext {
 	position: LinePosition | undefined;
 	isInGroup: boolean;
 	isInline: boolean;
+}
+
+export interface ButtonClickContext {
+	type: ButtonClickType;
+	shiftKey: boolean;
+	ctrlKey: boolean;
+	altKey: boolean;
+}
+
+export enum ButtonClickType {
+	LEFT = 'left',
+	MIDDLE = 'middle',
+}
+
+export interface ButtonActionMap {
+	[ButtonActionType.COMMAND]: CommandButtonAction;
+	[ButtonActionType.JS]: JSButtonAction;
+	[ButtonActionType.OPEN]: OpenButtonAction;
+	[ButtonActionType.INPUT]: InputButtonAction;
+	[ButtonActionType.SLEEP]: SleepButtonAction;
+	[ButtonActionType.TEMPLATER_CREATE_NOTE]: TemplaterCreateNoteButtonAction;
+	[ButtonActionType.UPDATE_METADATA]: UpdateMetadataButtonAction;
+	[ButtonActionType.CREATE_NOTE]: CreateNoteButtonAction;
+	[ButtonActionType.REPLACE_IN_NOTE]: ReplaceInNoteButtonAction;
+	[ButtonActionType.REPLACE_SELF]: ReplaceSelfButtonAction;
+	[ButtonActionType.REGEXP_REPLACE_IN_NOTE]: RegexpReplaceInNoteButtonAction;
+	[ButtonActionType.INSERT_INTO_NOTE]: InsertIntoNoteButtonAction;
+	[ButtonActionType.INLINE_JS]: InlineJSButtonAction;
 }

@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 import type { IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
 import type { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
 import type { MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';

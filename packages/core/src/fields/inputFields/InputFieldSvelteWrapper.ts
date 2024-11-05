@@ -42,7 +42,6 @@ export class InputFieldSvelteWrapper<Value, SvelteExports = object> extends Noti
 	 * @param value
 	 */
 	public setValue(value: Value): void {
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		this.svelteComponentInstance?.setValue(value);
 	}
 
