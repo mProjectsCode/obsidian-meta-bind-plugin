@@ -10,6 +10,26 @@ actions:
 
 ```
 
+```meta-bind-button
+label: Scroll to Bottom
+style: default
+actions:
+  - type: open
+    link: "[[#This is a Heading at the Bottom]]"
+    newTab: false
+
+```
+
+```meta-bind-button
+label: Scroll to Labeled Section
+style: default
+actions:
+  - type: open
+    link: "[[#^section-1]]"
+    newTab: false
+
+```
+
 some
 
 very
