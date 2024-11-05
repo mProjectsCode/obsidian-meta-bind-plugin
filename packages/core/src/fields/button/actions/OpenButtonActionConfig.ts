@@ -4,7 +4,7 @@ import type {
 	ButtonContext,
 	OpenButtonAction,
 } from 'packages/core/src/config/ButtonConfig';
-import { ButtonActionType } from 'packages/core/src/config/ButtonConfig';
+import { ButtonActionType, ButtonClickType } from 'packages/core/src/config/ButtonConfig';
 import { AbstractButtonActionConfig } from 'packages/core/src/fields/button/AbstractButtonActionConfig';
 import type { IPlugin } from 'packages/core/src/IPlugin';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
@@ -19,9 +19,10 @@ export class OpenButtonActionConfig extends AbstractButtonActionConfig<OpenButto
 		action: OpenButtonAction,
 		filePath: string,
 		_context: ButtonContext,
-		_click: ButtonClickContext,
+		click: ButtonClickContext,
 	): Promise<void> {
-		MDLinkParser.parseLinkOrUrl(action.link).open(this.plugin, filePath, action.newTab ?? false);
+		const newTab = click.type === ButtonClickType.MIDDLE || click.ctrlKey || (action.newTab ?? false);
+		MDLinkParser.parseLinkOrUrl(action.link).open(this.plugin, filePath, newTab);
 	}
 
 	create(): Required<OpenButtonAction> {

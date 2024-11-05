@@ -165,7 +165,7 @@ export const V_InsertIntoNoteButtonAction = schemaForType<InsertIntoNoteButtonAc
 	}),
 );
 
-export const V_InlineJsButtonAction = schemaForType<InlineJSButtonAction>()(
+export const V_InlineJSButtonAction = schemaForType<InlineJSButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.INLINE_JS),
 		code: stringValidator('inlineJS', 'code', 'code string to run'),
@@ -186,7 +186,7 @@ export const V_ButtonAction = schemaForType<ButtonAction>()(
 		V_ReplaceSelfButtonAction,
 		V_RegexpReplaceInNoteButtonAction,
 		V_InsertIntoNoteButtonAction,
-		V_InlineJsButtonAction,
+		V_InlineJSButtonAction,
 	]),
 );
 
