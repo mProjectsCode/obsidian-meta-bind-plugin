@@ -8,7 +8,13 @@ import { isUrl, openURL } from 'packages/core/src/utils/Utils';
 
 const P_MDLinkInner: Parser<[string, string | undefined, string | undefined]> = P.sequence(
 	P_FilePath, // the file path
-	P.string('#').then(P.manyNotOf('[]#|^:')).optional(), // the optional heading
+	P.or(
+		P.string('#^')
+			.then(P.manyNotOf('[]#|^:'))
+			.map(x => '^' + x), // the optional block
+		P.string('#').then(P.manyNotOf('[]#|^:')), // the optional heading
+		P.succeed(undefined),
+	),
 	P.string('|').then(P.manyNotOf('[]')).optional(), // the optional alias
 );
 
