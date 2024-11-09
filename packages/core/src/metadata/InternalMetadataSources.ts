@@ -1,4 +1,3 @@
-import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import type { IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
 import type {
 	FilePathMetadataCacheItem,
@@ -49,10 +48,6 @@ export class GlobalMetadataSource implements IMetadataSource<GlobalMetadataCache
 		};
 	}
 
-	public createCacheItem(_storagePath: string): GlobalMetadataCacheItem {
-		return this.cache;
-	}
-
 	public getOrCreateCacheItem(_storagePath: string): GlobalMetadataCacheItem {
 		return this.cache;
 	}
@@ -75,14 +70,6 @@ export class GlobalMetadataSource implements IMetadataSource<GlobalMetadataCache
 		return '';
 	}
 
-	public resolveBindTargetScope(
-		bindTargetDeclaration: BindTargetDeclaration,
-		_scope: BindTargetScope | undefined,
-		_parser: BindTargetParser,
-	): BindTargetDeclaration {
-		return bindTargetDeclaration;
-	}
-
 	public deleteCache(_cacheItem: GlobalMetadataCacheItem): void {
 		// noop
 	}
@@ -99,8 +86,8 @@ export class GlobalMetadataSource implements IMetadataSource<GlobalMetadataCache
 		// noop
 	}
 
-	public readCache(_bindTarget: BindTargetDeclaration): unknown {
-		return this.readCacheItem(this.cache, _bindTarget.storageProp);
+	public readCache(bindTarget: BindTargetDeclaration): unknown {
+		return this.readCacheItem(this.cache, bindTarget.storageProp);
 	}
 
 	public readCacheItem(cacheItem: GlobalMetadataCacheItem, propPath: PropPath): unknown {
@@ -113,6 +100,7 @@ export class GlobalMetadataSource implements IMetadataSource<GlobalMetadataCache
 
 	public subscribe(subscription: IMetadataSubscription): GlobalMetadataCacheItem {
 		this.cache.subscriptions.push(subscription);
+
 		return this.cache;
 	}
 
@@ -150,14 +138,6 @@ export class ScopeMetadataSource implements IMetadataSource<IMetadataCacheItem> 
 		this.manager = manager;
 	}
 
-	public createCacheItem(_storagePath: string): IMetadataCacheItem {
-		throw new MetaBindInternalError({
-			errorLevel: ErrorLevel.CRITICAL,
-			effect: 'action not permitted',
-			cause: `source 'scope' should have no cache items or subscriptions`,
-		});
-	}
-
 	public getOrCreateCacheItem(_storagePath: string): IMetadataCacheItem {
 		throw new MetaBindInternalError({
 			errorLevel: ErrorLevel.CRITICAL,
@@ -182,14 +162,6 @@ export class ScopeMetadataSource implements IMetadataSource<IMetadataCacheItem> 
 			);
 		}
 		return '';
-	}
-
-	public resolveBindTargetScope(
-		bindTargetDeclaration: BindTargetDeclaration,
-		scope: BindTargetScope | undefined,
-		parser: BindTargetParser,
-	): BindTargetDeclaration {
-		return parser.resolveScope(bindTargetDeclaration, scope);
 	}
 
 	public deleteCache(_cacheItem: IMetadataCacheItem): void {

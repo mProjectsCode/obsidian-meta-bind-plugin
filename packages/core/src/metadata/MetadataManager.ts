@@ -15,9 +15,9 @@ import {
 } from 'packages/core/src/utils/errors/MetaBindErrors';
 import type { PropPath } from 'packages/core/src/utils/prop/PropPath';
 import { PropUtils } from 'packages/core/src/utils/prop/PropUtils';
-import type { Signal } from 'packages/core/src/utils/Signal';
+import type { Writable } from 'packages/core/src/utils/Signal';
 
-export const METADATA_CACHE_UPDATE_CYCLE_THRESHOLD = 5; // {syncInterval (200)} * 5 = 1s
+export const METADATA_CACHE_EXTERNAL_WRITE_LOCK_DURATION = 5; // {syncInterval (200)} * 5 = 1s
 export const METADATA_CACHE_INACTIVE_CYCLE_THRESHOLD = 5 * 60; // {syncInterval (200)} * 5 * 60 = 1 minute
 
 export type MetadataSource = IMetadataSource<IMetadataCacheItem>;
@@ -124,7 +124,7 @@ export class MetadataManager {
 
 	public subscribe(
 		uuid: string,
-		callbackSignal: Signal<unknown>,
+		callbackSignal: Writable<unknown>,
 		bindTarget: BindTargetDeclaration,
 		onDelete: () => void,
 	): MetadataSubscription {
@@ -153,7 +153,7 @@ export class MetadataManager {
 	 */
 	public subscribeComputed(
 		uuid: string,
-		callbackSignal: Signal<unknown>,
+		callbackSignal: Writable<unknown>,
 		bindTarget: BindTargetDeclaration | undefined,
 		dependencies: ComputedSubscriptionDependency[],
 		computeFunction: ComputeFunction,
@@ -194,7 +194,7 @@ export class MetadataManager {
 
 		const cacheItem = source.unsubscribe(subscription);
 		if (cacheItem.subscriptions.length === 0) {
-			cacheItem.inactive = true;
+			cacheItem.cyclesWithoutListeners = 0;
 		}
 	}
 
@@ -213,8 +213,7 @@ export class MetadataManager {
 		}
 
 		const cacheItem = source.subscribe(subscription);
-		cacheItem.inactive = false;
-		cacheItem.cyclesSinceInactive = 0;
+		cacheItem.cyclesWithoutListeners = 0;
 
 		subscription.notify(source.readCacheItem(cacheItem, subscription.bindTarget.storageProp));
 	}
@@ -326,21 +325,27 @@ export class MetadataManager {
 			for (const cacheItem of source.iterateCacheItems()) {
 				source.onCycle(cacheItem);
 
-				if (cacheItem.pendingInternalChange) {
+				// if the cache is dirty, sync the changes to the external source
+				if (cacheItem.dirty) {
 					try {
 						source.syncExternal(cacheItem);
 					} catch (e) {
-						console.warn('failed to update frontmatter', e);
+						console.warn(`failed to sync changes to external source for ${source.id}`, e);
 					}
-					cacheItem.pendingInternalChange = false;
+					cacheItem.dirty = false;
 				}
-				cacheItem.cyclesSinceInternalChange += 1;
+				// decrease the external write lock duration
+				if (cacheItem.externalWriteLock > 0) {
+					cacheItem.externalWriteLock -= 1;
+				}
 
-				if (cacheItem.inactive) {
-					cacheItem.cyclesSinceInactive += 1;
+				// if there are no listeners, increase the cycles without listeners
+				if (cacheItem.subscriptions.length > 0) {
+					cacheItem.cyclesWithoutListeners += 1;
 				}
+				// if the cache is inactive, check if it should be deleted
 				if (
-					cacheItem.cyclesSinceInactive > METADATA_CACHE_INACTIVE_CYCLE_THRESHOLD &&
+					cacheItem.cyclesWithoutListeners > METADATA_CACHE_INACTIVE_CYCLE_THRESHOLD &&
 					source.shouldDelete(cacheItem)
 				) {
 					markedForDelete.push(cacheItem);
@@ -372,8 +377,8 @@ export class MetadataManager {
 		}
 
 		const cacheItem = source.writeCache(value, bindTarget);
-		cacheItem.pendingInternalChange = true;
-		cacheItem.cyclesSinceInternalChange = 0;
+		cacheItem.dirty = true;
+		cacheItem.externalWriteLock = METADATA_CACHE_EXTERNAL_WRITE_LOCK_DURATION;
 		this.notifyListeners(bindTarget, updateSourceUuid);
 	}
 
@@ -402,7 +407,7 @@ export class MetadataManager {
 	 * @param cacheItem
 	 */
 	public isCacheExternalWriteLocked(cacheItem: IMetadataCacheItem): boolean {
-		return cacheItem.cyclesSinceInternalChange < METADATA_CACHE_UPDATE_CYCLE_THRESHOLD;
+		return cacheItem.externalWriteLock > 0;
 	}
 
 	/**
@@ -485,10 +490,9 @@ export class MetadataManager {
 	public getDefaultCacheItem(): IMetadataCacheItem {
 		return {
 			subscriptions: [],
-			cyclesSinceInternalChange: METADATA_CACHE_UPDATE_CYCLE_THRESHOLD + 1,
-			pendingInternalChange: false,
-			cyclesSinceInactive: 0,
-			inactive: true,
+			externalWriteLock: 0,
+			dirty: false,
+			cyclesWithoutListeners: 0,
 		};
 	}
 

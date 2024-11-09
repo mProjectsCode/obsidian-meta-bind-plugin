@@ -65,9 +65,13 @@ export interface Listener<T> {
 
 export type ListenerCallback<T> = (value: T) => void;
 
-export type SignalLike<T> = Signal<T> | ComputedSignal<unknown, T>;
+export type SignalLike<T> = Signal<T> | ComputedSignal<unknown, T> | MappedSignal<unknown, T>;
 
-export class Signal<T> extends Notifier<T, Listener<T>> {
+export interface Writable<T> {
+	set(value: T): void;
+}
+
+export class Signal<T> extends Notifier<T, Listener<T>> implements Writable<T> {
 	private value: T;
 
 	constructor(value: T) {
@@ -85,7 +89,32 @@ export class Signal<T> extends Notifier<T, Listener<T>> {
 	}
 }
 
-export class ComputedSignal<R, T> extends Notifier<T, Listener<T>> {
+export class MappedSignal<R, T> extends Notifier<T, Listener<T>> implements Writable<R> {
+	private value: T;
+	private readonly mapFn: (value: R) => T;
+
+	constructor(value: R, mapFn: (value: R) => T) {
+		super();
+		this.value = mapFn(value);
+		this.mapFn = mapFn;
+	}
+
+	public get(): T {
+		return this.value;
+	}
+
+	public set(value: R): void {
+		this.value = this.mapFn(value);
+		this.notifyListeners(this.value);
+	}
+
+	public setDirect(value: T): void {
+		this.value = value;
+		this.notifyListeners(value);
+	}
+}
+
+export class ComputedSignal<R, T> extends Notifier<T, Listener<T>> implements Writable<T> {
 	private value: T;
 	private readonly dependency: SignalLike<R>;
 	private readonly dependencyListener: Listener<R>;

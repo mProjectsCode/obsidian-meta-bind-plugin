@@ -64,25 +64,25 @@ export class ObsidianMetadataSource extends FilePathMetadataSource<ObsidianMetad
 		};
 	}
 
-	getTags(file: TFile): string[] {
-		const cache = this.plugin.app.metadataCache.getFileCache(file);
-		if (!cache) {
-			return [];
-		}
+	// getTags(file: TFile): string[] {
+	// 	const cache = this.plugin.app.metadataCache.getFileCache(file);
+	// 	if (!cache) {
+	// 		return [];
+	// 	}
 
-		const tags = cache.tags?.map(x => x.tag.substring(1)) ?? [];
+	// 	const tags = cache.tags?.map(x => x.tag.substring(1)) ?? [];
 
-		const frontmatterTags = cache.frontmatter?.tags as string | string[] | undefined;
-		if (frontmatterTags) {
-			if (Array.isArray(frontmatterTags)) {
-				tags.push(...frontmatterTags);
-			} else {
-				tags.push(frontmatterTags);
-			}
-		}
+	// 	const frontmatterTags = cache.frontmatter?.tags as string | string[] | undefined;
+	// 	if (frontmatterTags) {
+	// 		if (Array.isArray(frontmatterTags)) {
+	// 			tags.push(...frontmatterTags);
+	// 		} else {
+	// 			tags.push(frontmatterTags);
+	// 		}
+	// 	}
 
-		return Array.from(new Set(tags));
-	}
+	// 	return Array.from(new Set(tags));
+	// }
 
 	syncExternal(cacheItem: ObsidianMetadataCacheItem): void {
 		void this.plugin.app.fileManager.processFrontMatter(cacheItem.file, frontmatter => {

@@ -4,6 +4,7 @@ import type {
 	BindTargetDeclaration,
 	UnvalidatedBindTargetDeclaration,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { BindTargetStorageType } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { P_BindTarget } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';
 import type { ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import { toResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
@@ -100,8 +101,12 @@ export class BindTargetParser {
 			this,
 		);
 
-		// resolve scope
-		return source.resolveBindTargetScope(bindTargetDeclaration, scope, this);
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+		if (source.id === BindTargetStorageType.SCOPE) {
+			return this.resolveScope(bindTargetDeclaration, scope);
+		} else {
+			return bindTargetDeclaration;
+		}
 	}
 
 	public resolveScope(bindTarget: BindTargetDeclaration, scope?: BindTargetScope): BindTargetDeclaration {

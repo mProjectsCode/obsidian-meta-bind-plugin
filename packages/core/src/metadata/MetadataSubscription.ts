@@ -3,11 +3,11 @@ import type { IMetadataSubscription } from 'packages/core/src/metadata/IMetadata
 import type { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
 import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import type { Signal } from 'packages/core/src/utils/Signal';
+import type { Writable } from 'packages/core/src/utils/Signal';
 
 export class MetadataSubscription implements IMetadataSubscription {
 	readonly uuid: string;
-	readonly callbackSignal: Signal<unknown>;
+	readonly callbackSignal: Writable<unknown>;
 
 	readonly metadataManager: MetadataManager;
 
@@ -18,7 +18,7 @@ export class MetadataSubscription implements IMetadataSubscription {
 
 	constructor(
 		uuid: string,
-		callbackSignal: Signal<unknown>,
+		callbackSignal: Writable<unknown>,
 		metadataManager: MetadataManager,
 		bindTarget: BindTargetDeclaration,
 		onDelete: () => void,

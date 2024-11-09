@@ -5,7 +5,7 @@ import { InputFieldSvelteWrapper } from 'packages/core/src/fields/inputFields/In
 import type { IPlugin } from 'packages/core/src/IPlugin';
 import type { MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
 import { Mountable } from 'packages/core/src/utils/Mountable';
-import { ComputedSignal, Signal } from 'packages/core/src/utils/Signal';
+import { MappedSignal } from 'packages/core/src/utils/Signal';
 
 export abstract class AbstractInputField<
 	MetadataValueType,
@@ -15,8 +15,7 @@ export abstract class AbstractInputField<
 	readonly plugin: IPlugin;
 	readonly mountable: InputFieldMountable;
 	readonly svelteWrapper: InputFieldSvelteWrapper<ComponentValueType, SvelteExports>;
-	readonly inputSignal: Signal<unknown>;
-	readonly computedSignal: ComputedSignal<unknown, MetadataValueType>;
+	readonly inputSignal: MappedSignal<unknown, MetadataValueType>;
 
 	private metadataSubscription?: MetadataSubscription;
 
@@ -25,14 +24,13 @@ export abstract class AbstractInputField<
 
 		this.mountable = mountable;
 		this.plugin = mountable.plugin;
-		this.inputSignal = new Signal<unknown>(undefined);
 		this.svelteWrapper = new InputFieldSvelteWrapper<ComponentValueType, SvelteExports>(
 			this.plugin,
 			this.getSvelteComponent(),
 		);
 
-		this.computedSignal = new ComputedSignal<unknown, MetadataValueType>(
-			this.inputSignal,
+		this.inputSignal = new MappedSignal<unknown, MetadataValueType>(
+			undefined,
 			(value: unknown): MetadataValueType => {
 				const filteredValue = this.filterValue(value);
 				if (filteredValue !== undefined) {
@@ -42,14 +40,6 @@ export abstract class AbstractInputField<
 				}
 			},
 		);
-	}
-
-	// TODO: What is this?
-	public destroy(): void {
-		// we don't need to unregister the listener because the component will destroy all listeners on unmount
-		if (this.svelteWrapper.isMounted()) {
-			this.unmount();
-		}
 	}
 
 	protected abstract getSvelteComponent(): InputFieldSvelteComponent<ComponentValueType, SvelteExports>;
@@ -92,7 +82,7 @@ export abstract class AbstractInputField<
 	 * Get the metadata value that the input field currently has.
 	 */
 	public getValue(): MetadataValueType {
-		return this.computedSignal.get();
+		return this.inputSignal.get();
 	}
 
 	/**
@@ -108,7 +98,7 @@ export abstract class AbstractInputField<
 	 * @param value
 	 */
 	public setValue(value: MetadataValueType): void {
-		this.computedSignal.set(value);
+		this.inputSignal.setDirect(value);
 		this.notifySubscription(value);
 	}
 
@@ -143,22 +133,19 @@ export abstract class AbstractInputField<
 	}
 
 	protected onMount(targetEl: HTMLElement): void {
-		// fix for computed signal possibly not having the correct value, as the class might not have been fully initialized
-		this.inputSignal.set(this.inputSignal.get());
-
-		this.computedSignal.registerListener({
+		this.inputSignal.registerListener({
 			callback: value => this.svelteWrapper.setValue(this.reverseMapValue(value)),
+		});
+
+		this.svelteWrapper.registerListener({
+			callback: value => {
+				this.notifySubscription(this.mapValue(value));
+			},
 		});
 
 		const bindTarget = this.mountable.getBindTarget();
 
 		if (bindTarget) {
-			this.svelteWrapper.registerListener({
-				callback: value => {
-					this.notifySubscription(this.mapValue(value));
-				},
-			});
-
 			this.metadataSubscription = this.mountable.plugin.metadataManager.subscribe(
 				this.mountable.getUuid(),
 				this.inputSignal,
@@ -171,7 +158,7 @@ export abstract class AbstractInputField<
 	}
 
 	protected onUnmount(): void {
-		this.computedSignal.unregisterAllListeners();
+		this.inputSignal.unregisterAllListeners();
 		this.metadataSubscription?.unsubscribe();
 
 		this.svelteWrapper.unmount();
