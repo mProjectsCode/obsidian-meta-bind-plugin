@@ -7,7 +7,7 @@ import { stringifyUnknown } from 'packages/core/src/utils/Literal';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { DomHelpers, getUUID } from 'packages/core/src/utils/Utils';
 
-export class TextVF extends AbstractViewField {
+export class TextVF extends AbstractViewField<string> {
 	textParts?: (string | number)[];
 	renderMarkdown: boolean;
 	markdownUnloadCallback?: () => void;
@@ -74,7 +74,9 @@ export class TextVF extends AbstractViewField {
 		}
 	}
 
-	protected async onRerender(container: HTMLElement, text: string): Promise<void> {
+	protected async onRerender(container: HTMLElement, value: string | undefined): Promise<void> {
+		const text = stringifyUnknown(value, this.mountable.plugin.settings.viewFieldDisplayNullAsEmpty) ?? '';
+
 		if (this.renderMarkdown) {
 			this.markdownUnloadCallback?.();
 

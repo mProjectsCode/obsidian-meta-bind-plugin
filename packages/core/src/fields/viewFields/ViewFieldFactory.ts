@@ -1,5 +1,4 @@
 import { ViewFieldType } from 'packages/core/src/config/FieldConfigs';
-import type { AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractViewField';
 import { ImageVF } from 'packages/core/src/fields/viewFields/fields/ImageVF';
 import { LinkVF } from 'packages/core/src/fields/viewFields/fields/LinkVF';
 import { MathVF } from 'packages/core/src/fields/viewFields/fields/MathVF';
@@ -8,6 +7,8 @@ import type { ViewFieldMountable } from 'packages/core/src/fields/viewFields/Vie
 import type { IPlugin } from 'packages/core/src/IPlugin';
 import { expectType } from 'packages/core/src/utils/Utils';
 
+export type ViewField = MathVF | TextVF | LinkVF | ImageVF;
+
 export class ViewFieldFactory {
 	plugin: IPlugin;
 
@@ -15,7 +16,7 @@ export class ViewFieldFactory {
 		this.plugin = plugin;
 	}
 
-	createViewField(mountable: ViewFieldMountable): AbstractViewField | undefined {
+	createViewField(mountable: ViewFieldMountable): ViewField | undefined {
 		// Skipped: Date, Time, Image Suggester
 
 		const type = mountable.declaration.viewFieldType;

@@ -58,7 +58,7 @@ Self Loop Error: `VIEW[**{computed}**][text():computed]`
 
 `INPUT[suggester(optionQuery(#example-note), useLinks(false)):file]`
 link with render markdown: `VIEW[\[\[{file}|link\]\]][text(renderMarkdown)]`
-link with link view field: `VIEW[{file}][link]`
+link with link view field: `VIEW[{file}|this is a link][link]`
 
 ```meta-bind
 INPUT[imageSuggester(optionQuery("Other/Images")):image]

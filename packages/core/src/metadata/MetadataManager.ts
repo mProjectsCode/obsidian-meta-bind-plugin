@@ -340,7 +340,7 @@ export class MetadataManager {
 				}
 
 				// if there are no listeners, increase the cycles without listeners
-				if (cacheItem.subscriptions.length > 0) {
+				if (cacheItem.subscriptions.length === 0) {
 					cacheItem.cyclesWithoutListeners += 1;
 				}
 				// if the cache is inactive, check if it should be deleted
