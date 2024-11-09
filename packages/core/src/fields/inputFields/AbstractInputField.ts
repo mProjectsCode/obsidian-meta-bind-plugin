@@ -27,6 +27,7 @@ export abstract class AbstractInputField<
 		this.svelteWrapper = new InputFieldSvelteWrapper<ComponentValueType, SvelteExports>(
 			this.plugin,
 			this.getSvelteComponent(),
+			value => this.notifySubscription(this.mapValue(value)),
 		);
 
 		this.inputSignal = new MappedSignal<unknown, MetadataValueType>(
@@ -135,12 +136,6 @@ export abstract class AbstractInputField<
 	protected onMount(targetEl: HTMLElement): void {
 		this.inputSignal.registerListener({
 			callback: value => this.svelteWrapper.setValue(this.reverseMapValue(value)),
-		});
-
-		this.svelteWrapper.registerListener({
-			callback: value => {
-				this.notifySubscription(this.mapValue(value));
-			},
 		});
 
 		const bindTarget = this.mountable.getBindTarget();

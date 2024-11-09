@@ -1,6 +1,4 @@
 import type { IPlugin } from 'packages/core/src/IPlugin';
-import type { Listener } from 'packages/core/src/utils/Signal';
-import { Notifier } from 'packages/core/src/utils/Signal';
 import type { Component as SvelteComponent } from 'svelte';
 import { mount, unmount } from 'svelte';
 
@@ -21,19 +19,23 @@ export interface InputFieldSvelteProps<Value> {
 	onValueChange: (value: Value) => void;
 }
 
-export class InputFieldSvelteWrapper<Value, SvelteExports = object> extends Notifier<Value, Listener<Value>> {
+export class InputFieldSvelteWrapper<Value, SvelteExports = object> {
 	readonly plugin: IPlugin;
 	private readonly svelteComponent: InputFieldSvelteComponent<Value, SvelteExports>;
 	private svelteComponentInstance?: ReturnType<InputFieldSvelteComponent<Value, SvelteExports>>;
 	private mounted: boolean;
+	private onValueChange: (value: Value) => void;
 
-	constructor(plugin: IPlugin, svelteComponent: InputFieldSvelteComponent<Value, SvelteExports>) {
-		super();
-
+	constructor(
+		plugin: IPlugin,
+		svelteComponent: InputFieldSvelteComponent<Value, SvelteExports>,
+		onValueChange: (value: Value) => void,
+	) {
 		this.plugin = plugin;
 
 		this.mounted = false;
 		this.svelteComponent = svelteComponent;
+		this.onValueChange = onValueChange;
 	}
 
 	/**
@@ -62,9 +64,7 @@ export class InputFieldSvelteWrapper<Value, SvelteExports = object> extends Noti
 			{
 				plugin: this.plugin,
 				value: initialValue,
-				onValueChange: (value: Value) => {
-					this.notifyListeners(value);
-				},
+				onValueChange: this.onValueChange,
 			},
 			mountArgs,
 		);
@@ -81,7 +81,6 @@ export class InputFieldSvelteWrapper<Value, SvelteExports = object> extends Noti
 	 * This unmounts the component.
 	 */
 	public unmount(): void {
-		this.unregisterAllListeners();
 		if (this.svelteComponentInstance) {
 			unmount(this.svelteComponentInstance);
 		}
