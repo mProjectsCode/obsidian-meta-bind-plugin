@@ -37,6 +37,9 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 					while (parent !== null) {
 						if (parent.classList.contains('mb-input')) {
 							e.stopPropagation();
+							// Uncommenting this will fix #403
+							// but it will break date and time inputs
+							// e.preventDefault();
 							break;
 						}
 

@@ -21,12 +21,19 @@
 
 <div class="mb-image-card">
 	{#if value}
-		<img class="mb-image-card-image" src={props.plugin.internal.imagePathToUri(value)} alt={value} />
+		<img
+			class="mb-image-card-image"
+			src={props.plugin.internal.imagePathToUri(value)}
+			alt={value}
+			aria-label={value}
+		/>
 	{/if}
-	<div class="mb-image-card-footer">
-		<span>{value || 'no image selected'}</span>
-		<Button variant={ButtonStyleType.PLAIN} onclick={openSuggester}>
-			<Icon iconName="pencil" plugin={props.plugin} />
-		</Button>
-	</div>
+	<Button
+		variant={ButtonStyleType.PLAIN}
+		onclick={openSuggester}
+		classes="mb-image-card-button"
+		tooltip="Change image"
+	>
+		<Icon iconName="pencil" plugin={props.plugin} />
+	</Button>
 </div>

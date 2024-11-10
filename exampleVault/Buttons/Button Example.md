@@ -33,6 +33,8 @@ label: Run Custom JS
 action:
   type: js
   file: testJsFile.js
+  args: 
+    greeting: "Meta Bind User"
 ```
 
 And open internal and external links
