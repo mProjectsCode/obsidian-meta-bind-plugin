@@ -26,22 +26,13 @@ action:
 ```
 
 Custom templater commands
+
 ```meta-bind-button
 style: default
-icon: app-window-mac
-label: "Close tabs"
-actions:
-  - type: templaterCreateNote
-    templateFile: "templates/templater/Close unpinned tabs.md"
-    templater: true
-```
-```meta-bind-button
-style: default
-icon: app-window-mac
-label: "Close tabs 2"
+label: "Run a templater file"
 actions:
   - type: runTemplaterFile
-    templateFile: "templates/templater/Close unpinned tabs.md"
+    templateFile: "templates/templater/Say Hello Command.md"
 ```
 
 And custom JS buttons as well
