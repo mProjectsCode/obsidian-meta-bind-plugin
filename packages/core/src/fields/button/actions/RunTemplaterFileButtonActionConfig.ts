@@ -1,7 +1,8 @@
 import type {
 	ButtonClickContext,
 	ButtonConfig,
-	ButtonContext, RunTemplaterFileButtonAction,
+	ButtonContext,
+	RunTemplaterFileButtonAction,
 } from 'packages/core/src/config/ButtonConfig';
 import { ButtonActionType } from 'packages/core/src/config/ButtonConfig';
 import { AbstractButtonActionConfig } from 'packages/core/src/fields/button/AbstractButtonActionConfig';

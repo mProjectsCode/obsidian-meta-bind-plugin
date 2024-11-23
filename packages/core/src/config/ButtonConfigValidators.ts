@@ -10,10 +10,11 @@ import type {
 	OpenButtonAction,
 	RegexpReplaceInNoteButtonAction,
 	ReplaceInNoteButtonAction,
-	ReplaceSelfButtonAction, RunTemplaterFileButtonAction,
+	ReplaceSelfButtonAction,
+	RunTemplaterFileButtonAction,
 	SleepButtonAction,
 	TemplaterCreateNoteButtonAction,
-	UpdateMetadataButtonAction
+	UpdateMetadataButtonAction,
 } from 'packages/core/src/config/ButtonConfig';
 import { ButtonActionType, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 import { oneOf, schemaForType } from 'packages/core/src/utils/ZodUtils';
