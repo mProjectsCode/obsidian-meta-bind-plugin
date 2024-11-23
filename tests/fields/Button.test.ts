@@ -253,6 +253,16 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 			}).not.toThrow();
 		});
 	},
+	[ButtonActionType.RUN_TEMPLATER_FILE]: () => {
+		test('does not throw', () => {
+			expect(async () => {
+				await simplifiedRunAction({
+					type: ButtonActionType.RUN_TEMPLATER_FILE,
+					templateFile: "test"
+				});
+			}).not.toThrow();
+		})
+	}
 };
 
 describe('Button', () => {
