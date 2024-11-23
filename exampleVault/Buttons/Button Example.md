@@ -25,6 +25,25 @@ action:
   command: obsidian-meta-bind-plugin:open-playground
 ```
 
+Custom templater commands
+```meta-bind-button
+style: default
+icon: app-window-mac
+label: "Close tabs"
+actions:
+  - type: templaterCreateNote
+    templateFile: "templates/templater/Close unpinned tabs.md"
+    templater: true
+```
+```meta-bind-button
+style: default
+icon: app-window-mac
+label: "Close tabs 2"
+actions:
+  - type: runTemplaterFile
+    templateFile: "templates/templater/Close unpinned tabs.md"
+```
+
 And custom JS buttons as well
 
 ```meta-bind-button
@@ -208,6 +227,7 @@ actions:
     code: console.log("Hello world")
 
 ```
+
 
 ### Modifying Front-matter
 

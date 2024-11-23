@@ -10,10 +10,10 @@ import type {
 	OpenButtonAction,
 	RegexpReplaceInNoteButtonAction,
 	ReplaceInNoteButtonAction,
-	ReplaceSelfButtonAction,
+	ReplaceSelfButtonAction, RunTemplaterFileButtonAction,
 	SleepButtonAction,
 	TemplaterCreateNoteButtonAction,
-	UpdateMetadataButtonAction,
+	UpdateMetadataButtonAction
 } from 'packages/core/src/config/ButtonConfig';
 import { ButtonActionType, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 import { oneOf, schemaForType } from 'packages/core/src/utils/ZodUtils';
@@ -95,6 +95,14 @@ export const V_TemplaterCreateNoteButtonAction = schemaForType<TemplaterCreateNo
 		).optional(),
 	}),
 );
+
+export const V_RunTemplaterFileButtonAction = schemaForType<RunTemplaterFileButtonAction>()(
+	z.object({
+		type: z.literal(ButtonActionType.RUN_TEMPLATER_FILE),
+		templateFile: stringValidator('runTemplaterFile', 'templateFile', 'template file path'),
+	}),
+);
+
 export const V_UpdateMetadataButtonAction = schemaForType<UpdateMetadataButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.UPDATE_METADATA),
@@ -187,6 +195,7 @@ export const V_ButtonAction = schemaForType<ButtonAction>()(
 		V_RegexpReplaceInNoteButtonAction,
 		V_InsertIntoNoteButtonAction,
 		V_InlineJSButtonAction,
+		V_RunTemplaterFileButtonAction,
 	]),
 );
 

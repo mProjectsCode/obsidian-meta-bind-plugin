@@ -23,6 +23,7 @@ import { UpdateMetadataButtonActionConfig } from 'packages/core/src/fields/butto
 import type { IPlugin } from 'packages/core/src/IPlugin';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import { ErrorLevel, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
+import { RunTemplaterFileButtonActionConfig } from './actions/RunTemplaterFileButtonActionConfig';
 
 type ActionContexts = {
 	[key in ButtonActionType]: AbstractButtonActionConfig<ButtonActionMap[key]>;
@@ -50,6 +51,7 @@ export class ButtonActionRunner {
 			[ButtonActionType.REGEXP_REPLACE_IN_NOTE]: new RegexpReplaceInNoteButtonActionConfig(plugin),
 			[ButtonActionType.INSERT_INTO_NOTE]: new InsertIntoNoteButtonActionConfig(plugin),
 			[ButtonActionType.INLINE_JS]: new InlineJSButtonActionConfig(plugin),
+			[ButtonActionType.RUN_TEMPLATER_FILE]: new RunTemplaterFileButtonActionConfig(plugin),
 		};
 	}
 
