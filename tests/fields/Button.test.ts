@@ -258,11 +258,11 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 			expect(async () => {
 				await simplifiedRunAction({
 					type: ButtonActionType.RUN_TEMPLATER_FILE,
-					templateFile: "test"
+					templateFile: 'test',
 				});
 			}).not.toThrow();
-		})
-	}
+		});
+	},
 };
 
 describe('Button', () => {

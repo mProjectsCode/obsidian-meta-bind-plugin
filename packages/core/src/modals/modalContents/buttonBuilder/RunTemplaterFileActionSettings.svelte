@@ -13,11 +13,11 @@
 		plugin: IPlugin;
 		action: RunTemplaterFileButtonAction;
 	} = $props();
-
 </script>
 
-<SettingComponent name="File path: {action.templateFile || 'default'}" description="The path from the vault to the templater file.">
+<SettingComponent
+	name="File path: {action.templateFile || 'default'}"
+	description="The path from the vault to the templater file."
+>
 	<input type="text" bind:value={action.templateFile} placeholder="some path" />
 </SettingComponent>
-
-
