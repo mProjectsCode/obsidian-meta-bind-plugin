@@ -32,6 +32,6 @@ export class RunTemplaterFileButtonActionConfig extends AbstractButtonActionConf
 	}
 
 	getActionLabel(): string {
-		return 'Create a new note using Templater';
+		return 'Run a templater file';
 	}
 }
