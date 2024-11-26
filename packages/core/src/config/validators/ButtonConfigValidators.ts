@@ -100,7 +100,7 @@ export const V_TemplaterCreateNoteButtonAction = schemaForType<TemplaterCreateNo
 export const V_RunTemplaterFileButtonAction = schemaForType<RunTemplaterFileButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.RUN_TEMPLATER_FILE),
-		templateFile: stringValidator('runTemplaterFile', 'templateFile', 'template file path'),
+		templateFile: actionFieldString('runTemplaterFile', 'templateFile', 'template file path'),
 	}),
 );
 

@@ -5,7 +5,7 @@ import { getBuildBanner } from 'build/buildBanner';
 
 const banner = getBuildBanner('Release Build', version => version);
 
-const build = await   esbuild.build({
+const build = await esbuild.build({
 	banner: {
 		js: banner,
 	},
