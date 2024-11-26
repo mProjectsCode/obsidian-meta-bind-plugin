@@ -26,6 +26,7 @@ export enum ButtonActionType {
 	INPUT = 'input',
 	SLEEP = 'sleep',
 	TEMPLATER_CREATE_NOTE = 'templaterCreateNote',
+	RUN_TEMPLATER_FILE = 'runTemplaterFile',
 	UPDATE_METADATA = 'updateMetadata',
 	CREATE_NOTE = 'createNote',
 	REPLACE_IN_NOTE = 'replaceInNote',
@@ -69,6 +70,11 @@ export interface TemplaterCreateNoteButtonAction {
 	fileName?: string;
 	openNote?: boolean;
 	openIfAlreadyExists?: boolean;
+}
+
+export interface RunTemplaterFileButtonAction {
+	type: ButtonActionType.RUN_TEMPLATER_FILE;
+	templateFile: string;
 }
 
 export interface UpdateMetadataButtonAction {
@@ -132,7 +138,8 @@ export type ButtonAction =
 	| ReplaceSelfButtonAction
 	| RegexpReplaceInNoteButtonAction
 	| InsertIntoNoteButtonAction
-	| InlineJSButtonAction;
+	| InlineJSButtonAction
+	| RunTemplaterFileButtonAction;
 
 export interface ButtonConfig {
 	/**
@@ -228,4 +235,5 @@ export interface ButtonActionMap {
 	[ButtonActionType.REGEXP_REPLACE_IN_NOTE]: RegexpReplaceInNoteButtonAction;
 	[ButtonActionType.INSERT_INTO_NOTE]: InsertIntoNoteButtonAction;
 	[ButtonActionType.INLINE_JS]: InlineJSButtonAction;
+	[ButtonActionType.RUN_TEMPLATER_FILE]: RunTemplaterFileButtonAction;
 }

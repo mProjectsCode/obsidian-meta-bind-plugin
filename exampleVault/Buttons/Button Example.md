@@ -25,6 +25,16 @@ action:
   command: obsidian-meta-bind-plugin:open-playground
 ```
 
+Custom templater commands
+
+```meta-bind-button
+style: default
+label: "Run a templater file"
+actions:
+  - type: runTemplaterFile
+    templateFile: "templates/templater/Say Hello Command.md"
+```
+
 And custom JS buttons as well
 
 ```meta-bind-button
@@ -208,6 +218,7 @@ actions:
     code: console.log("Hello world")
 
 ```
+
 
 ### Modifying Front-matter
 
