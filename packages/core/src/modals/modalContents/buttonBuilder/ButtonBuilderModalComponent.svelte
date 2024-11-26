@@ -7,6 +7,7 @@
 	import type { ButtonBuilderModal } from 'packages/core/src/modals/modalContents/buttonBuilder/ButtonBuilderModal';
 	import CommandActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/CommandActionSettings.svelte';
 	import CreateNoteActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/CreateNoteActionSettings.svelte';
+	import RunTemplaterFileActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/RunTemplaterFileActionSettings.svelte';
 	import InlineJsActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/InlineJsActionSettings.svelte';
 	import InputActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/InputActionSettings.svelte';
 	import InsertIntoNoteActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/InsertIntoNoteActionSettings.svelte';
@@ -227,6 +228,10 @@ Add action of type
 
 	{#if action.type === ButtonActionType.CREATE_NOTE}
 		<CreateNoteActionSettings action={action} plugin={plugin}></CreateNoteActionSettings>
+	{/if}
+
+	{#if action.type === ButtonActionType.RUN_TEMPLATER_FILE}
+		<RunTemplaterFileActionSettings action={action} plugin={plugin}></RunTemplaterFileActionSettings>
 	{/if}
 
 	{#if action.type === ButtonActionType.REPLACE_IN_NOTE}

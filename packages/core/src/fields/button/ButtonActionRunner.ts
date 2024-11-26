@@ -17,6 +17,7 @@ import { OpenButtonActionConfig } from 'packages/core/src/fields/button/actions/
 import { RegexpReplaceInNoteButtonActionConfig } from 'packages/core/src/fields/button/actions/RegexpReplaceInNoteButtonActionConfig';
 import { ReplaceInNoteButtonActionConfig } from 'packages/core/src/fields/button/actions/ReplaceInNoteButtonActionConfig';
 import { ReplaceSelfButtonActionConfig } from 'packages/core/src/fields/button/actions/ReplaceSelfButtonActionConfig';
+import { RunTemplaterFileButtonActionConfig } from 'packages/core/src/fields/button/actions/RunTemplaterFileButtonActionConfig';
 import { SleepButtonActionConfig } from 'packages/core/src/fields/button/actions/SleepButtonActionConfig';
 import { TemplaterCreateNoteButtonActionConfig } from 'packages/core/src/fields/button/actions/TemplaterCreateNoteButtonActionConfig';
 import { UpdateMetadataButtonActionConfig } from 'packages/core/src/fields/button/actions/UpdateMetadataButtonActionConfig';
@@ -49,6 +50,7 @@ export class ButtonActionRunner {
 			[ButtonActionType.REGEXP_REPLACE_IN_NOTE]: new RegexpReplaceInNoteButtonActionConfig(plugin),
 			[ButtonActionType.INSERT_INTO_NOTE]: new InsertIntoNoteButtonActionConfig(plugin),
 			[ButtonActionType.INLINE_JS]: new InlineJSButtonActionConfig(plugin),
+			[ButtonActionType.RUN_TEMPLATER_FILE]: new RunTemplaterFileButtonActionConfig(plugin),
 		};
 	}
 

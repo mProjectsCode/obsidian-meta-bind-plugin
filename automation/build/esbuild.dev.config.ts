@@ -1,7 +1,6 @@
 import esbuild from 'esbuild';
 import copy from 'esbuild-plugin-copy-watch';
 import esbuildSvelte from 'esbuild-svelte';
-import { sveltePreprocess } from 'svelte-preprocess';
 import manifest from '../../manifest.json' assert { type: 'json' };
 import { getBuildBanner } from 'build/buildBanner';
 

@@ -1,7 +1,6 @@
 import builtins from 'builtin-modules';
 import esbuild from 'esbuild';
 import esbuildSvelte from 'esbuild-svelte';
-import { sveltePreprocess } from 'svelte-preprocess';
 import { getBuildBanner } from 'build/buildBanner';
 
 const banner = getBuildBanner('Release Build', version => version);
