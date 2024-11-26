@@ -14,7 +14,7 @@
 		action: CommandButtonAction;
 	} = $props();
 
-	function changeCommand(action: CommandButtonAction): void {
+	function changeCommand(): void {
 		plugin.internal.openCommandSelectModal((command: Command) => {
 			action.command = command.id;
 		});
@@ -25,5 +25,5 @@
 	name="Command: {action.command || 'none'}"
 	description="The command to execute when this action runs."
 >
-	<Button variant={ButtonStyleType.PRIMARY} onclick={() => changeCommand(action)}>Change</Button>
+	<Button variant={ButtonStyleType.PRIMARY} onclick={() => changeCommand()}>Change</Button>
 </SettingComponent>

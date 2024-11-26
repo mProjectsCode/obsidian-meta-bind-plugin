@@ -22,7 +22,9 @@
 </script>
 
 <SettingComponent name="Folder: {action.folderPath || 'none'}" description="The folder to create a new note in.">
-	<Button variant={ButtonStyleType.PRIMARY} onclick={() => changeFolderPath()}>Change</Button>
+	<Button variant={ButtonStyleType.PRIMARY} onclick={() => changeFolderPath()} tooltip="Select from vault"
+		>Change</Button
+	>
 </SettingComponent>
 
 <SettingComponent name="File name: {action.fileName || 'default'}" description="The file name of the new note.">
@@ -34,7 +36,7 @@
 </SettingComponent>
 
 <SettingComponent
-	name="Open if note already xxists"
+	name="Open if note already exists"
 	description="Whether to open the note instead of creating a new one if the note already exists."
 >
 	<Toggle bind:checked={action.openIfAlreadyExists}></Toggle>

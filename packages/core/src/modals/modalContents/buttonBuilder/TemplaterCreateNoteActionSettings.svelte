@@ -31,11 +31,15 @@
 	name="Template file: {action.templateFile || 'none'}"
 	description="The template file to create a new note of."
 >
-	<Button variant={ButtonStyleType.PRIMARY} onclick={() => changeTemplateFile(action)}>Change</Button>
+	<Button variant={ButtonStyleType.PRIMARY} onclick={() => changeTemplateFile(action)} tooltip="Select from vault"
+		>Change</Button
+	>
 </SettingComponent>
 
 <SettingComponent name="Folder: {action.folderPath || 'none'}" description="The folder to create a new note in.">
-	<Button variant={ButtonStyleType.PRIMARY} onclick={() => changeFolderPath(action)}>Change</Button>
+	<Button variant={ButtonStyleType.PRIMARY} onclick={() => changeFolderPath(action)} tooltip="Select from vault"
+		>Change</Button
+	>
 </SettingComponent>
 
 <SettingComponent name="File name: {action.fileName || 'default'}" description="The file name of the new note.">

@@ -126,6 +126,12 @@
 
 		plugin.internal.createContextMenu(menuActions).showWithEvent(e);
 	}
+
+	function changeBackgroundImage(): void {
+		plugin.internal.openImageFileSelectModal((file: string) => {
+			buttonConfig.backgroundImage = file;
+		});
+	}
 </script>
 
 <SettingComponent name="Label" description="The label shown on the button.">
@@ -156,8 +162,10 @@
 </SettingComponent>
 
 <SettingComponent name="Background image" description="A background image to use in the button.">
-	<!-- TODO: make this a file selector with modal and so on -->
-	<input type="text" bind:value={buttonConfig.backgroundImage} />
+	<span>{buttonConfig.backgroundImage ?? 'none'}</span>
+	<Button variant={ButtonStyleType.PRIMARY} onclick={() => changeBackgroundImage()} tooltip="Select from vault"
+		>Select</Button
+	>
 </SettingComponent>
 
 <SettingComponent
