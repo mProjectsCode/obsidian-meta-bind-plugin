@@ -25,7 +25,7 @@
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
 	import Toggle from 'packages/core/src/utils/components/Toggle.svelte';
 	import type { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
-	import { DomHelpers, expectType } from 'packages/core/src/utils/Utils';
+	import { DomHelpers } from 'packages/core/src/utils/Utils';
 	import { onDestroy } from 'svelte';
 
 	let {
@@ -148,6 +148,15 @@
 	description="A list of CSS classes to add to the button. Multiple classes should be separated by a space."
 >
 	<input type="text" bind:value={buttonConfig.class} />
+</SettingComponent>
+
+<SettingComponent name="CSS styles" description="CSS styles to directly apply to the button.">
+	<input type="text" bind:value={buttonConfig.cssStyle} />
+</SettingComponent>
+
+<SettingComponent name="Background image" description="A background image to use in the button.">
+	<!-- TODO: make this a file selector with modal and so on -->
+	<input type="text" bind:value={buttonConfig.backgroundImage} />
 </SettingComponent>
 
 <SettingComponent

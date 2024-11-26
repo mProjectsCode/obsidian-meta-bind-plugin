@@ -28,7 +28,6 @@ type ActionContexts = {
 	[key in ButtonActionType]: AbstractButtonActionConfig<ButtonActionMap[key]>;
 };
 
-// TODO: rewrite this so that each button action is its own class
 export class ButtonActionRunner {
 	plugin: IPlugin;
 	actionContexts: ActionContexts;
@@ -59,7 +58,7 @@ export class ButtonActionRunner {
 		if (resolvedFilePath === undefined) {
 			throw new MetaBindParsingError({
 				errorLevel: ErrorLevel.ERROR,
-				cause: 'Could not find a file that matches "${filePath}".',
+				cause: `Could not find a file that matches "${filePath}".`,
 				effect: `Could not resolve path or link "${filePath}" relative to "${relativeFilePath}".`,
 			});
 		}
@@ -71,11 +70,13 @@ export class ButtonActionRunner {
 		return {
 			label: 'This is a button',
 			icon: '',
-			hidden: false,
+			style: ButtonStyleType.DEFAULT,
 			class: '',
+			cssStyle: '',
+			backgroundImage: '',
 			tooltip: '',
 			id: '',
-			style: ButtonStyleType.DEFAULT,
+			hidden: false,
 			actions: [],
 		};
 	}

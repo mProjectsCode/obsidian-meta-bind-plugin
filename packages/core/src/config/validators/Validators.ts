@@ -9,8 +9,8 @@ import type {
 	ViewFieldOptions,
 } from 'packages/core/src/config/APIConfigs';
 import { FieldType, NotePosition, RenderChildType } from 'packages/core/src/config/APIConfigs';
-import { V_ButtonConfig } from 'packages/core/src/config/ButtonConfigValidators';
 import { InputFieldType } from 'packages/core/src/config/FieldConfigs';
+import { V_ButtonConfig } from 'packages/core/src/config/validators/ButtonConfigValidators';
 import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import type {

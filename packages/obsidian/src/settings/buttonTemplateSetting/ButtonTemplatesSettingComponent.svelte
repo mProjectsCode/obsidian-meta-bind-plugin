@@ -2,7 +2,7 @@
 	import { Notice, parseYaml } from 'obsidian';
 	import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
-	import { V_ButtonConfig } from 'packages/core/src/config/ButtonConfigValidators';
+	import { V_ButtonConfig } from 'packages/core/src/config/validators/ButtonConfigValidators';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import ModalButtonGroup from 'packages/core/src/utils/components/ModalButtonGroup.svelte';
 	import { DocsUtils } from 'packages/core/src/utils/DocsUtils';

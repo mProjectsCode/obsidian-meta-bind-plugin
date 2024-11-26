@@ -67,7 +67,11 @@ export class ButtonField extends Mountable {
 				icon: this.config.icon,
 				variant: this.config.style,
 				label: this.config.label,
-				tooltip: isTruthy(this.config.tooltip) ? this.config.tooltip : this.config.label,
+				tooltip: isTruthy(this.config.tooltip) ? this.config.tooltip : undefined,
+				cssStyle: this.config.cssStyle,
+				backgroundImage: isTruthy(this.config.backgroundImage)
+					? this.plugin.internal.imagePathToUri(this.config.backgroundImage!)
+					: undefined,
 				onclick: async (event: MouseEvent): Promise<void> => {
 					await this.plugin.api.buttonActionRunner.runButtonActions(
 						this.config,

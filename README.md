@@ -48,16 +48,16 @@ You are more than welcome to open an issue on [GitHub](https://github.com/mProje
 
 I want to thank the following people:
 
--   blacksmithgu for the Dataview type definitions
--   Daniel (dbarenholz) for his contributions to the plugin and the docs
--   koala (kometenstaub) for help with CodeMirror
--   sailKite for help with CSS
--   Sigrunixia for enabling me to work on the Obsidian Publish version of the plugin
--   Zachatoo and SilentVoid13 for the Templater type definitions
+- blacksmithgu for the Dataview type definitions
+- Daniel (dbarenholz) for his contributions to the plugin and the docs
+- koala (kometenstaub) for help with CodeMirror
+- sailKite for help with CSS
+- Sigrunixia for enabling me to work on the Obsidian Publish version of the plugin
+- Zachatoo and SilentVoid13 for the Templater type definitions
 
--   All the contributors to the plugin and the docs
--   All the authors of the libraries used in the plugin
--   Everyone who has given feedback and suggestions
+- All the contributors to the plugin and the docs
+- All the authors of the libraries used in the plugin
+- Everyone who has given feedback and suggestions
 
 ## Contributions
 
@@ -70,10 +70,10 @@ Contributions are always welcome. If you have an idea, feel free to open a featu
 The plugin uses [Bun](https://bun.sh/) instead of Node.js/NPM to manage dependencies.
 To install the dependencies, run `bun install` and `bun run pack:i` in the root directory of the project.
 
--   `bun run dev` will build the plugin in dev mode and watch for changes. The plugin builds directly into the example vault inside of this repo.
--   `bun run build` will build the plugin in production mode. The plugin builds into the root of this repo.
--   `bun run test` will run the tests.
--   `bun run check` will check for formatting, linting, type errors and run the tests.
--   `bun run check:fix` will fix formatting and linting errors, check for type errors and run the tests.
+- `bun run dev` will build the plugin in dev mode and watch for changes. The plugin builds directly into the example vault inside of this repo.
+- `bun run build` will build the plugin in production mode. The plugin builds into the root of this repo.
+- `bun run test` will run the tests.
+- `bun run check` will check for formatting, linting, type errors and run the tests.
+- `bun run check:fix` will fix formatting and linting errors, check for type errors and run the tests.
 
 `bun run check` should run successfully before creating a pull request.

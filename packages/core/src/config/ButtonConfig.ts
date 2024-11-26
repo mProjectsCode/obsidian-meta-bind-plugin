@@ -1,9 +1,21 @@
 import type { LinePosition } from 'packages/core/src/config/APIConfigs';
 
 export enum ButtonStyleType {
+	/**
+	 * Default grey button
+	 */
 	DEFAULT = 'default',
+	/**
+	 * Primary button in the accent color
+	 */
 	PRIMARY = 'primary',
+	/**
+	 * Red button for destructive actions
+	 */
 	DESTRUCTIVE = 'destructive',
+	/**
+	 * Plain button with no background
+	 */
 	PLAIN = 'plain',
 }
 
@@ -123,14 +135,52 @@ export type ButtonAction =
 	| InlineJSButtonAction;
 
 export interface ButtonConfig {
+	/**
+	 * The text displayed on the button
+	 */
 	label: string;
+	/**
+	 * Optional icon to display in front of the label
+	 */
 	icon?: string;
+	/**
+	 * The style of the button
+	 */
 	style: ButtonStyleType;
+	/**
+	 * Optional CSS class to add to the button
+	 */
 	class?: string;
+	/**
+	 * Optional CSS styles to add to the button
+	 */
+	cssStyle?: string;
+	/**
+	 * Optional background image to add to the button,
+	 * needed since you can't load images from the vault via pure CSS
+	 */
+	backgroundImage?: string;
+	/**
+	 * Optional tooltip to display when hovering over the button
+	 */
 	tooltip?: string;
+	/**
+	 * Optional ID for use in inline buttons
+	 */
 	id?: string;
+	/**
+	 * Whether the button is hidden
+	 */
 	hidden?: boolean;
+	/**
+	 * A single action to run when the button is clicked
+	 * Mutually exclusive with `actions`
+	 */
 	action?: ButtonAction;
+	/**
+	 * Multiple actions to run when the button is clicked
+	 * Mutually exclusive with `action`
+	 */
 	actions?: ButtonAction[];
 }
 
@@ -140,6 +190,9 @@ export interface ButtonContext {
 	isInline: boolean;
 }
 
+/**
+ * Provides information about the button click event.
+ */
 export interface ButtonClickContext {
 	type: ButtonClickType;
 	shiftKey: boolean;
@@ -148,10 +201,19 @@ export interface ButtonClickContext {
 }
 
 export enum ButtonClickType {
+	/**
+	 * The user used the left mouse button to click the button
+	 */
 	LEFT = 'left',
+	/**
+	 * The user used the middle mouse button (also known as scroll wheel click) to click the button
+	 */
 	MIDDLE = 'middle',
 }
 
+/**
+ * Maps action types to their respective action interfaces.
+ */
 export interface ButtonActionMap {
 	[ButtonActionType.COMMAND]: CommandButtonAction;
 	[ButtonActionType.JS]: JSButtonAction;

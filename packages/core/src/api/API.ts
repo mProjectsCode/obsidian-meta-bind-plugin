@@ -1,18 +1,4 @@
 import { SyntaxHighlightingAPI } from 'packages/core/src/api/SyntaxHighlightingAPI';
-import {
-	V_BindTargetDeclaration,
-	V_BindTargetScope,
-	V_ButtonOptions,
-	V_EmbedOptions,
-	V_FieldType,
-	V_FilePath,
-	V_InlineButtonOptions,
-	V_InputFieldOptions,
-	V_JsViewFieldOptions,
-	V_RenderChildType,
-	V_TableFieldOptions,
-	V_ViewFieldOptions,
-} from 'packages/core/src/api/Validators';
 import type {
 	ButtonGroupOptions,
 	ButtonOptions,
@@ -30,6 +16,20 @@ import {
 	NotePosition,
 	RenderChildType,
 } from 'packages/core/src/config/APIConfigs';
+import {
+	V_BindTargetDeclaration,
+	V_BindTargetScope,
+	V_ButtonOptions,
+	V_EmbedOptions,
+	V_FieldType,
+	V_FilePath,
+	V_InlineButtonOptions,
+	V_InputFieldOptions,
+	V_JsViewFieldOptions,
+	V_RenderChildType,
+	V_TableFieldOptions,
+	V_ViewFieldOptions,
+} from 'packages/core/src/config/validators/Validators';
 import { ButtonActionRunner } from 'packages/core/src/fields/button/ButtonActionRunner';
 import { ButtonGroupMountable } from 'packages/core/src/fields/button/ButtonGroupMountable';
 import { ButtonManager } from 'packages/core/src/fields/button/ButtonManager';

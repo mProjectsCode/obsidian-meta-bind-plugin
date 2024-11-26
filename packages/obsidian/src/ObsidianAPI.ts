@@ -2,9 +2,9 @@ import type { ReactiveComponent } from 'jsEngine/api/reactive/ReactiveComponent'
 import { Component } from 'obsidian';
 import type { LifecycleHook } from 'packages/core/src/api/API.js';
 import { API } from 'packages/core/src/api/API.js';
-import { V_BindTargetDeclaration, V_HTMLElement, V_Mountable } from 'packages/core/src/api/Validators';
 import type { InlineFieldType } from 'packages/core/src/config/APIConfigs';
 import { isFieldTypeAllowedInline } from 'packages/core/src/config/APIConfigs';
+import { V_BindTargetDeclaration, V_HTMLElement, V_Mountable } from 'packages/core/src/config/validators/Validators';
 import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import type { Mountable } from 'packages/core/src/utils/Mountable';

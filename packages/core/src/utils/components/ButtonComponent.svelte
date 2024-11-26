@@ -12,6 +12,8 @@
 		tooltip = '',
 		label = '',
 		icon = '',
+		cssStyle = '',
+		backgroundImage = '',
 		error = false,
 		onclick = () => {},
 		onauxclick = () => {},
@@ -22,6 +24,8 @@
 		tooltip?: string;
 		label?: string;
 		icon?: string;
+		cssStyle?: string;
+		backgroundImage?: string;
 		error?: boolean;
 		onclick?: (event: MouseEvent) => void | Promise<void>;
 		onauxclick?: (event: MouseEvent) => void | Promise<void>;
@@ -52,6 +56,8 @@
 	class:mod-plain={variant === ButtonStyleType.PLAIN}
 	class:disabled={disabled}
 	class:mb-error={error}
+	style={cssStyle}
+	style:background-image={backgroundImage}
 	aria-label={tooltip}
 	disabled={disabled}
 	onclick={event => click(event, ButtonClickType.LEFT)}
