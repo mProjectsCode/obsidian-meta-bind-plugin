@@ -57,7 +57,7 @@
 	class:disabled={disabled}
 	class:mb-error={error}
 	style={cssStyle}
-	style:background-image={backgroundImage}
+	style:background-image={backgroundImage ? `url("${backgroundImage}")` : undefined}
 	aria-label={tooltip}
 	disabled={disabled}
 	onclick={event => click(event, ButtonClickType.LEFT)}

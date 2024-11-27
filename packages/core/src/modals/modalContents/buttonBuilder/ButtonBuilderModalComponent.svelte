@@ -162,9 +162,9 @@
 </SettingComponent>
 
 <SettingComponent name="Background image" description="A background image to use in the button.">
-	<span>{buttonConfig.backgroundImage ?? 'none'}</span>
+	<span style="word-break: break-word">{buttonConfig.backgroundImage ?? 'none'}</span>
 	<Button variant={ButtonStyleType.PRIMARY} onclick={() => changeBackgroundImage()} tooltip="Select from vault"
-		>Select</Button
+		>Change</Button
 	>
 </SettingComponent>
 
