@@ -123,6 +123,7 @@ export interface InsertIntoNoteButtonAction {
 export interface InlineJSButtonAction {
 	type: ButtonActionType.INLINE_JS;
 	code: string;
+	args?: Record<string, unknown>;
 }
 
 export type ButtonAction =

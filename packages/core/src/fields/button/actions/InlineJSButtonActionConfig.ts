@@ -31,6 +31,7 @@ export class InlineJSButtonActionConfig extends AbstractButtonActionConfig<Inlin
 
 		const configOverrides: Record<string, unknown> = {
 			buttonConfig: structuredClone(config),
+			args: structuredClone(action.args),
 			buttonContext: structuredClone(context),
 			click: structuredClone(click),
 		};
@@ -42,6 +43,7 @@ export class InlineJSButtonActionConfig extends AbstractButtonActionConfig<Inlin
 		return {
 			type: ButtonActionType.INLINE_JS,
 			code: 'console.log("Hello world")',
+			args: {},
 		};
 	}
 

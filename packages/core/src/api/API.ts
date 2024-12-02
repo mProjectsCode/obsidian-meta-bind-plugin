@@ -590,7 +590,7 @@ export abstract class API<Plugin extends IPlugin> {
 	}
 
 	/**
-	 * Checks if a string is any declaration and if yes returns the widget type.
+	 * Checks if a string is any declaration. If yes, it returns the widget type, otherwise undefined.
 	 *
 	 * @param str the declaration string
 	 */
@@ -635,7 +635,7 @@ export abstract class API<Plugin extends IPlugin> {
 	 *
 	 * @param storageType the storage type (also named metadata source sometimes)
 	 * @param storagePath the storage path (usually the file path)
-	 * @param property the property path a.b.c = ['a', 'b', 'c']
+	 * @param property the property access path as an array. E.g. for the path `cache.a.b.c`, the array would be `['a', 'b', 'c']`.
 	 * @param listenToChildren whether to listen to children, only relevant for arrays and objects
 	 */
 	public createBindTarget(

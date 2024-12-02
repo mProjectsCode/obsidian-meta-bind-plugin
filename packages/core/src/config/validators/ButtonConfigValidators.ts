@@ -178,6 +178,7 @@ export const V_InlineJSButtonAction = schemaForType<InlineJSButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.INLINE_JS),
 		code: actionFieldString('inlineJS', 'code', 'code string to run'),
+		args: z.record(z.unknown()).optional(),
 	}),
 );
 
