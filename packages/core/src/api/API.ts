@@ -1,3 +1,4 @@
+import type { MathJsInstance } from 'mathjs';
 import { SyntaxHighlightingAPI } from 'packages/core/src/api/SyntaxHighlightingAPI';
 import type {
 	ButtonGroupOptions,
@@ -63,6 +64,7 @@ import { Signal } from 'packages/core/src/utils/Signal';
 import { expectType, getUUID } from 'packages/core/src/utils/Utils';
 import { validateAPIArgs } from 'packages/core/src/utils/ZodUtils';
 import { z } from 'zod';
+import { getMathjsSingleton } from 'packages/core/src/utils/Mathjs';
 
 export interface LifecycleHook {
 	register(cb: () => void): void;
@@ -826,5 +828,13 @@ export abstract class API<Plugin extends IPlugin> {
 			lineStart: lineStart,
 			lineEnd: lineEnd,
 		});
+	}
+
+	/**
+	 * get the mathjs instance used in math-views. Useful to modify the config and scope.
+	 *
+	 */
+	public getMathjs(): MathJsInstance {
+		return getMathjsSingleton();
 	}
 }
