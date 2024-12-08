@@ -125,9 +125,12 @@
 		aria-valuemin={props.minValue}
 		aria-valuemax={props.maxValue}
 		aria-valuenow={value}
+		aria-label={value}
 		tabindex="0"
 	></div>
+{#if props.addLabels}
 	<span class="mb-progress-bar-value">{value}</span>
 	<span class="mb-progress-bar-label-left">{props.minValue}</span>
 	<span class="mb-progress-bar-label-right">{props.maxValue}</span>
+{/if}
 </div>
