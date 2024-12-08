@@ -54,6 +54,7 @@ export class ProgressBarIPF extends AbstractInputField<number, number> {
 			minValue: this.minValue,
 			maxValue: this.maxValue,
 			stepSize: this.stepSize,
+			addLabels: (this.mountable.getArgument(InputFieldArgumentType.ADD_LABELS)?.value ?? true) === true ,
 		};
 	}
 }
