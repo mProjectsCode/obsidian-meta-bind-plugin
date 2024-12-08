@@ -1,10 +1,10 @@
-import type { EvalFunction } from 'mathjs';
-import { compile as MathJsCompile } from 'mathjs';
+import type { EvalFunction, MathJsInstance } from 'mathjs';
 import { AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractViewField';
 import type { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
 import type { ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
 import { ErrorLevel, MetaBindExpressionError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { parseLiteral, stringifyUnknown } from 'packages/core/src/utils/Literal';
+import { getMathjsSingleton } from 'packages/core/src/utils/Mathjs';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { DomHelpers, getUUID } from 'packages/core/src/utils/Utils';
 
@@ -13,11 +13,14 @@ export class MathVF extends AbstractViewField<unknown> {
 	expression?: EvalFunction;
 	expressionStr?: string;
 	hasError: boolean;
+	math: MathJsInstance;
 
 	hidden: boolean;
 
 	constructor(mountable: ViewFieldMountable) {
 		super(mountable);
+
+		this.math = getMathjsSingleton();
 
 		this.hidden = false;
 
@@ -48,7 +51,7 @@ export class MathVF extends AbstractViewField<unknown> {
 			}
 		}
 
-		this.expression = MathJsCompile(this.expressionStr);
+		this.expression = this.math.compile(this.expressionStr);
 	}
 
 	private buildMathJSContext(): Record<string, unknown> {
