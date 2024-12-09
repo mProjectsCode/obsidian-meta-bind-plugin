@@ -1,4 +1,4 @@
-name: Build obsidian plugin
+name: Create Plugin Release
 
 on:
     push:
@@ -35,6 +35,7 @@ jobs:
               id: build
               run: |
                   bun install
+                  bun run pack:i
                   bun run build
                   mkdir ${{ env.PLUGIN_NAME }}
                   cp main.js manifest.json styles.css ${{ env.PLUGIN_NAME }}
