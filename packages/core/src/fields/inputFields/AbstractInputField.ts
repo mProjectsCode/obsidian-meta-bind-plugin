@@ -18,6 +18,7 @@ export abstract class AbstractInputField<
 	readonly inputSignal: MappedSignal<unknown, MetadataValueType>;
 
 	private metadataSubscription?: MetadataSubscription;
+	private mountTarget?: HTMLElement;
 
 	constructor(mountable: InputFieldMountable) {
 		super();
@@ -27,7 +28,11 @@ export abstract class AbstractInputField<
 		this.svelteWrapper = new InputFieldSvelteWrapper<ComponentValueType, SvelteExports>(
 			this.plugin,
 			this.getSvelteComponent(),
-			value => this.notifySubscription(this.mapValue(value)),
+			value => {
+				const mappedValue = this.mapValue(value);
+				this.updateDataAttributes(value, mappedValue);
+				this.notifySubscription(mappedValue);
+			},
 		);
 
 		this.inputSignal = new MappedSignal<unknown, MetadataValueType>(
@@ -129,13 +134,30 @@ export abstract class AbstractInputField<
 		}
 	}
 
+	private updateDataAttributes(internalValue: ComponentValueType, metadataValue: MetadataValueType): void {
+		if (this.mountTarget) {
+			this.mountTarget.dataset.internalValue = JSON.stringify(internalValue);
+			this.mountTarget.dataset.metadataValue = JSON.stringify(metadataValue);
+		}
+	}
+
 	protected getMountArgs(): Record<string, unknown> {
 		return {};
 	}
 
 	protected onMount(targetEl: HTMLElement): void {
+		this.mountTarget = targetEl;
+
+		// listener to update the svelte component
 		this.inputSignal.registerListener({
 			callback: value => this.svelteWrapper.setValue(this.reverseMapValue(value)),
+		});
+
+		// listener to update data attributes on the target element
+		this.inputSignal.registerListener({
+			callback: value => {
+				this.updateDataAttributes(this.reverseMapValue(value), value);
+			},
 		});
 
 		const bindTarget = this.mountable.getBindTarget();
@@ -153,6 +175,8 @@ export abstract class AbstractInputField<
 	}
 
 	protected onUnmount(): void {
+		this.mountTarget = undefined;
+
 		this.inputSignal.unregisterAllListeners();
 		this.metadataSubscription?.unsubscribe();
 

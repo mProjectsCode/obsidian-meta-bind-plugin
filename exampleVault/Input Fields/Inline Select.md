@@ -2,7 +2,7 @@
 select: b
 select2: 1
 select3: 2 hours
-select4: 
+select4:
 ---
 
 ```meta-bind
