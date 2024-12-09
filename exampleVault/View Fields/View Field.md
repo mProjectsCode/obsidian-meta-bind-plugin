@@ -21,6 +21,7 @@ images:
 otherImages:
   - "[[Other/Images/img_flower.webp]]"
   - "[image](Other/Images/img_flower.webp)"
+remoteImage: https://picsum.photos/200/300
 ---
 
 `INPUT[number:number1]`
@@ -60,11 +61,17 @@ Self Loop Error: `VIEW[**{computed}**][text():computed]`
 link with render markdown: `VIEW[\[\[{file}|link\]\]][text(renderMarkdown)]`
 link with link view field: `VIEW[{file}|this is a link][link]`
 
+## Images
+
+A single image works
+
 ```meta-bind
 INPUT[imageSuggester(optionQuery("Other/Images")):image]
 ```
 
 `VIEW[{image}][image]`
+
+View fields can also display a list of images.
 
 ```meta-bind
 INPUT[imageListSuggester(optionQuery("Other/Images")):images]
@@ -72,7 +79,13 @@ INPUT[imageListSuggester(optionQuery("Other/Images")):images]
 
 `VIEW[{images}][image]`
 
+Both markdown link types are supported.
+
 `VIEW[{otherImages}][image]`
+
+External images work as well.
+
+`VIEW[{remoteImage}][image]`
 
 ## Arrays and Objects
 

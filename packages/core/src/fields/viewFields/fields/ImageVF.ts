@@ -88,7 +88,7 @@ export class ImageVF extends AbstractViewField<string> {
 		this.component = mount(ImageGrid, {
 			target: container,
 			props: {
-				images: linkList.map(x => x.target),
+				images: linkList.map(x => ({ link: x.target, internal: x.internal })),
 				plugin: this.mountable.plugin,
 			},
 		});
