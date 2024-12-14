@@ -1,6 +1,7 @@
 import type { TAbstractFile } from 'obsidian';
 import { Notice, TFile, TFolder } from 'obsidian';
 import type { DataArray, DataviewApi, Literal } from 'obsidian-dataview';
+import { IMAGE_FILE_EXTENSIONS } from 'packages/core/src/api/InternalAPI';
 import {
 	InputFieldArgumentType,
 	UseLinksInputFieldArgumentValue,
@@ -15,7 +16,7 @@ import { ErrorLevel, MetaBindArgumentError } from 'packages/core/src/utils/error
 import type { MBLiteral } from 'packages/core/src/utils/Literal';
 import { stringifyLiteral } from 'packages/core/src/utils/Literal';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
-import { getDataViewPluginAPI, isImageExtension } from 'packages/obsidian/src/ObsUtils';
+import { getDataViewPluginAPI } from 'packages/obsidian/src/ObsUtils';
 import { z } from 'zod';
 
 export function getSuggesterOptions(
@@ -79,6 +80,10 @@ export function getSuggesterOptions(
 	}
 
 	return options;
+}
+
+function isImageExtension(extension: string): boolean {
+	return IMAGE_FILE_EXTENSIONS.contains(extension);
 }
 
 function recSearchFolder(folder: TFolder, useLinks: UseLinksInputFieldArgumentValue): SuggesterOption<MBLiteral>[] {
