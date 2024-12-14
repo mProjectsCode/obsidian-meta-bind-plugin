@@ -29,19 +29,20 @@ export function getSuggesterOptions(
 ): SuggesterOption<MBLiteral>[] {
 	let options: SuggesterOption<MBLiteral>[] = [];
 
-	if (allowImages !== AllowImagesInSuggesterInputFieldArgumentValue.FALSE) {
-		options = getImageOptions(optionQueryArgs, plugin, optionArgs, useLinks);
-
-		if (allowImages === AllowImagesInSuggesterInputFieldArgumentValue.ONLY) {
-			return options;
-		}
-	}
-
 	for (const suggestOptionsArgument of optionArgs) {
 		options.push(new SuggesterOption<MBLiteral>(suggestOptionsArgument.value, suggestOptionsArgument.name));
 	}
 
 	if (optionQueryArgs.length > 0) {
+
+		if (allowImages !== AllowImagesInSuggesterInputFieldArgumentValue.FALSE) {
+			options = getImageOptions(optionQueryArgs, plugin, optionArgs, useLinks);
+
+			if (allowImages === AllowImagesInSuggesterInputFieldArgumentValue.ONLY) {
+				return options;
+			}
+		}
+
 		let dv: DataviewApi | undefined = undefined;
 		try {
 			dv = getDataViewPluginAPI(plugin);
@@ -153,58 +154,6 @@ function getImageOptions(
 		}
 
 		options.push(...recSearchFolder(folder, useLinks));
-	}
-
-	for (const optionArg of optionArgs) {
-		const imagePathString = stringifyLiteral(optionArg.value);
-
-		if (!imagePathString) {
-			const error = new MetaBindArgumentError({
-				errorLevel: ErrorLevel.ERROR,
-				effect: 'failed to get suggest options',
-				cause: `expected suggest option ${optionArg.value} to be truthy`,
-			});
-			new Notice(`meta-bind | ${error.message}`);
-			console.warn(error);
-			continue;
-		}
-
-		const imageFile = plugin.app.vault.getAbstractFileByPath(imagePathString);
-
-		if (!imageFile) {
-			const error = new MetaBindArgumentError({
-				errorLevel: ErrorLevel.ERROR,
-				effect: 'failed to get suggest options',
-				cause: `expected suggest option ${optionArg.value} for image suggester to exist`,
-			});
-			new Notice(`meta-bind | ${error.message}`);
-			console.warn(error);
-			continue;
-		}
-
-		if (!(imageFile instanceof TFile)) {
-			const error = new MetaBindArgumentError({
-				errorLevel: ErrorLevel.ERROR,
-				effect: 'failed to get suggest options',
-				cause: `expected suggest option ${optionArg.value} for image suggester to be a file`,
-			});
-			new Notice(`meta-bind | ${error.message}`);
-			console.warn(error);
-			continue;
-		}
-
-		if (!isImageExtension(imageFile.extension)) {
-			const error = new MetaBindArgumentError({
-				errorLevel: ErrorLevel.ERROR,
-				effect: 'failed to get suggest options',
-				cause: `expected suggest option ${optionArg.value} for image suggester to be an image file`,
-			});
-			new Notice(`meta-bind | ${error.message}`);
-			console.warn(error);
-			continue;
-		}
-
-		options.push(new SuggesterOption(imageFile.path, imageFile.name));
 	}
 
 	return options;
