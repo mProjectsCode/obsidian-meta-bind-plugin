@@ -4,6 +4,7 @@ import type {
 	BindTargetDeclaration,
 	UnvalidatedBindTargetDeclaration,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import { BindTargetStorageType } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { P_BindTarget } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';
 import type { ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import { toResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
@@ -23,11 +24,7 @@ export class BindTargetParser {
 		return runParser(P_BindTarget, declarationString);
 	}
 
-	fromStringAndValidate(
-		bindTargetString: string,
-		filePath: string,
-		scope?: BindTargetScope | undefined,
-	): BindTargetDeclaration {
+	fromStringAndValidate(bindTargetString: string, filePath: string, scope?: BindTargetScope): BindTargetDeclaration {
 		return this.validate(bindTargetString, this.fromString(bindTargetString), filePath, scope);
 	}
 
@@ -56,7 +53,7 @@ export class BindTargetParser {
 		fullDeclaration: string | undefined,
 		unvalidatedBindTargetDeclaration: UnvalidatedBindTargetDeclaration,
 		filePath: string,
-		scope?: BindTargetScope | undefined,
+		scope?: BindTargetScope,
 	): BindTargetDeclaration {
 		const bindTargetDeclaration: BindTargetDeclaration = {} as BindTargetDeclaration;
 
@@ -104,11 +101,15 @@ export class BindTargetParser {
 			this,
 		);
 
-		// resolve scope
-		return source.resolveBindTargetScope(bindTargetDeclaration, scope, this);
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+		if (source.id === BindTargetStorageType.SCOPE) {
+			return this.resolveScope(bindTargetDeclaration, scope);
+		} else {
+			return bindTargetDeclaration;
+		}
 	}
 
-	public resolveScope(bindTarget: BindTargetDeclaration, scope?: BindTargetScope | undefined): BindTargetDeclaration {
+	public resolveScope(bindTarget: BindTargetDeclaration, scope?: BindTargetScope): BindTargetDeclaration {
 		if (scope === undefined) {
 			throw new ParsingValidationError(
 				ErrorLevel.ERROR,

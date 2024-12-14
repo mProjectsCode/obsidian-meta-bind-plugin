@@ -6,15 +6,14 @@ import type {
 	ComputedMetadataSubscription,
 	ComputedSubscriptionDependency,
 } from 'packages/core/src/metadata/ComputedMetadataSubscription';
-import { stringifyUnknown } from 'packages/core/src/utils/Literal';
 import { Mountable } from 'packages/core/src/utils/Mountable';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { DomHelpers } from 'packages/core/src/utils/Utils';
 
-export abstract class AbstractViewField extends Mountable {
+export abstract class AbstractViewField<T> extends Mountable {
 	readonly plugin: IPlugin;
 	readonly mountable: ViewFieldMountable;
-	readonly inputSignal: Signal<unknown>;
+	readonly inputSignal: Signal<T | undefined>;
 
 	private metadataSubscription?: ComputedMetadataSubscription;
 
@@ -28,7 +27,7 @@ export abstract class AbstractViewField extends Mountable {
 
 		this.mountable = mountable;
 		this.plugin = mountable.plugin;
-		this.inputSignal = new Signal<unknown>(undefined);
+		this.inputSignal = new Signal<T | undefined>(undefined);
 
 		this.variables = [];
 
@@ -37,8 +36,7 @@ export abstract class AbstractViewField extends Mountable {
 
 	protected abstract buildVariables(): void;
 
-	// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-	protected abstract computeValue(): unknown | Promise<unknown>;
+	protected abstract computeValue(): T | Promise<T>;
 
 	private async initialRender(targetEl: HTMLElement): Promise<void> {
 		DomHelpers.addClass(targetEl, 'mb-view-text');
@@ -51,20 +49,19 @@ export abstract class AbstractViewField extends Mountable {
 
 		await this.onInitialRender(targetEl);
 
-		await this.rerender(targetEl, '');
+		await this.rerender(targetEl, undefined);
 	}
 
 	protected abstract onInitialRender(container: HTMLElement): void | Promise<void>;
 
-	private async rerender(targetEl: HTMLElement, value: unknown): Promise<void> {
+	private async rerender(targetEl: HTMLElement, value: T | undefined): Promise<void> {
 		if (!this.hidden) {
-			const text = stringifyUnknown(value, this.mountable.plugin.settings.viewFieldDisplayNullAsEmpty) ?? '';
 			DomHelpers.empty(targetEl);
-			await this.onRerender(targetEl, text);
+			await this.onRerender(targetEl, value);
 		}
 	}
 
-	protected abstract onRerender(targetEl: HTMLElement, text: string): void | Promise<void>;
+	protected abstract onRerender(targetEl: HTMLElement, value: T | undefined): void | Promise<void>;
 
 	protected onMount(targetEl: HTMLElement): void {
 		this.buildVariables();

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { ButtonAction, CreateNoteButtonAction } from 'packages/core/src/config/ButtonConfig';
-	import { ButtonActionType, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+	import type { CreateNoteButtonAction } from 'packages/core/src/config/ButtonConfig';
+	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 	import type { IPlugin } from 'packages/core/src/IPlugin';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
@@ -14,11 +14,7 @@
 		action: CreateNoteButtonAction;
 	} = $props();
 
-	function createNoteActionChangeFolderPath(action: ButtonAction): void {
-		if (action.type !== ButtonActionType.CREATE_NOTE) {
-			return;
-		}
-
+	function changeFolderPath(): void {
 		plugin.internal.openFolderSelectModal((folder: string) => {
 			action.folderPath = folder;
 		});
@@ -26,7 +22,9 @@
 </script>
 
 <SettingComponent name="Folder: {action.folderPath || 'none'}" description="The folder to create a new note in.">
-	<Button variant={ButtonStyleType.PRIMARY} onclick={() => createNoteActionChangeFolderPath(action)}>Change</Button>
+	<Button variant={ButtonStyleType.PRIMARY} onclick={() => changeFolderPath()} tooltip="Select from vault"
+		>Change</Button
+	>
 </SettingComponent>
 
 <SettingComponent name="File name: {action.fileName || 'default'}" description="The file name of the new note.">
@@ -38,7 +36,7 @@
 </SettingComponent>
 
 <SettingComponent
-	name="Open if note already xxists"
+	name="Open if note already exists"
 	description="Whether to open the note instead of creating a new one if the note already exists."
 >
 	<Toggle bind:checked={action.openIfAlreadyExists}></Toggle>

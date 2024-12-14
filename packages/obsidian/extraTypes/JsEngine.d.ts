@@ -2,7 +2,8 @@
 
 declare module 'jsEngine/Settings' {
 	import type JsEnginePlugin from 'jsEngine/main';
-	import { type App, PluginSettingTab } from 'obsidian';
+	import type { App } from 'obsidian';
+	import { PluginSettingTab } from 'obsidian';
 
 	export interface JsEnginePluginSettings {}
 
@@ -26,7 +27,7 @@ declare module 'jsEngine/api/markdown/MarkdownElementType' {
 	}
 }
 declare module 'jsEngine/api/markdown/MarkdownString' {
-	import { type App, type Component } from 'obsidian';
+	import type { App, Component } from 'obsidian';
 
 	/**
 	 * A string that should be rendered as markdown by the plugin.
@@ -43,8 +44,8 @@ declare module 'jsEngine/api/markdown/MarkdownString' {
 	}
 }
 declare module 'jsEngine/api/markdown/AbstractMarkdownElement' {
-	import { type MarkdownElementType } from 'jsEngine/api/markdown/MarkdownElementType';
-	import { type MarkdownString } from 'jsEngine/api/markdown/MarkdownString';
+	import type { MarkdownElementType } from 'jsEngine/api/markdown/MarkdownElementType';
+	import type { MarkdownString } from 'jsEngine/api/markdown/MarkdownString';
 
 	/**
 	 * @internal
@@ -68,7 +69,7 @@ declare module 'jsEngine/api/markdown/AbstractMarkdownElement' {
 }
 declare module 'jsEngine/api/markdown/AbstractMarkdownLiteral' {
 	import { AbstractMarkdownElement } from 'jsEngine/api/markdown/AbstractMarkdownElement';
-	import { type MarkdownElementType } from 'jsEngine/api/markdown/MarkdownElementType';
+	import type { MarkdownElementType } from 'jsEngine/api/markdown/MarkdownElementType';
 
 	/**
 	 * @internal
@@ -80,7 +81,7 @@ declare module 'jsEngine/api/markdown/AbstractMarkdownLiteral' {
 declare module 'jsEngine/api/markdown/AbstractMarkdownElementContainer' {
 	import { AbstractMarkdownElement } from 'jsEngine/api/markdown/AbstractMarkdownElement';
 	import { AbstractMarkdownLiteral } from 'jsEngine/api/markdown/AbstractMarkdownLiteral';
-	import { type MarkdownElementType } from 'jsEngine/api/markdown/MarkdownElementType';
+	import type { MarkdownElementType } from 'jsEngine/api/markdown/MarkdownElementType';
 
 	/**
 	 * @internal
@@ -229,7 +230,7 @@ declare module 'jsEngine/api/markdown/AbstractMarkdownElementContainer' {
 	}
 }
 declare module 'jsEngine/api/markdown/MarkdownBuilder' {
-	import { type AbstractMarkdownElement } from 'jsEngine/api/markdown/AbstractMarkdownElement';
+	import type { AbstractMarkdownElement } from 'jsEngine/api/markdown/AbstractMarkdownElement';
 	import { AbstractMarkdownElementContainer } from 'jsEngine/api/markdown/AbstractMarkdownElementContainer';
 
 	/**
@@ -244,19 +245,19 @@ declare module 'jsEngine/api/markdown/MarkdownBuilder' {
 	}
 }
 declare module 'jsEngine/api/MarkdownAPI' {
-	import { type API } from 'jsEngine/api/API';
-	import {
-		type BlockQuoteElement,
-		type CalloutElement,
-		type CodeBlockElement,
-		type CodeElement,
-		type HeadingElement,
-		type ParagraphElement,
-		type TableElement,
-		type TextElement,
+	import type { API } from 'jsEngine/api/API';
+	import type {
+		BlockQuoteElement,
+		CalloutElement,
+		CodeBlockElement,
+		CodeElement,
+		HeadingElement,
+		ParagraphElement,
+		TableElement,
+		TextElement,
 	} from 'jsEngine/api/markdown/AbstractMarkdownElementContainer';
-	import { type MarkdownBuilder } from 'jsEngine/api/markdown/MarkdownBuilder';
-	import { type MarkdownString } from 'jsEngine/api/markdown/MarkdownString';
+	import type { MarkdownBuilder } from 'jsEngine/api/markdown/MarkdownBuilder';
+	import type { MarkdownString } from 'jsEngine/api/markdown/MarkdownString';
 
 	/**
 	 * The markdown API provides utilities for creating markdown using js.
@@ -383,7 +384,8 @@ declare module 'jsEngine/api/InstanceId' {
 }
 declare module 'jsEngine/messages/MessageDisplay' {
 	import type JsEnginePlugin from 'jsEngine/main';
-	import { type App, Modal } from 'obsidian';
+	import type { App } from 'obsidian';
+	import { Modal } from 'obsidian';
 
 	export class MessageDisplay extends Modal {
 		/**
@@ -400,7 +402,7 @@ declare module 'jsEngine/messages/MessageDisplay' {
 	}
 }
 declare module 'jsEngine/utils/StoreObj' {
-	import { type Subscriber, type Unsubscriber, type Writable } from 'svelte/store';
+	import type { Subscriber, Unsubscriber, Writable } from 'svelte/store';
 	export type Store<T> = Writable<T> & {
 		get(): T;
 		notify(): void;
@@ -432,11 +434,11 @@ declare module 'jsEngine/utils/Util' {
 	export function iteratorToArray<T>(iterator: Iterable<T>): T[];
 }
 declare module 'jsEngine/messages/MessageManager' {
-	import { type InstanceId } from 'jsEngine/api/InstanceId';
+	import type { InstanceId } from 'jsEngine/api/InstanceId';
 	import type JsEnginePlugin from 'jsEngine/main';
-	import { type Store } from 'jsEngine/utils/StoreObj';
+	import type { Store } from 'jsEngine/utils/StoreObj';
 	import type { Moment } from 'moment';
-	import { type App } from 'obsidian';
+	import type { App } from 'obsidian';
 
 	export enum MessageType {
 		INFO = 'info',
@@ -499,8 +501,8 @@ declare module 'jsEngine/messages/MessageManager' {
 	}
 }
 declare module 'jsEngine/api/MessageAPI' {
-	import { type API } from 'jsEngine/api/API';
-	import { type MessageManager, type MessageType, type MessageWrapper } from 'jsEngine/messages/MessageManager';
+	import type { API } from 'jsEngine/api/API';
+	import type { MessageManager, MessageType, MessageWrapper } from 'jsEngine/messages/MessageManager';
 
 	export class MessageAPI {
 		readonly apiInstance: API;
@@ -517,7 +519,7 @@ declare module 'jsEngine/api/MessageAPI' {
 }
 declare module 'jsEngine/engine/ResultRenderer' {
 	import type JsEnginePlugin from 'jsEngine/main';
-	import { type Component } from 'obsidian';
+	import type { Component } from 'obsidian';
 
 	/**
 	 * Attaches to a container and renders values.
@@ -549,9 +551,10 @@ declare module 'jsEngine/engine/ResultRenderer' {
 	}
 }
 declare module 'jsEngine/engine/ExecutionStatsModal' {
-	import { type JsExecution } from 'jsEngine/engine/JsExecution';
+	import type { JsExecution } from 'jsEngine/engine/JsExecution';
 	import type JsEnginePlugin from 'jsEngine/main';
-	import { type App, Modal } from 'obsidian';
+	import type { App } from 'obsidian';
+	import { Modal } from 'obsidian';
 
 	/**
 	 * @internal
@@ -571,9 +574,9 @@ declare module 'jsEngine/engine/ExecutionStatsModal' {
 	}
 }
 declare module 'jsEngine/engine/Engine' {
-	import { type JsExecution, type JsExecutionContext } from 'jsEngine/engine/JsExecution';
+	import type { JsExecution, JsExecutionContext } from 'jsEngine/engine/JsExecution';
 	import type JsEnginePlugin from 'jsEngine/main';
-	import { type App, type Component } from 'obsidian';
+	import type { App, Component } from 'obsidian';
 
 	/**
 	 * Parameters for the {@link Engine.execute} method.
@@ -625,12 +628,12 @@ declare module 'jsEngine/engine/Engine' {
 	}
 }
 declare module 'jsEngine/engine/JsExecution' {
-	import { type API } from 'jsEngine/api/API';
-	import { type EngineExecutionParams } from 'jsEngine/engine/Engine';
+	import type { API } from 'jsEngine/api/API';
+	import type { EngineExecutionParams } from 'jsEngine/engine/Engine';
 	import type JsEnginePlugin from 'jsEngine/main';
-	import { type MessageWrapper } from 'jsEngine/messages/MessageManager';
+	import type { MessageWrapper } from 'jsEngine/messages/MessageManager';
 	import type * as Obsidian from 'obsidian';
-	import { type App, type CachedMetadata, type Component, type TFile } from 'obsidian';
+	import type { App, CachedMetadata, Component, TFile } from 'obsidian';
 	/**
 	 * An async JavaScript function.
 	 */
@@ -740,8 +743,8 @@ declare module 'jsEngine/engine/JsExecution' {
 	}
 }
 declare module 'jsEngine/api/reactive/ReactiveComponent' {
-	import { type JsFunc } from 'jsEngine/engine/JsExecution';
-	import { type ResultRenderer } from 'jsEngine/engine/ResultRenderer';
+	import type { JsFunc } from 'jsEngine/engine/JsExecution';
+	import type { ResultRenderer } from 'jsEngine/engine/ResultRenderer';
 
 	/**
 	 * A reactive component is a component that can be refreshed.
@@ -778,13 +781,13 @@ declare module 'jsEngine/api/reactive/ReactiveComponent' {
 	}
 }
 declare module 'jsEngine/api/LibAPI' {
-	import { type Parser } from '@lemons_dev/parsinom/lib/Parser';
-	import { type ParserContext } from '@lemons_dev/parsinom/lib/ParserContext';
-	import { type createParsingErrorMessage, type ParsingError } from '@lemons_dev/parsinom/lib/ParserError';
-	import { type P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
-	import { type P } from '@lemons_dev/parsinom/lib/ParsiNOM';
+	import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
+	import type { ParserContext } from '@lemons_dev/parsinom/lib/ParserContext';
+	import type { createParsingErrorMessage, ParsingError } from '@lemons_dev/parsinom/lib/ParserError';
+	import type { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
+	import type { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 	import type * as IterTools from 'itertools-ts';
-	import { type API } from 'jsEngine/api/API';
+	import type { API } from 'jsEngine/api/API';
 
 	export interface LibParsiNOM {
 		P: typeof P;
@@ -815,11 +818,11 @@ declare module 'jsEngine/api/LibAPI' {
 	}
 }
 declare module 'jsEngine/api/Internal' {
-	import { type API } from 'jsEngine/api/API';
-	import { type EngineExecutionParams } from 'jsEngine/engine/Engine';
-	import { type JsExecution } from 'jsEngine/engine/JsExecution';
-	import { type ResultRenderer } from 'jsEngine/engine/ResultRenderer';
-	import { type Component } from 'obsidian';
+	import type { API } from 'jsEngine/api/API';
+	import type { EngineExecutionParams } from 'jsEngine/engine/Engine';
+	import type { JsExecution } from 'jsEngine/engine/JsExecution';
+	import type { ResultRenderer } from 'jsEngine/engine/ResultRenderer';
+	import type { Component } from 'obsidian';
 
 	/**
 	 * The internal API provides access to some of js engines internals.
@@ -855,15 +858,15 @@ declare module 'jsEngine/api/Internal' {
 	}
 }
 declare module 'jsEngine/api/API' {
-	import { type InstanceId } from 'jsEngine/api/InstanceId';
-	import { type InternalAPI } from 'jsEngine/api/Internal';
-	import { type LibAPI } from 'jsEngine/api/LibAPI';
-	import { type MarkdownAPI } from 'jsEngine/api/MarkdownAPI';
-	import { type MessageAPI } from 'jsEngine/api/MessageAPI';
-	import { type ReactiveComponent } from 'jsEngine/api/reactive/ReactiveComponent';
-	import { type JsFunc } from 'jsEngine/engine/JsExecution';
+	import type { InstanceId } from 'jsEngine/api/InstanceId';
+	import type { InternalAPI } from 'jsEngine/api/Internal';
+	import type { LibAPI } from 'jsEngine/api/LibAPI';
+	import type { MarkdownAPI } from 'jsEngine/api/MarkdownAPI';
+	import type { MessageAPI } from 'jsEngine/api/MessageAPI';
+	import type { ReactiveComponent } from 'jsEngine/api/reactive/ReactiveComponent';
+	import type { JsFunc } from 'jsEngine/engine/JsExecution';
 	import type JsEnginePlugin from 'jsEngine/main';
-	import { type App, type Plugin } from 'obsidian';
+	import type { App, Plugin } from 'obsidian';
 
 	export class API {
 		/**
@@ -920,7 +923,8 @@ declare module 'jsEngine/api/API' {
 }
 declare module 'jsEngine/fileRunner/JSFileSelectModal' {
 	import type JsEnginePlugin from 'jsEngine/main';
-	import { FuzzySuggestModal, type TFile } from 'obsidian';
+	import type { TFile } from 'obsidian';
+	import { FuzzySuggestModal } from 'obsidian';
 
 	export class JSFileSelectModal extends FuzzySuggestModal<TFile> {
 		plugin: JsEnginePlugin;
@@ -936,11 +940,12 @@ declare module 'jsEngine/fileRunner/JSFileSelectModal' {
 	}
 }
 declare module 'jsEngine/main' {
-	import { type JsEnginePluginSettings } from 'jsEngine/Settings';
-	import { type API } from 'jsEngine/api/API';
-	import { type Engine } from 'jsEngine/engine/Engine';
-	import { type MessageManager } from 'jsEngine/messages/MessageManager';
-	import { type App, Plugin, type PluginManifest } from 'obsidian';
+	import type { API } from 'jsEngine/api/API';
+	import type { Engine } from 'jsEngine/engine/Engine';
+	import type { MessageManager } from 'jsEngine/messages/MessageManager';
+	import type { JsEnginePluginSettings } from 'jsEngine/Settings';
+	import type { App, PluginManifest } from 'obsidian';
+	import { Plugin } from 'obsidian';
 	export default class JsEnginePlugin extends Plugin {
 		settings: JsEnginePluginSettings | undefined;
 		messageManager: MessageManager;
@@ -964,9 +969,10 @@ declare module 'jsEngine/main' {
 	}
 }
 declare module 'jsEngine/JsMDRC' {
-	import { type JsExecution, type JsExecutionContext } from 'jsEngine/engine/JsExecution';
+	import type { JsExecution, JsExecutionContext } from 'jsEngine/engine/JsExecution';
 	import type JsEnginePlugin from 'jsEngine/main';
-	import { type MarkdownPostProcessorContext, MarkdownRenderChild, type TFile } from 'obsidian';
+	import type { MarkdownPostProcessorContext, TFile } from 'obsidian';
+	import { MarkdownRenderChild } from 'obsidian';
 
 	export class JsMDRC extends MarkdownRenderChild {
 		plugin: JsEnginePlugin;

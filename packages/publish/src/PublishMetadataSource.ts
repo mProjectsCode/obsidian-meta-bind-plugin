@@ -31,7 +31,7 @@ export class PublishMetadataSource extends FilePathMetadataSource<FilePathMetada
 		};
 	}
 
-	async syncExternal(_: FilePathMetadataCacheItem): Promise<void> {
+	syncExternal(_: FilePathMetadataCacheItem): void {
 		// no-op
 	}
 }

@@ -1,4 +1,7 @@
-import { METADATA_CACHE_UPDATE_CYCLE_THRESHOLD, MetadataManager } from 'packages/core/src/metadata/MetadataManager';
+import {
+	METADATA_CACHE_EXTERNAL_WRITE_LOCK_DURATION,
+	MetadataManager,
+} from 'packages/core/src/metadata/MetadataManager';
 import type { IPlugin } from 'packages/core/src/IPlugin';
 import { DEFAULT_SETTINGS, type MetaBindPluginSettings } from 'packages/core/src/Settings';
 import {
@@ -36,7 +39,7 @@ export interface UninitializedTestInputField {
 export interface TestInputField {
 	mountable: InputFieldMountable;
 	field: InputField;
-	fieldSignalSetSpy: Mock<(value: any) => void>;
+	svelteUpdateSpy: Mock<(value: any) => void>;
 }
 
 export class TestPlugin implements IPlugin {
@@ -131,8 +134,8 @@ export class TestPlugin implements IPlugin {
 		test.mountable.mount(document.body);
 
 		const field = test.mountable.inputField as InputField;
-		const fieldSignalSetSpy = spyOn(field.computedSignal, 'set');
-		this.testInputFields[index] = { mountable: test.mountable, field, fieldSignalSetSpy };
+		const svelteUpdateSpy = spyOn(field.svelteWrapper, 'setValue');
+		this.testInputFields[index] = { mountable: test.mountable, field, svelteUpdateSpy };
 	}
 
 	getTestInputField(index: number): TestInputField {
@@ -156,7 +159,7 @@ export class TestPlugin implements IPlugin {
 	}
 
 	getAllTestInputFieldSpys(): Mock<(value: any) => void>[] {
-		return this.testInputFields.map(x => x.fieldSignalSetSpy);
+		return this.testInputFields.map(x => x.svelteUpdateSpy);
 	}
 
 	setTestInputFieldValue(index: number, value: any): void {
@@ -249,7 +252,7 @@ export class TestPlugin implements IPlugin {
 	}
 
 	public cycleMetadataManagerUntilThreshold(): void {
-		for (let i = 0; i < METADATA_CACHE_UPDATE_CYCLE_THRESHOLD; i++) {
+		for (let i = 0; i < METADATA_CACHE_EXTERNAL_WRITE_LOCK_DURATION; i++) {
 			this.cycleMetadataManager();
 		}
 	}

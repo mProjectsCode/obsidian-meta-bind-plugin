@@ -1,5 +1,6 @@
 import type { TAbstractFile } from 'obsidian';
 import { Notice, TFile, TFolder } from 'obsidian';
+import { IMAGE_FILE_EXTENSIONS } from 'packages/core/src/api/InternalAPI';
 import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import type { OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 import type { OptionQueryInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionQueryInputFieldArgument';
@@ -130,6 +131,10 @@ export function getImageSuggesterOptions(
 	}
 
 	return options;
+}
+
+function isImageExtension(extension: string): boolean {
+	return IMAGE_FILE_EXTENSIONS.contains(extension);
 }
 
 export function getImageSuggesterOptionsForInputField(

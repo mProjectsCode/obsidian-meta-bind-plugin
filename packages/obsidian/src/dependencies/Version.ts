@@ -23,7 +23,7 @@ export class Version {
 	readonly patch: number;
 	readonly prerelease?: string | undefined;
 
-	constructor(major: number, minor: number, patch: number, prerelease?: string | undefined) {
+	constructor(major: number, minor: number, patch: number, prerelease?: string) {
 		this.major = major;
 		this.minor = minor;
 		this.patch = patch;

@@ -52,6 +52,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	// @ts-expect-error TS2564
 	dependencyManager: DependencyManager;
 
+	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	async onload(): Promise<void> {
 		console.log(`meta-bind | Main >> loading`);
 		console.time('meta-bind | Main >> load-time');
@@ -257,7 +258,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	addCommands(): void {
 		this.addCommand({
 			id: 'open-docs',
-			name: 'Open Docs',
+			name: 'Open docs',
 			callback: () => {
 				window.open('https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/', '_blank');
 			},
@@ -265,7 +266,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		this.addCommand({
 			id: 'open-playground',
-			name: 'Open Playground',
+			name: 'Open playground',
 			callback: () => {
 				void this.activateView(MB_PLAYGROUND_VIEW_TYPE);
 			},
@@ -281,7 +282,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		this.addCommand({
 			id: 'open-button-builder',
-			name: 'Open Button Builder',
+			name: 'Open button builder',
 			callback: () => {
 				this.internal.openButtonBuilderModal({
 					onOkay: (config): void => {
@@ -296,7 +297,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		this.addCommand({
 			id: 'copy-command-id',
-			name: 'Select and Copy Command ID',
+			name: 'Select and copy command id',
 			callback: () => {
 				this.internal.openCommandSelectModal(command => {
 					void window.navigator.clipboard.writeText(command.id);

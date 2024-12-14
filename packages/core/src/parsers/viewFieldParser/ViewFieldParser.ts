@@ -41,11 +41,7 @@ export class ViewFieldParser {
 		};
 	}
 
-	fromStringAndValidate(
-		declarationString: string,
-		filePath: string,
-		scope?: BindTargetScope | undefined,
-	): ViewFieldDeclaration {
+	fromStringAndValidate(declarationString: string, filePath: string, scope?: BindTargetScope): ViewFieldDeclaration {
 		return this.validate(this.fromString(declarationString), filePath, scope);
 	}
 
@@ -76,7 +72,7 @@ export class ViewFieldParser {
 	fromSimpleDeclarationAndValidate(
 		simpleDeclaration: SimpleViewFieldDeclaration,
 		filePath: string,
-		scope?: BindTargetScope | undefined,
+		scope?: BindTargetScope,
 	): ViewFieldDeclaration {
 		return this.validate(this.fromSimpleDeclaration(simpleDeclaration), filePath, scope);
 	}
@@ -96,7 +92,7 @@ export class ViewFieldParser {
 	validate(
 		unvalidatedDeclaration: UnvalidatedViewFieldDeclaration,
 		filePath: string,
-		scope?: BindTargetScope | undefined,
+		scope?: BindTargetScope,
 	): ViewFieldDeclaration {
 		const validator = new ViewFieldDeclarationValidator(unvalidatedDeclaration, filePath, this.plugin);
 

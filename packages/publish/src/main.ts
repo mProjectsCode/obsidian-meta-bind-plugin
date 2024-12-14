@@ -196,5 +196,5 @@ export class MetaBindPublishPlugin implements IPlugin {
 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 const mb = new MetaBindPublishPlugin(mb_settings);
 // @ts-ignore
-// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+
 window.mb = mb;

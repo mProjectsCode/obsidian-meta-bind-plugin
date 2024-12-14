@@ -18,11 +18,21 @@ With a custom class and a CSS snippet we can change the button to be green.
 
 ```meta-bind-button
 style: primary
-label: Open Meta Bind FAQ
+label: Open Meta Bind Playground
 class: green-button
 action:
   type: command
-  command: obsidian-meta-bind-plugin:open-faq
+  command: obsidian-meta-bind-plugin:open-playground
+```
+
+Custom templater commands
+
+```meta-bind-button
+style: default
+label: "Run a templater file"
+actions:
+  - type: runTemplaterFile
+    templateFile: "templates/templater/Say Hello Command.md"
 ```
 
 And custom JS buttons as well
@@ -33,6 +43,8 @@ label: Run Custom JS
 action:
   type: js
   file: testJsFile.js
+  args: 
+    greeting: "Meta Bind User"
 ```
 
 And open internal and external links
@@ -206,6 +218,7 @@ actions:
     code: console.log("Hello world")
 
 ```
+
 
 ### Modifying Front-matter
 

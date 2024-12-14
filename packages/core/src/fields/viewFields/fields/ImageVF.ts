@@ -1,20 +1,18 @@
 import { AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractViewField';
 import type { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
+import type { ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
 import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import ImageGrid from 'packages/core/src/utils/components/ImageGrid.svelte';
-import {
-	ErrorLevel,
-	MetaBindExpressionError,
-	MetaBindValidationError,
-} from 'packages/core/src/utils/errors/MetaBindErrors';
+import { ErrorLevel, MetaBindValidationError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { getUUID } from 'packages/core/src/utils/Utils';
 import type { Component as SvelteComponent } from 'svelte';
 import { mount, unmount } from 'svelte';
 
-export class ImageVF extends AbstractViewField {
+export class ImageVF extends AbstractViewField<string> {
 	component?: ReturnType<SvelteComponent>;
+	linkVariable?: ViewFieldVariable;
 
 	constructor(mountable: ViewFieldMountable) {
 		super(mountable);
@@ -34,8 +32,8 @@ export class ImageVF extends AbstractViewField {
 			});
 		}
 
-		const firstEntry = entries[0];
-		if (typeof firstEntry === 'string') {
+		const linkEntry = entries[0];
+		if (typeof linkEntry === 'string') {
 			throw new MetaBindValidationError({
 				errorLevel: ErrorLevel.ERROR,
 				effect: 'can not create view field',
@@ -43,35 +41,26 @@ export class ImageVF extends AbstractViewField {
 			});
 		}
 
-		firstEntry.listenToChildren = true;
+		linkEntry.listenToChildren = true;
 
-		this.variables = [
-			{
-				bindTargetDeclaration: firstEntry,
-				inputSignal: new Signal<unknown>(undefined),
-				uuid: getUUID(),
-				contextName: `MB_VAR_0`,
-			},
-		];
+		this.linkVariable = {
+			bindTargetDeclaration: linkEntry,
+			inputSignal: new Signal<unknown>(undefined),
+			uuid: getUUID(),
+			contextName: `MB_VAR_0`,
+		};
+
+		this.variables.push(this.linkVariable);
 	}
 
 	protected computeValue(): string {
-		if (this.variables.length !== 1) {
-			throw new MetaBindExpressionError({
-				errorLevel: ErrorLevel.CRITICAL,
-				effect: 'failed to evaluate image view field',
-				cause: 'there should be exactly one variable',
-			});
-		}
-
-		const variable = this.variables[0];
-		const content = variable.inputSignal.get();
+		const linkContent = this.linkVariable!.inputSignal.get();
 
 		// we want the return value to be a human-readable string, since someone could save this to the frontmatter
-		if (typeof content === 'string') {
-			return MDLinkParser.toLinkString(content);
-		} else if (Array.isArray(content)) {
-			const strings = content.filter(x => typeof x === 'string');
+		if (typeof linkContent === 'string') {
+			return MDLinkParser.toLinkString(linkContent);
+		} else if (Array.isArray(linkContent)) {
+			const strings = linkContent.filter(x => typeof x === 'string');
 			return strings
 				.map(x => MDLinkParser.toLinkString(x))
 				.filter(x => x !== '')
@@ -91,15 +80,15 @@ export class ImageVF extends AbstractViewField {
 		});
 	}
 
-	protected async onRerender(container: HTMLElement, text: string): Promise<void> {
-		const linkList = MDLinkParser.parseLinkList(text);
+	protected async onRerender(container: HTMLElement, value: string | undefined): Promise<void> {
+		const linkList = value ? MDLinkParser.parseLinkList(value) : [];
 		if (this.component) {
 			unmount(this.component);
 		}
 		this.component = mount(ImageGrid, {
 			target: container,
 			props: {
-				images: linkList.map(x => x.target),
+				images: linkList.map(x => ({ link: x.target, internal: x.internal })),
 				plugin: this.mountable.plugin,
 			},
 		});

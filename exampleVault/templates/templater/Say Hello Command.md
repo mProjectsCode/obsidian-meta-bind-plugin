@@ -1,0 +1,3 @@
+<%* 
+new Notice("Hello!");
+-%>

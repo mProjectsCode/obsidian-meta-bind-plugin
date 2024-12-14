@@ -8,7 +8,13 @@ import { isUrl, openURL } from 'packages/core/src/utils/Utils';
 
 const P_MDLinkInner: Parser<[string, string | undefined, string | undefined]> = P.sequence(
 	P_FilePath, // the file path
-	P.string('#').then(P.manyNotOf('[]#|^:')).optional(), // the optional heading
+	P.or(
+		P.string('#^')
+			.then(P.manyNotOf('[]#|^:'))
+			.map(x => '^' + x), // the optional block
+		P.string('#').then(P.manyNotOf('[]#|^:')), // the optional heading
+		P.succeed(undefined),
+	),
 	P.string('|').then(P.manyNotOf('[]')).optional(), // the optional alias
 );
 
@@ -66,6 +72,18 @@ export class MarkdownLink {
 			openURL(this.target);
 		}
 	}
+
+	toString(): string {
+		const embed = this.isEmbed ? '!' : '';
+
+		if (this.internal) {
+			const alias = this.alias ? `|${this.alias}` : '';
+			return `${embed}[[${this.fullTarget()}${alias}]]`;
+		} else {
+			const alias = this.alias ?? this.fullTarget();
+			return `${embed}[${alias}](${this.fullTarget()})`;
+		}
+	}
 }
 
 export class MDLinkParser {
@@ -93,16 +111,37 @@ export class MDLinkParser {
 		}
 	}
 
-	static toLinkString(str: string): string {
-		if (MDLinkParser.isLink(str)) {
-			return str;
-		} else if (isUrl(str)) {
-			const url = new URL(str);
-			return `[${url.hostname}](${str})`;
-		} else if (MDLinkParser.isLink(`[[${str}]]`)) {
-			return `[[${str}]]`;
-		} else {
-			return '';
+	static toLinkString(str: string, alias?: string): string {
+		// case 1: it's a valid link
+		const linkParseTry = P_MDLink.thenEof().tryParse(str);
+		if (linkParseTry.success) {
+			if (alias) {
+				linkParseTry.value.alias = alias;
+			}
+
+			return linkParseTry.value.toString();
 		}
+
+		// case 2: it's a valid inner link part, so something that is a valid link without the [[]] around it
+		const linkParseTry2 = P_MDLinkInner.thenEof().tryParse(str);
+		if (linkParseTry2.success) {
+			const link = new MarkdownLink(
+				false,
+				linkParseTry2.value[0],
+				linkParseTry2.value[1],
+				alias ?? linkParseTry2.value[2],
+				false,
+			);
+			return link.toString();
+		}
+
+		// case 3: it's a url
+		if (isUrl(str)) {
+			const url = new URL(str);
+			return `[${alias ?? url.hostname}](${str})`;
+		}
+
+		// case 4: it's a valid link
+		return '';
 	}
 }

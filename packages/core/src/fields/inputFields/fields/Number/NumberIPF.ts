@@ -4,25 +4,25 @@ import NumberComponent from 'packages/core/src/fields/inputFields/fields/Number/
 import type { InputFieldSvelteComponent } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 import { parseUnknownToFloat } from 'packages/core/src/utils/Literal';
 
-export class NumberIPF extends AbstractInputField<number, number> {
-	protected filterValue(value: unknown): number | undefined {
+export class NumberIPF extends AbstractInputField<number | null, number | null> {
+	protected filterValue(value: unknown): number | null | undefined {
 		return parseUnknownToFloat(value);
 	}
 
-	protected getFallbackDefaultValue(): number {
-		return 0;
+	protected getFallbackDefaultValue(): number | null {
+		return null;
 	}
 
-	protected getSvelteComponent(): InputFieldSvelteComponent<number> {
+	protected getSvelteComponent(): InputFieldSvelteComponent<number | null> {
 		// @ts-ignore
 		return NumberComponent;
 	}
 
-	protected rawReverseMapValue(value: number): number | undefined {
+	protected rawReverseMapValue(value: number | null): number | null | undefined {
 		return value;
 	}
 
-	protected rawMapValue(value: number): number {
+	protected rawMapValue(value: number | null): number | null {
 		return value;
 	}
 

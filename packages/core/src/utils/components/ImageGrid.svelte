@@ -7,12 +7,12 @@
 		images = [],
 	}: {
 		plugin: IPlugin;
-		images: string[];
+		images: { link: string; internal: boolean }[];
 	} = $props();
 </script>
 
 <div class="mb-image-card-grid">
 	{#each images as image}
-		<ImageCard plugin={plugin} image={image}></ImageCard>
+		<ImageCard plugin={plugin} image={image.link} internal={image.internal}></ImageCard>
 	{/each}
 </div>

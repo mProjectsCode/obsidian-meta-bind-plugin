@@ -145,7 +145,7 @@ export const InputFieldConfigs: Record<InputFieldType, InputFieldConfig> = {
 	[InputFieldType.IMAGE_SUGGESTER]: {
 		type: InputFieldType.IMAGE_SUGGESTER,
 		allowInBlock: true,
-		allowInline: false,
+		allowInline: true,
 	},
 	[InputFieldType.PROGRESS_BAR]: {
 		type: InputFieldType.PROGRESS_BAR,

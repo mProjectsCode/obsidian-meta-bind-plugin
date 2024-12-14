@@ -1,6 +1,7 @@
 import type { NotePosition } from 'packages/core/src/config/APIConfigs';
 import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 import type { ButtonConfig, ButtonContext } from 'packages/core/src/config/ButtonConfig';
+import { ButtonClickType } from 'packages/core/src/config/ButtonConfig';
 import type { IPlugin } from 'packages/core/src/IPlugin';
 import ButtonComponent from 'packages/core/src/utils/components/ButtonComponent.svelte';
 import { Mountable } from 'packages/core/src/utils/Mountable';
@@ -66,12 +67,25 @@ export class ButtonField extends Mountable {
 				icon: this.config.icon,
 				variant: this.config.style,
 				label: this.config.label,
-				tooltip: isTruthy(this.config.tooltip) ? this.config.tooltip : this.config.label,
-				onclick: async (): Promise<void> => {
+				tooltip: isTruthy(this.config.tooltip) ? this.config.tooltip : undefined,
+				cssStyle: this.config.cssStyle,
+				backgroundImage: isTruthy(this.config.backgroundImage)
+					? this.plugin.internal.imagePathToUri(this.config.backgroundImage!)
+					: undefined,
+				onclick: async (event: MouseEvent): Promise<void> => {
 					await this.plugin.api.buttonActionRunner.runButtonActions(
 						this.config,
 						this.filePath,
 						this.getContext(),
+						this.plugin.api.buttonActionRunner.mouseEventToClickContext(event, ButtonClickType.LEFT),
+					);
+				},
+				onauxclick: async (event: MouseEvent): Promise<void> => {
+					await this.plugin.api.buttonActionRunner.runButtonActions(
+						this.config,
+						this.filePath,
+						this.getContext(),
+						this.plugin.api.buttonActionRunner.mouseEventToClickContext(event, ButtonClickType.MIDDLE),
 					);
 				},
 			},

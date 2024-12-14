@@ -1,7 +1,7 @@
 <!-- Inspired by https://github.com/marcusolsson/obsidian-svelte -->
 
 <script lang="ts">
-	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+	import { ButtonClickType, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 	import type { IPlugin } from 'packages/core/src/IPlugin';
 	import Icon from 'packages/core/src/utils/components/Icon.svelte';
 
@@ -12,8 +12,11 @@
 		tooltip = '',
 		label = '',
 		icon = '',
+		cssStyle = '',
+		backgroundImage = '',
 		error = false,
 		onclick = () => {},
+		onauxclick = () => {},
 	}: {
 		plugin: IPlugin;
 		variant?: ButtonStyleType;
@@ -21,15 +24,22 @@
 		tooltip?: string;
 		label?: string;
 		icon?: string;
+		cssStyle?: string;
+		backgroundImage?: string;
 		error?: boolean;
-		onclick?: () => void | Promise<void>;
+		onclick?: (event: MouseEvent) => void | Promise<void>;
+		onauxclick?: (event: MouseEvent) => void | Promise<void>;
 	} = $props();
 
-	async function click(): Promise<void> {
+	async function click(event: MouseEvent, clickType: ButtonClickType): Promise<void> {
 		if (!disabled) {
 			disabled = true;
 			try {
-				await onclick();
+				if (clickType === ButtonClickType.LEFT) {
+					await onclick(event);
+				} else if (clickType === ButtonClickType.MIDDLE) {
+					await onauxclick(event);
+				}
 			} catch (e) {
 				console.warn('failed to run button component on click', e);
 			} finally {
@@ -46,9 +56,12 @@
 	class:mod-plain={variant === ButtonStyleType.PLAIN}
 	class:disabled={disabled}
 	class:mb-error={error}
+	style={cssStyle}
+	style:background-image={backgroundImage ? `url("${backgroundImage}")` : undefined}
 	aria-label={tooltip}
-	onclick={click}
 	disabled={disabled}
+	onclick={event => click(event, ButtonClickType.LEFT)}
+	onauxclick={event => click(event, ButtonClickType.MIDDLE)}
 >
 	{#if icon}
 		<Icon plugin={plugin} iconName={icon}></Icon>

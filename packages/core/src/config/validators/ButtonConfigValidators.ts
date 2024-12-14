@@ -3,7 +3,7 @@ import type {
 	ButtonConfig,
 	CommandButtonAction,
 	CreateNoteButtonAction,
-	InlineJsButtonAction,
+	InlineJSButtonAction,
 	InputButtonAction,
 	InsertIntoNoteButtonAction,
 	JSButtonAction,
@@ -11,6 +11,7 @@ import type {
 	RegexpReplaceInNoteButtonAction,
 	ReplaceInNoteButtonAction,
 	ReplaceSelfButtonAction,
+	RunTemplaterFileButtonAction,
 	SleepButtonAction,
 	TemplaterCreateNoteButtonAction,
 	UpdateMetadataButtonAction,
@@ -20,7 +21,7 @@ import { oneOf, schemaForType } from 'packages/core/src/utils/ZodUtils';
 import { z } from 'zod';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function numberValidator(action: string, name: string, description: string) {
+function actionFieldNumber(action: string, name: string, description: string) {
 	return z.number({
 		required_error: `The ${action} action requires a specified ${description} with the '${name}' field.`,
 		invalid_type_error: `The ${action} action requires the value of the '${name}' fields to be a number.`,
@@ -28,7 +29,7 @@ function numberValidator(action: string, name: string, description: string) {
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function stringValidator(action: string, name: string, description: string) {
+function actionFieldString(action: string, name: string, description: string) {
 	return z.string({
 		required_error: `The ${action} action requires a specified ${description} with the '${name}' field.`,
 		invalid_type_error: `The ${action} action requires the value of the '${name}' fields to be a string.`,
@@ -36,7 +37,7 @@ function stringValidator(action: string, name: string, description: string) {
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function booleanValidator(action: string, name: string, description: string) {
+function actionFieldBool(action: string, name: string, description: string) {
 	return z.boolean({
 		required_error: `The ${action} action requires a specified ${description} with the '${name}' field.`,
 		invalid_type_error: `The ${action} action requires the value of the '${name}' fields to be a boolean.`,
@@ -46,14 +47,14 @@ function booleanValidator(action: string, name: string, description: string) {
 export const V_CommandButtonAction = schemaForType<CommandButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.COMMAND),
-		command: stringValidator('command', 'command', 'command to run'),
+		command: actionFieldString('command', 'command', 'command to run'),
 	}),
 );
 
 export const V_JSButtonAction = schemaForType<JSButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.JS),
-		file: stringValidator('js', 'file', 'file path to the file to run'),
+		file: actionFieldString('js', 'file', 'file path to the file to run'),
 		args: z.record(z.unknown()).optional(),
 	}),
 );
@@ -61,22 +62,22 @@ export const V_JSButtonAction = schemaForType<JSButtonAction>()(
 export const V_OpenButtonAction = schemaForType<OpenButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.OPEN),
-		link: stringValidator('open', 'link', 'link to open'),
-		newTab: booleanValidator('open', 'newTab', '').optional(),
+		link: actionFieldString('open', 'link', 'link to open'),
+		newTab: actionFieldBool('open', 'newTab', '').optional(),
 	}),
 );
 
 export const V_InputButtonAction = schemaForType<InputButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.INPUT),
-		str: stringValidator('input', 'str', 'value to input'),
+		str: actionFieldString('input', 'str', 'value to input'),
 	}),
 );
 
 export const V_SleepButtonAction = schemaForType<SleepButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.SLEEP),
-		ms: numberValidator('sleep', 'ms', 'duration'),
+		ms: actionFieldNumber('sleep', 'ms', 'duration'),
 	}),
 );
 
@@ -84,22 +85,30 @@ export const V_SleepButtonAction = schemaForType<SleepButtonAction>()(
 export const V_TemplaterCreateNoteButtonAction = schemaForType<TemplaterCreateNoteButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.TEMPLATER_CREATE_NOTE),
-		templateFile: stringValidator('templaterCreateNote', 'templateFile', 'template file path'),
-		folderPath: stringValidator('templaterCreateNote', 'folderPath', 'folder path').optional(),
-		fileName: stringValidator('templaterCreateNote', 'fileName', 'file name').optional(),
-		openNote: booleanValidator('templaterCreateNote', 'openNote', 'value for whether to open the note').optional(),
-		openIfAlreadyExists: booleanValidator(
+		templateFile: actionFieldString('templaterCreateNote', 'templateFile', 'template file path'),
+		folderPath: actionFieldString('templaterCreateNote', 'folderPath', 'folder path').optional(),
+		fileName: actionFieldString('templaterCreateNote', 'fileName', 'file name').optional(),
+		openNote: actionFieldBool('templaterCreateNote', 'openNote', 'value for whether to open the note').optional(),
+		openIfAlreadyExists: actionFieldBool(
 			'templaterCreateNote',
 			'openIfAlreadyExists',
 			'value for whether to open the note if it already exists',
 		).optional(),
 	}),
 );
+
+export const V_RunTemplaterFileButtonAction = schemaForType<RunTemplaterFileButtonAction>()(
+	z.object({
+		type: z.literal(ButtonActionType.RUN_TEMPLATER_FILE),
+		templateFile: actionFieldString('runTemplaterFile', 'templateFile', 'template file path'),
+	}),
+);
+
 export const V_UpdateMetadataButtonAction = schemaForType<UpdateMetadataButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.UPDATE_METADATA),
-		bindTarget: stringValidator('updateMetadata', 'bindTarget', 'bind target to the metadata to update'),
-		evaluate: booleanValidator(
+		bindTarget: actionFieldString('updateMetadata', 'bindTarget', 'bind target to the metadata to update'),
+		evaluate: actionFieldBool(
 			'updateMetadata',
 			'evaluate',
 			'value for whether to evaluate the value as a JavaScript expression',
@@ -114,10 +123,10 @@ export const V_UpdateMetadataButtonAction = schemaForType<UpdateMetadataButtonAc
 export const V_CreateNoteButtonAction = schemaForType<CreateNoteButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.CREATE_NOTE),
-		folderPath: stringValidator('createNote', 'folderPath', 'folder path').optional(),
-		fileName: stringValidator('createNote', 'fileName', 'file name'),
-		openNote: booleanValidator('createNote', 'openNote', 'value for whether to open the note').optional(),
-		openIfAlreadyExists: booleanValidator(
+		folderPath: actionFieldString('createNote', 'folderPath', 'folder path').optional(),
+		fileName: actionFieldString('createNote', 'fileName', 'file name'),
+		openNote: actionFieldBool('createNote', 'openNote', 'value for whether to open the note').optional(),
+		openIfAlreadyExists: actionFieldBool(
 			'createNote',
 			'openIfAlreadyExists',
 			'value for whether to open the note if it already exists',
@@ -128,47 +137,48 @@ export const V_CreateNoteButtonAction = schemaForType<CreateNoteButtonAction>()(
 export const V_ReplaceInNoteButtonAction = schemaForType<ReplaceInNoteButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.REPLACE_IN_NOTE),
-		fromLine: numberValidator('replaceInNote', 'fromLine', 'line to replace from'),
-		toLine: numberValidator('replaceInNote', 'toLine', 'line to replace to'),
-		replacement: stringValidator('replaceInNote', 'replacement', 'replacement string'),
-		templater: booleanValidator('replaceInNote', 'templater', 'value for whether to use Templater').optional(),
+		fromLine: actionFieldNumber('replaceInNote', 'fromLine', 'line to replace from'),
+		toLine: actionFieldNumber('replaceInNote', 'toLine', 'line to replace to'),
+		replacement: actionFieldString('replaceInNote', 'replacement', 'replacement string'),
+		templater: actionFieldBool('replaceInNote', 'templater', 'value for whether to use Templater').optional(),
 	}),
 );
 
 export const V_ReplaceSelfButtonAction = schemaForType<ReplaceSelfButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.REPLACE_SELF),
-		replacement: stringValidator('replaceSelf', 'replacement', 'replacement string'),
-		templater: booleanValidator('replaceSelf', 'templater', 'value for whether to use Templater').optional(),
+		replacement: actionFieldString('replaceSelf', 'replacement', 'replacement string'),
+		templater: actionFieldBool('replaceSelf', 'templater', 'value for whether to use Templater').optional(),
 	}),
 );
 
 export const V_RegexpReplaceInNoteButtonAction = schemaForType<RegexpReplaceInNoteButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.REGEXP_REPLACE_IN_NOTE),
-		regexp: stringValidator('regexpReplaceInNote', 'regexp', 'search regular expression'),
-		regexpFlags: stringValidator(
+		regexp: actionFieldString('regexpReplaceInNote', 'regexp', 'search regular expression'),
+		regexpFlags: actionFieldString(
 			'regexpReplaceInNote',
 			'regexpFlags',
 			'regular expression flags string',
 		).optional(),
-		replacement: stringValidator('regexpReplaceInNote', 'replacement', 'replacement string'),
+		replacement: actionFieldString('regexpReplaceInNote', 'replacement', 'replacement string'),
 	}),
 );
 
 export const V_InsertIntoNoteButtonAction = schemaForType<InsertIntoNoteButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.INSERT_INTO_NOTE),
-		line: numberValidator('insertIntoNote', 'line', 'line to insert at'),
-		value: stringValidator('insertIntoNote', 'value', 'string to insert'),
-		templater: booleanValidator('insertIntoNote', 'templater', 'value for whether to use Templater').optional(),
+		line: actionFieldNumber('insertIntoNote', 'line', 'line to insert at'),
+		value: actionFieldString('insertIntoNote', 'value', 'string to insert'),
+		templater: actionFieldBool('insertIntoNote', 'templater', 'value for whether to use Templater').optional(),
 	}),
 );
 
-export const V_InlineJsButtonAction = schemaForType<InlineJsButtonAction>()(
+export const V_InlineJSButtonAction = schemaForType<InlineJSButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.INLINE_JS),
-		code: stringValidator('inlineJS', 'code', 'code string to run'),
+		code: actionFieldString('inlineJS', 'code', 'code string to run'),
+		args: z.record(z.unknown()).optional(),
 	}),
 );
 
@@ -186,7 +196,8 @@ export const V_ButtonAction = schemaForType<ButtonAction>()(
 		V_ReplaceSelfButtonAction,
 		V_RegexpReplaceInNoteButtonAction,
 		V_InsertIntoNoteButtonAction,
-		V_InlineJsButtonAction,
+		V_InlineJSButtonAction,
+		V_RunTemplaterFileButtonAction,
 	]),
 );
 

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { ButtonAction, TemplaterCreateNoteButtonAction } from 'packages/core/src/config/ButtonConfig';
-	import { ButtonActionType, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+	import type { TemplaterCreateNoteButtonAction } from 'packages/core/src/config/ButtonConfig';
+	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 	import type { IPlugin } from 'packages/core/src/IPlugin';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
@@ -14,21 +14,13 @@
 		action: TemplaterCreateNoteButtonAction;
 	} = $props();
 
-	function templaterCreateNoteActionChangeTemplateFile(action: ButtonAction): void {
-		if (action.type !== ButtonActionType.TEMPLATER_CREATE_NOTE) {
-			return;
-		}
-
+	function changeTemplateFile(action: TemplaterCreateNoteButtonAction): void {
 		plugin.internal.openFileSelectModal((file: string) => {
 			action.templateFile = file;
 		});
 	}
 
-	function templaterCreateNoteActionChangeFolderPath(action: ButtonAction): void {
-		if (action.type !== ButtonActionType.TEMPLATER_CREATE_NOTE) {
-			return;
-		}
-
+	function changeFolderPath(action: TemplaterCreateNoteButtonAction): void {
 		plugin.internal.openFolderSelectModal((folder: string) => {
 			action.folderPath = folder;
 		});
@@ -39,15 +31,15 @@
 	name="Template file: {action.templateFile || 'none'}"
 	description="The template file to create a new note of."
 >
-	<Button variant={ButtonStyleType.PRIMARY} onclick={() => templaterCreateNoteActionChangeTemplateFile(action)}
-		>Change
-	</Button>
+	<Button variant={ButtonStyleType.PRIMARY} onclick={() => changeTemplateFile(action)} tooltip="Select from vault"
+		>Change</Button
+	>
 </SettingComponent>
 
 <SettingComponent name="Folder: {action.folderPath || 'none'}" description="The folder to create a new note in.">
-	<Button variant={ButtonStyleType.PRIMARY} onclick={() => templaterCreateNoteActionChangeFolderPath(action)}
-		>Change
-	</Button>
+	<Button variant={ButtonStyleType.PRIMARY} onclick={() => changeFolderPath(action)} tooltip="Select from vault"
+		>Change</Button
+	>
 </SettingComponent>
 
 <SettingComponent name="File name: {action.fileName || 'default'}" description="The file name of the new note.">

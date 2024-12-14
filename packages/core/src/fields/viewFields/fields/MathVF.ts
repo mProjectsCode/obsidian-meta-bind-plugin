@@ -4,11 +4,11 @@ import { AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractV
 import type { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
 import type { ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
 import { ErrorLevel, MetaBindExpressionError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import { parseLiteral } from 'packages/core/src/utils/Literal';
+import { parseLiteral, stringifyUnknown } from 'packages/core/src/utils/Literal';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { DomHelpers, getUUID } from 'packages/core/src/utils/Utils';
 
-export class MathVF extends AbstractViewField {
+export class MathVF extends AbstractViewField<unknown> {
 	container?: HTMLElement;
 	expression?: EvalFunction;
 	expressionStr?: string;
@@ -79,7 +79,6 @@ export class MathVF extends AbstractViewField {
 
 		const context = this.buildMathJSContext();
 		try {
-			// eslint-disable-next-line
 			const value: unknown = this.expression.evaluate(context);
 			return typeof value === 'string' ? parseLiteral(value) : value;
 		} catch (e) {
@@ -105,7 +104,9 @@ export class MathVF extends AbstractViewField {
 
 	protected onInitialRender(_container: HTMLElement): void {}
 
-	protected onRerender(container: HTMLElement, text: string): void {
+	protected onRerender(container: HTMLElement, value: unknown): void {
+		const text = stringifyUnknown(value, this.mountable.plugin.settings.viewFieldDisplayNullAsEmpty) ?? '';
+
 		if (this.hasError) {
 			DomHelpers.addClass(container, 'mb-error');
 		} else {

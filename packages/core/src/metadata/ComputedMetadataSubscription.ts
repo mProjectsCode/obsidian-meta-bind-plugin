@@ -1,10 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 import type { IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
 import type { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
 import type { MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
 import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import type { Signal } from 'packages/core/src/utils/Signal';
+import type { Signal, Writable } from 'packages/core/src/utils/Signal';
 import { getUUID } from 'packages/core/src/utils/Utils';
 
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
@@ -17,7 +16,7 @@ export interface ComputedSubscriptionDependency {
 
 export class ComputedMetadataSubscription implements IMetadataSubscription {
 	readonly uuid: string;
-	readonly callbackSignal: Signal<unknown>;
+	readonly callbackSignal: Writable<unknown>;
 
 	readonly metadataManager: MetadataManager;
 
@@ -33,7 +32,7 @@ export class ComputedMetadataSubscription implements IMetadataSubscription {
 
 	constructor(
 		uuid: string,
-		callbackSignal: Signal<unknown>,
+		callbackSignal: Writable<unknown>,
 		metadataManager: MetadataManager,
 		bindTarget: BindTargetDeclaration | undefined,
 		dependencies: ComputedSubscriptionDependency[],
@@ -75,7 +74,7 @@ export class ComputedMetadataSubscription implements IMetadataSubscription {
 
 	private async computeValue(): Promise<void> {
 		try {
-			const values = this.dependencySubscriptions.map(x => x.callbackSignal.get());
+			const values = this.dependencies.map(x => x.callbackSignal.get());
 			const value = await this.computeFunction(values);
 			this.callbackSignal.set(value);
 			if (this.bindTarget !== undefined) {

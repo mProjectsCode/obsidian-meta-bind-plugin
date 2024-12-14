@@ -57,6 +57,21 @@ export interface TextPromptModalOptions extends ModalOptions {
 	onCancel: () => void;
 }
 
+export const IMAGE_FILE_EXTENSIONS = [
+	'apng',
+	'avif',
+	'gif',
+	'jpg',
+	'jpeg',
+	'jfif',
+	'pjpeg',
+	'pjp',
+	'png',
+	'svg',
+	'webp',
+];
+export const IMAGE_FILE_EXTENSIONS_WITH_DOTS = IMAGE_FILE_EXTENSIONS.map(ext => `.${ext}`);
+
 export abstract class InternalAPI<Plugin extends IPlugin> {
 	readonly plugin: Plugin;
 	readonly file: FileAPI<Plugin>;
@@ -218,6 +233,23 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 
 	openFileSelectModal(selectCallback: (selected: string) => void): void {
 		this.createSearchModal(new FileSelectModal(this.plugin, selectCallback)).open();
+	}
+
+	openFilteredFileSelectModal(
+		selectCallback: (selected: string) => void,
+		filterFunction: (filePath: string) => boolean,
+	): void {
+		this.createSearchModal(new FileSelectModal(this.plugin, selectCallback, filterFunction)).open();
+	}
+
+	openMarkdownFileSelectModal(selectCallback: (selected: string) => void): void {
+		this.openFilteredFileSelectModal(selectCallback, filePath => filePath.endsWith('.md'));
+	}
+
+	openImageFileSelectModal(selectCallback: (selected: string) => void): void {
+		this.openFilteredFileSelectModal(selectCallback, filePath =>
+			IMAGE_FILE_EXTENSIONS_WITH_DOTS.some(ext => filePath.endsWith(ext)),
+		);
 	}
 
 	openFolderSelectModal(selectCallback: (selected: string) => void): void {

@@ -172,7 +172,7 @@ export class InputFieldMountable extends FieldMountable {
 		MB_DEBUG && console.debug('meta-bind | InputFieldMountable >> unmount', this.declaration);
 		super.onUnmount(targetEl);
 
-		this.inputField?.destroy();
+		this.inputField?.unmount();
 
 		showUnloadedMessage(targetEl, 'input field');
 	}

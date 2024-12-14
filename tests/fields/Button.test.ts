@@ -1,18 +1,28 @@
 import { beforeEach, describe, expect, test } from 'bun:test';
-import { type ButtonAction, ButtonActionType } from 'packages/core/src/config/ButtonConfig';
+import { type ButtonAction, ButtonActionType, ButtonClickType } from 'packages/core/src/config/ButtonConfig';
 import { TestPlugin } from 'tests/__mocks__/TestPlugin';
-
-import { NotePosition } from 'packages/core/src/config/APIConfigs';
 
 let testPlugin: TestPlugin;
 const testFilePath = 'test/file.md';
+const defaultClick = {
+	type: ButtonClickType.LEFT,
+	shiftKey: false,
+	ctrlKey: false,
+	altKey: false,
+};
 
 async function simplifiedRunAction(action: ButtonAction): Promise<void> {
-	await testPlugin.api.buttonActionRunner.runAction(undefined, action, testFilePath, {
-		position: undefined,
-		isInline: false,
-		isInGroup: false,
-	});
+	await testPlugin.api.buttonActionRunner.runAction(
+		undefined,
+		action,
+		testFilePath,
+		{
+			position: undefined,
+			isInline: false,
+			isInGroup: false,
+		},
+		defaultClick,
+	);
 }
 
 const buttonActionTests: Record<ButtonActionType, () => void> = {
@@ -189,6 +199,7 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 					isInline: false,
 					isInGroup: false,
 				},
+				defaultClick,
 			);
 
 			expect(await testPlugin.internal.file.read('test/file.md')).toBe('line1\nno button\nline3\n');
@@ -213,6 +224,7 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 					isInline: false,
 					isInGroup: false,
 				},
+				defaultClick,
 			);
 
 			expect(await testPlugin.internal.file.read('test/file.md')).toBe('line1\nno button\nline3\n');
@@ -237,6 +249,16 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 				await simplifiedRunAction({
 					type: ButtonActionType.INLINE_JS,
 					code: `console.log('test')`,
+				});
+			}).not.toThrow();
+		});
+	},
+	[ButtonActionType.RUN_TEMPLATER_FILE]: () => {
+		test('does not throw', () => {
+			expect(async () => {
+				await simplifiedRunAction({
+					type: ButtonActionType.RUN_TEMPLATER_FILE,
+					templateFile: 'test',
 				});
 			}).not.toThrow();
 		});

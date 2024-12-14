@@ -7,6 +7,7 @@
 	import type { ButtonBuilderModal } from 'packages/core/src/modals/modalContents/buttonBuilder/ButtonBuilderModal';
 	import CommandActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/CommandActionSettings.svelte';
 	import CreateNoteActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/CreateNoteActionSettings.svelte';
+	import RunTemplaterFileActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/RunTemplaterFileActionSettings.svelte';
 	import InlineJsActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/InlineJsActionSettings.svelte';
 	import InputActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/InputActionSettings.svelte';
 	import InsertIntoNoteActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/InsertIntoNoteActionSettings.svelte';
@@ -25,7 +26,7 @@
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
 	import Toggle from 'packages/core/src/utils/components/Toggle.svelte';
 	import type { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
-	import { DomHelpers, expectType } from 'packages/core/src/utils/Utils';
+	import { DomHelpers } from 'packages/core/src/utils/Utils';
 	import { onDestroy } from 'svelte';
 
 	let {
@@ -74,37 +75,7 @@
 	}
 
 	function getActionLabel(actionType: ButtonActionType): string {
-		if (actionType === ButtonActionType.COMMAND) {
-			return 'Run a command';
-		} else if (actionType === ButtonActionType.OPEN) {
-			return 'Open a link';
-		} else if (actionType === ButtonActionType.JS) {
-			return 'Run a JavaScript file';
-		} else if (actionType === ButtonActionType.INPUT) {
-			return 'Insert text at cursor';
-		} else if (actionType === ButtonActionType.SLEEP) {
-			return 'Sleep for some time';
-		} else if (actionType === ButtonActionType.TEMPLATER_CREATE_NOTE) {
-			return 'Create a new note using Templater';
-		} else if (actionType === ButtonActionType.UPDATE_METADATA) {
-			return 'Update metadata';
-		} else if (actionType === ButtonActionType.CREATE_NOTE) {
-			return 'Create a new note';
-		} else if (actionType === ButtonActionType.REPLACE_IN_NOTE) {
-			return 'Replace text in note';
-		} else if (actionType === ButtonActionType.REGEXP_REPLACE_IN_NOTE) {
-			return 'Replace text in note using regexp';
-		} else if (actionType === ButtonActionType.REPLACE_SELF) {
-			return 'Replace button with text';
-		} else if (actionType === ButtonActionType.INSERT_INTO_NOTE) {
-			return 'Insert text into the note';
-		} else if (actionType === ButtonActionType.INLINE_JS) {
-			return 'Run JavaScript code';
-		}
-
-		expectType<never>(actionType);
-
-		return 'CHANGE ME';
+		return plugin.api.buttonActionRunner.getActionLabel(actionType);
 	}
 
 	function openActionContextMenu(index: number, e: MouseEvent): void {
@@ -155,6 +126,12 @@
 
 		plugin.internal.createContextMenu(menuActions).showWithEvent(e);
 	}
+
+	function changeBackgroundImage(): void {
+		plugin.internal.openImageFileSelectModal((file: string) => {
+			buttonConfig.backgroundImage = file;
+		});
+	}
 </script>
 
 <SettingComponent name="Label" description="The label shown on the button.">
@@ -178,6 +155,17 @@
 	description="A list of CSS classes to add to the button. Multiple classes should be separated by a space."
 >
 	<input type="text" bind:value={buttonConfig.class} />
+</SettingComponent>
+
+<SettingComponent name="CSS styles" description="CSS styles to directly apply to the button.">
+	<input type="text" bind:value={buttonConfig.cssStyle} />
+</SettingComponent>
+
+<SettingComponent name="Background image" description="A background image to use in the button.">
+	<span style="word-break: break-word">{buttonConfig.backgroundImage ?? 'none'}</span>
+	<Button variant={ButtonStyleType.PRIMARY} onclick={() => changeBackgroundImage()} tooltip="Select from vault"
+		>Change</Button
+	>
 </SettingComponent>
 
 <SettingComponent
@@ -248,6 +236,10 @@ Add action of type
 
 	{#if action.type === ButtonActionType.CREATE_NOTE}
 		<CreateNoteActionSettings action={action} plugin={plugin}></CreateNoteActionSettings>
+	{/if}
+
+	{#if action.type === ButtonActionType.RUN_TEMPLATER_FILE}
+		<RunTemplaterFileActionSettings action={action} plugin={plugin}></RunTemplaterFileActionSettings>
 	{/if}
 
 	{#if action.type === ButtonActionType.REPLACE_IN_NOTE}

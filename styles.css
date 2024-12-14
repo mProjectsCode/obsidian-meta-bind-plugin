@@ -99,6 +99,8 @@ div.mb-view-wrapper {
 	vertical-align: bottom;
 	/* Add a gap between text and icons. */
 	gap: var(--size-4-1);
+	background-size: cover;
+	background-position: center center;
 
 	&.mod-plain {
 		background: none;
@@ -444,6 +446,10 @@ div.mb-view-wrapper {
 	gap: var(--size-4-4);
 }
 
+.mb-image-card {
+	position: relative;
+}
+
 .mb-image-suggester-modal {
 	width: 80%;
 }
@@ -473,6 +479,18 @@ div.mb-view-wrapper {
 		text-overflow-ellipsis: true;
 		flex: 1;
 	}
+}
+
+.mb-image-card-button {
+	position: absolute;
+	opacity: 0;
+	top: var(--size-4-2);
+	right: var(--size-4-2);
+	transition: opacity 0.2s ease-in-out;
+}
+
+.mb-image-card:hover .mb-image-card-button {
+	opacity: 1;
 }
 
 .mb-image-suggest-input {
