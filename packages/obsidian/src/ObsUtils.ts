@@ -31,3 +31,8 @@ export function getTemplaterPluginAPI(plugin: MetaBindPlugin): Templater {
 	const templaterPlugin = plugin.dependencyManager.checkDependency('templater-obsidian');
 	return (templaterPlugin as TemplaterPlugin).templater;
 }
+
+export function isImageExtension(extension: string): boolean {
+	const extensions = ['apng', 'avif', 'gif', 'jpg', 'jpeg', 'jfif', 'pjpeg', 'pjp', 'png', 'svg', 'webp'];
+	return extensions.contains(extension);
+}

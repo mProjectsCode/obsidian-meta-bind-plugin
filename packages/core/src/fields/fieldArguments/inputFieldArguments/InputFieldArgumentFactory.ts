@@ -1,5 +1,6 @@
 import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import { AddLabelsInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/AddLabelsInputFieldArgument';
+import { AllowImagesInSuggesterInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/AllowImagesInSuggesterInputFieldArgument';
 import { AllowOtherInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/AllowOtherInputFieldArgument';
 import { ClassInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/ClassInputFieldArgument';
 import { DefaultValueInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/DefaultValueInputFieldArgument';
@@ -35,6 +36,7 @@ export const INPUT_FIELD_ARGUMENT_MAP = {
 	[InputFieldArgumentType.USE_LINKS]: UseLinksInputFieldArgument,
 	[InputFieldArgumentType.LIMIT]: LimitInputFieldArgument,
 	[InputFieldArgumentType.ALLOW_OTHER]: AllowOtherInputFieldArgument,
+	[InputFieldArgumentType.INCLUDE_IMAGES]: AllowImagesInSuggesterInputFieldArgument,
 	[InputFieldArgumentType.MULTI_LINE]: MultiLineInputFieldArgument,
 } as const;
 

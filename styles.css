@@ -307,6 +307,7 @@ div.mb-view-wrapper {
 .mb-suggest-input > button {
 	padding: 0;
 	height: 20px;
+	margin-left: auto;
 }
 
 .mb-suggest-text {

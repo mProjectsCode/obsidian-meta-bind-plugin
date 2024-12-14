@@ -64,6 +64,7 @@ export enum InputFieldArgumentType {
 	LIMIT = 'limit',
 	MULTI_LINE = 'multiLine',
 	ALLOW_OTHER = 'allowOther',
+	INCLUDE_IMAGES = 'includeImages',
 
 	INVALID = 'invalid',
 }
@@ -200,6 +201,15 @@ export enum UseLinksInputFieldArgumentValue {
 	TRUE = 'true',
 	PARTIAL = 'partial',
 	FALSE = 'false',
+}
+
+/**
+ * @internal
+ */
+export enum AllowImagesInSuggesterInputFieldArgumentValue {
+	FALSE = 'false',
+	TRUE = 'true',
+	ONLY = 'only',
 }
 
 /**
@@ -423,6 +433,29 @@ export const InputFieldArgumentConfigs: Record<InputFieldArgumentType, InputFiel
 				{
 					name: 'value',
 					allowed: [],
+					description: '',
+				},
+			],
+		],
+		allowMultiple: false,
+	},
+	[InputFieldArgumentType.INCLUDE_IMAGES]: {
+		type: InputFieldArgumentType.INCLUDE_IMAGES,
+		allowedFieldTypes: [
+			InputFieldType.SUGGESTER,
+			InputFieldType.LIST_SUGGESTER,
+			InputFieldType.INLINE_LIST_SUGGESTER,
+		],
+		values: [
+			[],
+			[
+				{
+					name: 'value',
+					allowed: [
+						AllowImagesInSuggesterInputFieldArgumentValue.TRUE,
+						AllowImagesInSuggesterInputFieldArgumentValue.ONLY,
+						AllowImagesInSuggesterInputFieldArgumentValue.FALSE,
+					],
 					description: '',
 				},
 			],
