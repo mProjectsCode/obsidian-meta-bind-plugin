@@ -209,7 +209,7 @@ export class TableMountable extends FieldMountable {
 
 		this.unregisterSelfFromMetadataManager();
 		if (this.tableComponent) {
-			unmount(this.tableComponent);
+			void unmount(this.tableComponent);
 		}
 
 		showUnloadedMessage(targetEl, 'table');

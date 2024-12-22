@@ -83,7 +83,7 @@ export class ImageVF extends AbstractViewField<string> {
 	protected async onRerender(container: HTMLElement, value: string | undefined): Promise<void> {
 		const linkList = value ? MDLinkParser.parseLinkList(value) : [];
 		if (this.component) {
-			unmount(this.component);
+			void unmount(this.component);
 		}
 		this.component = mount(ImageGrid, {
 			target: container,
@@ -98,7 +98,7 @@ export class ImageVF extends AbstractViewField<string> {
 		super.onUnmount();
 
 		if (this.component) {
-			unmount(this.component);
+			void unmount(this.component);
 		}
 	}
 }

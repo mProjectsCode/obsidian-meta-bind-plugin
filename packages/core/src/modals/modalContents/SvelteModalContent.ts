@@ -26,7 +26,7 @@ export class SvelteModalContent<T extends SvelteComponent> extends ModalContent 
 
 	protected onUnmount(targetEl: HTMLElement): void {
 		if (this.component) {
-			unmount(this.component);
+			void unmount(this.component);
 		}
 
 		DomHelpers.empty(targetEl);

@@ -49,7 +49,13 @@ export abstract class Mountable {
 	 */
 	public mount(targetEl: HTMLElement): void {
 		if (this.mounted || this.targetEl) {
-			throw new Error('Mountable is already mounted');
+			console.warn('Mountable is already mounted', this);
+			return;
+		}
+
+		if (targetEl === undefined) {
+			console.error('Mountable target element is undefined', this);
+			return;
 		}
 
 		this.mounted = true;
@@ -60,11 +66,11 @@ export abstract class Mountable {
 
 	/**
 	 * Unmount the mountable from the current element.
-	 * Will throw an error if the mountable is not mounted.
 	 */
 	public unmount(): void {
 		if (!this.mounted || !this.targetEl) {
-			throw new Error('Mountable is not mounted');
+			console.warn('Mountable is not mounted', this);
+			return;
 		}
 
 		this.mounted = false;

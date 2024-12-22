@@ -82,7 +82,7 @@ export class InputFieldSvelteWrapper<Value, SvelteExports = object> {
 	 */
 	public unmount(): void {
 		if (this.svelteComponentInstance) {
-			unmount(this.svelteComponentInstance);
+			void unmount(this.svelteComponentInstance);
 		}
 
 		this.mounted = false;

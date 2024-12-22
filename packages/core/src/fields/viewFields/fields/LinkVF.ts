@@ -158,7 +158,7 @@ export class LinkVF extends AbstractViewField<string> {
 		super.onUnmount();
 
 		if (this.component) {
-			unmount(this.component);
+			void unmount(this.component);
 		}
 	}
 }

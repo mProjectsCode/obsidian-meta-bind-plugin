@@ -102,7 +102,7 @@ export class ButtonField extends Mountable {
 
 	protected onUnmount(): void {
 		if (this.buttonComponent) {
-			unmount(this.buttonComponent);
+			void unmount(this.buttonComponent);
 		}
 
 		if (!this.isInline && !this.isPreview) {

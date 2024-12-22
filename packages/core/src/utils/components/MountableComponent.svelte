@@ -1,21 +1,24 @@
 <script lang="ts">
 	import type { Mountable } from 'packages/core/src/utils/Mountable';
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
 
-	const {
+	let {
 		mountable,
 	}: {
 		mountable: Mountable;
 	} = $props();
 
 	let element: HTMLElement;
+	let current: Mountable | undefined;
 
-	onMount(() => {
-		mountable.mount(element);
+	$effect(() => {
+		current?.unmount();
+		current = mountable;
+		current.mount(element);
 	});
 
 	onDestroy(() => {
-		mountable.unmount();
+		current?.unmount();
 	});
 </script>
 
