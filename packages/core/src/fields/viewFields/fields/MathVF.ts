@@ -79,10 +79,9 @@ export class MathVF extends AbstractViewField<MathVFResult> {
 
 		const context = this.buildMathJSContext();
 		try {
-			const value: unknown = this.expression.evaluate(context);
-			const parsedValue = typeof value === 'string' ? parseLiteral(value) : value;
+			const value: string = `${this.expression.evaluate(context)}`;
 			return {
-				value: parsedValue,
+				value: parseLiteral(value),
 				error: false,
 			};
 		} catch (e) {

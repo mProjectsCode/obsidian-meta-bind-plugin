@@ -122,13 +122,20 @@ export class LinkVF extends AbstractViewField<MarkdownLink | MarkdownLink[] | un
 		const alias = this.getAlias();
 
 		if (typeof linkContent === 'string') {
-			const link = MDLinkParser.parseLink(linkContent);
+			const link = MDLinkParser.interpretAsLink(linkContent);
+			if (link === undefined) {
+				return undefined;
+			}
+
 			if (alias) {
 				link.alias = alias;
 			}
 			return [link];
 		} else if (Array.isArray(linkContent)) {
-			return linkContent.filter(x => typeof x === 'string').map(x => MDLinkParser.parseLink(x));
+			return linkContent
+				.filter(x => typeof x === 'string')
+				.map(x => MDLinkParser.interpretAsLink(x))
+				.filter(x => x !== undefined);
 		} else {
 			return undefined;
 		}

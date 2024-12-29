@@ -111,37 +111,32 @@ export class MDLinkParser {
 		}
 	}
 
-	static toLinkString(str: string, alias?: string): string {
+	static interpretAsLink(str: string): MarkdownLink | undefined {
 		// case 1: it's a valid link
 		const linkParseTry = P_MDLink.thenEof().tryParse(str);
 		if (linkParseTry.success) {
-			if (alias) {
-				linkParseTry.value.alias = alias;
-			}
-
-			return linkParseTry.value.toString();
+			return linkParseTry.value;
 		}
 
 		// case 2: it's a valid inner link part, so something that is a valid link without the [[]] around it
 		const linkParseTry2 = P_MDLinkInner.thenEof().tryParse(str);
 		if (linkParseTry2.success) {
-			const link = new MarkdownLink(
+			return new MarkdownLink(
 				false,
 				linkParseTry2.value[0],
 				linkParseTry2.value[1],
-				alias ?? linkParseTry2.value[2],
-				false,
+				linkParseTry2.value[2],
+				true,
 			);
-			return link.toString();
 		}
 
 		// case 3: it's a url
 		if (isUrl(str)) {
 			const url = new URL(str);
-			return `[${alias ?? url.hostname}](${str})`;
+			return MarkdownLink.fromUrl(url);
 		}
 
 		// case 4: it's a valid link
-		return '';
+		return undefined;
 	}
 }

@@ -13,7 +13,7 @@ inlineSelect: 1
 nested:
   object: test
 number1: 2
-number2: 18
+number2: 10
 time: 
 ---
 

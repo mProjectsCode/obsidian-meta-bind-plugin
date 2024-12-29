@@ -4,13 +4,11 @@ import type { ViewFieldVariable } from 'packages/core/src/fields/viewFields/View
 import type { IPlugin } from 'packages/core/src/IPlugin';
 import type { DerivedMetadataSubscription } from 'packages/core/src/metadata/DerivedMetadataSubscription';
 import { Mountable } from 'packages/core/src/utils/Mountable';
-import { Signal } from 'packages/core/src/utils/Signal';
 import { DomHelpers } from 'packages/core/src/utils/Utils';
 
 export abstract class AbstractViewField<T> extends Mountable {
 	readonly plugin: IPlugin;
 	readonly mountable: ViewFieldMountable;
-	readonly metadataSignal: Signal<T | undefined>;
 
 	private metadataSubscription?: DerivedMetadataSubscription;
 
@@ -24,7 +22,6 @@ export abstract class AbstractViewField<T> extends Mountable {
 
 		this.mountable = mountable;
 		this.plugin = mountable.plugin;
-		this.metadataSignal = new Signal<T | undefined>(undefined);
 
 		this.variables = [];
 
@@ -47,15 +44,12 @@ export abstract class AbstractViewField<T> extends Mountable {
 		}
 
 		await this.onInitialRender(targetEl);
-
-		await this.rerender(targetEl, undefined);
 	}
 
 	protected abstract onInitialRender(container: HTMLElement): void | Promise<void>;
 
 	private async rerender(targetEl: HTMLElement, value: T | undefined): Promise<void> {
 		if (!this.hidden) {
-			DomHelpers.empty(targetEl);
 			await this.onRerender(targetEl, value);
 		}
 	}
@@ -65,7 +59,7 @@ export abstract class AbstractViewField<T> extends Mountable {
 	protected onMount(targetEl: HTMLElement): void {
 		this.buildVariables();
 
-		this.metadataSignal.registerListener({ callback: value => void this.rerender(targetEl, value) });
+		void this.initialRender(targetEl);
 
 		this.metadataSubscription = this.mountable.plugin.metadataManager.subscribeDerived(
 			this.mountable.getUuid(),
@@ -79,12 +73,9 @@ export abstract class AbstractViewField<T> extends Mountable {
 			},
 			() => this.mountable.unmount(),
 		);
-
-		void this.initialRender(targetEl);
 	}
 
 	protected onUnmount(): void {
-		this.metadataSignal.unregisterAllListeners();
 		this.metadataSubscription?.unsubscribe();
 	}
 }

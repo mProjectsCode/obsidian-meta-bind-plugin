@@ -57,9 +57,16 @@ export class ImageVF extends AbstractViewField<MarkdownLink | MarkdownLink[] | u
 		const linkContent = this.linkVariable!.metadataSignal.get();
 
 		if (typeof linkContent === 'string') {
-			return [MDLinkParser.parseLink(linkContent)];
+			const link = MDLinkParser.interpretAsLink(linkContent);
+			if (link === undefined) {
+				return undefined;
+			}
+			return [link];
 		} else if (Array.isArray(linkContent)) {
-			return linkContent.filter(x => typeof x === 'string').map(x => MDLinkParser.parseLink(x));
+			return linkContent
+				.filter(x => typeof x === 'string')
+				.map(x => MDLinkParser.interpretAsLink(x))
+				.filter(x => x !== undefined);
 		} else {
 			return undefined;
 		}

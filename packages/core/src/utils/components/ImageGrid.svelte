@@ -11,6 +11,8 @@
 	} = $props();
 
 	export function updateImages(newImages: { link: string; internal: boolean }[]) {
+		console.warn('updating images');
+
 		images = newImages;
 	}
 </script>
@@ -18,5 +20,7 @@
 <div class="mb-image-card-grid">
 	{#each images as image}
 		<ImageCard plugin={plugin} image={image.link} internal={image.internal}></ImageCard>
+	{:else}
+		<span>No images</span>
 	{/each}
 </div>
