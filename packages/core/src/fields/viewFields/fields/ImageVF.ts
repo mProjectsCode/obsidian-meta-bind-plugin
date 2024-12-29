@@ -2,16 +2,16 @@ import { AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractV
 import type { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
 import type { ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
 import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import type { MarkdownLink } from 'packages/core/src/parsers/MarkdownLinkParser';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import ImageGrid from 'packages/core/src/utils/components/ImageGrid.svelte';
 import { ErrorLevel, MetaBindValidationError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { Signal } from 'packages/core/src/utils/Signal';
-import { getUUID } from 'packages/core/src/utils/Utils';
-import type { Component as SvelteComponent } from 'svelte';
+import { getUUID, toArray } from 'packages/core/src/utils/Utils';
 import { mount, unmount } from 'svelte';
 
-export class ImageVF extends AbstractViewField<string> {
-	component?: ReturnType<SvelteComponent>;
+export class ImageVF extends AbstractViewField<MarkdownLink | MarkdownLink[] | undefined> {
+	component?: ReturnType<typeof ImageGrid>;
 	linkVariable?: ViewFieldVariable;
 
 	constructor(mountable: ViewFieldMountable) {
@@ -45,7 +45,7 @@ export class ImageVF extends AbstractViewField<string> {
 
 		this.linkVariable = {
 			bindTargetDeclaration: linkEntry,
-			inputSignal: new Signal<unknown>(undefined),
+			metadataSignal: new Signal<unknown>(undefined),
 			uuid: getUUID(),
 			contextName: `MB_VAR_0`,
 		};
@@ -53,20 +53,25 @@ export class ImageVF extends AbstractViewField<string> {
 		this.variables.push(this.linkVariable);
 	}
 
-	protected computeValue(): string {
-		const linkContent = this.linkVariable!.inputSignal.get();
+	protected computeValue(): MarkdownLink | MarkdownLink[] | undefined {
+		const linkContent = this.linkVariable!.metadataSignal.get();
 
-		// we want the return value to be a human-readable string, since someone could save this to the frontmatter
 		if (typeof linkContent === 'string') {
-			return MDLinkParser.toLinkString(linkContent);
+			return [MDLinkParser.parseLink(linkContent)];
 		} else if (Array.isArray(linkContent)) {
-			const strings = linkContent.filter(x => typeof x === 'string');
-			return strings
-				.map(x => MDLinkParser.toLinkString(x))
-				.filter(x => x !== '')
-				.join(', ');
+			return linkContent.filter(x => typeof x === 'string').map(x => MDLinkParser.parseLink(x));
 		} else {
+			return undefined;
+		}
+	}
+
+	protected mapValue(value: MarkdownLink | MarkdownLink[] | undefined): unknown {
+		if (value === undefined) {
 			return '';
+		} else if (Array.isArray(value)) {
+			return value.map(x => x.toString());
+		} else {
+			return value.toString();
 		}
 	}
 
@@ -80,18 +85,9 @@ export class ImageVF extends AbstractViewField<string> {
 		});
 	}
 
-	protected async onRerender(container: HTMLElement, value: string | undefined): Promise<void> {
-		const linkList = value ? MDLinkParser.parseLinkList(value) : [];
-		if (this.component) {
-			void unmount(this.component);
-		}
-		this.component = mount(ImageGrid, {
-			target: container,
-			props: {
-				images: linkList.map(x => ({ link: x.target, internal: x.internal })),
-				plugin: this.mountable.plugin,
-			},
-		});
+	protected async onRerender(_: HTMLElement, value: MarkdownLink | MarkdownLink[] | undefined): Promise<void> {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+		this.component?.updateImages(toArray(value).map(x => ({ link: x.target, internal: x.internal })));
 	}
 
 	protected onUnmount(): void {

@@ -5,6 +5,10 @@ export class FolderSelectModal extends SelectModalContent<string> {
 		return item;
 	}
 
+	public getItemDescription(_: string): string | undefined {
+		return undefined;
+	}
+
 	public getItems(): string[] {
 		return this.plugin.internal.file.getAllFolders();
 	}

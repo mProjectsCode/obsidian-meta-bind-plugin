@@ -21,7 +21,9 @@ export function getSuggesterOptions(
 	const options: SuggesterOption<MBLiteral>[] = [];
 
 	for (const suggestOptionsArgument of optionArgs) {
-		options.push(new SuggesterOption<MBLiteral>(suggestOptionsArgument.value, suggestOptionsArgument.name));
+		options.push(
+			new SuggesterOption<MBLiteral>(suggestOptionsArgument.value, suggestOptionsArgument.name, `option`),
+		);
 	}
 
 	if (optionQueryArgs.length > 0) {
@@ -54,7 +56,7 @@ export function getSuggesterOptions(
 					}
 
 					const link = applyUseLinksArgument(dvFile.path, dvFile.name, useLinks);
-					options.push(new SuggesterOption<MBLiteral>(link, `file: ${dvFile.name}`));
+					options.push(new SuggesterOption<MBLiteral>(link, dvFile.name, `file: ${dvFile.path}`));
 				} catch (e) {
 					console.warn('meta-bind | error while computing suggest options', e);
 				}

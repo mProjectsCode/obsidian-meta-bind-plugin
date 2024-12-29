@@ -347,3 +347,10 @@ export function ensureFileExtension(filePath: string, extension: string): string
 
 	return filePath + extension;
 }
+
+export function toArray<T>(value: T | T[] | undefined): T[] {
+	if (value === undefined) {
+		return [];
+	}
+	return Array.isArray(value) ? value : [value];
+}

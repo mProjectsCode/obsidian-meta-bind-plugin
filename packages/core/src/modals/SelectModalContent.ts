@@ -17,6 +17,13 @@ export abstract class SelectModalContent<T> {
 	abstract getItemText(item: T): string;
 
 	/**
+	 * Get the description to display for the given item.
+	 *
+	 * @param item
+	 */
+	abstract getItemDescription(item: T): string | undefined;
+
+	/**
 	 * Get the items to display in the select modal.
 	 */
 	abstract getItems(): T[];

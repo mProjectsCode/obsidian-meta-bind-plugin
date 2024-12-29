@@ -17,6 +17,10 @@ export class FileSelectModal extends SelectModalContent<string> {
 		return item;
 	}
 
+	public getItemDescription(_: string): string | undefined {
+		return undefined;
+	}
+
 	public getItems(): string[] {
 		if (this.filterFunction !== undefined) {
 			return this.plugin.internal.file.getAllFiles().filter(f => this.filterFunction!(f));

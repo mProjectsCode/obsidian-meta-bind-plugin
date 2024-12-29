@@ -118,7 +118,7 @@ export abstract class AbstractInputField<
 	}
 
 	private notifySubscription(value: MetadataValueType): void {
-		this.metadataSubscription?.update(value);
+		this.metadataSubscription?.write(value);
 	}
 
 	public getDefaultValue(): MetadataValueType {

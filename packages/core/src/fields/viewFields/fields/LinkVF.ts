@@ -2,17 +2,17 @@ import { AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractV
 import type { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
 import type { ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
 import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import type { MarkdownLink } from 'packages/core/src/parsers/MarkdownLinkParser';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import LinkListComponent from 'packages/core/src/utils/components/LinkListComponent.svelte';
 import { ErrorLevel, MetaBindValidationError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { stringifyUnknown } from 'packages/core/src/utils/Literal';
 import { Signal } from 'packages/core/src/utils/Signal';
-import { getUUID } from 'packages/core/src/utils/Utils';
-import type { Component as SvelteComponent } from 'svelte';
+import { getUUID, toArray } from 'packages/core/src/utils/Utils';
 import { mount, unmount } from 'svelte';
 
-export class LinkVF extends AbstractViewField<string> {
-	component?: ReturnType<SvelteComponent>;
+export class LinkVF extends AbstractViewField<MarkdownLink | MarkdownLink[] | undefined> {
+	component?: ReturnType<typeof LinkListComponent>;
 	linkVariable?: ViewFieldVariable;
 	aliasVariable?: ViewFieldVariable | string;
 
@@ -53,7 +53,7 @@ export class LinkVF extends AbstractViewField<string> {
 
 			this.linkVariable = {
 				bindTargetDeclaration: linkEntry,
-				inputSignal: new Signal<unknown>(undefined),
+				metadataSignal: new Signal<unknown>(undefined),
 				uuid: getUUID(),
 				contextName: `MB_VAR_0`,
 			};
@@ -72,7 +72,7 @@ export class LinkVF extends AbstractViewField<string> {
 
 			this.linkVariable = {
 				bindTargetDeclaration: linkEntry,
-				inputSignal: new Signal<unknown>(undefined),
+				metadataSignal: new Signal<unknown>(undefined),
 				uuid: getUUID(),
 				contextName: `MB_VAR_0`,
 			};
@@ -89,7 +89,7 @@ export class LinkVF extends AbstractViewField<string> {
 
 					this.aliasVariable = {
 						bindTargetDeclaration: linkTextEntry,
-						inputSignal: new Signal<unknown>(undefined),
+						metadataSignal: new Signal<unknown>(undefined),
 						uuid: getUUID(),
 						contextName: `MB_VAR_1`,
 					};
@@ -111,27 +111,36 @@ export class LinkVF extends AbstractViewField<string> {
 			return this.aliasVariable;
 		} else {
 			return stringifyUnknown(
-				this.aliasVariable.inputSignal.get(),
+				this.aliasVariable.metadataSignal.get(),
 				this.mountable.plugin.settings.viewFieldDisplayNullAsEmpty,
 			);
 		}
 	}
 
-	protected computeValue(): string {
-		const linkContent = this.linkVariable!.inputSignal.get();
+	protected computeValue(): MarkdownLink | MarkdownLink[] | undefined {
+		const linkContent = this.linkVariable!.metadataSignal.get();
 		const alias = this.getAlias();
 
-		// we want the return value to be a human-readable string, since someone could save this to the frontmatter
 		if (typeof linkContent === 'string') {
-			return MDLinkParser.toLinkString(linkContent, alias);
+			const link = MDLinkParser.parseLink(linkContent);
+			if (alias) {
+				link.alias = alias;
+			}
+			return [link];
 		} else if (Array.isArray(linkContent)) {
-			const strings = linkContent.filter(x => typeof x === 'string');
-			return strings
-				.map(x => MDLinkParser.toLinkString(x))
-				.filter(x => x !== '')
-				.join(', ');
+			return linkContent.filter(x => typeof x === 'string').map(x => MDLinkParser.parseLink(x));
 		} else {
+			return undefined;
+		}
+	}
+
+	protected mapValue(value: MarkdownLink | MarkdownLink[] | undefined): unknown {
+		if (value === undefined) {
 			return '';
+		} else if (Array.isArray(value)) {
+			return value.map(x => x.toString());
+		} else {
+			return value.toString();
 		}
 	}
 
@@ -144,14 +153,9 @@ export class LinkVF extends AbstractViewField<string> {
 		});
 	}
 
-	protected async onRerender(container: HTMLElement, value: string | undefined): Promise<void> {
-		const linkList = value ? MDLinkParser.parseLinkList(value) : [];
-		this.component = mount(LinkListComponent, {
-			target: container,
-			props: {
-				mdLinkList: linkList,
-			},
-		});
+	protected async onRerender(_: HTMLElement, value: MarkdownLink | MarkdownLink[] | undefined): Promise<void> {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+		this.component?.updateList(toArray(value));
 	}
 
 	protected onUnmount(): void {

@@ -112,7 +112,7 @@ describe('metadata manager', () => {
 	test('should not update self', () => {
 		const s1 = subscribe(manager, createBindTarget(testFilePath, ['var1']));
 
-		s1.subscription.update(5);
+		s1.subscription.write(5);
 
 		expect(s1.signal.get()).toBe(undefined);
 		expect(s1.spy).toHaveBeenCalledTimes(1);

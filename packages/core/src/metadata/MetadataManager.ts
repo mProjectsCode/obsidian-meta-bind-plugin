@@ -1,8 +1,7 @@
-import type {
-	ComputedSubscriptionDependency,
-	ComputeFunction,
-} from 'packages/core/src/metadata/ComputedMetadataSubscription';
-import { ComputedMetadataSubscription } from 'packages/core/src/metadata/ComputedMetadataSubscription';
+import type { DeriveFunction } from 'packages/core/src/metadata/DerivedMetadataSubscription';
+import { DerivedMetadataSubscription } from 'packages/core/src/metadata/DerivedMetadataSubscription';
+import type { EffectFunction } from 'packages/core/src/metadata/EffectMetadataSubscription';
+import { EffectMetadataSubscription } from 'packages/core/src/metadata/EffectMetadataSubscription';
 import type { IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
 import type { IMetadataCacheItem } from 'packages/core/src/metadata/MetadataCacheItem';
 import type { IMetadataSource, Metadata } from 'packages/core/src/metadata/MetadataSource';
@@ -15,7 +14,7 @@ import {
 } from 'packages/core/src/utils/errors/MetaBindErrors';
 import type { PropPath } from 'packages/core/src/utils/prop/PropPath';
 import { PropUtils } from 'packages/core/src/utils/prop/PropUtils';
-import type { Writable } from 'packages/core/src/utils/Signal';
+import type { Signal, Writable } from 'packages/core/src/utils/Signal';
 
 export const METADATA_CACHE_EXTERNAL_WRITE_LOCK_DURATION = 5; // {syncInterval (200)} * 5 = 1s
 export const METADATA_CACHE_INACTIVE_CYCLE_THRESHOLD = 5 * 60; // {syncInterval (200)} * 5 * 60 = 1 minute
@@ -142,34 +141,70 @@ export class MetadataManager {
 	}
 
 	/**
-	 * Subscribes a computed value to the metadata manager.
+	 * Subscribes a derived value to the metadata manager.
 	 *
 	 * @param uuid
-	 * @param callbackSignal The signal that will hold the computed value.
 	 * @param bindTarget The bind target that the computed value will be written to.
 	 * @param dependencies The dependencies of the computed value.
-	 * @param computeFunction The function that computes the value from the dependencies.
+	 * @param dependencySignals The that will be used to listen to the dependencies.
+	 * They should be used to retrieve the values of the dependencies in the derive function.
+	 * @param deriveFunction The function that computes the value from the dependencies.
 	 * @param onDelete Called when the metadata manager wants to delete the subscription.
 	 */
-	public subscribeComputed(
+	public subscribeDerived(
 		uuid: string,
-		callbackSignal: Writable<unknown>,
 		bindTarget: BindTargetDeclaration | undefined,
-		dependencies: ComputedSubscriptionDependency[],
-		computeFunction: ComputeFunction,
+		dependencies: BindTargetDeclaration[],
+		dependencySignals: Signal<unknown>[],
+		deriveFunction: DeriveFunction,
 		onDelete: () => void,
-	): ComputedMetadataSubscription {
-		const subscription: ComputedMetadataSubscription = new ComputedMetadataSubscription(
+	): DerivedMetadataSubscription {
+		const subscription = new DerivedMetadataSubscription(
 			uuid,
-			callbackSignal,
 			this,
 			bindTarget,
 			dependencies,
-			computeFunction,
+			dependencySignals,
+			deriveFunction,
 			onDelete,
 		);
 
 		this.checkForLoops(subscription);
+
+		subscription.init();
+
+		this.subscribeSubscription(subscription);
+
+		return subscription;
+	}
+
+	/**
+	 * Subscribes an effect to the metadata manager.
+	 *
+	 * THE EFFECT FUNCTION SHOULD NOT UPDATE ANY BIND TARGETS. USE `subscribeDerived` FOR THAT.
+	 *
+	 * @param uuid
+	 * @param dependencies The dependencies of the effect.
+	 * @param dependencySignals The that will be used to listen to the dependencies.
+	 * They should be used to retrieve the values of the dependencies in the derive function.
+	 * @param effectFunction The function that computes the value from the dependencies.
+	 * @param onDelete Called when the metadata manager wants to delete the subscription.
+	 */
+	public subscribeEffect(
+		uuid: string,
+		dependencies: BindTargetDeclaration[],
+		dependencySignals: Signal<unknown>[],
+		effectFunction: EffectFunction,
+		onDelete: () => void,
+	): EffectMetadataSubscription {
+		const subscription = new EffectMetadataSubscription(
+			uuid,
+			this,
+			dependencies,
+			dependencySignals,
+			effectFunction,
+			onDelete,
+		);
 
 		subscription.init();
 
@@ -215,7 +250,7 @@ export class MetadataManager {
 		const cacheItem = source.subscribe(subscription);
 		cacheItem.cyclesWithoutListeners = 0;
 
-		subscription.notify(source.readCacheItem(cacheItem, subscription.bindTarget.storageProp));
+		subscription.onUpdate(source.readCacheItem(cacheItem, subscription.bindTarget.storageProp));
 	}
 
 	/**
@@ -274,7 +309,7 @@ export class MetadataManager {
 	private getAllSubscriptionsToDependencies(subscription: IMetadataSubscription): IMetadataSubscription[] {
 		return subscription
 			.getDependencies()
-			.map(x => this.getAllSubscriptionsToBindTarget(x.bindTarget))
+			.map(x => this.getAllSubscriptionsToBindTarget(x))
 			.flat();
 	}
 
@@ -449,7 +484,7 @@ export class MetadataManager {
 				)
 			) {
 				const value = source.readCache(cacheSubscription.bindTarget);
-				cacheSubscription.notify(value);
+				cacheSubscription.onUpdate(value);
 			}
 		}
 	}
@@ -467,7 +502,7 @@ export class MetadataManager {
 			}
 
 			const value = source.readCache(subscription.bindTarget);
-			subscription.notify(value);
+			subscription.onUpdate(value);
 		}
 	}
 
@@ -527,7 +562,7 @@ export class MetadataManager {
 			const oldBoundValue = PropUtils.tryGet(oldValue, propPath);
 
 			if (newBoundValue !== oldBoundValue) {
-				subscription.notify(newBoundValue);
+				subscription.onUpdate(newBoundValue);
 			}
 		}
 	}

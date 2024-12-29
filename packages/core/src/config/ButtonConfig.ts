@@ -126,21 +126,27 @@ export interface InlineJSButtonAction {
 	args?: Record<string, unknown>;
 }
 
-export type ButtonAction =
-	| CommandButtonAction
-	| JSButtonAction
-	| OpenButtonAction
-	| InputButtonAction
-	| SleepButtonAction
-	| TemplaterCreateNoteButtonAction
-	| UpdateMetadataButtonAction
-	| CreateNoteButtonAction
-	| ReplaceInNoteButtonAction
-	| ReplaceSelfButtonAction
-	| RegexpReplaceInNoteButtonAction
-	| InsertIntoNoteButtonAction
-	| InlineJSButtonAction
-	| RunTemplaterFileButtonAction;
+/**
+ * Maps action types to their respective action interfaces.
+ */
+export interface ButtonActionMap {
+	[ButtonActionType.COMMAND]: CommandButtonAction;
+	[ButtonActionType.JS]: JSButtonAction;
+	[ButtonActionType.OPEN]: OpenButtonAction;
+	[ButtonActionType.INPUT]: InputButtonAction;
+	[ButtonActionType.SLEEP]: SleepButtonAction;
+	[ButtonActionType.TEMPLATER_CREATE_NOTE]: TemplaterCreateNoteButtonAction;
+	[ButtonActionType.UPDATE_METADATA]: UpdateMetadataButtonAction;
+	[ButtonActionType.CREATE_NOTE]: CreateNoteButtonAction;
+	[ButtonActionType.REPLACE_IN_NOTE]: ReplaceInNoteButtonAction;
+	[ButtonActionType.REPLACE_SELF]: ReplaceSelfButtonAction;
+	[ButtonActionType.REGEXP_REPLACE_IN_NOTE]: RegexpReplaceInNoteButtonAction;
+	[ButtonActionType.INSERT_INTO_NOTE]: InsertIntoNoteButtonAction;
+	[ButtonActionType.INLINE_JS]: InlineJSButtonAction;
+	[ButtonActionType.RUN_TEMPLATER_FILE]: RunTemplaterFileButtonAction;
+}
+
+export type ButtonAction = ButtonActionMap[ButtonActionType];
 
 export interface ButtonConfig {
 	/**
@@ -217,24 +223,4 @@ export enum ButtonClickType {
 	 * The user used the middle mouse button (also known as scroll wheel click) to click the button
 	 */
 	MIDDLE = 'middle',
-}
-
-/**
- * Maps action types to their respective action interfaces.
- */
-export interface ButtonActionMap {
-	[ButtonActionType.COMMAND]: CommandButtonAction;
-	[ButtonActionType.JS]: JSButtonAction;
-	[ButtonActionType.OPEN]: OpenButtonAction;
-	[ButtonActionType.INPUT]: InputButtonAction;
-	[ButtonActionType.SLEEP]: SleepButtonAction;
-	[ButtonActionType.TEMPLATER_CREATE_NOTE]: TemplaterCreateNoteButtonAction;
-	[ButtonActionType.UPDATE_METADATA]: UpdateMetadataButtonAction;
-	[ButtonActionType.CREATE_NOTE]: CreateNoteButtonAction;
-	[ButtonActionType.REPLACE_IN_NOTE]: ReplaceInNoteButtonAction;
-	[ButtonActionType.REPLACE_SELF]: ReplaceSelfButtonAction;
-	[ButtonActionType.REGEXP_REPLACE_IN_NOTE]: RegexpReplaceInNoteButtonAction;
-	[ButtonActionType.INSERT_INTO_NOTE]: InsertIntoNoteButtonAction;
-	[ButtonActionType.INLINE_JS]: InlineJSButtonAction;
-	[ButtonActionType.RUN_TEMPLATER_FILE]: RunTemplaterFileButtonAction;
 }

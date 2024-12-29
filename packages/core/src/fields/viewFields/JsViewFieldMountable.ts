@@ -1,10 +1,7 @@
 import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import type { ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
 import type { IPlugin } from 'packages/core/src/IPlugin';
-import type {
-	ComputedMetadataSubscription,
-	ComputedSubscriptionDependency,
-} from 'packages/core/src/metadata/ComputedMetadataSubscription';
+import type { DerivedMetadataSubscription } from 'packages/core/src/metadata/DerivedMetadataSubscription';
 import type { JsViewFieldDeclaration } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { ErrorLevel, MetaBindJsError } from 'packages/core/src/utils/errors/MetaBindErrors';
@@ -19,7 +16,7 @@ export class JsViewFieldMountable extends FieldMountable {
 	declaration: JsViewFieldDeclaration;
 
 	variables: ViewFieldVariable[];
-	metadataSubscription: ComputedMetadataSubscription | undefined;
+	metadataSubscription: DerivedMetadataSubscription | undefined;
 	jsRenderer: IJsRenderer | undefined;
 
 	constructor(plugin: IPlugin, uuid: string, filePath: string, declaration: JsViewFieldDeclaration) {
@@ -43,7 +40,7 @@ export class JsViewFieldMountable extends FieldMountable {
 				for (const bindTargetMapping of this.declaration.bindTargetMappings ?? []) {
 					this.variables.push({
 						bindTargetDeclaration: bindTargetMapping.bindTarget,
-						inputSignal: new Signal<unknown>(undefined),
+						metadataSignal: new Signal<unknown>(undefined),
 						uuid: getUUID(),
 						contextName: bindTargetMapping.name,
 					});
@@ -57,11 +54,11 @@ export class JsViewFieldMountable extends FieldMountable {
 	private buildContext(): Record<string, unknown> {
 		const context: Record<string, unknown> = {};
 		for (const variable of this.variables ?? []) {
-			if (!variable.contextName || !variable.inputSignal) {
+			if (!variable.contextName || !variable.metadataSignal) {
 				continue;
 			}
 
-			context[variable.contextName] = variable.inputSignal.get() ?? '';
+			context[variable.contextName] = variable.metadataSignal.get() ?? '';
 		}
 
 		return context;
@@ -74,18 +71,11 @@ export class JsViewFieldMountable extends FieldMountable {
 	}
 
 	private registerSelfToMetadataManager(): void {
-		const updateSignal = new Signal<unknown>(undefined);
-
-		this.metadataSubscription = this.plugin.metadataManager.subscribeComputed(
+		this.metadataSubscription = this.plugin.metadataManager.subscribeDerived(
 			this.getUuid(),
-			updateSignal,
 			this.declaration.writeToBindTarget,
-			this.variables.map((x): ComputedSubscriptionDependency => {
-				return {
-					bindTarget: x.bindTargetDeclaration,
-					callbackSignal: x.inputSignal,
-				};
-			}),
+			this.variables.map(x => x.bindTargetDeclaration),
+			this.variables.map(x => x.metadataSignal),
 			async () => await this.evaluate(),
 			() => this.unmount(),
 		);

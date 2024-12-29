@@ -8,11 +8,15 @@ import { parseLiteral, stringifyUnknown } from 'packages/core/src/utils/Literal'
 import { Signal } from 'packages/core/src/utils/Signal';
 import { DomHelpers, getUUID } from 'packages/core/src/utils/Utils';
 
-export class MathVF extends AbstractViewField<unknown> {
+interface MathVFResult {
+	value: unknown;
+	error: boolean;
+}
+
+export class MathVF extends AbstractViewField<MathVFResult> {
 	container?: HTMLElement;
 	expression?: EvalFunction;
 	expressionStr?: string;
-	hasError: boolean;
 
 	hidden: boolean;
 
@@ -20,8 +24,6 @@ export class MathVF extends AbstractViewField<unknown> {
 		super(mountable);
 
 		this.hidden = false;
-
-		this.hasError = false;
 	}
 
 	protected buildVariables(): void {
@@ -34,7 +36,7 @@ export class MathVF extends AbstractViewField<unknown> {
 			if (typeof entry !== 'string') {
 				const variable: ViewFieldVariable = {
 					bindTargetDeclaration: entry,
-					inputSignal: new Signal<unknown>(undefined),
+					metadataSignal: new Signal<unknown>(undefined),
 					uuid: getUUID(),
 					contextName: `MB_VAR_${varCounter}`,
 				};
@@ -54,19 +56,17 @@ export class MathVF extends AbstractViewField<unknown> {
 	private buildMathJSContext(): Record<string, unknown> {
 		const context: Record<string, unknown> = {};
 		for (const variable of this.variables ?? []) {
-			if (!variable.contextName || !variable.inputSignal) {
+			if (!variable.contextName || !variable.metadataSignal) {
 				continue;
 			}
 
-			context[variable.contextName] = variable.inputSignal.get() ?? '';
+			context[variable.contextName] = variable.metadataSignal.get() ?? '';
 		}
 
 		return context;
 	}
 
-	protected computeValue(): unknown {
-		this.hasError = false;
-
+	protected computeValue(): MathVFResult {
 		if (!this.expression) {
 			return this.handleComputeError(
 				new MetaBindExpressionError({
@@ -80,7 +80,11 @@ export class MathVF extends AbstractViewField<unknown> {
 		const context = this.buildMathJSContext();
 		try {
 			const value: unknown = this.expression.evaluate(context);
-			return typeof value === 'string' ? parseLiteral(value) : value;
+			const parsedValue = typeof value === 'string' ? parseLiteral(value) : value;
+			return {
+				value: parsedValue,
+				error: false,
+			};
 		} catch (e) {
 			if (e instanceof Error) {
 				return this.handleComputeError(
@@ -96,18 +100,22 @@ export class MathVF extends AbstractViewField<unknown> {
 				);
 			} else {
 				return this.handleComputeError(
-					new Error('failed to evaluate js expression because of: unexpected thrown value'),
+					new Error('failed to evaluate js expression because of unexpected thrown value'),
 				);
 			}
 		}
 	}
 
+	protected mapValue(value: MathVFResult): unknown {
+		return value.value;
+	}
+
 	protected onInitialRender(_container: HTMLElement): void {}
 
-	protected onRerender(container: HTMLElement, value: unknown): void {
-		const text = stringifyUnknown(value, this.mountable.plugin.settings.viewFieldDisplayNullAsEmpty) ?? '';
+	protected onRerender(container: HTMLElement, value: MathVFResult | undefined): void {
+		const text = stringifyUnknown(value?.value, this.mountable.plugin.settings.viewFieldDisplayNullAsEmpty) ?? '';
 
-		if (this.hasError) {
+		if (value?.error) {
 			DomHelpers.addClass(container, 'mb-error');
 		} else {
 			DomHelpers.removeClass(container, 'mb-error');
@@ -115,9 +123,11 @@ export class MathVF extends AbstractViewField<unknown> {
 		container.innerText = text;
 	}
 
-	private handleComputeError(e: Error): string {
-		this.hasError = true;
+	private handleComputeError(e: Error): MathVFResult {
 		console.warn(e);
-		return e.message;
+		return {
+			error: true,
+			value: e.message,
+		};
 	}
 }

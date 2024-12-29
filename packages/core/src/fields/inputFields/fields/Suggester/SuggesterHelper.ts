@@ -11,10 +11,12 @@ export type ImageSuggesterLikeIPF = ImageSuggesterIPF | ImageListSuggesterIPF;
 export class SuggesterOption<T> {
 	value: T;
 	displayValue: string;
+	displayDescription?: string;
 
-	constructor(value: T, displayValue: string) {
+	constructor(value: T, displayValue: string, displayDescription?: string) {
 		this.value = value;
 		this.displayValue = displayValue;
+		this.displayDescription = displayDescription;
 	}
 
 	valueAsString(): string {

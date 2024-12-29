@@ -872,6 +872,10 @@ div.setting-item > div.setting-item-control.mb-vertical-control {
 	width: 100%;
 }
 
+.mb-search-modal-element-description {
+	color: var(--text-faint);
+}
+
 /* --- HIGHLIGHTING CLASSES --- */
 .mb-highlight-test {
 	color: #00bfbc;

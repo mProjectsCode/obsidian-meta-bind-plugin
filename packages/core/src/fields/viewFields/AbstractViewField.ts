@@ -2,10 +2,7 @@ import { ViewFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import type { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
 import type { ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
 import type { IPlugin } from 'packages/core/src/IPlugin';
-import type {
-	ComputedMetadataSubscription,
-	ComputedSubscriptionDependency,
-} from 'packages/core/src/metadata/ComputedMetadataSubscription';
+import type { DerivedMetadataSubscription } from 'packages/core/src/metadata/DerivedMetadataSubscription';
 import { Mountable } from 'packages/core/src/utils/Mountable';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { DomHelpers } from 'packages/core/src/utils/Utils';
@@ -13,9 +10,9 @@ import { DomHelpers } from 'packages/core/src/utils/Utils';
 export abstract class AbstractViewField<T> extends Mountable {
 	readonly plugin: IPlugin;
 	readonly mountable: ViewFieldMountable;
-	readonly inputSignal: Signal<T | undefined>;
+	readonly metadataSignal: Signal<T | undefined>;
 
-	private metadataSubscription?: ComputedMetadataSubscription;
+	private metadataSubscription?: DerivedMetadataSubscription;
 
 	variables: ViewFieldVariable[];
 
@@ -27,7 +24,7 @@ export abstract class AbstractViewField<T> extends Mountable {
 
 		this.mountable = mountable;
 		this.plugin = mountable.plugin;
-		this.inputSignal = new Signal<T | undefined>(undefined);
+		this.metadataSignal = new Signal<T | undefined>(undefined);
 
 		this.variables = [];
 
@@ -37,6 +34,8 @@ export abstract class AbstractViewField<T> extends Mountable {
 	protected abstract buildVariables(): void;
 
 	protected abstract computeValue(): T | Promise<T>;
+
+	protected abstract mapValue(value: T): unknown;
 
 	private async initialRender(targetEl: HTMLElement): Promise<void> {
 		DomHelpers.addClass(targetEl, 'mb-view-text');
@@ -66,19 +65,18 @@ export abstract class AbstractViewField<T> extends Mountable {
 	protected onMount(targetEl: HTMLElement): void {
 		this.buildVariables();
 
-		this.inputSignal.registerListener({ callback: value => void this.rerender(targetEl, value) });
+		this.metadataSignal.registerListener({ callback: value => void this.rerender(targetEl, value) });
 
-		this.metadataSubscription = this.mountable.plugin.metadataManager.subscribeComputed(
+		this.metadataSubscription = this.mountable.plugin.metadataManager.subscribeDerived(
 			this.mountable.getUuid(),
-			this.inputSignal,
 			this.mountable.getDeclaration().writeToBindTarget,
-			this.variables.map((x): ComputedSubscriptionDependency => {
-				return {
-					bindTarget: x.bindTargetDeclaration,
-					callbackSignal: x.inputSignal,
-				};
-			}),
-			async () => await this.computeValue(),
+			this.variables.map(x => x.bindTargetDeclaration),
+			this.variables.map(x => x.metadataSignal),
+			async () => {
+				const value = await this.computeValue();
+				void this.rerender(targetEl, value);
+				return this.mapValue(value);
+			},
 			() => this.mountable.unmount(),
 		);
 
@@ -86,7 +84,7 @@ export abstract class AbstractViewField<T> extends Mountable {
 	}
 
 	protected onUnmount(): void {
-		this.inputSignal.unregisterAllListeners();
+		this.metadataSignal.unregisterAllListeners();
 		this.metadataSubscription?.unsubscribe();
 	}
 }

@@ -3,7 +3,7 @@ import type { Signal } from 'packages/core/src/utils/Signal';
 
 export interface ViewFieldVariable {
 	bindTargetDeclaration: BindTargetDeclaration;
-	inputSignal: Signal<unknown>;
+	metadataSignal: Signal<unknown>;
 	uuid: string;
 	contextName: string | undefined;
 }

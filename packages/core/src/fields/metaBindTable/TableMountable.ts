@@ -104,7 +104,7 @@ export class TableMountable extends FieldMountable {
 	}
 
 	updateMetadataManager(value: unknown): void {
-		this.metadataSubscription?.update(value);
+		this.metadataSubscription?.write(value);
 	}
 
 	updateDisplayValue(values: T | undefined): void {
