@@ -1,5 +1,34 @@
 # Obsidian Meta Bind Changelog
 
+# 1.3.0
+
+New Features
+
+- Added a tooltip to error indicators
+- Added modifier support for button clicks
+- Middle-clicking on buttons will open files in a new tab for any action that opens files [#436](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/436)
+- Added a button action to run a templater file without creating a new note (thanks reply2za) [#466](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/pull/466)
+- Added option to specify a background image for buttons [#429](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/429)
+- Image view fields now work with URLs [#476](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/476)
+- Added a data attribute to input fields that reflects their internal value [#475](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/475)
+
+Changes
+
+- Updated image suggester styling and allowed it as an inline input field
+- Multiple small improvements to the button builder
+
+Bug Fixes
+
+- Fixed markdown parser not handling block references in links correctly [#494](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/494)
+- Fixed `addLabels` not working for the `progressBar` input (thanks Cube707) [#473](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/pull/473)
+- Fixed the `defaultValue` argument having no effect on the `number` input field [#470](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/470)
+- Fixed the meta bind table sometimes not correctly unloading [#487](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/487)
+
+Misc
+
+- Internal improvements to input and view fields
+- Canary releases are now marked as prereleases on GitHub
+
 # 1.2.5
 
 Bug Fixes
