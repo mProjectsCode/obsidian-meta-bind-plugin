@@ -29,9 +29,8 @@ export abstract class AbstractInputField<
 			this.plugin,
 			this.getSvelteComponent(),
 			value => {
-				const mappedValue = this.mapValue(value);
-				this.updateDataAttributes(value, mappedValue);
-				this.notifySubscription(mappedValue);
+				this.updateDataAttributes(value);
+				this.notifySubscription(this.mapValue(value));
 			},
 		);
 
@@ -134,10 +133,15 @@ export abstract class AbstractInputField<
 		}
 	}
 
-	private updateDataAttributes(internalValue: ComponentValueType, metadataValue: MetadataValueType): void {
+	/**
+	 * Attaches the internal value to the mount target as a data attribute.
+	 * This way users can style the component based on the internal value.
+	 *
+	 * @param internalValue
+	 */
+	private updateDataAttributes(internalValue: ComponentValueType): void {
 		if (this.mountTarget) {
 			this.mountTarget.dataset.internalValue = JSON.stringify(internalValue);
-			this.mountTarget.dataset.metadataValue = JSON.stringify(metadataValue);
 		}
 	}
 
@@ -156,7 +160,7 @@ export abstract class AbstractInputField<
 		// listener to update data attributes on the target element
 		this.inputSignal.registerListener({
 			callback: value => {
-				this.updateDataAttributes(this.reverseMapValue(value), value);
+				this.updateDataAttributes(this.reverseMapValue(value));
 			},
 		});
 
