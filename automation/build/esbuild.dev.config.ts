@@ -34,6 +34,7 @@ const context = await esbuild.context({
 	treeShaking: true,
 	outdir: `exampleVault/.obsidian/plugins/${manifest.id}/`,
 	outbase: 'packages/obsidian/src',
+	conditions: ['browser', 'development'],
 	define: {
 		MB_DEV_BUILD: 'false',
 		MB_DEBUG: 'true',

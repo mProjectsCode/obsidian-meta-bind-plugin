@@ -54,14 +54,17 @@ export class ButtonActionRunner {
 		};
 	}
 
-	resolveFilePath(filePath: string, relativeFilePath?: string): string {
+	/**
+	 * Resolves a file name, path or link to a file path.
+	 */
+	resolveFilePath(filePath: string, relativeTo?: string): string {
 		const targetFilePath = MDLinkParser.isLink(filePath) ? MDLinkParser.parseLink(filePath).target : filePath;
-		const resolvedFilePath = this.plugin.internal.file.getPathByName(targetFilePath, relativeFilePath);
+		const resolvedFilePath = this.plugin.internal.file.getPathByName(targetFilePath, relativeTo);
 		if (resolvedFilePath === undefined) {
 			throw new MetaBindParsingError({
 				errorLevel: ErrorLevel.ERROR,
 				cause: `Could not find a file that matches "${filePath}".`,
-				effect: `Could not resolve path or link "${filePath}" relative to "${relativeFilePath}".`,
+				effect: `Could not resolve path or link "${filePath}" relative to "${relativeTo}".`,
 			});
 		}
 

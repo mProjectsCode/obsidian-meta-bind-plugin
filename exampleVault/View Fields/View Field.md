@@ -12,8 +12,8 @@ object:
   key: value
 file: Example Note with Embeds
 image: Other/Images/subfolder/img_frozen_branch.jpg
-someInputValue: 2
-someComputedValue: 4
+someInputValue: 1
+someComputedValue: 2
 images:
   - Other/Images/img_flower.webp
   - Other/Images/img_butterfly.webp
