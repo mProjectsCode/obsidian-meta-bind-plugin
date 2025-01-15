@@ -1,5 +1,12 @@
 # Obsidian Meta Bind Changelog
 
+# 1.3.1
+
+Bug Fixes
+
+- Fixed the new `backgroundImage` and `cssStyles` button options not working
+- Fixed the `open` action not being able to open plain file paths
+
 # 1.3.0
 
 New Features
@@ -8,7 +15,8 @@ New Features
 - Added modifier support for button clicks
 - Middle-clicking on buttons will open files in a new tab for any action that opens files [#436](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/436)
 - Added a button action to run a templater file without creating a new note (thanks reply2za) [#466](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/pull/466)
-- Added option to specify a background image for buttons [#429](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/429)
+- Added an option named `backgroundImage` to specify a background image for buttons [#429](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/429)
+- Added an option named `cssStyles` to specify inline CSS styles for a button
 - Image view fields now work with URLs [#476](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/476)
 - Added a data attribute to input fields that reflects their internal value [#475](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/475)
 
