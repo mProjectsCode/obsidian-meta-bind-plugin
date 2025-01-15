@@ -210,6 +210,8 @@ export const V_ButtonConfig = schemaForType<ButtonConfig>()(
 			icon: z.string().optional(),
 			style: V_ButtonStyleType,
 			class: z.string().optional(),
+			cssStyle: z.string().optional(),
+			backgroundImage: z.string().optional(),
 			tooltip: z.string().optional(),
 			id: z.string().optional(),
 			hidden: z.boolean().optional(),

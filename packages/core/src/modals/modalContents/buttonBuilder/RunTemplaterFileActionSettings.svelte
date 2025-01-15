@@ -7,7 +7,7 @@
 
 	const {
 		plugin,
-		action,
+		action = $bindable(),
 	}: {
 		plugin: IPlugin;
 		action: RunTemplaterFileButtonAction;

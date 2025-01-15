@@ -5,7 +5,7 @@
 
 	const {
 		plugin,
-		action,
+		action = $bindable(),
 	}: {
 		plugin: IPlugin;
 		action: ReplaceSelfButtonAction;

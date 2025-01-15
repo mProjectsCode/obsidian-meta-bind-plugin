@@ -57,6 +57,8 @@ div.mb-view-wrapper {
 .mb-button {
 	background-color: transparent !important;
 	border: none !important;
+	font-family: var(--font-text);
+	color: var(--text-normal);
 }
 
 .mb-button-inline {
@@ -64,11 +66,13 @@ div.mb-view-wrapper {
 }
 
 .mb-button-block {
+	display: block !important;
 }
 
-.mb-button-group {
+.mb-button-group.mb-button-group {
 	background-color: transparent !important;
 	border: none !important;
+	padding-inline: 0;
 
 	& > .mb-button {
 		&:first-child:not(:last-child) {

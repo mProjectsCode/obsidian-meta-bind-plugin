@@ -1,6 +1,22 @@
 <script lang="ts">
 	import { RenderChildType } from 'packages/core/src/config/APIConfigs';
-	import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
+	import type {
+		ButtonConfig,
+		CommandButtonAction,
+		CreateNoteButtonAction,
+		InlineJSButtonAction,
+		InputButtonAction,
+		InsertIntoNoteButtonAction,
+		JSButtonAction,
+		OpenButtonAction,
+		RegexpReplaceInNoteButtonAction,
+		ReplaceInNoteButtonAction,
+		ReplaceSelfButtonAction,
+		RunTemplaterFileButtonAction,
+		SleepButtonAction,
+		TemplaterCreateNoteButtonAction,
+		UpdateMetadataButtonAction,
+	} from 'packages/core/src/config/ButtonConfig';
 	import { ButtonActionType, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 	import { ButtonField } from 'packages/core/src/fields/button/ButtonField';
 	import type { IPlugin } from 'packages/core/src/IPlugin';
@@ -196,72 +212,99 @@ Add action of type
 </select>
 
 <Button variant={ButtonStyleType.PRIMARY} onclick={() => addAction()}>Add Action</Button>
+{#if buttonConfig.actions}
+	{#each buttonConfig.actions ?? [] as action, i (i)}
+		<FlexRow>
+			<h5>{getActionLabel(action.type)}</h5>
+			<!-- eslint-disable-next-line @typescript-eslint/no-unsafe-argument -->
+			<Button variant={ButtonStyleType.PLAIN} onclick={e => openActionContextMenu(i, e)}>
+				<Icon iconName="more-vertical" plugin={plugin}></Icon>
+			</Button>
+		</FlexRow>
 
-{#each buttonConfig.actions ?? [] as action, i (i)}
-	<FlexRow>
-		<h5>{getActionLabel(action.type)}</h5>
-		<!-- eslint-disable-next-line @typescript-eslint/no-unsafe-argument -->
-		<Button variant={ButtonStyleType.PLAIN} onclick={e => openActionContextMenu(i, e)}>
-			<Icon iconName="more-vertical" plugin={plugin}></Icon>
-		</Button>
-	</FlexRow>
+		{#if action.type === ButtonActionType.COMMAND}
+			<CommandActionSettings bind:action={buttonConfig.actions[i] as CommandButtonAction} plugin={plugin}
+			></CommandActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.COMMAND}
-		<CommandActionSettings action={action} plugin={plugin}></CommandActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.OPEN}
+			<OpenActionSettings bind:action={buttonConfig.actions[i] as OpenButtonAction} plugin={plugin}
+			></OpenActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.OPEN}
-		<OpenActionSettings action={action} plugin={plugin}></OpenActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.JS}
+			<JSActionSettings bind:action={buttonConfig.actions[i] as JSButtonAction} plugin={plugin}
+			></JSActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.JS}
-		<JSActionSettings action={action} plugin={plugin}></JSActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.INPUT}
+			<InputActionSettings bind:action={buttonConfig.actions[i] as InputButtonAction} plugin={plugin}
+			></InputActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.INPUT}
-		<InputActionSettings action={action} plugin={plugin}></InputActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.SLEEP}
+			<SleepActionSettings bind:action={buttonConfig.actions[i] as SleepButtonAction} plugin={plugin}
+			></SleepActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.SLEEP}
-		<SleepActionSettings action={action} plugin={plugin}></SleepActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.TEMPLATER_CREATE_NOTE}
+			<TemplaterCreateNoteActionSettings
+				bind:action={buttonConfig.actions[i] as TemplaterCreateNoteButtonAction}
+				plugin={plugin}
+			></TemplaterCreateNoteActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.TEMPLATER_CREATE_NOTE}
-		<TemplaterCreateNoteActionSettings action={action} plugin={plugin}></TemplaterCreateNoteActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.UPDATE_METADATA}
+			<UpdateMetadataActionSettings
+				bind:action={buttonConfig.actions[i] as UpdateMetadataButtonAction}
+				plugin={plugin}
+			></UpdateMetadataActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.UPDATE_METADATA}
-		<UpdateMetadataActionSettings action={action} plugin={plugin}></UpdateMetadataActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.CREATE_NOTE}
+			<CreateNoteActionSettings bind:action={buttonConfig.actions[i] as CreateNoteButtonAction} plugin={plugin}
+			></CreateNoteActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.CREATE_NOTE}
-		<CreateNoteActionSettings action={action} plugin={plugin}></CreateNoteActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.RUN_TEMPLATER_FILE}
+			<RunTemplaterFileActionSettings
+				bind:action={buttonConfig.actions[i] as RunTemplaterFileButtonAction}
+				plugin={plugin}
+			></RunTemplaterFileActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.RUN_TEMPLATER_FILE}
-		<RunTemplaterFileActionSettings action={action} plugin={plugin}></RunTemplaterFileActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.REPLACE_IN_NOTE}
+			<ReplaceInNoteActionSettings
+				bind:action={buttonConfig.actions[i] as ReplaceInNoteButtonAction}
+				plugin={plugin}
+			></ReplaceInNoteActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.REPLACE_IN_NOTE}
-		<ReplaceInNoteActionSettings action={action} plugin={plugin}></ReplaceInNoteActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.REGEXP_REPLACE_IN_NOTE}
+			<RegexpReplaceInNoteActionSettings
+				bind:action={buttonConfig.actions[i] as RegexpReplaceInNoteButtonAction}
+				plugin={plugin}
+			></RegexpReplaceInNoteActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.REGEXP_REPLACE_IN_NOTE}
-		<RegexpReplaceInNoteActionSettings action={action} plugin={plugin}></RegexpReplaceInNoteActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.REPLACE_SELF}
+			<ReplaceSelfActionSettings bind:action={buttonConfig.actions[i] as ReplaceSelfButtonAction} plugin={plugin}
+			></ReplaceSelfActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.REPLACE_SELF}
-		<ReplaceSelfActionSettings action={action} plugin={plugin}></ReplaceSelfActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.INSERT_INTO_NOTE}
+			<InsertIntoNoteActionSettings
+				bind:action={buttonConfig.actions[i] as InsertIntoNoteButtonAction}
+				plugin={plugin}
+			></InsertIntoNoteActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.INSERT_INTO_NOTE}
-		<InsertIntoNoteActionSettings action={action} plugin={plugin}></InsertIntoNoteActionSettings>
-	{/if}
-
-	{#if action.type === ButtonActionType.INLINE_JS}
-		<InlineJsActionSettings action={action} plugin={plugin}></InlineJsActionSettings>
-	{/if}
-{/each}
+		{#if action.type === ButtonActionType.INLINE_JS}
+			<InlineJsActionSettings bind:action={buttonConfig.actions[i] as InlineJSButtonAction} plugin={plugin}
+			></InlineJsActionSettings>
+		{/if}
+	{/each}
+{/if}
 
 <h4>Preview</h4>
 

@@ -6,7 +6,7 @@
 
 	const {
 		plugin,
-		action,
+		action = $bindable(),
 	}: {
 		plugin: IPlugin;
 		action: UpdateMetadataButtonAction;

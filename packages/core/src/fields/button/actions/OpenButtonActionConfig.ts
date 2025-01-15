@@ -22,7 +22,11 @@ export class OpenButtonActionConfig extends AbstractButtonActionConfig<OpenButto
 		click: ButtonClickContext,
 	): Promise<void> {
 		const newTab = click.type === ButtonClickType.MIDDLE || click.ctrlKey || (action.newTab ?? false);
-		MDLinkParser.parseLinkOrUrl(action.link).open(this.plugin, filePath, newTab);
+		const link = MDLinkParser.interpretAsLink(action.link);
+		if (!link) {
+			throw new Error('Invalid link');
+		}
+		link.open(this.plugin, filePath, newTab);
 	}
 
 	create(): Required<OpenButtonAction> {
