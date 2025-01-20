@@ -3,7 +3,7 @@ import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { ErrorLevel, ErrorType, MetaBindError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 export function runParser<T>(parser: Parser<T>, str: string): T {
-	const result = parser.tryParse(str);
+	const result = parser.thenEof().tryParse(str);
 	if (result.success) {
 		return result.value;
 	} else {

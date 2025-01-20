@@ -12,7 +12,6 @@ import { ModalContent } from 'packages/core/src/modals/ModalContent';
 import type { IModal } from 'packages/core/src/modals/IModal';
 import { SelectModalContent } from 'packages/core/src/modals/SelectModalContent';
 import type { ContextMenuItemDefinition, IContextMenu } from 'packages/core/src/utils/IContextMenu';
-import { TestFileSystem } from 'tests/__mocks__/TestFileSystem';
 import YAML from 'yaml';
 import { z, ZodType } from 'zod';
 import type { LifecycleHook } from 'packages/core/src/api/API';

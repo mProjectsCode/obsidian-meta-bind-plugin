@@ -34,3 +34,5 @@ exampleVault/.obsidian/*
 exampleVault/.obsidian/plugins/*
 exampleVault/.obsidian/plugins/obsidian-meta-bind-plugin/*
 !exampleVault/.obsidian/plugins/obsidian-meta-bind-plugin/.hotreload
+
+coverage/

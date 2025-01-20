@@ -1,3 +1,5 @@
 [test]
 preload = ["./tests/__preload__/happydom.ts", "./tests/__preload__/svelteLoader.ts", "./tests/__preload__/obsidianMock.ts", "./tests/__preload__/customMatchers.ts"]
 root = "./tests"
+coverage = true
+coverageReporter = ["text", "lcov"]

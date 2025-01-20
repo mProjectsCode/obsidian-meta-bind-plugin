@@ -12,6 +12,7 @@ import {
 	HLP_ViewFieldDeclaration,
 } from 'packages/core/src/parsers/syntaxHighlighting/HLPs';
 import { SyntaxHighlighting } from 'packages/core/src/parsers/syntaxHighlighting/SyntaxHighlighting';
+import { expectType } from '../utils/Utils';
 
 export class SyntaxHighlightingAPI {
 	public readonly plugin: IPlugin;
@@ -40,6 +41,8 @@ export class SyntaxHighlightingAPI {
 		} else if (inlineFieldType === FieldType.BUTTON_GROUP) {
 			return this.highlightInlineButtonDeclaration(str, trimWhiteSpace);
 		}
+
+		expectType<never>(inlineFieldType);
 
 		throw new Error(`Unknown MDRCType ${inlineFieldType}`);
 	}
