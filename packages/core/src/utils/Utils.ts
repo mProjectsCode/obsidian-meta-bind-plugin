@@ -80,6 +80,7 @@ export function areObjectsEqual(obj1: unknown, obj2: unknown): boolean {
 	}
 
 	if (typeof obj1 === 'object' && typeof obj2 === 'object') {
+		// both are arrays
 		if (Array.isArray(obj1) && Array.isArray(obj2)) {
 			if (obj1.length !== obj2.length) {
 				return false;
@@ -92,6 +93,11 @@ export function areObjectsEqual(obj1: unknown, obj2: unknown): boolean {
 			}
 
 			return true;
+		}
+
+		// one is array and the other is not
+		if (Array.isArray(obj1) || Array.isArray(obj2)) {
+			return false;
 		}
 
 		const keys1 = Object.keys(obj1);
