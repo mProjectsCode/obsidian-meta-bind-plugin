@@ -14,217 +14,252 @@ import { PropAccess, PropAccessType } from 'packages/core/src/utils/prop/PropAcc
 import { TestComponent } from './__mocks__/TestComponent';
 
 describe('api', () => {
-    let plugin = new TestPlugin();
+	let plugin = new TestPlugin();
 
-    beforeEach(() => {
-        plugin = new TestPlugin();
-    });
+	beforeEach(() => {
+		plugin = new TestPlugin();
+	});
 
-    describe('createField', () => {
-        test('input field', () => {
-            let field = plugin.api.createField(FieldType.INPUT, '', {
-                declaration: 'INPUT[toggle:foo]',
-                renderChildType: RenderChildType.BLOCK,
-            }, true);
+	describe('createField', () => {
+		test('input field', () => {
+			let field = plugin.api.createField(
+				FieldType.INPUT,
+				'',
+				{
+					declaration: 'INPUT[toggle:foo]',
+					renderChildType: RenderChildType.BLOCK,
+				},
+				true,
+			);
 
-            expect(field).toBeInstanceOf(InputFieldMountable);
-        });
+			expect(field).toBeInstanceOf(InputFieldMountable);
+		});
 
-        test('view field', () => {
-            let field = plugin.api.createField(FieldType.VIEW, '', {
-                declaration: 'VIEW[1 + {foo}]',
-                renderChildType: RenderChildType.BLOCK,
-            }, true);
+		test('view field', () => {
+			let field = plugin.api.createField(
+				FieldType.VIEW,
+				'',
+				{
+					declaration: 'VIEW[1 + {foo}]',
+					renderChildType: RenderChildType.BLOCK,
+				},
+				true,
+			);
 
-            expect(field).toBeInstanceOf(ViewFieldMountable);   
-        });
+			expect(field).toBeInstanceOf(ViewFieldMountable);
+		});
 
-        test('js view field', () => {
-            let field = plugin.api.createField(FieldType.JS_VIEW, '', {
-                declaration: '{foo} as foo\n---\nreturn 1 + context.bound.foo',
-            }, true);
+		test('js view field', () => {
+			let field = plugin.api.createField(
+				FieldType.JS_VIEW,
+				'',
+				{
+					declaration: '{foo} as foo\n---\nreturn 1 + context.bound.foo',
+				},
+				true,
+			);
 
-            expect(field).toBeInstanceOf(JsViewFieldMountable);
-        });
+			expect(field).toBeInstanceOf(JsViewFieldMountable);
+		});
 
-        test('table field', () => {
-            let field = plugin.api.createField(FieldType.TABLE, '', {
-                bindTarget: plugin.api.parseBindTarget('foo', ''),
-                columns: [],
-                tableHead: [],
-            }, true);
+		test('table field', () => {
+			let field = plugin.api.createField(
+				FieldType.TABLE,
+				'',
+				{
+					bindTarget: plugin.api.parseBindTarget('foo', ''),
+					columns: [],
+					tableHead: [],
+				},
+				true,
+			);
 
-            expect(field).toBeInstanceOf(TableMountable);
-        });
+			expect(field).toBeInstanceOf(TableMountable);
+		});
 
-        test('button group field', () => {
-            let field = plugin.api.createField(FieldType.BUTTON_GROUP, '', {
-                declaration: 'BUTTON[foo]',
-                renderChildType: RenderChildType.BLOCK,
-            }, true);
+		test('button group field', () => {
+			let field = plugin.api.createField(
+				FieldType.BUTTON_GROUP,
+				'',
+				{
+					declaration: 'BUTTON[foo]',
+					renderChildType: RenderChildType.BLOCK,
+				},
+				true,
+			);
 
-            expect(field).toBeInstanceOf(ButtonGroupMountable);
-        });
+			expect(field).toBeInstanceOf(ButtonGroupMountable);
+		});
 
-        test('button field', () => {
-            let field = plugin.api.createField(FieldType.BUTTON, '', {
-                declaration: `style: primary
+		test('button field', () => {
+			let field = plugin.api.createField(
+				FieldType.BUTTON,
+				'',
+				{
+					declaration: `style: primary
 label: Open Meta Bind Playground
 class: green-button
 action:
   type: command
   command: obsidian-meta-bind-plugin:open-playground`,
-                isPreview: false,
-            }, true);
+					isPreview: false,
+				},
+				true,
+			);
 
-            expect(field).toBeInstanceOf(ButtonMountable);
-        });
+			expect(field).toBeInstanceOf(ButtonMountable);
+		});
 
-        test('embed field', () => {
-            let field = plugin.api.createField(FieldType.EMBED, '', {
-                content: '[[some note]]',
-                depth: 1,
-            }, true);
+		test('embed field', () => {
+			let field = plugin.api.createField(
+				FieldType.EMBED,
+				'',
+				{
+					content: '[[some note]]',
+					depth: 1,
+				},
+				true,
+			);
 
-            expect(field).toBeInstanceOf(EmbedMountable);
-        });
+			expect(field).toBeInstanceOf(EmbedMountable);
+		});
 
-        test('excluded field', () => {
-            let field = plugin.api.createField(FieldType.EXCLUDED, '', undefined, true);
+		test('excluded field', () => {
+			let field = plugin.api.createField(FieldType.EXCLUDED, '', undefined, true);
 
-            expect(field).toBeInstanceOf(ExcludedMountable);
-        });
-    });
+			expect(field).toBeInstanceOf(ExcludedMountable);
+		});
+	});
 
-    describe('createInlineFieldFromString', () => {
-        test('input field', () => {
-            let field = plugin.api.createInlineFieldFromString('INPUT[toggle:foo]', '', undefined);
+	describe('createInlineFieldFromString', () => {
+		test('input field', () => {
+			let field = plugin.api.createInlineFieldFromString('INPUT[toggle:foo]', '', undefined);
 
-            expect(field).toBeInstanceOf(InputFieldMountable);
-        });
+			expect(field).toBeInstanceOf(InputFieldMountable);
+		});
 
-        test('view field', () => {
-            let field = plugin.api.createInlineFieldFromString('VIEW[1 + {foo}]', '', undefined);
+		test('view field', () => {
+			let field = plugin.api.createInlineFieldFromString('VIEW[1 + {foo}]', '', undefined);
 
-            expect(field).toBeInstanceOf(ViewFieldMountable);
-        });
+			expect(field).toBeInstanceOf(ViewFieldMountable);
+		});
 
-        test('button group field', () => {
-            let field = plugin.api.createInlineFieldFromString('BUTTON[foo]', '', undefined);
+		test('button group field', () => {
+			let field = plugin.api.createInlineFieldFromString('BUTTON[foo]', '', undefined);
 
-            expect(field).toBeInstanceOf(ButtonGroupMountable);
-        });
-    });
+			expect(field).toBeInstanceOf(ButtonGroupMountable);
+		});
+	});
 
-    describe('isInlineFieldDeclaration', () => {
-        test('input field', () => {
-            expect(plugin.api.isInlineFieldDeclaration(FieldType.INPUT, 'INPUT[toggle:foo]')).toBe(true);
-        });
+	describe('isInlineFieldDeclaration', () => {
+		test('input field', () => {
+			expect(plugin.api.isInlineFieldDeclaration(FieldType.INPUT, 'INPUT[toggle:foo]')).toBe(true);
+		});
 
-        test('view field', () => {
-            expect(plugin.api.isInlineFieldDeclaration(FieldType.VIEW, 'VIEW[1 + {foo}]')).toBe(true);
-        });
+		test('view field', () => {
+			expect(plugin.api.isInlineFieldDeclaration(FieldType.VIEW, 'VIEW[1 + {foo}]')).toBe(true);
+		});
 
-        test('button group field', () => {
-            expect(plugin.api.isInlineFieldDeclaration(FieldType.BUTTON_GROUP, 'BUTTON[foo]')).toBe(true);
-        });
+		test('button group field', () => {
+			expect(plugin.api.isInlineFieldDeclaration(FieldType.BUTTON_GROUP, 'BUTTON[foo]')).toBe(true);
+		});
 
-        test('not a field', () => {
-            expect(plugin.api.isInlineFieldDeclaration(FieldType.INPUT, 'foo')).toBe(false);
-        });
+		test('not a field', () => {
+			expect(plugin.api.isInlineFieldDeclaration(FieldType.INPUT, 'foo')).toBe(false);
+		});
 
-        test('wrong field', () => {
-            expect(plugin.api.isInlineFieldDeclaration(FieldType.INPUT, 'VIEW[1 + {foo}]')).toBe(false);
-        });
-    });
+		test('wrong field', () => {
+			expect(plugin.api.isInlineFieldDeclaration(FieldType.INPUT, 'VIEW[1 + {foo}]')).toBe(false);
+		});
+	});
 
-    describe('createBindTarget', () => {
-        test('simple bind target', () => {
-            let bindTarget = plugin.api.createBindTarget('frontmatter', 'file', ['foo']);
+	describe('createBindTarget', () => {
+		test('simple bind target', () => {
+			let bindTarget = plugin.api.createBindTarget('frontmatter', 'file', ['foo']);
 
-            expect(bindTarget).toEqual({
-                storageType: 'frontmatter',
-                storagePath: 'file',
-                storageProp: new PropPath([ new PropAccess(PropAccessType.OBJECT, 'foo') ]),
-                listenToChildren: false,
-            });
-        });
+			expect(bindTarget).toEqual({
+				storageType: 'frontmatter',
+				storagePath: 'file',
+				storageProp: new PropPath([new PropAccess(PropAccessType.OBJECT, 'foo')]),
+				listenToChildren: false,
+			});
+		});
 
-        test('nested bind target', () => {
-            let bindTarget = plugin.api.createBindTarget('frontmatter', 'file', ['foo', '0', 'bar']);
+		test('nested bind target', () => {
+			let bindTarget = plugin.api.createBindTarget('frontmatter', 'file', ['foo', '0', 'bar']);
 
-            expect(bindTarget).toEqual({
-                storageType: 'frontmatter',
-                storagePath: 'file',
-                storageProp: new PropPath([ 
-                    new PropAccess(PropAccessType.OBJECT, 'foo'),
-                    new PropAccess(PropAccessType.ARRAY, '0'),
-                    new PropAccess(PropAccessType.OBJECT, 'bar'),
-                ]),
-                listenToChildren: false,
-            });
-        });
-    });
+			expect(bindTarget).toEqual({
+				storageType: 'frontmatter',
+				storagePath: 'file',
+				storageProp: new PropPath([
+					new PropAccess(PropAccessType.OBJECT, 'foo'),
+					new PropAccess(PropAccessType.ARRAY, '0'),
+					new PropAccess(PropAccessType.OBJECT, 'bar'),
+				]),
+				listenToChildren: false,
+			});
+		});
+	});
 
-    describe('metadata update methods', () => {
-        let bindTargetA = plugin.api.parseBindTarget('file#foo', '');
-        let bindTargetB = plugin.api.parseBindTarget('file#bar', '');
+	describe('metadata update methods', () => {
+		let bindTargetA = plugin.api.parseBindTarget('file#foo', '');
+		let bindTargetB = plugin.api.parseBindTarget('file#bar', '');
 
-        test.each(['string', 5, false, ['array']])('setting a value, then reading it reads the same value', (value) => {
-            plugin.api.setMetadata(bindTargetA, value);
+		test.each(['string', 5, false, ['array']])('setting a value, then reading it reads the same value', value => {
+			plugin.api.setMetadata(bindTargetA, value);
 
-            expect(plugin.api.getMetadata(bindTargetA)).toEqual(value);
-        });
+			expect(plugin.api.getMetadata(bindTargetA)).toEqual(value);
+		});
 
-        test('setting metadata on different bind target does not affect the first one', () => {
-            plugin.api.setMetadata(bindTargetA, 'foo');
-            plugin.api.setMetadata(bindTargetB, 'bar');
+		test('setting metadata on different bind target does not affect the first one', () => {
+			plugin.api.setMetadata(bindTargetA, 'foo');
+			plugin.api.setMetadata(bindTargetB, 'bar');
 
-            expect(plugin.api.getMetadata(bindTargetA)).toEqual('foo');
-        });
+			expect(plugin.api.getMetadata(bindTargetA)).toEqual('foo');
+		});
 
-        test('update callback works correctly', () => {
-            plugin.api.setMetadata(bindTargetA, 0);
+		test('update callback works correctly', () => {
+			plugin.api.setMetadata(bindTargetA, 0);
 
-            expect(plugin.api.getMetadata(bindTargetA)).toEqual(0);
+			expect(plugin.api.getMetadata(bindTargetA)).toEqual(0);
 
-            plugin.api.updateMetadata(bindTargetA, (value) => value as number + 1);
+			plugin.api.updateMetadata(bindTargetA, value => (value as number) + 1);
 
-            expect(plugin.api.getMetadata(bindTargetA)).toEqual(1);
-        });
+			expect(plugin.api.getMetadata(bindTargetA)).toEqual(1);
+		});
 
-        test('subscribing to metadata changes works correctly', () => {
-            plugin.api.setMetadata(bindTargetA, 0);
+		test('subscribing to metadata changes works correctly', () => {
+			plugin.api.setMetadata(bindTargetA, 0);
 
-            let lifecycle = new TestComponent();
-            lifecycle.load();
-            let callback = mock(() => {});
-            plugin.api.subscribeToMetadata(bindTargetA, lifecycle, callback);
+			let lifecycle = new TestComponent();
+			lifecycle.load();
+			let callback = mock(() => {});
+			plugin.api.subscribeToMetadata(bindTargetA, lifecycle, callback);
 
-            plugin.api.setMetadata(bindTargetA, 1);
+			plugin.api.setMetadata(bindTargetA, 1);
 
-            // two times because the callback is called once when subscribing
-            expect(callback).toHaveBeenCalledTimes(2);
-            expect(callback).toHaveBeenLastCalledWith(1);
-        });
+			// two times because the callback is called once when subscribing
+			expect(callback).toHaveBeenCalledTimes(2);
+			expect(callback).toHaveBeenLastCalledWith(1);
+		});
 
-        test('unsubscribing from metadata works correctly', () => {
-            plugin.api.setMetadata(bindTargetA, 0);
+		test('unsubscribing from metadata works correctly', () => {
+			plugin.api.setMetadata(bindTargetA, 0);
 
-            let lifecycle = new TestComponent();
-            lifecycle.load();
-            let callback = mock(() => {});
-            plugin.api.subscribeToMetadata(bindTargetA, lifecycle, callback);
+			let lifecycle = new TestComponent();
+			lifecycle.load();
+			let callback = mock(() => {});
+			plugin.api.subscribeToMetadata(bindTargetA, lifecycle, callback);
 
-            plugin.api.setMetadata(bindTargetA, 1);
+			plugin.api.setMetadata(bindTargetA, 1);
 
-            lifecycle.unload();
+			lifecycle.unload();
 
-            plugin.api.setMetadata(bindTargetA, 2);
+			plugin.api.setMetadata(bindTargetA, 2);
 
-            // two times because the callback is called once when subscribing
-            expect(callback).toHaveBeenCalledTimes(2);
-            expect(callback).toHaveBeenLastCalledWith(1);
-        });
-    });
+			// two times because the callback is called once when subscribing
+			expect(callback).toHaveBeenCalledTimes(2);
+			expect(callback).toHaveBeenLastCalledWith(1);
+		});
+	});
 });

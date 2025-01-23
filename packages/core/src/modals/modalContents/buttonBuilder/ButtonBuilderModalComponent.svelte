@@ -148,6 +148,10 @@
 			buttonConfig.backgroundImage = file;
 		});
 	}
+
+	function resetBackgroundImage(): void {
+		buttonConfig.backgroundImage = undefined;
+	}
 </script>
 
 <SettingComponent name="Label" description="The label shown on the button.">
@@ -178,9 +182,12 @@
 </SettingComponent>
 
 <SettingComponent name="Background image" description="A background image to use in the button.">
-	<span style="word-break: break-word">{buttonConfig.backgroundImage ?? 'none'}</span>
+	<span style="word-break: break-word">{buttonConfig.backgroundImage || 'none'}</span>
 	<Button variant={ButtonStyleType.PRIMARY} onclick={() => changeBackgroundImage()} tooltip="Select from vault"
 		>Change</Button
+	>
+	<Button variant={ButtonStyleType.DEFAULT} onclick={() => resetBackgroundImage()} tooltip="Reset to none"
+		><Icon plugin={plugin} iconName="x"></Icon></Button
 	>
 </SettingComponent>
 

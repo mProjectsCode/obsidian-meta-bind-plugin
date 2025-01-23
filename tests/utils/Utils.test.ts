@@ -1,9 +1,20 @@
 import { describe, expect, test } from 'bun:test';
-import { areArraysEqual, arrayStartsWith, clamp, ensureFileExtension, getFolderPathFromFilePath, joinPath, mod, optClamp, remapRange, toArray, toEnumeration } from 'packages/core/src/utils/Utils';
+import {
+	areArraysEqual,
+	arrayStartsWith,
+	clamp,
+	ensureFileExtension,
+	getFolderPathFromFilePath,
+	joinPath,
+	mod,
+	optClamp,
+	remapRange,
+	toArray,
+	toEnumeration,
+} from 'packages/core/src/utils/Utils';
 import { areObjectsEqual } from 'packages/core/src/utils/Utils';
 
 describe('utils', () => {
-
 	describe('clamp function', () => {
 		test('should return the number if it is within the range', () => {
 			expect(clamp(5, 0, 10)).toBe(5);
@@ -222,8 +233,6 @@ describe('utils', () => {
 			expect(ensureFileExtension('file', '')).toBe('file.');
 			expect(ensureFileExtension('file.txt', '')).toBe('file.txt.');
 		});
-
-
 	});
 
 	describe('joinPath function', () => {
@@ -367,7 +376,12 @@ describe('utils', () => {
 		});
 
 		test('should return false for two different functions', () => {
-			expect(areObjectsEqual(() => {}, () => {})).toBe(false);
+			expect(
+				areObjectsEqual(
+					() => {},
+					() => {},
+				),
+			).toBe(false);
 		});
 	});
 });
