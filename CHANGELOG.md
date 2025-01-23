@@ -1,5 +1,17 @@
 # Obsidian Meta Bind Changelog
 
+# 1.3.2
+
+Changes
+
+- Improved the styling of the image suggester and image list suggester
+
+Bug Fixes
+
+- Fixed Meta Bind embeds not displaying correctly under certain conditions [#499](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/499)
+- Fixed missing reset button for the background image option in the button builder [#500](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/500)
+- Fixed the image suggester edit button not displaying when no image was selected [#501](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/501)
+
 # 1.3.1
 
 Bug Fixes
