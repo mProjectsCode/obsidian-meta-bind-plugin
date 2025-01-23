@@ -1,5 +1,5 @@
 import type { MarkdownPostProcessorContext, WorkspaceLeaf } from 'obsidian';
-import { Plugin, stringifyYaml } from 'obsidian';
+import { loadPrism, Plugin, stringifyYaml } from 'obsidian';
 import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 import { EMBED_MAX_DEPTH } from 'packages/core/src/config/FieldConfigs';
 import type { IPlugin } from 'packages/core/src/IPlugin';
@@ -115,6 +115,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		}
 
 		console.timeEnd('meta-bind | Main >> load-time');
+
 		// TODO: not sure if this is still needed, but it adds 100+ms to the load time, so I disabled it for now
 		// we need to wait for prism to load first, otherwise prism will cause problems by highlighting things that it shouldn't
 		// await loadPrism();
@@ -168,6 +169,11 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	}
 
 	addPostProcessors(): void {
+		// In every processor we await prism to load, otherwise prism may break our rendering.
+		// Luckily `await loadPrism()` is a no-op if prism is already loaded.
+		// We could also load prism once on startup, but that would add 100+ms to the reported plugin load time.
+		// Prism is always loaded, so the total startup time would be the same, but the higher reported time may scare users.
+
 		// inline code blocks
 		this.registerMarkdownPostProcessor((el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
 			const codeBlocks = el.querySelectorAll('code');
@@ -192,7 +198,9 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		}, 1);
 
 		// "meta-bind" code blocks
-		this.registerMarkdownCodeBlockProcessor('meta-bind', (source, el, ctx) => {
+		this.registerMarkdownCodeBlockProcessor('meta-bind', async (source, el, ctx) => {
+			await loadPrism();
+
 			const codeBlock = el;
 			const content = source.trim();
 			const filePath = ctx.sourcePath;
@@ -214,7 +222,9 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		});
 
 		// "meta-bind-js-view" code blocks
-		this.registerMarkdownCodeBlockProcessor('meta-bind-js-view', (source, el, ctx) => {
+		this.registerMarkdownCodeBlockProcessor('meta-bind-js-view', async (source, el, ctx) => {
+			await loadPrism();
+
 			const mountable = this.api.createJsViewFieldMountable(ctx.sourcePath, {
 				declaration: source,
 			});
@@ -223,7 +233,9 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		});
 
 		// "meta-bind-embed" code blocks
-		this.registerMarkdownCodeBlockProcessor('meta-bind-embed', (source, el, ctx) => {
+		this.registerMarkdownCodeBlockProcessor('meta-bind-embed', async (source, el, ctx) => {
+			await loadPrism();
+
 			const mountable = this.api.createEmbedMountable(ctx.sourcePath, {
 				content: source,
 				depth: 0,
@@ -233,7 +245,9 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		});
 
 		for (let i = 1; i <= EMBED_MAX_DEPTH; i++) {
-			this.registerMarkdownCodeBlockProcessor(`meta-bind-embed-internal-${i}`, (source, el, ctx) => {
+			this.registerMarkdownCodeBlockProcessor(`meta-bind-embed-internal-${i}`, async (source, el, ctx) => {
+				await loadPrism();
+
 				const mountable = this.api.createEmbedMountable(ctx.sourcePath, {
 					content: source,
 					depth: i,
@@ -244,7 +258,9 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		}
 
 		// "meta-bind-button" code blocks
-		this.registerMarkdownCodeBlockProcessor('meta-bind-button', (source, el, ctx) => {
+		this.registerMarkdownCodeBlockProcessor('meta-bind-button', async (source, el, ctx) => {
+			await loadPrism();
+
 			const mountable = this.api.createButtonMountable(ctx.sourcePath, {
 				declaration: source,
 				isPreview: false,

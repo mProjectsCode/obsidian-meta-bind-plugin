@@ -28,7 +28,7 @@ import type { ContextMenuItemDefinition, IContextMenu } from 'packages/core/src/
 import type { IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
 import type { IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
 import type { MBLiteral } from 'packages/core/src/utils/Literal';
-import { mount } from 'svelte';
+import { mount, unmount } from 'svelte';
 import type { z } from 'zod';
 
 export interface ErrorIndicatorProps {
@@ -352,17 +352,22 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 
 	/**
 	 * Create an error indicator in the given element.
+	 * Returns a cleanup function.
 	 *
 	 * @param element
 	 * @param settings
 	 */
-	createErrorIndicator(element: HTMLElement, settings: ErrorIndicatorProps): void {
-		mount(ErrorIndicatorComponent, {
+	createErrorIndicator(element: HTMLElement, settings: ErrorIndicatorProps): () => void {
+		const component = mount(ErrorIndicatorComponent, {
 			target: element,
 			props: {
 				plugin: this.plugin,
 				settings: settings,
 			},
 		});
+
+		return () => {
+			void unmount(component);
+		};
 	}
 }

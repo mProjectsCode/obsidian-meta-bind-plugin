@@ -1,3 +1,7 @@
+---
+foo: barssadad
+---
+
 This comes from [[Test Template]].
 
 Completed: `INPUT[toggle:completed]`
