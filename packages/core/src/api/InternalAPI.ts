@@ -267,7 +267,11 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 		this.createSearchModal(new SuggesterSelectModal(this.plugin, selectCallback, inputField)).open();
 	}
 
-	openImageSuggesterModal(inputField: ImageSuggesterLikeIPF, selectCallback: (selected: string) => void): void {
+	openImageSuggesterModal(
+		inputField: ImageSuggesterLikeIPF,
+		canSelectNone: boolean,
+		selectCallback: (selected: string | undefined) => void,
+	): void {
 		this.createModal(
 			new SvelteModalContent((modal, targetEl) => {
 				return mount(ImageSuggesterModalComponent, {
@@ -275,15 +279,19 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 					props: {
 						plugin: this.plugin,
 						options: this.getImageSuggesterOptions(inputField),
-						onSelect: (item: string): void => {
+						canSelectNone: canSelectNone,
+						onSelect: (item: string | undefined): void => {
 							selectCallback(item);
+							modal.closeModal();
+						},
+						onCancel: () => {
 							modal.closeModal();
 						},
 					},
 				});
 			}),
 			{
-				title: 'Meta Bind image suggester',
+				title: 'Select an image from your Vault',
 				classes: ['mb-image-suggester-modal'],
 			},
 		).open();
