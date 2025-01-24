@@ -83,6 +83,7 @@ export class TextVF extends AbstractViewField<string> {
 
 		if (this.renderMarkdown) {
 			this.markdownUnloadCallback?.();
+			DomHelpers.empty(container);
 
 			this.markdownUnloadCallback = await this.mountable.plugin.internal.renderMarkdown(
 				text,
