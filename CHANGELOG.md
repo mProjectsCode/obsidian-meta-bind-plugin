@@ -1,5 +1,11 @@
 # Obsidian Meta Bind Changelog
 
+# 1.3.3
+
+Bug Fixes
+
+- Fixed text view fields with the `renderMarkdown` argument not clearing the DOM while rerendering [#502](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/502)
+
 # 1.3.2
 
 Changes
