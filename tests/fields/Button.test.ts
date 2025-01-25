@@ -1,14 +1,28 @@
 import { beforeEach, describe, expect, test } from 'bun:test';
-import { type ButtonAction, ButtonActionType } from 'packages/core/src/config/ButtonConfig';
+import { type ButtonAction, ButtonActionType, ButtonClickType } from 'packages/core/src/config/ButtonConfig';
 import { TestPlugin } from 'tests/__mocks__/TestPlugin';
-
-import { NotePosition } from 'packages/core/src/config/APIConfigs';
 
 let testPlugin: TestPlugin;
 const testFilePath = 'test/file.md';
+const defaultClick = {
+	type: ButtonClickType.LEFT,
+	shiftKey: false,
+	ctrlKey: false,
+	altKey: false,
+};
 
 async function simplifiedRunAction(action: ButtonAction): Promise<void> {
-	await testPlugin.api.buttonActionRunner.runAction(undefined, action, testFilePath, false, undefined);
+	await testPlugin.api.buttonActionRunner.runAction(
+		undefined,
+		action,
+		testFilePath,
+		{
+			position: undefined,
+			isInline: false,
+			isInGroup: false,
+		},
+		defaultClick,
+	);
 }
 
 const buttonActionTests: Record<ButtonActionType, () => void> = {
@@ -122,12 +136,12 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 				openNote: false,
 			});
 
-			expect(testPlugin.internal.fileSystem.fileExists('test/otherFile.md')).toBe(true);
+			expect(await testPlugin.internal.file.exists('test/otherFile.md')).toBe(true);
 		});
 	},
 	[ButtonActionType.REPLACE_IN_NOTE]: () => {
 		test('replaces single line in note', async () => {
-			testPlugin.internal.fileSystem.writeFile('test/file.md', 'line1\nline2\nline3\n');
+			await testPlugin.internal.file.write('test/file.md', 'line1\nline2\nline3\n');
 
 			await simplifiedRunAction({
 				type: ButtonActionType.REPLACE_IN_NOTE,
@@ -136,11 +150,11 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 				replacement: 'newLine2',
 			});
 
-			expect(testPlugin.internal.fileSystem.readFile('test/file.md')).toBe('line1\nnewLine2\nline3\n');
+			expect(await testPlugin.internal.file.read('test/file.md')).toBe('line1\nnewLine2\nline3\n');
 		});
 
 		test('replaces multiple lines in note', async () => {
-			testPlugin.internal.fileSystem.writeFile('test/file.md', 'line1\nline2\nline3\n');
+			await testPlugin.internal.file.write('test/file.md', 'line1\nline2\nline3\n');
 
 			await simplifiedRunAction({
 				type: ButtonActionType.REPLACE_IN_NOTE,
@@ -149,12 +163,12 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 				replacement: 'newLine2\nnewLine3',
 			});
 
-			expect(testPlugin.internal.fileSystem.readFile('test/file.md')).toBe('line1\nnewLine2\nnewLine3\n');
+			expect(await testPlugin.internal.file.read('test/file.md')).toBe('line1\nnewLine2\nnewLine3\n');
 		});
 	},
 	[ButtonActionType.REGEXP_REPLACE_IN_NOTE]: () => {
 		test('replaces in note', async () => {
-			testPlugin.internal.fileSystem.writeFile('test/file.md', 'line1\nline2\nline3\n');
+			await testPlugin.internal.file.write('test/file.md', 'line1\nline2\nline3\n');
 
 			await simplifiedRunAction({
 				type: ButtonActionType.REGEXP_REPLACE_IN_NOTE,
@@ -162,12 +176,12 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 				replacement: 'newLine',
 			});
 
-			expect(testPlugin.internal.fileSystem.readFile('test/file.md')).toBe('newLine\nnewLine\nnewLine\n');
+			expect(await testPlugin.internal.file.read('test/file.md')).toBe('newLine\nnewLine\nnewLine\n');
 		});
 	},
 	[ButtonActionType.REPLACE_SELF]: () => {
 		test('replaces self', async () => {
-			testPlugin.internal.fileSystem.writeFile('test/file.md', 'line1\nbutton\nline3\n');
+			await testPlugin.internal.file.write('test/file.md', 'line1\nbutton\nline3\n');
 
 			await testPlugin.api.buttonActionRunner.runAction(
 				undefined,
@@ -176,19 +190,23 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 					replacement: 'no button',
 				},
 				testFilePath,
-				false,
-				new NotePosition({
-					// these line numbers start at 0
-					lineStart: 1,
-					lineEnd: 1,
-				}),
+				{
+					position: {
+						// these line numbers start at 0
+						lineStart: 1,
+						lineEnd: 1,
+					},
+					isInline: false,
+					isInGroup: false,
+				},
+				defaultClick,
 			);
 
-			expect(testPlugin.internal.fileSystem.readFile('test/file.md')).toBe('line1\nno button\nline3\n');
+			expect(await testPlugin.internal.file.read('test/file.md')).toBe('line1\nno button\nline3\n');
 		});
 
 		test('replaces multiline self', async () => {
-			testPlugin.internal.fileSystem.writeFile('test/file.md', 'line1\nbutton\n\nalso button\nline3\n');
+			await testPlugin.internal.file.write('test/file.md', 'line1\nbutton\n\nalso button\nline3\n');
 
 			await testPlugin.api.buttonActionRunner.runAction(
 				undefined,
@@ -197,20 +215,24 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 					replacement: 'no button',
 				},
 				testFilePath,
-				false,
-				new NotePosition({
-					// these line numbers start at 0
-					lineStart: 1,
-					lineEnd: 3,
-				}),
+				{
+					position: {
+						// these line numbers start at 0
+						lineStart: 1,
+						lineEnd: 3,
+					},
+					isInline: false,
+					isInGroup: false,
+				},
+				defaultClick,
 			);
 
-			expect(testPlugin.internal.fileSystem.readFile('test/file.md')).toBe('line1\nno button\nline3\n');
+			expect(await testPlugin.internal.file.read('test/file.md')).toBe('line1\nno button\nline3\n');
 		});
 	},
 	[ButtonActionType.INSERT_INTO_NOTE]: () => {
 		test('inserts into note', async () => {
-			testPlugin.internal.fileSystem.writeFile('test/file.md', 'line1\nline2\nline3\n');
+			await testPlugin.internal.file.write('test/file.md', 'line1\nline2\nline3\n');
 
 			await simplifiedRunAction({
 				type: ButtonActionType.INSERT_INTO_NOTE,
@@ -218,7 +240,7 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 				value: 'newLine2',
 			});
 
-			expect(testPlugin.internal.fileSystem.readFile('test/file.md')).toBe('line1\nnewLine2\nline2\nline3\n');
+			expect(await testPlugin.internal.file.read('test/file.md')).toBe('line1\nnewLine2\nline2\nline3\n');
 		});
 	},
 	[ButtonActionType.INLINE_JS]: () => {
@@ -227,6 +249,16 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 				await simplifiedRunAction({
 					type: ButtonActionType.INLINE_JS,
 					code: `console.log('test')`,
+				});
+			}).not.toThrow();
+		});
+	},
+	[ButtonActionType.RUN_TEMPLATER_FILE]: () => {
+		test('does not throw', () => {
+			expect(async () => {
+				await simplifiedRunAction({
+					type: ButtonActionType.RUN_TEMPLATER_FILE,
+					templateFile: 'test',
 				});
 			}).not.toThrow();
 		});

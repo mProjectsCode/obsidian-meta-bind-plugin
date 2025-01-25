@@ -3,7 +3,6 @@ import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import type { IPlugin } from 'packages/core/src/IPlugin';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
-import { ErrorLevel, MetaBindEmbedError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { showUnloadedMessage } from 'packages/core/src/utils/Utils';
 
 export class EmbedMountable extends FieldMountable {
@@ -18,59 +17,57 @@ export class EmbedMountable extends FieldMountable {
 		this.content = content;
 	}
 
-	async parseContent(): Promise<string> {
+	async parseContent(): Promise<{ content?: string; error?: string }> {
 		const lines = this.content
 			.split('\n')
 			.map(line => line.trim())
 			.filter(line => line.length > 0);
 
 		if (lines.length === 0) {
-			return '';
+			return { content: '' };
 		}
 		if (lines.length > 1) {
-			throw new MetaBindEmbedError({
-				errorLevel: ErrorLevel.ERROR,
-				effect: 'can not create embed',
-				cause: 'embed may only contain one link',
-			});
+			return { error: 'Embed may only contain one link' };
 		}
 
 		const firstLine = lines[0];
 		const link = MDLinkParser.parseLink(firstLine);
 		if (!link.internal) {
-			throw new MetaBindEmbedError({
-				errorLevel: ErrorLevel.ERROR,
-				effect: 'can not create embed',
-				cause: 'embed link is not an internal link',
-			});
+			return { error: `${firstLine} is not an internal link` };
 		}
-		const filePath = this.plugin.internal.getFilePathByName(link.target, this.getFilePath());
+		const filePath = this.plugin.internal.file.getPathByName(link.target, this.getFilePath());
 		if (filePath === undefined) {
-			throw new MetaBindEmbedError({
-				errorLevel: ErrorLevel.ERROR,
-				effect: 'can not create embed',
-				cause: 'link target not found',
-			});
+			return { error: `"${link.target}" is not created yet` };
 		}
-		return await this.plugin.internal.readFilePath(filePath);
+		return { content: await this.plugin.internal.file.read(filePath) };
 	}
 
-	checkMaxDepth(): void {
-		if (this.depth > EMBED_MAX_DEPTH) {
-			throw new MetaBindEmbedError({
-				errorLevel: ErrorLevel.ERROR,
-				effect: 'can not create embed',
-				cause: 'embed depth exceeds maximum',
-			});
-		}
+	exceedsMaxDepth(): boolean {
+		return this.depth > EMBED_MAX_DEPTH;
+	}
+
+	createEmbedMessage(target: HTMLElement, message: string): void {
+		target.createSpan({ text: message, cls: 'mb-embed-message' });
 	}
 
 	async renderContent(target: HTMLElement): Promise<void> {
 		try {
-			this.checkMaxDepth();
+			if (this.exceedsMaxDepth()) {
+				this.createEmbedMessage(target, 'Max embed depth exceeded');
+				return;
+			}
 
 			const content = await this.parseContent();
-			const renderContent = content.replace(
+			if (content.error) {
+				this.createEmbedMessage(target, content.error);
+				return;
+			}
+			if (content.content === undefined) {
+				this.createEmbedMessage(target, 'Embed content not found');
+				return;
+			}
+
+			const renderContent = content.content.replace(
 				/(```+|~~~+)meta-bind-embed.*/g,
 				`$1meta-bind-embed-internal-${this.depth + 1}`,
 			);
@@ -94,12 +91,16 @@ export class EmbedMountable extends FieldMountable {
 		MB_DEBUG && console.debug('meta-bind | EmbedMountable >> mount', this.content);
 		super.onMount(targetEl);
 
+		targetEl.addClass('mb-embed');
+
 		void this.renderContent(targetEl);
 	}
 
 	protected onUnmount(targetEl: HTMLElement): void {
 		MB_DEBUG && console.debug('meta-bind | EmbedMountable >> unmount', this.content);
 		super.onUnmount(targetEl);
+
+		targetEl.removeClass('mb-embed');
 
 		this.markdownUnloadCallback?.();
 

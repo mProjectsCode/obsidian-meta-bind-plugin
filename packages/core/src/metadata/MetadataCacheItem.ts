@@ -7,19 +7,15 @@ export interface IMetadataCacheItem {
 	/**
 	 * The cycles since the last change to the cache by the plugin.
 	 */
-	cyclesSinceInternalChange: number;
+	externalWriteLock: number;
 	/**
 	 * Whether the cache was changed by the plugin. If this is true, the frontmatter should be updated.
 	 */
-	pendingInternalChange: boolean;
+	dirty: boolean;
 	/**
 	 * The cycles that the cache has been inactive, meaning no listener registered to it.
 	 */
-	cyclesSinceInactive: number;
-	/**
-	 * Whether the there are no subscribers to the cache.
-	 */
-	inactive: boolean;
+	cyclesWithoutListeners: number;
 }
 
 export interface FilePathMetadataCacheItem extends IMetadataCacheItem {

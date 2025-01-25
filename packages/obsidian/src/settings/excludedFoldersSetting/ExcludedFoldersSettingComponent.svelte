@@ -11,7 +11,7 @@
 	let {
 		plugin,
 		modal,
-		excludedFolders,
+		excludedFolders: propExcludedFolders,
 	}: {
 		plugin: IPlugin;
 		modal: ExcludedFoldersSettingModal;
@@ -19,6 +19,7 @@
 	} = $props();
 
 	let errorCollection: ErrorCollection | undefined = $state();
+	let excludedFolders: string[] = $state(propExcludedFolders);
 
 	function deleteFolder(name: string): void {
 		excludedFolders = excludedFolders.filter(x => x !== name);
@@ -29,7 +30,7 @@
 	}
 
 	function save(): void {
-		errorCollection = modal.save(excludedFolders);
+		errorCollection = modal.save($state.snapshot(excludedFolders));
 
 		if (errorCollection === undefined) {
 			modal.close();
@@ -42,7 +43,7 @@
 </script>
 
 <div>
-	<table>
+	<table class="mb-excluded-folders-table">
 		<thead>
 			<tr>
 				<th> Folder Path</th>
@@ -52,13 +53,8 @@
 		<tbody>
 			{#each excludedFolders as folder, i (i)}
 				<tr>
-					<td style="width: 100%">
-						<input
-							type="text"
-							bind:value={excludedFolders[i]}
-							placeholder="path/to/folder"
-							style="width: 100%"
-						/>
+					<td class="mb-excluded-folders-table-input-cell">
+						<input type="text" bind:value={excludedFolders[i]} placeholder="path/to/folder" />
 					</td>
 					<td>
 						<Button onclick={() => deleteFolder(folder)} tooltip="Delete">
@@ -70,20 +66,20 @@
 		</tbody>
 	</table>
 
-	<Button onclick={() => addFolder()} variant={ButtonStyleType.PRIMARY} tooltip="Add new excluded Folder"
-		>Add Folder</Button
+	<Button onclick={() => addFolder()} variant={ButtonStyleType.PRIMARY} tooltip="Add new excluded folder"
+		>Add folder</Button
 	>
 
 	{#if errorCollection}
 		<div>
-			<h3 class="mod-error">Some Folder Paths are invalid</h3>
+			<h3 class="mod-error">Some folder paths are invalid</h3>
 
 			<ErrorCollectionComponent settings={{ errorCollection: errorCollection }}></ErrorCollectionComponent>
 		</div>
 	{/if}
 
 	<ModalButtonGroup>
-		<Button onclick={() => save()} variant={ButtonStyleType.PRIMARY} tooltip="Save Changes">Save</Button>
-		<Button onclick={() => cancel()} tooltip="Revert Changes">Cancel</Button>
+		<Button onclick={() => save()} variant={ButtonStyleType.PRIMARY} tooltip="Save changes">Save</Button>
+		<Button onclick={() => cancel()} tooltip="Revert changes">Cancel</Button>
 	</ModalButtonGroup>
 </div>

@@ -12,7 +12,7 @@
 </script>
 
 {#if typeof parsedValue === 'string'}
-	<span style="white-space: pre">{parsedValue}</span>
+	<span class="mb-whitespace-pre">{parsedValue}</span>
 {:else if Array.isArray(parsedValue)}
 	<span>
 		<ListWrapper elements={parsedValue}>

@@ -3,11 +3,15 @@
 	import LinkComponent from 'packages/core/src/utils/components/LinkComponent.svelte';
 	import ListWrapper from 'packages/core/src/utils/components/ListWrapper.svelte';
 
-	const {
+	let {
 		mdLinkList,
 	}: {
 		mdLinkList: MarkdownLink[];
 	} = $props();
+
+	export function updateList(newMdLinkList: MarkdownLink[]) {
+		mdLinkList = newMdLinkList;
+	}
 </script>
 
 {#if mdLinkList.length === 0}

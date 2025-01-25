@@ -1,7 +1,6 @@
 import builtins from 'builtin-modules';
 import esbuild from 'esbuild';
 import esbuildSvelte from 'esbuild-svelte';
-import { sveltePreprocess } from 'svelte-preprocess';
 import { getBuildBanner } from 'build/buildBanner';
 
 const banner = getBuildBanner('Release Build', version => version);
@@ -36,6 +35,7 @@ const build = await esbuild.build({
 	outfile: 'main.js',
 	minify: true,
 	metafile: true,
+	conditions: ['browser', 'production'],
 	define: {
 		MB_DEV_BUILD: 'false',
 		MB_DEBUG: 'false',
@@ -43,7 +43,6 @@ const build = await esbuild.build({
 	plugins: [
 		esbuildSvelte({
 			compilerOptions: { css: 'injected', dev: false },
-			preprocess: sveltePreprocess(),
 			filterWarnings: warning => {
 				// we don't want warnings from node modules that we can do nothing about
 				return !warning.filename?.includes('node_modules');

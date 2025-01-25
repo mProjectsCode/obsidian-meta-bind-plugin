@@ -1,5 +1,6 @@
 import type { Moment } from 'moment';
 import type { LifecycleHook } from 'packages/core/src/api/API';
+import type { FileAPI } from 'packages/core/src/api/FileAPI';
 import DatePickerInput from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePicker.svelte';
 import type { DatePickerIPF } from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePickerIPF';
 import type {
@@ -27,7 +28,7 @@ import type { ContextMenuItemDefinition, IContextMenu } from 'packages/core/src/
 import type { IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
 import type { IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
 import type { MBLiteral } from 'packages/core/src/utils/Literal';
-import { mount } from 'svelte';
+import { mount, unmount } from 'svelte';
 import type { z } from 'zod';
 
 export interface ErrorIndicatorProps {
@@ -56,11 +57,28 @@ export interface TextPromptModalOptions extends ModalOptions {
 	onCancel: () => void;
 }
 
-export abstract class InternalAPI<Plugin extends IPlugin> {
-	plugin: Plugin;
+export const IMAGE_FILE_EXTENSIONS = [
+	'apng',
+	'avif',
+	'gif',
+	'jpg',
+	'jpeg',
+	'jfif',
+	'pjpeg',
+	'pjp',
+	'png',
+	'svg',
+	'webp',
+];
+export const IMAGE_FILE_EXTENSIONS_WITH_DOTS = IMAGE_FILE_EXTENSIONS.map(ext => `.${ext}`);
 
-	constructor(plugin: Plugin) {
+export abstract class InternalAPI<Plugin extends IPlugin> {
+	readonly plugin: Plugin;
+	readonly file: FileAPI<Plugin>;
+
+	constructor(plugin: Plugin, fileAPI: FileAPI<Plugin>) {
 		this.plugin = plugin;
+		this.file = fileAPI;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -148,23 +166,6 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	abstract createJsRenderer(container: HTMLElement, filePath: string, code: string, hidden: boolean): IJsRenderer;
 
 	/**
-	 * Open a specific file.
-	 *
-	 * @param filePath
-	 * @param callingFilePath
-	 * @param newTab
-	 */
-	abstract openFile(filePath: string, callingFilePath: string, newTab: boolean): void;
-
-	/**
-	 * Resolves a file name to a file path.
-	 *
-	 * @param name
-	 * @param relativeTo
-	 */
-	abstract getFilePathByName(name: string, relativeTo?: string): string | undefined;
-
-	/**
 	 * Shows a notice to the user.
 	 *
 	 * @param message
@@ -191,16 +192,6 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	abstract imagePathToUri(imagePath: string): string;
 
 	/**
-	 * List all files by their path.
-	 */
-	abstract getAllFiles(): string[];
-
-	/**
-	 * List all folders by their path.
-	 */
-	abstract getAllFolders(): string[];
-
-	/**
 	 * List all commands.
 	 */
 	abstract getAllCommands(): Command[];
@@ -225,28 +216,6 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	 */
 	abstract createFuzzySearch(): IFuzzySearch;
 
-	/**
-	 * Read a files content.
-	 *
-	 * @param filePath
-	 */
-	abstract readFilePath(filePath: string): Promise<string>;
-
-	abstract writeFilePath(filePath: string, content: string): Promise<void>;
-
-	/**
-	 * Create a file in the given folder with the given name and extension.
-	 * If the name is already taken, a number will be appended to the name.
-	 *
-	 * @param folderPath the path to the folder
-	 * @param fileName the name of the file
-	 * @param extension the extension of the file
-	 * @param open
-	 *
-	 * @returns the path to the created file
-	 */
-	abstract createFile(folderPath: string, fileName: string, extension: string, open?: boolean): Promise<string>;
-
 	abstract createContextMenu(items: ContextMenuItemDefinition[]): IContextMenu;
 
 	abstract evaluateTemplaterTemplate(templateFilePath: string, targetFilePath: string): Promise<string>;
@@ -266,6 +235,23 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 		this.createSearchModal(new FileSelectModal(this.plugin, selectCallback)).open();
 	}
 
+	openFilteredFileSelectModal(
+		selectCallback: (selected: string) => void,
+		filterFunction: (filePath: string) => boolean,
+	): void {
+		this.createSearchModal(new FileSelectModal(this.plugin, selectCallback, filterFunction)).open();
+	}
+
+	openMarkdownFileSelectModal(selectCallback: (selected: string) => void): void {
+		this.openFilteredFileSelectModal(selectCallback, filePath => filePath.endsWith('.md'));
+	}
+
+	openImageFileSelectModal(selectCallback: (selected: string) => void): void {
+		this.openFilteredFileSelectModal(selectCallback, filePath =>
+			IMAGE_FILE_EXTENSIONS_WITH_DOTS.some(ext => filePath.endsWith(ext)),
+		);
+	}
+
 	openFolderSelectModal(selectCallback: (selected: string) => void): void {
 		this.createSearchModal(new FolderSelectModal(this.plugin, selectCallback)).open();
 	}
@@ -281,7 +267,11 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 		this.createSearchModal(new SuggesterSelectModal(this.plugin, selectCallback, inputField)).open();
 	}
 
-	openImageSuggesterModal(inputField: ImageSuggesterLikeIPF, selectCallback: (selected: string) => void): void {
+	openImageSuggesterModal(
+		inputField: ImageSuggesterLikeIPF,
+		canSelectNone: boolean,
+		selectCallback: (selected: string | undefined) => void,
+	): void {
 		this.createModal(
 			new SvelteModalContent((modal, targetEl) => {
 				return mount(ImageSuggesterModalComponent, {
@@ -289,15 +279,19 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 					props: {
 						plugin: this.plugin,
 						options: this.getImageSuggesterOptions(inputField),
-						onSelect: (item: string): void => {
+						canSelectNone: canSelectNone,
+						onSelect: (item: string | undefined): void => {
 							selectCallback(item);
+							modal.closeModal();
+						},
+						onCancel: () => {
 							modal.closeModal();
 						},
 					},
 				});
 			}),
 			{
-				title: 'Meta Bind Image Suggester',
+				title: 'Select an image from your Vault',
 				classes: ['mb-image-suggester-modal'],
 			},
 		).open();
@@ -318,7 +312,7 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 				});
 			}),
 			{
-				title: 'Meta Bind Date Picker',
+				title: 'Meta Bind date picker',
 			},
 		).open();
 	}
@@ -358,7 +352,7 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 				});
 			}),
 			{
-				title: 'Meta Bind Error Overview',
+				title: 'Meta Bind error overview',
 				classes: ['mb-error-collection-modal', 'markdown-rendered'],
 			},
 		).open();
@@ -366,32 +360,22 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 
 	/**
 	 * Create an error indicator in the given element.
+	 * Returns a cleanup function.
 	 *
 	 * @param element
 	 * @param settings
 	 */
-	createErrorIndicator(element: HTMLElement, settings: ErrorIndicatorProps): void {
-		mount(ErrorIndicatorComponent, {
+	createErrorIndicator(element: HTMLElement, settings: ErrorIndicatorProps): () => void {
+		const component = mount(ErrorIndicatorComponent, {
 			target: element,
 			props: {
 				plugin: this.plugin,
 				settings: settings,
 			},
 		});
-	}
 
-	/**
-	 * Checks if a file path has been excluded in the settings.
-	 *
-	 * @param filePath
-	 */
-	isFilePathExcluded(filePath: string): boolean {
-		for (const excludedFolder of this.plugin.settings.excludedFolders) {
-			if (filePath.startsWith(excludedFolder)) {
-				return true;
-			}
-		}
-
-		return false;
+		return () => {
+			void unmount(component);
+		};
 	}
 }

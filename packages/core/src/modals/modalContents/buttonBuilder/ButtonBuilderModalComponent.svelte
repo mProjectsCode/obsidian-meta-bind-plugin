@@ -1,12 +1,29 @@
 <script lang="ts">
 	import { RenderChildType } from 'packages/core/src/config/APIConfigs';
-	import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
+	import type {
+		ButtonConfig,
+		CommandButtonAction,
+		CreateNoteButtonAction,
+		InlineJSButtonAction,
+		InputButtonAction,
+		InsertIntoNoteButtonAction,
+		JSButtonAction,
+		OpenButtonAction,
+		RegexpReplaceInNoteButtonAction,
+		ReplaceInNoteButtonAction,
+		ReplaceSelfButtonAction,
+		RunTemplaterFileButtonAction,
+		SleepButtonAction,
+		TemplaterCreateNoteButtonAction,
+		UpdateMetadataButtonAction,
+	} from 'packages/core/src/config/ButtonConfig';
 	import { ButtonActionType, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 	import { ButtonField } from 'packages/core/src/fields/button/ButtonField';
 	import type { IPlugin } from 'packages/core/src/IPlugin';
 	import type { ButtonBuilderModal } from 'packages/core/src/modals/modalContents/buttonBuilder/ButtonBuilderModal';
 	import CommandActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/CommandActionSettings.svelte';
 	import CreateNoteActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/CreateNoteActionSettings.svelte';
+	import RunTemplaterFileActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/RunTemplaterFileActionSettings.svelte';
 	import InlineJsActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/InlineJsActionSettings.svelte';
 	import InputActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/InputActionSettings.svelte';
 	import InsertIntoNoteActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/InsertIntoNoteActionSettings.svelte';
@@ -25,7 +42,7 @@
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
 	import Toggle from 'packages/core/src/utils/components/Toggle.svelte';
 	import type { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
-	import { DomHelpers, expectType } from 'packages/core/src/utils/Utils';
+	import { DomHelpers } from 'packages/core/src/utils/Utils';
 	import { onDestroy } from 'svelte';
 
 	let {
@@ -52,7 +69,15 @@
 		buttonMountable?.unmount();
 		if (buttonEl) {
 			DomHelpers.empty(buttonEl);
-			buttonMountable = new ButtonField(plugin, buttonConfig, '', RenderChildType.BLOCK, undefined, false, true);
+			buttonMountable = new ButtonField(
+				plugin,
+				$state.snapshot(buttonConfig),
+				'',
+				RenderChildType.BLOCK,
+				undefined,
+				false,
+				true,
+			);
 			buttonMountable.mount(buttonEl);
 		}
 	});
@@ -66,37 +91,7 @@
 	}
 
 	function getActionLabel(actionType: ButtonActionType): string {
-		if (actionType === ButtonActionType.COMMAND) {
-			return 'Run a Command';
-		} else if (actionType === ButtonActionType.OPEN) {
-			return 'Open a Link';
-		} else if (actionType === ButtonActionType.JS) {
-			return 'Run a JavaScript File';
-		} else if (actionType === ButtonActionType.INPUT) {
-			return 'Insert Text at Cursor';
-		} else if (actionType === ButtonActionType.SLEEP) {
-			return 'Sleep for Some Time';
-		} else if (actionType === ButtonActionType.TEMPLATER_CREATE_NOTE) {
-			return 'Create a New Note Using Templater';
-		} else if (actionType === ButtonActionType.UPDATE_METADATA) {
-			return 'Update Metadata';
-		} else if (actionType === ButtonActionType.CREATE_NOTE) {
-			return 'Create a New Note';
-		} else if (actionType === ButtonActionType.REPLACE_IN_NOTE) {
-			return 'Replace Text in Note';
-		} else if (actionType === ButtonActionType.REGEXP_REPLACE_IN_NOTE) {
-			return 'Replace Text in Note using Regexp';
-		} else if (actionType === ButtonActionType.REPLACE_SELF) {
-			return 'Replace Button with Text';
-		} else if (actionType === ButtonActionType.INSERT_INTO_NOTE) {
-			return 'Insert Text into the Note';
-		} else if (actionType === ButtonActionType.INLINE_JS) {
-			return 'Run JavaScript Code';
-		}
-
-		expectType<never>(actionType);
-
-		return 'CHANGE ME';
+		return plugin.api.buttonActionRunner.getActionLabel(actionType);
 	}
 
 	function openActionContextMenu(index: number, e: MouseEvent): void {
@@ -147,6 +142,16 @@
 
 		plugin.internal.createContextMenu(menuActions).showWithEvent(e);
 	}
+
+	function changeBackgroundImage(): void {
+		plugin.internal.openImageFileSelectModal((file: string) => {
+			buttonConfig.backgroundImage = file;
+		});
+	}
+
+	function resetBackgroundImage(): void {
+		buttonConfig.backgroundImage = undefined;
+	}
 </script>
 
 <SettingComponent name="Label" description="The label shown on the button.">
@@ -166,10 +171,24 @@
 </SettingComponent>
 
 <SettingComponent
-	name="CSS Classes"
+	name="CSS classes"
 	description="A list of CSS classes to add to the button. Multiple classes should be separated by a space."
 >
 	<input type="text" bind:value={buttonConfig.class} />
+</SettingComponent>
+
+<SettingComponent name="CSS styles" description="CSS styles to directly apply to the button.">
+	<input type="text" bind:value={buttonConfig.cssStyle} />
+</SettingComponent>
+
+<SettingComponent name="Background image" description="A background image to use in the button.">
+	<span style="word-break: break-word">{buttonConfig.backgroundImage || 'none'}</span>
+	<Button variant={ButtonStyleType.PRIMARY} onclick={() => changeBackgroundImage()} tooltip="Select from vault"
+		>Change</Button
+	>
+	<Button variant={ButtonStyleType.DEFAULT} onclick={() => resetBackgroundImage()} tooltip="Reset to none"
+		><Icon plugin={plugin} iconName="x"></Icon></Button
+	>
 </SettingComponent>
 
 <SettingComponent
@@ -200,75 +219,106 @@ Add action of type
 </select>
 
 <Button variant={ButtonStyleType.PRIMARY} onclick={() => addAction()}>Add Action</Button>
+{#if buttonConfig.actions}
+	{#each buttonConfig.actions ?? [] as action, i (i)}
+		<FlexRow>
+			<h5>{getActionLabel(action.type)}</h5>
+			<!-- eslint-disable-next-line @typescript-eslint/no-unsafe-argument -->
+			<Button variant={ButtonStyleType.PLAIN} onclick={e => openActionContextMenu(i, e)}>
+				<Icon iconName="more-vertical" plugin={plugin}></Icon>
+			</Button>
+		</FlexRow>
 
-{#each buttonConfig.actions ?? [] as action, i (i)}
-	<FlexRow>
-		<h5>{getActionLabel(action.type)}</h5>
-		<!-- eslint-disable-next-line @typescript-eslint/no-unsafe-argument -->
-		<Button variant={ButtonStyleType.PLAIN} onclick={e => openActionContextMenu(i, e)}>
-			<Icon iconName="more-vertical" plugin={plugin}></Icon>
-		</Button>
-	</FlexRow>
+		{#if action.type === ButtonActionType.COMMAND}
+			<CommandActionSettings bind:action={buttonConfig.actions[i] as CommandButtonAction} plugin={plugin}
+			></CommandActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.COMMAND}
-		<CommandActionSettings action={action} plugin={plugin}></CommandActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.OPEN}
+			<OpenActionSettings bind:action={buttonConfig.actions[i] as OpenButtonAction} plugin={plugin}
+			></OpenActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.OPEN}
-		<OpenActionSettings action={action} plugin={plugin}></OpenActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.JS}
+			<JSActionSettings bind:action={buttonConfig.actions[i] as JSButtonAction} plugin={plugin}
+			></JSActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.JS}
-		<JSActionSettings action={action} plugin={plugin}></JSActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.INPUT}
+			<InputActionSettings bind:action={buttonConfig.actions[i] as InputButtonAction} plugin={plugin}
+			></InputActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.INPUT}
-		<InputActionSettings action={action} plugin={plugin}></InputActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.SLEEP}
+			<SleepActionSettings bind:action={buttonConfig.actions[i] as SleepButtonAction} plugin={plugin}
+			></SleepActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.SLEEP}
-		<SleepActionSettings action={action} plugin={plugin}></SleepActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.TEMPLATER_CREATE_NOTE}
+			<TemplaterCreateNoteActionSettings
+				bind:action={buttonConfig.actions[i] as TemplaterCreateNoteButtonAction}
+				plugin={plugin}
+			></TemplaterCreateNoteActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.TEMPLATER_CREATE_NOTE}
-		<TemplaterCreateNoteActionSettings action={action} plugin={plugin}></TemplaterCreateNoteActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.UPDATE_METADATA}
+			<UpdateMetadataActionSettings
+				bind:action={buttonConfig.actions[i] as UpdateMetadataButtonAction}
+				plugin={plugin}
+			></UpdateMetadataActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.UPDATE_METADATA}
-		<UpdateMetadataActionSettings action={action} plugin={plugin}></UpdateMetadataActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.CREATE_NOTE}
+			<CreateNoteActionSettings bind:action={buttonConfig.actions[i] as CreateNoteButtonAction} plugin={plugin}
+			></CreateNoteActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.CREATE_NOTE}
-		<CreateNoteActionSettings action={action} plugin={plugin}></CreateNoteActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.RUN_TEMPLATER_FILE}
+			<RunTemplaterFileActionSettings
+				bind:action={buttonConfig.actions[i] as RunTemplaterFileButtonAction}
+				plugin={plugin}
+			></RunTemplaterFileActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.REPLACE_IN_NOTE}
-		<ReplaceInNoteActionSettings action={action} plugin={plugin}></ReplaceInNoteActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.REPLACE_IN_NOTE}
+			<ReplaceInNoteActionSettings
+				bind:action={buttonConfig.actions[i] as ReplaceInNoteButtonAction}
+				plugin={plugin}
+			></ReplaceInNoteActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.REGEXP_REPLACE_IN_NOTE}
-		<RegexpReplaceInNoteActionSettings action={action} plugin={plugin}></RegexpReplaceInNoteActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.REGEXP_REPLACE_IN_NOTE}
+			<RegexpReplaceInNoteActionSettings
+				bind:action={buttonConfig.actions[i] as RegexpReplaceInNoteButtonAction}
+				plugin={plugin}
+			></RegexpReplaceInNoteActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.REPLACE_SELF}
-		<ReplaceSelfActionSettings action={action} plugin={plugin}></ReplaceSelfActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.REPLACE_SELF}
+			<ReplaceSelfActionSettings bind:action={buttonConfig.actions[i] as ReplaceSelfButtonAction} plugin={plugin}
+			></ReplaceSelfActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.INSERT_INTO_NOTE}
-		<InsertIntoNoteActionSettings action={action} plugin={plugin}></InsertIntoNoteActionSettings>
-	{/if}
+		{#if action.type === ButtonActionType.INSERT_INTO_NOTE}
+			<InsertIntoNoteActionSettings
+				bind:action={buttonConfig.actions[i] as InsertIntoNoteButtonAction}
+				plugin={plugin}
+			></InsertIntoNoteActionSettings>
+		{/if}
 
-	{#if action.type === ButtonActionType.INLINE_JS}
-		<InlineJsActionSettings action={action} plugin={plugin}></InlineJsActionSettings>
-	{/if}
-{/each}
+		{#if action.type === ButtonActionType.INLINE_JS}
+			<InlineJsActionSettings bind:action={buttonConfig.actions[i] as InlineJSButtonAction} plugin={plugin}
+			></InlineJsActionSettings>
+		{/if}
+	{/each}
+{/if}
 
 <h4>Preview</h4>
 
 <div bind:this={buttonEl}></div>
 
 <ModalButtonGroup>
-	<Button variant={ButtonStyleType.PRIMARY} onclick={() => modal.okay(buttonConfig)}
+	<Button variant={ButtonStyleType.PRIMARY} onclick={() => modal.okay($state.snapshot(buttonConfig))}
 		>{modal.options.submitText}</Button
 	>
 	<Button variant={ButtonStyleType.DEFAULT} onclick={() => modal.cancel()}>Cancel</Button>

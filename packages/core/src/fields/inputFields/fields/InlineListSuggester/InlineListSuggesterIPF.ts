@@ -35,7 +35,7 @@ export class InlineListSuggesterIPF extends AbstractInputField<MBLiteral[], MBLi
 		return {
 			showSuggester: () => this.openModal(),
 			showTextPrompt: () => this.openTextModal(),
-			allowsOther: this.mountable.getArgument(InputFieldArgumentType.ALLOW_OTHER)?.value === true,
+			allowOther: this.mountable.getArgument(InputFieldArgumentType.ALLOW_OTHER)?.value === true,
 		};
 	}
 

@@ -1,6 +1,7 @@
 import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
+import type { UnvalidatedFieldArgument } from 'packages/core/src/parsers/FieldDeclaration';
 import type { ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import {
 	createResultNode,
@@ -35,13 +36,3 @@ export const P_FieldArguments: Parser<UnvalidatedFieldArgument[]> = P.separateBy
 	P_FieldArgument,
 	P.string(',').describe('argument separator ","').trim(P_UTILS.optionalWhitespace()),
 );
-
-export interface UnvalidatedFieldArgument {
-	name: ParsingResultNode;
-	value: ParsingResultNode[];
-}
-
-export interface SimpleFieldArgument {
-	name: string;
-	value: string[];
-}

@@ -28,7 +28,7 @@ export class ButtonBuilderModal extends ModalContent {
 	protected onMount(targetEl: HTMLElement): void {
 		DomHelpers.empty(targetEl);
 		if (this.component) {
-			unmount(this.component);
+			void unmount(this.component);
 		}
 
 		this.component = mount(ButtonBuilderModalComponent, {
@@ -44,7 +44,7 @@ export class ButtonBuilderModal extends ModalContent {
 	protected onUnmount(targetEl: HTMLElement): void {
 		DomHelpers.empty(targetEl);
 		if (this.component) {
-			unmount(this.component);
+			void unmount(this.component);
 		}
 	}
 

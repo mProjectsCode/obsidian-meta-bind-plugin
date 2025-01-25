@@ -25,7 +25,7 @@ export class PropPath {
 	tryGet(obj: unknown): PropAccessResult | undefined {
 		try {
 			return this.get(obj);
-		} catch (e) {
+		} catch (_e) {
 			return undefined;
 		}
 	}

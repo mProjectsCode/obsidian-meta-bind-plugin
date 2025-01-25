@@ -1,8 +1,7 @@
-import type {
-	ComputedSubscriptionDependency,
-	ComputeFunction,
-} from 'packages/core/src/metadata/ComputedMetadataSubscription';
-import { ComputedMetadataSubscription } from 'packages/core/src/metadata/ComputedMetadataSubscription';
+import type { DeriveFunction } from 'packages/core/src/metadata/DerivedMetadataSubscription';
+import { DerivedMetadataSubscription } from 'packages/core/src/metadata/DerivedMetadataSubscription';
+import type { EffectFunction } from 'packages/core/src/metadata/EffectMetadataSubscription';
+import { EffectMetadataSubscription } from 'packages/core/src/metadata/EffectMetadataSubscription';
 import type { IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
 import type { IMetadataCacheItem } from 'packages/core/src/metadata/MetadataCacheItem';
 import type { IMetadataSource, Metadata } from 'packages/core/src/metadata/MetadataSource';
@@ -15,9 +14,9 @@ import {
 } from 'packages/core/src/utils/errors/MetaBindErrors';
 import type { PropPath } from 'packages/core/src/utils/prop/PropPath';
 import { PropUtils } from 'packages/core/src/utils/prop/PropUtils';
-import type { Signal } from 'packages/core/src/utils/Signal';
+import type { Signal, Writable } from 'packages/core/src/utils/Signal';
 
-export const METADATA_CACHE_UPDATE_CYCLE_THRESHOLD = 5; // {syncInterval (200)} * 5 = 1s
+export const METADATA_CACHE_EXTERNAL_WRITE_LOCK_DURATION = 5; // {syncInterval (200)} * 5 = 1s
 export const METADATA_CACHE_INACTIVE_CYCLE_THRESHOLD = 5 * 60; // {syncInterval (200)} * 5 * 60 = 1 minute
 
 export type MetadataSource = IMetadataSource<IMetadataCacheItem>;
@@ -124,7 +123,7 @@ export class MetadataManager {
 
 	public subscribe(
 		uuid: string,
-		callbackSignal: Signal<unknown>,
+		callbackSignal: Writable<unknown>,
 		bindTarget: BindTargetDeclaration,
 		onDelete: () => void,
 	): MetadataSubscription {
@@ -142,34 +141,70 @@ export class MetadataManager {
 	}
 
 	/**
-	 * Subscribes a computed value to the metadata manager.
+	 * Subscribes a derived value to the metadata manager.
 	 *
 	 * @param uuid
-	 * @param callbackSignal The signal that will hold the computed value.
 	 * @param bindTarget The bind target that the computed value will be written to.
 	 * @param dependencies The dependencies of the computed value.
-	 * @param computeFunction The function that computes the value from the dependencies.
+	 * @param dependencySignals The that will be used to listen to the dependencies.
+	 * They should be used to retrieve the values of the dependencies in the derive function.
+	 * @param deriveFunction The function that computes the value from the dependencies.
 	 * @param onDelete Called when the metadata manager wants to delete the subscription.
 	 */
-	public subscribeComputed(
+	public subscribeDerived(
 		uuid: string,
-		callbackSignal: Signal<unknown>,
 		bindTarget: BindTargetDeclaration | undefined,
-		dependencies: ComputedSubscriptionDependency[],
-		computeFunction: ComputeFunction,
+		dependencies: BindTargetDeclaration[],
+		dependencySignals: Signal<unknown>[],
+		deriveFunction: DeriveFunction,
 		onDelete: () => void,
-	): ComputedMetadataSubscription {
-		const subscription: ComputedMetadataSubscription = new ComputedMetadataSubscription(
+	): DerivedMetadataSubscription {
+		const subscription = new DerivedMetadataSubscription(
 			uuid,
-			callbackSignal,
 			this,
 			bindTarget,
 			dependencies,
-			computeFunction,
+			dependencySignals,
+			deriveFunction,
 			onDelete,
 		);
 
 		this.checkForLoops(subscription);
+
+		subscription.init();
+
+		this.subscribeSubscription(subscription);
+
+		return subscription;
+	}
+
+	/**
+	 * Subscribes an effect to the metadata manager.
+	 *
+	 * THE EFFECT FUNCTION SHOULD NOT UPDATE ANY BIND TARGETS. USE `subscribeDerived` FOR THAT.
+	 *
+	 * @param uuid
+	 * @param dependencies The dependencies of the effect.
+	 * @param dependencySignals The that will be used to listen to the dependencies.
+	 * They should be used to retrieve the values of the dependencies in the derive function.
+	 * @param effectFunction The function that computes the value from the dependencies.
+	 * @param onDelete Called when the metadata manager wants to delete the subscription.
+	 */
+	public subscribeEffect(
+		uuid: string,
+		dependencies: BindTargetDeclaration[],
+		dependencySignals: Signal<unknown>[],
+		effectFunction: EffectFunction,
+		onDelete: () => void,
+	): EffectMetadataSubscription {
+		const subscription = new EffectMetadataSubscription(
+			uuid,
+			this,
+			dependencies,
+			dependencySignals,
+			effectFunction,
+			onDelete,
+		);
 
 		subscription.init();
 
@@ -194,7 +229,7 @@ export class MetadataManager {
 
 		const cacheItem = source.unsubscribe(subscription);
 		if (cacheItem.subscriptions.length === 0) {
-			cacheItem.inactive = true;
+			cacheItem.cyclesWithoutListeners = 0;
 		}
 	}
 
@@ -213,10 +248,9 @@ export class MetadataManager {
 		}
 
 		const cacheItem = source.subscribe(subscription);
-		cacheItem.inactive = false;
-		cacheItem.cyclesSinceInactive = 0;
+		cacheItem.cyclesWithoutListeners = 0;
 
-		subscription.notify(source.readCacheItem(cacheItem, subscription.bindTarget.storageProp));
+		subscription.onUpdate(source.readCacheItem(cacheItem, subscription.bindTarget.storageProp));
 	}
 
 	/**
@@ -275,7 +309,7 @@ export class MetadataManager {
 	private getAllSubscriptionsToDependencies(subscription: IMetadataSubscription): IMetadataSubscription[] {
 		return subscription
 			.getDependencies()
-			.map(x => this.getAllSubscriptionsToBindTarget(x.bindTarget))
+			.map(x => this.getAllSubscriptionsToBindTarget(x))
 			.flat();
 	}
 
@@ -326,21 +360,27 @@ export class MetadataManager {
 			for (const cacheItem of source.iterateCacheItems()) {
 				source.onCycle(cacheItem);
 
-				if (cacheItem.pendingInternalChange) {
+				// if the cache is dirty, sync the changes to the external source
+				if (cacheItem.dirty) {
 					try {
 						source.syncExternal(cacheItem);
 					} catch (e) {
-						console.warn('failed to update frontmatter', e);
+						console.warn(`failed to sync changes to external source for ${source.id}`, e);
 					}
-					cacheItem.pendingInternalChange = false;
+					cacheItem.dirty = false;
 				}
-				cacheItem.cyclesSinceInternalChange += 1;
+				// decrease the external write lock duration
+				if (cacheItem.externalWriteLock > 0) {
+					cacheItem.externalWriteLock -= 1;
+				}
 
-				if (cacheItem.inactive) {
-					cacheItem.cyclesSinceInactive += 1;
+				// if there are no listeners, increase the cycles without listeners
+				if (cacheItem.subscriptions.length === 0) {
+					cacheItem.cyclesWithoutListeners += 1;
 				}
+				// if the cache is inactive, check if it should be deleted
 				if (
-					cacheItem.cyclesSinceInactive > METADATA_CACHE_INACTIVE_CYCLE_THRESHOLD &&
+					cacheItem.cyclesWithoutListeners > METADATA_CACHE_INACTIVE_CYCLE_THRESHOLD &&
 					source.shouldDelete(cacheItem)
 				) {
 					markedForDelete.push(cacheItem);
@@ -372,8 +412,8 @@ export class MetadataManager {
 		}
 
 		const cacheItem = source.writeCache(value, bindTarget);
-		cacheItem.pendingInternalChange = true;
-		cacheItem.cyclesSinceInternalChange = 0;
+		cacheItem.dirty = true;
+		cacheItem.externalWriteLock = METADATA_CACHE_EXTERNAL_WRITE_LOCK_DURATION;
 		this.notifyListeners(bindTarget, updateSourceUuid);
 	}
 
@@ -402,7 +442,7 @@ export class MetadataManager {
 	 * @param cacheItem
 	 */
 	public isCacheExternalWriteLocked(cacheItem: IMetadataCacheItem): boolean {
-		return cacheItem.cyclesSinceInternalChange < METADATA_CACHE_UPDATE_CYCLE_THRESHOLD;
+		return cacheItem.externalWriteLock > 0;
 	}
 
 	/**
@@ -444,7 +484,7 @@ export class MetadataManager {
 				)
 			) {
 				const value = source.readCache(cacheSubscription.bindTarget);
-				cacheSubscription.notify(value);
+				cacheSubscription.onUpdate(value);
 			}
 		}
 	}
@@ -462,7 +502,7 @@ export class MetadataManager {
 			}
 
 			const value = source.readCache(subscription.bindTarget);
-			subscription.notify(value);
+			subscription.onUpdate(value);
 		}
 	}
 
@@ -485,10 +525,9 @@ export class MetadataManager {
 	public getDefaultCacheItem(): IMetadataCacheItem {
 		return {
 			subscriptions: [],
-			cyclesSinceInternalChange: METADATA_CACHE_UPDATE_CYCLE_THRESHOLD + 1,
-			pendingInternalChange: false,
-			cyclesSinceInactive: 0,
-			inactive: true,
+			externalWriteLock: 0,
+			dirty: false,
+			cyclesWithoutListeners: 0,
 		};
 	}
 
@@ -523,7 +562,7 @@ export class MetadataManager {
 			const oldBoundValue = PropUtils.tryGet(oldValue, propPath);
 
 			if (newBoundValue !== oldBoundValue) {
-				subscription.notify(newBoundValue);
+				subscription.onUpdate(newBoundValue);
 			}
 		}
 	}

@@ -52,8 +52,10 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	// @ts-expect-error TS2564
 	dependencyManager: DependencyManager;
 
+	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	async onload(): Promise<void> {
-		console.log(`meta-bind | Main >> load`);
+		console.log(`meta-bind | Main >> loading`);
+		console.time('meta-bind | Main >> load-time');
 
 		this.build = this.determineBuild();
 
@@ -112,8 +114,11 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			);
 		}
 
+		console.timeEnd('meta-bind | Main >> load-time');
+
+		// TODO: not sure if this is still needed, but it adds 100+ms to the load time, so I disabled it for now
 		// we need to wait for prism to load first, otherwise prism will cause problems by highlighting things that it shouldn't
-		await loadPrism();
+		// await loadPrism();
 	}
 
 	onunload(): void {
@@ -164,6 +169,11 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	}
 
 	addPostProcessors(): void {
+		// In every processor we await prism to load, otherwise prism may break our rendering.
+		// Luckily `await loadPrism()` is a no-op if prism is already loaded.
+		// We could also load prism once on startup, but that would add 100+ms to the reported plugin load time.
+		// Prism is always loaded, so the total startup time would be the same, but the higher reported time may scare users.
+
 		// inline code blocks
 		this.registerMarkdownPostProcessor((el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
 			const codeBlocks = el.querySelectorAll('code');
@@ -188,7 +198,9 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		}, 1);
 
 		// "meta-bind" code blocks
-		this.registerMarkdownCodeBlockProcessor('meta-bind', (source, el, ctx) => {
+		this.registerMarkdownCodeBlockProcessor('meta-bind', async (source, el, ctx) => {
+			await loadPrism();
+
 			const codeBlock = el;
 			const content = source.trim();
 			const filePath = ctx.sourcePath;
@@ -210,7 +222,9 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		});
 
 		// "meta-bind-js-view" code blocks
-		this.registerMarkdownCodeBlockProcessor('meta-bind-js-view', (source, el, ctx) => {
+		this.registerMarkdownCodeBlockProcessor('meta-bind-js-view', async (source, el, ctx) => {
+			await loadPrism();
+
 			const mountable = this.api.createJsViewFieldMountable(ctx.sourcePath, {
 				declaration: source,
 			});
@@ -219,7 +233,9 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		});
 
 		// "meta-bind-embed" code blocks
-		this.registerMarkdownCodeBlockProcessor('meta-bind-embed', (source, el, ctx) => {
+		this.registerMarkdownCodeBlockProcessor('meta-bind-embed', async (source, el, ctx) => {
+			await loadPrism();
+
 			const mountable = this.api.createEmbedMountable(ctx.sourcePath, {
 				content: source,
 				depth: 0,
@@ -229,7 +245,9 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		});
 
 		for (let i = 1; i <= EMBED_MAX_DEPTH; i++) {
-			this.registerMarkdownCodeBlockProcessor(`meta-bind-embed-internal-${i}`, (source, el, ctx) => {
+			this.registerMarkdownCodeBlockProcessor(`meta-bind-embed-internal-${i}`, async (source, el, ctx) => {
+				await loadPrism();
+
 				const mountable = this.api.createEmbedMountable(ctx.sourcePath, {
 					content: source,
 					depth: i,
@@ -240,7 +258,9 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		}
 
 		// "meta-bind-button" code blocks
-		this.registerMarkdownCodeBlockProcessor('meta-bind-button', (source, el, ctx) => {
+		this.registerMarkdownCodeBlockProcessor('meta-bind-button', async (source, el, ctx) => {
+			await loadPrism();
+
 			const mountable = this.api.createButtonMountable(ctx.sourcePath, {
 				declaration: source,
 				isPreview: false,
@@ -254,7 +274,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	addCommands(): void {
 		this.addCommand({
 			id: 'open-docs',
-			name: 'Open Meta Bind Docs',
+			name: 'Open docs',
 			callback: () => {
 				window.open('https://mprojectscode.github.io/obsidian-meta-bind-plugin-docs/', '_blank');
 			},
@@ -262,7 +282,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		this.addCommand({
 			id: 'open-playground',
-			name: 'Open Meta Bind Playground',
+			name: 'Open playground',
 			callback: () => {
 				void this.activateView(MB_PLAYGROUND_VIEW_TYPE);
 			},
@@ -270,7 +290,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		this.addCommand({
 			id: 'open-help',
-			name: 'Open Meta Bind Help',
+			name: 'Open Help',
 			callback: () => {
 				void this.activateView(MB_PLAYGROUND_VIEW_TYPE);
 			},
@@ -278,7 +298,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		this.addCommand({
 			id: 'open-button-builder',
-			name: 'Open Button Builder',
+			name: 'Open button builder',
 			callback: () => {
 				this.internal.openButtonBuilderModal({
 					onOkay: (config): void => {
@@ -293,7 +313,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 
 		this.addCommand({
 			id: 'copy-command-id',
-			name: 'Select and Copy Command ID',
+			name: 'Select and copy command id',
 			callback: () => {
 				this.internal.openCommandSelectModal(command => {
 					void window.navigator.clipboard.writeText(command.id);
@@ -339,7 +359,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 	}
 
 	async loadSettings(): Promise<void> {
-		console.log(`meta-bind | Main >> settings load`);
+		console.log(`meta-bind | Main >> loading settings`);
 
 		const loadedSettings = ((await this.loadData()) ?? {}) as MetaBindPluginSettings;
 
@@ -351,6 +371,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		}
 
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, loadedSettings);
+		this.updateInternalSettings();
 
 		if (!areObjectsEqual(loadedSettings, this.settings)) {
 			await this.saveSettings();

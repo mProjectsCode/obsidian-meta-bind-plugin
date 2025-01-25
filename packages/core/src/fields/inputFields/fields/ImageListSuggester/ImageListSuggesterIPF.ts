@@ -37,8 +37,10 @@ export class ImageListSuggesterIPF extends AbstractInputField<MBLiteral[], strin
 	}
 
 	openModal(): void {
-		this.mountable.plugin.internal.openImageSuggesterModal(this, (selected: string) => {
-			this.svelteWrapper.getInstance()?.pushValue(selected);
+		this.mountable.plugin.internal.openImageSuggesterModal(this, false, (selected: string | undefined) => {
+			if (selected !== undefined) {
+				this.svelteWrapper.getInstance()?.pushValue(selected);
+			}
 		});
 	}
 }

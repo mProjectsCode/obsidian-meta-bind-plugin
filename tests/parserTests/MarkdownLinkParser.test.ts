@@ -41,12 +41,72 @@ describe('markdown link parser', () => {
 			);
 		});
 
-		test('should parse wiki with block', () => {
+		test('should parse wiki with heading', () => {
 			expect(MDLinkParser.parseLink('[[test#123]]')).toEqual(
 				toLink({
 					isEmbed: false,
 					target: 'test',
 					block: '123',
+					alias: undefined,
+					internal: true,
+				}),
+			);
+		});
+
+		test('should parse wiki with only heading', () => {
+			expect(MDLinkParser.parseLink('[[#123]]')).toEqual(
+				toLink({
+					isEmbed: false,
+					target: '',
+					block: '123',
+					alias: undefined,
+					internal: true,
+				}),
+			);
+		});
+
+		test('should parse wiki with block', () => {
+			expect(MDLinkParser.parseLink('[[test#^123]]')).toEqual(
+				toLink({
+					isEmbed: false,
+					target: 'test',
+					block: '^123',
+					alias: undefined,
+					internal: true,
+				}),
+			);
+		});
+
+		test('should parse wiki only block', () => {
+			expect(MDLinkParser.parseLink('[[#^123]]')).toEqual(
+				toLink({
+					isEmbed: false,
+					target: '',
+					block: '^123',
+					alias: undefined,
+					internal: true,
+				}),
+			);
+		});
+
+		test('should parse wiki with heading and block', () => {
+			expect(MDLinkParser.parseLink('[[test#123^456]]')).toEqual(
+				toLink({
+					isEmbed: false,
+					target: 'test',
+					block: '123^456',
+					alias: undefined,
+					internal: true,
+				}),
+			);
+		});
+
+		test('should parse wiki with only heading and block', () => {
+			expect(MDLinkParser.parseLink('[[#123^456]]')).toEqual(
+				toLink({
+					isEmbed: false,
+					target: '',
+					block: '123^456',
 					alias: undefined,
 					internal: true,
 				}),

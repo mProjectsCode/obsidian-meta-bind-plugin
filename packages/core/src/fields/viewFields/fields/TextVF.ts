@@ -7,8 +7,8 @@ import { stringifyUnknown } from 'packages/core/src/utils/Literal';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { DomHelpers, getUUID } from 'packages/core/src/utils/Utils';
 
-export class TextVF extends AbstractViewField {
-	textParts?: (string | number)[];
+export class TextVF extends AbstractViewField<string> {
+	textParts?: (string | ViewFieldVariable)[];
 	renderMarkdown: boolean;
 	markdownUnloadCallback?: () => void;
 
@@ -28,14 +28,14 @@ export class TextVF extends AbstractViewField {
 			if (typeof entry !== 'string') {
 				const variable: ViewFieldVariable = {
 					bindTargetDeclaration: entry,
-					inputSignal: new Signal<unknown>(undefined),
+					metadataSignal: new Signal<unknown>(undefined),
 					uuid: getUUID(),
 					contextName: `MB_VAR_${varCounter}`,
 				};
 
 				this.variables.push(variable);
 
-				this.textParts.push(varCounter);
+				this.textParts.push(variable);
 				varCounter += 1;
 			} else {
 				this.textParts.push(entry);
@@ -54,16 +54,20 @@ export class TextVF extends AbstractViewField {
 
 		return this.textParts
 			.map<string>(x => {
-				if (typeof x === 'number') {
-					return stringifyUnknown(
-						this.variables[x].inputSignal.get(),
-						this.mountable.plugin.settings.viewFieldDisplayNullAsEmpty,
-					);
-				} else {
+				if (typeof x === 'string') {
 					return x;
 				}
+
+				return stringifyUnknown(
+					x.metadataSignal.get(),
+					this.mountable.plugin.settings.viewFieldDisplayNullAsEmpty,
+				);
 			})
 			.join('');
+	}
+
+	protected mapValue(value: string): unknown {
+		return value;
 	}
 
 	protected onInitialRender(container: HTMLElement): void {
@@ -74,9 +78,12 @@ export class TextVF extends AbstractViewField {
 		}
 	}
 
-	protected async onRerender(container: HTMLElement, text: string): Promise<void> {
+	protected async onRerender(container: HTMLElement, value: string | undefined): Promise<void> {
+		const text = stringifyUnknown(value, this.mountable.plugin.settings.viewFieldDisplayNullAsEmpty) ?? '';
+
 		if (this.renderMarkdown) {
 			this.markdownUnloadCallback?.();
+			DomHelpers.empty(container);
 
 			this.markdownUnloadCallback = await this.mountable.plugin.internal.renderMarkdown(
 				text,

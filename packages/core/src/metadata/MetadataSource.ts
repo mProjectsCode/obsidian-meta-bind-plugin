@@ -30,12 +30,6 @@ export interface IMetadataSource<T extends IMetadataCacheItem> {
 		parser: BindTargetParser,
 	): string;
 
-	resolveBindTargetScope(
-		bindTargetDeclaration: BindTargetDeclaration,
-		scope: BindTargetScope | undefined,
-		parser: BindTargetParser,
-	): BindTargetDeclaration;
-
 	/**
 	 * Subscribes a subscription to the metadata source.
 	 *
@@ -59,14 +53,6 @@ export interface IMetadataSource<T extends IMetadataCacheItem> {
 	 * @returns The cache item for the storage path.
 	 */
 	getCacheItemForStoragePath(storagePath: string): T | undefined;
-
-	/**
-	 * Creates a new cache item for the given storage path.
-	 * Will throw if the cache item already exists.
-	 *
-	 * @param storagePath
-	 */
-	createCacheItem(storagePath: string): T;
 
 	/**
 	 * Gets the cache item for the given storage path.
@@ -188,23 +174,6 @@ export abstract class FilePathMetadataSource<T extends FilePathMetadataCacheItem
 
 	abstract readExternal(storagePath: string): Metadata;
 
-	createCacheItem(storagePath: string): T {
-		let cacheItem = this.cache.get(storagePath);
-
-		if (cacheItem !== undefined) {
-			throw new MetaBindInternalError({
-				errorLevel: ErrorLevel.CRITICAL,
-				effect: 'can not create cache item',
-				cause: 'cache item already exists',
-			});
-		}
-
-		cacheItem = this.getDefaultCacheItem(storagePath);
-		this.cache.set(storagePath, cacheItem);
-
-		return cacheItem;
-	}
-
 	getOrCreateCacheItem(storagePath: string): T {
 		let cacheItem = this.getCacheItemForStoragePath(storagePath);
 
@@ -290,7 +259,6 @@ export abstract class FilePathMetadataSource<T extends FilePathMetadataCacheItem
 	}
 
 	readCache(bindTarget: BindTargetDeclaration): unknown {
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
 		if (bindTarget.storageType !== this.id) {
 			throw new MetaBindInternalError({
 				errorLevel: ErrorLevel.ERROR,

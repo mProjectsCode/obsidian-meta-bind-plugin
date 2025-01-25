@@ -2,6 +2,7 @@ import { InputFieldType } from 'packages/core/src/config/FieldConfigs';
 import type { IPlugin } from 'packages/core/src/IPlugin';
 import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import type { UnvalidatedBindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+import type { UnvalidatedFieldArgument } from 'packages/core/src/parsers/FieldDeclaration';
 import type {
 	InputFieldDeclaration,
 	PartialUnvalidatedInputFieldDeclaration,
@@ -13,7 +14,6 @@ import type {
 	ITemplateSupplier,
 	TemplateSupplierTemplate,
 } from 'packages/core/src/parsers/inputFieldParser/ITemplateSupplier';
-import type { UnvalidatedFieldArgument } from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
 import { toResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import {
 	P_InputFieldDeclaration,

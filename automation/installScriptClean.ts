@@ -13,6 +13,10 @@ async function installScriptClean() {
 		await $('rm "bun.lockb"', `packages/${nonCorePackage}`, Verboseness.VERBOSE);
 		await $('bun i', `packages/${nonCorePackage}`, Verboseness.NORMAL);
 	}
+
+	await $('rm -rf "node_modules"', '', Verboseness.VERBOSE);
+	await $('rm "bun.lockb"', '', Verboseness.VERBOSE);
+	await $('bun i', '', Verboseness.NORMAL);
 }
 
 await installScriptClean();

@@ -11,7 +11,7 @@ multiSelect3:
   - 1
   - 
   - false
-select2: false
+select2: 
 ---
 
 ### Select

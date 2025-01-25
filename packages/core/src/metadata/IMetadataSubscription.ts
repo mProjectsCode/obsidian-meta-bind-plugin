@@ -1,4 +1,3 @@
-import type { ComputedSubscriptionDependency } from 'packages/core/src/metadata/ComputedMetadataSubscription';
 import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 
 /**
@@ -10,7 +9,7 @@ export interface IMetadataSubscription {
 	 */
 	uuid: string;
 	/**
-	 * Whether the subscription has been deleted. Useful to avoid infinite loops during deletion.
+	 * Whether the subscription has been deleted. Used as a flag to prevent double deletion.
 	 */
 	deleted: boolean;
 	/**
@@ -30,9 +29,9 @@ export interface IMetadataSubscription {
 	 *
 	 * @param value
 	 */
-	notify: (value: unknown) => void;
+	onUpdate: (value: unknown) => void;
 	/**
 	 * Returns the dependencies of this subscription or an empty array if there are none.
 	 */
-	getDependencies: () => ComputedSubscriptionDependency[];
+	getDependencies: () => BindTargetDeclaration[];
 }

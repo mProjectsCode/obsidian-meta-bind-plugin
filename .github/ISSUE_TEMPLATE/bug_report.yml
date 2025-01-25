@@ -7,8 +7,8 @@ body:
       attributes:
           value: >-
               Thanks for taking the time to fill out this bug report!
-              
-              
+
+
               By filling out the form you are giving me a clear description of the
               bug, which helps me to fix the bug more quickly. :)
     - type: checkboxes
@@ -20,7 +20,7 @@ body:
                 required: true
               - label: I checked that the plugin is up to date
                 required: true
-              - label: The issue persist with all other plugins and themes disabled
+              - label: The issue persists with all other plugins and themes disabled
                 required: false
     - type: input
       id: plugin-version

@@ -8,6 +8,11 @@ export enum MB_WidgetType {
 	HIGHLIGHT = 'highlight',
 }
 
+export interface MB_WidgetSpec {
+	mb_widgetType: MB_WidgetType;
+	mb_unload?: () => void;
+}
+
 export class Cm6_Util {
 	/**
 	 * Checks if a selection overlaps with a given range.
@@ -78,6 +83,14 @@ export class Cm6_Util {
 		return exists;
 	}
 
+	/**
+	 * Checks if a decoration of a given type exists in a given range.
+	 *
+	 * @param decorations
+	 * @param widgetType
+	 * @param from
+	 * @param to
+	 */
 	static existsDecorationOfTypeBetween(
 		decorations: DecorationSet,
 		widgetType: MB_WidgetType,
@@ -86,8 +99,8 @@ export class Cm6_Util {
 	): boolean {
 		let exists = false;
 		decorations.between(from, to, (_from, _to, decoration) => {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-			if (decoration.spec.mb_widgetType === widgetType) {
+			const spec = decoration.spec as MB_WidgetSpec;
+			if (spec.mb_widgetType === widgetType) {
 				exists = true;
 			}
 		});

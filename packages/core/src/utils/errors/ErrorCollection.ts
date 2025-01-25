@@ -20,6 +20,7 @@ export class ErrorCollection {
 
 			console.warn(error);
 		} else {
+			console.trace('');
 			console.warn(`[MB_ERROR_CONTAINER] received invalid error type`, error);
 		}
 	}

@@ -80,6 +80,7 @@ export function areObjectsEqual(obj1: unknown, obj2: unknown): boolean {
 	}
 
 	if (typeof obj1 === 'object' && typeof obj2 === 'object') {
+		// both are arrays
 		if (Array.isArray(obj1) && Array.isArray(obj2)) {
 			if (obj1.length !== obj2.length) {
 				return false;
@@ -92,6 +93,11 @@ export function areObjectsEqual(obj1: unknown, obj2: unknown): boolean {
 			}
 
 			return true;
+		}
+
+		// one is array and the other is not
+		if (Array.isArray(obj1) || Array.isArray(obj2)) {
+			return false;
 		}
 
 		const keys1 = Object.keys(obj1);
@@ -138,7 +144,13 @@ export function isFalsy(value: unknown): boolean {
 	return !value;
 }
 
-export function deepFreeze<T extends object>(object: T): Readonly<T> {
+export function deepFreeze<T extends object>(object: T): Readonly<T>;
+export function deepFreeze<T extends object>(object: T | undefined): Readonly<T | undefined>;
+export function deepFreeze<T extends object>(object: T | undefined): Readonly<T | undefined> {
+	if (object === undefined) {
+		return object;
+	}
+
 	// Retrieve the property names defined on object
 	const propNames: (string | symbol)[] = Reflect.ownKeys(object);
 
@@ -306,4 +318,45 @@ export function getFolderPathFromFilePath(filePath: string): string {
 		return '';
 	}
 	return filePath.substring(0, pathSeparator);
+}
+
+/**
+ * Joins the given paths together without duplicate slashes.
+ */
+export function joinPath(...paths: string[]): string {
+	let result = paths[0];
+	for (let i = 1; i < paths.length; i++) {
+		const endsWithSlash = result.endsWith('/');
+		const startsWithSlash = paths[i].startsWith('/');
+
+		if (endsWithSlash && startsWithSlash) {
+			result = result.substring(0, result.length - 1);
+		} else if (!endsWithSlash && !startsWithSlash) {
+			result += '/';
+		}
+
+		result += paths[i];
+	}
+
+	return result;
+}
+
+/**
+ * Ensures that the file path has the given extension.
+ */
+export function ensureFileExtension(filePath: string, extension: string): string {
+	extension = extension.startsWith('.') ? extension : '.' + extension;
+
+	if (filePath.endsWith(extension)) {
+		return filePath;
+	}
+
+	return filePath + extension;
+}
+
+export function toArray<T>(value: T | T[] | undefined): T[] {
+	if (value === undefined) {
+		return [];
+	}
+	return Array.isArray(value) ? value : [value];
 }

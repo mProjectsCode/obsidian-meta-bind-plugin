@@ -23,8 +23,8 @@ export abstract class ModalContent extends Mountable {
 		} else {
 			throw new MetaBindInternalError({
 				errorLevel: ErrorLevel.CRITICAL,
-				effect: 'Failed to close modal.',
-				cause: 'Modal reference in ModalContent is undefined.',
+				effect: 'Failed to close modal',
+				cause: 'Modal reference in ModalContent is undefined',
 			});
 		}
 	}

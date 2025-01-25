@@ -6,6 +6,10 @@ export class CommandSelectModal extends SelectModalContent<Command> {
 		return item.name;
 	}
 
+	public getItemDescription(_: Command): string | undefined {
+		return undefined;
+	}
+
 	public getItems(): Command[] {
 		return this.plugin.internal.getAllCommands();
 	}

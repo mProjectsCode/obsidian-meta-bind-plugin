@@ -18,6 +18,10 @@ export class SuggesterSelectModal extends SelectModalContent<SuggesterOption<MBL
 		return item.displayValue;
 	}
 
+	public getItemDescription(item: SuggesterOption<MBLiteral>): string | undefined {
+		return item.displayDescription;
+	}
+
 	public getItems(): SuggesterOption<MBLiteral>[] {
 		return this.plugin.internal.getSuggesterOptions(this.ipf);
 	}

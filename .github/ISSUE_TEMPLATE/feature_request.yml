@@ -23,7 +23,7 @@ body:
           description: >-
               If your feature request is related to a problem or annoyance, please
               describe it.
-          placeholder: ' I''m always frustrated when...'
+          placeholder: " I'm always frustrated when..."
     - type: textarea
       attributes:
           label: Describe the Feature you'd like

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 
-	const props: InputFieldSvelteProps<number> & {
+	const props: InputFieldSvelteProps<number | null> & {
 		placeholder: string;
 	} = $props();
 

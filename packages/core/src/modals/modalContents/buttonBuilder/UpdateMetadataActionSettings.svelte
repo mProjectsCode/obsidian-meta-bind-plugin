@@ -6,14 +6,14 @@
 
 	const {
 		plugin,
-		action,
+		action = $bindable(),
 	}: {
 		plugin: IPlugin;
 		action: UpdateMetadataButtonAction;
 	} = $props();
 </script>
 
-<SettingComponent name="Metadata Property" description="The metadata property in form of a bind target.">
+<SettingComponent name="Metadata property" description="The metadata property in form of a bind target.">
 	<input type="text" bind:value={action.bindTarget} placeholder="some value" />
 </SettingComponent>
 

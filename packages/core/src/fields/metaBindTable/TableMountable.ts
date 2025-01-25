@@ -104,7 +104,7 @@ export class TableMountable extends FieldMountable {
 	}
 
 	updateMetadataManager(value: unknown): void {
-		this.metadataSubscription?.update(value);
+		this.metadataSubscription?.write(value);
 	}
 
 	updateDisplayValue(values: T | undefined): void {
@@ -209,7 +209,7 @@ export class TableMountable extends FieldMountable {
 
 		this.unregisterSelfFromMetadataManager();
 		if (this.tableComponent) {
-			unmount(this.tableComponent);
+			void unmount(this.tableComponent);
 		}
 
 		showUnloadedMessage(targetEl, 'table');

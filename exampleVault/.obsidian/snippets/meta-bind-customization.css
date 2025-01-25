@@ -1,0 +1,9 @@
+/* A snippet that turns a progress bar input field red */
+.mb-input-type-progressBar.red-progress-bar .mb-progress-bar-progress {
+    background: var(--color-red);
+}
+
+/* A snippet that turns a button green */
+.mb-button.green-button > button {
+    background: var(--color-green);
+}

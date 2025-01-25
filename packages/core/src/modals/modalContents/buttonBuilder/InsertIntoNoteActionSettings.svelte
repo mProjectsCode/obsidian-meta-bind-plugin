@@ -5,7 +5,7 @@
 
 	const {
 		plugin,
-		action,
+		action = $bindable(),
 	}: {
 		plugin: IPlugin;
 		action: InsertIntoNoteButtonAction;
@@ -16,7 +16,7 @@
 	<input type="number" bind:value={action.line} placeholder="0" />
 </SettingComponent>
 
-<SettingComponent name="Text to Insert" description="The text to insert into the note."></SettingComponent>
+<SettingComponent name="Text to insert" description="The text to insert into the note."></SettingComponent>
 <div class="meta-bind-full-width meta-bind-high">
 	<textarea bind:value={action.value}></textarea>
 </div>

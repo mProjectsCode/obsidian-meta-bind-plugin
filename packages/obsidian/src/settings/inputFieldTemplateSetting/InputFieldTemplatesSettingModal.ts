@@ -19,7 +19,7 @@ export class InputFieldTemplatesSettingModal extends Modal {
 	public onOpen(): void {
 		this.contentEl.empty();
 		if (this.component) {
-			unmount(this.component);
+			void unmount(this.component);
 		}
 
 		this.component = mount(InputFieldTemplatesSettingComponent, {
@@ -35,7 +35,7 @@ export class InputFieldTemplatesSettingModal extends Modal {
 	public onClose(): void {
 		this.contentEl.empty();
 		if (this.component) {
-			unmount(this.component);
+			void unmount(this.component);
 		}
 	}
 

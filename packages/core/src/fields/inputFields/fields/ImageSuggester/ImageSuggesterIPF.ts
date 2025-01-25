@@ -4,16 +4,16 @@ import type { InputFieldSvelteComponent } from 'packages/core/src/fields/inputFi
 import type { MBLiteral } from 'packages/core/src/utils/Literal';
 import { isLiteral, stringifyLiteral } from 'packages/core/src/utils/Literal';
 
-export class ImageSuggesterIPF extends AbstractInputField<MBLiteral, string> {
+export class ImageSuggesterIPF extends AbstractInputField<MBLiteral, string | undefined> {
 	protected filterValue(value: unknown): MBLiteral | undefined {
 		return isLiteral(value) ? value : undefined;
 	}
 
-	protected getFallbackDefaultValue(): string {
-		return '';
+	protected getFallbackDefaultValue(): string | undefined {
+		return undefined;
 	}
 
-	protected getSvelteComponent(): InputFieldSvelteComponent<string> {
+	protected getSvelteComponent(): InputFieldSvelteComponent<string | undefined> {
 		// @ts-ignore
 		return ImageSuggesterComponent;
 	}
@@ -29,11 +29,12 @@ export class ImageSuggesterIPF extends AbstractInputField<MBLiteral, string> {
 	protected getMountArgs(): Record<string, unknown> {
 		return {
 			showSuggester: () => this.openModal(),
+			clear: () => this.setInternalValue(undefined),
 		};
 	}
 
 	openModal(): void {
-		this.mountable.plugin.internal.openImageSuggesterModal(this, (selected: string) =>
+		this.mountable.plugin.internal.openImageSuggesterModal(this, true, (selected: string | undefined) =>
 			this.setInternalValue(selected),
 		);
 	}

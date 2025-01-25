@@ -1,11 +1,12 @@
 <script lang="ts">
 	import type { IPlugin } from 'packages/core/src/IPlugin';
+	import { DomHelpers } from 'packages/core/src/utils/Utils';
 	import { onDestroy } from 'svelte';
 
 	let element: HTMLElement;
 
 	const {
-		value = $bindable(''),
+		value,
 		plugin,
 		filePath,
 	}: {
@@ -22,6 +23,7 @@
 
 	async function render(v: string): Promise<void> {
 		markdownUnloadCallback?.();
+		DomHelpers.empty(element);
 		markdownUnloadCallback = await plugin.internal.renderMarkdown(v, element, filePath);
 	}
 

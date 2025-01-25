@@ -57,6 +57,8 @@ div.mb-view-wrapper {
 .mb-button {
 	background-color: transparent !important;
 	border: none !important;
+	font-family: var(--font-text);
+	color: var(--text-normal);
 }
 
 .mb-button-inline {
@@ -64,11 +66,13 @@ div.mb-view-wrapper {
 }
 
 .mb-button-block {
+	display: block !important;
 }
 
-.mb-button-group {
+.mb-button-group.mb-button-group {
 	background-color: transparent !important;
 	border: none !important;
+	padding-inline: 0;
 
 	& > .mb-button {
 		&:first-child:not(:last-child) {
@@ -99,6 +103,8 @@ div.mb-view-wrapper {
 	vertical-align: bottom;
 	/* Add a gap between text and icons. */
 	gap: var(--size-4-1);
+	background-size: cover;
+	background-position: center center;
 
 	&.mod-plain {
 		background: none;
@@ -433,7 +439,7 @@ div.mb-view-wrapper {
 }
 
 /* Image */
-.mb-image-search-container {
+.mb-image-modal-header {
 	margin-bottom: var(--size-4-4);
 }
 
@@ -441,6 +447,10 @@ div.mb-view-wrapper {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
 	gap: var(--size-4-4);
+}
+
+.mb-image-card {
+	position: relative;
 }
 
 .mb-image-suggester-modal {
@@ -474,12 +484,30 @@ div.mb-view-wrapper {
 	}
 }
 
+.mb-image-card-button {
+	position: absolute;
+	opacity: 0;
+	top: var(--size-4-2);
+	right: var(--size-4-2);
+	transition: opacity 0.2s ease-in-out;
+}
+
+.mb-image-card:hover .mb-image-card-button {
+	opacity: 1;
+}
+
 .mb-image-suggest-input {
 	background: var(--background-secondary);
 	border-radius: var(--mb-border-radius);
 	border: var(--mb-border-width) solid var(--background-modifier-border);
 	padding: var(--size-4-2);
 	width: 100%;
+}
+
+.mb-image-empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 /* Time Input */
@@ -642,6 +670,16 @@ div.mb-view-wrapper {
 	background: var(--interactive-accent-hover);
 }
 
+/* Embed */
+
+.mb-embed > .mb-embed-message {
+	display: block;
+	width: 100%;
+	text-align: center;
+	color: var(--text-muted);
+	font-size: var(--font-smaller);
+}
+
 /* Error */
 .mb-error {
 	color: var(--text-error) !important;
@@ -729,6 +767,24 @@ code.mb-warning {
 }
 
 /* --- Misc --- */
+
+.mb-whitespace-pre {
+	white-space: pre;
+}
+
+.mb-excluded-folders-table-input-cell {
+	width: 100%;
+}
+
+.mb-excluded-folders-table-input-cell > input {
+	width: 100%;
+}
+
+.mb-textarea {
+	width: 100%;
+	height: 100px;
+	resize: vertical;
+}
 
 .mb-icon-wrapper {
 	display: block;
@@ -824,6 +880,10 @@ div.setting-item > div.setting-item-control.mb-vertical-control {
 	align-items: flex-start;
 	gap: var(--size-4-1);
 	width: 100%;
+}
+
+.mb-search-modal-element-description {
+	color: var(--text-faint);
 }
 
 /* --- HIGHLIGHTING CLASSES --- */

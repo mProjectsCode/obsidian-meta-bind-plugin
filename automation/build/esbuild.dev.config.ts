@@ -1,7 +1,6 @@
 import esbuild from 'esbuild';
 import copy from 'esbuild-plugin-copy-watch';
 import esbuildSvelte from 'esbuild-svelte';
-import { sveltePreprocess } from 'svelte-preprocess';
 import manifest from '../../manifest.json' assert { type: 'json' };
 import { getBuildBanner } from 'build/buildBanner';
 
@@ -35,6 +34,7 @@ const context = await esbuild.context({
 	treeShaking: true,
 	outdir: `exampleVault/.obsidian/plugins/${manifest.id}/`,
 	outbase: 'packages/obsidian/src',
+	conditions: ['browser', 'development'],
 	define: {
 		MB_DEV_BUILD: 'false',
 		MB_DEBUG: 'true',
@@ -54,7 +54,6 @@ const context = await esbuild.context({
 		}),
 		esbuildSvelte({
 			compilerOptions: { css: 'injected', dev: true },
-			preprocess: sveltePreprocess(),
 			filterWarnings: warning => {
 				// we don't want warnings from node modules that we can do nothing about
 				return !(

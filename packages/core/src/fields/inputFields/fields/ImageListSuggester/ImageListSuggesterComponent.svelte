@@ -59,13 +59,14 @@
 			onclick: () => {
 				const imagePath = value[index];
 
+				// in this case, using `.then()` is nicer than `await` and a try-catch block
 				navigator.clipboard
 					.writeText(imagePath)
 					.then(() => {
 						props.plugin.internal.showNotice('Image path copied to clipboard');
 					})
 					.catch(() => {
-						props.plugin.internal.showNotice('Failed to copy image to clipboard');
+						props.plugin.internal.showNotice('Failed to copy image path to clipboard');
 					});
 			},
 		});
@@ -84,10 +85,12 @@
 <div class="mb-image-card-grid">
 	{#each value as image, i}
 		<div class="mb-image-card" oncontextmenu={e => openContextMenuForElement(e, i)} role="listitem">
-			<img class="mb-image-card-image" src={props.plugin.internal.imagePathToUri(image)} alt={image} />
-			<div class="mb-image-card-footer">
-				<span>{image}</span>
-			</div>
+			<img
+				class="mb-image-card-image"
+				src={props.plugin.internal.imagePathToUri(image)}
+				alt={image}
+				aria-label={image}
+			/>
 		</div>
 	{/each}
 </div>

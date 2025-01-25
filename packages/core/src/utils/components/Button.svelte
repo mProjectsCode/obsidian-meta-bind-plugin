@@ -8,19 +8,21 @@
 		variant = ButtonStyleType.DEFAULT,
 		disabled = false,
 		tooltip = '',
+		classes = '',
 		onclick = () => {},
 		children,
 	}: {
 		variant?: ButtonStyleType;
 		disabled?: boolean;
 		tooltip?: string;
+		classes?: string;
 		onclick?: (e: MouseEvent) => void | Promise<void>;
 		children: Snippet;
 	} = $props();
 </script>
 
 <button
-	class="mb-button-inner"
+	class="mb-button-inner {classes}"
 	class:mod-cta={variant === ButtonStyleType.PRIMARY}
 	class:mod-warning={variant === ButtonStyleType.DESTRUCTIVE}
 	class:mod-plain={variant === ButtonStyleType.PLAIN}

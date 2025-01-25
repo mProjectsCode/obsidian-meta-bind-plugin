@@ -20,7 +20,7 @@ export class ButtonTemplatesSettingModal extends Modal {
 	public onOpen(): void {
 		this.contentEl.empty();
 		if (this.component) {
-			unmount(this.component);
+			void unmount(this.component);
 		}
 
 		this.component = mount(ButtonTemplatesSettingComponent, {
@@ -35,7 +35,7 @@ export class ButtonTemplatesSettingModal extends Modal {
 	public onClose(): void {
 		this.contentEl.empty();
 		if (this.component) {
-			unmount(this.component);
+			void unmount(this.component);
 		}
 	}
 

@@ -1,18 +1,4 @@
 import { SyntaxHighlightingAPI } from 'packages/core/src/api/SyntaxHighlightingAPI';
-import {
-	V_BindTargetDeclaration,
-	V_BindTargetScope,
-	V_ButtonOptions,
-	V_EmbedOptions,
-	V_FieldType,
-	V_FilePath,
-	V_InlineButtonOptions,
-	V_InputFieldOptions,
-	V_JsViewFieldOptions,
-	V_RenderChildType,
-	V_TableFieldOptions,
-	V_ViewFieldOptions,
-} from 'packages/core/src/api/Validators';
 import type {
 	ButtonGroupOptions,
 	ButtonOptions,
@@ -30,6 +16,20 @@ import {
 	NotePosition,
 	RenderChildType,
 } from 'packages/core/src/config/APIConfigs';
+import {
+	V_BindTargetDeclaration,
+	V_BindTargetScope,
+	V_ButtonOptions,
+	V_EmbedOptions,
+	V_FieldType,
+	V_FilePath,
+	V_InlineButtonOptions,
+	V_InputFieldOptions,
+	V_JsViewFieldOptions,
+	V_RenderChildType,
+	V_TableFieldOptions,
+	V_ViewFieldOptions,
+} from 'packages/core/src/config/validators/Validators';
 import { ButtonActionRunner } from 'packages/core/src/fields/button/ButtonActionRunner';
 import { ButtonGroupMountable } from 'packages/core/src/fields/button/ButtonGroupMountable';
 import { ButtonManager } from 'packages/core/src/fields/button/ButtonManager';
@@ -145,7 +145,7 @@ export abstract class API<Plugin extends IPlugin> {
 			},
 		);
 
-		if (this.plugin.internal.isFilePathExcluded(filePath) && honorExcludedSetting) {
+		if (this.plugin.internal.file.isExcludedFromRendering(filePath) && honorExcludedSetting) {
 			return this.createExcludedMountable(filePath);
 		}
 
@@ -189,7 +189,7 @@ export abstract class API<Plugin extends IPlugin> {
 		filePath: string,
 		scope: BindTargetScope | undefined,
 		renderChildType: RenderChildType = RenderChildType.INLINE,
-		position?: NotePosition | undefined,
+		position?: NotePosition,
 		honorExcludedSetting: boolean = true,
 	): FieldMountable {
 		validateAPIArgs(
@@ -247,7 +247,7 @@ export abstract class API<Plugin extends IPlugin> {
 		filePath: string,
 		scope: BindTargetScope | undefined,
 		renderChildType: RenderChildType = RenderChildType.INLINE,
-		position?: NotePosition | undefined,
+		position?: NotePosition,
 		honorExcludedSetting: boolean = true,
 	): FieldMountable {
 		validateAPIArgs(
@@ -269,7 +269,7 @@ export abstract class API<Plugin extends IPlugin> {
 			},
 		);
 
-		if (this.plugin.internal.isFilePathExcluded(filePath) && honorExcludedSetting) {
+		if (this.plugin.internal.file.isExcludedFromRendering(filePath) && honorExcludedSetting) {
 			return this.createExcludedMountable(filePath);
 		}
 
@@ -590,7 +590,7 @@ export abstract class API<Plugin extends IPlugin> {
 	}
 
 	/**
-	 * Checks if a string is any declaration and if yes returns the widget type.
+	 * Checks if a string is any declaration. If yes, it returns the widget type, otherwise undefined.
 	 *
 	 * @param str the declaration string
 	 */
@@ -635,7 +635,7 @@ export abstract class API<Plugin extends IPlugin> {
 	 *
 	 * @param storageType the storage type (also named metadata source sometimes)
 	 * @param storagePath the storage path (usually the file path)
-	 * @param property the property path a.b.c = ['a', 'b', 'c']
+	 * @param property the property access path as an array. E.g. for the path `cache.a.b.c`, the array would be `['a', 'b', 'c']`.
 	 * @param listenToChildren whether to listen to children, only relevant for arrays and objects
 	 */
 	public createBindTarget(
@@ -758,8 +758,13 @@ export abstract class API<Plugin extends IPlugin> {
 
 	/**
 	 * Subscribes to a property in meta binds metadata cache.
-	 * This returns a subscription that can be used to unsubscribe as well as update the cache.
-	 * IF YOU DON'T CALL `unsubscribe` THE SUBSCRIPTION WILL LEAK MEMORY.
+	 * This expects some sort of lifecycle hook to be passed in.
+	 * This method will register a callback to the lifecycle hook.
+	 * To unsubscribe the subscription, the callback registered to the lifecycle hook must be called.
+	 * In the context of Obsidian, you should pass a `Component` instance as the lifecycle hook and
+	 * make sure to unload the component when you are done using the metadata subscription.
+	 *
+	 * NOT UNSUBSCRIBING WILL LEAD TO MEMORY LEAKS.
 	 *
 	 * @param bindTarget
 	 * @param lifecycleHook In Obsidian this is an instance of the Component class. The subscription will be automatically unsubscribed when the component is unloaded.

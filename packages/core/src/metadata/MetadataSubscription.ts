@@ -1,13 +1,12 @@
-import type { ComputedSubscriptionDependency } from 'packages/core/src/metadata/ComputedMetadataSubscription';
 import type { IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
 import type { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
 import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import type { Signal } from 'packages/core/src/utils/Signal';
+import type { Writable } from 'packages/core/src/utils/Signal';
 
 export class MetadataSubscription implements IMetadataSubscription {
 	readonly uuid: string;
-	readonly callbackSignal: Signal<unknown>;
+	readonly callbackSignal: Writable<unknown>;
 
 	readonly metadataManager: MetadataManager;
 
@@ -18,7 +17,7 @@ export class MetadataSubscription implements IMetadataSubscription {
 
 	constructor(
 		uuid: string,
-		callbackSignal: Signal<unknown>,
+		callbackSignal: Writable<unknown>,
 		metadataManager: MetadataManager,
 		bindTarget: BindTargetDeclaration,
 		onDelete: () => void,
@@ -44,7 +43,7 @@ export class MetadataSubscription implements IMetadataSubscription {
 	 *
 	 * @param value
 	 */
-	public update(value: unknown): void {
+	public write(value: unknown): void {
 		this.metadataManager.write(value, this.bindTarget, this.uuid);
 	}
 
@@ -55,7 +54,7 @@ export class MetadataSubscription implements IMetadataSubscription {
 	 *
 	 * @param value
 	 */
-	public notify(value: unknown): void {
+	public onUpdate(value: unknown): void {
 		try {
 			this.callbackSignal.set(value);
 		} catch (e) {
@@ -71,7 +70,7 @@ export class MetadataSubscription implements IMetadataSubscription {
 		}
 	}
 
-	public getDependencies(): ComputedSubscriptionDependency[] {
+	public getDependencies(): BindTargetDeclaration[] {
 		return [];
 	}
 

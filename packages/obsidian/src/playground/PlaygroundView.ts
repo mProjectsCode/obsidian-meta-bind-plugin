@@ -21,10 +21,9 @@ export class PlaygroundView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return 'Meta Bind Playground';
+		return 'Meta Bind playground';
 	}
 
-	// eslint-disable-next-line @typescript-eslint/require-await
 	async onOpen(): Promise<void> {
 		this.contentEl.empty();
 
@@ -36,10 +35,9 @@ export class PlaygroundView extends ItemView {
 		});
 	}
 
-	// eslint-disable-next-line @typescript-eslint/require-await
 	async onClose(): Promise<void> {
 		if (this.component) {
-			unmount(this.component);
+			void unmount(this.component);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+import { zip } from 'itertools-ts/es/multi';
 import type { IMetadataSubscription } from 'packages/core/src/metadata/IMetadataSubscription';
 import type { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
 import type { MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
@@ -7,49 +7,41 @@ import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/error
 import type { Signal } from 'packages/core/src/utils/Signal';
 import { getUUID } from 'packages/core/src/utils/Utils';
 
-// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-export type ComputeFunction = (values: unknown[]) => Promise<unknown> | unknown;
+export type EffectFunction = () => Promise<void> | void;
 
-export interface ComputedSubscriptionDependency {
-	bindTarget: BindTargetDeclaration;
-	callbackSignal: Signal<unknown>;
-}
-
-export class ComputedMetadataSubscription implements IMetadataSubscription {
+export class EffectMetadataSubscription implements IMetadataSubscription {
 	readonly uuid: string;
-	readonly callbackSignal: Signal<unknown>;
 
 	readonly metadataManager: MetadataManager;
 
 	readonly bindTarget: BindTargetDeclaration | undefined;
-	readonly dependencies: ComputedSubscriptionDependency[];
+	readonly dependencies: BindTargetDeclaration[];
+	readonly dependencySignals: Signal<unknown>[];
 
 	readonly dependencySubscriptions: MetadataSubscription[];
 
-	readonly computeFunction: ComputeFunction;
+	readonly effectFunction: EffectFunction;
 
 	deleted: boolean;
 	readonly onDelete: () => void;
 
 	constructor(
 		uuid: string,
-		callbackSignal: Signal<unknown>,
 		metadataManager: MetadataManager,
-		bindTarget: BindTargetDeclaration | undefined,
-		dependencies: ComputedSubscriptionDependency[],
-		computeFunction: ComputeFunction,
+		dependencies: BindTargetDeclaration[],
+		dependencySignals: Signal<unknown>[],
+		effectFunction: EffectFunction,
 		onDelete: () => void,
 	) {
 		this.uuid = uuid;
-		this.callbackSignal = callbackSignal;
 		this.metadataManager = metadataManager;
-		this.bindTarget = bindTarget;
+		this.bindTarget = undefined;
 		this.dependencies = dependencies;
+		this.dependencySignals = dependencySignals;
 		this.dependencySubscriptions = [];
-		this.computeFunction = computeFunction;
-		this.onDelete = onDelete;
-
+		this.effectFunction = effectFunction;
 		this.deleted = false;
+		this.onDelete = onDelete;
 	}
 
 	/**
@@ -58,36 +50,29 @@ export class ComputedMetadataSubscription implements IMetadataSubscription {
 	 * Used to initialize the dependency subscriptions.
 	 */
 	public init(): void {
-		for (const dependency of this.dependencies) {
+		for (const [dependency, signal] of zip(this.dependencies, this.dependencySignals)) {
 			const dependencyId = this.uuid + '/' + getUUID();
 
 			this.dependencySubscriptions.push(
-				this.metadataManager.subscribe(dependencyId, dependency.callbackSignal, dependency.bindTarget, () =>
-					this.delete(),
-				),
+				this.metadataManager.subscribe(dependencyId, signal, dependency, () => this.delete()),
 			);
 
-			dependency.callbackSignal.registerListener({ callback: () => void this.computeValue() });
+			signal.registerListener({ callback: () => void this.runEffect() });
 		}
 
-		void this.computeValue();
+		void this.runEffect();
 	}
 
-	private async computeValue(): Promise<void> {
+	private async runEffect(): Promise<void> {
 		try {
-			const values = this.dependencySubscriptions.map(x => x.callbackSignal.get());
-			const value = await this.computeFunction(values);
-			this.callbackSignal.set(value);
-			if (this.bindTarget !== undefined) {
-				this.metadataManager.write(value, this.bindTarget, this.uuid);
-			}
+			await this.effectFunction();
 		} catch (e) {
 			const error = e instanceof Error ? e : String(e);
 
 			console.warn(
 				new MetaBindInternalError({
 					errorLevel: ErrorLevel.ERROR,
-					effect: 'Failed to compute value of computed subscription',
+					effect: 'Failed to run metadata effect',
 					cause: error,
 				}),
 			);
@@ -106,13 +91,13 @@ export class ComputedMetadataSubscription implements IMetadataSubscription {
 	}
 
 	/**
-	 * Does nothing.
+	 * Does nothing because this subscription does not have a bind target.
 	 *
 	 * @param _
 	 */
-	public notify(_: unknown): void {}
+	public onUpdate(_: unknown): void {}
 
-	public getDependencies(): ComputedSubscriptionDependency[] {
+	public getDependencies(): BindTargetDeclaration[] {
 		return this.dependencies;
 	}
 

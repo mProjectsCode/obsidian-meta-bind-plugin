@@ -5,7 +5,7 @@
 
 	const {
 		plugin,
-		action,
+		action = $bindable(),
 	}: {
 		plugin: IPlugin;
 		action: RegexpReplaceInNoteButtonAction;
@@ -16,11 +16,11 @@
 	<input type="text" bind:value={action.regexp} />
 </SettingComponent>
 
-<SettingComponent name="Regexp Flags" description="The regexp flags for this regexp.">
+<SettingComponent name="Regexp flags" description="The regexp flags for this regexp.">
 	<input type="text" bind:value={action.regexpFlags} placeholder="g" />
 </SettingComponent>
 
-<SettingComponent name="Replacement Text" description="The text to replace the button with."></SettingComponent>
+<SettingComponent name="Replacement text" description="The text to replace the button with."></SettingComponent>
 <div class="meta-bind-full-width meta-bind-high">
 	<textarea bind:value={action.replacement}></textarea>
 </div>

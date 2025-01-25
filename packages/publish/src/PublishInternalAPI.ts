@@ -15,11 +15,16 @@ import type { IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
 import type { IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
 import type { MBLiteral } from 'packages/core/src/utils/Literal';
 import type { MetaBindPublishPlugin } from 'packages/publish/src/main';
+import { PublishFileAPI } from 'packages/publish/src/PublishFileAPI';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
 // TODO: implement
 export class PublishInternalAPI extends InternalAPI<MetaBindPublishPlugin> {
+	constructor(plugin: MetaBindPublishPlugin) {
+		super(plugin, new PublishFileAPI(plugin));
+	}
+
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public getLifecycleHookValidator(): ZodType<LifecycleHook, any, any> {
 		return z.instanceof(Component);
@@ -60,14 +65,6 @@ export class PublishInternalAPI extends InternalAPI<MetaBindPublishPlugin> {
 		throw new Error('not implemented');
 	}
 
-	public openFile(_filePath: string, _callingFilePath: string, _newTab: boolean): void {
-		throw new Error('not implemented');
-	}
-
-	public getFilePathByName(name: string, _relativeTo: string = ''): string | undefined {
-		return name;
-	}
-
 	public showNotice(message: string): void {
 		new Notice(message);
 	}
@@ -104,24 +101,6 @@ export class PublishInternalAPI extends InternalAPI<MetaBindPublishPlugin> {
 		return [];
 	}
 
-	public getAllFiles(): string[] {
-		return Object.keys(publish.site.cache);
-	}
-
-	public getAllFolders(): string[] {
-		const filePaths = this.getAllFiles();
-
-		const folders = new Set<string>();
-
-		for (const filePath of filePaths) {
-			const parts = filePath.split('/');
-			parts.pop();
-			folders.add(parts.join('/'));
-		}
-
-		return Array.from(folders);
-	}
-
 	public getImageSuggesterOptions(_inputField: ImageSuggesterIPF): SuggesterOption<string>[] {
 		return [];
 	}
@@ -131,14 +110,6 @@ export class PublishInternalAPI extends InternalAPI<MetaBindPublishPlugin> {
 	}
 
 	public readFilePath(_filePath: string): Promise<string> {
-		return Promise.resolve('');
-	}
-
-	public writeFilePath(_filePath: string, _content: string): Promise<void> {
-		return Promise.resolve();
-	}
-
-	public createFile(_folderPath: string, _fileName: string, _extension: string, _open?: boolean): Promise<string> {
 		return Promise.resolve('');
 	}
 

@@ -8,7 +8,11 @@ import { isUrl, openURL } from 'packages/core/src/utils/Utils';
 
 const P_MDLinkInner: Parser<[string, string | undefined, string | undefined]> = P.sequence(
 	P_FilePath, // the file path
-	P.string('#').then(P.manyNotOf('[]#|^:')).optional(), // the optional heading
+	P.or(
+		P.string('#').then(P.manyNotOf('[]#|:')), // either a heading with maybe a block
+		P.string('#').result(undefined), // or an empty heading
+		P.succeed(undefined), // or no heading at all
+	),
 	P.string('|').then(P.manyNotOf('[]')).optional(), // the optional alias
 );
 
@@ -61,9 +65,21 @@ export class MarkdownLink {
 
 	open(plugin: IPlugin, relativeFilePath: string, newTab: boolean): void {
 		if (this.internal) {
-			plugin.internal.openFile(this.fullTarget(), relativeFilePath, newTab);
+			plugin.internal.file.open(this.fullTarget(), relativeFilePath, newTab);
 		} else {
 			openURL(this.target);
+		}
+	}
+
+	toString(): string {
+		const embed = this.isEmbed ? '!' : '';
+
+		if (this.internal) {
+			const alias = this.alias ? `|${this.alias}` : '';
+			return `${embed}[[${this.fullTarget()}${alias}]]`;
+		} else {
+			const alias = this.alias ?? this.fullTarget();
+			return `${embed}[${alias}](${this.fullTarget()})`;
 		}
 	}
 }
@@ -93,16 +109,32 @@ export class MDLinkParser {
 		}
 	}
 
-	static toLinkString(str: string): string {
-		if (MDLinkParser.isLink(str)) {
-			return str;
-		} else if (isUrl(str)) {
-			const url = new URL(str);
-			return `[${url.hostname}](${str})`;
-		} else if (MDLinkParser.isLink(`[[${str}]]`)) {
-			return `[[${str}]]`;
-		} else {
-			return '';
+	static interpretAsLink(str: string): MarkdownLink | undefined {
+		// case 1: it's a valid link
+		const linkParseTry = P_MDLink.thenEof().tryParse(str);
+		if (linkParseTry.success) {
+			return linkParseTry.value;
 		}
+
+		// case 2: it's a valid inner link part, so something that is a valid link without the [[]] around it
+		const linkParseTry2 = P_MDLinkInner.thenEof().tryParse(str);
+		if (linkParseTry2.success) {
+			return new MarkdownLink(
+				false,
+				linkParseTry2.value[0],
+				linkParseTry2.value[1],
+				linkParseTry2.value[2],
+				true,
+			);
+		}
+
+		// case 3: it's a url
+		if (isUrl(str)) {
+			const url = new URL(str);
+			return MarkdownLink.fromUrl(url);
+		}
+
+		// case 4: it's a valid link
+		return undefined;
 	}
 }

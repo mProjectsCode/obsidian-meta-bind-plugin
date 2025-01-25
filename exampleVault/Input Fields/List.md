@@ -4,6 +4,7 @@ list:
   - banana
   - berries
   - https://github.com/
+  - apple
 list2:
   - "[[Other/Example Notes/Example Note with Image.md|Example Note with Image]]"
   - "[[Other/Example Notes/Example Note with Callouts.md|Example Note with Callouts]]"
@@ -18,7 +19,8 @@ list4:
 list5:
   - "[[Other/Example Notes/Example Note with Embeds.md|Example Note with Embeds]]"
   - "[[Other/Example Notes/Example Note with Callouts.md|Example Note with Callouts]]"
-list6: 
+list6:
+  - ""
 ---
 
 ### List
@@ -59,7 +61,7 @@ INPUT[inlineListSuggester(optionQuery(#example-note), option(something, other), 
 
 Some text: `INPUT[inlineListSuggester(optionQuery(#example-note), option(something, other), useLinks(false)):list4]` some more text
 
-`INPUT[inlineListSuggester(optionQuery(#example-note), option(something, other)):list5]` 
+`INPUT[inlineListSuggester(optionQuery(#example-note), option(something, other), allowOther):list5]` 
 
 ### Null Values
 

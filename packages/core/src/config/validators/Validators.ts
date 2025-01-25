@@ -9,8 +9,8 @@ import type {
 	ViewFieldOptions,
 } from 'packages/core/src/config/APIConfigs';
 import { FieldType, NotePosition, RenderChildType } from 'packages/core/src/config/APIConfigs';
-import { V_ButtonConfig } from 'packages/core/src/config/ButtonConfigValidators';
 import { InputFieldType } from 'packages/core/src/config/FieldConfigs';
+import { V_ButtonConfig } from 'packages/core/src/config/validators/ButtonConfigValidators';
 import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import type {
@@ -20,14 +20,11 @@ import type {
 	UnvalidatedPropAccess,
 } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import type { SimpleButtonGroupDeclaration } from 'packages/core/src/parsers/ButtonParser';
+import type { SimpleFieldArgument, UnvalidatedFieldArgument } from 'packages/core/src/parsers/FieldDeclaration';
 import type {
 	SimpleInputFieldDeclaration,
 	UnvalidatedInputFieldDeclaration,
 } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
-import type {
-	SimpleFieldArgument,
-	UnvalidatedFieldArgument,
-} from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
 import type { ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import type {
 	SimpleJsViewFieldBindTargetMapping,

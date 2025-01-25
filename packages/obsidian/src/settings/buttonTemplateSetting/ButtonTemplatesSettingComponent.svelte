@@ -2,7 +2,7 @@
 	import { Notice, parseYaml } from 'obsidian';
 	import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
-	import { V_ButtonConfig } from 'packages/core/src/config/ButtonConfigValidators';
+	import { V_ButtonConfig } from 'packages/core/src/config/validators/ButtonConfigValidators';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import ModalButtonGroup from 'packages/core/src/utils/components/ModalButtonGroup.svelte';
 	import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
@@ -15,13 +15,14 @@
 
 	let {
 		modal,
-		buttonConfigs,
+		buttonConfigs: propButtonConfigs,
 	}: {
 		modal: ButtonTemplatesSettingModal;
 		buttonConfigs: ButtonConfig[];
 	} = $props();
 
 	let errorCollection: ErrorCollection | undefined = $state();
+	let buttonConfigs: ButtonConfig[] = $state(propButtonConfigs);
 
 	function deleteTemplate(template: ButtonConfig): void {
 		buttonConfigs = buttonConfigs.filter(x => x !== template);
@@ -73,7 +74,7 @@
 	}
 
 	function save(): void {
-		errorCollection = modal.save(buttonConfigs);
+		errorCollection = modal.save($state.snapshot(buttonConfigs));
 
 		if (errorCollection === undefined) {
 			modal.close();
@@ -93,13 +94,13 @@
 		></ButtonTemplateSettingComponent>
 	{/each}
 
-	<Button onclick={() => addTemplate()} variant={ButtonStyleType.PRIMARY} tooltip="Create New Template"
+	<Button onclick={() => addTemplate()} variant={ButtonStyleType.PRIMARY} tooltip="Create new template"
 		>Add Template</Button
 	>
 	<Button
 		onclick={() => addTemplateFromClipboard()}
 		variant={ButtonStyleType.DEFAULT}
-		tooltip="Create New Template from YAML in Clipboard"
+		tooltip="Create new template from YAML in clipboard"
 		>Add Template from Clipboard
 	</Button>
 
@@ -116,7 +117,7 @@
 	{/if}
 
 	<ModalButtonGroup>
-		<Button onclick={() => save()} variant={ButtonStyleType.PRIMARY} tooltip="Save Changes">Save</Button>
-		<Button onclick={() => cancel()} tooltip="Revert Changes">Cancel</Button>
+		<Button onclick={() => save()} variant={ButtonStyleType.PRIMARY} tooltip="Save changes">Save</Button>
+		<Button onclick={() => cancel()} tooltip="Revert changes">Cancel</Button>
 	</ModalButtonGroup>
 </div>

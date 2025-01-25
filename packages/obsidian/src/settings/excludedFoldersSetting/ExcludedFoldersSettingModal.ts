@@ -18,7 +18,7 @@ export class ExcludedFoldersSettingModal extends Modal {
 	public onOpen(): void {
 		this.contentEl.empty();
 		if (this.component) {
-			unmount(this.component);
+			void unmount(this.component);
 		}
 
 		this.component = mount(ExcludedFoldersSettingComponent, {
@@ -34,14 +34,14 @@ export class ExcludedFoldersSettingModal extends Modal {
 	public onClose(): void {
 		this.contentEl.empty();
 		if (this.component) {
-			unmount(this.component);
+			void unmount(this.component);
 		}
 	}
 
 	public save(folders: string[]): ErrorCollection | undefined {
 		for (const folder of folders) {
 			if (folder === '') {
-				const errorCollection = new ErrorCollection('Excluded Folders');
+				const errorCollection = new ErrorCollection('Excluded folders');
 
 				errorCollection.add(new Error(`Invalid Folder Path '${folder}'. Folder path may not be empty.`));
 

@@ -2,9 +2,9 @@ import type { ReactiveComponent } from 'jsEngine/api/reactive/ReactiveComponent'
 import { Component } from 'obsidian';
 import type { LifecycleHook } from 'packages/core/src/api/API.js';
 import { API } from 'packages/core/src/api/API.js';
-import { V_BindTargetDeclaration, V_HTMLElement, V_Mountable } from 'packages/core/src/api/Validators';
 import type { InlineFieldType } from 'packages/core/src/config/APIConfigs';
 import { isFieldTypeAllowedInline } from 'packages/core/src/config/APIConfigs';
+import { V_BindTargetDeclaration, V_HTMLElement, V_Mountable } from 'packages/core/src/config/validators/Validators';
 import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import type { Mountable } from 'packages/core/src/utils/Mountable';
@@ -125,29 +125,26 @@ export class ObsidianAPI extends API<MetaBindPlugin> {
 		);
 
 		const jsEngine = getJsEnginePluginAPI(this.plugin);
-
 		const uuid = getUUID();
-		const signal = new Signal<unknown>(undefined);
+		const metadataSignals = bindTargets.map(() => new Signal<unknown>(undefined));
 
-		const dependencies = bindTargets.map(bindTarget => ({
-			bindTarget: bindTarget,
-			callbackSignal: new Signal<unknown>(undefined),
-		}));
+		// we start with a noop callback so that we can create the subscription
+		let cb = (): Promise<void> => Promise.resolve();
 
-		let reactive: ReactiveComponent | undefined = undefined;
-
-		const subscription = this.plugin.metadataManager.subscribeComputed(
+		const subscription = this.plugin.metadataManager.subscribeEffect(
 			uuid,
-			signal,
-			undefined,
-			dependencies,
-			(values: unknown[]) => reactive?.refresh(...values),
+			bindTargets,
+			metadataSignals,
+			() => cb(),
 			() => {},
 		);
-
 		lifecycleHook.register(() => subscription.unsubscribe());
 
-		reactive = jsEngine.reactive(callback, ...dependencies.map(x => x.callbackSignal.get()));
+		// we create the reactive component here so that the metadata signals are already set up
+		const reactive = jsEngine.reactive(callback, ...metadataSignals.map(x => x.get()));
+
+		// now we update the callback to actually refresh the reactive component
+		cb = (): Promise<void> => reactive.refresh(...metadataSignals.map(x => x.get()));
 
 		return reactive;
 	}

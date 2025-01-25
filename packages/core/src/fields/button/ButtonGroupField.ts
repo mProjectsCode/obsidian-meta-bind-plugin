@@ -71,7 +71,7 @@ export class ButtonGroupField extends Mountable {
 				buttonId,
 				(buttonConfig: ButtonConfig) => {
 					if (initialButton) {
-						unmount(initialButton);
+						void unmount(initialButton);
 					}
 					initialButton = undefined;
 					button = new ButtonField(
@@ -89,7 +89,7 @@ export class ButtonGroupField extends Mountable {
 
 			this.registerUnmountCb(() => {
 				if (initialButton) {
-					unmount(initialButton);
+					void unmount(initialButton);
 				}
 				initialButton = undefined;
 				button?.unmount();

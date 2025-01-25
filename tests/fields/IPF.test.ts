@@ -414,7 +414,7 @@ describe('IPF', () => {
 			testPlugin = new TestPlugin();
 		});
 
-		describe('load behaviour', () => {
+		describe('load behavior', () => {
 			describe('should load with front-matter value if front-matter value is valid for that IPF', () => {
 				for (const validValue of TEST_CASE.validValues ?? []) {
 					test(getTestName(validValue), () => {

@@ -1,6 +1,7 @@
 import type { NotePosition } from 'packages/core/src/config/APIConfigs';
 import { RenderChildType } from 'packages/core/src/config/APIConfigs';
-import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
+import type { ButtonConfig, ButtonContext } from 'packages/core/src/config/ButtonConfig';
+import { ButtonClickType } from 'packages/core/src/config/ButtonConfig';
 import type { IPlugin } from 'packages/core/src/IPlugin';
 import ButtonComponent from 'packages/core/src/utils/components/ButtonComponent.svelte';
 import { Mountable } from 'packages/core/src/utils/Mountable';
@@ -12,7 +13,7 @@ export class ButtonField extends Mountable {
 	plugin: IPlugin;
 	config: ButtonConfig;
 	filePath: string;
-	inline: boolean;
+	isInline: boolean;
 	position: NotePosition | undefined;
 	buttonComponent?: ReturnType<SvelteComponent>;
 	isInGroup: boolean;
@@ -32,7 +33,7 @@ export class ButtonField extends Mountable {
 		this.plugin = plugin;
 		this.config = config;
 		this.filePath = filePath;
-		this.inline = renderChildType === RenderChildType.INLINE;
+		this.isInline = renderChildType === RenderChildType.INLINE;
 		this.position = position;
 		this.isInGroup = isInGroup;
 		this.isPreview = isPreview;
@@ -41,9 +42,9 @@ export class ButtonField extends Mountable {
 	protected onMount(targetEl: HTMLElement): void {
 		DomHelpers.empty(targetEl);
 		DomHelpers.removeAllClasses(targetEl);
-		DomHelpers.addClasses(targetEl, ['mb-button', this.inline ? 'mb-button-inline' : 'mb-button-block']);
+		DomHelpers.addClasses(targetEl, ['mb-button', this.isInline ? 'mb-button-inline' : 'mb-button-block']);
 
-		if (!this.inline && !this.isPreview && !this.isInGroup) {
+		if (!this.isInline && !this.isPreview && !this.isInGroup) {
 			if (this.config.id) {
 				this.plugin.api.buttonManager.addButton(this.filePath, this.config);
 			}
@@ -66,25 +67,45 @@ export class ButtonField extends Mountable {
 				icon: this.config.icon,
 				variant: this.config.style,
 				label: this.config.label,
-				tooltip: isTruthy(this.config.tooltip) ? this.config.tooltip : this.config.label,
-				onclick: async (): Promise<void> => {
-					await this.plugin.api.buttonActionRunner.runButtonAction(
+				tooltip: isTruthy(this.config.tooltip) ? this.config.tooltip : undefined,
+				cssStyle: this.config.cssStyle,
+				backgroundImage: isTruthy(this.config.backgroundImage)
+					? this.plugin.internal.imagePathToUri(this.config.backgroundImage!)
+					: undefined,
+				onclick: async (event: MouseEvent): Promise<void> => {
+					await this.plugin.api.buttonActionRunner.runButtonActions(
 						this.config,
 						this.filePath,
-						this.inline,
-						this.position,
+						this.getContext(),
+						this.plugin.api.buttonActionRunner.mouseEventToClickContext(event, ButtonClickType.LEFT),
+					);
+				},
+				onauxclick: async (event: MouseEvent): Promise<void> => {
+					await this.plugin.api.buttonActionRunner.runButtonActions(
+						this.config,
+						this.filePath,
+						this.getContext(),
+						this.plugin.api.buttonActionRunner.mouseEventToClickContext(event, ButtonClickType.MIDDLE),
 					);
 				},
 			},
 		});
 	}
 
+	public getContext(): ButtonContext {
+		return {
+			position: this.position?.getPosition(),
+			isInGroup: this.isInGroup,
+			isInline: this.isInline,
+		};
+	}
+
 	protected onUnmount(): void {
 		if (this.buttonComponent) {
-			unmount(this.buttonComponent);
+			void unmount(this.buttonComponent);
 		}
 
-		if (!this.inline && !this.isPreview) {
+		if (!this.isInline && !this.isPreview) {
 			if (this.config?.id) {
 				this.plugin.api.buttonManager.removeButton(this.filePath, this.config.id);
 			}
