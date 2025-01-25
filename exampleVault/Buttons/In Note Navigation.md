@@ -83,5 +83,5 @@ text
 ## This is a Heading at the Bottom
 
 
-Some Secion
+Some Section
 ^section-1
