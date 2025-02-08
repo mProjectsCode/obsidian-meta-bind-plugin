@@ -107,7 +107,7 @@ function generateTestCase(combination: BindTargetCombination): TestCase {
 				storageType: localScopeBindTarget.storageType,
 				storagePath: localScopeBindTarget.storagePath,
 				storageProp: localScopeBindTarget.storageProp.concat(combination.storageProp),
-				listenToChildren: false,
+				listenToChildren: true,
 			},
 		};
 	}
@@ -118,7 +118,7 @@ function generateTestCase(combination: BindTargetCombination): TestCase {
 				storageType: BindTargetStorageType.GLOBAL_MEMORY,
 				storagePath: '',
 				storageProp: combination.storageProp,
-				listenToChildren: false,
+				listenToChildren: true,
 			},
 		};
 	}
@@ -131,7 +131,7 @@ function generateTestCase(combination: BindTargetCombination): TestCase {
 				: BindTargetStorageType.FRONTMATTER,
 			storagePath: hasStoragePath ? (combination.storagePath as string) : TEST_FILE,
 			storageProp: combination.storageProp,
-			listenToChildren: false,
+			listenToChildren: true,
 		},
 	};
 }

@@ -41,7 +41,7 @@ const P_FirstMetadataPathPart: Parser<UnvalidatedBindTargetDeclaration> = P.or(
 	P.sequenceMap(firstPart => {
 		return {
 			storagePath: undefined,
-			listenToChildren: false,
+			listenToChildren: true,
 			storageProp: firstPart,
 		} satisfies UnvalidatedBindTargetDeclaration;
 	}, P_BracketMetadataPathPart.atLeast(1)),
@@ -49,7 +49,7 @@ const P_FirstMetadataPathPart: Parser<UnvalidatedBindTargetDeclaration> = P.or(
 		(firstPart, bracketPath) => {
 			return {
 				storagePath: undefined,
-				listenToChildren: false,
+				listenToChildren: true,
 				storageProp: [firstPart, ...bracketPath],
 			} satisfies UnvalidatedBindTargetDeclaration;
 		},
