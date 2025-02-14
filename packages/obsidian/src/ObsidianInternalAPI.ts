@@ -77,21 +77,13 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 	): Promise<() => void> {
 		const jsEngineAPI = getJsEnginePluginAPI(this.plugin);
 
-		const callingFile = this.app.vault.getAbstractFileByPath(callingFilePath);
-		if (!callingFile || !(callingFile instanceof TFile)) {
-			throw new Error(`calling file not found: ${callingFilePath}`);
-		}
-		const metadata = this.app.metadataCache.getFileCache(callingFile);
+		const context = await jsEngineAPI.internal.getContextForMarkdownCallingJSFile(callingFilePath, filePath);
 
 		const component = new Component();
 		await jsEngineAPI.internal.executeFile(filePath, {
 			component: component,
 			container: container,
-			context: {
-				metadata: metadata,
-				file: callingFile,
-				line: 0,
-			},
+			context: context,
 			contextOverrides: contextOverrides,
 		});
 
@@ -106,22 +98,14 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 	): Promise<() => void> {
 		const jsEngineAPI = getJsEnginePluginAPI(this.plugin);
 
-		const callingFile = this.app.vault.getAbstractFileByPath(callingFilePath);
-		if (!callingFile || !(callingFile instanceof TFile)) {
-			throw new Error(`calling file not found: ${callingFilePath}`);
-		}
-		const metadata = this.app.metadataCache.getFileCache(callingFile);
+		const context = await jsEngineAPI.internal.getContextForMarkdownOther(callingFilePath);
 
 		const component = new Component();
 		await jsEngineAPI.internal.execute({
 			code: code,
 			component: component,
 			container: container,
-			context: {
-				metadata: metadata,
-				file: callingFile,
-				line: 0,
-			},
+			context: context,
 			contextOverrides: contextOverrides,
 		});
 

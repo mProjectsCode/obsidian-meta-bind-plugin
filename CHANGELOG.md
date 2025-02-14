@@ -1,5 +1,15 @@
 # Obsidian Meta Bind Changelog
 
+# 1.3.4
+
+Changes
+
+- The minimum required [JS Engine](https://github.com/mProjectsCode/obsidian-js-engine-plugin) version is now `0.3.0`
+
+Bug Fixes
+
+- Fixed a bug with view fields not updating when a child of the bound property changed
+
 # 1.3.3
 
 Bug Fixes

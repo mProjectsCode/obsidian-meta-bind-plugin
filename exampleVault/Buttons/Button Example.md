@@ -82,6 +82,8 @@ action:
 
 text `BUTTON[docs-button, open-button, open-tab-button]` text
 
+And switch between light and dark mode
+
 ```meta-bind-button
 label: Switch to Light Mode
 hidden: false
@@ -102,6 +104,8 @@ actions:
     command: theme:use-dark
 
 ```
+
+And multiple things
 
 ```meta-bind-button
 label: This is a button

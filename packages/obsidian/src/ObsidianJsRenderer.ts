@@ -1,6 +1,6 @@
 import type { API } from 'jsEngine/api/API';
 import type { JsExecution } from 'jsEngine/engine/JsExecution';
-import { Component, TFile } from 'obsidian';
+import { Component } from 'obsidian';
 import type { IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
 import { DomHelpers } from 'packages/core/src/utils/Utils';
 import type MetaBindPlugin from 'packages/obsidian/src/main';
@@ -9,7 +9,7 @@ import { getJsEnginePluginAPI } from 'packages/obsidian/src/ObsUtils';
 export class ObsidianJsRenderer implements IJsRenderer {
 	readonly plugin: MetaBindPlugin;
 	containerEl: HTMLElement;
-	file: TFile;
+	filePath: string;
 	jsEngine: API;
 	code: string;
 	hidden: boolean;
@@ -18,34 +18,26 @@ export class ObsidianJsRenderer implements IJsRenderer {
 	constructor(plugin: MetaBindPlugin, containerEl: HTMLElement, filePath: string, code: string, hidden: boolean) {
 		this.plugin = plugin;
 		this.containerEl = containerEl;
+		this.filePath = filePath;
 		this.code = code;
 		this.hidden = hidden;
-
-		const file = plugin.app.vault.getAbstractFileByPath(filePath);
-		if (!(file instanceof TFile)) {
-			throw new Error(`File not found: ${filePath}`);
-		}
-		this.file = file;
 
 		this.jsEngine = getJsEnginePluginAPI(this.plugin);
 		this.renderComponent = new Component();
 	}
 
-	private async evaluateCode(context: Record<string, unknown>): Promise<JsExecution> {
+	private async evaluateCode(contextOverrides: Record<string, unknown>): Promise<JsExecution> {
+		const context = await this.jsEngine.internal.getContextForMarkdownOther(this.filePath);
 		return this.jsEngine.internal.execute({
 			code: this.code,
-			context: {
-				file: this.file,
-				line: 0,
-				metadata: this.plugin.app.metadataCache.getFileCache(this.file),
-			},
+			context: context,
 			container: this.containerEl,
 			component: this.renderComponent,
-			contextOverrides: context,
+			contextOverrides: contextOverrides,
 		});
 	}
 
-	async evaluate(context: Record<string, unknown>): Promise<unknown> {
+	async evaluate(contextOverrides: Record<string, unknown>): Promise<unknown> {
 		try {
 			DomHelpers.empty(this.containerEl);
 			DomHelpers.removeClass(this.containerEl, 'mb-error');
@@ -54,10 +46,10 @@ export class ObsidianJsRenderer implements IJsRenderer {
 			this.renderComponent = new Component();
 			this.renderComponent.load();
 
-			const execution = await this.evaluateCode(context);
+			const execution = await this.evaluateCode(contextOverrides);
 			const renderer = this.jsEngine.internal.createRenderer(
 				this.containerEl,
-				this.file.path,
+				this.filePath,
 				this.renderComponent,
 			);
 			if (!this.hidden) {

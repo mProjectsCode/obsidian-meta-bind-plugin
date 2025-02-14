@@ -1,2 +1,1 @@
-console.log(`Hello ${context.args.greeting} from ${context.file.path}!`);
-throw new Error('This is an error');
+new Notice(`Hello ${context.args.greeting} from "${context.jsFile?.path}", ran by "${context.file?.path}"!`);

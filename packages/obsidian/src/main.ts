@@ -73,7 +73,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			{
 				name: 'JS Engine',
 				pluginId: 'js-engine',
-				minVersion: new Version(0, 1, 0),
+				minVersion: new Version(0, 3, 0),
 			},
 			{
 				name: 'Templater',

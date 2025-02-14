@@ -1,4 +1,5 @@
 import type { Plugin } from 'obsidian';
+import { Notice } from 'obsidian';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { ErrorLevel, MetaBindDependencyError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import type { Dependency } from 'packages/obsidian/src/dependencies/Dependency';
@@ -31,31 +32,32 @@ export class DependencyManager {
 	}
 
 	private throwPluginNotFound(pluginId: string): void {
+		this.throwDependencyError(`Plugin ${pluginId} is required, but not installed. Please install the plugin.`);
+	}
+
+	private throwDependencyError(message: string): void {
+		new Notice(`meta-bind | Dependency Error: ${message}`, 0);
 		throw new MetaBindDependencyError({
 			errorLevel: ErrorLevel.ERROR,
 			effect: `Dependency violation detected`,
-			cause: `Plugin ${pluginId} is required, but not installed. Please install the plugin.`,
+			cause: message,
 		});
 	}
 
 	private checkDependencyVersion(dependency: Dependency, version: Version): void {
 		if (Version.lessThan(version, dependency.minVersion)) {
-			throw new MetaBindDependencyError({
-				errorLevel: ErrorLevel.ERROR,
-				effect: `Dependency violation detected`,
-				cause: `Plugin ${dependency.pluginId} is outdated. Required version is at least ${dependency.minVersion}, installed version is ${version}. Please update the plugin.`,
-			});
+			this.throwDependencyError(
+				`Plugin ${dependency.pluginId} is outdated. Required version is at least ${dependency.minVersion}, installed version is ${version}. Please update the plugin.`,
+			);
 		}
 
 		if (
 			dependency.maxVersion !== undefined &&
 			(Version.greaterThan(version, dependency.maxVersion) || Version.equals(version, dependency.maxVersion))
 		) {
-			throw new MetaBindDependencyError({
-				errorLevel: ErrorLevel.ERROR,
-				effect: `Dependency violation detected`,
-				cause: `Plugin ${dependency.pluginId} is too new. Required version is lower than ${dependency.maxVersion}, installed version is ${version}. Please downgrade the plugin.`,
-			});
+			this.throwDependencyError(
+				`Plugin ${dependency.pluginId} is too new. Required version is lower than ${dependency.maxVersion}, installed version is ${version}. Please downgrade the plugin.`,
+			);
 		}
 	}
 
