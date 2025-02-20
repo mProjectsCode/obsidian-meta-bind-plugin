@@ -1,27 +1,10 @@
-import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
-import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
-import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import type { MarkdownLink } from 'packages/core/src/parsers/MarkdownLinkParser';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
+import { P_float, P_int } from 'packages/core/src/parsers/nomParsers/MiscNomParsers';
 import { isUrl } from 'packages/core/src/utils/Utils';
 
 export type MBLiteral = string | number | boolean | null;
 export type MBExtendedLiteral = MBLiteral | MBLiteral[];
-
-export const floatParser: Parser<number> = P.sequenceMap(
-	(sign, number) => (sign === undefined ? number : -number),
-	P.string('-').optional(),
-	P.or(
-		P.sequenceMap((a, b, c) => Number(a + b + c), P_UTILS.digits(), P.string('.'), P_UTILS.digits()),
-		P_UTILS.digits().map(x => Number(x)),
-	),
-).thenEof();
-
-export const intParser: Parser<number> = P.sequenceMap(
-	(sign, number) => (sign === undefined ? number : -number),
-	P.string('-').optional(),
-	P_UTILS.digits().map(x => Number(x)),
-).thenEof();
 
 export function parseLiteral(literalString: string): MBLiteral {
 	if (literalString.toLowerCase() === 'null') {
@@ -31,7 +14,7 @@ export function parseLiteral(literalString: string): MBLiteral {
 	} else if (literalString === 'false') {
 		return false;
 	} else {
-		const parseResult = floatParser.tryParse(literalString);
+		const parseResult = P_float.tryParse(literalString);
 
 		if (parseResult.success) {
 			return parseResult.value;
@@ -96,7 +79,7 @@ export function parseUnknownToFloat(literal: unknown): number | undefined {
 	if (typeof literal === 'number') {
 		return literal;
 	} else if (typeof literal === 'string') {
-		const v = floatParser.tryParse(literal);
+		const v = P_float.tryParse(literal);
 		if (v.success) {
 			return v.value;
 		}
@@ -114,7 +97,7 @@ export function parseUnknownToInt(literal: unknown): number | undefined {
 	if (typeof literal === 'number') {
 		return Number.isInteger(literal) ? literal : undefined;
 	} else if (typeof literal === 'string') {
-		const v = intParser.tryParse(literal);
+		const v = P_int.tryParse(literal);
 		if (v.success) {
 			return v.value;
 		}

@@ -32,6 +32,13 @@ function actionFieldNumber(action: string, name: string, description: string) {
 function actionFieldString(action: string, name: string, description: string) {
 	return z.string({
 		required_error: `The ${action} action requires a specified ${description} with the '${name}' field.`,
+	});
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+function actionFieldCoerceString(action: string, name: string, description: string) {
+	return z.coerce.string({
+		required_error: `The ${action} action requires a specified ${description} with the '${name}' field.`,
 		invalid_type_error: `The ${action} action requires the value of the '${name}' fields to be a string.`,
 	});
 }
@@ -137,8 +144,8 @@ export const V_CreateNoteButtonAction = schemaForType<CreateNoteButtonAction>()(
 export const V_ReplaceInNoteButtonAction = schemaForType<ReplaceInNoteButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.REPLACE_IN_NOTE),
-		fromLine: actionFieldNumber('replaceInNote', 'fromLine', 'line to replace from'),
-		toLine: actionFieldNumber('replaceInNote', 'toLine', 'line to replace to'),
+		fromLine: actionFieldCoerceString('replaceInNote', 'fromLine', 'line to replace from'),
+		toLine: actionFieldCoerceString('replaceInNote', 'toLine', 'line to replace to'),
 		replacement: actionFieldString('replaceInNote', 'replacement', 'replacement string'),
 		templater: actionFieldBool('replaceInNote', 'templater', 'value for whether to use Templater').optional(),
 	}),
@@ -168,7 +175,7 @@ export const V_RegexpReplaceInNoteButtonAction = schemaForType<RegexpReplaceInNo
 export const V_InsertIntoNoteButtonAction = schemaForType<InsertIntoNoteButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.INSERT_INTO_NOTE),
-		line: actionFieldNumber('insertIntoNote', 'line', 'line to insert at'),
+		line: actionFieldCoerceString('insertIntoNote', 'line', 'line to insert at'),
 		value: actionFieldString('insertIntoNote', 'value', 'string to insert'),
 		templater: actionFieldBool('insertIntoNote', 'templater', 'value for whether to use Templater').optional(),
 	}),

@@ -7,6 +7,8 @@ import type {
 import { ButtonActionType } from 'packages/core/src/config/ButtonConfig';
 import { AbstractButtonActionConfig } from 'packages/core/src/fields/button/AbstractButtonActionConfig';
 import type { IPlugin } from 'packages/core/src/IPlugin';
+import { P_lineNumberExpression } from 'packages/core/src/parsers/nomParsers/MiscNomParsers';
+import { runParser } from 'packages/core/src/parsers/ParsingError';
 
 export class InsertIntoNoteButtonActionConfig extends AbstractButtonActionConfig<InsertIntoNoteButtonAction> {
 	constructor(plugin: IPlugin) {
@@ -17,7 +19,7 @@ export class InsertIntoNoteButtonActionConfig extends AbstractButtonActionConfig
 		_config: ButtonConfig | undefined,
 		action: InsertIntoNoteButtonAction,
 		filePath: string,
-		_context: ButtonContext,
+		context: ButtonContext,
 		_click: ButtonClickContext,
 	): Promise<void> {
 		const insertString = action.templater
@@ -27,17 +29,22 @@ export class InsertIntoNoteButtonActionConfig extends AbstractButtonActionConfig
 				)
 			: action.value;
 
+		const line = runParser(P_lineNumberExpression, action.line.toString());
+
 		await this.plugin.internal.file.atomicModify(filePath, content => {
 			let splitContent = content.split('\n');
 
-			if (action.line < 1 || action.line > splitContent.length + 1) {
+			const lineContext = this.plugin.api.buttonActionRunner.getLineNumberContext(content, context.position);
+			const lineNumber = line.evaluate(lineContext);
+
+			if (lineNumber < 1 || lineNumber > splitContent.length) {
 				throw new Error('Line number out of bounds');
 			}
 
 			splitContent = [
-				...splitContent.slice(0, action.line - 1),
+				...splitContent.slice(0, lineNumber - 1),
 				insertString,
-				...splitContent.slice(action.line - 1),
+				...splitContent.slice(lineNumber - 1),
 			];
 
 			return splitContent.join('\n');

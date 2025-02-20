@@ -1,3 +1,4 @@
+import type { LinePosition } from 'packages/core/src/config/APIConfigs';
 import type { IPlugin } from 'packages/core/src/IPlugin';
 
 export abstract class FileAPI<Plugin extends IPlugin> {
@@ -57,6 +58,24 @@ export abstract class FileAPI<Plugin extends IPlugin> {
 	 * @param relativeTo
 	 */
 	public abstract getPathByName(name: string, relativeTo?: string): string | undefined;
+
+	public getFrontmatterLocation(fileContent: string): LinePosition | undefined {
+		const splitContent = fileContent.split('\n');
+		if (splitContent.at(0) !== '---') {
+			return undefined;
+		}
+
+		for (let i = 1; i < splitContent.length; i++) {
+			if (splitContent.at(i) === '---') {
+				return {
+					lineStart: 1,
+					lineEnd: i + 1,
+				};
+			}
+		}
+
+		return undefined;
+	}
 
 	/**
 	 * Checks if a file path has been excluded in the settings.

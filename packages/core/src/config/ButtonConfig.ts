@@ -94,8 +94,8 @@ export interface CreateNoteButtonAction {
 
 export interface ReplaceInNoteButtonAction {
 	type: ButtonActionType.REPLACE_IN_NOTE;
-	fromLine: number;
-	toLine: number;
+	fromLine: number | string;
+	toLine: number | string;
 	replacement: string;
 	templater?: boolean;
 }
@@ -115,7 +115,7 @@ export interface RegexpReplaceInNoteButtonAction {
 
 export interface InsertIntoNoteButtonAction {
 	type: ButtonActionType.INSERT_INTO_NOTE;
-	line: number;
+	line: number | string;
 	value: string;
 	templater?: boolean;
 }

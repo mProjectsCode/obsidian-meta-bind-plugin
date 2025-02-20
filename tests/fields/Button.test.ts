@@ -165,6 +165,145 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 
 			expect(await testPlugin.internal.file.read('test/file.md')).toBe('line1\nnewLine2\nnewLine3\n');
 		});
+
+		describe('replaces with line number expressions', () => {
+			test('file relative 1', async () => {
+				await testPlugin.internal.file.write('test/file.md', 'line1\nline2\nline3\n');
+
+				await simplifiedRunAction({
+					type: ButtonActionType.REPLACE_IN_NOTE,
+					fromLine: 'fileStart',
+					toLine: 'fileEnd',
+					replacement: 'newLine1\nnewLine2\nnewLine3',
+				});
+
+				expect(await testPlugin.internal.file.read('test/file.md')).toBe('newLine1\nnewLine2\nnewLine3');
+			});
+
+			test('file relative 2', async () => {
+				await testPlugin.internal.file.write('test/file.md', 'line1\nline2\nline3');
+
+				await simplifiedRunAction({
+					type: ButtonActionType.REPLACE_IN_NOTE,
+					fromLine: 'fileStart',
+					toLine: 'fileEnd',
+					replacement: 'newLine1\nnewLine2\nnewLine3',
+				});
+
+				expect(await testPlugin.internal.file.read('test/file.md')).toBe('newLine1\nnewLine2\nnewLine3');
+			});
+
+			test('file relative 3', async () => {
+				await testPlugin.internal.file.write('test/file.md', 'line1\nline2\nline3\n');
+
+				await simplifiedRunAction({
+					type: ButtonActionType.REPLACE_IN_NOTE,
+					fromLine: 'fileStart + 1',
+					toLine: 'fileEnd - 1',
+					replacement: 'newLine2\nnewLine3',
+				});
+
+				expect(await testPlugin.internal.file.read('test/file.md')).toBe('line1\nnewLine2\nnewLine3\n');
+			});
+
+			test('frontmatter relative 1', async () => {
+				await testPlugin.internal.file.write('test/file.md', 'line1\nline2\nline3\n');
+
+				await simplifiedRunAction({
+					type: ButtonActionType.REPLACE_IN_NOTE,
+					fromLine: 'frontmatterStart',
+					toLine: 'frontmatterEnd',
+					replacement: 'newLine2\nnewLine3',
+				});
+
+				expect(await testPlugin.internal.file.read('test/file.md')).toBe('newLine2\nnewLine3\nline2\nline3\n');
+			});
+
+			test('frontmatter relative 2', async () => {
+				await testPlugin.internal.file.write('test/file.md', '---\n---\nline1\nline2\nline3\n');
+
+				await simplifiedRunAction({
+					type: ButtonActionType.REPLACE_IN_NOTE,
+					fromLine: 'frontmatterStart',
+					toLine: 'frontmatterEnd',
+					replacement: 'newLine2\nnewLine3',
+				});
+
+				expect(await testPlugin.internal.file.read('test/file.md')).toBe(
+					'newLine2\nnewLine3\nline1\nline2\nline3\n',
+				);
+			});
+
+			test('frontmatter relative 3', async () => {
+				await testPlugin.internal.file.write('test/file.md', '---\nfoo: bar\n---\nline1\nline2\nline3\n');
+
+				await simplifiedRunAction({
+					type: ButtonActionType.REPLACE_IN_NOTE,
+					fromLine: 'frontmatterStart',
+					toLine: 'frontmatterEnd',
+					replacement: 'newLine2\nnewLine3',
+				});
+
+				expect(await testPlugin.internal.file.read('test/file.md')).toBe(
+					'newLine2\nnewLine3\nline1\nline2\nline3\n',
+				);
+			});
+
+			test('content relative 1', async () => {
+				await testPlugin.internal.file.write('test/file.md', 'line1\nline2\nline3\n');
+
+				await simplifiedRunAction({
+					type: ButtonActionType.REPLACE_IN_NOTE,
+					fromLine: 'contentStart',
+					toLine: 'contentEnd',
+					replacement: 'newLine2\nnewLine3',
+				});
+
+				expect(await testPlugin.internal.file.read('test/file.md')).toBe('newLine2\nnewLine3');
+			});
+
+			test('content relative 2', async () => {
+				await testPlugin.internal.file.write('test/file.md', '---\nfoo: bar\n---\nline1\nline2\nline3\n');
+
+				await simplifiedRunAction({
+					type: ButtonActionType.REPLACE_IN_NOTE,
+					fromLine: 'contentStart',
+					toLine: 'contentEnd',
+					replacement: 'newLine2\nnewLine3',
+				});
+
+				expect(await testPlugin.internal.file.read('test/file.md')).toBe(
+					'---\nfoo: bar\n---\nnewLine2\nnewLine3',
+				);
+			});
+
+			test('self relative', async () => {
+				await testPlugin.internal.file.write('test/file.md', 'line1\nbutton\nline3\n');
+
+				await testPlugin.api.buttonActionRunner.runAction(
+					undefined,
+					{
+						type: ButtonActionType.REPLACE_IN_NOTE,
+						fromLine: 'selfStart',
+						toLine: 'selfEnd',
+						replacement: 'no button',
+					},
+					testFilePath,
+					{
+						position: {
+							// these line numbers start at 0
+							lineStart: 1,
+							lineEnd: 1,
+						},
+						isInline: false,
+						isInGroup: false,
+					},
+					defaultClick,
+				);
+
+				expect(await testPlugin.internal.file.read('test/file.md')).toBe('line1\nno button\nline3\n');
+			});
+		});
 	},
 	[ButtonActionType.REGEXP_REPLACE_IN_NOTE]: () => {
 		test('replaces in note', async () => {

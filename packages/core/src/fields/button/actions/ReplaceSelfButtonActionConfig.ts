@@ -44,7 +44,7 @@ export class ReplaceSelfButtonActionConfig extends AbstractButtonActionConfig<Re
 		await this.plugin.internal.file.atomicModify(filePath, content => {
 			let splitContent = content.split('\n');
 
-			if (position.lineStart < 0 || position.lineEnd > splitContent.length + 1) {
+			if (position.lineStart < 0 || position.lineEnd > splitContent.length) {
 				throw new Error('Position of the button in the note is out of bounds');
 			}
 

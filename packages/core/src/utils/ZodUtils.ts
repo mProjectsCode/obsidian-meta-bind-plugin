@@ -1,3 +1,5 @@
+import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
+import { ParsingError } from 'packages/core/src/parsers/ParsingError';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import type { RefinementCtx } from 'zod';
 import { z } from 'zod';
@@ -42,6 +44,23 @@ export function validateAPIArgs<T>(validator: z.ZodType<T>, args: T): void {
 
 export function validate<T>(validator: z.ZodType<T>, value: unknown): ReturnType<z.ZodType<T>['safeParse']> {
 	return validator.safeParse(value, { errorMap: customErrorMap });
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export function parserToValidator<T>(str: z.ZodType<string>, parser: Parser<T>) {
+	return str.transform((data, ctx) => {
+		const result = parser.tryParse(data);
+
+		if (result.success) {
+			return result.value;
+		} else {
+			ctx.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: new ParsingError(ErrorLevel.ERROR, 'parsiNOM parser', data, result).message,
+			});
+			return z.NEVER;
+		}
+	});
 }
 
 const special = [

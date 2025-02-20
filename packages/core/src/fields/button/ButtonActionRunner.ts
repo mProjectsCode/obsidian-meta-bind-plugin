@@ -1,3 +1,4 @@
+import type { LinePosition } from 'packages/core/src/config/APIConfigs';
 import type {
 	ButtonActionMap,
 	ButtonClickContext,
@@ -24,6 +25,7 @@ import { UpdateMetadataButtonActionConfig } from 'packages/core/src/fields/butto
 import type { IPlugin } from 'packages/core/src/IPlugin';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import { ErrorLevel, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
+import type { LineNumberContext } from 'packages/core/src/utils/LineNumberExpression';
 
 type ActionContexts = {
 	[key in ButtonActionType]: AbstractButtonActionConfig<ButtonActionMap[key]>;
@@ -159,6 +161,23 @@ export class ButtonActionRunner {
 			shiftKey: event.shiftKey,
 			ctrlKey: event.ctrlKey,
 			altKey: event.altKey,
+		};
+	}
+
+	getLineNumberContext(fileContent: string, selfNotePosition: LinePosition | undefined): LineNumberContext {
+		const fileStart = 1;
+		const fileEnd = fileContent.split('\n').length;
+		const frontmatterPosition = this.plugin.internal.file.getFrontmatterLocation(fileContent);
+
+		return {
+			fileStart: fileStart,
+			fileEnd: fileEnd,
+			frontmatterStart: frontmatterPosition ? frontmatterPosition.lineStart : fileStart,
+			frontmatterEnd: frontmatterPosition ? frontmatterPosition.lineEnd : fileStart,
+			contentStart: frontmatterPosition ? frontmatterPosition.lineEnd + 1 : fileStart,
+			contentEnd: fileEnd,
+			selfStart: selfNotePosition ? selfNotePosition.lineStart + 1 : undefined,
+			selfEnd: selfNotePosition ? selfNotePosition.lineEnd + 1 : undefined,
 		};
 	}
 }
