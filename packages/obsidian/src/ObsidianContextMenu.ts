@@ -29,5 +29,7 @@ export class ObsidianContextMenu implements IContextMenu {
 
 	public showWithEvent(event: MouseEvent): void {
 		this.menu.showAtMouseEvent(event);
+		event.stopImmediatePropagation();
+		event.preventDefault();
 	}
 }

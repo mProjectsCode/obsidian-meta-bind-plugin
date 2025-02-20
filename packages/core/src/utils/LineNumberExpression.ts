@@ -46,7 +46,7 @@ export interface LineNumberContext {
 	 */
 	contentStart: number;
 	/**
-	 * The end of the content, so the last line of the content.
+	 * The end of the file, so the last line of the content.
 	 */
 	contentEnd: number;
 	/**
