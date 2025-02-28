@@ -1,3 +1,4 @@
+import type { ImportObject as MathJSImportObject, ImportOptions as MathJSImportOptions } from 'mathjs';
 import { SyntaxHighlightingAPI } from 'packages/core/src/api/SyntaxHighlightingAPI';
 import type {
 	ButtonGroupOptions,
@@ -826,5 +827,13 @@ export abstract class API<Plugin extends IPlugin> {
 			lineStart: lineStart,
 			lineEnd: lineEnd,
 		});
+	}
+
+	/**
+	 * Import new definitions into the internal mathJS instance.
+	 * For details on how to use, see https://mathjs.org/docs/reference/functions/import.html
+	 */
+	public mathJSimport(object: MathJSImportObject | MathJSImportObject[], options?: MathJSImportOptions): void {
+		this.plugin.internal.math.import(object, options);
 	}
 }

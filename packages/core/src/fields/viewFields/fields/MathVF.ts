@@ -1,5 +1,4 @@
 import type { EvalFunction } from 'mathjs';
-import { compile as MathJsCompile } from 'mathjs';
 import { AbstractViewField } from 'packages/core/src/fields/viewFields/AbstractViewField';
 import type { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
 import type { ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
@@ -50,7 +49,7 @@ export class MathVF extends AbstractViewField<MathVFResult> {
 			}
 		}
 
-		this.expression = MathJsCompile(this.expressionStr);
+		this.expression = this.plugin.internal.math.compile(this.expressionStr);
 	}
 
 	private buildMathJSContext(): Record<string, unknown> {
