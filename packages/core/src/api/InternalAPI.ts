@@ -1,3 +1,4 @@
+import type { MathJsInstance } from 'mathjs';
 import type { Moment } from 'moment';
 import type { LifecycleHook } from 'packages/core/src/api/API';
 import type { FileAPI } from 'packages/core/src/api/FileAPI';
@@ -28,6 +29,7 @@ import type { ContextMenuItemDefinition, IContextMenu } from 'packages/core/src/
 import type { IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
 import type { IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
 import type { MBLiteral } from 'packages/core/src/utils/Literal';
+import { createMathJS } from 'packages/core/src/utils/MathJS';
 import { mount, unmount } from 'svelte';
 import type { z } from 'zod';
 
@@ -75,10 +77,12 @@ export const IMAGE_FILE_EXTENSIONS_WITH_DOTS = IMAGE_FILE_EXTENSIONS.map(ext => 
 export abstract class InternalAPI<Plugin extends IPlugin> {
 	readonly plugin: Plugin;
 	readonly file: FileAPI<Plugin>;
+	readonly math: MathJsInstance;
 
 	constructor(plugin: Plugin, fileAPI: FileAPI<Plugin>) {
 		this.plugin = plugin;
 		this.file = fileAPI;
+		this.math = createMathJS();
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
