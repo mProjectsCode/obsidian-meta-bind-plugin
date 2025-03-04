@@ -37,7 +37,10 @@
 	tabindex="0"
 >
 	{#if editing}
-		<textarea bind:value={value} onfocusout={() => focusOut()} oninput={() => props.onValueChange(value)}
+		<textarea
+			bind:value={value}
+			onfocusout={() => focusOut()}
+			oninput={() => props.onValueChange($state.snapshot(value))}
 		></textarea>
 	{:else}
 		<MarkdownRenderComponent value={value} plugin={props.plugin} filePath={props.filePath}

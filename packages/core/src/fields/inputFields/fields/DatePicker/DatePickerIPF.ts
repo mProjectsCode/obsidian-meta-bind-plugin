@@ -65,7 +65,9 @@ export class DatePickerIPF extends AbstractInputField<string | null, Moment | nu
 		return {
 			dateFormat: this.mountable.plugin.settings.preferredDateFormat,
 			showDatePicker: (): void => {
-				this.mountable.plugin.internal.openDatePickerModal(this);
+				this.mountable.plugin.internal.openDatePickerModal(this.getInternalValue(), (value: Moment | null) =>
+					this.setInternalValue(value),
+				);
 			},
 		};
 	}

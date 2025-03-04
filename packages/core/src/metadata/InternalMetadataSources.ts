@@ -33,6 +33,33 @@ export class InternalMetadataSource extends FilePathMetadataSource<FilePathMetad
 	}
 }
 
+export class TestMetadataSource extends FilePathMetadataSource<FilePathMetadataCacheItem> {
+	externalMetadata: Record<string, Metadata>;
+
+	constructor(id: string, manager: MetadataManager, externalMetadata: Record<string, Metadata> = {}) {
+		super(id, manager);
+
+		this.externalMetadata = externalMetadata;
+	}
+
+	public readExternal(storagePath: string): Metadata {
+		console.log('reading external', storagePath);
+		return this.externalMetadata[storagePath] ?? {};
+	}
+
+	public getDefaultCacheItem(storagePath: string): FilePathMetadataCacheItem {
+		return {
+			data: this.readExternal(storagePath),
+			storagePath: storagePath,
+			...this.manager.getDefaultCacheItem(),
+		};
+	}
+
+	public syncExternal(cacheItem: FilePathMetadataCacheItem): void {
+		this.externalMetadata[cacheItem.storagePath] = cacheItem.data;
+	}
+}
+
 export class GlobalMetadataSource implements IMetadataSource<GlobalMetadataCacheItem> {
 	public readonly id: string;
 	public readonly manager: MetadataManager;

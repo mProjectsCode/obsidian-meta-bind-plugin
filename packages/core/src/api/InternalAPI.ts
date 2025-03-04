@@ -2,7 +2,6 @@ import type { Moment } from 'moment';
 import type { LifecycleHook } from 'packages/core/src/api/API';
 import type { FileAPI } from 'packages/core/src/api/FileAPI';
 import DatePickerInput from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePicker.svelte';
-import type { DatePickerIPF } from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePickerIPF';
 import type {
 	ImageSuggesterLikeIPF,
 	SuggesterLikeIFP,
@@ -297,15 +296,15 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 		).open();
 	}
 
-	openDatePickerModal(inputField: DatePickerIPF): void {
+	openDatePickerModal(value: Moment | null, setValue: (value: Moment | null) => void): void {
 		this.createModal(
 			new SvelteModalContent((modal, targetEl) => {
 				return mount(DatePickerInput, {
 					target: targetEl,
 					props: {
-						selectedDate: inputField.getInternalValue(),
+						selectedDate: value,
 						dateChangeCallback: (value: Moment | null): void => {
-							inputField.setInternalValue(value);
+							setValue(value);
 							modal.closeModal();
 						},
 					},

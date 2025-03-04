@@ -14,7 +14,7 @@
 	}
 
 	function selectOption(): void {
-		props.onValueChange(value);
+		props.onValueChange($state.snapshot(value));
 	}
 </script>
 

@@ -134,7 +134,7 @@ export class TestPlugin implements IPlugin {
 		test.mountable.mount(document.body);
 
 		const field = test.mountable.inputField as InputField;
-		const svelteUpdateSpy = spyOn(field.svelteWrapper, 'setValue');
+		const svelteUpdateSpy = spyOn(field.svelteWrapper!, 'setValue');
 		this.testInputFields[index] = { mountable: test.mountable, field, svelteUpdateSpy };
 	}
 

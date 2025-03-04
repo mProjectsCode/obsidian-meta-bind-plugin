@@ -95,7 +95,13 @@ export class EffectMetadataSubscription implements IMetadataSubscription {
 	 *
 	 * @param _
 	 */
-	public onUpdate(_: unknown): void {}
+	public onUpdate(_: unknown): boolean {
+		return false;
+	}
+
+	public updatable(): boolean {
+		return false;
+	}
 
 	public getDependencies(): BindTargetDeclaration[] {
 		return this.dependencies;

@@ -411,7 +411,7 @@ export class MetadataManager {
 			});
 		}
 
-		const cacheItem = source.writeCache(value, bindTarget);
+		const cacheItem = source.writeCache(structuredClone(value), bindTarget);
 		cacheItem.dirty = true;
 		cacheItem.externalWriteLock = METADATA_CACHE_EXTERNAL_WRITE_LOCK_DURATION;
 		this.notifyListeners(bindTarget, updateSourceUuid);
@@ -423,6 +423,27 @@ export class MetadataManager {
 	 * @param bindTarget
 	 */
 	public read(bindTarget: BindTargetDeclaration): unknown {
+		const source = this.getSource(bindTarget.storageType);
+		if (source === undefined) {
+			throw new MetaBindInternalError({
+				errorLevel: ErrorLevel.ERROR,
+				effect: 'can not read metadata',
+				cause: `Source "${bindTarget.storageType}" does not exist`,
+			});
+		}
+
+		return structuredClone(source.readCache(bindTarget));
+	}
+
+	/**
+	 * Reads from the cache without cloning the value.
+	 *
+	 * ONLY USE FOR SHORT LIVED VALUES, SO A VALUE THAT IS IMMEDIATELY USED AND DISCARDED.
+	 *
+	 * @param bindTarget
+	 * @returns
+	 */
+	public readShortLived(bindTarget: BindTargetDeclaration): unknown {
 		const source = this.getSource(bindTarget.storageType);
 		if (source === undefined) {
 			throw new MetaBindInternalError({
@@ -471,7 +492,8 @@ export class MetadataManager {
 		for (const cacheSubscription of cacheItem.subscriptions) {
 			if (
 				(ignoreUuid !== undefined && ignoreUuid === cacheSubscription.uuid) ||
-				cacheSubscription.bindTarget === undefined
+				cacheSubscription.bindTarget === undefined ||
+				!cacheSubscription.updatable()
 			) {
 				continue;
 			}
@@ -540,31 +562,36 @@ export class MetadataManager {
 	 * @param value
 	 */
 	public onExternalUpdate(source: MetadataSource, storagePath: string, value: Metadata): void {
-		MB_DEBUG && console.log('meta-bind | MetadataManager >> external update', source.id, storagePath, value);
-
 		const cacheItem = source.getCacheItemForStoragePath(storagePath);
 		if (cacheItem === undefined || this.isCacheExternalWriteLocked(cacheItem)) {
 			return;
 		}
 
-		const oldValue = source.readEntireCacheItem(cacheItem);
+		MB_DEBUG &&
+			console.log(
+				`meta-bind | MetadataManager >> external update in source "${source.id}" and storage path "${storagePath}"`,
+				value,
+			);
 
 		source.writeEntireCache(value, cacheItem);
 
+		let updatedCount = 0;
+
 		for (const subscription of cacheItem.subscriptions) {
-			if (subscription.bindTarget === undefined) {
+			if (subscription.bindTarget === undefined || !subscription.updatable()) {
 				continue;
 			}
 
-			const propPath = subscription.bindTarget.storageProp;
+			const newValue = PropUtils.tryGet(value, subscription.bindTarget.storageProp);
+			const updated = subscription.onUpdate(newValue);
 
-			const newBoundValue = PropUtils.tryGet(value, propPath);
-			const oldBoundValue = PropUtils.tryGet(oldValue, propPath);
-
-			if (newBoundValue !== oldBoundValue) {
-				subscription.onUpdate(newBoundValue);
+			if (updated) {
+				updatedCount += 1;
 			}
 		}
+
+		MB_DEBUG &&
+			console.log(`meta-bind | MetadataManager >> external update >> updated ${updatedCount} subscriptions`);
 	}
 
 	/**

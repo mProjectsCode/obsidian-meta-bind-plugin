@@ -21,7 +21,7 @@
 			value.push(option);
 		}
 
-		props.onValueChange(value);
+		props.onValueChange($state.snapshot(value));
 	}
 
 	function selectOptionOnKey(event: KeyboardEvent, option: MBLiteral): void {

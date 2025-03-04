@@ -17,5 +17,5 @@
 	tabindex="0"
 	placeholder={props.placeholder}
 	bind:value={value}
-	oninput={() => props.onValueChange(value)}
+	oninput={() => props.onValueChange($state.snapshot(value))}
 />

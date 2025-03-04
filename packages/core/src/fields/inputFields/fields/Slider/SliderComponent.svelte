@@ -26,7 +26,7 @@
 	max={props.maxValue}
 	step={props.stepSize}
 	bind:value={value}
-	oninput={() => props.onValueChange(value)}
+	oninput={() => props.onValueChange($state.snapshot(value))}
 />
 {#if props.addLabels}
 	<span class="mb-slider-input-label">{props.maxValue}</span>

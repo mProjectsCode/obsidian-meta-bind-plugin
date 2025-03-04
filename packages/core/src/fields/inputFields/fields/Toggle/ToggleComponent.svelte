@@ -11,7 +11,7 @@
 
 	function toggleValue(): void {
 		value = !value;
-		props.onValueChange(value);
+		props.onValueChange($state.snapshot(value));
 	}
 
 	function toggleValueOnKey(event: KeyboardEvent): void {

@@ -68,10 +68,10 @@ export function areArraysEqual<T>(arr1: T[] | undefined, arr2: T[] | undefined):
 }
 
 export function areObjectsEqual(obj1: unknown, obj2: unknown): boolean {
-	if (obj1 == null && obj2 == null) {
+	if (obj1 === null && obj2 === null) {
 		return true;
 	}
-	if (obj1 == null || obj2 == null) {
+	if (obj1 === null || obj2 === null) {
 		return false;
 	}
 

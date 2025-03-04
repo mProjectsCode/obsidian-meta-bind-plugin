@@ -18,12 +18,12 @@
 
 	export function pushValue(v: MBLiteral): void {
 		value.push(v);
-		props.onValueChange(value);
+		props.onValueChange($state.snapshot(value));
 	}
 
 	function remove(i: number): void {
 		value.splice(i, 1);
-		props.onValueChange(value);
+		props.onValueChange($state.snapshot(value));
 	}
 
 	function inputKey(event: KeyboardEvent): void {
@@ -43,7 +43,7 @@
 					const temp = value[index - 1];
 					value[index - 1] = value[index];
 					value[index] = temp;
-					props.onValueChange(value);
+					props.onValueChange($state.snapshot(value));
 				},
 			});
 		}
@@ -56,7 +56,7 @@
 					const temp = value[index + 1];
 					value[index + 1] = value[index];
 					value[index] = temp;
-					props.onValueChange(value);
+					props.onValueChange($state.snapshot(value));
 				},
 			});
 		}
@@ -72,7 +72,7 @@
 					multiline: false,
 					onSubmit: (v: MBLiteral) => {
 						value[index] = v;
-						props.onValueChange(value);
+						props.onValueChange($state.snapshot(value));
 					},
 					onCancel: () => {},
 				});

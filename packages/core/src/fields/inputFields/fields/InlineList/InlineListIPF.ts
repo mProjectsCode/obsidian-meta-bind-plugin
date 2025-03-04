@@ -43,7 +43,7 @@ export class InlineListIPF extends AbstractInputField<MBLiteral[], MBLiteral[], 
 			value: '',
 			multiline: false,
 			onSubmit: (newElement: MBLiteral) => {
-				this.svelteWrapper.getInstance()?.pushValue(newElement);
+				this.svelteWrapper?.getInstance()?.pushValue(newElement);
 			},
 			onCancel: () => {},
 		});

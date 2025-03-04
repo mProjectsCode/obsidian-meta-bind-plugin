@@ -14,8 +14,9 @@ export abstract class AbstractInputField<
 > extends Mountable {
 	readonly plugin: IPlugin;
 	readonly mountable: InputFieldMountable;
-	readonly svelteWrapper: InputFieldSvelteWrapper<ComponentValueType, SvelteExports>;
-	readonly inputSignal: MappedSignal<unknown, MetadataValueType>;
+
+	svelteWrapper?: InputFieldSvelteWrapper<ComponentValueType, SvelteExports>;
+	inputSignal?: MappedSignal<unknown, MetadataValueType>;
 
 	private metadataSubscription?: MetadataSubscription;
 	private mountTarget?: HTMLElement;
@@ -25,26 +26,6 @@ export abstract class AbstractInputField<
 
 		this.mountable = mountable;
 		this.plugin = mountable.plugin;
-		this.svelteWrapper = new InputFieldSvelteWrapper<ComponentValueType, SvelteExports>(
-			this.plugin,
-			this.getSvelteComponent(),
-			value => {
-				this.updateDataAttributes(value);
-				this.notifySubscription(this.mapValue(value));
-			},
-		);
-
-		this.inputSignal = new MappedSignal<unknown, MetadataValueType>(
-			undefined,
-			(value: unknown): MetadataValueType => {
-				const filteredValue = this.filterValue(value);
-				if (filteredValue !== undefined) {
-					return filteredValue;
-				} else {
-					return this.getDefaultValue();
-				}
-			},
-		);
 	}
 
 	protected abstract getSvelteComponent(): InputFieldSvelteComponent<ComponentValueType, SvelteExports>;
@@ -87,6 +68,9 @@ export abstract class AbstractInputField<
 	 * Get the metadata value that the input field currently has.
 	 */
 	public getValue(): MetadataValueType {
+		if (!this.inputSignal) {
+			return this.getDefaultValue();
+		}
 		return this.inputSignal.get();
 	}
 
@@ -103,7 +87,7 @@ export abstract class AbstractInputField<
 	 * @param value
 	 */
 	public setValue(value: MetadataValueType): void {
-		this.inputSignal.setDirect(value);
+		this.inputSignal?.setDirect(value);
 		this.notifySubscription(value);
 	}
 
@@ -152,9 +136,30 @@ export abstract class AbstractInputField<
 	protected onMount(targetEl: HTMLElement): void {
 		this.mountTarget = targetEl;
 
+		this.svelteWrapper = new InputFieldSvelteWrapper<ComponentValueType, SvelteExports>(
+			this.plugin,
+			this.getSvelteComponent(),
+			value => {
+				this.updateDataAttributes(value);
+				this.notifySubscription(this.mapValue(value));
+			},
+		);
+
+		this.inputSignal = new MappedSignal<unknown, MetadataValueType>(
+			undefined,
+			(value: unknown): MetadataValueType => {
+				const filteredValue = this.filterValue(value);
+				if (filteredValue !== undefined) {
+					return filteredValue;
+				} else {
+					return this.getDefaultValue();
+				}
+			},
+		);
+
 		// listener to update the svelte component
 		this.inputSignal.registerListener({
-			callback: value => this.svelteWrapper.setValue(this.reverseMapValue(value)),
+			callback: value => this.svelteWrapper?.setValue(this.reverseMapValue(value)),
 		});
 
 		// listener to update data attributes on the target element
@@ -181,9 +186,9 @@ export abstract class AbstractInputField<
 	protected onUnmount(): void {
 		this.mountTarget = undefined;
 
-		this.inputSignal.unregisterAllListeners();
+		this.inputSignal?.unregisterAllListeners();
 		this.metadataSubscription?.unsubscribe();
 
-		this.svelteWrapper.unmount();
+		this.svelteWrapper?.unmount();
 	}
 }

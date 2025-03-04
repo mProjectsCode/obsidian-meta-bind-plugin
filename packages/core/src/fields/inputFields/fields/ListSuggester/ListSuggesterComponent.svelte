@@ -20,12 +20,12 @@
 
 	export function pushValue(v: MBLiteral): void {
 		value.push(v);
-		props.onValueChange(value);
+		props.onValueChange($state.snapshot(value));
 	}
 
 	function remove(i: number): void {
 		value.splice(i, 1);
-		props.onValueChange(value);
+		props.onValueChange($state.snapshot(value));
 	}
 
 	function openContextMenuForElement(e: MouseEvent, index: number): void {
@@ -39,7 +39,7 @@
 					const temp = value[index - 1];
 					value[index - 1] = value[index];
 					value[index] = temp;
-					props.onValueChange(value);
+					props.onValueChange($state.snapshot(value));
 				},
 			});
 		}
@@ -52,7 +52,7 @@
 					const temp = value[index + 1];
 					value[index + 1] = value[index];
 					value[index] = temp;
-					props.onValueChange(value);
+					props.onValueChange($state.snapshot(value));
 				},
 			});
 		}

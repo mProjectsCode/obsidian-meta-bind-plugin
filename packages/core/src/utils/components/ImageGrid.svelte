@@ -11,8 +11,6 @@
 	} = $props();
 
 	export function updateImages(newImages: { link: string; internal: boolean }[]) {
-		console.warn('updating images');
-
 		images = newImages;
 	}
 </script>

@@ -5,7 +5,7 @@ import type { MetadataSubscription } from 'packages/core/src/metadata/MetadataSu
 import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import type { Signal } from 'packages/core/src/utils/Signal';
-import { getUUID } from 'packages/core/src/utils/Utils';
+import { areObjectsEqual, getUUID } from 'packages/core/src/utils/Utils';
 
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 export type DeriveFunction = () => Promise<unknown> | unknown;
@@ -79,7 +79,10 @@ export class DerivedMetadataSubscription implements IMetadataSubscription {
 		try {
 			const value = await this.computeFunction();
 			if (this.bindTarget) {
-				this.metadataManager.write(value, this.bindTarget, this.uuid);
+				const currentValue = this.metadataManager.readShortLived(this.bindTarget);
+				if (!areObjectsEqual(currentValue, value)) {
+					this.metadataManager.write(value, this.bindTarget, this.uuid);
+				}
 			}
 		} catch (e) {
 			const error = e instanceof Error ? e : String(e);
@@ -111,7 +114,13 @@ export class DerivedMetadataSubscription implements IMetadataSubscription {
 	 *
 	 * @param _
 	 */
-	public onUpdate(_: unknown): void {}
+	public onUpdate(_: unknown): boolean {
+		return false;
+	}
+
+	public updatable(): boolean {
+		return false;
+	}
 
 	public getDependencies(): BindTargetDeclaration[] {
 		return this.dependencies;

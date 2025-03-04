@@ -10,4 +10,4 @@
 	}
 </script>
 
-<input type="date" bind:value={value} oninput={() => props.onValueChange(value)} />
+<input type="date" bind:value={value} oninput={() => props.onValueChange($state.snapshot(value))} />

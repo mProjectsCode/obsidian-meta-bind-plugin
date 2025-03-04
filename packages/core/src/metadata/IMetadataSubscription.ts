@@ -28,8 +28,13 @@ export interface IMetadataSubscription {
 	 * Called by the metadata manager when the cache receives an update that concerns this subscription.
 	 *
 	 * @param value
+	 * @returns Whether the subscription has updated, i.e. the value was different from the current memorized value.
 	 */
-	onUpdate: (value: unknown) => void;
+	onUpdate: (value: unknown) => boolean;
+	/**
+	 * Whether the subscription can be updated by the metadata manager.
+	 */
+	updatable(): boolean;
 	/**
 	 * Returns the dependencies of this subscription or an empty array if there are none.
 	 */

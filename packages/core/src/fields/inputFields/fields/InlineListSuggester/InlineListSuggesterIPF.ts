@@ -41,7 +41,7 @@ export class InlineListSuggesterIPF extends AbstractInputField<MBLiteral[], MBLi
 
 	openModal(): void {
 		this.mountable.plugin.internal.openSuggesterModal(this, selected => {
-			this.svelteWrapper.getInstance()?.pushValue(selected.value);
+			this.svelteWrapper?.getInstance()?.pushValue(selected.value);
 		});
 	}
 
@@ -52,7 +52,7 @@ export class InlineListSuggesterIPF extends AbstractInputField<MBLiteral[], MBLi
 			value: '',
 			multiline: false,
 			onSubmit: (newElement: MBLiteral) => {
-				this.svelteWrapper.getInstance()?.pushValue(newElement);
+				this.svelteWrapper?.getInstance()?.pushValue(newElement);
 			},
 			onCancel: () => {},
 		});

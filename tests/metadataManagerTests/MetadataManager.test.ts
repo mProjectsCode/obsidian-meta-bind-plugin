@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, type Mock, spyOn, test } from 'bun:test';
-import { InternalMetadataSource } from '../../packages/core/src/metadata/InternalMetadataSources';
+import { TestMetadataSource } from '../../packages/core/src/metadata/InternalMetadataSources';
 import { MetadataManager } from '../../packages/core/src/metadata/MetadataManager';
 import { type Metadata } from '../../packages/core/src/metadata/MetadataSource';
 import { MetadataSubscription } from '../../packages/core/src/metadata/MetadataSubscription';
@@ -12,6 +12,7 @@ import { type ListenerCallback, Signal } from '../../packages/core/src/utils/Sig
 import { getUUID } from '../../packages/core/src/utils/Utils';
 
 const testFilePath = 'testFile';
+const otherFilePath = 'otherFile';
 
 function subscribe(
 	manager: MetadataManager,
@@ -48,39 +49,42 @@ describe('metadata manager', () => {
 
 	beforeEach(() => {
 		manager = new MetadataManager();
-		const obsidianMetadataSource = new InternalMetadataSource(BindTargetStorageType.FRONTMATTER, manager);
-		manager.registerSource(obsidianMetadataSource);
+		const testSource = new TestMetadataSource(BindTargetStorageType.FRONTMATTER, manager, {
+			[testFilePath]: { var1: 1, var2: 2 },
+			[otherFilePath]: { var1: 1, var2: 2 },
+		});
+		manager.registerSource(testSource);
 	});
 
 	test('subscribing should change the signal value to the current cache value', () => {
 		const s1 = subscribe(manager, createBindTarget(testFilePath, ['var1']));
 
-		expect(s1.signal.get()).toBe(undefined);
+		expect(s1.signal.get()).toBe(1);
 		expect(s1.spy).toHaveBeenCalledTimes(1);
-		expect(s1.spy.mock.calls).toEqual([[undefined]]);
+		expect(s1.spy.mock.calls).toEqual([[1]]);
 	});
 
 	test('unsubscribing should not change the signal value', () => {
 		const s1 = subscribe(manager, createBindTarget(testFilePath, ['var1']));
 		s1.subscription.unsubscribe();
 
-		expect(s1.signal.get()).toBe(undefined);
+		expect(s1.signal.get()).toBe(1);
 		expect(s1.spy).toHaveBeenCalledTimes(1);
-		expect(s1.spy.mock.calls).toEqual([[undefined]]);
+		expect(s1.spy.mock.calls).toEqual([[1]]);
 	});
 
 	test('should update on external update', () => {
 		const s1 = subscribe(manager, createBindTarget(testFilePath, ['var1']));
 
-		expect(s1.signal.get()).toBe(undefined);
+		expect(s1.signal.get()).toBe(1);
 		expect(s1.spy).toHaveBeenCalledTimes(1);
-		expect(s1.spy.mock.calls).toEqual([[undefined]]);
+		expect(s1.spy.mock.calls).toEqual([[1]]);
 
 		externalUpdate(manager, testFilePath, { var1: 5 });
 
 		expect(s1.signal.get()).toBe(5);
 		expect(s1.spy).toHaveBeenCalledTimes(2);
-		expect(s1.spy.mock.calls).toEqual([[undefined], [5]]);
+		expect(s1.spy.mock.calls).toEqual([[1], [5]]);
 	});
 
 	test('should not update on external update after unsubscribing', () => {
@@ -89,12 +93,12 @@ describe('metadata manager', () => {
 
 		externalUpdate(manager, testFilePath, { var1: 5 });
 
-		expect(s1.signal.get()).toBe(undefined);
+		expect(s1.signal.get()).toBe(1);
 		expect(s1.spy).toHaveBeenCalledTimes(1);
-		expect(s1.spy.mock.calls).toEqual([[undefined]]);
+		expect(s1.spy.mock.calls).toEqual([[1]]);
 	});
 
-	test('should update all subscriptions on external update', () => {
+	test('should update all changed subscriptions on external update', () => {
 		const s1 = subscribe(manager, createBindTarget(testFilePath, ['var1']));
 		const s2 = subscribe(manager, createBindTarget(testFilePath, ['var2']));
 
@@ -102,11 +106,26 @@ describe('metadata manager', () => {
 
 		expect(s1.signal.get()).toBe(5);
 		expect(s1.spy).toHaveBeenCalledTimes(2);
-		expect(s1.spy.mock.calls).toEqual([[undefined], [5]]);
+		expect(s1.spy.mock.calls).toEqual([[1], [5]]);
 
 		expect(s2.signal.get()).toBe(6);
 		expect(s2.spy).toHaveBeenCalledTimes(2);
-		expect(s2.spy.mock.calls).toEqual([[undefined], [6]]);
+		expect(s2.spy.mock.calls).toEqual([[2], [6]]);
+	});
+
+	test('should update only changed subscriptions on external update', () => {
+		const s1 = subscribe(manager, createBindTarget(testFilePath, ['var1']));
+		const s2 = subscribe(manager, createBindTarget(testFilePath, ['var2']));
+
+		externalUpdate(manager, testFilePath, { var1: 5, var2: 2 });
+
+		expect(s1.signal.get()).toBe(5);
+		expect(s1.spy).toHaveBeenCalledTimes(2);
+		expect(s1.spy.mock.calls).toEqual([[1], [5]]);
+
+		expect(s2.signal.get()).toBe(2);
+		expect(s2.spy).toHaveBeenCalledTimes(1);
+		expect(s2.spy.mock.calls).toEqual([[2]]);
 	});
 
 	test('should not update self', () => {
@@ -114,23 +133,23 @@ describe('metadata manager', () => {
 
 		s1.subscription.write(5);
 
-		expect(s1.signal.get()).toBe(undefined);
+		expect(s1.signal.get()).toBe(1);
 		expect(s1.spy).toHaveBeenCalledTimes(1);
-		expect(s1.spy.mock.calls).toEqual([[undefined]]);
+		expect(s1.spy.mock.calls).toEqual([[1]]);
 	});
 
 	test('should update different values independently', () => {
 		const s1 = subscribe(manager, createBindTarget(testFilePath, ['var1']));
-		const s2 = subscribe(manager, createBindTarget('otherFile', ['var1']));
+		const s2 = subscribe(manager, createBindTarget(otherFilePath, ['var1']));
 
 		externalUpdate(manager, testFilePath, { var1: 5 });
 
 		expect(s1.signal.get()).toBe(5);
 		expect(s1.spy).toHaveBeenCalledTimes(2);
-		expect(s1.spy.mock.calls).toEqual([[undefined], [5]]);
+		expect(s1.spy.mock.calls).toEqual([[1], [5]]);
 
-		expect(s2.signal.get()).toBe(undefined);
+		expect(s2.signal.get()).toBe(1);
 		expect(s2.spy).toHaveBeenCalledTimes(1);
-		expect(s2.spy.mock.calls).toEqual([[undefined]]);
+		expect(s2.spy.mock.calls).toEqual([[1]]);
 	});
 });

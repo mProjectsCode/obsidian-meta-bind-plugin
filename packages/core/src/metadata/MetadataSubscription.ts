@@ -3,17 +3,19 @@ import type { MetadataManager } from 'packages/core/src/metadata/MetadataManager
 import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import type { Writable } from 'packages/core/src/utils/Signal';
+import { areObjectsEqual } from 'packages/core/src/utils/Utils';
 
 export class MetadataSubscription implements IMetadataSubscription {
 	readonly uuid: string;
 	readonly callbackSignal: Writable<unknown>;
+	private value: unknown;
 
 	readonly metadataManager: MetadataManager;
 
 	readonly bindTarget: BindTargetDeclaration;
 
 	deleted: boolean;
-	readonly onDelete: () => void;
+	private readonly onDelete: () => void;
 
 	constructor(
 		uuid: string,
@@ -29,6 +31,7 @@ export class MetadataSubscription implements IMetadataSubscription {
 		this.onDelete = onDelete;
 
 		this.deleted = false;
+		this.value = undefined;
 	}
 
 	/**
@@ -39,12 +42,16 @@ export class MetadataSubscription implements IMetadataSubscription {
 	}
 
 	/**
-	 * Updates the cache.
+	 * Updates the cache when the given value is different from the current cache value.
 	 *
 	 * @param value
 	 */
 	public write(value: unknown): void {
-		this.metadataManager.write(value, this.bindTarget, this.uuid);
+		const currentValue = this.metadataManager.readShortLived(this.bindTarget);
+		if (!areObjectsEqual(currentValue, value)) {
+			this.value = value;
+			this.metadataManager.write(value, this.bindTarget, this.uuid);
+		}
 	}
 
 	/**
@@ -54,9 +61,14 @@ export class MetadataSubscription implements IMetadataSubscription {
 	 *
 	 * @param value
 	 */
-	public onUpdate(value: unknown): void {
+	public onUpdate(value: unknown): boolean {
 		try {
-			this.callbackSignal.set(value);
+			if (!areObjectsEqual(this.value, value)) {
+				this.value = value;
+				this.callbackSignal.set(value);
+
+				return true;
+			}
 		} catch (e) {
 			const error = e instanceof Error ? e : String(e);
 
@@ -68,6 +80,12 @@ export class MetadataSubscription implements IMetadataSubscription {
 				}),
 			);
 		}
+
+		return false;
+	}
+
+	public updatable(): boolean {
+		return true;
 	}
 
 	public getDependencies(): BindTargetDeclaration[] {

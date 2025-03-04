@@ -23,14 +23,14 @@
 
 	function pushValue(): void {
 		value.push(addValue);
-		props.onValueChange(value);
+		props.onValueChange($state.snapshot(value));
 
 		addValue = '';
 	}
 
 	function remove(i: number): void {
 		value.splice(i, 1);
-		props.onValueChange(value);
+		props.onValueChange($state.snapshot(value));
 	}
 
 	function getLimitString(length: number, limit: number): string {
@@ -50,7 +50,7 @@
 					const temp = value[index - 1];
 					value[index - 1] = value[index];
 					value[index] = temp;
-					props.onValueChange(value);
+					props.onValueChange($state.snapshot(value));
 				},
 			});
 		}
@@ -63,7 +63,7 @@
 					const temp = value[index + 1];
 					value[index + 1] = value[index];
 					value[index] = temp;
-					props.onValueChange(value);
+					props.onValueChange($state.snapshot(value));
 				},
 			});
 		}
@@ -79,7 +79,7 @@
 					multiline: props.multiLine,
 					onSubmit: (v: MBLiteral) => {
 						value[index] = v;
-						props.onValueChange(value);
+						props.onValueChange($state.snapshot(value));
 					},
 					onCancel: () => {},
 				});

@@ -324,6 +324,15 @@ describe('utils', () => {
 			expect(areObjectsEqual(null, null)).toBe(true);
 		});
 
+		test('should return true for two undefined values', () => {
+			expect(areObjectsEqual(undefined, undefined)).toBe(true);
+		});
+
+		test('should return false comparing null and undefined', () => {
+			expect(areObjectsEqual(undefined, null)).toBe(false);
+			expect(areObjectsEqual(null, undefined)).toBe(false);
+		});
+
 		test('should return false for one null and one non-null value', () => {
 			expect(areObjectsEqual(null, {})).toBe(false);
 			expect(areObjectsEqual({}, null)).toBe(false);
