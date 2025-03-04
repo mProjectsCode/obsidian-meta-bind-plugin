@@ -73,7 +73,7 @@ export class ObsidianAPI extends API<MetaBindPlugin> {
 	/**
 	 * Creates a CM6 widget from a given widget type.
 	 *
-	 * This is only useful fur use in a CodeMirror plugin.
+	 * This is only useful for use in a CodeMirror plugin.
 	 *
 	 * @param inlineFieldType
 	 * @param content
