@@ -245,22 +245,29 @@ describe('utils', () => {
 
 		test('should handle single path correctly', () => {
 			expect(joinPath('path')).toBe('path');
-			expect(joinPath('/path')).toBe('/path');
-			expect(joinPath('path/')).toBe('path/');
+			expect(joinPath('/path')).toBe('path');
+			expect(joinPath('path/')).toBe('path');
 		});
 
 		test('should handle empty paths correctly', () => {
-			expect(joinPath('')).toBe('');
+			expect(joinPath('')).toBe('/');
 			expect(joinPath('', '')).toBe('/');
-			expect(joinPath('', 'path')).toBe('/path');
-			expect(joinPath('path', '')).toBe('path/');
+			expect(joinPath('', 'path')).toBe('path');
+			expect(joinPath('path', '')).toBe('path');
 		});
 
 		test('should handle paths with leading and trailing slashes correctly', () => {
-			expect(joinPath('/path', 'to', 'file')).toBe('/path/to/file');
+			expect(joinPath('/path', 'to', 'file')).toBe('path/to/file');
 			expect(joinPath('path', 'to', '/file')).toBe('path/to/file');
-			expect(joinPath('/path', 'to', '/file')).toBe('/path/to/file');
-			expect(joinPath('/path/', '/to/', '/file/')).toBe('/path/to/file/');
+			expect(joinPath('/path', 'to', '/file')).toBe('path/to/file');
+			expect(joinPath('/path/', '/to/', '/file/')).toBe('path/to/file');
+		});
+
+		test('should handle slashes only correctly', () => {
+			expect(joinPath('/')).toBe('/');
+			expect(joinPath('/', '/')).toBe('/');
+			expect(joinPath('/', 'path')).toBe('path');
+			expect(joinPath('path', '/')).toBe('path');
 		});
 	});
 

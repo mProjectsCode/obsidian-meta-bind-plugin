@@ -324,21 +324,42 @@ export function getFolderPathFromFilePath(filePath: string): string {
  * Joins the given paths together without duplicate slashes.
  */
 export function joinPath(...paths: string[]): string {
-	let result = paths[0];
+	if (paths.length === 0) {
+		return '/';
+	}
+	if (paths.length === 1) {
+		return cleanPath(paths[0]);
+	}
+
+	let result = paths[0].startsWith('/') ? paths[0].substring(1) : paths[0];
 	for (let i = 1; i < paths.length; i++) {
+		if (paths[i] === '' || paths[i] === '/') {
+			continue;
+		}
+
 		const endsWithSlash = result.endsWith('/');
 		const startsWithSlash = paths[i].startsWith('/');
 
 		if (endsWithSlash && startsWithSlash) {
-			result = result.substring(0, result.length - 1);
+			result += paths[i].substring(1);
 		} else if (!endsWithSlash && !startsWithSlash) {
-			result += '/';
+			result += '/' + paths[i];
+		} else {
+			result += paths[i];
 		}
-
-		result += paths[i];
 	}
 
-	return result;
+	return cleanPath(result);
+}
+
+export function cleanPath(path: string): string {
+	if (path.startsWith('/')) {
+		path = path.substring(1);
+	}
+	if (path.endsWith('/')) {
+		path = path.substring(0, path.length - 1);
+	}
+	return path === '' ? '/' : path;
 }
 
 /**
