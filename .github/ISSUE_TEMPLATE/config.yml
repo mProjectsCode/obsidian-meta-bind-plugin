@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "Meta Bind thead on the official Obsidian Discord server"
+    url: "https://discord.com/channels/686053708261228577/1286803892549713921"
+    about: "Please ask your questions on the official Obsidian Discord server in the \"Meta Bind ans JS Engine\" thread." 
+  - name: "Discussions"
+    url: "https://github.com/mProjectsCode/obsidian-meta-bind-plugin/discussions"
+    about: "If you don't want to join the official Obsidian Discord server, you can use the Discussions tab of this repository to ask your questions."
