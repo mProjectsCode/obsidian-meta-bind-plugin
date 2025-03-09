@@ -22,6 +22,7 @@
 	class="mb-slider-input slider"
 	type="range"
 	tabindex="0"
+	aria-label={value.toString()}
 	min={props.minValue}
 	max={props.maxValue}
 	step={props.stepSize}

@@ -111,8 +111,9 @@
 <div
 	class="mb-progress-bar-input"
 	tabindex="0"
-	bind:this={progressBarEl}
 	role="button"
+	aria-label={value.toString()}
+	bind:this={progressBarEl}
 	onkeydown={onKeyPress}
 	onmousedown={onTrackEvent}
 	ontouchstart={onTrackEvent}
@@ -125,7 +126,6 @@
 		aria-valuemin={props.minValue}
 		aria-valuemax={props.maxValue}
 		aria-valuenow={value}
-		aria-label={value.toString()}
 		tabindex="0"
 	></div>
 	{#if props.addLabels}
