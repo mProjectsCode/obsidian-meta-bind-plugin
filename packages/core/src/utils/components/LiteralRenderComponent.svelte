@@ -12,13 +12,13 @@
 </script>
 
 {#if typeof parsedValue === 'string'}
-	<span data-value={parsedValue} class="mb-whitespace-pre">{parsedValue}</span>
+	<span class="mb-whitespace-pre">{parsedValue}</span>
 {:else if Array.isArray(parsedValue)}
 	<span>
 		<ListWrapper elements={parsedValue}>
 			{#snippet children(element)}
 				{#if typeof element === 'string'}
-					<span data-value={element}>{element}</span>
+					<span>{element}</span>
 				{:else}
 					<LinkComponent mdLink={element}></LinkComponent>
 				{/if}

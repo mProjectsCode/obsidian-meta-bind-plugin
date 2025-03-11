@@ -2,7 +2,7 @@
 	import type { OptionInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/arguments/OptionInputFieldArgument';
 	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 	import LiteralRenderComponent from 'packages/core/src/utils/components/LiteralRenderComponent.svelte';
-	import type { MBLiteral } from 'packages/core/src/utils/Literal';
+	import { stringifyLiteral, type MBLiteral } from 'packages/core/src/utils/Literal';
 
 	const props: InputFieldSvelteProps<MBLiteral[]> & {
 		options: OptionInputFieldArgument[];
@@ -44,6 +44,7 @@
 			selectOption(option.value);
 		}}
 		onkeypress={event => selectOptionOnKey(event, option.value)}
+		data-value={stringifyLiteral(option.value)}
 	>
 		<input type="checkbox" checked={value.includes(option.value)} oninput={() => selectOption(option.value)} />
 		<LiteralRenderComponent value={option.name}></LiteralRenderComponent>

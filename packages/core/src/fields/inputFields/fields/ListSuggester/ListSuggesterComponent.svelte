@@ -4,7 +4,7 @@
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import LiteralRenderComponent from 'packages/core/src/utils/components/LiteralRenderComponent.svelte';
 	import type { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
-	import type { MBLiteral } from 'packages/core/src/utils/Literal';
+	import { stringifyLiteral, type MBLiteral } from 'packages/core/src/utils/Literal';
 
 	const props: InputFieldSvelteProps<MBLiteral[]> & {
 		showSuggester: () => void;
@@ -70,7 +70,7 @@
 
 <div class="mb-list-items">
 	{#each value as entry, i}
-		<div class="mb-list-item" oncontextmenu={e => openContextMenuForElement(e, i)} role="listitem">
+		<div class="mb-list-item" oncontextmenu={e => openContextMenuForElement(e, i)} role="listitem" data-value={stringifyLiteral(entry)}>
 			<LiteralRenderComponent value={entry}></LiteralRenderComponent>
 		</div>
 	{:else}

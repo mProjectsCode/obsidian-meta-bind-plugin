@@ -3,6 +3,7 @@
 	import type { InputFieldSvelteProps } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import type { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
+	import { stringifyLiteral } from 'packages/core/src/utils/Literal';
 
 	const props: InputFieldSvelteProps<string[]> & {
 		showSuggester: () => void;
@@ -84,7 +85,7 @@
 
 <div class="mb-image-card-grid">
 	{#each value as image, i}
-		<div class="mb-image-card" oncontextmenu={e => openContextMenuForElement(e, i)} role="listitem">
+		<div class="mb-image-card" oncontextmenu={e => openContextMenuForElement(e, i)} role="listitem"  data-value={stringifyLiteral(image)}>
 			<img
 				class="mb-image-card-image"
 				src={props.plugin.internal.imagePathToUri(image)}
