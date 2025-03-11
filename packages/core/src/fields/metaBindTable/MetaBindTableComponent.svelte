@@ -45,7 +45,7 @@
 
 					<td class="mb-html-table-button-cell">
 						<Button onclick={() => table.removeColumn(tableRow.index)}>
-							<Icon plugin={table.plugin} iconName="x" />
+							<Icon mb={table.mb} iconName="x" />
 						</Button>
 					</td>
 				</tr>

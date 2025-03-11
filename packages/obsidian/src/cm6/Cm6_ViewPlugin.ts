@@ -9,10 +9,10 @@ import { Component, editorLivePreviewField } from 'obsidian';
 import type { InlineFieldType } from 'packages/core/src/config/APIConfigs';
 import type { MB_WidgetSpec } from 'packages/obsidian/src/cm6/Cm6_Util';
 import { Cm6_Util, MB_WidgetType } from 'packages/obsidian/src/cm6/Cm6_Util';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
+import type { ObsMetaBind } from 'packages/obsidian/src/main';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlugin): ViewPlugin<any> {
+export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): ViewPlugin<any> {
 	return ViewPlugin.fromClass(
 		class {
 			decorations: DecorationSet;
@@ -240,7 +240,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 					return {
 						shouldRender: shouldRenderField,
 						// we need to also check that the user has highlighting enabled in the settings
-						shouldHighlight: !shouldRenderField && plugin.settings.enableSyntaxHighlighting,
+						shouldHighlight: !shouldRenderField && mb.getSettings().enableSyntaxHighlighting,
 						content: content.content,
 						widgetType: content.widgetType,
 					};
@@ -263,7 +263,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				const content = Cm6_Util.getContent(view.state, from, to);
 				return {
 					content: content,
-					widgetType: plugin.api.isInlineFieldDeclarationAndGetType(content),
+					widgetType: mb.api.isInlineFieldDeclarationAndGetType(content),
 				};
 			}
 
@@ -346,7 +346,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 				currentFile: TFile,
 			): Range<Decoration> | Range<Decoration>[] {
 				if (widgetType === MB_WidgetType.FIELD) {
-					const widget = plugin.api.constructMDRCWidget(
+					const widget = mb.api.constructMDRCWidget(
 						inlineFieldType,
 						content,
 						currentFile.path,
@@ -361,7 +361,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(plugin: MetaBindPlug
 						},
 					}).range(node.from - 1, node.to + 1);
 				} else {
-					const highlight = plugin.api.syntaxHighlighting.highlight(content, inlineFieldType, false);
+					const highlight = mb.syntaxHighlighting.highlight(content, inlineFieldType, false);
 
 					return highlight.getHighlights().map(h => {
 						return Decoration.mark({

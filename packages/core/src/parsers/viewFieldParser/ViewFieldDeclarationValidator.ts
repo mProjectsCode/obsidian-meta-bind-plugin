@@ -1,8 +1,8 @@
+import type { MetaBind } from 'packages/core/src';
 import { ViewFieldArgumentType, ViewFieldType } from 'packages/core/src/config/FieldConfigs';
 import type { AbstractViewFieldArgument } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/AbstractViewFieldArgument';
 import { ViewFieldArgumentContainer } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/ViewFieldArgumentContainer';
 import { ViewFieldArgumentFactory } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import type { ParsingResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
@@ -18,11 +18,11 @@ export class ViewFieldDeclarationValidator {
 	unvalidatedDeclaration: UnvalidatedViewFieldDeclaration;
 	errorCollection: ErrorCollection;
 	filePath: string;
-	plugin: IPlugin;
+	mb: MetaBind;
 
-	constructor(unvalidatedDeclaration: UnvalidatedViewFieldDeclaration, filePath: string, plugin: IPlugin) {
+	constructor(unvalidatedDeclaration: UnvalidatedViewFieldDeclaration, filePath: string, mb: MetaBind) {
 		this.unvalidatedDeclaration = unvalidatedDeclaration;
-		this.plugin = plugin;
+		this.mb = mb;
 		this.filePath = filePath;
 
 		this.errorCollection = new ErrorCollection('view field declaration');
@@ -79,7 +79,7 @@ export class ViewFieldDeclarationValidator {
 
 	private validateBindTarget(scope: BindTargetScope | undefined): BindTargetDeclaration | undefined {
 		if (this.unvalidatedDeclaration.writeToBindTarget !== undefined) {
-			return this.plugin.api.bindTargetParser.validate(
+			return this.mb.bindTargetParser.validate(
 				this.unvalidatedDeclaration.declarationString,
 				this.unvalidatedDeclaration.writeToBindTarget,
 				this.filePath,
@@ -165,7 +165,7 @@ export class ViewFieldDeclarationValidator {
 					if (typeof x === 'string') {
 						return x;
 					} else {
-						return this.plugin.api.bindTargetParser.validate(
+						return this.mb.bindTargetParser.validate(
 							this.unvalidatedDeclaration.declarationString,
 							x,
 							this.filePath,

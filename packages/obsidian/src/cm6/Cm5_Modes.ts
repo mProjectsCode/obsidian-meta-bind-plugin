@@ -3,12 +3,12 @@ import { yaml } from '@codemirror/legacy-modes/mode/yaml';
 import type { Mode, StringStream } from 'codemirror';
 import type { InlineFieldType } from 'packages/core/src/config/APIConfigs';
 import { SyntaxHighlighting } from 'packages/core/src/parsers/syntaxHighlighting/SyntaxHighlighting';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
+import type { ObsMetaBind } from 'packages/obsidian/src/main';
 
-export function registerCm5HLModes(plugin: MetaBindPlugin): void {
+export function registerCm5HLModes(mb: ObsMetaBind): void {
 	/* eslint-disable */
 
-	if (!plugin.settings.enableSyntaxHighlighting) {
+	if (!mb.getSettings().enableSyntaxHighlighting) {
 		return;
 	}
 
@@ -90,12 +90,12 @@ export function registerCm5HLModes(plugin: MetaBindPlugin): void {
 
 					state.str = lines.filter(x => x.trim() !== '').join('\n');
 
-					let fieldType = plugin.api.isInlineFieldDeclarationAndGetType(state.str.trim());
+					let fieldType = mb.api.isInlineFieldDeclarationAndGetType(state.str.trim());
 					if (fieldType === undefined) {
 						state.highlights = new SyntaxHighlighting(state.str, []);
 					} else {
 						state.fieldType = fieldType;
-						state.highlights = plugin.api.syntaxHighlighting.highlight(state.str, state.fieldType, true);
+						state.highlights = mb.syntaxHighlighting.highlight(state.str, state.fieldType, true);
 					}
 
 					// console.log(state.str, state.highlights.getHighlights());

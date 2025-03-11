@@ -1,12 +1,12 @@
+import type { MetaBind } from 'packages/core/src';
 import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { ErrorLevel, MetaBindButtonError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { RefCounter } from 'packages/core/src/utils/RefCounter';
 import { getUUID } from 'packages/core/src/utils/Utils';
 
 export class ButtonManager {
-	readonly plugin: IPlugin;
+	readonly mb: MetaBind;
 
 	// filePath -> buttonId -> ref counter of buttonConfig
 	buttons: Map<string, Map<string, RefCounter<ButtonConfig>>>;
@@ -14,8 +14,8 @@ export class ButtonManager {
 	buttonLoadListeners: Map<string, Map<string, Map<string, (config: ButtonConfig) => void>>>;
 	buttonTemplates: Map<string, ButtonConfig>;
 
-	constructor(plugin: IPlugin) {
-		this.plugin = plugin;
+	constructor(mb: MetaBind) {
+		this.mb = mb;
 
 		this.buttons = new Map();
 		this.buttonLoadListeners = new Map();

@@ -1,15 +1,15 @@
 import { MarkdownRenderChild } from 'obsidian/publish';
 import type { Mountable } from 'packages/core/src/utils/Mountable';
-import type { MetaBindPublishPlugin } from 'packages/publish/src/main';
+import type { PublishMetaBind } from 'packages/publish/src/main';
 
 export class PublishFieldMDRC extends MarkdownRenderChild {
-	readonly plugin: MetaBindPublishPlugin;
+	readonly mb: PublishMetaBind;
 	readonly mountable: Mountable;
 
-	constructor(plugin: MetaBindPublishPlugin, mountable: Mountable, containerEl: HTMLElement) {
+	constructor(mb: PublishMetaBind, mountable: Mountable, containerEl: HTMLElement) {
 		super(containerEl);
 
-		this.plugin = plugin;
+		this.mb = mb;
 		this.mountable = mountable;
 
 		this.mountable.registerUnmountCb(() => {

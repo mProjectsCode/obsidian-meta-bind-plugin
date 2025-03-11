@@ -1,5 +1,5 @@
+import type { MetaBind } from 'packages/core/src';
 import { ViewFieldType } from 'packages/core/src/config/FieldConfigs';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import { toResultNode } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import { P_ViewFieldDeclaration } from 'packages/core/src/parsers/nomParsers/ViewFieldNomParsers';
@@ -14,10 +14,10 @@ import { ViewFieldDeclarationValidator } from 'packages/core/src/parsers/viewFie
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 
 export class ViewFieldParser {
-	plugin: IPlugin;
+	mb: MetaBind;
 
-	constructor(plugin: IPlugin) {
-		this.plugin = plugin;
+	constructor(mb: MetaBind) {
+		this.mb = mb;
 	}
 
 	fromString(fullDeclaration: string): UnvalidatedViewFieldDeclaration {
@@ -54,7 +54,7 @@ export class ViewFieldParser {
 				if (typeof x === 'string') {
 					return x;
 				} else {
-					return this.plugin.api.bindTargetParser.fromExistingDeclaration(x);
+					return this.mb.bindTargetParser.fromExistingDeclaration(x);
 				}
 			}),
 			viewFieldType: toResultNode(simpleDeclaration.viewFieldType),
@@ -62,9 +62,7 @@ export class ViewFieldParser {
 				name: toResultNode(x.name),
 				value: x.value.map(y => toResultNode(y)),
 			})),
-			writeToBindTarget: this.plugin.api.bindTargetParser.fromExistingDeclaration(
-				simpleDeclaration.writeToBindTarget,
-			),
+			writeToBindTarget: this.mb.bindTargetParser.fromExistingDeclaration(simpleDeclaration.writeToBindTarget),
 			errorCollection: errorCollection,
 		};
 	}
@@ -94,7 +92,7 @@ export class ViewFieldParser {
 		filePath: string,
 		scope?: BindTargetScope,
 	): ViewFieldDeclaration {
-		const validator = new ViewFieldDeclarationValidator(unvalidatedDeclaration, filePath, this.plugin);
+		const validator = new ViewFieldDeclarationValidator(unvalidatedDeclaration, filePath, this.mb);
 
 		return validator.validate(scope);
 	}

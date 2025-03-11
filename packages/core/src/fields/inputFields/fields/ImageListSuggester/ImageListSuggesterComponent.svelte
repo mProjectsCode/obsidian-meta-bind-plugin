@@ -64,10 +64,10 @@
 				navigator.clipboard
 					.writeText(imagePath)
 					.then(() => {
-						props.plugin.internal.showNotice('Image path copied to clipboard');
+						props.mb.internal.showNotice('Image path copied to clipboard');
 					})
 					.catch(() => {
-						props.plugin.internal.showNotice('Failed to copy image path to clipboard');
+						props.mb.internal.showNotice('Failed to copy image path to clipboard');
 					});
 			},
 		});
@@ -79,16 +79,21 @@
 			onclick: () => remove(index),
 		});
 
-		props.plugin.internal.createContextMenu(menuActions).showWithEvent(e);
+		props.mb.internal.createContextMenu(menuActions).showWithEvent(e);
 	}
 </script>
 
 <div class="mb-image-card-grid">
 	{#each value as image, i}
-		<div class="mb-image-card" oncontextmenu={e => openContextMenuForElement(e, i)} role="listitem"  data-value={stringifyLiteral(image)}>
+		<div
+			class="mb-image-card"
+			oncontextmenu={e => openContextMenuForElement(e, i)}
+			role="listitem"
+			data-value={stringifyLiteral(image)}
+		>
 			<img
 				class="mb-image-card-image"
-				src={props.plugin.internal.imagePathToUri(image)}
+				src={props.mb.internal.imagePathToUri(image)}
 				alt={image}
 				aria-label={image}
 			/>

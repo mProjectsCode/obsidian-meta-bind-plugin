@@ -2,13 +2,13 @@ import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
 import { V_ButtonConfig } from 'packages/core/src/config/validators/ButtonConfigValidators';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import { runParser } from 'packages/core/src/parsers/ParsingError';
 import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { ErrorLevel, MetaBindButtonError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { validate } from 'packages/core/src/utils/ZodUtils';
 import { fromZodError } from 'zod-validation-error';
+import type { MetaBind } from '..';
 
 const P_ButtonGroupDeclaration = P.sequenceMap(
 	(_, b) => b,
@@ -33,10 +33,10 @@ export interface ButtonDeclaration {
 }
 
 export class ButtonParser {
-	plugin: IPlugin;
+	mb: MetaBind;
 
-	constructor(plugin: IPlugin) {
-		this.plugin = plugin;
+	constructor(mb: MetaBind) {
+		this.mb = mb;
 	}
 
 	public fromGroupString(input: string): ButtonGroupDeclaration {
@@ -68,7 +68,7 @@ export class ButtonParser {
 		let config: ButtonConfig | undefined = undefined;
 
 		try {
-			const parsedYaml = this.plugin.internal.parseYaml(input);
+			const parsedYaml = this.mb.internal.parseYaml(input);
 			config = this.validateConfig(parsedYaml);
 		} catch (e) {
 			errorCollection.add(e);

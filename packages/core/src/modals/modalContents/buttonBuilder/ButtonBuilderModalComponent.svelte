@@ -19,7 +19,7 @@
 	} from 'packages/core/src/config/ButtonConfig';
 	import { ButtonActionType, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 	import { ButtonField } from 'packages/core/src/fields/button/ButtonField';
-	import type { IPlugin } from 'packages/core/src/IPlugin';
+
 	import type { ButtonBuilderModal } from 'packages/core/src/modals/modalContents/buttonBuilder/ButtonBuilderModal';
 	import CommandActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/CommandActionSettings.svelte';
 	import CreateNoteActionSettings from 'packages/core/src/modals/modalContents/buttonBuilder/CreateNoteActionSettings.svelte';
@@ -44,13 +44,14 @@
 	import type { ContextMenuItemDefinition } from 'packages/core/src/utils/IContextMenu';
 	import { DomHelpers } from 'packages/core/src/utils/Utils';
 	import { onDestroy } from 'svelte';
+	import type { MetaBind } from 'packages/core/src';
 
 	let {
-		plugin,
+		mb,
 		modal,
 		buttonConfig: propConfig = $bindable(),
 	}: {
-		plugin: IPlugin;
+		mb: MetaBind;
 		modal: ButtonBuilderModal;
 		buttonConfig: ButtonConfig;
 	} = $props();
@@ -70,7 +71,7 @@
 		if (buttonEl) {
 			DomHelpers.empty(buttonEl);
 			buttonMountable = new ButtonField(
-				plugin,
+				mb,
 				$state.snapshot(buttonConfig),
 				'',
 				RenderChildType.BLOCK,
@@ -83,7 +84,7 @@
 	});
 
 	function addAction(): void {
-		buttonConfig.actions?.push(plugin.api.buttonActionRunner.createDefaultAction(addActionType));
+		buttonConfig.actions?.push(mb.buttonActionRunner.createDefaultAction(addActionType));
 	}
 
 	function removeAction(id: number): void {
@@ -91,7 +92,7 @@
 	}
 
 	function getActionLabel(actionType: ButtonActionType): string {
-		return plugin.api.buttonActionRunner.getActionLabel(actionType);
+		return mb.buttonActionRunner.getActionLabel(actionType);
 	}
 
 	function openActionContextMenu(index: number, e: MouseEvent): void {
@@ -140,11 +141,11 @@
 			onclick: () => removeAction(index),
 		});
 
-		plugin.internal.createContextMenu(menuActions).showWithEvent(e);
+		mb.internal.createContextMenu(menuActions).showWithEvent(e);
 	}
 
 	function changeBackgroundImage(): void {
-		plugin.internal.openImageFileSelectModal((file: string) => {
+		mb.internal.openImageFileSelectModal((file: string) => {
 			buttonConfig.backgroundImage = file;
 		});
 	}
@@ -187,7 +188,7 @@
 		>Change</Button
 	>
 	<Button variant={ButtonStyleType.DEFAULT} onclick={() => resetBackgroundImage()} tooltip="Reset to none"
-		><Icon plugin={plugin} iconName="x"></Icon></Button
+		><Icon mb={mb} iconName="x"></Icon></Button
 	>
 </SettingComponent>
 
@@ -225,89 +226,81 @@ Add action of type
 			<h5>{getActionLabel(action.type)}</h5>
 			<!-- eslint-disable-next-line @typescript-eslint/no-unsafe-argument -->
 			<Button variant={ButtonStyleType.PLAIN} onclick={e => openActionContextMenu(i, e)}>
-				<Icon iconName="more-vertical" plugin={plugin}></Icon>
+				<Icon iconName="more-vertical" mb={mb}></Icon>
 			</Button>
 		</FlexRow>
 
 		{#if action.type === ButtonActionType.COMMAND}
-			<CommandActionSettings bind:action={buttonConfig.actions[i] as CommandButtonAction} plugin={plugin}
+			<CommandActionSettings bind:action={buttonConfig.actions[i] as CommandButtonAction} mb={mb}
 			></CommandActionSettings>
 		{/if}
 
 		{#if action.type === ButtonActionType.OPEN}
-			<OpenActionSettings bind:action={buttonConfig.actions[i] as OpenButtonAction} plugin={plugin}
-			></OpenActionSettings>
+			<OpenActionSettings bind:action={buttonConfig.actions[i] as OpenButtonAction} mb={mb}></OpenActionSettings>
 		{/if}
 
 		{#if action.type === ButtonActionType.JS}
-			<JSActionSettings bind:action={buttonConfig.actions[i] as JSButtonAction} plugin={plugin}
-			></JSActionSettings>
+			<JSActionSettings bind:action={buttonConfig.actions[i] as JSButtonAction} mb={mb}></JSActionSettings>
 		{/if}
 
 		{#if action.type === ButtonActionType.INPUT}
-			<InputActionSettings bind:action={buttonConfig.actions[i] as InputButtonAction} plugin={plugin}
+			<InputActionSettings bind:action={buttonConfig.actions[i] as InputButtonAction} mb={mb}
 			></InputActionSettings>
 		{/if}
 
 		{#if action.type === ButtonActionType.SLEEP}
-			<SleepActionSettings bind:action={buttonConfig.actions[i] as SleepButtonAction} plugin={plugin}
+			<SleepActionSettings bind:action={buttonConfig.actions[i] as SleepButtonAction} mb={mb}
 			></SleepActionSettings>
 		{/if}
 
 		{#if action.type === ButtonActionType.TEMPLATER_CREATE_NOTE}
 			<TemplaterCreateNoteActionSettings
 				bind:action={buttonConfig.actions[i] as TemplaterCreateNoteButtonAction}
-				plugin={plugin}
+				mb={mb}
 			></TemplaterCreateNoteActionSettings>
 		{/if}
 
 		{#if action.type === ButtonActionType.UPDATE_METADATA}
-			<UpdateMetadataActionSettings
-				bind:action={buttonConfig.actions[i] as UpdateMetadataButtonAction}
-				plugin={plugin}
+			<UpdateMetadataActionSettings bind:action={buttonConfig.actions[i] as UpdateMetadataButtonAction} mb={mb}
 			></UpdateMetadataActionSettings>
 		{/if}
 
 		{#if action.type === ButtonActionType.CREATE_NOTE}
-			<CreateNoteActionSettings bind:action={buttonConfig.actions[i] as CreateNoteButtonAction} plugin={plugin}
+			<CreateNoteActionSettings bind:action={buttonConfig.actions[i] as CreateNoteButtonAction} mb={mb}
 			></CreateNoteActionSettings>
 		{/if}
 
 		{#if action.type === ButtonActionType.RUN_TEMPLATER_FILE}
 			<RunTemplaterFileActionSettings
 				bind:action={buttonConfig.actions[i] as RunTemplaterFileButtonAction}
-				plugin={plugin}
+				mb={mb}
 			></RunTemplaterFileActionSettings>
 		{/if}
 
 		{#if action.type === ButtonActionType.REPLACE_IN_NOTE}
-			<ReplaceInNoteActionSettings
-				bind:action={buttonConfig.actions[i] as ReplaceInNoteButtonAction}
-				plugin={plugin}
+			<ReplaceInNoteActionSettings bind:action={buttonConfig.actions[i] as ReplaceInNoteButtonAction} mb={mb}
 			></ReplaceInNoteActionSettings>
 		{/if}
 
 		{#if action.type === ButtonActionType.REGEXP_REPLACE_IN_NOTE}
 			<RegexpReplaceInNoteActionSettings
 				bind:action={buttonConfig.actions[i] as RegexpReplaceInNoteButtonAction}
-				plugin={plugin}
+				mb={mb}
 			></RegexpReplaceInNoteActionSettings>
 		{/if}
 
 		{#if action.type === ButtonActionType.REPLACE_SELF}
-			<ReplaceSelfActionSettings bind:action={buttonConfig.actions[i] as ReplaceSelfButtonAction} plugin={plugin}
+			<ReplaceSelfActionSettings bind:action={buttonConfig.actions[i] as ReplaceSelfButtonAction} mb={mb}
 			></ReplaceSelfActionSettings>
 		{/if}
 
 		{#if action.type === ButtonActionType.INSERT_INTO_NOTE}
-			<InsertIntoNoteActionSettings
-				bind:action={buttonConfig.actions[i] as InsertIntoNoteButtonAction}
-				plugin={plugin}
+			<InsertIntoNoteActionSettings bind:action={buttonConfig.actions[i] as InsertIntoNoteButtonAction} mb={mb}
 			></InsertIntoNoteActionSettings>
 		{/if}
 
 		{#if action.type === ButtonActionType.INLINE_JS}
-			<InlineJsActionSettings bind:action={buttonConfig.actions[i] as InlineJSButtonAction} plugin={plugin}
+			<InlineJsActionSettings bind:action={buttonConfig.actions[i] as InlineJSButtonAction} mb={mb}
 			></InlineJsActionSettings>
 		{/if}
 	{/each}

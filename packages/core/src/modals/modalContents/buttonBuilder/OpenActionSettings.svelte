@@ -1,21 +1,22 @@
 <script lang="ts">
+	import type { MetaBind } from 'packages/core/src';
 	import { ButtonStyleType, type OpenButtonAction } from 'packages/core/src/config/ButtonConfig';
-	import type { IPlugin } from 'packages/core/src/IPlugin';
+
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import Icon from 'packages/core/src/utils/components/Icon.svelte';
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
 	import Toggle from 'packages/core/src/utils/components/Toggle.svelte';
 
 	const {
-		plugin,
+		mb,
 		action = $bindable(),
 	}: {
-		plugin: IPlugin;
+		mb: MetaBind;
 		action: OpenButtonAction;
 	} = $props();
 
 	function changeFilePath(): void {
-		plugin.internal.openMarkdownFileSelectModal((file: string) => {
+		mb.internal.openMarkdownFileSelectModal((file: string) => {
 			action.link = file;
 		});
 	}
@@ -24,7 +25,7 @@
 <SettingComponent name="Link" description="The link to open.">
 	<input type="text" bind:value={action.link} placeholder="[[Some Note]] or https://www.example.com" />
 	<Button variant={ButtonStyleType.PRIMARY} onclick={() => changeFilePath()} tooltip="Select from vault"
-		><Icon iconName="list" plugin={plugin}></Icon></Button
+		><Icon iconName="list" mb={mb}></Icon></Button
 	>
 </SettingComponent>
 

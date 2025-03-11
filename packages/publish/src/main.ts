@@ -1,7 +1,7 @@
 import type { MarkdownPostProcessorContext } from 'obsidian/publish';
+import { MetaBind } from 'packages/core/src';
 import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 import { EMBED_MAX_DEPTH } from 'packages/core/src/config/FieldConfigs';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import { GlobalMetadataSource, InternalMetadataSource } from 'packages/core/src/metadata/InternalMetadataSources';
 import { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
 import { MountableManager } from 'packages/core/src/MountableManager';
@@ -10,28 +10,46 @@ import { DateParser } from 'packages/core/src/parsers/DateParser';
 import type { MetaBindPluginSettings } from 'packages/core/src/Settings';
 import { setFirstWeekday } from 'packages/core/src/utils/DatePickerUtils';
 import { PublishAPI } from 'packages/publish/src/PublishAPI';
+import { PublishFileAPI } from 'packages/publish/src/PublishFileAPI';
 import { PublishInternalAPI } from 'packages/publish/src/PublishInternalAPI';
 import { PublishMetadataSource } from 'packages/publish/src/PublishMetadataSource';
 import { PublishNotePosition } from 'packages/publish/src/PublishNotePosition';
 
-export class MetaBindPublishPlugin implements IPlugin {
-	settings: MetaBindPluginSettings;
+export interface PublishComponents {
 	api: PublishAPI;
 	internal: PublishInternalAPI;
+	file: PublishFileAPI;
+}
+
+export class PublishMetaBind extends MetaBind<PublishComponents> {
+	settings: MetaBindPluginSettings;
 	metadataManager: MetadataManager;
 	mountableManager: MountableManager;
 
 	constructor(settings: MetaBindPluginSettings) {
+		super();
 		this.settings = settings;
 
-		this.api = new PublishAPI(this);
-		this.internal = new PublishInternalAPI(this);
+		this.setComponents({
+			api: new PublishAPI(this),
+			internal: new PublishInternalAPI(this),
+			file: new PublishFileAPI(this),
+		});
+
 		this.metadataManager = new MetadataManager();
 		this.setUpMetadataManager();
 
 		this.mountableManager = new MountableManager();
 
 		this.load();
+	}
+
+	getSettings(): MetaBindPluginSettings {
+		return this.settings;
+	}
+
+	saveSettings(settings: MetaBindPluginSettings): void {
+		this.settings = settings;
 	}
 
 	setUpMetadataManager(): void {
@@ -176,16 +194,14 @@ export class MetaBindPublishPlugin implements IPlugin {
 			return;
 		}
 
-		const inputFieldTemplateParseErrorCollection = this.api.inputFieldParser.parseTemplates(
+		const inputFieldTemplateParseErrorCollection = this.inputFieldParser.parseTemplates(
 			this.settings.inputFieldTemplates,
 		);
 		if (inputFieldTemplateParseErrorCollection.hasErrors()) {
 			console.warn('meta-bind | failed to parse input field templates', inputFieldTemplateParseErrorCollection);
 		}
 
-		const buttonTemplateParseErrorCollection = this.api.buttonManager.setButtonTemplates(
-			this.settings.buttonTemplates,
-		);
+		const buttonTemplateParseErrorCollection = this.buttonManager.setButtonTemplates(this.settings.buttonTemplates);
 		if (buttonTemplateParseErrorCollection.hasErrors()) {
 			console.warn('meta-bind | failed to parse button templates', buttonTemplateParseErrorCollection);
 		}
@@ -194,7 +210,7 @@ export class MetaBindPublishPlugin implements IPlugin {
 
 // @ts-ignore
 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-const mb = new MetaBindPublishPlugin(mb_settings);
+const mb = new PublishMetaBind(mb_settings);
 // @ts-ignore
 
 window.mb = mb;

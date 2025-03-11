@@ -11,6 +11,6 @@ export class CommandSelectModal extends SelectModalContent<Command> {
 	}
 
 	public getItems(): Command[] {
-		return this.plugin.internal.getAllCommands();
+		return this.mb.internal.getAllCommands();
 	}
 }

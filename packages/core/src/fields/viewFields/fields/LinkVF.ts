@@ -112,7 +112,7 @@ export class LinkVF extends AbstractViewField<MarkdownLink | MarkdownLink[] | un
 		} else {
 			return stringifyUnknown(
 				this.aliasVariable.metadataSignal.get(),
-				this.mountable.plugin.settings.viewFieldDisplayNullAsEmpty,
+				this.mountable.mb.getSettings().viewFieldDisplayNullAsEmpty,
 			);
 		}
 	}

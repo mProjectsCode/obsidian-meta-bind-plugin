@@ -1,3 +1,4 @@
+import type { MetaBind } from 'packages/core/src';
 import type {
 	ButtonClickContext,
 	ButtonConfig,
@@ -6,13 +7,12 @@ import type {
 } from 'packages/core/src/config/ButtonConfig';
 import { ButtonActionType } from 'packages/core/src/config/ButtonConfig';
 import { AbstractButtonActionConfig } from 'packages/core/src/fields/button/AbstractButtonActionConfig';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import { P_lineNumberExpression } from 'packages/core/src/parsers/nomParsers/MiscNomParsers';
 import { runParser } from 'packages/core/src/parsers/ParsingError';
 
 export class InsertIntoNoteButtonActionConfig extends AbstractButtonActionConfig<InsertIntoNoteButtonAction> {
-	constructor(plugin: IPlugin) {
-		super(ButtonActionType.INSERT_INTO_NOTE, plugin);
+	constructor(mb: MetaBind) {
+		super(ButtonActionType.INSERT_INTO_NOTE, mb);
 	}
 
 	async run(
@@ -23,18 +23,18 @@ export class InsertIntoNoteButtonActionConfig extends AbstractButtonActionConfig
 		_click: ButtonClickContext,
 	): Promise<void> {
 		const insertString = action.templater
-			? await this.plugin.internal.evaluateTemplaterTemplate(
-					this.plugin.api.buttonActionRunner.resolveFilePath(action.value),
+			? await this.mb.internal.evaluateTemplaterTemplate(
+					this.mb.buttonActionRunner.resolveFilePath(action.value),
 					filePath,
 				)
 			: action.value;
 
 		const line = runParser(P_lineNumberExpression, action.line.toString());
 
-		await this.plugin.internal.file.atomicModify(filePath, content => {
+		await this.mb.file.atomicModify(filePath, content => {
 			let splitContent = content.split('\n');
 
-			const lineContext = this.plugin.api.buttonActionRunner.getLineNumberContext(content, context.position);
+			const lineContext = this.mb.buttonActionRunner.getLineNumberContext(content, context.position);
 			const lineNumber = line.evaluate(lineContext);
 
 			if (lineNumber < 1 || lineNumber > splitContent.length) {

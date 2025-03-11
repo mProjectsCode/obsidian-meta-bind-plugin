@@ -1,3 +1,4 @@
+import type { MetaBind } from 'packages/core/src';
 import type { LinePosition } from 'packages/core/src/config/APIConfigs';
 import type {
 	ButtonActionMap,
@@ -22,7 +23,6 @@ import { RunTemplaterFileButtonActionConfig } from 'packages/core/src/fields/but
 import { SleepButtonActionConfig } from 'packages/core/src/fields/button/actions/SleepButtonActionConfig';
 import { TemplaterCreateNoteButtonActionConfig } from 'packages/core/src/fields/button/actions/TemplaterCreateNoteButtonActionConfig';
 import { UpdateMetadataButtonActionConfig } from 'packages/core/src/fields/button/actions/UpdateMetadataButtonActionConfig';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import { ErrorLevel, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import type { LineNumberContext } from 'packages/core/src/utils/LineNumberExpression';
@@ -32,27 +32,27 @@ type ActionContexts = {
 };
 
 export class ButtonActionRunner {
-	plugin: IPlugin;
+	mb: MetaBind;
 	actionContexts: ActionContexts;
 
-	constructor(plugin: IPlugin) {
-		this.plugin = plugin;
+	constructor(mb: MetaBind) {
+		this.mb = mb;
 
 		this.actionContexts = {
-			[ButtonActionType.COMMAND]: new CommandButtonActionConfig(plugin),
-			[ButtonActionType.OPEN]: new OpenButtonActionConfig(plugin),
-			[ButtonActionType.JS]: new JSButtonActionConfig(plugin),
-			[ButtonActionType.INPUT]: new InputButtonActionConfig(plugin),
-			[ButtonActionType.SLEEP]: new SleepButtonActionConfig(plugin),
-			[ButtonActionType.TEMPLATER_CREATE_NOTE]: new TemplaterCreateNoteButtonActionConfig(plugin),
-			[ButtonActionType.UPDATE_METADATA]: new UpdateMetadataButtonActionConfig(plugin),
-			[ButtonActionType.CREATE_NOTE]: new CreateNoteButtonActionConfig(plugin),
-			[ButtonActionType.REPLACE_IN_NOTE]: new ReplaceInNoteButtonActionConfig(plugin),
-			[ButtonActionType.REPLACE_SELF]: new ReplaceSelfButtonActionConfig(plugin),
-			[ButtonActionType.REGEXP_REPLACE_IN_NOTE]: new RegexpReplaceInNoteButtonActionConfig(plugin),
-			[ButtonActionType.INSERT_INTO_NOTE]: new InsertIntoNoteButtonActionConfig(plugin),
-			[ButtonActionType.INLINE_JS]: new InlineJSButtonActionConfig(plugin),
-			[ButtonActionType.RUN_TEMPLATER_FILE]: new RunTemplaterFileButtonActionConfig(plugin),
+			[ButtonActionType.COMMAND]: new CommandButtonActionConfig(mb),
+			[ButtonActionType.OPEN]: new OpenButtonActionConfig(mb),
+			[ButtonActionType.JS]: new JSButtonActionConfig(mb),
+			[ButtonActionType.INPUT]: new InputButtonActionConfig(mb),
+			[ButtonActionType.SLEEP]: new SleepButtonActionConfig(mb),
+			[ButtonActionType.TEMPLATER_CREATE_NOTE]: new TemplaterCreateNoteButtonActionConfig(mb),
+			[ButtonActionType.UPDATE_METADATA]: new UpdateMetadataButtonActionConfig(mb),
+			[ButtonActionType.CREATE_NOTE]: new CreateNoteButtonActionConfig(mb),
+			[ButtonActionType.REPLACE_IN_NOTE]: new ReplaceInNoteButtonActionConfig(mb),
+			[ButtonActionType.REPLACE_SELF]: new ReplaceSelfButtonActionConfig(mb),
+			[ButtonActionType.REGEXP_REPLACE_IN_NOTE]: new RegexpReplaceInNoteButtonActionConfig(mb),
+			[ButtonActionType.INSERT_INTO_NOTE]: new InsertIntoNoteButtonActionConfig(mb),
+			[ButtonActionType.INLINE_JS]: new InlineJSButtonActionConfig(mb),
+			[ButtonActionType.RUN_TEMPLATER_FILE]: new RunTemplaterFileButtonActionConfig(mb),
 		};
 	}
 
@@ -61,7 +61,7 @@ export class ButtonActionRunner {
 	 */
 	resolveFilePath(filePath: string, relativeTo?: string): string {
 		const targetFilePath = MDLinkParser.isLink(filePath) ? MDLinkParser.parseLink(filePath).target : filePath;
-		const resolvedFilePath = this.plugin.internal.file.getPathByName(targetFilePath, relativeTo);
+		const resolvedFilePath = this.mb.file.getPathByName(targetFilePath, relativeTo);
 		if (resolvedFilePath === undefined) {
 			throw new MetaBindParsingError({
 				errorLevel: ErrorLevel.ERROR,
@@ -115,7 +115,7 @@ export class ButtonActionRunner {
 			}
 		} catch (e) {
 			console.warn('meta-bind | ButtonMDRC >> error while running action', e);
-			this.plugin.internal.showNotice(
+			this.mb.internal.showNotice(
 				'meta-bind | Error while running button action. Check the console for details.',
 			);
 		}
@@ -167,7 +167,7 @@ export class ButtonActionRunner {
 	getLineNumberContext(fileContent: string, selfNotePosition: LinePosition | undefined): LineNumberContext {
 		const fileStart = 1;
 		const fileEnd = fileContent.split('\n').length;
-		const frontmatterPosition = this.plugin.internal.file.getFrontmatterLocation(fileContent);
+		const frontmatterPosition = this.mb.file.getFrontmatterLocation(fileContent);
 
 		return {
 			fileStart: fileStart,

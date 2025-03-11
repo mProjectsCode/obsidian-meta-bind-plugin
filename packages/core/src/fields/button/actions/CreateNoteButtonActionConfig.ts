@@ -1,3 +1,4 @@
+import type { MetaBind } from 'packages/core/src';
 import type {
 	ButtonClickContext,
 	ButtonConfig,
@@ -6,12 +7,11 @@ import type {
 } from 'packages/core/src/config/ButtonConfig';
 import { ButtonActionType } from 'packages/core/src/config/ButtonConfig';
 import { AbstractButtonActionConfig } from 'packages/core/src/fields/button/AbstractButtonActionConfig';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import { ensureFileExtension, joinPath } from 'packages/core/src/utils/Utils';
 
 export class CreateNoteButtonActionConfig extends AbstractButtonActionConfig<CreateNoteButtonAction> {
-	constructor(plugin: IPlugin) {
-		super(ButtonActionType.CREATE_NOTE, plugin);
+	constructor(mb: MetaBind) {
+		super(ButtonActionType.CREATE_NOTE, mb);
 	}
 
 	async run(
@@ -24,18 +24,13 @@ export class CreateNoteButtonActionConfig extends AbstractButtonActionConfig<Cre
 		if (action.openIfAlreadyExists) {
 			const filePath = ensureFileExtension(joinPath(action.folderPath ?? '', action.fileName), 'md');
 			// if the file already exists, open it in the same tab
-			if (await this.plugin.internal.file.exists(filePath)) {
-				this.plugin.internal.file.open(filePath, '', false);
+			if (await this.mb.file.exists(filePath)) {
+				await this.mb.file.open(filePath, '', false);
 				return;
 			}
 		}
 
-		await this.plugin.internal.file.create(
-			action.folderPath ?? '',
-			action.fileName,
-			'md',
-			action.openNote ?? false,
-		);
+		await this.mb.file.create(action.folderPath ?? '', action.fileName, 'md', action.openNote ?? false);
 	}
 
 	create(): Required<CreateNoteButtonAction> {

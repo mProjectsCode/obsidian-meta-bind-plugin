@@ -1,15 +1,11 @@
-import type { IPlugin } from 'packages/core/src/IPlugin';
+import type { MetaBind } from 'packages/core/src';
 import { SelectModalContent } from 'packages/core/src/modals/SelectModalContent';
 
 export class FileSelectModal extends SelectModalContent<string> {
 	readonly filterFunction?: (filePath: string) => boolean;
 
-	constructor(
-		plugin: IPlugin,
-		selectCallback: (value: string) => void,
-		filterFunction?: (filePath: string) => boolean,
-	) {
-		super(plugin, selectCallback);
+	constructor(mb: MetaBind, selectCallback: (value: string) => void, filterFunction?: (filePath: string) => boolean) {
+		super(mb, selectCallback);
 		this.filterFunction = filterFunction;
 	}
 
@@ -23,9 +19,9 @@ export class FileSelectModal extends SelectModalContent<string> {
 
 	public getItems(): string[] {
 		if (this.filterFunction !== undefined) {
-			return this.plugin.internal.file.getAllFiles().filter(f => this.filterFunction!(f));
+			return this.mb.file.getAllFiles().filter(f => this.filterFunction!(f));
 		} else {
-			return this.plugin.internal.file.getAllFiles();
+			return this.mb.file.getAllFiles();
 		}
 	}
 }

@@ -1,3 +1,4 @@
+import type { MetaBind } from 'packages/core/src';
 import type {
 	ButtonClickContext,
 	ButtonConfig,
@@ -6,11 +7,10 @@ import type {
 } from 'packages/core/src/config/ButtonConfig';
 import { ButtonActionType } from 'packages/core/src/config/ButtonConfig';
 import { AbstractButtonActionConfig } from 'packages/core/src/fields/button/AbstractButtonActionConfig';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 
 export class RegexpReplaceInNoteButtonActionConfig extends AbstractButtonActionConfig<RegexpReplaceInNoteButtonAction> {
-	constructor(plugin: IPlugin) {
-		super(ButtonActionType.REGEXP_REPLACE_IN_NOTE, plugin);
+	constructor(mb: MetaBind) {
+		super(ButtonActionType.REGEXP_REPLACE_IN_NOTE, mb);
 	}
 
 	async run(
@@ -24,7 +24,7 @@ export class RegexpReplaceInNoteButtonActionConfig extends AbstractButtonActionC
 			throw new Error('Regexp cannot be empty');
 		}
 
-		await this.plugin.internal.file.atomicModify(filePath, content => {
+		await this.mb.file.atomicModify(filePath, content => {
 			return content.replace(new RegExp(action.regexp, action.regexpFlags ?? 'g'), action.replacement);
 		});
 	}

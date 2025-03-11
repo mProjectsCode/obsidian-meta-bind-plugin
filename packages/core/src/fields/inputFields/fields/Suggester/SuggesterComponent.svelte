@@ -42,11 +42,11 @@
 		{/if}
 	</div>
 	<Button variant={ButtonStyleType.PLAIN} onclick={props.showSuggester}>
-		<Icon plugin={props.plugin} iconName="list" />
+		<Icon mb={props.mb} iconName="list" />
 	</Button>
 	{#if props.allowOther}
 		<Button variant={ButtonStyleType.PLAIN} onclick={props.showTextPrompt}>
-			<Icon plugin={props.plugin} iconName="pencil" />
+			<Icon mb={props.mb} iconName="pencil" />
 		</Button>
 	{/if}
 </div>

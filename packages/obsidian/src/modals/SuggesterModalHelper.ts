@@ -7,12 +7,12 @@ import { applyUseLinksArgument } from 'packages/core/src/fields/fieldArguments/i
 import type { SuggesterLikeIFP } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
 import { SuggesterOption } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
 import type { MBLiteral } from 'packages/core/src/utils/Literal';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
+import type { ObsMetaBind } from 'packages/obsidian/src/main';
 import { getDataViewPluginAPI } from 'packages/obsidian/src/ObsUtils';
 import { z } from 'zod';
 
 export function getSuggesterOptions(
-	plugin: MetaBindPlugin,
+	mb: ObsMetaBind,
 	filePath: string,
 	optionArgs: OptionInputFieldArgument[],
 	optionQueryArgs: OptionQueryInputFieldArgument[],
@@ -29,7 +29,7 @@ export function getSuggesterOptions(
 	if (optionQueryArgs.length > 0) {
 		let dv: DataviewApi | undefined = undefined;
 		try {
-			dv = getDataViewPluginAPI(plugin);
+			dv = getDataViewPluginAPI(mb);
 		} catch (e) {
 			new Notice(
 				'meta-bind | Dataview needs to be installed and enabled to use suggest option queries. Check the console for more information.',
@@ -68,7 +68,7 @@ export function getSuggesterOptions(
 }
 
 export function getSuggesterOptionsForInputField(
-	plugin: MetaBindPlugin,
+	mb: ObsMetaBind,
 	inputField: SuggesterLikeIFP,
 ): SuggesterOption<MBLiteral>[] {
 	const optionArgs = inputField.mountable.getArguments(InputFieldArgumentType.OPTION);
@@ -76,7 +76,7 @@ export function getSuggesterOptionsForInputField(
 	const useLinksArg = inputField.mountable.getArgument(InputFieldArgumentType.USE_LINKS);
 	// in not present, we treat the use links argument as true
 	return getSuggesterOptions(
-		plugin,
+		mb,
 		inputField.mountable.getFilePath(),
 		optionArgs,
 		optionQueryArgs,

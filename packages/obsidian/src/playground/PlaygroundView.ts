@@ -1,7 +1,7 @@
 import type { WorkspaceLeaf } from 'obsidian';
 import { ItemView } from 'obsidian';
 import PlaygroundComponent from 'packages/core/src/utils/playground/PlaygroundComponent.svelte';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
+import type { ObsMetaBind } from 'packages/obsidian/src/main';
 import type { Component as SvelteComponent } from 'svelte';
 import { mount, unmount } from 'svelte';
 
@@ -9,11 +9,11 @@ export const MB_PLAYGROUND_VIEW_TYPE = 'mb-playground-view-type';
 
 export class PlaygroundView extends ItemView {
 	component: ReturnType<SvelteComponent> | undefined;
-	plugin: MetaBindPlugin;
+	mb: ObsMetaBind;
 
-	constructor(leaf: WorkspaceLeaf, plugin: MetaBindPlugin) {
+	constructor(leaf: WorkspaceLeaf, mb: ObsMetaBind) {
 		super(leaf);
-		this.plugin = plugin;
+		this.mb = mb;
 	}
 
 	getViewType(): string {
@@ -30,7 +30,7 @@ export class PlaygroundView extends ItemView {
 		this.component = mount(PlaygroundComponent, {
 			target: this.contentEl,
 			props: {
-				plugin: this.plugin,
+				mb: this.mb,
 			},
 		});
 	}

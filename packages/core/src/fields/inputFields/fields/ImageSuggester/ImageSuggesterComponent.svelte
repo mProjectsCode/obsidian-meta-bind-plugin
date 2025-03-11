@@ -34,21 +34,16 @@
 			onclick: () => props.clear(),
 		});
 
-		props.plugin.internal.createContextMenu(menuActions).showWithEvent(e);
+		props.mb.internal.createContextMenu(menuActions).showWithEvent(e);
 	}
 </script>
 
 {#if value}
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div class="mb-image-card" oncontextmenu={e => showContextMenu(e)}>
-		<img
-			class="mb-image-card-image"
-			src={props.plugin.internal.imagePathToUri(value)}
-			alt={value}
-			aria-label={value}
-		/>
+		<img class="mb-image-card-image" src={props.mb.internal.imagePathToUri(value)} alt={value} aria-label={value} />
 		<Button variant={ButtonStyleType.PLAIN} onclick={e => showContextMenu(e)} classes="mb-image-card-button">
-			<Icon iconName="ellipsis-vertical" plugin={props.plugin} />
+			<Icon iconName="ellipsis-vertical" mb={props.mb} />
 		</Button>
 	</div>
 {:else}

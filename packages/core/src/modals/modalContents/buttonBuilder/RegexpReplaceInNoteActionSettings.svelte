@@ -1,13 +1,14 @@
 <script lang="ts">
+	import type { MetaBind } from 'packages/core/src';
 	import type { RegexpReplaceInNoteButtonAction } from 'packages/core/src/config/ButtonConfig';
-	import type { IPlugin } from 'packages/core/src/IPlugin';
+
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
 
 	const {
-		plugin,
+		mb,
 		action = $bindable(),
 	}: {
-		plugin: IPlugin;
+		mb: MetaBind;
 		action: RegexpReplaceInNoteButtonAction;
 	} = $props();
 </script>

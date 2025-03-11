@@ -1,7 +1,7 @@
 import { FileAPI } from 'packages/core/src/api/FileAPI';
-import type { MetaBindPublishPlugin } from 'packages/publish/src/main';
+import type { PublishComponents } from 'packages/publish/src/main';
 
-export class PublishFileAPI extends FileAPI<MetaBindPublishPlugin> {
+export class PublishFileAPI extends FileAPI<PublishComponents> {
 	public read(_filePath: string): Promise<string> {
 		throw new Error('Reading files is not supported in Obsidian Publish.');
 	}
@@ -40,7 +40,7 @@ export class PublishFileAPI extends FileAPI<MetaBindPublishPlugin> {
 		return Array.from(folders);
 	}
 
-	public open(_filePath: string, _callingFilePath: string, _newTab: boolean): void {
+	public open(_filePath: string, _callingFilePath: string, _newTab: boolean): Promise<void> {
 		throw new Error('not implemented');
 	}
 

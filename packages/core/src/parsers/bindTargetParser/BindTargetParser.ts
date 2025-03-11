@@ -1,4 +1,4 @@
-import type { IPlugin } from 'packages/core/src/IPlugin';
+import type { MetaBind } from 'packages/core/src';
 import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import type {
 	BindTargetDeclaration,
@@ -14,10 +14,10 @@ import { PropAccess } from 'packages/core/src/utils/prop/PropAccess';
 import { PropPath } from 'packages/core/src/utils/prop/PropPath';
 
 export class BindTargetParser {
-	plugin: IPlugin;
+	mb: MetaBind;
 
-	constructor(plugin: IPlugin) {
-		this.plugin = plugin;
+	constructor(mb: MetaBind) {
+		this.mb = mb;
 	}
 
 	fromString(declarationString: string): UnvalidatedBindTargetDeclaration {
@@ -67,7 +67,7 @@ export class BindTargetParser {
 
 		// storage type
 		if (unvalidatedBindTargetDeclaration.storageType === undefined) {
-			bindTargetDeclaration.storageType = this.plugin.metadataManager.defaultSource;
+			bindTargetDeclaration.storageType = this.mb.metadataManager.defaultSource;
 		} else {
 			bindTargetDeclaration.storageType = this.validateStorageType(
 				unvalidatedBindTargetDeclaration.storageType,
@@ -81,7 +81,7 @@ export class BindTargetParser {
 			value: filePath,
 		};
 
-		const source = this.plugin.metadataManager.getSource(bindTargetDeclaration.storageType);
+		const source = this.mb.metadataManager.getSource(bindTargetDeclaration.storageType);
 		if (source === undefined) {
 			throw new MetaBindInternalError({
 				errorLevel: ErrorLevel.CRITICAL,
@@ -89,7 +89,7 @@ export class BindTargetParser {
 				cause: `Source '${bindTargetDeclaration.storageType}' not found. But validation was successful. This should not happen.`,
 				context: {
 					fullDeclaration: fullDeclaration,
-					sources: [...this.plugin.metadataManager.sources.keys()],
+					sources: [...this.mb.metadataManager.sources.keys()],
 				},
 			});
 		}
@@ -125,7 +125,7 @@ export class BindTargetParser {
 	}
 
 	public validateStorageType(storageType: ParsingResultNode, fullDeclaration: string | undefined): string {
-		for (const source of this.plugin.metadataManager.iterateSources()) {
+		for (const source of this.mb.metadataManager.iterateSources()) {
 			if (source === storageType.value) {
 				return source;
 			}
@@ -155,7 +155,7 @@ export class BindTargetParser {
 			);
 		}
 
-		const filePath: string | undefined = this.plugin.internal.file.getPathByName(storagePath);
+		const filePath: string | undefined = this.mb.file.getPathByName(storagePath);
 
 		if (filePath === undefined) {
 			throw new ParsingValidationError(

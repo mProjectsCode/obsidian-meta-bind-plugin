@@ -1,18 +1,18 @@
+import type { MetaBind } from 'packages/core/src';
 import type {
 	ButtonActionType,
 	ButtonClickContext,
 	ButtonConfig,
 	ButtonContext,
 } from 'packages/core/src/config/ButtonConfig';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 
 export abstract class AbstractButtonActionConfig<T> {
 	actionType: ButtonActionType;
-	plugin: IPlugin;
+	mb: MetaBind;
 
-	constructor(actionType: ButtonActionType, plugin: IPlugin) {
+	constructor(actionType: ButtonActionType, mb: MetaBind) {
 		this.actionType = actionType;
-		this.plugin = plugin;
+		this.mb = mb;
 	}
 
 	abstract run(

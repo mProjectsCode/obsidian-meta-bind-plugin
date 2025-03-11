@@ -1,19 +1,19 @@
+import type { MetaBind } from 'packages/core/src';
 import { ViewFieldType } from 'packages/core/src/config/FieldConfigs';
 import { ImageVF } from 'packages/core/src/fields/viewFields/fields/ImageVF';
 import { LinkVF } from 'packages/core/src/fields/viewFields/fields/LinkVF';
 import { MathVF } from 'packages/core/src/fields/viewFields/fields/MathVF';
 import { TextVF } from 'packages/core/src/fields/viewFields/fields/TextVF';
 import type { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import { expectType } from 'packages/core/src/utils/Utils';
 
 export type ViewField = MathVF | TextVF | LinkVF | ImageVF;
 
 export class ViewFieldFactory {
-	plugin: IPlugin;
+	mb: MetaBind;
 
-	constructor(plugin: IPlugin) {
-		this.plugin = plugin;
+	constructor(mb: MetaBind) {
+		this.mb = mb;
 	}
 
 	createViewField(mountable: ViewFieldMountable): ViewField | undefined {

@@ -65,8 +65,6 @@ export interface MetaBindPluginSettings {
 	preferredDateFormat: string;
 	firstWeekday: Weekday;
 	syncInterval: number;
-	maxSyncInterval: number;
-	minSyncInterval: number;
 	enableJs: boolean;
 	viewFieldDisplayNullAsEmpty: boolean;
 	enableSyntaxHighlighting: boolean;
@@ -88,8 +86,6 @@ export const DEFAULT_SETTINGS: MetaBindPluginSettings = {
 	preferredDateFormat: 'YYYY-MM-DD',
 	firstWeekday: weekdays[1],
 	syncInterval: 200,
-	minSyncInterval: 50,
-	maxSyncInterval: 1000,
 	enableJs: false,
 	viewFieldDisplayNullAsEmpty: false,
 	enableSyntaxHighlighting: true,
@@ -99,3 +95,6 @@ export const DEFAULT_SETTINGS: MetaBindPluginSettings = {
 	buttonTemplates: [],
 	excludedFolders: ['templates'],
 };
+
+export const MIN_SYNC_INTERVAL = 50;
+export const MAX_SYNC_INTERVAL = 1000;

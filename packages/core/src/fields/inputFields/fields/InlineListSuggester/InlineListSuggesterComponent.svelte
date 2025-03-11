@@ -33,7 +33,7 @@
 			return;
 		}
 
-		props.plugin.internal
+		props.mb.internal
 			.createContextMenu([
 				{
 					name: 'From Options',
@@ -89,19 +89,24 @@
 			onclick: () => remove(index),
 		});
 
-		props.plugin.internal.createContextMenu(menuActions).showWithEvent(e);
+		props.mb.internal.createContextMenu(menuActions).showWithEvent(e);
 	}
 </script>
 
 <div class="mb-inline-list">
 	{#each value as entry, i}
-		<div class="mb-inline-list-item" oncontextmenu={e => openContextMenuForElement(e, i)} role="listitem" data-value={stringifyLiteral(entry)}>
+		<div
+			class="mb-inline-list-item"
+			oncontextmenu={e => openContextMenuForElement(e, i)}
+			role="listitem"
+			data-value={stringifyLiteral(entry)}
+		>
 			<LiteralRenderComponent value={entry}></LiteralRenderComponent>
 		</div>
 	{/each}
 	<div class="mb-inline-list-add" onclick={suggest} onkeydown={suggestKey} role="button" tabindex="0">
 		<!-- Alignment hack with zero width space -->
 		<span>&#x200B;</span>
-		<Icon plugin={props.plugin} iconName="plus" />
+		<Icon mb={props.mb} iconName="plus" />
 	</div>
 </div>

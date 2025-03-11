@@ -43,7 +43,6 @@
 			oninput={() => props.onValueChange($state.snapshot(value))}
 		></textarea>
 	{:else}
-		<MarkdownRenderComponent value={value} plugin={props.plugin} filePath={props.filePath}
-		></MarkdownRenderComponent>
+		<MarkdownRenderComponent value={value} mb={props.mb} filePath={props.filePath}></MarkdownRenderComponent>
 	{/if}
 </div>

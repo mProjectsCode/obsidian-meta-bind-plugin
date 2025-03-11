@@ -1,9 +1,9 @@
+import type { MetaBind } from 'packages/core/src';
 import type { NotePosition } from 'packages/core/src/config/APIConfigs';
 import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
 import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 import { ButtonField } from 'packages/core/src/fields/button/ButtonField';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import ButtonComponent from 'packages/core/src/utils/components/ButtonComponent.svelte';
 import { Mountable } from 'packages/core/src/utils/Mountable';
 import { DomHelpers } from 'packages/core/src/utils/Utils';
@@ -11,14 +11,14 @@ import type { Component as SvelteComponent } from 'svelte';
 import { mount, unmount } from 'svelte';
 
 export class ButtonGroupField extends Mountable {
-	plugin: IPlugin;
+	mb: MetaBind;
 	referencedIds: string[];
 	filePath: string;
 	renderChildType: RenderChildType;
 	notePosition: NotePosition | undefined;
 
 	constructor(
-		plugin: IPlugin,
+		mb: MetaBind,
 		referencedIds: string[],
 		filePath: string,
 		renderChildType: RenderChildType,
@@ -26,7 +26,7 @@ export class ButtonGroupField extends Mountable {
 	) {
 		super();
 
-		this.plugin = plugin;
+		this.mb = mb;
 		this.referencedIds = referencedIds;
 		this.filePath = filePath;
 		this.renderChildType = renderChildType;
@@ -43,7 +43,7 @@ export class ButtonGroupField extends Mountable {
 		return mount(ButtonComponent, {
 			target: element,
 			props: {
-				plugin: this.plugin,
+				mb: this.mb,
 				variant: ButtonStyleType.DEFAULT,
 				label: 'Button ID not Found',
 				tooltip: `No button with id '${buttonId}' found`,
@@ -66,7 +66,7 @@ export class ButtonGroupField extends Mountable {
 			let initialButton: ReturnType<SvelteComponent> | undefined = this.renderInitialButton(wrapperEl, buttonId);
 			let button: ButtonField | undefined;
 
-			const loadListenerCleanup = this.plugin.api.buttonManager.registerButtonLoadListener(
+			const loadListenerCleanup = this.mb.buttonManager.registerButtonLoadListener(
 				this.filePath,
 				buttonId,
 				(buttonConfig: ButtonConfig) => {
@@ -75,7 +75,7 @@ export class ButtonGroupField extends Mountable {
 					}
 					initialButton = undefined;
 					button = new ButtonField(
-						this.plugin,
+						this.mb,
 						buttonConfig,
 						this.filePath,
 						this.renderChildType,

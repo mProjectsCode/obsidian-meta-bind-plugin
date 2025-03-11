@@ -1,8 +1,8 @@
+import type { MetaBind } from 'packages/core/src';
 import type { NotePosition } from 'packages/core/src/config/APIConfigs';
 import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 import { ButtonField } from 'packages/core/src/fields/button/ButtonField';
 import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import type { ButtonDeclaration } from 'packages/core/src/parsers/ButtonParser';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
@@ -16,14 +16,14 @@ export class ButtonMountable extends FieldMountable {
 	isPreview: boolean;
 
 	constructor(
-		plugin: IPlugin,
+		mb: MetaBind,
 		uuid: string,
 		filePath: string,
 		declaration: ButtonDeclaration,
 		position: NotePosition | undefined,
 		isPreview: boolean,
 	) {
-		super(plugin, uuid, filePath);
+		super(mb, uuid, filePath);
 
 		this.declaration = declaration;
 		this.position = position;
@@ -42,7 +42,7 @@ export class ButtonMountable extends FieldMountable {
 		if (this.declaration.config && this.declaration.errorCollection.isEmpty()) {
 			try {
 				this.buttonField = new ButtonField(
-					this.plugin,
+					this.mb,
 					this.declaration.config,
 					this.getFilePath(),
 					RenderChildType.BLOCK,
@@ -61,7 +61,7 @@ export class ButtonMountable extends FieldMountable {
 	}
 
 	private renderErrorIndicator(targetEl: HTMLElement): void {
-		this.plugin.internal.createErrorIndicator(targetEl, {
+		this.mb.internal.createErrorIndicator(targetEl, {
 			errorCollection: this.errorCollection,
 			errorText:
 				'Errors caused the creation of the field to fail. Sometimes one error only occurs because of another.',

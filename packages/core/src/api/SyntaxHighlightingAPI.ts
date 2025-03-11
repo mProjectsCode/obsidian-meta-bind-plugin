@@ -2,7 +2,6 @@ import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import type { InlineFieldType } from 'packages/core/src/config/APIConfigs';
 import { FieldType } from 'packages/core/src/config/APIConfigs';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import { ParsingError, runParser } from 'packages/core/src/parsers/ParsingError';
 import type { Highlight } from 'packages/core/src/parsers/syntaxHighlighting/Highlight';
 import {
@@ -13,12 +12,13 @@ import {
 } from 'packages/core/src/parsers/syntaxHighlighting/HLPs';
 import { SyntaxHighlighting } from 'packages/core/src/parsers/syntaxHighlighting/SyntaxHighlighting';
 import { expectType } from 'packages/core/src/utils/Utils';
+import type { MetaBind } from '..';
 
 export class SyntaxHighlightingAPI {
-	public readonly plugin: IPlugin;
+	public readonly mb: MetaBind;
 
-	constructor(plugin: IPlugin) {
-		this.plugin = plugin;
+	constructor(mb: MetaBind) {
+		this.mb = mb;
 	}
 
 	highlightInputFieldDeclaration(str: string, trimWhiteSpace: boolean): SyntaxHighlighting {

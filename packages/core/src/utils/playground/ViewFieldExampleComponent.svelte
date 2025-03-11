@@ -1,25 +1,25 @@
 <script lang="ts">
 	import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 	import type { FieldMountable } from 'packages/core/src/fields/FieldMountable';
-	import type { IPlugin } from 'packages/core/src/IPlugin';
 	import MountableComponent from 'packages/core/src/utils/components/MountableComponent.svelte';
 	import type { ViewFieldExampleDeclaration } from 'packages/core/src/utils/InputFieldExamples';
+	import type { MetaBind } from '../..';
 
 	const {
-		plugin,
+		mb,
 		declaration,
 	}: {
-		plugin: IPlugin;
+		mb: MetaBind;
 		declaration: ViewFieldExampleDeclaration;
 	} = $props();
 
-	let ipf: FieldMountable = plugin.api.createInlineFieldFromString(
+	let ipf: FieldMountable = mb.api.createInlineFieldFromString(
 		declaration.inputField,
 		'',
 		undefined,
 		RenderChildType.BLOCK,
 	);
-	let vf: FieldMountable = plugin.api.createInlineFieldFromString(
+	let vf: FieldMountable = mb.api.createInlineFieldFromString(
 		declaration.declaration,
 		'',
 		undefined,

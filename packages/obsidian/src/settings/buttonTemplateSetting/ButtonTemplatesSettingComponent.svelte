@@ -29,7 +29,7 @@
 	}
 
 	function addTemplate(): void {
-		buttonConfigs.push(modal.plugin.api.buttonActionRunner.createDefaultButtonConfig());
+		buttonConfigs.push(modal.mb.buttonActionRunner.createDefaultButtonConfig());
 	}
 
 	async function addTemplateFromClipboard(): Promise<void> {
@@ -90,7 +90,7 @@
 	<h2>Meta Bind Button Templates</h2>
 
 	{#each buttonConfigs as _, i}
-		<ButtonTemplateSettingComponent plugin={modal.plugin} bind:template={buttonConfigs[i]} onDelete={deleteTemplate}
+		<ButtonTemplateSettingComponent mb={modal.mb} bind:template={buttonConfigs[i]} onDelete={deleteTemplate}
 		></ButtonTemplateSettingComponent>
 	{/each}
 

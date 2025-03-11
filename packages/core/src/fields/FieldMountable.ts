@@ -1,15 +1,15 @@
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import { Mountable } from 'packages/core/src/utils/Mountable';
+import type { MetaBind } from '..';
 
 export abstract class FieldMountable extends Mountable {
-	readonly plugin: IPlugin;
+	readonly mb: MetaBind;
 	private readonly filePath: string;
 	private readonly uuid: string;
 
-	constructor(plugin: IPlugin, uuid: string, filePath: string) {
+	constructor(mb: MetaBind, uuid: string, filePath: string) {
 		super();
 
-		this.plugin = plugin;
+		this.mb = mb;
 		this.filePath = filePath;
 		this.uuid = uuid;
 	}
@@ -23,10 +23,10 @@ export abstract class FieldMountable extends Mountable {
 	}
 
 	protected onMount(_targetEl: HTMLElement): void {
-		this.plugin.mountableManager.registerMountable(this);
+		this.mb.mountableManager.registerMountable(this);
 	}
 
 	protected onUnmount(_targetEl: HTMLElement): void {
-		this.plugin.mountableManager.unregisterMountable(this);
+		this.mb.mountableManager.unregisterMountable(this);
 	}
 }

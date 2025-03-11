@@ -1,7 +1,7 @@
 import { Menu } from 'obsidian';
 import type { ContextMenuItemDefinition, IContextMenu } from 'packages/core/src/utils/IContextMenu';
 
-export class ObsidianContextMenu implements IContextMenu {
+export class ObsContextMenu implements IContextMenu {
 	menu: Menu;
 
 	constructor() {

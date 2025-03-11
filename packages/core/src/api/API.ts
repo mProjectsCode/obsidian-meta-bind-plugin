@@ -1,5 +1,4 @@
 import type { ImportObject as MathJSImportObject, ImportOptions as MathJSImportOptions } from 'mathjs';
-import { SyntaxHighlightingAPI } from 'packages/core/src/api/SyntaxHighlightingAPI';
 import type {
 	ButtonGroupOptions,
 	ButtonOptions,
@@ -31,90 +30,40 @@ import {
 	V_TableFieldOptions,
 	V_ViewFieldOptions,
 } from 'packages/core/src/config/validators/Validators';
-import { ButtonActionRunner } from 'packages/core/src/fields/button/ButtonActionRunner';
 import { ButtonGroupMountable } from 'packages/core/src/fields/button/ButtonGroupMountable';
-import { ButtonManager } from 'packages/core/src/fields/button/ButtonManager';
 import { ButtonMountable } from 'packages/core/src/fields/button/ButtonMountable';
 import { EmbedMountable } from 'packages/core/src/fields/embed/EmbedMountable';
 import { ExcludedMountable } from 'packages/core/src/fields/excluded/ExcludedMountable';
 import type { FieldMountable } from 'packages/core/src/fields/FieldMountable';
-import { InputFieldFactory } from 'packages/core/src/fields/inputFields/InputFieldFactory';
 import { InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
 import { TableMountable } from 'packages/core/src/fields/metaBindTable/TableMountable';
 import { JsViewFieldMountable } from 'packages/core/src/fields/viewFields/JsViewFieldMountable';
-import { ViewFieldFactory } from 'packages/core/src/fields/viewFields/ViewFieldFactory';
 import { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { BindTargetParser } from 'packages/core/src/parsers/bindTargetParser/BindTargetParser';
 import type { ButtonDeclaration, ButtonGroupDeclaration } from 'packages/core/src/parsers/ButtonParser';
-import { ButtonParser } from 'packages/core/src/parsers/ButtonParser';
 import type { InputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
-import { InputFieldParser } from 'packages/core/src/parsers/inputFieldParser/InputFieldParser';
-import { JsViewFieldParser } from 'packages/core/src/parsers/viewFieldParser/JsViewFieldParser';
 import type {
 	JsViewFieldDeclaration,
 	ViewFieldDeclaration,
 } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
-import { ViewFieldParser } from 'packages/core/src/parsers/viewFieldParser/ViewFieldParser';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { expectType, getUUID } from 'packages/core/src/utils/Utils';
 import { validateAPIArgs } from 'packages/core/src/utils/ZodUtils';
 import { z } from 'zod';
+import type { MB_Comps, MetaBind } from '..';
 
 export interface LifecycleHook {
 	register(cb: () => void): void;
 }
 
-export interface APIFieldOverrides {
-	inputFieldParser?: InputFieldParser;
-	viewFieldParser?: ViewFieldParser;
-	jsViewFieldParser?: JsViewFieldParser;
-	buttonParser?: ButtonParser;
-	bindTargetParser?: BindTargetParser;
-	inputFieldFactory?: InputFieldFactory;
-	viewFieldFactory?: ViewFieldFactory;
-	buttonActionRunner?: ButtonActionRunner;
-	buttonManager?: ButtonManager;
-	syntaxHighlighting?: SyntaxHighlightingAPI;
-}
+export abstract class API<Components extends MB_Comps> {
+	readonly mb: MetaBind<Components>;
 
-export abstract class API<Plugin extends IPlugin> {
-	readonly plugin: Plugin;
-
-	readonly inputFieldParser: InputFieldParser;
-	readonly viewFieldParser: ViewFieldParser;
-	readonly jsViewFieldParser: JsViewFieldParser;
-	readonly buttonParser: ButtonParser;
-	readonly bindTargetParser: BindTargetParser;
-
-	readonly inputFieldFactory: InputFieldFactory;
-	readonly viewFieldFactory: ViewFieldFactory;
-
-	readonly buttonActionRunner: ButtonActionRunner;
-	readonly buttonManager: ButtonManager;
-
-	readonly syntaxHighlighting: SyntaxHighlightingAPI;
-
-	constructor(plugin: Plugin, overrides?: APIFieldOverrides) {
-		this.plugin = plugin;
-
-		this.inputFieldParser = overrides?.inputFieldParser ?? new InputFieldParser(plugin);
-		this.viewFieldParser = overrides?.viewFieldParser ?? new ViewFieldParser(plugin);
-		this.jsViewFieldParser = overrides?.jsViewFieldParser ?? new JsViewFieldParser(plugin);
-		this.buttonParser = overrides?.buttonParser ?? new ButtonParser(plugin);
-		this.bindTargetParser = overrides?.bindTargetParser ?? new BindTargetParser(plugin);
-
-		this.inputFieldFactory = overrides?.inputFieldFactory ?? new InputFieldFactory(plugin);
-		this.viewFieldFactory = overrides?.viewFieldFactory ?? new ViewFieldFactory(plugin);
-
-		this.buttonActionRunner = overrides?.buttonActionRunner ?? new ButtonActionRunner(plugin);
-		this.buttonManager = overrides?.buttonManager ?? new ButtonManager(plugin);
-
-		this.syntaxHighlighting = overrides?.syntaxHighlighting ?? new SyntaxHighlightingAPI(plugin);
+	constructor(mb: MetaBind<Components>) {
+		this.mb = mb;
 	}
 
 	/**
@@ -146,7 +95,7 @@ export abstract class API<Plugin extends IPlugin> {
 			},
 		);
 
-		if (this.plugin.internal.file.isExcludedFromRendering(filePath) && honorExcludedSetting) {
+		if (this.mb.file.isExcludedFromRendering(filePath) && honorExcludedSetting) {
 			return this.createExcludedMountable(filePath);
 		}
 
@@ -270,7 +219,7 @@ export abstract class API<Plugin extends IPlugin> {
 			},
 		);
 
-		if (this.plugin.internal.file.isExcludedFromRendering(filePath) && honorExcludedSetting) {
+		if (this.mb.file.isExcludedFromRendering(filePath) && honorExcludedSetting) {
 			return this.createExcludedMountable(filePath);
 		}
 
@@ -329,16 +278,16 @@ export abstract class API<Plugin extends IPlugin> {
 
 		let declaration: InputFieldDeclaration;
 		if (typeof options.declaration === 'string') {
-			declaration = this.inputFieldParser.fromStringAndValidate(options.declaration, filePath, options.scope);
+			declaration = this.mb.inputFieldParser.fromStringAndValidate(options.declaration, filePath, options.scope);
 		} else {
-			declaration = this.inputFieldParser.fromSimpleDeclarationAndValidate(
+			declaration = this.mb.inputFieldParser.fromSimpleDeclarationAndValidate(
 				options.declaration,
 				filePath,
 				options.scope,
 			);
 		}
 
-		return new InputFieldMountable(this.plugin, uuid, filePath, options.renderChildType, declaration);
+		return new InputFieldMountable(this.mb, uuid, filePath, options.renderChildType, declaration);
 	}
 
 	/**
@@ -363,16 +312,16 @@ export abstract class API<Plugin extends IPlugin> {
 
 		let declaration: ViewFieldDeclaration;
 		if (typeof options.declaration === 'string') {
-			declaration = this.viewFieldParser.fromStringAndValidate(options.declaration, filePath, options.scope);
+			declaration = this.mb.viewFieldParser.fromStringAndValidate(options.declaration, filePath, options.scope);
 		} else {
-			declaration = this.viewFieldParser.fromSimpleDeclarationAndValidate(
+			declaration = this.mb.viewFieldParser.fromSimpleDeclarationAndValidate(
 				options.declaration,
 				filePath,
 				options.scope,
 			);
 		}
 
-		return new ViewFieldMountable(this.plugin, uuid, filePath, options.renderChildType, declaration);
+		return new ViewFieldMountable(this.mb, uuid, filePath, options.renderChildType, declaration);
 	}
 
 	/**
@@ -397,12 +346,12 @@ export abstract class API<Plugin extends IPlugin> {
 
 		let declaration: JsViewFieldDeclaration;
 		if (typeof options.declaration === 'string') {
-			declaration = this.jsViewFieldParser.fromStringAndValidate(options.declaration, filePath);
+			declaration = this.mb.jsViewFieldParser.fromStringAndValidate(options.declaration, filePath);
 		} else {
-			declaration = this.jsViewFieldParser.fromSimpleDeclarationAndValidate(options.declaration, filePath);
+			declaration = this.mb.jsViewFieldParser.fromSimpleDeclarationAndValidate(options.declaration, filePath);
 		}
 
-		return new JsViewFieldMountable(this.plugin, uuid, filePath, declaration);
+		return new JsViewFieldMountable(this.mb, uuid, filePath, declaration);
 	}
 
 	/**
@@ -425,7 +374,7 @@ export abstract class API<Plugin extends IPlugin> {
 
 		const uuid = getUUID();
 
-		return new TableMountable(this.plugin, uuid, filePath, options.bindTarget, options.tableHead, options.columns);
+		return new TableMountable(this.mb, uuid, filePath, options.bindTarget, options.tableHead, options.columns);
 	}
 
 	/**
@@ -450,13 +399,13 @@ export abstract class API<Plugin extends IPlugin> {
 
 		let declaration: ButtonGroupDeclaration;
 		if (typeof options.declaration === 'string') {
-			declaration = this.buttonParser.fromGroupString(options.declaration);
+			declaration = this.mb.buttonParser.fromGroupString(options.declaration);
 		} else {
-			declaration = this.buttonParser.validateGroup(options.declaration);
+			declaration = this.mb.buttonParser.validateGroup(options.declaration);
 		}
 
 		return new ButtonGroupMountable(
-			this.plugin,
+			this.mb,
 			uuid,
 			filePath,
 			declaration,
@@ -487,12 +436,12 @@ export abstract class API<Plugin extends IPlugin> {
 
 		let declaration: ButtonDeclaration;
 		if (typeof options.declaration === 'string') {
-			declaration = this.buttonParser.fromString(options.declaration);
+			declaration = this.mb.buttonParser.fromString(options.declaration);
 		} else {
-			declaration = this.buttonParser.validate(options.declaration);
+			declaration = this.mb.buttonParser.validate(options.declaration);
 		}
 
-		return new ButtonMountable(this.plugin, uuid, filePath, declaration, options.position, options.isPreview);
+		return new ButtonMountable(this.mb, uuid, filePath, declaration, options.position, options.isPreview);
 	}
 
 	/**
@@ -514,7 +463,7 @@ export abstract class API<Plugin extends IPlugin> {
 		);
 
 		const uuid = getUUID();
-		return new EmbedMountable(this.plugin, uuid, filePath, options.depth, options.content);
+		return new EmbedMountable(this.mb, uuid, filePath, options.depth, options.content);
 	}
 
 	/**
@@ -533,7 +482,7 @@ export abstract class API<Plugin extends IPlugin> {
 		);
 
 		const uuid = getUUID();
-		return new ExcludedMountable(this.plugin, uuid, filePath);
+		return new ExcludedMountable(this.mb, uuid, filePath);
 	}
 
 	/**
@@ -693,7 +642,7 @@ export abstract class API<Plugin extends IPlugin> {
 			},
 		);
 
-		return this.bindTargetParser.fromStringAndValidate(declarationString, filePath, scope);
+		return this.mb.bindTargetParser.fromStringAndValidate(declarationString, filePath, scope);
 	}
 
 	/**
@@ -712,7 +661,7 @@ export abstract class API<Plugin extends IPlugin> {
 			},
 		);
 
-		this.plugin.metadataManager.write(value, bindTarget);
+		this.mb.metadataManager.write(value, bindTarget);
 	}
 
 	/**
@@ -731,7 +680,7 @@ export abstract class API<Plugin extends IPlugin> {
 			},
 		);
 
-		return this.plugin.metadataManager.read(bindTarget);
+		return this.mb.metadataManager.read(bindTarget);
 	}
 
 	/**
@@ -752,9 +701,9 @@ export abstract class API<Plugin extends IPlugin> {
 			},
 		);
 
-		const value = this.plugin.metadataManager.read(bindTarget);
+		const value = this.mb.metadataManager.read(bindTarget);
 		const newValue = updateFn(value);
-		this.plugin.metadataManager.write(newValue, bindTarget);
+		this.mb.metadataManager.write(newValue, bindTarget);
 	}
 
 	/**
@@ -779,7 +728,7 @@ export abstract class API<Plugin extends IPlugin> {
 		validateAPIArgs(
 			z.object({
 				bindTarget: V_BindTargetDeclaration,
-				lifecycleHook: this.plugin.internal.getLifecycleHookValidator(),
+				lifecycleHook: this.mb.internal.getLifecycleHookValidator(),
 				callback: z.function().args(z.any()).returns(z.void()),
 			}),
 			{
@@ -796,7 +745,7 @@ export abstract class API<Plugin extends IPlugin> {
 			callback: callback,
 		});
 
-		const subscription = this.plugin.metadataManager.subscribe(uuid, signal, bindTarget, (): void => {
+		const subscription = this.mb.metadataManager.subscribe(uuid, signal, bindTarget, (): void => {
 			signal.unregisterAllListeners();
 		});
 
@@ -834,6 +783,6 @@ export abstract class API<Plugin extends IPlugin> {
 	 * For details on how to use, see https://mathjs.org/docs/reference/functions/import.html
 	 */
 	public mathJSimport(object: MathJSImportObject | MathJSImportObject[], options?: MathJSImportOptions): void {
-		this.plugin.internal.math.import(object, options);
+		this.mb.math.import(object, options);
 	}
 }

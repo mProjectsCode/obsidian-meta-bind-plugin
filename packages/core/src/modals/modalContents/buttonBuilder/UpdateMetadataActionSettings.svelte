@@ -1,14 +1,15 @@
 <script lang="ts">
+	import type { MetaBind } from 'packages/core/src';
 	import type { UpdateMetadataButtonAction } from 'packages/core/src/config/ButtonConfig';
-	import type { IPlugin } from 'packages/core/src/IPlugin';
+
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
 	import Toggle from 'packages/core/src/utils/components/Toggle.svelte';
 
 	const {
-		plugin,
+		mb,
 		action = $bindable(),
 	}: {
-		plugin: IPlugin;
+		mb: MetaBind;
 		action: UpdateMetadataButtonAction;
 	} = $props();
 </script>

@@ -1,10 +1,10 @@
+import type { MetaBind } from 'packages/core/src';
 import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import { DomHelpers, showUnloadedMessage } from 'packages/core/src/utils/Utils';
 
 export class ExcludedMountable extends FieldMountable {
-	constructor(plugin: IPlugin, uuid: string, filePath: string) {
-		super(plugin, uuid, filePath);
+	constructor(mb: MetaBind, uuid: string, filePath: string) {
+		super(mb, uuid, filePath);
 	}
 
 	protected onMount(targetEl: HTMLElement): void {

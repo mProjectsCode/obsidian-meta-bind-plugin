@@ -1,9 +1,9 @@
+import type { MetaBind } from 'packages/core/src';
 import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 import { ViewFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import type { ViewFieldArgumentMapType } from 'packages/core/src/fields/fieldArguments/viewFieldArguments/ViewFieldArgumentFactory';
 import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import type { ViewField } from 'packages/core/src/fields/viewFields/ViewFieldFactory';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import type { ViewFieldDeclaration } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
@@ -18,13 +18,13 @@ export class ViewFieldMountable extends FieldMountable {
 	declaration: ViewFieldDeclaration;
 
 	constructor(
-		plugin: IPlugin,
+		mb: MetaBind,
 		uuid: string,
 		filePath: string,
 		renderChildType: RenderChildType,
 		declaration: ViewFieldDeclaration,
 	) {
-		super(plugin, uuid, filePath);
+		super(mb, uuid, filePath);
 
 		this.renderChildType = renderChildType;
 		this.declaration = declaration;
@@ -61,7 +61,7 @@ export class ViewFieldMountable extends FieldMountable {
 	private createViewField(): void {
 		if (!this.errorCollection.hasErrors()) {
 			try {
-				this.viewField = this.plugin.api.viewFieldFactory.createViewField(this);
+				this.viewField = this.mb.viewFieldFactory.createViewField(this);
 			} catch (e) {
 				this.errorCollection.add(e);
 			}
@@ -79,7 +79,7 @@ export class ViewFieldMountable extends FieldMountable {
 	}
 
 	private createErrorIndicator(containerEl: HTMLElement): void {
-		this.plugin.internal.createErrorIndicator(containerEl, {
+		this.mb.internal.createErrorIndicator(containerEl, {
 			errorCollection: this.errorCollection,
 			errorText:
 				'Errors caused the creation of the field to fail. Sometimes one error only occurs because of another.',

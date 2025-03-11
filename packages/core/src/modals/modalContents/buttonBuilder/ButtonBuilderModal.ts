@@ -1,5 +1,5 @@
+import type { MetaBind } from 'packages/core/src';
 import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import { ModalContent } from 'packages/core/src/modals/ModalContent';
 import ButtonBuilderModalComponent from 'packages/core/src/modals/modalContents/buttonBuilder/ButtonBuilderModalComponent.svelte';
 import { DomHelpers } from 'packages/core/src/utils/Utils';
@@ -13,14 +13,14 @@ export interface ButtonBuilderModalOptions {
 }
 
 export class ButtonBuilderModal extends ModalContent {
-	plugin: IPlugin;
+	mb: MetaBind;
 
 	component?: ReturnType<SvelteComponent>;
 	options: ButtonBuilderModalOptions;
 
-	constructor(plugin: IPlugin, options: ButtonBuilderModalOptions) {
+	constructor(mb: MetaBind, options: ButtonBuilderModalOptions) {
 		super();
-		this.plugin = plugin;
+		this.mb = mb;
 
 		this.options = options;
 	}
@@ -34,9 +34,9 @@ export class ButtonBuilderModal extends ModalContent {
 		this.component = mount(ButtonBuilderModalComponent, {
 			target: targetEl,
 			props: {
-				plugin: this.plugin,
+				mb: this.mb,
 				modal: this,
-				buttonConfig: this.options.config ?? this.plugin.api.buttonActionRunner.createDefaultButtonConfig(),
+				buttonConfig: this.options.config ?? this.mb.buttonActionRunner.createDefaultButtonConfig(),
 			},
 		});
 	}

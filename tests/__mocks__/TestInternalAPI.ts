@@ -6,7 +6,7 @@ import {
 } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
 import type { IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
 import type { MBLiteral } from 'packages/core/src/utils/Literal';
-import { TestPlugin } from './TestPlugin';
+import { TestMetaBind, type TestComponents } from './TestPlugin';
 import type { IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
 import { ModalContent } from 'packages/core/src/modals/ModalContent';
 import type { IModal } from 'packages/core/src/modals/IModal';
@@ -17,9 +17,9 @@ import { z, ZodType } from 'zod';
 import type { LifecycleHook } from 'packages/core/src/api/API';
 import { TestFileAPI } from './TestFileAPI';
 
-export class TestInternalAPI extends InternalAPI<TestPlugin> {
-	constructor(plugin: TestPlugin) {
-		super(plugin, new TestFileAPI(plugin));
+export class TestInternalAPI extends InternalAPI<TestComponents> {
+	constructor(mb: TestMetaBind) {
+		super(mb);
 	}
 
 	public getLifecycleHookValidator(): ZodType<LifecycleHook, any, any> {
@@ -115,6 +115,6 @@ export class TestInternalAPI extends InternalAPI<TestPlugin> {
 		fileName?: string,
 		openNote?: boolean,
 	): Promise<string | undefined> {
-		return await this.file.create(folderPath ?? '', fileName ?? 'unnamed', 'md', openNote);
+		return await this.mb.file.create(folderPath ?? '', fileName ?? 'unnamed', 'md', openNote);
 	}
 }

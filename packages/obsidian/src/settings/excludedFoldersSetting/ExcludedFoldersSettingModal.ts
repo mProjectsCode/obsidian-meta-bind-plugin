@@ -1,18 +1,18 @@
 import type { App } from 'obsidian';
 import { Modal } from 'obsidian';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
+import type { ObsMetaBind } from 'packages/obsidian/src/main';
 import ExcludedFoldersSettingComponent from 'packages/obsidian/src/settings/excludedFoldersSetting/ExcludedFoldersSettingComponent.svelte';
 import type { Component as SvelteComponent } from 'svelte';
 import { mount, unmount } from 'svelte';
 
 export class ExcludedFoldersSettingModal extends Modal {
-	private readonly plugin: MetaBindPlugin;
+	private readonly mb: ObsMetaBind;
 	private component: ReturnType<SvelteComponent> | undefined;
 
-	constructor(app: App, plugin: MetaBindPlugin) {
+	constructor(app: App, mb: ObsMetaBind) {
 		super(app);
-		this.plugin = plugin;
+		this.mb = mb;
 	}
 
 	public onOpen(): void {
@@ -24,9 +24,9 @@ export class ExcludedFoldersSettingModal extends Modal {
 		this.component = mount(ExcludedFoldersSettingComponent, {
 			target: this.contentEl,
 			props: {
-				excludedFolders: this.plugin.settings.excludedFolders.slice(),
+				excludedFolders: structuredClone(this.mb.getSettings().excludedFolders),
 				modal: this,
-				plugin: this.plugin,
+				mb: this.mb,
 			},
 		});
 	}
@@ -49,8 +49,9 @@ export class ExcludedFoldersSettingModal extends Modal {
 			}
 		}
 
-		this.plugin.settings.excludedFolders = folders;
-		void this.plugin.saveSettings();
+		this.mb.updateSettings(settings => {
+			settings.excludedFolders = folders;
+		});
 
 		return undefined;
 	}

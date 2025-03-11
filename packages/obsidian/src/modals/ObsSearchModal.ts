@@ -2,13 +2,13 @@ import type { FuzzyMatch } from 'obsidian';
 import { FuzzySuggestModal, renderResults } from 'obsidian';
 import type { IModal } from 'packages/core/src/modals/IModal';
 import type { SelectModalContent } from 'packages/core/src/modals/SelectModalContent';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
+import type { ObsMetaBind } from 'packages/obsidian/src/main';
 
-export class ObsidianSearchModal<T> extends FuzzySuggestModal<T> implements IModal {
+export class ObsSearchModal<T> extends FuzzySuggestModal<T> implements IModal {
 	private content: SelectModalContent<T>;
 
-	constructor(plugin: MetaBindPlugin, content: SelectModalContent<T>) {
-		super(plugin.app);
+	constructor(mb: ObsMetaBind, content: SelectModalContent<T>) {
+		super(mb.app);
 
 		this.content = content;
 	}

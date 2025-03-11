@@ -2,7 +2,7 @@ import type { MarkdownPostProcessorContext } from 'obsidian';
 import type { LinePosition } from 'packages/core/src/config/APIConfigs';
 import { NotePosition } from 'packages/core/src/config/APIConfigs';
 
-export class ObsidianNotePosition extends NotePosition {
+export class ObsNotePosition extends NotePosition {
 	ctx: MarkdownPostProcessorContext;
 	element: HTMLElement;
 

@@ -60,7 +60,7 @@ export class TextVF extends AbstractViewField<string> {
 
 				return stringifyUnknown(
 					x.metadataSignal.get(),
-					this.mountable.plugin.settings.viewFieldDisplayNullAsEmpty,
+					this.mountable.mb.getSettings().viewFieldDisplayNullAsEmpty,
 				);
 			})
 			.join('');
@@ -79,13 +79,13 @@ export class TextVF extends AbstractViewField<string> {
 	}
 
 	protected async onRerender(container: HTMLElement, value: string | undefined): Promise<void> {
-		const text = stringifyUnknown(value, this.mountable.plugin.settings.viewFieldDisplayNullAsEmpty) ?? '';
+		const text = stringifyUnknown(value, this.mountable.mb.getSettings().viewFieldDisplayNullAsEmpty) ?? '';
 
 		if (this.renderMarkdown) {
 			this.markdownUnloadCallback?.();
 			DomHelpers.empty(container);
 
-			this.markdownUnloadCallback = await this.mountable.plugin.internal.renderMarkdown(
+			this.markdownUnloadCallback = await this.mountable.mb.internal.renderMarkdown(
 				text,
 				container,
 				this.mountable.getFilePath(),

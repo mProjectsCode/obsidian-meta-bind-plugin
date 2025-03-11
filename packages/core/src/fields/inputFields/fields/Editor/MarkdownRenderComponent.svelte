@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { IPlugin } from 'packages/core/src/IPlugin';
+	import type { MetaBind } from 'packages/core/src';
 	import { DomHelpers } from 'packages/core/src/utils/Utils';
 	import { onDestroy } from 'svelte';
 
@@ -7,11 +7,11 @@
 
 	const {
 		value,
-		plugin,
+		mb,
 		filePath,
 	}: {
 		value: string;
-		plugin: IPlugin;
+		mb: MetaBind;
 		filePath: string;
 	} = $props();
 
@@ -24,7 +24,7 @@
 	async function render(v: string): Promise<void> {
 		markdownUnloadCallback?.();
 		DomHelpers.empty(element);
-		markdownUnloadCallback = await plugin.internal.renderMarkdown(v, element, filePath);
+		markdownUnloadCallback = await mb.internal.renderMarkdown(v, element, filePath);
 	}
 
 	$effect(() => void render(value));

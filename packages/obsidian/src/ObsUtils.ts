@@ -3,15 +3,15 @@ import type JsEnginePlugin from 'jsEngine/main';
 import type { Plugin } from 'obsidian';
 import type { DataviewApi } from 'obsidian-dataview';
 import type { Templater, TemplaterPlugin } from 'packages/obsidian/extraTypes/Templater';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
+import type { ObsMetaBind } from 'packages/obsidian/src/main';
 
-export function getDataViewPluginAPI(plugin: MetaBindPlugin): DataviewApi {
-	const dataViewPlugin = plugin.dependencyManager.checkDependency('dataview');
+export function getDataViewPluginAPI(mb: ObsMetaBind): DataviewApi {
+	const dataViewPlugin = mb.dependencyManager.checkDependency('dataview');
 	return (dataViewPlugin as Plugin & { api: DataviewApi }).api;
 }
 
-export function getJsEnginePluginAPI(plugin: MetaBindPlugin): JsEngineAPI {
-	const jsEnginePlugin = plugin.dependencyManager.checkDependency('js-engine');
+export function getJsEnginePluginAPI(mb: ObsMetaBind): JsEngineAPI {
+	const jsEnginePlugin = mb.dependencyManager.checkDependency('js-engine');
 	return (jsEnginePlugin as JsEnginePlugin).api;
 }
 
@@ -24,7 +24,7 @@ export enum Templater_RunMode {
 	StartupTemplate,
 }
 
-export function getTemplaterPluginAPI(plugin: MetaBindPlugin): Templater {
-	const templaterPlugin = plugin.dependencyManager.checkDependency('templater-obsidian');
+export function getTemplaterPluginAPI(mb: ObsMetaBind): Templater {
+	const templaterPlugin = mb.dependencyManager.checkDependency('templater-obsidian');
 	return (templaterPlugin as TemplaterPlugin).templater;
 }

@@ -1,20 +1,20 @@
 import type { App } from 'obsidian';
 import { ButtonComponent, PluginSettingTab, Setting } from 'obsidian';
-import { DEFAULT_SETTINGS, weekdays } from 'packages/core/src/Settings';
+import { MetaBindBuild } from 'packages/core/src';
+import { DEFAULT_SETTINGS, MAX_SYNC_INTERVAL, MIN_SYNC_INTERVAL, weekdays } from 'packages/core/src/Settings';
 import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
-import { MetaBindBuild } from 'packages/obsidian/src/main';
+import type { ObsMetaBind } from 'packages/obsidian/src/main';
 import { MB_PLAYGROUND_VIEW_TYPE } from 'packages/obsidian/src/playground/PlaygroundView';
 import { ButtonTemplatesSettingModal } from 'packages/obsidian/src/settings/buttonTemplateSetting/ButtonTemplatesSettingModal';
 import { ExcludedFoldersSettingModal } from 'packages/obsidian/src/settings/excludedFoldersSetting/ExcludedFoldersSettingModal';
 import { InputFieldTemplatesSettingModal } from 'packages/obsidian/src/settings/inputFieldTemplateSetting/InputFieldTemplatesSettingModal';
 
 export class MetaBindSettingTab extends PluginSettingTab {
-	plugin: MetaBindPlugin;
+	mb: ObsMetaBind;
 
-	constructor(app: App, plugin: MetaBindPlugin) {
-		super(app, plugin);
-		this.plugin = plugin;
+	constructor(app: App, mb: ObsMetaBind) {
+		super(app, mb.plugin);
+		this.mb = mb;
 	}
 
 	display(): void {
@@ -22,9 +22,9 @@ export class MetaBindSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		if (this.plugin.build === MetaBindBuild.DEV || this.plugin.build === MetaBindBuild.CANARY) {
+		if (this.mb.build === MetaBindBuild.DEV || this.mb.build === MetaBindBuild.CANARY) {
 			containerEl.createEl('p', {
-				text: `You are using a ${this.plugin.build} build (${this.plugin.manifest.version}). This build is not intended for production use. Use at your own risk.`,
+				text: `You are using a ${this.mb.build} build (${MB_VERSION}). This build is not intended for production use. Use at your own risk.`,
 				cls: 'mb-error',
 			});
 			const button = new ButtonComponent(containerEl);
@@ -47,7 +47,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			.addButton(cb => {
 				cb.setButtonText('Open FAQ');
 				cb.onClick(() => {
-					void this.plugin.activateView(MB_PLAYGROUND_VIEW_TYPE);
+					void this.mb.activateView(MB_PLAYGROUND_VIEW_TYPE);
 				});
 			})
 			.addButton(cb => {
@@ -67,10 +67,11 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			.setName('Enable syntax highlighting')
 			.setDesc(`Enable syntax highlighting for meta bind syntax. RESTART REQUIRED.`)
 			.addToggle(cb => {
-				cb.setValue(this.plugin.settings.enableSyntaxHighlighting);
+				cb.setValue(this.mb.getSettings().enableSyntaxHighlighting);
 				cb.onChange(data => {
-					this.plugin.settings.enableSyntaxHighlighting = data;
-					void this.plugin.saveSettings();
+					this.mb.updateSettings(settings => {
+						settings.enableSyntaxHighlighting = data;
+					});
 				});
 			});
 
@@ -78,10 +79,11 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			.setName('Enable editor right-click menu')
 			.setDesc(`Enable a meta bind menu section in the editor right-click menu. RESTART REQUIRED.`)
 			.addToggle(cb => {
-				cb.setValue(this.plugin.settings.enableEditorRightClickMenu);
+				cb.setValue(this.mb.getSettings().enableEditorRightClickMenu);
 				cb.onChange(data => {
-					this.plugin.settings.enableEditorRightClickMenu = data;
-					void this.plugin.saveSettings();
+					this.mb.updateSettings(settings => {
+						settings.enableEditorRightClickMenu = data;
+					});
 				});
 			});
 
@@ -93,7 +95,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			.addButton(cb => {
 				cb.setButtonText('Edit templates');
 				cb.onClick(() => {
-					new InputFieldTemplatesSettingModal(this.app, this.plugin).open();
+					new InputFieldTemplatesSettingModal(this.app, this.mb).open();
 				});
 			});
 
@@ -103,7 +105,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			.addButton(cb => {
 				cb.setButtonText('Edit templates');
 				cb.onClick(() => {
-					new ButtonTemplatesSettingModal(this.app, this.plugin).open();
+					new ButtonTemplatesSettingModal(this.app, this.mb).open();
 				});
 			});
 
@@ -113,7 +115,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			.addButton(cb => {
 				cb.setButtonText('Edit excluded folders');
 				cb.onClick(() => {
-					new ExcludedFoldersSettingModal(this.app, this.plugin).open();
+					new ExcludedFoldersSettingModal(this.app, this.mb).open();
 				});
 			});
 
@@ -121,10 +123,11 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			.setName('View fields display null as empty')
 			.setDesc('Display nothing instead of null, if the frontmatter value is empty, in text view fields.')
 			.addToggle(cb => {
-				cb.setValue(this.plugin.settings.viewFieldDisplayNullAsEmpty);
+				cb.setValue(this.mb.getSettings().viewFieldDisplayNullAsEmpty);
 				cb.onChange(data => {
-					this.plugin.settings.viewFieldDisplayNullAsEmpty = data;
-					void this.plugin.saveSettings();
+					this.mb.updateSettings(settings => {
+						settings.viewFieldDisplayNullAsEmpty = data;
+					});
 				});
 			});
 
@@ -134,10 +137,11 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				"Enable features that run user written JavaScript. This is potentially DANGEROUS, thus it's disabled by default. RESTART REQUIRED.",
 			)
 			.addToggle(cb => {
-				cb.setValue(this.plugin.settings.enableJs);
+				cb.setValue(this.mb.getSettings().enableJs);
 				cb.onChange(data => {
-					this.plugin.settings.enableJs = data;
-					void this.plugin.saveSettings();
+					this.mb.updateSettings(settings => {
+						settings.enableJs = data;
+					});
 				});
 			});
 
@@ -149,10 +153,11 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				`The date format to be used by this plugin. Changing this setting will break the parsing of existing date inputs. Here is a list of all available date tokes https://momentjs.com/docs/#/displaying/.`,
 			)
 			.addText(cb => {
-				cb.setValue(this.plugin.settings.preferredDateFormat);
+				cb.setValue(this.mb.getSettings().preferredDateFormat);
 				cb.onChange(data => {
-					this.plugin.settings.preferredDateFormat = data;
-					void this.plugin.saveSettings();
+					this.mb.updateSettings(settings => {
+						settings.preferredDateFormat = data;
+					});
 				});
 			});
 
@@ -163,10 +168,11 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				for (const weekday of weekdays) {
 					cb.addOption(weekday.name, weekday.name);
 				}
-				cb.setValue(this.plugin.settings.firstWeekday.name);
+				cb.setValue(this.mb.getSettings().firstWeekday.name);
 				cb.onChange(data => {
-					this.plugin.settings.firstWeekday = weekdays.find(x => x.name === data)!;
-					void this.plugin.saveSettings();
+					this.mb.updateSettings(settings => {
+						settings.firstWeekday = weekdays.find(x => x.name === data)!;
+					});
 				});
 			});
 
@@ -176,10 +182,11 @@ export class MetaBindSettingTab extends PluginSettingTab {
 			.setName('Dev mode')
 			.setDesc('Enable dev mode. Not recommended unless you want to debug this plugin.')
 			.addToggle(cb => {
-				cb.setValue(this.plugin.settings.devMode);
+				cb.setValue(this.mb.getSettings().devMode);
 				cb.onChange(data => {
-					this.plugin.settings.devMode = data;
-					void this.plugin.saveSettings();
+					this.mb.updateSettings(settings => {
+						settings.devMode = data;
+					});
 				});
 			});
 
@@ -189,32 +196,34 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				'Disable restrictions on which input fields can be created in which code blocks. Not recommended unless you know what you are doing.',
 			)
 			.addToggle(cb => {
-				cb.setValue(this.plugin.settings.ignoreCodeBlockRestrictions);
+				cb.setValue(this.mb.getSettings().ignoreCodeBlockRestrictions);
 				cb.onChange(data => {
-					this.plugin.settings.ignoreCodeBlockRestrictions = data;
-					void this.plugin.saveSettings();
+					this.mb.updateSettings(settings => {
+						settings.ignoreCodeBlockRestrictions = data;
+					});
 				});
 			});
 
 		new Setting(containerEl)
 			.setName('Sync interval')
 			.setDesc(
-				`The interval in milli-seconds between disk writes. Changing this number is not recommended except if your hard drive is exceptionally slow. Standard: ${DEFAULT_SETTINGS.syncInterval}; Minimum: ${DEFAULT_SETTINGS.minSyncInterval}; Maximum: ${DEFAULT_SETTINGS.maxSyncInterval}`,
+				`The interval in milli-seconds between disk writes. Changing this number is not recommended except if your hard drive is exceptionally slow. Standard: ${DEFAULT_SETTINGS.syncInterval}; Minimum: ${MIN_SYNC_INTERVAL}; Maximum: ${MAX_SYNC_INTERVAL}`,
 			)
 			.addText(cb => {
-				cb.setValue(this.plugin.settings.syncInterval.toString());
+				cb.setValue(this.mb.getSettings().syncInterval.toString());
 				cb.onChange(data => {
-					this.plugin.settings.syncInterval = Number.parseInt(data);
-					if (Number.isNaN(this.plugin.settings.syncInterval)) {
-						this.plugin.settings.syncInterval = DEFAULT_SETTINGS.syncInterval;
-					}
-					if (this.plugin.settings.syncInterval < DEFAULT_SETTINGS.minSyncInterval) {
-						this.plugin.settings.syncInterval = DEFAULT_SETTINGS.minSyncInterval;
-					}
-					if (this.plugin.settings.syncInterval > DEFAULT_SETTINGS.maxSyncInterval) {
-						this.plugin.settings.syncInterval = DEFAULT_SETTINGS.maxSyncInterval;
-					}
-					void this.plugin.saveSettings();
+					this.mb.updateSettings(settings => {
+						settings.syncInterval = Number.parseInt(data);
+						if (Number.isNaN(settings.syncInterval)) {
+							settings.syncInterval = DEFAULT_SETTINGS.syncInterval;
+						}
+						if (settings.syncInterval < MIN_SYNC_INTERVAL) {
+							settings.syncInterval = MIN_SYNC_INTERVAL;
+						}
+						if (settings.syncInterval > MAX_SYNC_INTERVAL) {
+							settings.syncInterval = MAX_SYNC_INTERVAL;
+						}
+					});
 				});
 			});
 	}

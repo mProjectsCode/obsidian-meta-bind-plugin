@@ -1,3 +1,4 @@
+import type { MetaBind } from 'packages/core/src';
 import type {
 	ButtonClickContext,
 	ButtonConfig,
@@ -6,12 +7,11 @@ import type {
 } from 'packages/core/src/config/ButtonConfig';
 import { ButtonActionType, ButtonClickType } from 'packages/core/src/config/ButtonConfig';
 import { AbstractButtonActionConfig } from 'packages/core/src/fields/button/AbstractButtonActionConfig';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 
 export class OpenButtonActionConfig extends AbstractButtonActionConfig<OpenButtonAction> {
-	constructor(plugin: IPlugin) {
-		super(ButtonActionType.OPEN, plugin);
+	constructor(mb: MetaBind) {
+		super(ButtonActionType.OPEN, mb);
 	}
 
 	async run(
@@ -26,7 +26,7 @@ export class OpenButtonActionConfig extends AbstractButtonActionConfig<OpenButto
 		if (!link) {
 			throw new Error('Invalid link');
 		}
-		link.open(this.plugin, filePath, newTab);
+		link.open(this.mb, filePath, newTab);
 	}
 
 	create(): Required<OpenButtonAction> {

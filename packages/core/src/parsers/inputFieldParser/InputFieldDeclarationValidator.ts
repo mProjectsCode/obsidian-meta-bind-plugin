@@ -1,8 +1,8 @@
+import type { MetaBind } from 'packages/core/src';
 import { InputFieldArgumentType, InputFieldType } from 'packages/core/src/config/FieldConfigs';
 import type { AbstractInputFieldArgument } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/AbstractInputFieldArgument';
 import { InputFieldArgumentContainer } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/InputFieldArgumentContainer';
 import { InputFieldArgumentFactory } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import type {
@@ -18,10 +18,10 @@ export class InputFieldDeclarationValidator {
 	unvalidatedDeclaration: UnvalidatedInputFieldDeclaration;
 	errorCollection: ErrorCollection;
 	filePath: string;
-	plugin: IPlugin;
+	mb: MetaBind;
 
-	constructor(plugin: IPlugin, unvalidatedDeclaration: UnvalidatedInputFieldDeclaration, filePath: string) {
-		this.plugin = plugin;
+	constructor(mb: MetaBind, unvalidatedDeclaration: UnvalidatedInputFieldDeclaration, filePath: string) {
+		this.mb = mb;
 		this.unvalidatedDeclaration = unvalidatedDeclaration;
 		this.filePath = filePath;
 
@@ -75,7 +75,7 @@ export class InputFieldDeclarationValidator {
 	private validateBindTarget(scope: BindTargetScope | undefined): BindTargetDeclaration | undefined {
 		if (this.unvalidatedDeclaration.bindTarget !== undefined) {
 			try {
-				return this.plugin.api.bindTargetParser.validate(
+				return this.mb.bindTargetParser.validate(
 					this.unvalidatedDeclaration.declarationString,
 					this.unvalidatedDeclaration.bindTarget,
 					this.filePath,

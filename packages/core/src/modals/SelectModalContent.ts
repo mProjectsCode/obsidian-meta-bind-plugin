@@ -1,11 +1,11 @@
-import type { IPlugin } from 'packages/core/src/IPlugin';
+import type { MetaBind } from '..';
 
 export abstract class SelectModalContent<T> {
-	readonly plugin: IPlugin;
+	readonly mb: MetaBind;
 	private readonly selectCallback: (value: T) => void;
 
-	constructor(plugin: IPlugin, selectCallback: (value: T) => void) {
-		this.plugin = plugin;
+	constructor(mb: MetaBind, selectCallback: (value: T) => void) {
+		this.mb = mb;
 		this.selectCallback = selectCallback;
 	}
 

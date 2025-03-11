@@ -1,10 +1,10 @@
 import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import { P_FilePath } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';
 import { runParser } from 'packages/core/src/parsers/ParsingError';
 import { isUrl, openURL } from 'packages/core/src/utils/Utils';
+import type { MetaBind } from '..';
 
 const P_MDLinkInner: Parser<[string, string | undefined, string | undefined]> = P.sequence(
 	P_FilePath, // the file path
@@ -63,9 +63,9 @@ export class MarkdownLink {
 		return this.block ? `${this.target}#${this.block}` : this.target;
 	}
 
-	open(plugin: IPlugin, relativeFilePath: string, newTab: boolean): void {
+	open(mb: MetaBind, relativeFilePath: string, newTab: boolean): void {
 		if (this.internal) {
-			plugin.internal.file.open(this.fullTarget(), relativeFilePath, newTab);
+			void mb.file.open(this.fullTarget(), relativeFilePath, newTab);
 		} else {
 			openURL(this.target);
 		}

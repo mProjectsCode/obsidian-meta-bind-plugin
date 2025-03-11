@@ -1,17 +1,17 @@
 <script lang="ts">
-	import type { IPlugin } from 'packages/core/src/IPlugin';
+	import type { MetaBind } from '../..';
 
 	const {
-		plugin,
+		mb,
 		image,
 		internal = true,
 	}: {
-		plugin: IPlugin;
+		mb: MetaBind;
 		image: string;
 		internal?: boolean;
 	} = $props();
 
-	let imageUri = $derived(internal ? plugin.internal.imagePathToUri(image) : image);
+	let imageUri = $derived(internal ? mb.internal.imagePathToUri(image) : image);
 </script>
 
 <div class="mb-image-card">

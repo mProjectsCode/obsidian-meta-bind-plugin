@@ -2,6 +2,7 @@ import builtins from 'builtin-modules';
 import esbuild from 'esbuild';
 import esbuildSvelte from 'esbuild-svelte';
 import { getBuildBanner } from 'build/buildBanner';
+import manifest from '../../manifest.json' assert { type: 'json' };
 
 const banner = getBuildBanner('Release Build', version => version);
 
@@ -37,6 +38,7 @@ const build = await esbuild.build({
 	metafile: true,
 	conditions: ['browser', 'production'],
 	define: {
+		MB_VERSION: `"${manifest.version}"`,
 		MB_DEV_BUILD: 'false',
 		MB_DEBUG: 'false',
 	},

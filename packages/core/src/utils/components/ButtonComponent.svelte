@@ -2,11 +2,11 @@
 
 <script lang="ts">
 	import { ButtonClickType, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
-	import type { IPlugin } from 'packages/core/src/IPlugin';
 	import Icon from 'packages/core/src/utils/components/Icon.svelte';
+	import type { MetaBind } from '../..';
 
 	let {
-		plugin,
+		mb,
 		variant = ButtonStyleType.DEFAULT,
 		disabled = false,
 		tooltip = '',
@@ -18,7 +18,7 @@
 		onclick = () => {},
 		onauxclick = () => {},
 	}: {
-		plugin: IPlugin;
+		mb: MetaBind;
 		variant?: ButtonStyleType;
 		disabled?: boolean;
 		tooltip?: string;
@@ -64,7 +64,7 @@
 	onauxclick={event => click(event, ButtonClickType.MIDDLE)}
 >
 	{#if icon}
-		<Icon plugin={plugin} iconName={icon}></Icon>
+		<Icon mb={mb} iconName={icon}></Icon>
 	{/if}
 	{label}
 </button>

@@ -1,37 +1,33 @@
-import type { IPlugin } from 'packages/core/src/IPlugin';
+import type { MetaBind } from 'packages/core/src';
 import type { Component as SvelteComponent } from 'svelte';
 import { mount, unmount } from 'svelte';
 
 export type InputFieldSvelteComponent<Value, Exports = object> = SvelteComponent<
-	{
-		plugin: IPlugin;
-		value: Value;
-		onValueChange: (value: Value) => void;
-	},
+	InputFieldSvelteProps<Value>,
 	{
 		setValue: (value: Value) => void;
 	} & Exports
 >;
 
 export interface InputFieldSvelteProps<Value> {
-	plugin: IPlugin;
+	mb: MetaBind;
 	value: Value;
 	onValueChange: (value: Value) => void;
 }
 
 export class InputFieldSvelteWrapper<Value, SvelteExports = object> {
-	readonly plugin: IPlugin;
+	readonly mb: MetaBind;
 	private readonly svelteComponent: InputFieldSvelteComponent<Value, SvelteExports>;
 	private svelteComponentInstance?: ReturnType<InputFieldSvelteComponent<Value, SvelteExports>>;
 	private mounted: boolean;
 	private onValueChange: (value: Value) => void;
 
 	constructor(
-		plugin: IPlugin,
+		mb: MetaBind,
 		svelteComponent: InputFieldSvelteComponent<Value, SvelteExports>,
 		onValueChange: (value: Value) => void,
 	) {
-		this.plugin = plugin;
+		this.mb = mb;
 
 		this.mounted = false;
 		this.svelteComponent = svelteComponent;
@@ -62,7 +58,7 @@ export class InputFieldSvelteWrapper<Value, SvelteExports = object> {
 	public mount(container: HTMLElement, initialValue: Value, mountArgs: Record<string, unknown> = {}): void {
 		const props = Object.assign(
 			{
-				plugin: this.plugin,
+				mb: this.mb,
 				value: initialValue,
 				onValueChange: this.onValueChange,
 			},

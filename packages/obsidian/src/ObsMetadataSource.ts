@@ -4,28 +4,28 @@ import type { MetadataManager } from 'packages/core/src/metadata/MetadataManager
 import type { Metadata } from 'packages/core/src/metadata/MetadataSource';
 import { FilePathMetadataSource } from 'packages/core/src/metadata/MetadataSource';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
+import type { ObsMetaBind } from 'packages/obsidian/src/main';
 
-interface ObsidianMetadataCacheItem extends FilePathMetadataCacheItem {
+interface ObsMetadataCacheItem extends FilePathMetadataCacheItem {
 	file: TFile;
 }
 
-export class ObsidianMetadataSource extends FilePathMetadataSource<ObsidianMetadataCacheItem> {
-	public readonly plugin: MetaBindPlugin;
+export class ObsMetadataSource extends FilePathMetadataSource<ObsMetadataCacheItem> {
+	public readonly mb: ObsMetaBind;
 
-	constructor(plugin: MetaBindPlugin, id: string, manager: MetadataManager) {
+	constructor(mb: ObsMetaBind, id: string, manager: MetadataManager) {
 		super(id, manager);
-		this.plugin = plugin;
+		this.mb = mb;
 
-		this.plugin.registerEvent(
-			this.plugin.app.metadataCache.on('changed', (file, _data, cache) => {
+		this.mb.plugin.registerEvent(
+			this.mb.app.metadataCache.on('changed', (file, _data, cache) => {
 				this.manager.onExternalUpdate(this, file.path, structuredClone(cache.frontmatter) ?? {});
 			}),
 		);
 	}
 
 	public readExternal(storagePath: string): Metadata {
-		const file = this.plugin.app.vault.getAbstractFileByPath(storagePath);
+		const file = this.mb.app.vault.getAbstractFileByPath(storagePath);
 
 		if (file == null || !(file instanceof TFile)) {
 			throw new MetaBindInternalError({
@@ -35,13 +35,13 @@ export class ObsidianMetadataSource extends FilePathMetadataSource<ObsidianMetad
 			});
 		}
 
-		const frontmatter = this.plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+		const frontmatter = this.mb.app.metadataCache.getFileCache(file)?.frontmatter;
 
 		return structuredClone(frontmatter) ?? {};
 	}
 
-	getDefaultCacheItem(storagePath: string): ObsidianMetadataCacheItem {
-		const file = this.plugin.app.vault.getAbstractFileByPath(storagePath);
+	getDefaultCacheItem(storagePath: string): ObsMetadataCacheItem {
+		const file = this.mb.app.vault.getAbstractFileByPath(storagePath);
 
 		if (file == null || !(file instanceof TFile)) {
 			throw new MetaBindInternalError({
@@ -51,7 +51,7 @@ export class ObsidianMetadataSource extends FilePathMetadataSource<ObsidianMetad
 			});
 		}
 
-		const frontmatter = this.plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+		const frontmatter = this.mb.app.metadataCache.getFileCache(file)?.frontmatter;
 
 		MB_DEBUG &&
 			console.log('meta-bind | Obs Source >> loaded frontmatter', structuredClone(frontmatter), storagePath);
@@ -84,8 +84,8 @@ export class ObsidianMetadataSource extends FilePathMetadataSource<ObsidianMetad
 	// 	return Array.from(new Set(tags));
 	// }
 
-	syncExternal(cacheItem: ObsidianMetadataCacheItem): void {
-		void this.plugin.app.fileManager.processFrontMatter(cacheItem.file, frontmatter => {
+	syncExternal(cacheItem: ObsMetadataCacheItem): void {
+		void this.mb.app.fileManager.processFrontMatter(cacheItem.file, frontmatter => {
 			Object.assign(frontmatter, cacheItem.data);
 		});
 	}

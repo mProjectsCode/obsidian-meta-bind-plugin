@@ -1,14 +1,11 @@
-import type { MathJsInstance } from 'mathjs';
 import type { Moment } from 'moment';
 import type { LifecycleHook } from 'packages/core/src/api/API';
-import type { FileAPI } from 'packages/core/src/api/FileAPI';
 import DatePickerInput from 'packages/core/src/fields/inputFields/fields/DatePicker/DatePicker.svelte';
 import type {
 	ImageSuggesterLikeIPF,
 	SuggesterLikeIFP,
 	SuggesterOption,
 } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import type { IModal } from 'packages/core/src/modals/IModal';
 import type { ModalContent } from 'packages/core/src/modals/ModalContent';
 import type { ButtonBuilderModalOptions } from 'packages/core/src/modals/modalContents/buttonBuilder/ButtonBuilderModal';
@@ -28,9 +25,9 @@ import type { ContextMenuItemDefinition, IContextMenu } from 'packages/core/src/
 import type { IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
 import type { IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
 import type { MBLiteral } from 'packages/core/src/utils/Literal';
-import { createMathJS } from 'packages/core/src/utils/MathJS';
 import { mount, unmount } from 'svelte';
 import type { z } from 'zod';
+import type { MB_Comps, MetaBind } from '..';
 
 export interface ErrorIndicatorProps {
 	errorCollection: ErrorCollection;
@@ -73,15 +70,11 @@ export const IMAGE_FILE_EXTENSIONS = [
 ];
 export const IMAGE_FILE_EXTENSIONS_WITH_DOTS = IMAGE_FILE_EXTENSIONS.map(ext => `.${ext}`);
 
-export abstract class InternalAPI<Plugin extends IPlugin> {
-	readonly plugin: Plugin;
-	readonly file: FileAPI<Plugin>;
-	readonly math: MathJsInstance;
+export abstract class InternalAPI<Components extends MB_Comps> {
+	readonly mb: MetaBind<Components>;
 
-	constructor(plugin: Plugin, fileAPI: FileAPI<Plugin>) {
-		this.plugin = plugin;
-		this.file = fileAPI;
-		this.math = createMathJS();
+	constructor(mb: MetaBind<Components>) {
+		this.mb = mb;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -228,21 +221,22 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 		folderPath?: string,
 		fileName?: string,
 		openNote?: boolean,
+		newTab?: boolean,
 	): Promise<string | undefined>;
 
 	openCommandSelectModal(selectCallback: (selected: Command) => void): void {
-		this.createSearchModal(new CommandSelectModal(this.plugin, selectCallback)).open();
+		this.createSearchModal(new CommandSelectModal(this.mb, selectCallback)).open();
 	}
 
 	openFileSelectModal(selectCallback: (selected: string) => void): void {
-		this.createSearchModal(new FileSelectModal(this.plugin, selectCallback)).open();
+		this.createSearchModal(new FileSelectModal(this.mb, selectCallback)).open();
 	}
 
 	openFilteredFileSelectModal(
 		selectCallback: (selected: string) => void,
 		filterFunction: (filePath: string) => boolean,
 	): void {
-		this.createSearchModal(new FileSelectModal(this.plugin, selectCallback, filterFunction)).open();
+		this.createSearchModal(new FileSelectModal(this.mb, selectCallback, filterFunction)).open();
 	}
 
 	openMarkdownFileSelectModal(selectCallback: (selected: string) => void): void {
@@ -256,18 +250,18 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 	}
 
 	openFolderSelectModal(selectCallback: (selected: string) => void): void {
-		this.createSearchModal(new FolderSelectModal(this.plugin, selectCallback)).open();
+		this.createSearchModal(new FolderSelectModal(this.mb, selectCallback)).open();
 	}
 
 	openButtonBuilderModal(options: ButtonBuilderModalOptions): void {
-		this.createModal(new ButtonBuilderModal(this.plugin, options), { title: 'Meta Bind Button Builder' }).open();
+		this.createModal(new ButtonBuilderModal(this.mb, options), { title: 'Meta Bind Button Builder' }).open();
 	}
 
 	openSuggesterModal(
 		inputField: SuggesterLikeIFP,
 		selectCallback: (selected: SuggesterOption<MBLiteral>) => void,
 	): void {
-		this.createSearchModal(new SuggesterSelectModal(this.plugin, selectCallback, inputField)).open();
+		this.createSearchModal(new SuggesterSelectModal(this.mb, selectCallback, inputField)).open();
 	}
 
 	openImageSuggesterModal(
@@ -280,7 +274,7 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 				return mount(ImageSuggesterModalComponent, {
 					target: targetEl,
 					props: {
-						plugin: this.plugin,
+						mb: this.mb,
 						options: this.getImageSuggesterOptions(inputField),
 						canSelectNone: canSelectNone,
 						onSelect: (item: string | undefined): void => {
@@ -372,7 +366,7 @@ export abstract class InternalAPI<Plugin extends IPlugin> {
 		const component = mount(ErrorIndicatorComponent, {
 			target: element,
 			props: {
-				plugin: this.plugin,
+				mb: this.mb,
 				settings: settings,
 			},
 		});

@@ -34,7 +34,7 @@ export class ImageSuggesterIPF extends AbstractInputField<MBLiteral, string | un
 	}
 
 	openModal(): void {
-		this.mountable.plugin.internal.openImageSuggesterModal(this, true, (selected: string | undefined) =>
+		this.mountable.mb.internal.openImageSuggesterModal(this, true, (selected: string | undefined) =>
 			this.setInternalValue(selected),
 		);
 	}

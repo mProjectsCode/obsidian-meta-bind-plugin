@@ -1,3 +1,4 @@
+import type { MetaBind } from 'packages/core/src';
 import type {
 	ButtonClickContext,
 	ButtonConfig,
@@ -6,11 +7,10 @@ import type {
 } from 'packages/core/src/config/ButtonConfig';
 import { ButtonActionType } from 'packages/core/src/config/ButtonConfig';
 import { AbstractButtonActionConfig } from 'packages/core/src/fields/button/AbstractButtonActionConfig';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 
 export class ReplaceSelfButtonActionConfig extends AbstractButtonActionConfig<ReplaceSelfButtonAction> {
-	constructor(plugin: IPlugin) {
-		super(ButtonActionType.REPLACE_SELF, plugin);
+	constructor(mb: MetaBind) {
+		super(ButtonActionType.REPLACE_SELF, mb);
 	}
 
 	async run(
@@ -35,13 +35,13 @@ export class ReplaceSelfButtonActionConfig extends AbstractButtonActionConfig<Re
 		const position = context.position;
 
 		const replacement = action.templater
-			? await this.plugin.internal.evaluateTemplaterTemplate(
-					this.plugin.api.buttonActionRunner.resolveFilePath(action.replacement),
+			? await this.mb.internal.evaluateTemplaterTemplate(
+					this.mb.buttonActionRunner.resolveFilePath(action.replacement),
 					filePath,
 				)
 			: action.replacement;
 
-		await this.plugin.internal.file.atomicModify(filePath, content => {
+		await this.mb.file.atomicModify(filePath, content => {
 			let splitContent = content.split('\n');
 
 			if (position.lineStart < 0 || position.lineEnd > splitContent.length) {

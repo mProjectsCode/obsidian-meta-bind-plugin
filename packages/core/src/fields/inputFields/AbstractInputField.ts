@@ -1,8 +1,8 @@
+import type { MetaBind } from 'packages/core/src';
 import { InputFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import type { InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
 import type { InputFieldSvelteComponent } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
 import { InputFieldSvelteWrapper } from 'packages/core/src/fields/inputFields/InputFieldSvelteWrapper';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import type { MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
 import { Mountable } from 'packages/core/src/utils/Mountable';
 import { MappedSignal } from 'packages/core/src/utils/Signal';
@@ -12,7 +12,7 @@ export abstract class AbstractInputField<
 	ComponentValueType,
 	SvelteExports = object,
 > extends Mountable {
-	readonly plugin: IPlugin;
+	readonly mb: MetaBind;
 	readonly mountable: InputFieldMountable;
 
 	svelteWrapper?: InputFieldSvelteWrapper<ComponentValueType, SvelteExports>;
@@ -25,7 +25,7 @@ export abstract class AbstractInputField<
 		super();
 
 		this.mountable = mountable;
-		this.plugin = mountable.plugin;
+		this.mb = mountable.mb;
 	}
 
 	protected abstract getSvelteComponent(): InputFieldSvelteComponent<ComponentValueType, SvelteExports>;
@@ -137,7 +137,7 @@ export abstract class AbstractInputField<
 		this.mountTarget = targetEl;
 
 		this.svelteWrapper = new InputFieldSvelteWrapper<ComponentValueType, SvelteExports>(
-			this.plugin,
+			this.mb,
 			this.getSvelteComponent(),
 			value => {
 				this.updateDataAttributes(value);
@@ -172,7 +172,7 @@ export abstract class AbstractInputField<
 		const bindTarget = this.mountable.getBindTarget();
 
 		if (bindTarget) {
-			this.metadataSubscription = this.mountable.plugin.metadataManager.subscribe(
+			this.metadataSubscription = this.mountable.mb.metadataManager.subscribe(
 				this.mountable.getUuid(),
 				this.inputSignal,
 				bindTarget,

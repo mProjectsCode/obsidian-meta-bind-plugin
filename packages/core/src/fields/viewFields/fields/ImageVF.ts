@@ -87,7 +87,7 @@ export class ImageVF extends AbstractViewField<MarkdownLink | MarkdownLink[] | u
 			target: container,
 			props: {
 				images: [],
-				plugin: this.mountable.plugin,
+				mb: this.mountable.mb,
 			},
 		});
 	}

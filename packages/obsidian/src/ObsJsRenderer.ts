@@ -3,26 +3,26 @@ import type { JsExecution } from 'jsEngine/engine/JsExecution';
 import { Component } from 'obsidian';
 import type { IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
 import { DomHelpers } from 'packages/core/src/utils/Utils';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
+import type { ObsMetaBind } from 'packages/obsidian/src/main';
 import { getJsEnginePluginAPI } from 'packages/obsidian/src/ObsUtils';
 
-export class ObsidianJsRenderer implements IJsRenderer {
-	readonly plugin: MetaBindPlugin;
-	containerEl: HTMLElement;
-	filePath: string;
-	jsEngine: API;
-	code: string;
-	hidden: boolean;
+export class ObsJsRenderer implements IJsRenderer {
+	readonly mb: ObsMetaBind;
+	readonly containerEl: HTMLElement;
+	readonly filePath: string;
+	readonly jsEngine: API;
+	readonly code: string;
+	readonly hidden: boolean;
 	renderComponent: Component;
 
-	constructor(plugin: MetaBindPlugin, containerEl: HTMLElement, filePath: string, code: string, hidden: boolean) {
-		this.plugin = plugin;
+	constructor(mb: ObsMetaBind, containerEl: HTMLElement, filePath: string, code: string, hidden: boolean) {
+		this.mb = mb;
 		this.containerEl = containerEl;
 		this.filePath = filePath;
 		this.code = code;
 		this.hidden = hidden;
 
-		this.jsEngine = getJsEnginePluginAPI(this.plugin);
+		this.jsEngine = getJsEnginePluginAPI(this.mb);
 		this.renderComponent = new Component();
 	}
 

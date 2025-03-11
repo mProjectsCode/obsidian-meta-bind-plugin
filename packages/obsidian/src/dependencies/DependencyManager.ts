@@ -1,17 +1,16 @@
 import type { Plugin } from 'obsidian';
 import { Notice } from 'obsidian';
-import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { ErrorLevel, MetaBindDependencyError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import type { Dependency } from 'packages/obsidian/src/dependencies/Dependency';
 import { Version } from 'packages/obsidian/src/dependencies/Version';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
+import type { ObsMetaBind } from 'packages/obsidian/src/main';
 
 export class DependencyManager {
-	readonly plugin: MetaBindPlugin;
-	readonly dependencies: Dependency[];
+	readonly mb: ObsMetaBind;
+	dependencies: Dependency[];
 
-	constructor(plugin: MetaBindPlugin, dependencies: Dependency[]) {
-		this.plugin = plugin;
+	constructor(mb: ObsMetaBind, dependencies: Dependency[]) {
+		this.mb = mb;
 		this.dependencies = dependencies;
 	}
 
@@ -28,7 +27,7 @@ export class DependencyManager {
 	}
 
 	private getPlugin(pluginId: string): Plugin | undefined {
-		return this.plugin.app.plugins.getPlugin(pluginId);
+		return this.mb.app.plugins.getPlugin(pluginId);
 	}
 
 	private throwPluginNotFound(pluginId: string): void {
@@ -75,42 +74,5 @@ export class DependencyManager {
 		this.checkDependencyVersion(dependency, version);
 
 		return plugin;
-	}
-
-	private checkDependencyOnStartup(pluginId: string): void {
-		const dependency = this.getDependency(pluginId);
-
-		if (!this.plugin.app.plugins.enabledPlugins.has(pluginId)) {
-			this.throwPluginNotFound(pluginId);
-			throw Error('unreachable');
-		}
-
-		const version = Version.fromString(this.plugin.app.plugins.manifests[pluginId].version);
-
-		this.checkDependencyVersion(dependency, version);
-	}
-
-	checkDependenciesOnStartup(): boolean {
-		const errorCollection = new ErrorCollection('Dependency Validation');
-
-		for (const dependency of this.dependencies) {
-			if (dependency.checkOnStartup) {
-				try {
-					this.checkDependencyOnStartup(dependency.pluginId);
-				} catch (e) {
-					errorCollection.add(e);
-				}
-			}
-		}
-
-		if (errorCollection.hasErrors()) {
-			this.plugin.internal.openErrorCollectionViewModal({
-				text: "The following errors were detected during dependency validation. The plugin won't load until these errors have been resolved. Please install the required plugins and restart Obsidian.",
-				errorCollection: errorCollection,
-			});
-			return true;
-		}
-
-		return false;
 	}
 }

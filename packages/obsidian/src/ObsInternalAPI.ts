@@ -15,25 +15,27 @@ import type { IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
 import type { IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
 import type { MBLiteral } from 'packages/core/src/utils/Literal';
 import { FuzzySearch } from 'packages/obsidian/src/FuzzySearch';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
+import type { ObsMetaBind } from 'packages/obsidian/src/main';
 import { getImageSuggesterOptionsForInputField } from 'packages/obsidian/src/modals/ImageSuggesterModalHelper';
-import { ObsidianModal } from 'packages/obsidian/src/modals/ObsidianModal';
-import { ObsidianSearchModal } from 'packages/obsidian/src/modals/ObsidianSearchModal';
+import { ObsModal } from 'packages/obsidian/src/modals/ObsModal';
+import { ObsSearchModal } from 'packages/obsidian/src/modals/ObsSearchModal';
 import { getSuggesterOptionsForInputField } from 'packages/obsidian/src/modals/SuggesterModalHelper';
-import { ObsidianContextMenu } from 'packages/obsidian/src/ObsidianContextMenu';
-import { ObsidianFileAPI } from 'packages/obsidian/src/ObsidianFileAPI';
-import { ObsidianJsRenderer } from 'packages/obsidian/src/ObsidianJsRenderer';
+import { ObsContextMenu } from 'packages/obsidian/src/ObsContextMenu';
+import { ObsJsRenderer } from 'packages/obsidian/src/ObsJsRenderer';
 import { getJsEnginePluginAPI, getTemplaterPluginAPI, Templater_RunMode } from 'packages/obsidian/src/ObsUtils';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
-export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
-	readonly app: App;
+export class ObsInternalAPI extends InternalAPI<ObsMetaBind> {
+	// This is needed to access the plugin instance with the correct type.
+	private readonly omb: ObsMetaBind;
+	private readonly app: App;
 
-	constructor(plugin: MetaBindPlugin) {
-		super(plugin, new ObsidianFileAPI(plugin));
+	constructor(mb: ObsMetaBind) {
+		super(mb);
 
-		this.app = plugin.app;
+		this.omb = mb;
+		this.app = mb.app;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -42,11 +44,11 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 	}
 
 	public getImageSuggesterOptions(inputField: ImageSuggesterLikeIPF): SuggesterOption<string>[] {
-		return getImageSuggesterOptionsForInputField(this.plugin, inputField);
+		return getImageSuggesterOptionsForInputField(this.omb, inputField);
 	}
 
 	public getSuggesterOptions(inputField: SuggesterLikeIFP): SuggesterOption<MBLiteral>[] {
-		return getSuggesterOptionsForInputField(this.plugin, inputField);
+		return getSuggesterOptionsForInputField(this.omb, inputField);
 	}
 
 	public async renderMarkdown(markdown: string, element: HTMLElement, filePath: string): Promise<() => void> {
@@ -62,7 +64,7 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 
 	public isJsEngineAvailable(): boolean {
 		try {
-			getJsEnginePluginAPI(this.plugin);
+			getJsEnginePluginAPI(this.omb);
 			return true;
 		} catch (_e) {
 			return false;
@@ -75,7 +77,7 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 		contextOverrides: Record<string, unknown>,
 		container?: HTMLElement,
 	): Promise<() => void> {
-		const jsEngineAPI = getJsEnginePluginAPI(this.plugin);
+		const jsEngineAPI = getJsEnginePluginAPI(this.omb);
 
 		const context = await jsEngineAPI.internal.getContextForMarkdownCallingJSFile(callingFilePath, filePath);
 
@@ -96,7 +98,7 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 		contextOverrides: Record<string, unknown>,
 		container?: HTMLElement,
 	): Promise<() => void> {
-		const jsEngineAPI = getJsEnginePluginAPI(this.plugin);
+		const jsEngineAPI = getJsEnginePluginAPI(this.omb);
 
 		const context = await jsEngineAPI.internal.getContextForMarkdownOther(callingFilePath);
 
@@ -113,7 +115,7 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 	}
 
 	public createJsRenderer(container: HTMLElement, filePath: string, code: string, hidden: boolean): IJsRenderer {
-		return new ObsidianJsRenderer(this.plugin, container, filePath, code, hidden);
+		return new ObsJsRenderer(this.omb, container, filePath, code, hidden);
 	}
 
 	public showNotice(message: string): void {
@@ -136,12 +138,12 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 		return this.app.vault.adapter.getResourcePath(imagePath);
 	}
 
-	public createModal(content: ModalContent, options: ModalOptions): ObsidianModal {
-		return new ObsidianModal(this.plugin, content, options);
+	public createModal(content: ModalContent, options: ModalOptions): ObsModal {
+		return new ObsModal(this.omb, content, options);
 	}
 
-	public createSearchModal<T>(content: SelectModalContent<T>): ObsidianSearchModal<T> {
-		return new ObsidianSearchModal(this.plugin, content);
+	public createSearchModal<T>(content: SelectModalContent<T>): ObsSearchModal<T> {
+		return new ObsSearchModal(this.omb, content);
 	}
 
 	public getAllCommands(): Command[] {
@@ -156,13 +158,13 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 	}
 
 	public createContextMenu(items: ContextMenuItemDefinition[]): IContextMenu {
-		const menu = new ObsidianContextMenu();
+		const menu = new ObsContextMenu();
 		menu.setItems(items);
 		return menu;
 	}
 
 	public async evaluateTemplaterTemplate(templateFilePath: string, targetFilePath: string): Promise<string> {
-		const templaterAPI = getTemplaterPluginAPI(this.plugin);
+		const templaterAPI = getTemplaterPluginAPI(this.omb);
 
 		const templateFile = this.app.vault.getAbstractFileByPath(templateFilePath);
 		if (!templateFile || !(templateFile instanceof TFile)) {
@@ -187,9 +189,10 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 		templateFilePath: string,
 		folderPath?: string,
 		fileName?: string,
-		openNote?: boolean,
+		openNote: boolean = false,
+		newTab: boolean = false,
 	): Promise<string | undefined> {
-		const templaterAPI = getTemplaterPluginAPI(this.plugin);
+		const templaterAPI = getTemplaterPluginAPI(this.omb);
 
 		const templateFile = this.app.vault.getAbstractFileByPath(templateFilePath);
 		if (!templateFile || !(templateFile instanceof TFile)) {
@@ -206,12 +209,12 @@ export class ObsidianInternalAPI extends InternalAPI<MetaBindPlugin> {
 			folder = folderTFile;
 		}
 
-		const newFile = await templaterAPI.create_new_note_from_template(
-			templateFile,
-			folder,
-			fileName,
-			openNote ?? true,
-		);
+		const newFile = await templaterAPI.create_new_note_from_template(templateFile, folder, fileName, false);
+
+		if (openNote && newFile) {
+			await this.mb.file.openInSourceMode(newFile, newTab);
+		}
+
 		return newFile?.path;
 	}
 }

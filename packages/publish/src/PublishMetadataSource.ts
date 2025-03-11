@@ -2,14 +2,14 @@ import type { FilePathMetadataCacheItem } from 'packages/core/src/metadata/Metad
 import type { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
 import type { Metadata } from 'packages/core/src/metadata/MetadataSource';
 import { FilePathMetadataSource } from 'packages/core/src/metadata/MetadataSource';
-import type { MetaBindPublishPlugin } from 'packages/publish/src/main';
+import type { PublishMetaBind } from 'packages/publish/src/main';
 
 export class PublishMetadataSource extends FilePathMetadataSource<FilePathMetadataCacheItem> {
-	public readonly plugin: MetaBindPublishPlugin;
+	public readonly mb: PublishMetaBind;
 
-	constructor(plugin: MetaBindPublishPlugin, id: string, manager: MetadataManager) {
+	constructor(mb: PublishMetaBind, id: string, manager: MetadataManager) {
 		super(id, manager);
-		this.plugin = plugin;
+		this.mb = mb;
 	}
 
 	public readExternal(storagePath: string): Metadata {

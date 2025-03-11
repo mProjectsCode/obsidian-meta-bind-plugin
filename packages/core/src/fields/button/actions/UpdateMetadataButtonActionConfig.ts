@@ -1,3 +1,4 @@
+import type { MetaBind } from 'packages/core/src';
 import type {
 	ButtonClickContext,
 	ButtonConfig,
@@ -6,13 +7,12 @@ import type {
 } from 'packages/core/src/config/ButtonConfig';
 import { ButtonActionType } from 'packages/core/src/config/ButtonConfig';
 import { AbstractButtonActionConfig } from 'packages/core/src/fields/button/AbstractButtonActionConfig';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import { ErrorLevel, MetaBindJsError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { parseLiteral } from 'packages/core/src/utils/Literal';
 
 export class UpdateMetadataButtonActionConfig extends AbstractButtonActionConfig<UpdateMetadataButtonAction> {
-	constructor(plugin: IPlugin) {
-		super(ButtonActionType.UPDATE_METADATA, plugin);
+	constructor(mb: MetaBind) {
+		super(ButtonActionType.UPDATE_METADATA, mb);
 	}
 
 	async run(
@@ -22,10 +22,10 @@ export class UpdateMetadataButtonActionConfig extends AbstractButtonActionConfig
 		_context: ButtonContext,
 		_click: ButtonClickContext,
 	): Promise<void> {
-		const bindTarget = this.plugin.api.bindTargetParser.fromStringAndValidate(action.bindTarget, filePath);
+		const bindTarget = this.mb.bindTargetParser.fromStringAndValidate(action.bindTarget, filePath);
 
 		if (action.evaluate) {
-			if (!this.plugin.settings.enableJs) {
+			if (!this.mb.getSettings().enableJs) {
 				throw new MetaBindJsError({
 					errorLevel: ErrorLevel.CRITICAL,
 					effect: "Can't run button action that requires JS evaluation.",
@@ -39,13 +39,13 @@ export class UpdateMetadataButtonActionConfig extends AbstractButtonActionConfig
 				getMetadata: (bindTarget: string) => unknown,
 			) => unknown;
 
-			this.plugin.api.updateMetadata(bindTarget, value =>
+			this.mb.api.updateMetadata(bindTarget, value =>
 				func(value, bindTarget => {
-					return this.plugin.api.getMetadata(this.plugin.api.parseBindTarget(bindTarget, filePath));
+					return this.mb.api.getMetadata(this.mb.api.parseBindTarget(bindTarget, filePath));
 				}),
 			);
 		} else {
-			this.plugin.api.setMetadata(bindTarget, parseLiteral(action.value));
+			this.mb.api.setMetadata(bindTarget, parseLiteral(action.value));
 		}
 	}
 

@@ -37,7 +37,7 @@ export class EditorIPF extends AbstractInputField<string, string> {
 	async renderInElement(el: HTMLElement, value: string): Promise<void> {
 		this.mdUnloadCallback?.();
 		el.innerHTML = '';
-		this.mdUnloadCallback = await this.mountable.plugin.internal.renderMarkdown(
+		this.mdUnloadCallback = await this.mountable.mb.internal.renderMarkdown(
 			value,
 			el,
 			this.mountable.getFilePath(),

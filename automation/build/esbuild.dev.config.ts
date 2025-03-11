@@ -36,6 +36,7 @@ const context = await esbuild.context({
 	outbase: 'packages/obsidian/src',
 	conditions: ['browser', 'development'],
 	define: {
+		MB_VERSION: `"${manifest.version}"`,
 		MB_DEV_BUILD: 'false',
 		MB_DEBUG: 'true',
 	},

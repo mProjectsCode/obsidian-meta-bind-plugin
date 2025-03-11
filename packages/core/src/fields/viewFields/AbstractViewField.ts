@@ -1,13 +1,13 @@
+import type { MetaBind } from 'packages/core/src';
 import { ViewFieldArgumentType } from 'packages/core/src/config/FieldConfigs';
 import type { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
 import type { ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import type { DerivedMetadataSubscription } from 'packages/core/src/metadata/DerivedMetadataSubscription';
 import { Mountable } from 'packages/core/src/utils/Mountable';
 import { DomHelpers } from 'packages/core/src/utils/Utils';
 
 export abstract class AbstractViewField<T> extends Mountable {
-	readonly plugin: IPlugin;
+	readonly mb: MetaBind;
 	readonly mountable: ViewFieldMountable;
 
 	private metadataSubscription?: DerivedMetadataSubscription;
@@ -21,7 +21,7 @@ export abstract class AbstractViewField<T> extends Mountable {
 		super();
 
 		this.mountable = mountable;
-		this.plugin = mountable.plugin;
+		this.mb = mountable.mb;
 
 		this.variables = [];
 
@@ -61,7 +61,7 @@ export abstract class AbstractViewField<T> extends Mountable {
 
 		void this.initialRender(targetEl);
 
-		this.metadataSubscription = this.mountable.plugin.metadataManager.subscribeDerived(
+		this.metadataSubscription = this.mountable.mb.metadataManager.subscribeDerived(
 			this.mountable.getUuid(),
 			this.mountable.getDeclaration().writeToBindTarget,
 			this.variables.map(x => x.bindTargetDeclaration),

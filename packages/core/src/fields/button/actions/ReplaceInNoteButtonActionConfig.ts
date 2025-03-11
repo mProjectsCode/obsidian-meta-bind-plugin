@@ -1,3 +1,4 @@
+import type { MetaBind } from 'packages/core/src';
 import type {
 	ButtonClickContext,
 	ButtonConfig,
@@ -6,13 +7,12 @@ import type {
 } from 'packages/core/src/config/ButtonConfig';
 import { ButtonActionType } from 'packages/core/src/config/ButtonConfig';
 import { AbstractButtonActionConfig } from 'packages/core/src/fields/button/AbstractButtonActionConfig';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import { P_lineNumberExpression } from 'packages/core/src/parsers/nomParsers/MiscNomParsers';
 import { runParser } from 'packages/core/src/parsers/ParsingError';
 
 export class ReplaceInNoteButtonActionConfig extends AbstractButtonActionConfig<ReplaceInNoteButtonAction> {
-	constructor(plugin: IPlugin) {
-		super(ButtonActionType.REPLACE_IN_NOTE, plugin);
+	constructor(mb: MetaBind) {
+		super(ButtonActionType.REPLACE_IN_NOTE, mb);
 	}
 
 	async run(
@@ -23,8 +23,8 @@ export class ReplaceInNoteButtonActionConfig extends AbstractButtonActionConfig<
 		_click: ButtonClickContext,
 	): Promise<void> {
 		const replacement = action.templater
-			? await this.plugin.internal.evaluateTemplaterTemplate(
-					this.plugin.api.buttonActionRunner.resolveFilePath(action.replacement),
+			? await this.mb.internal.evaluateTemplaterTemplate(
+					this.mb.buttonActionRunner.resolveFilePath(action.replacement),
 					filePath,
 				)
 			: action.replacement;
@@ -32,10 +32,10 @@ export class ReplaceInNoteButtonActionConfig extends AbstractButtonActionConfig<
 		const fromLine = runParser(P_lineNumberExpression, action.fromLine.toString());
 		const toLine = runParser(P_lineNumberExpression, action.toLine.toString());
 
-		await this.plugin.internal.file.atomicModify(filePath, content => {
+		await this.mb.file.atomicModify(filePath, content => {
 			let splitContent = content.split('\n');
 
-			const lineContext = this.plugin.api.buttonActionRunner.getLineNumberContext(content, context.position);
+			const lineContext = this.mb.buttonActionRunner.getLineNumberContext(content, context.position);
 			const fromLineNumber = fromLine.evaluate(lineContext);
 			const toLineNumber = toLine.evaluate(lineContext);
 

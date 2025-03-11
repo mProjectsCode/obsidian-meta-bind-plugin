@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
-	import type { IPlugin } from 'packages/core/src/IPlugin';
+
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import FlexRow from 'packages/core/src/utils/components/FlexRow.svelte';
 	import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
@@ -14,11 +14,12 @@
 	import InputFieldExampleComponent from 'packages/core/src/utils/playground/InputFieldExampleComponent.svelte';
 	import ViewFieldExampleComponent from 'packages/core/src/utils/playground/ViewFieldExampleComponent.svelte';
 	import { onMount } from 'svelte';
+	import type { MetaBind } from '../..';
 
 	const {
-		plugin,
+		mb,
 	}: {
-		plugin: IPlugin;
+		mb: MetaBind;
 	} = $props();
 
 	let exampleWarningDeclaration = 'INPUT[someInputFieldDeclaration]';
@@ -83,7 +84,7 @@
 		<a href={DocsUtils.linkToViewFields()}>View Fields</a>
 		<strong>warnings</strong> (
 		<ErrorIndicatorComponent
-			plugin={plugin}
+			mb={mb}
 			settings={{
 				errorCollection: exampleWarningErrorCollection,
 				code: exampleWarningDeclaration,
@@ -91,7 +92,7 @@
 		></ErrorIndicatorComponent>
 		) and <strong>errors</strong> (
 		<ErrorIndicatorComponent
-			plugin={plugin}
+			mb={mb}
 			settings={{
 				errorCollection: exampleErrorErrorCollection,
 				code: exampleErrorDeclaration,
@@ -128,8 +129,8 @@
 		of notes.
 	</p>
 
-	{#each createInputFieldFAQExamples(plugin) as example}
-		<InputFieldExampleComponent declaration={example[1]} plugin={plugin}></InputFieldExampleComponent>
+	{#each createInputFieldFAQExamples(mb) as example}
+		<InputFieldExampleComponent declaration={example[1]} mb={mb}></InputFieldExampleComponent>
 	{/each}
 
 	<h3>View Fields</h3>
@@ -141,7 +142,7 @@
 
 	{#each Object.values(VIEW_FIELD_EXAMPLE_DECLARATIONS) as examples}
 		{#each examples as example}
-			<ViewFieldExampleComponent declaration={example} plugin={plugin}></ViewFieldExampleComponent>
+			<ViewFieldExampleComponent declaration={example} mb={mb}></ViewFieldExampleComponent>
 		{/each}
 	{/each}
 </div>

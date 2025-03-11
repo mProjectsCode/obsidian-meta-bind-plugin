@@ -1,12 +1,12 @@
 import { FileAPI } from 'packages/core/src/api/FileAPI';
 import { TestFileSystem } from './TestFileSystem';
-import type { TestPlugin } from './TestPlugin';
+import type { TestComponents, TestMetaBind } from './TestPlugin';
 
-export class TestFileAPI extends FileAPI<TestPlugin> {
+export class TestFileAPI extends FileAPI<TestComponents> {
 	fileSystem: TestFileSystem;
 
-	constructor(plugin: TestPlugin) {
-		super(plugin);
+	constructor(mb: TestMetaBind) {
+		super(mb);
 
 		this.fileSystem = new TestFileSystem();
 	}
@@ -45,7 +45,9 @@ export class TestFileAPI extends FileAPI<TestPlugin> {
 		return this.fileSystem.listDirs();
 	}
 
-	public open(_filePath: string, _callingFilePath: string, _newTab: boolean): void {}
+	public open(_filePath: string, _callingFilePath: string, _newTab: boolean): Promise<void> {
+		return Promise.resolve();
+	}
 
 	public getPathByName(name: string, _relativeTo?: string): string | undefined {
 		return name;

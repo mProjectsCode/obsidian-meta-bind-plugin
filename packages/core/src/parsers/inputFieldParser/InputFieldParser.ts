@@ -1,5 +1,5 @@
+import type { MetaBind } from 'packages/core/src';
 import { InputFieldType } from 'packages/core/src/config/FieldConfigs';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import type { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import type { UnvalidatedBindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import type { UnvalidatedFieldArgument } from 'packages/core/src/parsers/FieldDeclaration';
@@ -28,11 +28,11 @@ import { deepFreeze } from 'packages/core/src/utils/Utils';
 export type InputFieldDeclarationTemplate = TemplateSupplierTemplate<UnvalidatedInputFieldDeclaration>;
 
 export class InputFieldParser implements ITemplateSupplier<UnvalidatedInputFieldDeclaration> {
-	plugin: IPlugin;
+	mb: MetaBind;
 	templates: InputFieldDeclarationTemplate[];
 
-	constructor(plugin: IPlugin) {
-		this.plugin = plugin;
+	constructor(mb: MetaBind) {
+		this.mb = mb;
 		this.templates = [];
 	}
 
@@ -78,7 +78,7 @@ export class InputFieldParser implements ITemplateSupplier<UnvalidatedInputField
 		return {
 			declarationString: undefined,
 			inputFieldType: toResultNode(simpleDeclaration.inputFieldType),
-			bindTarget: this.plugin.api.bindTargetParser.fromExistingDeclaration(simpleDeclaration.bindTarget),
+			bindTarget: this.mb.bindTargetParser.fromExistingDeclaration(simpleDeclaration.bindTarget),
 			arguments: (simpleDeclaration.arguments ?? []).map(x => ({
 				name: toResultNode(x.name),
 				value: x.value.map(y => toResultNode(y)),
@@ -120,7 +120,7 @@ export class InputFieldParser implements ITemplateSupplier<UnvalidatedInputField
 		filePath: string,
 		scope: BindTargetScope | undefined,
 	): InputFieldDeclaration {
-		const declarationValidator = new InputFieldDeclarationValidator(this.plugin, unvalidatedDeclaration, filePath);
+		const declarationValidator = new InputFieldDeclarationValidator(this.mb, unvalidatedDeclaration, filePath);
 
 		return declarationValidator.validate(scope);
 	}

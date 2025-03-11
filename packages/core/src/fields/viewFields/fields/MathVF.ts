@@ -49,7 +49,7 @@ export class MathVF extends AbstractViewField<MathVFResult> {
 			}
 		}
 
-		this.expression = this.plugin.internal.math.compile(this.expressionStr);
+		this.expression = this.mb.math.compile(this.expressionStr);
 	}
 
 	private buildMathJSContext(): Record<string, unknown> {
@@ -111,7 +111,7 @@ export class MathVF extends AbstractViewField<MathVFResult> {
 	protected onInitialRender(_container: HTMLElement): void {}
 
 	protected onRerender(container: HTMLElement, value: MathVFResult | undefined): void {
-		const text = stringifyUnknown(value?.value, this.mountable.plugin.settings.viewFieldDisplayNullAsEmpty) ?? '';
+		const text = stringifyUnknown(value?.value, this.mountable.mb.getSettings().viewFieldDisplayNullAsEmpty) ?? '';
 
 		if (value?.error) {
 			DomHelpers.addClass(container, 'mb-error');

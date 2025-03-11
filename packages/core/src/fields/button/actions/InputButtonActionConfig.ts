@@ -1,3 +1,4 @@
+import type { MetaBind } from 'packages/core/src';
 import type {
 	ButtonClickContext,
 	ButtonConfig,
@@ -6,11 +7,10 @@ import type {
 } from 'packages/core/src/config/ButtonConfig';
 import { ButtonActionType } from 'packages/core/src/config/ButtonConfig';
 import { AbstractButtonActionConfig } from 'packages/core/src/fields/button/AbstractButtonActionConfig';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 
 export class InputButtonActionConfig extends AbstractButtonActionConfig<InputButtonAction> {
-	constructor(plugin: IPlugin) {
-		super(ButtonActionType.INPUT, plugin);
+	constructor(mb: MetaBind) {
+		super(ButtonActionType.INPUT, mb);
 	}
 
 	async run(

@@ -1,4 +1,4 @@
-export * from 'packages/obsidian/src/ObsidianAPI';
+export * from 'packages/obsidian/src/ObsAPI';
 export * from 'packages/core/src/config/APIConfigs';
 export * from 'packages/core/src/config/FieldConfigs';
 export * from 'packages/core/src/config/ButtonConfig';

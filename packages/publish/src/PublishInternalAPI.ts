@@ -14,15 +14,18 @@ import type { ContextMenuItemDefinition, IContextMenu } from 'packages/core/src/
 import type { IFuzzySearch } from 'packages/core/src/utils/IFuzzySearch';
 import type { IJsRenderer } from 'packages/core/src/utils/IJsRenderer';
 import type { MBLiteral } from 'packages/core/src/utils/Literal';
-import type { MetaBindPublishPlugin } from 'packages/publish/src/main';
-import { PublishFileAPI } from 'packages/publish/src/PublishFileAPI';
+import type { PublishComponents, PublishMetaBind } from 'packages/publish/src/main';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
 // TODO: implement
-export class PublishInternalAPI extends InternalAPI<MetaBindPublishPlugin> {
-	constructor(plugin: MetaBindPublishPlugin) {
-		super(plugin, new PublishFileAPI(plugin));
+export class PublishInternalAPI extends InternalAPI<PublishComponents> {
+	private readonly pmb: PublishMetaBind;
+
+	constructor(mb: PublishMetaBind) {
+		super(mb);
+
+		this.pmb = mb;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any

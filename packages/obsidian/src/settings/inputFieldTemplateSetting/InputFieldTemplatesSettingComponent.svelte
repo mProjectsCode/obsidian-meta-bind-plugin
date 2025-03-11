@@ -47,7 +47,7 @@
 	<h2>Meta Bind Input Field Templates</h2>
 
 	{#each inputFieldTemplates as template}
-		<InputFieldTemplateSettingComponent plugin={modal.plugin} template={template} onDelete={deleteTemplate}
+		<InputFieldTemplateSettingComponent mb={modal.mb} template={template} onDelete={deleteTemplate}
 		></InputFieldTemplateSettingComponent>
 	{/each}
 

@@ -1,17 +1,17 @@
 <script lang="ts">
 	import type { ErrorIndicatorProps } from 'packages/core/src/api/InternalAPI';
-	import type { IPlugin } from 'packages/core/src/IPlugin';
+	import type { MetaBind } from '../..';
 
 	const {
-		plugin,
+		mb,
 		settings,
 	}: {
-		plugin: IPlugin;
+		mb: MetaBind;
 		settings: ErrorIndicatorProps;
 	} = $props();
 
 	function openModal(): void {
-		plugin.internal.openErrorCollectionViewModal(settings);
+		mb.internal.openErrorCollectionViewModal(settings);
 	}
 </script>
 

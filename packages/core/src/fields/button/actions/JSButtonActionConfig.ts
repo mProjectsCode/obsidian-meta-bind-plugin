@@ -1,3 +1,4 @@
+import type { MetaBind } from 'packages/core/src';
 import type {
 	ButtonClickContext,
 	ButtonConfig,
@@ -6,12 +7,11 @@ import type {
 } from 'packages/core/src/config/ButtonConfig';
 import { ButtonActionType } from 'packages/core/src/config/ButtonConfig';
 import { AbstractButtonActionConfig } from 'packages/core/src/fields/button/AbstractButtonActionConfig';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import { ErrorLevel, MetaBindJsError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 export class JSButtonActionConfig extends AbstractButtonActionConfig<JSButtonAction> {
-	constructor(plugin: IPlugin) {
-		super(ButtonActionType.JS, plugin);
+	constructor(mb: MetaBind) {
+		super(ButtonActionType.JS, mb);
 	}
 
 	async run(
@@ -21,7 +21,7 @@ export class JSButtonActionConfig extends AbstractButtonActionConfig<JSButtonAct
 		context: ButtonContext,
 		click: ButtonClickContext,
 	): Promise<void> {
-		if (!this.plugin.settings.enableJs) {
+		if (!this.mb.getSettings().enableJs) {
 			throw new MetaBindJsError({
 				errorLevel: ErrorLevel.CRITICAL,
 				effect: "Can't run button action that requires JS evaluation.",
@@ -35,7 +35,7 @@ export class JSButtonActionConfig extends AbstractButtonActionConfig<JSButtonAct
 			buttonContext: structuredClone(context),
 			click: structuredClone(click),
 		};
-		const unloadCallback = await this.plugin.internal.jsEngineRunFile(action.file, filePath, configOverrides);
+		const unloadCallback = await this.mb.internal.jsEngineRunFile(action.file, filePath, configOverrides);
 		unloadCallback();
 	}
 

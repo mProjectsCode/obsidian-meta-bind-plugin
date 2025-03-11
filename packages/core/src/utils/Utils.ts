@@ -167,10 +167,6 @@ export function deepFreeze<T extends object>(object: T | undefined): Readonly<T 
 	return Object.freeze(object);
 }
 
-export function deepCopy<T extends object>(object: T): T {
-	return structuredClone(object);
-}
-
 export function getUUID(): string {
 	return window.crypto.randomUUID();
 }

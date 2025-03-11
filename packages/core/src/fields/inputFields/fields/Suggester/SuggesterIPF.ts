@@ -36,11 +36,11 @@ export class SuggesterIPF extends AbstractInputField<MBLiteral, MBLiteral> {
 	}
 
 	openModal(): void {
-		this.mountable.plugin.internal.openSuggesterModal(this, selected => this.setInternalValue(selected.value));
+		this.mountable.mb.internal.openSuggesterModal(this, selected => this.setInternalValue(selected.value));
 	}
 
 	openTextModal(): void {
-		this.mountable.plugin.internal.openTextPromptModal({
+		this.mountable.mb.internal.openTextPromptModal({
 			title: 'Meta Bind Suggester',
 			subTitle: 'Set the suggester value.',
 			value: '',

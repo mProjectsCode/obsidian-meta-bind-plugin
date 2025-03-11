@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { IPlugin } from 'packages/core/src/IPlugin';
+	import type { MetaBind } from '../..';
 
 	const props: {
-		plugin: IPlugin;
+		mb: MetaBind;
 		image: string;
 		onSelect: (item: string) => void;
 	} = $props();
@@ -21,7 +21,7 @@
 	role="button"
 	tabindex="0"
 >
-	<img class="mb-image-card-image" src={props.plugin.internal.imagePathToUri(props.image)} alt={props.image} />
+	<img class="mb-image-card-image" src={props.mb.internal.imagePathToUri(props.image)} alt={props.image} />
 	<div class="mb-image-card-footer">
 		<span>{props.image}</span>
 	</div>

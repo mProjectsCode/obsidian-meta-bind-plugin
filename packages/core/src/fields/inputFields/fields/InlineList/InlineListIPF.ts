@@ -37,7 +37,7 @@ export class InlineListIPF extends AbstractInputField<MBLiteral[], MBLiteral[], 
 	}
 
 	openModal(): void {
-		this.mountable.plugin.internal.openTextPromptModal({
+		this.mountable.mb.internal.openTextPromptModal({
 			title: 'Meta Bind List',
 			subTitle: 'Create a new List Element.',
 			value: '',

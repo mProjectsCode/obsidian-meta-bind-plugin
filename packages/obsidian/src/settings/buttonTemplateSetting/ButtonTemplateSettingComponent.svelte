@@ -1,24 +1,24 @@
 <script lang="ts">
 	import { Notice, stringifyYaml } from 'obsidian';
+	import type { MetaBind } from 'packages/core/src';
 	import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
-	import type { IPlugin } from 'packages/core/src/IPlugin';
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import FlexRow from 'packages/core/src/utils/components/FlexRow.svelte';
 	import Icon from 'packages/core/src/utils/components/Icon.svelte';
 
 	let {
-		plugin,
+		mb,
 		template = $bindable(),
 		onDelete,
 	}: {
-		plugin: IPlugin;
+		mb: MetaBind;
 		template: ButtonConfig;
 		onDelete: (template: ButtonConfig) => void;
 	} = $props();
 
 	function editTemplate(): void {
-		plugin.internal.openButtonBuilderModal({
+		mb.internal.openButtonBuilderModal({
 			submitText: 'Submit',
 			config: $state.snapshot(template),
 			onOkay: newTemplate => {
@@ -38,13 +38,13 @@
 	<FlexRow stretchChildren={true}>
 		<span>{template.id}</span>
 		<Button onclick={() => editTemplate()} variant={ButtonStyleType.PRIMARY} tooltip="Edit">
-			<Icon plugin={plugin} iconName="pen-line" />
+			<Icon mb={mb} iconName="pen-line" />
 		</Button>
 		<Button onclick={() => copyTemplate()} variant={ButtonStyleType.DEFAULT} tooltip="Copy">
-			<Icon plugin={plugin} iconName="copy" />
+			<Icon mb={mb} iconName="copy" />
 		</Button>
 		<Button onclick={() => onDelete(template)} variant={ButtonStyleType.DESTRUCTIVE} tooltip="Delete">
-			<Icon plugin={plugin} iconName="x" />
+			<Icon mb={mb} iconName="x" />
 		</Button>
 	</FlexRow>
 	<pre class="mb-pre"><code class="mb-none">{stringifyYaml(template)}</code></pre>

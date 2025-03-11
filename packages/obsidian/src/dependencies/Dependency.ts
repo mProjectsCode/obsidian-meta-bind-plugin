@@ -11,5 +11,4 @@ export interface Dependency {
 	 * The maximum version, exclusive.
 	 */
 	maxVersion?: Version;
-	checkOnStartup?: boolean;
 }

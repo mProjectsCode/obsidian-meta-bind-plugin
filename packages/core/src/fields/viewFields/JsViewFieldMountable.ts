@@ -1,6 +1,6 @@
+import type { MetaBind } from 'packages/core/src';
 import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import type { ViewFieldVariable } from 'packages/core/src/fields/viewFields/ViewFieldVariable';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import type { DerivedMetadataSubscription } from 'packages/core/src/metadata/DerivedMetadataSubscription';
 import type { JsViewFieldDeclaration } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
@@ -19,8 +19,8 @@ export class JsViewFieldMountable extends FieldMountable {
 	metadataSubscription: DerivedMetadataSubscription | undefined;
 	jsRenderer: IJsRenderer | undefined;
 
-	constructor(plugin: IPlugin, uuid: string, filePath: string, declaration: JsViewFieldDeclaration) {
-		super(plugin, uuid, filePath);
+	constructor(mb: MetaBind, uuid: string, filePath: string, declaration: JsViewFieldDeclaration) {
+		super(mb, uuid, filePath);
 
 		this.declaration = declaration;
 
@@ -71,7 +71,7 @@ export class JsViewFieldMountable extends FieldMountable {
 	}
 
 	private registerSelfToMetadataManager(): void {
-		this.metadataSubscription = this.plugin.metadataManager.subscribeDerived(
+		this.metadataSubscription = this.mb.metadataManager.subscribeDerived(
 			this.getUuid(),
 			this.declaration.writeToBindTarget,
 			this.variables.map(x => x.bindTargetDeclaration),
@@ -86,7 +86,7 @@ export class JsViewFieldMountable extends FieldMountable {
 	}
 
 	private createErrorIndicator(containerEl: HTMLElement): void {
-		this.plugin.internal.createErrorIndicator(containerEl, {
+		this.mb.internal.createErrorIndicator(containerEl, {
 			errorCollection: this.errorCollection,
 			errorText:
 				'Errors caused the creation of the field to fail. Sometimes one error only occurs because of another.',
@@ -103,7 +103,7 @@ export class JsViewFieldMountable extends FieldMountable {
 		DomHelpers.addClass(targetEl, 'mb-view');
 		DomHelpers.empty(targetEl);
 
-		if (!this.plugin.internal.isJsEngineAvailable()) {
+		if (!this.mb.internal.isJsEngineAvailable()) {
 			this.errorCollection.add(
 				new MetaBindJsError({
 					errorLevel: ErrorLevel.ERROR,
@@ -113,7 +113,7 @@ export class JsViewFieldMountable extends FieldMountable {
 			);
 		}
 
-		if (!this.plugin.settings.enableJs) {
+		if (!this.mb.getSettings().enableJs) {
 			this.errorCollection.add(
 				new MetaBindJsError({
 					errorLevel: ErrorLevel.CRITICAL,
@@ -132,7 +132,7 @@ export class JsViewFieldMountable extends FieldMountable {
 		const wrapperEl: HTMLDivElement = document.createElement('div');
 		DomHelpers.addClass(wrapperEl, 'mb-view-wrapper');
 
-		this.jsRenderer = this.plugin.internal.createJsRenderer(
+		this.jsRenderer = this.mb.internal.createJsRenderer(
 			wrapperEl,
 			this.getFilePath(),
 			this.declaration.code,

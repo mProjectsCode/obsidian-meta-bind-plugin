@@ -1,15 +1,15 @@
 import { MarkdownRenderChild } from 'obsidian';
 import type { Mountable } from 'packages/core/src/utils/Mountable';
-import type MetaBindPlugin from 'packages/obsidian/src/main.ts';
+import type { ObsMetaBind } from 'packages/obsidian/src/main.ts';
 
 export class MountableMDRC extends MarkdownRenderChild {
-	readonly plugin: MetaBindPlugin;
+	readonly mb: ObsMetaBind;
 	readonly mountable: Mountable;
 
-	constructor(plugin: MetaBindPlugin, mountable: Mountable, containerEl: HTMLElement) {
+	constructor(mb: ObsMetaBind, mountable: Mountable, containerEl: HTMLElement) {
 		super(containerEl);
 
-		this.plugin = plugin;
+		this.mb = mb;
 		this.mountable = mountable;
 
 		this.mountable.registerUnmountCb(() => {

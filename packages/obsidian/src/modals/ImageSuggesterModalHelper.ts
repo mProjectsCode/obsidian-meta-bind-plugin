@@ -8,7 +8,7 @@ import type { ImageSuggesterLikeIPF } from 'packages/core/src/fields/inputFields
 import { SuggesterOption } from 'packages/core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
 import { ErrorLevel, MetaBindArgumentError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { stringifyLiteral } from 'packages/core/src/utils/Literal';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
+import type { ObsMetaBind } from 'packages/obsidian/src/main';
 
 function recSearchFolder(folder: TFolder): SuggesterOption<string>[] {
 	const ret = [];
@@ -24,9 +24,9 @@ function recSearchFolder(folder: TFolder): SuggesterOption<string>[] {
 }
 
 export function getImageSuggesterOptions(
+	mb: ObsMetaBind,
 	optionArgs: OptionInputFieldArgument[],
 	optionQueryArgs: OptionQueryInputFieldArgument[],
-	plugin: MetaBindPlugin,
 ): SuggesterOption<string>[] {
 	const options: SuggesterOption<string>[] = [];
 
@@ -47,9 +47,9 @@ export function getImageSuggesterOptions(
 
 		let folder: TAbstractFile | null;
 		if (folderPathString === '' || folderPathString === '.') {
-			folder = plugin.app.vault.getRoot();
+			folder = mb.app.vault.getRoot();
 		} else {
-			folder = plugin.app.vault.getAbstractFileByPath(folderPathString);
+			folder = mb.app.vault.getAbstractFileByPath(folderPathString);
 		}
 
 		if (folder == null) {
@@ -91,7 +91,7 @@ export function getImageSuggesterOptions(
 			continue;
 		}
 
-		const imageFile = plugin.app.vault.getAbstractFileByPath(imagePathString);
+		const imageFile = mb.app.vault.getAbstractFileByPath(imagePathString);
 
 		if (!imageFile) {
 			const error = new MetaBindArgumentError({
@@ -137,10 +137,10 @@ function isImageExtension(extension: string): boolean {
 }
 
 export function getImageSuggesterOptionsForInputField(
-	plugin: MetaBindPlugin,
+	mb: ObsMetaBind,
 	inputField: ImageSuggesterLikeIPF,
 ): SuggesterOption<string>[] {
 	const optionArgs = inputField.mountable.getArguments(InputFieldArgumentType.OPTION);
 	const optionQueryArgs = inputField.mountable.getArguments(InputFieldArgumentType.OPTION_QUERY);
-	return getImageSuggesterOptions(optionArgs, optionQueryArgs, plugin);
+	return getImageSuggesterOptions(mb, optionArgs, optionQueryArgs);
 }

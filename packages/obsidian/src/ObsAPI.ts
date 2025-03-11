@@ -12,7 +12,7 @@ import { Signal } from 'packages/core/src/utils/Signal';
 import { getUUID } from 'packages/core/src/utils/Utils';
 import { validateAPIArgs } from 'packages/core/src/utils/ZodUtils';
 import { MarkdownRenderChildWidget } from 'packages/obsidian/src/cm6/Cm6_Widgets';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
+import type { ObsComponents, ObsMetaBind } from 'packages/obsidian/src/main';
 import { MountableMDRC } from 'packages/obsidian/src/MountableMDRC';
 import { getJsEnginePluginAPI } from 'packages/obsidian/src/ObsUtils';
 import { z } from 'zod';
@@ -35,9 +35,14 @@ export const V_ComponentLike = z.object({
  * Meta Bind API for Obsidian.
  * @extends API
  */
-export class ObsidianAPI extends API<MetaBindPlugin> {
-	constructor(plugin: MetaBindPlugin) {
-		super(plugin);
+export class ObsAPI extends API<ObsComponents> {
+	// This is needed to access the plugin instance with the correct type.
+	private readonly omb: ObsMetaBind;
+
+	constructor(mb: ObsMetaBind) {
+		super(mb);
+
+		this.omb = mb;
 	}
 
 	/**
@@ -64,7 +69,7 @@ export class ObsidianAPI extends API<MetaBindPlugin> {
 			},
 		);
 
-		const mdrc = new MountableMDRC(this.plugin, mountable, containerEl);
+		const mdrc = new MountableMDRC(this.omb, mountable, containerEl);
 		component.addChild(mdrc);
 
 		return mdrc;
@@ -87,7 +92,7 @@ export class ObsidianAPI extends API<MetaBindPlugin> {
 		component: Component,
 	): MarkdownRenderChildWidget {
 		if (isFieldTypeAllowedInline(inlineFieldType)) {
-			return new MarkdownRenderChildWidget(inlineFieldType, content, filePath, component, this.plugin);
+			return new MarkdownRenderChildWidget(inlineFieldType, content, filePath, component, this.omb);
 		}
 
 		throw new MetaBindInternalError({
@@ -114,7 +119,7 @@ export class ObsidianAPI extends API<MetaBindPlugin> {
 		validateAPIArgs(
 			z.object({
 				bindTargets: V_BindTargetDeclaration.array(),
-				lifecycleHook: this.plugin.internal.getLifecycleHookValidator(),
+				lifecycleHook: this.mb.internal.getLifecycleHookValidator(),
 				callback: z.function(),
 			}),
 			{
@@ -124,14 +129,14 @@ export class ObsidianAPI extends API<MetaBindPlugin> {
 			},
 		);
 
-		const jsEngine = getJsEnginePluginAPI(this.plugin);
+		const jsEngine = getJsEnginePluginAPI(this.omb);
 		const uuid = getUUID();
 		const metadataSignals = bindTargets.map(() => new Signal<unknown>(undefined));
 
 		// we start with a noop callback so that we can create the subscription
 		let cb = (): Promise<void> => Promise.resolve();
 
-		const subscription = this.plugin.metadataManager.subscribeEffect(
+		const subscription = this.mb.metadataManager.subscribeEffect(
 			uuid,
 			bindTargets,
 			metadataSignals,

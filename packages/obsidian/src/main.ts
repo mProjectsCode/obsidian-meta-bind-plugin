@@ -1,70 +1,87 @@
-import type { MarkdownPostProcessorContext, WorkspaceLeaf } from 'obsidian';
+import type { App, MarkdownPostProcessorContext, WorkspaceLeaf } from 'obsidian';
 import { loadPrism, Plugin, stringifyYaml } from 'obsidian';
+import { MetaBind, MetaBindBuild } from 'packages/core/src';
 import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 import { EMBED_MAX_DEPTH } from 'packages/core/src/config/FieldConfigs';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import {
 	GlobalMetadataSource,
 	InternalMetadataSource,
 	ScopeMetadataSource,
 } from 'packages/core/src/metadata/InternalMetadataSources';
 import { MetadataManager } from 'packages/core/src/metadata/MetadataManager';
-import { MountableManager } from 'packages/core/src/MountableManager';
 import { BindTargetStorageType } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
-import { DateParser } from 'packages/core/src/parsers/DateParser';
 import type { MetaBindPluginSettings } from 'packages/core/src/Settings';
 import { DEFAULT_SETTINGS } from 'packages/core/src/Settings';
-import { setFirstWeekday } from 'packages/core/src/utils/DatePickerUtils';
 import { areObjectsEqual } from 'packages/core/src/utils/Utils';
 import { registerCm5HLModes } from 'packages/obsidian/src/cm6/Cm5_Modes';
 import { createMarkdownRenderChildWidgetEditorPlugin } from 'packages/obsidian/src/cm6/Cm6_ViewPlugin';
 import { DependencyManager } from 'packages/obsidian/src/dependencies/DependencyManager';
 import { Version } from 'packages/obsidian/src/dependencies/Version';
 import { createEditorMenu } from 'packages/obsidian/src/EditorMenu';
-import { ObsidianAPI } from 'packages/obsidian/src/ObsidianAPI';
-import { ObsidianInternalAPI } from 'packages/obsidian/src/ObsidianInternalAPI';
-import { ObsidianMetadataSource } from 'packages/obsidian/src/ObsidianMetadataSource';
-import { ObsidianNotePosition } from 'packages/obsidian/src/ObsidianNotePosition';
+import { ObsAPI } from 'packages/obsidian/src/ObsAPI';
+import { ObsFileAPI } from 'packages/obsidian/src/ObsFileAPI';
+import { ObsInternalAPI } from 'packages/obsidian/src/ObsInternalAPI';
+import { ObsMetadataSource } from 'packages/obsidian/src/ObsMetadataSource';
+import { ObsNotePosition } from 'packages/obsidian/src/ObsNotePosition';
 import { PlaygroundView, MB_PLAYGROUND_VIEW_TYPE } from 'packages/obsidian/src/playground/PlaygroundView';
 import { MetaBindSettingTab } from 'packages/obsidian/src/settings/SettingsTab';
 
-export enum MetaBindBuild {
-	DEV = 'dev',
-	CANARY = 'canary',
-	RELEASE = 'release',
+export interface ObsComponents {
+	api: ObsAPI;
+	internal: ObsInternalAPI;
+	file: ObsFileAPI;
 }
 
-export default class MetaBindPlugin extends Plugin implements IPlugin {
-	// @ts-expect-error TS2564
-	api: ObsidianAPI;
-	// @ts-expect-error TS2564
-	internal: ObsidianInternalAPI;
-	// @ts-expect-error TS2564
-	metadataManager: MetadataManager;
-	// @ts-expect-error TS2564
-	mountableManager: MountableManager;
+export class ObsMetaBind extends MetaBind<ObsComponents> {
+	app: App;
+	plugin: ObsMetaBindPlugin;
 
-	// @ts-expect-error TS2564
-	settings: MetaBindPluginSettings;
-
-	// @ts-expect-error TS2564
-	build: MetaBindBuild;
-	// @ts-expect-error TS2564
 	dependencyManager: DependencyManager;
 
-	// eslint-disable-next-line @typescript-eslint/no-misused-promises
-	async onload(): Promise<void> {
-		console.log(`meta-bind | Main >> loading`);
-		console.time('meta-bind | Main >> load-time');
+	constructor(plugin: ObsMetaBindPlugin) {
+		super();
 
-		this.build = this.determineBuild();
+		this.app = plugin.app;
+		this.plugin = plugin;
 
-		// settings
-		await this.loadSettings();
-		this.addSettingTab(new MetaBindSettingTab(this.app, this));
+		this.setComponents({
+			api: new ObsAPI(this),
+			internal: new ObsInternalAPI(this),
+			file: new ObsFileAPI(this),
+		});
+
+		this.plugin.addSettingTab(new MetaBindSettingTab(this.app, this));
 
 		// check dependencies
-		this.dependencyManager = new DependencyManager(this, [
+		this.dependencyManager = new DependencyManager(this, []);
+		this.setUpDependencies();
+
+		this.setUpMetadataManager();
+
+		this.loadTemplates();
+
+		// register all post processors for MDRCs
+		this.addPostProcessors();
+		this.plugin.registerEditorExtension(createMarkdownRenderChildWidgetEditorPlugin(this));
+
+		this.addCommands();
+		registerCm5HLModes(this);
+
+		// misc
+		this.plugin.registerView(MB_PLAYGROUND_VIEW_TYPE, leaf => new PlaygroundView(leaf, this));
+		this.addStatusBarBuildIndicator();
+
+		if (this.getSettings().enableEditorRightClickMenu) {
+			this.plugin.registerEvent(
+				this.app.workspace.on('editor-menu', (menu, editor) => {
+					createEditorMenu(menu, editor, this);
+				}),
+			);
+		}
+	}
+
+	private setUpDependencies(): void {
+		this.dependencyManager.dependencies = [
 			{
 				name: 'Dataview',
 				pluginId: 'dataview',
@@ -80,67 +97,13 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				pluginId: 'templater-obsidian',
 				minVersion: new Version(2, 2, 3),
 			},
-		]);
-		if (this.dependencyManager.checkDependenciesOnStartup()) {
-			return;
-		}
-
-		// create all APIs and managers
-		this.api = new ObsidianAPI(this);
-		this.internal = new ObsidianInternalAPI(this);
-		this.mountableManager = new MountableManager();
-		// const metadataAdapter = new ObsidianMetadataAdapter(this);
-
-		this.setUpMetadataManager();
-
-		this.loadTemplates();
-
-		// register all post processors for MDRCs
-		this.addPostProcessors();
-		this.registerEditorExtension(createMarkdownRenderChildWidgetEditorPlugin(this));
-
-		this.addCommands();
-		registerCm5HLModes(this);
-
-		// misc
-		this.registerView(MB_PLAYGROUND_VIEW_TYPE, leaf => new PlaygroundView(leaf, this));
-		this.addStatusBarBuildIndicator();
-
-		if (this.settings.enableEditorRightClickMenu) {
-			this.registerEvent(
-				this.app.workspace.on('editor-menu', (menu, editor) => {
-					createEditorMenu(menu, editor, this);
-				}),
-			);
-		}
-
-		console.timeEnd('meta-bind | Main >> load-time');
-
-		// TODO: not sure if this is still needed, but it adds 100+ms to the load time, so I disabled it for now
-		// we need to wait for prism to load first, otherwise prism will cause problems by highlighting things that it shouldn't
-		// await loadPrism();
+		];
 	}
 
-	onunload(): void {
-		console.log(`meta-bind | Main >> unload`);
-		this.mountableManager.unload();
-	}
-
-	// TODO: move to internal API
-	determineBuild(): MetaBindBuild {
-		if (MB_DEV_BUILD) {
-			return MetaBindBuild.DEV;
-		} else if (this.manifest.version.includes('canary')) {
-			return MetaBindBuild.CANARY;
-		} else {
-			return MetaBindBuild.RELEASE;
-		}
-	}
-
-	setUpMetadataManager(): void {
+	private setUpMetadataManager(): void {
 		this.metadataManager = new MetadataManager();
 		this.metadataManager.registerSource(
-			new ObsidianMetadataSource(this, BindTargetStorageType.FRONTMATTER, this.metadataManager),
+			new ObsMetadataSource(this, BindTargetStorageType.FRONTMATTER, this.metadataManager),
 		);
 		this.metadataManager.registerSource(
 			new InternalMetadataSource(BindTargetStorageType.MEMORY, this.metadataManager),
@@ -151,31 +114,33 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		this.metadataManager.registerSource(new ScopeMetadataSource(BindTargetStorageType.SCOPE, this.metadataManager));
 		this.metadataManager.setDefaultSource(BindTargetStorageType.FRONTMATTER);
 
-		this.registerEvent(
+		this.plugin.registerEvent(
 			this.app.vault.on('rename', (file, oldPath) => {
 				this.mountableManager.unloadFile(oldPath);
 				this.metadataManager.onStoragePathRenamed(oldPath, file.path);
 			}),
 		);
 
-		this.registerEvent(
+		this.plugin.registerEvent(
 			this.app.vault.on('delete', file => {
 				this.mountableManager.unloadFile(file.path);
 				this.metadataManager.onStoragePathDeleted(file.path);
 			}),
 		);
 
-		this.registerInterval(window.setInterval(() => this.metadataManager.cycle(), this.settings.syncInterval));
+		this.plugin.registerInterval(
+			window.setInterval(() => this.metadataManager.cycle(), this.getSettings().syncInterval),
+		);
 	}
 
-	addPostProcessors(): void {
+	private addPostProcessors(): void {
 		// In every processor we await prism to load, otherwise prism may break our rendering.
 		// Luckily `await loadPrism()` is a no-op if prism is already loaded.
 		// We could also load prism once on startup, but that would add 100+ms to the reported plugin load time.
 		// Prism is always loaded, so the total startup time would be the same, but the higher reported time may scare users.
 
 		// inline code blocks
-		this.registerMarkdownPostProcessor((el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+		this.plugin.registerMarkdownPostProcessor((el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
 			const codeBlocks = el.querySelectorAll('code');
 			const filePath = ctx.sourcePath;
 
@@ -198,7 +163,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		}, 1);
 
 		// "meta-bind" code blocks
-		this.registerMarkdownCodeBlockProcessor('meta-bind', async (source, el, ctx) => {
+		this.plugin.registerMarkdownCodeBlockProcessor('meta-bind', async (source, el, ctx) => {
 			await loadPrism();
 
 			const codeBlock = el;
@@ -216,13 +181,13 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 				filePath,
 				undefined,
 				RenderChildType.BLOCK,
-				new ObsidianNotePosition(ctx, el),
+				new ObsNotePosition(ctx, el),
 			);
 			this.api.wrapInMDRC(mountable, codeBlock, ctx);
 		});
 
 		// "meta-bind-js-view" code blocks
-		this.registerMarkdownCodeBlockProcessor('meta-bind-js-view', async (source, el, ctx) => {
+		this.plugin.registerMarkdownCodeBlockProcessor('meta-bind-js-view', async (source, el, ctx) => {
 			await loadPrism();
 
 			const mountable = this.api.createJsViewFieldMountable(ctx.sourcePath, {
@@ -233,7 +198,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		});
 
 		// "meta-bind-embed" code blocks
-		this.registerMarkdownCodeBlockProcessor('meta-bind-embed', async (source, el, ctx) => {
+		this.plugin.registerMarkdownCodeBlockProcessor('meta-bind-embed', async (source, el, ctx) => {
 			await loadPrism();
 
 			const mountable = this.api.createEmbedMountable(ctx.sourcePath, {
@@ -245,7 +210,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		});
 
 		for (let i = 1; i <= EMBED_MAX_DEPTH; i++) {
-			this.registerMarkdownCodeBlockProcessor(`meta-bind-embed-internal-${i}`, async (source, el, ctx) => {
+			this.plugin.registerMarkdownCodeBlockProcessor(`meta-bind-embed-internal-${i}`, async (source, el, ctx) => {
 				await loadPrism();
 
 				const mountable = this.api.createEmbedMountable(ctx.sourcePath, {
@@ -258,21 +223,21 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		}
 
 		// "meta-bind-button" code blocks
-		this.registerMarkdownCodeBlockProcessor('meta-bind-button', async (source, el, ctx) => {
+		this.plugin.registerMarkdownCodeBlockProcessor('meta-bind-button', async (source, el, ctx) => {
 			await loadPrism();
 
 			const mountable = this.api.createButtonMountable(ctx.sourcePath, {
 				declaration: source,
 				isPreview: false,
-				position: new ObsidianNotePosition(ctx, el),
+				position: new ObsNotePosition(ctx, el),
 			});
 
 			this.api.wrapInMDRC(mountable, el, ctx);
 		});
 	}
 
-	addCommands(): void {
-		this.addCommand({
+	private addCommands(): void {
+		this.plugin.addCommand({
 			id: 'open-docs',
 			name: 'Open docs',
 			callback: () => {
@@ -280,7 +245,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			},
 		});
 
-		this.addCommand({
+		this.plugin.addCommand({
 			id: 'open-playground',
 			name: 'Open playground',
 			callback: () => {
@@ -288,7 +253,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			},
 		});
 
-		this.addCommand({
+		this.plugin.addCommand({
 			id: 'open-help',
 			name: 'Open Help',
 			callback: () => {
@@ -296,7 +261,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			},
 		});
 
-		this.addCommand({
+		this.plugin.addCommand({
 			id: 'open-button-builder',
 			name: 'Open button builder',
 			callback: () => {
@@ -311,7 +276,7 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 			},
 		});
 
-		this.addCommand({
+		this.plugin.addCommand({
 			id: 'copy-command-id',
 			name: 'Select and copy command id',
 			callback: () => {
@@ -322,82 +287,22 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		});
 	}
 
-	addStatusBarBuildIndicator(): void {
+	private addStatusBarBuildIndicator(): void {
 		if (this.build === MetaBindBuild.DEV) {
-			const item = this.addStatusBarItem();
+			const item = this.plugin.addStatusBarItem();
 			item.setText('Meta Bind Dev Build');
 			item.addClass('mb-error');
-			this.register(() => item.remove());
+			this.plugin.register(() => item.remove());
 		}
 
 		if (this.build === MetaBindBuild.CANARY) {
-			const item = this.addStatusBarItem();
-			item.setText(`Meta Bind Canary Build (${this.manifest.version})`);
+			const item = this.plugin.addStatusBarItem();
+			item.setText(`Meta Bind Canary Build (${MB_VERSION})`);
 			item.addClass('mb-error');
-			this.register(() => item.remove());
+			this.plugin.register(() => item.remove());
 		}
 	}
 
-	loadTemplates(): void {
-		if (!this.api) {
-			return;
-		}
-
-		const inputFieldTemplateParseErrorCollection = this.api.inputFieldParser.parseTemplates(
-			this.settings.inputFieldTemplates,
-		);
-		if (inputFieldTemplateParseErrorCollection.hasErrors()) {
-			console.warn('meta-bind | failed to parse input field templates', inputFieldTemplateParseErrorCollection);
-		}
-
-		const buttonTemplateParseErrorCollection = this.api.buttonManager.setButtonTemplates(
-			this.settings.buttonTemplates,
-		);
-		if (buttonTemplateParseErrorCollection.hasErrors()) {
-			console.warn('meta-bind | failed to parse button templates', buttonTemplateParseErrorCollection);
-		}
-	}
-
-	async loadSettings(): Promise<void> {
-		console.log(`meta-bind | Main >> loading settings`);
-
-		const loadedSettings = ((await this.loadData()) ?? {}) as MetaBindPluginSettings;
-
-		if (typeof loadedSettings === 'object' && loadedSettings != null) {
-			// @ts-expect-error TS2339 remove old config field
-			delete loadedSettings.inputTemplates;
-			// @ts-expect-error TS2339 remove old config field
-			delete loadedSettings.useUsDateInputOrder;
-		}
-
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, loadedSettings);
-		this.updateInternalSettings();
-
-		if (!areObjectsEqual(loadedSettings, this.settings)) {
-			await this.saveSettings();
-		}
-	}
-
-	async saveSettings(): Promise<void> {
-		console.log(`meta-bind | Main >> settings save`);
-
-		this.updateInternalSettings();
-
-		await this.saveData(this.settings);
-	}
-
-	updateInternalSettings(): void {
-		DateParser.dateFormat = this.settings.preferredDateFormat;
-		setFirstWeekday(this.settings.firstWeekday);
-
-		this.loadTemplates();
-	}
-
-	async onExternalSettingsChange(): Promise<void> {
-		await this.loadSettings();
-	}
-
-	// TODO: move to internal API
 	async activateView(viewType: string): Promise<void> {
 		const { workspace } = this.app;
 
@@ -415,6 +320,75 @@ export default class MetaBindPlugin extends Plugin implements IPlugin {
 		}
 
 		// "Reveal" the leaf in case it is in a collapsed sidebar
-		workspace.revealLeaf(leaf);
+		await workspace.revealLeaf(leaf);
+	}
+
+	getSettings(): MetaBindPluginSettings {
+		return this.plugin.settings;
+	}
+
+	saveSettings(settings: MetaBindPluginSettings): void {
+		this.plugin.settings = settings;
+		void this.plugin.saveSettings();
+	}
+}
+
+export default class ObsMetaBindPlugin extends Plugin {
+	// @ts-expect-error TS2564
+	mb: ObsMetaBind;
+	// @ts-expect-error TS2564
+	api: ObsAPI;
+	// @ts-expect-error TS2564
+	settings: MetaBindPluginSettings;
+
+	async onload(): Promise<void> {
+		console.log(`meta-bind | Main >> loading`);
+		console.time('meta-bind | Main >> load-time');
+
+		// settings
+		await this.loadSettings();
+
+		this.mb = new ObsMetaBind(this);
+		this.api = this.mb.api;
+
+		this.mb.updateInternalSettings(this.settings);
+
+		console.timeEnd('meta-bind | Main >> load-time');
+	}
+
+	onunload(): void {
+		this.mb.destroy();
+
+		console.log(`meta-bind | Main >> unload`);
+	}
+
+	async loadSettings(): Promise<void> {
+		console.log(`meta-bind | Main >> loading settings`);
+
+		const loadedSettings = ((await this.loadData()) ?? {}) as MetaBindPluginSettings;
+
+		if (typeof loadedSettings === 'object' && loadedSettings != null) {
+			// @ts-expect-error TS2339 remove old config field
+			delete loadedSettings.inputTemplates;
+			// @ts-expect-error TS2339 remove old config field
+			delete loadedSettings.useUsDateInputOrder;
+		}
+
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, loadedSettings);
+
+		if (!areObjectsEqual(loadedSettings, this.settings)) {
+			await this.saveSettings();
+		}
+	}
+
+	async saveSettings(): Promise<void> {
+		console.log(`meta-bind | Main >> settings save`);
+
+		await this.saveData(this.settings);
+	}
+
+	async onExternalSettingsChange(): Promise<void> {
+		await this.loadSettings();
+		this.mb.updateInternalSettings(this.settings);
 	}
 }

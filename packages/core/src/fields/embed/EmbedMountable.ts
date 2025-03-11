@@ -1,6 +1,6 @@
+import type { MetaBind } from 'packages/core/src';
 import { EMBED_MAX_DEPTH } from 'packages/core/src/config/FieldConfigs';
 import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { showUnloadedMessage } from 'packages/core/src/utils/Utils';
@@ -10,8 +10,8 @@ export class EmbedMountable extends FieldMountable {
 	content: string;
 	markdownUnloadCallback: (() => void) | undefined;
 
-	constructor(plugin: IPlugin, uuid: string, filePath: string, depth: number, content: string) {
-		super(plugin, uuid, filePath);
+	constructor(mb: MetaBind, uuid: string, filePath: string, depth: number, content: string) {
+		super(mb, uuid, filePath);
 
 		this.depth = depth;
 		this.content = content;
@@ -35,11 +35,11 @@ export class EmbedMountable extends FieldMountable {
 		if (!link.internal) {
 			return { error: `${firstLine} is not an internal link` };
 		}
-		const filePath = this.plugin.internal.file.getPathByName(link.target, this.getFilePath());
+		const filePath = this.mb.file.getPathByName(link.target, this.getFilePath());
 		if (filePath === undefined) {
 			return { error: `"${link.target}" is not created yet` };
 		}
-		return { content: await this.plugin.internal.file.read(filePath) };
+		return { content: await this.mb.file.read(filePath) };
 	}
 
 	exceedsMaxDepth(): boolean {
@@ -72,7 +72,7 @@ export class EmbedMountable extends FieldMountable {
 				`$1meta-bind-embed-internal-${this.depth + 1}`,
 			);
 
-			this.markdownUnloadCallback = await this.plugin.internal.renderMarkdown(
+			this.markdownUnloadCallback = await this.mb.internal.renderMarkdown(
 				renderContent,
 				target,
 				this.getFilePath(),
@@ -81,7 +81,7 @@ export class EmbedMountable extends FieldMountable {
 			const errorCollection = new ErrorCollection('Embed');
 			errorCollection.add(e);
 
-			this.plugin.internal.createErrorIndicator(target, {
+			this.mb.internal.createErrorIndicator(target, {
 				errorCollection: errorCollection,
 			});
 		}

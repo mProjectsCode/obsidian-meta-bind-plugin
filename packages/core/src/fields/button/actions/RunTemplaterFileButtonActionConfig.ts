@@ -1,3 +1,4 @@
+import type { MetaBind } from 'packages/core/src';
 import type {
 	ButtonClickContext,
 	ButtonConfig,
@@ -6,11 +7,10 @@ import type {
 } from 'packages/core/src/config/ButtonConfig';
 import { ButtonActionType } from 'packages/core/src/config/ButtonConfig';
 import { AbstractButtonActionConfig } from 'packages/core/src/fields/button/AbstractButtonActionConfig';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 
 export class RunTemplaterFileButtonActionConfig extends AbstractButtonActionConfig<RunTemplaterFileButtonAction> {
-	constructor(plugin: IPlugin) {
-		super(ButtonActionType.RUN_TEMPLATER_FILE, plugin);
+	constructor(mb: MetaBind) {
+		super(ButtonActionType.RUN_TEMPLATER_FILE, mb);
 	}
 
 	async run(
@@ -20,8 +20,8 @@ export class RunTemplaterFileButtonActionConfig extends AbstractButtonActionConf
 		_context: ButtonContext,
 		_click: ButtonClickContext,
 	): Promise<void> {
-		const templateFilePath = this.plugin.api.buttonActionRunner.resolveFilePath(action.templateFile);
-		void (await this.plugin.internal.evaluateTemplaterTemplate(templateFilePath, filePath));
+		const templateFilePath = this.mb.buttonActionRunner.resolveFilePath(action.templateFile);
+		void (await this.mb.internal.evaluateTemplaterTemplate(templateFilePath, filePath));
 	}
 
 	create(): Required<RunTemplaterFileButtonAction> {

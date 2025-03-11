@@ -27,5 +27,5 @@
 
 <div class="mb-date-picker-input" onclick={datePicker} onkeydown={datePickerKey} role="button" tabindex="0">
 	<span class="mb-date-picker-text">{value ? value.format(props.dateFormat) : 'none'}</span>
-	<Icon plugin={props.plugin} iconName="calendar" />
+	<Icon mb={props.mb} iconName="calendar" />
 </div>

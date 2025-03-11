@@ -2,18 +2,18 @@ import type { App } from 'obsidian';
 import { Modal } from 'obsidian';
 import type { InputFieldTemplate } from 'packages/core/src/Settings';
 import type { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
+import type { ObsMetaBind } from 'packages/obsidian/src/main';
 import InputFieldTemplatesSettingComponent from 'packages/obsidian/src/settings/inputFieldTemplateSetting/InputFieldTemplatesSettingComponent.svelte';
 import type { Component as SvelteComponent } from 'svelte';
 import { mount, unmount } from 'svelte';
 
 export class InputFieldTemplatesSettingModal extends Modal {
-	readonly plugin: MetaBindPlugin;
+	readonly mb: ObsMetaBind;
 	private component: ReturnType<SvelteComponent> | undefined;
 
-	constructor(app: App, plugin: MetaBindPlugin) {
+	constructor(app: App, mb: ObsMetaBind) {
 		super(app);
-		this.plugin = plugin;
+		this.mb = mb;
 	}
 
 	public onOpen(): void {
@@ -25,8 +25,7 @@ export class InputFieldTemplatesSettingModal extends Modal {
 		this.component = mount(InputFieldTemplatesSettingComponent, {
 			target: this.contentEl,
 			props: {
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-				inputFieldTemplates: JSON.parse(JSON.stringify(this.plugin.settings.inputFieldTemplates)),
+				inputFieldTemplates: structuredClone(this.mb.getSettings().inputFieldTemplates),
 				modal: this,
 			},
 		});
@@ -40,13 +39,14 @@ export class InputFieldTemplatesSettingModal extends Modal {
 	}
 
 	public save(templates: InputFieldTemplate[]): ErrorCollection | undefined {
-		const errorCollection = this.plugin.api.inputFieldParser.parseTemplates(templates);
+		const errorCollection = this.mb.inputFieldParser.parseTemplates(templates);
 		if (errorCollection.hasErrors()) {
 			return errorCollection;
 		}
 
-		this.plugin.settings.inputFieldTemplates = templates;
-		void this.plugin.saveSettings();
+		this.mb.updateSettings(settings => {
+			settings.inputFieldTemplates = templates;
+		});
 
 		return undefined;
 	}

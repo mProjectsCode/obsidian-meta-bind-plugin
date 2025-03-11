@@ -4,11 +4,11 @@ import {
 	createInputFieldInsertExamples,
 	createViewFieldInsertExamples,
 } from 'packages/core/src/utils/InputFieldExamples';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
+import type { ObsMetaBind } from 'packages/obsidian/src/main';
 
-export function createEditorMenu(menu: Menu, editor: Editor, plugin: MetaBindPlugin): void {
-	const inputFieldExamples = createInputFieldInsertExamples(plugin);
-	const viewFieldExamples = createViewFieldInsertExamples(plugin);
+export function createEditorMenu(menu: Menu, editor: Editor, mb: ObsMetaBind): void {
+	const inputFieldExamples = createInputFieldInsertExamples(mb);
+	const viewFieldExamples = createViewFieldInsertExamples(mb);
 
 	menu.addItem(mbItem => {
 		mbItem.setTitle('Meta Bind');
@@ -52,7 +52,7 @@ export function createEditorMenu(menu: Menu, editor: Editor, plugin: MetaBindPlu
 		mbSubmenu.addItem(buttonItem => {
 			buttonItem.setTitle('Button');
 			buttonItem.onClick(() => {
-				plugin.internal.openButtonBuilderModal({
+				mb.internal.openButtonBuilderModal({
 					onOkay: (config): void => {
 						insetAtCursor(editor, `\`\`\`meta-bind-button\n${stringifyYaml(config)}\n\`\`\``);
 					},

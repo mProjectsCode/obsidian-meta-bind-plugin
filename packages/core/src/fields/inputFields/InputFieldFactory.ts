@@ -1,3 +1,4 @@
+import type { MetaBind } from 'packages/core/src';
 import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 import type { InputFieldConfig } from 'packages/core/src/config/FieldConfigs';
 import { InputFieldConfigs, InputFieldType } from 'packages/core/src/config/FieldConfigs';
@@ -23,7 +24,6 @@ import { TextAreaIPF } from 'packages/core/src/fields/inputFields/fields/TextAre
 import { TimeIPF } from 'packages/core/src/fields/inputFields/fields/Time/TimeIPF';
 import { ToggleIPF } from 'packages/core/src/fields/inputFields/fields/Toggle/ToggleIPF';
 import type { InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
 import { ErrorLevel, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import { expectType } from 'packages/core/src/utils/Utils';
@@ -52,10 +52,10 @@ export type InputField =
 	| DateTimeIPF;
 
 export class InputFieldFactory {
-	plugin: IPlugin;
+	mb: MetaBind;
 
-	constructor(plugin: IPlugin) {
-		this.plugin = plugin;
+	constructor(mb: MetaBind) {
+		this.mb = mb;
 	}
 
 	createInputField(mountable: InputFieldMountable): InputField | undefined {
@@ -118,7 +118,7 @@ export class InputFieldFactory {
 	}
 
 	checkRenderChildTypeAllowed(type: InputFieldType, renderChildType: RenderChildType): void {
-		if (this.plugin.settings.ignoreCodeBlockRestrictions) {
+		if (this.mb.getSettings().ignoreCodeBlockRestrictions) {
 			return;
 		}
 

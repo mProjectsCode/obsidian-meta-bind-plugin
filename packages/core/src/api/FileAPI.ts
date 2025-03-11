@@ -1,11 +1,11 @@
 import type { LinePosition } from 'packages/core/src/config/APIConfigs';
-import type { IPlugin } from 'packages/core/src/IPlugin';
+import type { MB_Comps, MetaBind } from '..';
 
-export abstract class FileAPI<Plugin extends IPlugin> {
-	readonly plugin: Plugin;
+export abstract class FileAPI<Components extends MB_Comps> {
+	readonly mb: MetaBind<Components>;
 
-	constructor(plugin: Plugin) {
-		this.plugin = plugin;
+	constructor(mb: MetaBind<Components>) {
+		this.mb = mb;
 	}
 
 	public abstract read(filePath: string): Promise<string>;
@@ -26,11 +26,18 @@ export abstract class FileAPI<Plugin extends IPlugin> {
 	 * @param folderPath the path to the folder
 	 * @param fileName the name of the file
 	 * @param extension the extension of the file
-	 * @param open
+	 * @param open whether to open the file
+	 * @param newTab whether to open the file in a new tab or the current one
 	 *
 	 * @returns the path to the created file
 	 */
-	public abstract create(folderPath: string, fileName: string, extension: string, open?: boolean): Promise<string>;
+	public abstract create(
+		folderPath: string,
+		fileName: string,
+		extension: string,
+		open?: boolean,
+		newTab?: boolean,
+	): Promise<string>;
 
 	/**
 	 * List all files by their path.
@@ -49,7 +56,7 @@ export abstract class FileAPI<Plugin extends IPlugin> {
 	 * @param callingFilePath
 	 * @param newTab
 	 */
-	public abstract open(filePath: string, callingFilePath: string, newTab: boolean): void;
+	public abstract open(filePath: string, callingFilePath: string, newTab: boolean): Promise<void>;
 
 	/**
 	 * Resolves a file name to a file path.
@@ -83,7 +90,7 @@ export abstract class FileAPI<Plugin extends IPlugin> {
 	 * @param filePath
 	 */
 	public isExcludedFromRendering(filePath: string): boolean {
-		for (const excludedFolder of this.plugin.settings.excludedFolders) {
+		for (const excludedFolder of this.mb.getSettings().excludedFolders) {
 			if (filePath.startsWith(excludedFolder)) {
 				return true;
 			}

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, mock, type Mock, spyOn, test } from 'bun:test';
-import { TestPlugin } from './__mocks__/TestPlugin';
+import { TestMetaBind } from './__mocks__/TestPlugin';
 import { InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
 import { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
 import { JsViewFieldMountable } from 'packages/core/src/fields/viewFields/JsViewFieldMountable';
@@ -14,10 +14,10 @@ import { PropAccess, PropAccessType } from 'packages/core/src/utils/prop/PropAcc
 import { TestComponent } from './__mocks__/TestComponent';
 
 describe('api', () => {
-	let plugin = new TestPlugin();
+	let plugin = new TestMetaBind();
 
 	beforeEach(() => {
-		plugin = new TestPlugin();
+		plugin = new TestMetaBind();
 	});
 
 	describe('createField', () => {

@@ -1,14 +1,14 @@
 import type { App } from 'obsidian';
 import { normalizePath, TFile, TFolder } from 'obsidian';
 import { FileAPI } from 'packages/core/src/api/FileAPI';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
+import type { ObsComponents, ObsMetaBind } from 'packages/obsidian/src/main';
 
-export class ObsidianFileAPI extends FileAPI<MetaBindPlugin> {
+export class ObsFileAPI extends FileAPI<ObsComponents> {
 	readonly app: App;
 
-	constructor(plugin: MetaBindPlugin) {
-		super(plugin);
-		this.app = plugin.app;
+	constructor(mb: ObsMetaBind) {
+		super(mb);
+		this.app = mb.app;
 	}
 
 	public async read(filePath: string): Promise<string> {
@@ -41,17 +41,18 @@ export class ObsidianFileAPI extends FileAPI<MetaBindPlugin> {
 		await this.app.vault.process(tFile, content => modify(content));
 	}
 
-	public async create(folderPath: string, fileName: string, extension: string, open?: boolean): Promise<string> {
+	public async create(
+		folderPath: string,
+		fileName: string,
+		extension: string,
+		open: boolean = false,
+		newTab: boolean = false,
+	): Promise<string> {
 		const path = this.app.vault.getAvailablePath(normalizePath(folderPath + '/' + fileName), extension);
 		const newFile = await this.app.vault.create(path, '');
 
 		if (open) {
-			const activeLeaf = this.app.workspace.getLeaf(false);
-			if (activeLeaf) {
-				await activeLeaf.openFile(newFile, {
-					state: { mode: 'source' },
-				});
-			}
+			await this.openInSourceMode(newFile, newTab);
 		}
 
 		return newFile.path;
@@ -71,8 +72,17 @@ export class ObsidianFileAPI extends FileAPI<MetaBindPlugin> {
 			.map(file => file.path);
 	}
 
-	public open(filePath: string, callingFilePath: string, newTab: boolean): void {
+	public async open(filePath: string, callingFilePath: string, newTab: boolean): Promise<void> {
 		void this.app.workspace.openLinkText(filePath, callingFilePath, newTab);
+	}
+
+	public async openInSourceMode(file: TFile, newTab: boolean): Promise<void> {
+		const activeLeaf = this.app.workspace.getLeaf(newTab ? 'tab' : false);
+		if (activeLeaf) {
+			await activeLeaf.openFile(file, {
+				state: { mode: 'source' },
+			});
+		}
 	}
 
 	public getPathByName(name: string, relativeTo: string = ''): string | undefined {

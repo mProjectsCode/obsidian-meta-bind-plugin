@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { IPlugin } from 'packages/core/src/IPlugin';
 	import ImageCard from 'packages/core/src/utils/components/ImageCard.svelte';
+	import type { MetaBind } from '../..';
 
 	let {
-		plugin,
+		mb,
 		images = [],
 	}: {
-		plugin: IPlugin;
+		mb: MetaBind;
 		images: { link: string; internal: boolean }[];
 	} = $props();
 
@@ -17,7 +17,7 @@
 
 <div class="mb-image-card-grid">
 	{#each images as image}
-		<ImageCard plugin={plugin} image={image.link} internal={image.internal}></ImageCard>
+		<ImageCard mb={mb} image={image.link} internal={image.internal}></ImageCard>
 	{:else}
 		<span>No images</span>
 	{/each}

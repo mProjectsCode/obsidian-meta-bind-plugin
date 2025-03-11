@@ -1,7 +1,7 @@
+import type { MetaBind } from 'packages/core/src';
 import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import MetaBindTableComponent from 'packages/core/src/fields/metaBindTable/MetaBindTableComponent.svelte';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import { BindTargetScope } from 'packages/core/src/metadata/BindTargetScope';
 import type { MetadataSubscription } from 'packages/core/src/metadata/MetadataSubscription';
 import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
@@ -64,14 +64,14 @@ export class TableMountable extends FieldMountable {
 	private value: T | undefined;
 
 	constructor(
-		plugin: IPlugin,
+		mb: MetaBind,
 		uuid: string,
 		filePath: string,
 		bindTarget: BindTargetDeclaration,
 		tableHead: string[],
 		columns: MetaBindColumnDeclaration[],
 	) {
-		super(plugin, uuid, filePath);
+		super(mb, uuid, filePath);
 		this.bindTarget = bindTarget;
 		this.tableHead = tableHead;
 		this.columns = columns;
@@ -87,7 +87,7 @@ export class TableMountable extends FieldMountable {
 			callback: this.updateMetadataManager.bind(this),
 		});
 
-		this.metadataSubscription = this.plugin.metadataManager.subscribe(
+		this.metadataSubscription = this.mb.metadataManager.subscribe(
 			this.getUuid(),
 			this.inputSignal,
 			this.bindTarget,
@@ -122,7 +122,7 @@ export class TableMountable extends FieldMountable {
 
 				const cells: MetaBindTableCell[] = this.columns.map(x => {
 					if (typeof x === 'string') {
-						return this.plugin.api.createInlineFieldFromString(
+						return this.mb.api.createInlineFieldFromString(
 							x,
 							this.getFilePath(),
 							scope,
@@ -131,13 +131,13 @@ export class TableMountable extends FieldMountable {
 					}
 
 					if ('inputFieldType' in x) {
-						return this.plugin.api.createInputFieldMountable(this.getFilePath(), {
+						return this.mb.api.createInputFieldMountable(this.getFilePath(), {
 							declaration: x,
 							scope: scope,
 							renderChildType: RenderChildType.INLINE,
 						});
 					} else {
-						return this.plugin.api.createViewFieldMountable(this.getFilePath(), {
+						return this.mb.api.createViewFieldMountable(this.getFilePath(), {
 							declaration: x as SimpleViewFieldDeclaration,
 							scope: scope,
 							renderChildType: RenderChildType.INLINE,

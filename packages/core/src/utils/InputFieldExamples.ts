@@ -1,7 +1,7 @@
 import type { InputFieldType, ViewFieldType } from 'packages/core/src/config/FieldConfigs';
 import { InputFieldArgumentType, InputFieldConfigs } from 'packages/core/src/config/FieldConfigs';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import type { InputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
+import type { MetaBind } from '..';
 
 export const INPUT_FIELD_EXAMPLE_DECLARATIONS: Record<InputFieldType, string> = {
 	date: 'date',
@@ -79,15 +79,15 @@ export const VIEW_FIELD_EXAMPLE_DECLARATIONS: Record<ViewFieldType, ViewFieldExa
 	invalid: [],
 };
 
-export function createInputFieldFAQExamples(plugin: IPlugin): [InputFieldType, InputFieldDeclaration][] {
+export function createInputFieldFAQExamples(mb: MetaBind): [InputFieldType, InputFieldDeclaration][] {
 	const ret: [InputFieldType, InputFieldDeclaration][] = [];
 	for (const [type, declaration] of Object.entries(INPUT_FIELD_EXAMPLE_DECLARATIONS)) {
 		if (declaration === '') {
 			continue;
 		}
 
-		let parsedDeclaration = plugin.api.inputFieldParser.fromString(`INPUT[${declaration}]`);
-		const overrides = plugin.api.inputFieldParser.fromSimpleDeclaration({
+		let parsedDeclaration = mb.inputFieldParser.fromString(`INPUT[${declaration}]`);
+		const overrides = mb.inputFieldParser.fromSimpleDeclaration({
 			inputFieldType: undefined,
 			templateName: undefined,
 			bindTarget: undefined,
@@ -103,16 +103,16 @@ export function createInputFieldFAQExamples(plugin: IPlugin): [InputFieldType, I
 			],
 		});
 
-		parsedDeclaration = plugin.api.inputFieldParser.merge(parsedDeclaration, overrides);
+		parsedDeclaration = mb.inputFieldParser.merge(parsedDeclaration, overrides);
 		parsedDeclaration.declarationString = `INPUT[${declaration}]`;
-		const validatedDeclaration = plugin.api.inputFieldParser.validate(parsedDeclaration, '', undefined);
+		const validatedDeclaration = mb.inputFieldParser.validate(parsedDeclaration, '', undefined);
 
 		ret.push([type as InputFieldType, validatedDeclaration]);
 	}
 	return ret;
 }
 
-export function createInputFieldInsertExamples(_plugin: IPlugin): [string, string][] {
+export function createInputFieldInsertExamples(_mb: MetaBind): [string, string][] {
 	const ret: [string, string][] = [];
 	for (const [type, declaration] of Object.entries(INPUT_FIELD_EXAMPLE_DECLARATIONS)) {
 		if (declaration === '') {
@@ -136,7 +136,7 @@ export function createInputFieldInsertExamples(_plugin: IPlugin): [string, strin
 	return ret;
 }
 
-export function createViewFieldInsertExamples(_plugin: IPlugin): [string, string][] {
+export function createViewFieldInsertExamples(_mb: MetaBind): [string, string][] {
 	const ret: [string, string][] = [];
 	for (const declarations of Object.values(VIEW_FIELD_EXAMPLE_DECLARATIONS)) {
 		for (const declaration of declarations) {

@@ -7,10 +7,9 @@ import {
 } from '../../packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import { parsePropPath } from '../../packages/core/src/utils/prop/PropParser';
 import { PropPath } from '../../packages/core/src/utils/prop/PropPath';
-import { TestPlugin } from '../__mocks__/TestPlugin';
+import { TestMetaBind } from '../__mocks__/TestPlugin';
 
-const plugin = new TestPlugin();
-const parser = plugin.api.bindTargetParser;
+const mb = new TestMetaBind();
 const TEST_FILE = 'test.md';
 
 const validStorageTypes = [
@@ -142,12 +141,12 @@ describe('bind target parser', () => {
 			const testCase = generateTestCase(bindTarget);
 
 			test(testCase.str, () => {
-				expect(parser.fromStringAndValidate(testCase.str, TEST_FILE, localScope)).toEqual(testCase.expected);
+				expect(mb.bindTargetParser.fromStringAndValidate(testCase.str, TEST_FILE, localScope)).toEqual(
+					testCase.expected,
+				);
 
 				// the syntax highlighting parser should not error
-				expect(
-					plugin.api.syntaxHighlighting.highlightBindTarget(testCase.str, false).parsingError,
-				).toBeUndefined();
+				expect(mb.syntaxHighlighting.highlightBindTarget(testCase.str, false).parsingError).toBeUndefined();
 			});
 		}
 	});

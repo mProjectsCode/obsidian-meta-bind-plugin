@@ -2,30 +2,24 @@ import type { EditorView } from '@codemirror/view';
 import { WidgetType } from '@codemirror/view';
 import type { Component } from 'obsidian';
 import type { InlineFieldType } from 'packages/core/src/config/APIConfigs';
-import type MetaBindPlugin from 'packages/obsidian/src/main';
+import type { ObsMetaBind } from 'packages/obsidian/src/main';
 import type { MountableMDRC } from 'packages/obsidian/src/MountableMDRC';
 
 export class MarkdownRenderChildWidget extends WidgetType {
+	mb: ObsMetaBind;
 	type: InlineFieldType;
 	content: string;
 	filePath: string;
 	parentComponent: Component;
-	plugin: MetaBindPlugin;
 	renderChild?: MountableMDRC;
 
-	constructor(
-		type: InlineFieldType,
-		content: string,
-		filePath: string,
-		component: Component,
-		plugin: MetaBindPlugin,
-	) {
+	constructor(type: InlineFieldType, content: string, filePath: string, component: Component, mb: ObsMetaBind) {
 		super();
 		this.type = type;
 		this.content = content;
 		this.filePath = filePath;
 		this.parentComponent = component;
-		this.plugin = plugin;
+		this.mb = mb;
 	}
 
 	eq(other: MarkdownRenderChildWidget): boolean {
@@ -36,14 +30,14 @@ export class MarkdownRenderChildWidget extends WidgetType {
 		const span = document.createElement('span');
 		span.addClass('cm-inline-code');
 
-		const mountable = this.plugin.api.createInlineFieldOfTypeFromString(
+		const mountable = this.mb.api.createInlineFieldOfTypeFromString(
 			this.type,
 			this.content,
 			this.filePath,
 			undefined,
 		);
 
-		this.renderChild = this.plugin.api.wrapInMDRC(mountable, span, this.parentComponent);
+		this.renderChild = this.mb.api.wrapInMDRC(mountable, span, this.parentComponent);
 
 		return span;
 	}

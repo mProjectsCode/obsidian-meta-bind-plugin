@@ -1,21 +1,22 @@
 <script lang="ts">
+	import type { MetaBind } from 'packages/core/src';
 	import type { CreateNoteButtonAction } from 'packages/core/src/config/ButtonConfig';
 	import { ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
-	import type { IPlugin } from 'packages/core/src/IPlugin';
+
 	import Button from 'packages/core/src/utils/components/Button.svelte';
 	import SettingComponent from 'packages/core/src/utils/components/SettingComponent.svelte';
 	import Toggle from 'packages/core/src/utils/components/Toggle.svelte';
 
 	const {
-		plugin,
+		mb,
 		action = $bindable(),
 	}: {
-		plugin: IPlugin;
+		mb: MetaBind;
 		action: CreateNoteButtonAction;
 	} = $props();
 
 	function changeFolderPath(): void {
-		plugin.internal.openFolderSelectModal((folder: string) => {
+		mb.internal.openFolderSelectModal((folder: string) => {
 			action.folderPath = folder;
 		});
 	}

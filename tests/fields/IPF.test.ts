@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, test } from 'bun:test';
 import { Stream, multi } from 'itertools-ts/es';
 import { InputFieldType } from 'packages/core/src/config/FieldConfigs';
 import { stringifyLiteral } from 'packages/core/src/utils/Literal';
-import { DEFAULT_VALUE_INDICATOR, TestPlugin } from 'tests/__mocks__/TestPlugin';
+import { DEFAULT_VALUE_INDICATOR, TestMetaBind } from 'tests/__mocks__/TestPlugin';
 
 const TEST_FILE_PATH = 'testFile';
 const TEST_PROP = 'testProp';
@@ -405,13 +405,13 @@ function getTestName(value: any): string {
 }
 
 describe('IPF', () => {
-	let testPlugin: TestPlugin;
+	let testPlugin: TestMetaBind;
 
 	function runTestCase(TEST_CONFIG: IPFTest, TEST_CASE: IPFTestCase): void {
 		// NOTE: all signal spys have a -1 to account for the initial signal set on mount
 
 		beforeEach(() => {
-			testPlugin = new TestPlugin();
+			testPlugin = new TestMetaBind();
 		});
 
 		describe('load behavior', () => {

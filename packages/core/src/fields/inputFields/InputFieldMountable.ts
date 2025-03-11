@@ -1,9 +1,9 @@
+import type { MetaBind } from 'packages/core/src';
 import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 import { InputFieldArgumentType, InputFieldType } from 'packages/core/src/config/FieldConfigs';
 import type { InputFieldArgumentMapType } from 'packages/core/src/fields/fieldArguments/inputFieldArguments/InputFieldArgumentFactory';
 import { FieldMountable } from 'packages/core/src/fields/FieldMountable';
 import type { InputField } from 'packages/core/src/fields/inputFields/InputFieldFactory';
-import type { IPlugin } from 'packages/core/src/IPlugin';
 import type { BindTargetDeclaration } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
 import type { InputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
 import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
@@ -20,13 +20,13 @@ export class InputFieldMountable extends FieldMountable {
 	declaration: InputFieldDeclaration;
 
 	constructor(
-		plugin: IPlugin,
+		mb: MetaBind,
 		uuid: string,
 		filePath: string,
 		renderChildType: RenderChildType,
 		declaration: InputFieldDeclaration,
 	) {
-		super(plugin, uuid, filePath);
+		super(mb, uuid, filePath);
 
 		this.renderChildType = renderChildType;
 		this.declaration = declaration;
@@ -103,7 +103,7 @@ export class InputFieldMountable extends FieldMountable {
 	private createInputField(): void {
 		if (!this.errorCollection.hasErrors()) {
 			try {
-				this.inputField = this.plugin.api.inputFieldFactory.createInputField(this);
+				this.inputField = this.mb.inputFieldFactory.createInputField(this);
 			} catch (e) {
 				this.errorCollection.add(e);
 			}
@@ -121,7 +121,7 @@ export class InputFieldMountable extends FieldMountable {
 	}
 
 	private createErrorIndicator(containerEl: HTMLElement): void {
-		this.plugin.internal.createErrorIndicator(containerEl, {
+		this.mb.internal.createErrorIndicator(containerEl, {
 			errorCollection: this.errorCollection,
 			errorText:
 				'Errors caused the creation of the field to fail. Sometimes one error only occurs because of another.',

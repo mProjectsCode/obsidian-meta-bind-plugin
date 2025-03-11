@@ -1,4 +1,4 @@
-import type { IPlugin } from 'packages/core/src/IPlugin';
+import type { MetaBind } from 'packages/core/src';
 import { P_JsViewFieldDeclaration } from 'packages/core/src/parsers/nomParsers/ViewFieldNomParsers';
 import { runParser } from 'packages/core/src/parsers/ParsingError';
 import type {
@@ -10,10 +10,10 @@ import type {
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 
 export class JsViewFieldParser {
-	plugin: IPlugin;
+	mb: MetaBind;
 
-	constructor(plugin: IPlugin) {
-		this.plugin = plugin;
+	constructor(mb: MetaBind) {
+		this.mb = mb;
 	}
 
 	fromString(fullDeclaration: string): UnvalidatedJsViewFieldDeclaration {
@@ -49,13 +49,11 @@ export class JsViewFieldParser {
 			code: simpleDeclaration.code,
 			bindTargetMappings: simpleDeclaration.bindTargetMappings.map(x => {
 				return {
-					bindTarget: this.plugin.api.bindTargetParser.fromExistingDeclaration(x.bindTarget),
+					bindTarget: this.mb.bindTargetParser.fromExistingDeclaration(x.bindTarget),
 					name: x.name,
 				};
 			}),
-			writeToBindTarget: this.plugin.api.bindTargetParser.fromExistingDeclaration(
-				simpleDeclaration.writeToBindTarget,
-			),
+			writeToBindTarget: this.mb.bindTargetParser.fromExistingDeclaration(simpleDeclaration.writeToBindTarget),
 			hidden: simpleDeclaration.hidden ?? false,
 			errorCollection: errorCollection,
 		};
@@ -93,7 +91,7 @@ export class JsViewFieldParser {
 		try {
 			declaration.bindTargetMappings = unvalidatedDeclaration.bindTargetMappings.map(x => {
 				return {
-					bindTarget: this.plugin.api.bindTargetParser.validate(
+					bindTarget: this.mb.bindTargetParser.validate(
 						unvalidatedDeclaration.declarationString,
 						x.bindTarget,
 						filePath,
@@ -103,7 +101,7 @@ export class JsViewFieldParser {
 			});
 
 			if (unvalidatedDeclaration.writeToBindTarget !== undefined) {
-				declaration.writeToBindTarget = this.plugin.api.bindTargetParser.validate(
+				declaration.writeToBindTarget = this.mb.bindTargetParser.validate(
 					unvalidatedDeclaration.declarationString,
 					unvalidatedDeclaration.writeToBindTarget,
 					filePath,

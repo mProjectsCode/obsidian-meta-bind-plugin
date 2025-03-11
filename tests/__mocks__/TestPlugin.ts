@@ -2,7 +2,7 @@ import {
 	METADATA_CACHE_EXTERNAL_WRITE_LOCK_DURATION,
 	MetadataManager,
 } from 'packages/core/src/metadata/MetadataManager';
-import type { IPlugin } from 'packages/core/src/IPlugin';
+
 import { DEFAULT_SETTINGS, type MetaBindPluginSettings } from 'packages/core/src/Settings';
 import {
 	GlobalMetadataSource,
@@ -26,11 +26,14 @@ import { Signal } from 'packages/core/src/utils/Signal';
 import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
 import { MountableManager } from 'packages/core/src/MountableManager';
 import { RenderChildType } from 'packages/core/src/config/APIConfigs';
+import { MetaBind } from 'packages/core/src';
+import { TestFileAPI } from './TestFileAPI';
 
 /**
  * A default value to indicate that a field should be it's the default value.
  */
 export const DEFAULT_VALUE_INDICATOR = '$$default$$';
+export const TEST_FILE_PATH = 'test/file.md';
 
 export interface UninitializedTestInputField {
 	mountable: InputFieldMountable;
@@ -42,26 +45,32 @@ export interface TestInputField {
 	svelteUpdateSpy: Mock<(value: any) => void>;
 }
 
-export class TestPlugin implements IPlugin {
-	public api: TestAPI;
-	public metadataManager: MetadataManager;
-	public internal: TestInternalAPI;
-	public mountableManager: MountableManager;
+export interface TestComponents {
+	api: TestAPI;
+	internal: TestInternalAPI;
+	file: TestFileAPI;
+}
 
+export class TestMetaBind extends MetaBind<TestComponents> {
 	public settings: MetaBindPluginSettings;
 
 	public uninitializedTestInputFields: UninitializedTestInputField[] = [];
 	public testInputFields: TestInputField[] = [];
 
-	public testFilePath: string = 'test/file.md';
 	public inTestSetup: boolean = true;
 	public metadataManagerInternalUpdateSpy:
 		| Mock<(value: unknown, bindTarget: BindTargetDeclaration) => void>
 		| undefined;
 
 	constructor() {
-		this.api = new TestAPI(this);
-		this.internal = new TestInternalAPI(this);
+		super();
+
+		this.setComponents({
+			api: new TestAPI(this),
+			internal: new TestInternalAPI(this),
+			file: new TestFileAPI(this),
+		});
+
 		this.metadataManager = new MetadataManager();
 		this.setUpMetadataManager();
 
@@ -72,6 +81,14 @@ export class TestPlugin implements IPlugin {
 
 		DateParser.dateFormat = this.settings.preferredDateFormat;
 		setFirstWeekday(this.settings.firstWeekday);
+	}
+
+	getSettings(): MetaBindPluginSettings {
+		return this.settings;
+	}
+
+	saveSettings(settings: MetaBindPluginSettings): void {
+		this.settings = settings;
 	}
 
 	setUpMetadataManager(): void {
@@ -94,7 +111,7 @@ export class TestPlugin implements IPlugin {
 			throw new Error('Cannot add test input field outside of test setup');
 		}
 
-		const mountable = this.api.createInputFieldMountable(filePath ?? this.testFilePath, {
+		const mountable = this.api.createInputFieldMountable(filePath ?? TEST_FILE_PATH, {
 			declaration: declaration,
 			renderChildType: RenderChildType.BLOCK,
 			scope: undefined,
@@ -207,7 +224,7 @@ export class TestPlugin implements IPlugin {
 			new Signal<unknown>(undefined),
 			{
 				storageType: BindTargetStorageType.FRONTMATTER,
-				storagePath: filePath ?? this.testFilePath,
+				storagePath: filePath ?? TEST_FILE_PATH,
 				storageProp: parsePropPath(['something_unused']),
 				listenToChildren: false,
 			},
@@ -227,7 +244,7 @@ export class TestPlugin implements IPlugin {
 		if (!source) {
 			throw new Error('source not found');
 		}
-		this.metadataManager.onExternalUpdate(source, filePath ?? this.testFilePath, metadata);
+		this.metadataManager.onExternalUpdate(source, filePath ?? TEST_FILE_PATH, metadata);
 	}
 
 	getCacheMetadata(filePath?: string): Metadata | undefined {
@@ -235,7 +252,7 @@ export class TestPlugin implements IPlugin {
 		if (!source) {
 			throw new Error('source not found');
 		}
-		const cacheItem = source.getCacheItemForStoragePath(filePath ?? this.testFilePath);
+		const cacheItem = source.getCacheItemForStoragePath(filePath ?? TEST_FILE_PATH);
 		if (!cacheItem) {
 			throw new Error('cache item not found');
 		}
