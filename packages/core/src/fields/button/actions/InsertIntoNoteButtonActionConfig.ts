@@ -23,10 +23,7 @@ export class InsertIntoNoteButtonActionConfig extends AbstractButtonActionConfig
 		_click: ButtonClickContext,
 	): Promise<void> {
 		const insertString = action.templater
-			? await this.mb.internal.evaluateTemplaterTemplate(
-					this.mb.buttonActionRunner.resolveFilePath(action.value),
-					filePath,
-				)
+			? await this.mb.internal.evaluateTemplaterTemplate(this.mb.file.resolveFilePathLike(action.value), filePath)
 			: action.value;
 
 		const line = runParser(P_lineNumberExpression, action.line.toString());
@@ -34,7 +31,7 @@ export class InsertIntoNoteButtonActionConfig extends AbstractButtonActionConfig
 		await this.mb.file.atomicModify(filePath, content => {
 			let splitContent = content.split('\n');
 
-			const lineContext = this.mb.buttonActionRunner.getLineNumberContext(content, context.position);
+			const lineContext = this.mb.file.createLineNumberContext(content, context.position);
 			const lineNumber = line.evaluate(lineContext);
 
 			if (lineNumber < 1 || lineNumber > splitContent.length) {

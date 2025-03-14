@@ -19,7 +19,7 @@ export class TemplaterCreateNoteButtonActionConfig extends AbstractButtonActionC
 		action: TemplaterCreateNoteButtonAction,
 		_filePath: string,
 		_context: ButtonContext,
-		_click: ButtonClickContext,
+		click: ButtonClickContext,
 	): Promise<void> {
 		if (action.openIfAlreadyExists && action.fileName) {
 			const filePath = ensureFileExtension(joinPath(action.folderPath ?? '', action.fileName), 'md');
@@ -35,6 +35,7 @@ export class TemplaterCreateNoteButtonActionConfig extends AbstractButtonActionC
 			action.folderPath,
 			action.fileName,
 			action.openNote,
+			click.openInNewTab(),
 		);
 	}
 

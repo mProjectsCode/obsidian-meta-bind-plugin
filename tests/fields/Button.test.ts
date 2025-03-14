@@ -1,15 +1,15 @@
 import { beforeEach, describe, expect, test } from 'bun:test';
-import { type ButtonAction, ButtonActionType, ButtonClickType } from 'packages/core/src/config/ButtonConfig';
+import {
+	type ButtonAction,
+	ButtonActionType,
+	ButtonClickContext,
+	ButtonClickType,
+} from 'packages/core/src/config/ButtonConfig';
 import { TestMetaBind } from 'tests/__mocks__/TestPlugin';
 
 let testPlugin: TestMetaBind;
 const testFilePath = 'test/file.md';
-const defaultClick = {
-	type: ButtonClickType.LEFT,
-	shiftKey: false,
-	ctrlKey: false,
-	altKey: false,
-};
+const defaultClick = new ButtonClickContext(ButtonClickType.LEFT, false, false, false);
 
 async function simplifiedRunAction(action: ButtonAction): Promise<void> {
 	await testPlugin.buttonActionRunner.runAction(

@@ -1,4 +1,7 @@
 import type { LinePosition } from 'packages/core/src/config/APIConfigs';
+import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
+import { ErrorLevel, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
+import type { LineNumberContext } from 'packages/core/src/utils/LineNumberExpression';
 import type { MB_Comps, MetaBind } from '..';
 
 export abstract class FileAPI<Components extends MB_Comps> {
@@ -97,5 +100,53 @@ export abstract class FileAPI<Components extends MB_Comps> {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Resolves a file name, path or link to a file path.
+	 *
+	 * @param filePathLike Something that is a file path or a link.
+	 * @param relativeTo The file path to resolve the link relative to. This should be an actual full file path.
+	 *
+	 * @returns the `filePathLike` resolved to a full file path.
+	 */
+	public resolveFilePathLike(filePathLike: string, relativeTo?: string): string {
+		const targetFilePath = MDLinkParser.isLink(filePathLike)
+			? MDLinkParser.parseLink(filePathLike).target
+			: filePathLike;
+		const resolvedFilePath = this.mb.file.getPathByName(targetFilePath, relativeTo);
+		if (resolvedFilePath === undefined) {
+			throw new MetaBindParsingError({
+				errorLevel: ErrorLevel.ERROR,
+				cause: `Could not find a file that matches "${filePathLike}".`,
+				effect: `Could not resolve path or link "${filePathLike}" relative to "${relativeTo}".`,
+			});
+		}
+
+		return resolvedFilePath;
+	}
+
+	/**
+	 * Get the line number context based on a file content and a self note position.
+	 *
+	 * @param fileContent
+	 * @param selfNotePosition
+	 * @returns
+	 */
+	public createLineNumberContext(fileContent: string, selfNotePosition: LinePosition | undefined): LineNumberContext {
+		const fileStart = 1;
+		const fileEnd = fileContent.split('\n').length;
+		const frontmatterPosition = this.mb.file.getFrontmatterLocation(fileContent);
+
+		return {
+			fileStart: fileStart,
+			fileEnd: fileEnd,
+			frontmatterStart: frontmatterPosition ? frontmatterPosition.lineStart : fileStart,
+			frontmatterEnd: frontmatterPosition ? frontmatterPosition.lineEnd : fileStart,
+			contentStart: frontmatterPosition ? frontmatterPosition.lineEnd + 1 : fileStart,
+			contentEnd: fileEnd,
+			selfStart: selfNotePosition ? selfNotePosition.lineStart + 1 : undefined,
+			selfEnd: selfNotePosition ? selfNotePosition.lineEnd + 1 : undefined,
+		};
 	}
 }

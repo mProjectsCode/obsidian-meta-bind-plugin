@@ -36,7 +36,7 @@ export class ReplaceSelfButtonActionConfig extends AbstractButtonActionConfig<Re
 
 		const replacement = action.templater
 			? await this.mb.internal.evaluateTemplaterTemplate(
-					this.mb.buttonActionRunner.resolveFilePath(action.replacement),
+					this.mb.file.resolveFilePathLike(action.replacement),
 					filePath,
 				)
 			: action.replacement;

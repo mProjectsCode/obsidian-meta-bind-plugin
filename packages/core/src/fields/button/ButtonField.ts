@@ -2,7 +2,7 @@ import type { MetaBind } from 'packages/core/src';
 import type { NotePosition } from 'packages/core/src/config/APIConfigs';
 import { RenderChildType } from 'packages/core/src/config/APIConfigs';
 import type { ButtonConfig, ButtonContext } from 'packages/core/src/config/ButtonConfig';
-import { ButtonClickType } from 'packages/core/src/config/ButtonConfig';
+import { ButtonClickContext, ButtonClickType } from 'packages/core/src/config/ButtonConfig';
 import ButtonComponent from 'packages/core/src/utils/components/ButtonComponent.svelte';
 import { Mountable } from 'packages/core/src/utils/Mountable';
 import { DomHelpers, isTruthy } from 'packages/core/src/utils/Utils';
@@ -77,7 +77,7 @@ export class ButtonField extends Mountable {
 						this.config,
 						this.filePath,
 						this.getContext(),
-						this.mb.buttonActionRunner.mouseEventToClickContext(event, ButtonClickType.LEFT),
+						ButtonClickContext.fromMouseEvent(event, ButtonClickType.LEFT),
 					);
 				},
 				onauxclick: async (event: MouseEvent): Promise<void> => {
@@ -85,7 +85,7 @@ export class ButtonField extends Mountable {
 						this.config,
 						this.filePath,
 						this.getContext(),
-						this.mb.buttonActionRunner.mouseEventToClickContext(event, ButtonClickType.MIDDLE),
+						ButtonClickContext.fromMouseEvent(event, ButtonClickType.LEFT),
 					);
 				},
 			},

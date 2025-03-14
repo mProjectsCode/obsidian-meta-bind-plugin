@@ -1,9 +1,7 @@
 import type { MetaBind } from 'packages/core/src';
-import type { LinePosition } from 'packages/core/src/config/APIConfigs';
 import type {
 	ButtonActionMap,
 	ButtonClickContext,
-	ButtonClickType,
 	ButtonConfig,
 	ButtonContext,
 } from 'packages/core/src/config/ButtonConfig';
@@ -23,9 +21,6 @@ import { RunTemplaterFileButtonActionConfig } from 'packages/core/src/fields/but
 import { SleepButtonActionConfig } from 'packages/core/src/fields/button/actions/SleepButtonActionConfig';
 import { TemplaterCreateNoteButtonActionConfig } from 'packages/core/src/fields/button/actions/TemplaterCreateNoteButtonActionConfig';
 import { UpdateMetadataButtonActionConfig } from 'packages/core/src/fields/button/actions/UpdateMetadataButtonActionConfig';
-import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
-import { ErrorLevel, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import type { LineNumberContext } from 'packages/core/src/utils/LineNumberExpression';
 
 type ActionContexts = {
 	[key in ButtonActionType]: AbstractButtonActionConfig<ButtonActionMap[key]>;
@@ -54,23 +49,6 @@ export class ButtonActionRunner {
 			[ButtonActionType.INLINE_JS]: new InlineJSButtonActionConfig(mb),
 			[ButtonActionType.RUN_TEMPLATER_FILE]: new RunTemplaterFileButtonActionConfig(mb),
 		};
-	}
-
-	/**
-	 * Resolves a file name, path or link to a file path.
-	 */
-	resolveFilePath(filePath: string, relativeTo?: string): string {
-		const targetFilePath = MDLinkParser.isLink(filePath) ? MDLinkParser.parseLink(filePath).target : filePath;
-		const resolvedFilePath = this.mb.file.getPathByName(targetFilePath, relativeTo);
-		if (resolvedFilePath === undefined) {
-			throw new MetaBindParsingError({
-				errorLevel: ErrorLevel.ERROR,
-				cause: `Could not find a file that matches "${filePath}".`,
-				effect: `Could not resolve path or link "${filePath}" relative to "${relativeTo}".`,
-			});
-		}
-
-		return resolvedFilePath;
 	}
 
 	createDefaultButtonConfig(): ButtonConfig {
@@ -153,31 +131,5 @@ export class ButtonActionRunner {
 
 	getActionLabel<T extends ButtonActionType>(type: T): string {
 		return this.actionContexts[type].getActionLabel();
-	}
-
-	mouseEventToClickContext(event: MouseEvent, type: ButtonClickType): ButtonClickContext {
-		return {
-			type: type,
-			shiftKey: event.shiftKey,
-			ctrlKey: event.ctrlKey,
-			altKey: event.altKey,
-		};
-	}
-
-	getLineNumberContext(fileContent: string, selfNotePosition: LinePosition | undefined): LineNumberContext {
-		const fileStart = 1;
-		const fileEnd = fileContent.split('\n').length;
-		const frontmatterPosition = this.mb.file.getFrontmatterLocation(fileContent);
-
-		return {
-			fileStart: fileStart,
-			fileEnd: fileEnd,
-			frontmatterStart: frontmatterPosition ? frontmatterPosition.lineStart : fileStart,
-			frontmatterEnd: frontmatterPosition ? frontmatterPosition.lineEnd : fileStart,
-			contentStart: frontmatterPosition ? frontmatterPosition.lineEnd + 1 : fileStart,
-			contentEnd: fileEnd,
-			selfStart: selfNotePosition ? selfNotePosition.lineStart + 1 : undefined,
-			selfEnd: selfNotePosition ? selfNotePosition.lineEnd + 1 : undefined,
-		};
 	}
 }

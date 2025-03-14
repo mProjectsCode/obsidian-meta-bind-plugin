@@ -20,7 +20,7 @@ export class RunTemplaterFileButtonActionConfig extends AbstractButtonActionConf
 		_context: ButtonContext,
 		_click: ButtonClickContext,
 	): Promise<void> {
-		const templateFilePath = this.mb.buttonActionRunner.resolveFilePath(action.templateFile);
+		const templateFilePath = this.mb.file.resolveFilePathLike(action.templateFile);
 		void (await this.mb.internal.evaluateTemplaterTemplate(templateFilePath, filePath));
 	}
 

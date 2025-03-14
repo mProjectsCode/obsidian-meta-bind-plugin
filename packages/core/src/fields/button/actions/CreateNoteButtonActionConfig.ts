@@ -19,7 +19,7 @@ export class CreateNoteButtonActionConfig extends AbstractButtonActionConfig<Cre
 		action: CreateNoteButtonAction,
 		_filePath: string,
 		_context: ButtonContext,
-		_click: ButtonClickContext,
+		click: ButtonClickContext,
 	): Promise<void> {
 		if (action.openIfAlreadyExists) {
 			const filePath = ensureFileExtension(joinPath(action.folderPath ?? '', action.fileName), 'md');
@@ -30,7 +30,13 @@ export class CreateNoteButtonActionConfig extends AbstractButtonActionConfig<Cre
 			}
 		}
 
-		await this.mb.file.create(action.folderPath ?? '', action.fileName, 'md', action.openNote ?? false);
+		await this.mb.file.create(
+			action.folderPath ?? '',
+			action.fileName,
+			'md',
+			action.openNote ?? false,
+			click.openInNewTab(),
+		);
 	}
 
 	create(): Required<CreateNoteButtonAction> {

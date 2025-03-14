@@ -5,7 +5,7 @@ import type {
 	ButtonContext,
 	OpenButtonAction,
 } from 'packages/core/src/config/ButtonConfig';
-import { ButtonActionType, ButtonClickType } from 'packages/core/src/config/ButtonConfig';
+import { ButtonActionType } from 'packages/core/src/config/ButtonConfig';
 import { AbstractButtonActionConfig } from 'packages/core/src/fields/button/AbstractButtonActionConfig';
 import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 
@@ -21,7 +21,7 @@ export class OpenButtonActionConfig extends AbstractButtonActionConfig<OpenButto
 		_context: ButtonContext,
 		click: ButtonClickContext,
 	): Promise<void> {
-		const newTab = click.type === ButtonClickType.MIDDLE || click.ctrlKey || (action.newTab ?? false);
+		const newTab = click.openInNewTab() || (action.newTab ?? false);
 		const link = MDLinkParser.interpretAsLink(action.link);
 		if (!link) {
 			throw new Error('Invalid link');

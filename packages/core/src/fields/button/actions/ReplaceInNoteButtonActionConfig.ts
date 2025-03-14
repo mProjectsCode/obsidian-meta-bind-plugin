@@ -24,7 +24,7 @@ export class ReplaceInNoteButtonActionConfig extends AbstractButtonActionConfig<
 	): Promise<void> {
 		const replacement = action.templater
 			? await this.mb.internal.evaluateTemplaterTemplate(
-					this.mb.buttonActionRunner.resolveFilePath(action.replacement),
+					this.mb.file.resolveFilePathLike(action.replacement),
 					filePath,
 				)
 			: action.replacement;
@@ -35,7 +35,7 @@ export class ReplaceInNoteButtonActionConfig extends AbstractButtonActionConfig<
 		await this.mb.file.atomicModify(filePath, content => {
 			let splitContent = content.split('\n');
 
-			const lineContext = this.mb.buttonActionRunner.getLineNumberContext(content, context.position);
+			const lineContext = this.mb.file.createLineNumberContext(content, context.position);
 			const fromLineNumber = fromLine.evaluate(lineContext);
 			const toLineNumber = toLine.evaluate(lineContext);
 

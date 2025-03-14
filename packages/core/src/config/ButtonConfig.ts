@@ -207,11 +207,32 @@ export interface ButtonContext {
 /**
  * Provides information about the button click event.
  */
-export interface ButtonClickContext {
+export class ButtonClickContext {
 	type: ButtonClickType;
 	shiftKey: boolean;
 	ctrlKey: boolean;
 	altKey: boolean;
+
+	constructor(type: ButtonClickType, shiftKey: boolean, ctrlKey: boolean, altKey: boolean) {
+		this.type = type;
+		this.shiftKey = shiftKey;
+		this.ctrlKey = ctrlKey;
+		this.altKey = altKey;
+	}
+
+	static fromMouseEvent(event: MouseEvent, type: ButtonClickType): ButtonClickContext {
+		return new ButtonClickContext(type, event.shiftKey, event.ctrlKey, event.altKey);
+	}
+
+	/**
+	 * Whether the click should cause a link to open in a new tab.
+	 * Only applicable when the click is on a link.
+	 *
+	 * @returns
+	 */
+	openInNewTab(): boolean {
+		return this.type === ButtonClickType.MIDDLE || this.ctrlKey;
+	}
 }
 
 export enum ButtonClickType {
