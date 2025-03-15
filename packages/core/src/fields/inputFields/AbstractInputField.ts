@@ -168,6 +168,7 @@ export abstract class AbstractInputField<
 				this.updateDataAttributes(this.reverseMapValue(value));
 			},
 		});
+		this.updateDataAttributes(this.getInternalValue());
 
 		const bindTarget = this.mountable.getBindTarget();
 
