@@ -26,6 +26,8 @@ export interface IMetadataSubscription {
 	delete: () => void;
 	/**
 	 * Called by the metadata manager when the cache receives an update that concerns this subscription.
+	 * This is NOT called with a clone of the value, so the subscription should not modify the value.
+	 * If the subscription can't guarantee that the value won't be modified, it should clone the value.
 	 *
 	 * @param value
 	 * @returns Whether the subscription has updated, i.e. the value was different from the current memorized value.

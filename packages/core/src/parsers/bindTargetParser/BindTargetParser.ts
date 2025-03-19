@@ -55,24 +55,17 @@ export class BindTargetParser {
 		filePath: string,
 		scope?: BindTargetScope,
 	): BindTargetDeclaration {
-		const bindTargetDeclaration: BindTargetDeclaration = {} as BindTargetDeclaration;
-
-		// listen to children
-		bindTargetDeclaration.listenToChildren = unvalidatedBindTargetDeclaration.listenToChildren;
-
 		// storage prop
-		bindTargetDeclaration.storageProp = new PropPath(
+		const storageProp = new PropPath(
 			unvalidatedBindTargetDeclaration.storageProp.map(x => new PropAccess(x.type, x.prop.value)),
 		);
 
 		// storage type
+		let storageType: string;
 		if (unvalidatedBindTargetDeclaration.storageType === undefined) {
-			bindTargetDeclaration.storageType = this.mb.metadataManager.defaultSource;
+			storageType = this.mb.metadataManager.defaultSource;
 		} else {
-			bindTargetDeclaration.storageType = this.validateStorageType(
-				unvalidatedBindTargetDeclaration.storageType,
-				fullDeclaration,
-			);
+			storageType = this.validateStorageType(unvalidatedBindTargetDeclaration.storageType, fullDeclaration);
 		}
 
 		// storage path
@@ -81,12 +74,12 @@ export class BindTargetParser {
 			value: filePath,
 		};
 
-		const source = this.mb.metadataManager.getSource(bindTargetDeclaration.storageType);
+		const source = this.mb.metadataManager.getSource(storageType);
 		if (source === undefined) {
 			throw new MetaBindInternalError({
 				errorLevel: ErrorLevel.CRITICAL,
 				effect: 'can not validate bind target',
-				cause: `Source '${bindTargetDeclaration.storageType}' not found. But validation was successful. This should not happen.`,
+				cause: `Source '${storageType}' not found. But validation was successful. This should not happen.`,
 				context: {
 					fullDeclaration: fullDeclaration,
 					sources: [...this.mb.metadataManager.sources.keys()],
@@ -94,12 +87,15 @@ export class BindTargetParser {
 			});
 		}
 
-		bindTargetDeclaration.storagePath = source.validateStoragePath(
-			storagePathToValidate,
-			hadStoragePath,
-			fullDeclaration,
-			this,
-		);
+		const storagePath = source.validateStoragePath(storagePathToValidate, hadStoragePath, fullDeclaration, this);
+
+		// construct bind target declaration
+		const bindTargetDeclaration: BindTargetDeclaration = {
+			storageType: storageType,
+			storagePath: storagePath,
+			storageProp: storageProp,
+			listenToChildren: unvalidatedBindTargetDeclaration.listenToChildren,
+		};
 
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
 		if (source.id === BindTargetStorageType.SCOPE) {

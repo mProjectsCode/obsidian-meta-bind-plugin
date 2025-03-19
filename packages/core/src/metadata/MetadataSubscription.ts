@@ -50,22 +50,19 @@ export class MetadataSubscription implements IMetadataSubscription {
 		const currentValue = this.metadataManager.readShortLived(this.bindTarget);
 		if (!areObjectsEqual(currentValue, value)) {
 			this.value = value;
+			// note: write already clones the value
 			this.metadataManager.write(value, this.bindTarget, this.uuid);
 		}
 	}
 
-	/**
-	 * DO NOT CALL!
-	 *
-	 * Notifies the subscription of an updated value in the cache.
-	 *
-	 * @param value
-	 */
 	public onUpdate(value: unknown): boolean {
+		// The value is NOT cloned, but that's fine for the comparison.
+		// If we actually notify the callback, we need to clone the value, as we can't guarantee that the callback won't modify it.
 		try {
 			if (!areObjectsEqual(this.value, value)) {
-				this.value = value;
-				this.callbackSignal.set(value);
+				const clonedValue = structuredClone(value);
+				this.value = clonedValue;
+				this.callbackSignal.set(clonedValue);
 
 				return true;
 			}

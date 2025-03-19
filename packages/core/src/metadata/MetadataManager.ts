@@ -250,7 +250,8 @@ export class MetadataManager {
 		const cacheItem = source.subscribe(subscription);
 		cacheItem.cyclesWithoutListeners = 0;
 
-		subscription.onUpdate(source.readCacheItem(cacheItem, subscription.bindTarget.storageProp));
+		const initialValue = source.readCacheItem(cacheItem, subscription.bindTarget.storageProp);
+		subscription.onUpdate(initialValue);
 	}
 
 	/**
