@@ -782,7 +782,7 @@ export abstract class API<Components extends MB_Comps> {
 	 * Import new definitions into the internal mathJS instance.
 	 * For details on how to use, see https://mathjs.org/docs/reference/functions/import.html
 	 */
-	public mathJSimport(object: MathJSImportObject | MathJSImportObject[], options?: MathJSImportOptions): void {
+	public mathJSImport(object: MathJSImportObject | MathJSImportObject[], options?: MathJSImportOptions): void {
 		this.mb.math.import(object, options);
 	}
 }
