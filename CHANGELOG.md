@@ -1,5 +1,25 @@
 # Obsidian Meta Bind Changelog
 
+# 1.4.0
+
+New Features
+
+- Button actions with line numbers can now use relative line number offsets [#296](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/296)
+- Exposed the mathjs singleton via the JavaScript API. This allows registering custom functions to mathjs. (thanks Cube707) [#481](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/pull/481)
+
+Changes
+
+- Majorly revamped the internal structure of the plugin to make certain things easier. Most internal things are not where they were anymore, sorry if you relied on that.
+- Added memorization to plugin internal metadata manager. This should majorly improve performance for notes with lots of input and view fields.
+- Added tooltips to the slider indicating the current value (thanks Cube707) [#529](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/pull/529)
+
+Bug Fixes
+
+- Fixed some context menus overlapping when right clicking certain input fields [#517](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/517)
+- Fixed `createNote` button action option `openIfAlreadyExists` not opening the note in a new tab when `ctrl`-clicking [#520](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/520)
+- Fixed `createNote` button action option `openIfAlreadyExists` not working if the file was in the root of the vault [#521](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/521)
+- Fixed `runTemplaterFile` button action not working as intended [#522](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/522)
+
 # 1.3.4
 
 Changes
