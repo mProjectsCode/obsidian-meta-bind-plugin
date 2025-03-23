@@ -7,3 +7,34 @@
 .mb-button.green-button > button {
     background: var(--color-green);
 }
+
+/* A snippets that adds icons after an inlineSelector */
+.mb-input .dnd5e-skill-prof {
+    &::after {
+        content: '';
+        display: inline-block;
+        margin-left: 0.2em;
+        width: 1.5em;
+        aspect-ratio: 1;
+        vertical-align: middle;
+        mask-size: contain;
+        mask-position: center;
+        mask-repeat: no-repeat;
+    }
+    &[data-internal-value~="0"]::after {
+        mask-image: url('data:image/svg+xml,<svg version="1.1" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="5" r="2.5" fill="none" stroke="black" stroke-width="0.75"/></svg>');
+        background-color: var(--text-faint);
+    }
+    &[data-internal-value~="0.5"]::after {
+        mask-image: url('data:image/svg+xml,<svg version="1.1" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="5" r="2.5" fill="none" stroke="black" stroke-width=".75"/><path transform="rotate(45,5,5)" d="m5 7.5s-2.5-1.1-2.5-2.5 2.2-2.5 2.2-2.5"/></svg>');
+        background-color: var(--text-normal);
+    }
+    &[data-internal-value~="1"]::after {
+        mask-image: url('data:image/svg+xml,<svg version="1.1" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="5" r="2.5" stroke="black" stroke-width=".75"/></svg>');
+        background-color: var(--color-accent);
+    }
+    &[data-internal-value~="2"]::after {
+        mask-image: url('data:image/svg+xml,<svg version="1.1" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="5" r="2.5"/><circle cx="5" cy="5" r="4" fill="none" stroke="black" stroke-width=".75"/></svg>');
+        background-color: var(--color-accent);
+    }
+}
