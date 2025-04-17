@@ -58,7 +58,7 @@ export class JsViewFieldMountable extends FieldMountable {
 				continue;
 			}
 
-			context[variable.contextName] = variable.metadataSignal.get() ?? '';
+			context[variable.contextName] = variable.metadataSignal.get();
 		}
 
 		return context;
