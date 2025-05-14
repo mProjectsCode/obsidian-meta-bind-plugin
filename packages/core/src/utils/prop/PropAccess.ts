@@ -1,3 +1,5 @@
+import type { UnvalidatedPropAccess } from 'packages/core/src/parsers/bindTargetParser/BindTargetDeclaration';
+
 export enum PropAccessType {
 	OBJECT = 'object',
 	ARRAY = 'array',
@@ -85,6 +87,20 @@ export class PropAccess {
 			}
 
 			obj[this.index] = undefined;
+		}
+	}
+
+	toUnvalidatedPropAccess(): UnvalidatedPropAccess {
+		if (this.type === PropAccessType.OBJECT) {
+			return {
+				type: this.type,
+				prop: { value: this.prop },
+			};
+		} else {
+			return {
+				type: this.type,
+				prop: { value: this.index.toString() },
+			};
 		}
 	}
 }

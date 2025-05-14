@@ -73,8 +73,6 @@ export class InputFieldParser implements ITemplateSupplier<UnvalidatedInputField
 	 * @param simpleDeclaration
 	 */
 	public fromSimpleDeclaration(simpleDeclaration: SimpleInputFieldDeclaration): UnvalidatedInputFieldDeclaration {
-		const errorCollection = new ErrorCollection('InputField');
-
 		return {
 			declarationString: undefined,
 			inputFieldType: toResultNode(simpleDeclaration.inputFieldType),
@@ -83,7 +81,7 @@ export class InputFieldParser implements ITemplateSupplier<UnvalidatedInputField
 				name: toResultNode(x.name),
 				value: x.value.map(y => toResultNode(y)),
 			})),
-			errorCollection: errorCollection,
+			errorCollection: new ErrorCollection('InputField'),
 		};
 	}
 

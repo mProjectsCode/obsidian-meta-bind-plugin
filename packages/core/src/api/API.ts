@@ -648,6 +648,12 @@ export abstract class API<Components extends MB_Comps> {
 	/**
 	 * Sets a property in meta binds metadata cache.
 	 *
+	 * @example
+	 * // Assumes you use the JS Engine plugin to run this.
+	 * const mb = engine.getPlugin("obsidian-meta-bind-plugin").api;
+	 * const bindTarget = mb.parseBindTarget("property", context.file.path);
+	 * mb.setMetadata(bindTarget, "some value");
+	 *
 	 * @param bindTarget
 	 * @param value
 	 */
@@ -668,6 +674,12 @@ export abstract class API<Components extends MB_Comps> {
 	 * Reads a property from meta binds metadata cache.
 	 * If the value is not present in the cache, it will check the underlying source. E.g. Obsidians metadata cache.
 	 *
+	 * @example
+	 * // Assumes you use the JS Engine plugin to run this.
+	 * const mb = engine.getPlugin("obsidian-meta-bind-plugin").api;
+	 * const bindTarget = mb.parseBindTarget("property", context.file.path);
+	 * const value = mb.getMetadata(bindTarget);
+	 *
 	 * @param bindTarget
 	 */
 	public getMetadata(bindTarget: BindTargetDeclaration): unknown {
@@ -685,6 +697,14 @@ export abstract class API<Components extends MB_Comps> {
 
 	/**
 	 * Updates a property in meta binds metadata cache.
+	 *
+	 * @example
+	 * // Assumes you use the JS Engine plugin to run this.
+	 * const mb = engine.getPlugin("obsidian-meta-bind-plugin").api;
+	 * const bindTarget = mb.parseBindTarget("property", context.file.path);
+	 * mb.updateMetadata(bindTarget, (value) => {
+	 *     return value + 1;
+	 * });
 	 *
 	 * @param bindTarget
 	 * @param updateFn a function that takes the current value and returns the new value

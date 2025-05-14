@@ -41,10 +41,7 @@ export class BindTargetParser {
 		return {
 			storageType: toResultNode(declaration.storageType),
 			storagePath: toResultNode(declaration.storagePath),
-			storageProp: declaration.storageProp.path.map(x => ({
-				type: x.type,
-				prop: toResultNode(x.prop),
-			})),
+			storageProp: declaration.storageProp.path.map(x => x.toUnvalidatedPropAccess()),
 			listenToChildren: declaration.listenToChildren,
 		};
 	}
