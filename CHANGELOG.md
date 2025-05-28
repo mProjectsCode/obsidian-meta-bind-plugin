@@ -1,5 +1,23 @@
 # Obsidian Meta Bind Changelog
 
+# 1.4.2
+
+Bug Fixes
+
+- Fixed `null` and `undefined` values in bind targets for JS view fields being turned to the empty string. [#564](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/564)
+- Fixed array accesses in nested properties going missing when using the JS API. [#576](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/576)
+- Fixed meta bind table reverting to previous state when adding or removing rows. [#585](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/585)
+
+Misc
+
+- Added an example for data dependent styling. (thanks Cube707) [#545](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/pull/545)
+
+# 1.4.1
+
+Changes
+
+- Changed the name of the API function used to register functions to mathjs.
+
 # 1.4.0
 
 New Features
