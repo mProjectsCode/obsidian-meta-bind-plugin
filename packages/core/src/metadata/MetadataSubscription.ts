@@ -55,6 +55,15 @@ export class MetadataSubscription implements IMetadataSubscription {
 		}
 	}
 
+	/**
+	 * Reads the value from the cache.
+	 * Does not update the subscription.
+	 *
+	 */
+	public read(): unknown {
+		return this.metadataManager.read(this.bindTarget);
+	}
+
 	public onUpdate(value: unknown): boolean {
 		// The value is NOT cloned, but that's fine for the comparison.
 		// If we actually notify the callback, we need to clone the value, as we can't guarantee that the callback won't modify it.

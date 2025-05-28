@@ -9,36 +9,21 @@ import type { SimpleInputFieldDeclaration } from 'packages/core/src/parsers/inpu
 import type { SimpleViewFieldDeclaration } from 'packages/core/src/parsers/viewFieldParser/ViewFieldDeclaration';
 import type { MBExtendedLiteral } from 'packages/core/src/utils/Literal';
 import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
-import type { Listener } from 'packages/core/src/utils/Signal';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { showUnloadedMessage } from 'packages/core/src/utils/Utils';
 import type { Component as SvelteComponent } from 'svelte';
 import { mount, unmount } from 'svelte';
 
-// export type MetaBindTableCell =
-// 	| {
-// 			type: FieldType.INPUT;
-// 			declaration: InputFieldDeclaration;
-// 			scope: BindTargetScope;
-// 	  }
-// 	| {
-// 			type: FieldType.VIEW;
-// 			declaration: ViewFieldDeclaration;
-// 			scope: BindTargetScope;
-// 	  };
-
-export type MetaBindTableCell = FieldMountable;
-
 export type MetaBindColumnDeclaration = SimpleInputFieldDeclaration | SimpleViewFieldDeclaration | string;
 
 export interface MetaBindTableRow {
-	cells: MetaBindTableCell[];
+	cells: FieldMountable[];
 	index: number;
 	value: unknown;
 	isValid: boolean;
 }
 
-type T = Record<string, MBExtendedLiteral>[];
+type TableData = Record<string, MBExtendedLiteral>[];
 
 type TableComponent = SvelteComponent<object, { updateTable(cells: MetaBindTableRow[]): void }>;
 
@@ -48,20 +33,8 @@ export class TableMountable extends FieldMountable {
 	columns: MetaBindColumnDeclaration[];
 	tableComponent: ReturnType<TableComponent> | undefined;
 
-	private metadataManagerOutputSignalListener: Listener<unknown> | undefined;
-
-	/**
-	 * Signal to write to the input field
-	 */
 	public inputSignal: Signal<unknown>;
-	/**
-	 * Signal to read from the input field
-	 */
-	public outputSignal: Signal<unknown>;
-
 	private metadataSubscription?: MetadataSubscription;
-
-	private value: T | undefined;
 
 	constructor(
 		mb: MetaBind,
@@ -77,16 +50,9 @@ export class TableMountable extends FieldMountable {
 		this.columns = columns;
 
 		this.inputSignal = new Signal<unknown>(undefined);
-		this.outputSignal = new Signal<unknown>(undefined);
-
-		this.value = undefined;
 	}
 
 	registerSelfToMetadataManager(): undefined {
-		this.metadataManagerOutputSignalListener = this.outputSignal.registerListener({
-			callback: this.updateMetadataManager.bind(this),
-		});
-
 		this.metadataSubscription = this.mb.metadataManager.subscribe(
 			this.getUuid(),
 			this.inputSignal,
@@ -96,10 +62,6 @@ export class TableMountable extends FieldMountable {
 	}
 
 	unregisterSelfFromMetadataManager(): void {
-		if (this.metadataManagerOutputSignalListener) {
-			this.outputSignal.unregisterListener(this.metadataManagerOutputSignalListener);
-		}
-
 		this.metadataSubscription?.unsubscribe();
 	}
 
@@ -107,7 +69,19 @@ export class TableMountable extends FieldMountable {
 		this.metadataSubscription?.write(value);
 	}
 
-	updateDisplayValue(values: T | undefined): void {
+	getValue(): TableData {
+		return this.parseTableData(this.metadataSubscription?.read());
+	}
+
+	parseTableData(value: unknown): TableData {
+		if (Array.isArray(value)) {
+			return value as TableData;
+		} else {
+			return [];
+		}
+	}
+
+	updateDisplayValue(values: TableData | undefined): void {
 		values = values ?? [];
 		const tableRows: MetaBindTableRow[] = [];
 
@@ -120,7 +94,7 @@ export class TableMountable extends FieldMountable {
 					listenToChildren: false,
 				});
 
-				const cells: MetaBindTableCell[] = this.columns.map(x => {
+				const cells: FieldMountable[] = this.columns.map(x => {
 					if (typeof x === 'string') {
 						return this.mb.api.createInlineFieldFromString(
 							x,
@@ -136,13 +110,16 @@ export class TableMountable extends FieldMountable {
 							scope: scope,
 							renderChildType: RenderChildType.INLINE,
 						});
-					} else {
+					}
+					if ('viewFieldType' in x) {
 						return this.mb.api.createViewFieldMountable(this.getFilePath(), {
-							declaration: x as SimpleViewFieldDeclaration,
+							declaration: x,
 							scope: scope,
 							renderChildType: RenderChildType.INLINE,
 						});
 					}
+
+					throw new Error(`Unknown column type: ${JSON.stringify(x)}`);
 				});
 
 				tableRows.push({
@@ -164,23 +141,18 @@ export class TableMountable extends FieldMountable {
 		this.tableComponent?.updateTable(tableRows);
 	}
 
-	createCell(cell: MetaBindTableCell, element: HTMLElement): () => void {
-		cell.mount(element);
-		return () => cell.unmount();
-	}
-
 	removeColumn(index: number): void {
-		this.value = this.value ?? [];
-		this.value.splice(index, 1);
-		this.updateDisplayValue(this.value);
-		this.outputSignal.set(this.value);
+		const value = this.getValue();
+		value.splice(index, 1);
+		this.updateDisplayValue(value);
+		this.updateMetadataManager(value);
 	}
 
 	addColumn(): void {
-		this.value = this.value ?? [];
-		this.value.push({});
-		this.updateDisplayValue(this.value);
-		this.outputSignal.set(this.value);
+		const value = this.getValue();
+		value.push({});
+		this.updateDisplayValue(value);
+		this.updateMetadataManager(value);
 	}
 
 	protected onMount(targetEl: HTMLElement): void {
@@ -195,9 +167,8 @@ export class TableMountable extends FieldMountable {
 		});
 
 		this.inputSignal.registerListener({
-			callback: values => {
-				this.value = values as T;
-				this.updateDisplayValue(values as T);
+			callback: value => {
+				this.updateDisplayValue(this.parseTableData(value));
 			},
 		});
 
