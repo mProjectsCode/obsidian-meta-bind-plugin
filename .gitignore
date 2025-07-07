@@ -25,6 +25,8 @@ obsidian.css
 tmp.txt
 meta.txt
 
+exampleVault/tmp*.md
+
 !exampleVault/.obsidian
 
 exampleVault/.obsidian/*

@@ -277,7 +277,9 @@ export class ObsMetaBind extends MetaBind<ObsComponents> {
 		});
 
 		this.plugin.addCommand({
+			// eslint-disable-next-line obsidianmd/commands/no-command-in-command-id
 			id: 'copy-command-id',
+			// eslint-disable-next-line obsidianmd/commands/no-command-in-command-name
 			name: 'Select and copy command id',
 			callback: () => {
 				this.internal.openCommandSelectModal(command => {

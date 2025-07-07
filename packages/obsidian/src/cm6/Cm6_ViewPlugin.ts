@@ -11,6 +11,20 @@ import type { MB_WidgetSpec } from 'packages/obsidian/src/cm6/Cm6_Util';
 import { Cm6_Util, MB_WidgetType } from 'packages/obsidian/src/cm6/Cm6_Util';
 import type { ObsMetaBind } from 'packages/obsidian/src/main';
 
+interface NodeData {
+	content: string;
+	widgetType: InlineFieldType | undefined;
+	preOffset: number;
+	postOffset: number;
+}
+
+interface RenderNodeData {
+	content: string;
+	widgetType: InlineFieldType;
+	preOffset: number;
+	postOffset: number;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): ViewPlugin<any> {
 	return ViewPlugin.fromClass(
@@ -98,29 +112,20 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 							const node = nodeRef.node;
 							const renderInfo = this.getRenderInfo(view, node);
 
-							if (renderInfo.widgetType === undefined || renderInfo.content === undefined) {
+							if (!renderInfo.data?.widgetType) {
 								// not our decoration
 								return;
 							}
 
+							// safe cast because we checked for widgetType above
+							const renderData: RenderNodeData = renderInfo.data as RenderNodeData;
+
 							if (renderInfo.shouldRender) {
 								this.removeDecoration(node, MB_WidgetType.FIELD);
-								this.addDecoration(
-									node,
-									view,
-									MB_WidgetType.FIELD,
-									renderInfo.content,
-									renderInfo.widgetType,
-								);
+								this.addDecoration(node, view, MB_WidgetType.FIELD, renderData);
 							} else if (renderInfo.shouldHighlight) {
 								this.removeDecoration(node, MB_WidgetType.HIGHLIGHT);
-								this.addDecoration(
-									node,
-									view,
-									MB_WidgetType.HIGHLIGHT,
-									renderInfo.content,
-									renderInfo.widgetType,
-								);
+								this.addDecoration(node, view, MB_WidgetType.HIGHLIGHT, renderData);
 							} else {
 								this.removeDecoration(node);
 							}
@@ -163,15 +168,9 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 			 * @param widgetType
 			 * @param inlineFieldType
 			 */
-			addDecoration(
-				node: SyntaxNode,
-				view: EditorView,
-				widgetType: MB_WidgetType,
-				content: string,
-				inlineFieldType: InlineFieldType,
-			): void {
-				const from = node.from - 1;
-				const to = node.to + 1;
+			addDecoration(node: SyntaxNode, view: EditorView, widgetType: MB_WidgetType, data: RenderNodeData): void {
+				const from = node.from - data.preOffset;
+				const to = node.to + data.postOffset;
 
 				// we check if there already is a decoration of the same type in the range
 				if (Cm6_Util.existsDecorationOfTypeBetween(this.decorations, widgetType, from, to)) {
@@ -184,11 +183,12 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 					return;
 				}
 
+				console.log(`add decoration at ${from} - ${to} for node ${node.type.name}`);
+
 				const newDecoration: Range<Decoration> | Range<Decoration>[] = this.renderWidget(
 					node,
-					inlineFieldType,
 					widgetType,
-					content,
+					data,
 					currentFile,
 				);
 				const newDecorations = Array.isArray(newDecoration) ? newDecoration : [newDecoration];
@@ -214,8 +214,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 			): {
 				shouldRender: boolean;
 				shouldHighlight: boolean;
-				content: string | undefined;
-				widgetType: InlineFieldType | undefined;
+				data: NodeData | undefined;
 			} {
 				// get the node props
 				// const propsString: string | undefined = node.type.prop<string>(tokenClassNodeProp);
@@ -225,12 +224,12 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 				// node is inline code
 				if (props.has('inline-code') && !props.has('formatting')) {
 					// check for selection or cursor overlap
+					const data = this.readNode(view, node.from, node.to);
 					const hasSelectionOverlap = Cm6_Util.checkSelectionOverlap(
 						view.state.selection,
-						node.from - 1,
-						node.to + 1,
+						node.from - data.preOffset,
+						node.to + data.postOffset,
 					);
-					const content = this.readNode(view, node.from, node.to);
 					const isLivePreview = this.isLivePreview(view.state);
 					// if we are in live preview mode, we only render the widget if there is no selection overlap
 					// otherwise the user has it's cursor within the bounds of the code for the field and we do syntax highlighting
@@ -241,11 +240,10 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 						shouldRender: shouldRenderField,
 						// we need to also check that the user has highlighting enabled in the settings
 						shouldHighlight: !shouldRenderField && mb.getSettings().enableSyntaxHighlighting,
-						content: content.content,
-						widgetType: content.widgetType,
+						data: data,
 					};
 				}
-				return { shouldRender: false, shouldHighlight: false, content: undefined, widgetType: undefined };
+				return { shouldRender: false, shouldHighlight: false, data: undefined };
 			}
 
 			/**
@@ -255,15 +253,25 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 			 * @param from
 			 * @param to
 			 */
-			readNode(
-				view: EditorView,
-				from: number,
-				to: number,
-			): { content: string; widgetType: InlineFieldType | undefined } {
-				const content = Cm6_Util.getContent(view.state, from, to);
+			readNode(view: EditorView, from: number, to: number): NodeData {
+				let content = Cm6_Util.getContent(view.state, from - 1, to + 1);
+
+				let preOffset = 0;
+				let postOffset = 0;
+				if (content.startsWith('`')) {
+					preOffset = 1;
+				}
+				if (content.endsWith('`')) {
+					postOffset = 1;
+				}
+
+				content = content.slice(1, content.length - 1);
+
 				return {
 					content: content,
 					widgetType: mb.api.isInlineFieldDeclarationAndGetType(content),
+					preOffset: preOffset,
+					postOffset: postOffset,
 				};
 			}
 
@@ -289,30 +297,26 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 
 							const renderInfo = this.getRenderInfo(view, node);
 
-							if (!renderInfo.widgetType || !renderInfo.content) {
+							if (!renderInfo.data?.widgetType) {
+								console.log(
+									`Skipping node ${node.type.name} because it is not a field declaration`,
+									renderInfo,
+								);
+
 								return;
 							}
+
+							// safe cast because we checked for widgetType above
+							const renderData: RenderNodeData = renderInfo.data as RenderNodeData;
 
 							let widget: Range<Decoration> | Range<Decoration>[] | undefined = undefined;
 
 							if (renderInfo.shouldRender) {
-								widget = this.renderWidget(
-									node,
-									renderInfo.widgetType,
-									MB_WidgetType.FIELD,
-									renderInfo.content,
-									currentFile,
-								);
+								widget = this.renderWidget(node, MB_WidgetType.FIELD, renderData, currentFile);
 							}
 
 							if (renderInfo.shouldHighlight) {
-								widget = this.renderWidget(
-									node,
-									renderInfo.widgetType,
-									MB_WidgetType.HIGHLIGHT,
-									renderInfo.content,
-									currentFile,
-								);
+								widget = this.renderWidget(node, MB_WidgetType.HIGHLIGHT, renderData, currentFile);
 							}
 
 							if (widget) {
@@ -332,6 +336,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 			/**
 			 * Renders a singe widget of the given widget type at a given node.
 			 *
+			 * @param view
 			 * @param node
 			 * @param inlineFieldType
 			 * @param widgetType
@@ -340,15 +345,14 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 			 */
 			renderWidget(
 				node: SyntaxNode,
-				inlineFieldType: InlineFieldType,
-				widgetType: MB_WidgetType,
-				content: string,
+				type: MB_WidgetType,
+				data: RenderNodeData,
 				currentFile: TFile,
 			): Range<Decoration> | Range<Decoration>[] {
-				if (widgetType === MB_WidgetType.FIELD) {
+				if (type === MB_WidgetType.FIELD) {
 					const widget = mb.api.constructMDRCWidget(
-						inlineFieldType,
-						content,
+						data.widgetType,
+						data.content,
 						currentFile.path,
 						this.component,
 					);
@@ -359,9 +363,9 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 						mb_unload: () => {
 							widget.renderChild?.unload();
 						},
-					}).range(node.from - 1, node.to + 1);
+					}).range(node.from - data.preOffset, node.to + data.postOffset);
 				} else {
-					const highlight = mb.syntaxHighlighting.highlight(content, inlineFieldType, false);
+					const highlight = mb.syntaxHighlighting.highlight(data.content, data.widgetType, false);
 
 					return highlight.getHighlights().map(h => {
 						return Decoration.mark({

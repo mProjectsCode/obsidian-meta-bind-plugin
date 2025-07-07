@@ -145,7 +145,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				});
 			});
 
-		containerEl.createEl('h2', { text: 'Date and time settings' });
+		new Setting(containerEl).setName('Date and time').setHeading();
 
 		new Setting(containerEl)
 			.setName('Date format')
@@ -176,7 +176,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				});
 			});
 
-		containerEl.createEl('h2', { text: 'Advanced settings' });
+		new Setting(containerEl).setName('Advanced').setHeading();
 
 		new Setting(containerEl)
 			.setName('Dev mode')
