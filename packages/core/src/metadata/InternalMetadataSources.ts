@@ -28,8 +28,8 @@ export class InternalMetadataSource extends FilePathMetadataSource<FilePathMetad
 		};
 	}
 
-	public syncExternal(_cacheItem: FilePathMetadataCacheItem): void {
-		// Do nothing
+	public syncExternal(_cacheItem: FilePathMetadataCacheItem): Promise<void> {
+		return Promise.resolve();
 	}
 }
 
@@ -55,8 +55,9 @@ export class TestMetadataSource extends FilePathMetadataSource<FilePathMetadataC
 		};
 	}
 
-	public syncExternal(cacheItem: FilePathMetadataCacheItem): void {
+	public syncExternal(cacheItem: FilePathMetadataCacheItem): Promise<void> {
 		this.externalMetadata[cacheItem.storagePath] = cacheItem.data;
+		return Promise.resolve();
 	}
 }
 
@@ -102,11 +103,11 @@ export class GlobalMetadataSource implements IMetadataSource<GlobalMetadataCache
 	}
 
 	public getCacheItemForStoragePath(_storagePath: string): GlobalMetadataCacheItem | undefined {
-		return this.cache;
+		return undefined;
 	}
 
-	public iterateCacheItems(): IterableIterator<GlobalMetadataCacheItem> {
-		return [this.cache][Symbol.iterator]();
+	public getCacheItems(): GlobalMetadataCacheItem[] {
+		return [this.cache];
 	}
 
 	public onCycle(_cacheItem: GlobalMetadataCacheItem): void {
@@ -131,8 +132,8 @@ export class GlobalMetadataSource implements IMetadataSource<GlobalMetadataCache
 		return this.cache;
 	}
 
-	public syncExternal(_cacheItem: GlobalMetadataCacheItem): void {
-		// noop
+	public syncExternal(_cacheItem: GlobalMetadataCacheItem): Promise<void> {
+		return Promise.resolve();
 	}
 
 	public unsubscribe(subscription: IMetadataSubscription): GlobalMetadataCacheItem {
@@ -199,8 +200,8 @@ export class ScopeMetadataSource implements IMetadataSource<IMetadataCacheItem> 
 		return undefined;
 	}
 
-	public iterateCacheItems(): IterableIterator<IMetadataCacheItem> {
-		return [][Symbol.iterator]();
+	public getCacheItems(): IMetadataCacheItem[] {
+		return [];
 	}
 
 	public onCycle(_cacheItem: IMetadataCacheItem): void {
@@ -227,8 +228,8 @@ export class ScopeMetadataSource implements IMetadataSource<IMetadataCacheItem> 
 		});
 	}
 
-	public syncExternal(_cacheItem: IMetadataCacheItem): void {
-		// noop
+	public syncExternal(_cacheItem: IMetadataCacheItem): Promise<void> {
+		return Promise.resolve();
 	}
 
 	public unsubscribe(_subscription: IMetadataSubscription): IMetadataCacheItem {

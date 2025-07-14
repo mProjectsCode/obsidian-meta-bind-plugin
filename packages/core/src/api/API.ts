@@ -51,7 +51,7 @@ import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/error
 import { parsePropPath } from 'packages/core/src/utils/prop/PropParser';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { expectType, getUUID } from 'packages/core/src/utils/Utils';
-import { validateAPIArgs } from 'packages/core/src/utils/ZodUtils';
+import { validateAPIArgs, zodFunction } from 'packages/core/src/utils/ZodUtils';
 import { z } from 'zod';
 import type { MB_Comps, MetaBind } from '..';
 
@@ -713,7 +713,7 @@ export abstract class API<Components extends MB_Comps> {
 		validateAPIArgs(
 			z.object({
 				bindTarget: V_BindTargetDeclaration,
-				updateFn: z.function().args(z.any()).returns(z.any()),
+				updateFn: zodFunction<(value: unknown) => unknown>(),
 			}),
 			{
 				bindTarget: bindTarget,
@@ -749,7 +749,7 @@ export abstract class API<Components extends MB_Comps> {
 			z.object({
 				bindTarget: V_BindTargetDeclaration,
 				lifecycleHook: this.mb.internal.getLifecycleHookValidator(),
-				callback: z.function().args(z.any()).returns(z.void()),
+				callback: zodFunction<(value: unknown) => void>(),
 			}),
 			{
 				bindTarget: bindTarget,

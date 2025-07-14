@@ -260,17 +260,17 @@ export class TestMetaBind extends MetaBind<TestComponents> {
 		return source.readEntireCacheItem(cacheItem);
 	}
 
-	cycleMetadataManager(): void {
-		this.metadataManager.cycle();
+	async cycleMetadataManager(): Promise<void> {
+		return this.metadataManager.cycle();
 	}
 
 	expectMetadataManagerToHaveUpdatedTimes(times: number): void {
 		expect(this.metadataManagerInternalUpdateSpy).toHaveBeenCalledTimes(times);
 	}
 
-	public cycleMetadataManagerUntilThreshold(): void {
+	public async cycleMetadataManagerUntilThreshold(): Promise<void> {
 		for (let i = 0; i < METADATA_CACHE_EXTERNAL_WRITE_LOCK_DURATION; i++) {
-			this.cycleMetadataManager();
+			await this.cycleMetadataManager();
 		}
 	}
 }

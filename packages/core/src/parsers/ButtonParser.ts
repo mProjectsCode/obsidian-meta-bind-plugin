@@ -2,13 +2,12 @@ import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
 import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
 import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
 import { V_ButtonConfig } from 'packages/core/src/config/validators/ButtonConfigValidators';
+import type { MetaBind } from 'packages/core/src/index';
 import { runParser } from 'packages/core/src/parsers/ParsingError';
 import { DocsUtils } from 'packages/core/src/utils/DocsUtils';
 import { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 import { ErrorLevel, MetaBindButtonError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import { validate } from 'packages/core/src/utils/ZodUtils';
-import { fromZodError } from 'zod-validation-error';
-import type { MetaBind } from '..';
+import { toReadableError, validate } from 'packages/core/src/utils/ZodUtils';
 
 const P_ButtonGroupDeclaration = P.sequenceMap(
 	(_, b) => b,
@@ -85,18 +84,13 @@ export class ButtonParser {
 		const parsedConfig = validate(V_ButtonConfig, config);
 
 		if (!parsedConfig.success) {
-			const niceError = fromZodError(parsedConfig.error, {
-				unionSeparator: '\nOR ',
-				issueSeparator: ' AND ',
-				prefix: null,
-				includePath: false,
-			});
+			const niceError = toReadableError(parsedConfig.error);
 
 			throw new MetaBindButtonError({
 				errorLevel: ErrorLevel.ERROR,
 				effect: 'The validation for the button config failed.',
 				cause: 'Your button syntax seems to be invalid. Check that your button config follows what is described in the docs.',
-				positionContext: niceError.message,
+				positionContext: niceError,
 				docs: [DocsUtils.linkToButtonConfig()],
 			});
 		}

@@ -14,15 +14,15 @@ import type { ObsMetaBind } from 'packages/obsidian/src/main';
 interface NodeData {
 	content: string;
 	widgetType: InlineFieldType | undefined;
-	preOffset: number;
-	postOffset: number;
+	// If the node is truly an inline code block, meaning it starts and ends with a backtick.
+	trulyInline: boolean;
 }
 
 interface RenderNodeData {
 	content: string;
 	widgetType: InlineFieldType;
-	preOffset: number;
-	postOffset: number;
+	// If the node is truly an inline code block, meaning it starts and ends with a backtick.
+	trulyInline: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -88,9 +88,9 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 				// remove all decorations that are not visible and call unload manually
 				// this is needed because otherwise some decorations are not unloaded correctly
 				this.decorations = this.decorations.update({
-					filter: (fromA, toA, decoration) => {
+					filter: (decFrom, decTo, decoration) => {
 						const inVisibleRange = summary.anyMatch(view.visibleRanges, range =>
-							Cm6_Util.checkRangeOverlap(fromA, toA, range.from, range.to),
+							Cm6_Util.checkRangeOverlap(decFrom, decTo, range.from, range.to),
 						);
 
 						if (inVisibleRange) {
@@ -112,8 +112,14 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 							const node = nodeRef.node;
 							const renderInfo = this.getRenderInfo(view, node);
 
-							if (!renderInfo.data?.widgetType) {
-								// not our decoration
+							if (!renderInfo.data) {
+								// not an inline code block, so we skip it
+								return;
+							}
+
+							if (!renderInfo.data.widgetType) {
+								// an inline code block, but not a field declaration, so we remove all our decorations and skip
+								this.removeDecoration(node);
 								return;
 							}
 
@@ -124,7 +130,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 								this.removeDecoration(node, MB_WidgetType.FIELD);
 								this.addDecoration(node, view, MB_WidgetType.FIELD, renderData);
 							} else if (renderInfo.shouldHighlight) {
-								this.removeDecoration(node, MB_WidgetType.HIGHLIGHT);
+								this.removeDecoration(node);
 								this.addDecoration(node, view, MB_WidgetType.HIGHLIGHT, renderData);
 							} else {
 								this.removeDecoration(node);
@@ -141,21 +147,24 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 			 * @param widgetTypeToKeep if specified, decorations of this type are kept
 			 */
 			removeDecoration(node: SyntaxNode, widgetTypeToKeep?: MB_WidgetType): void {
-				this.decorations.between(node.from - 1, node.to + 1, (from, to, _) => {
-					this.decorations = this.decorations.update({
-						filterFrom: from,
-						filterTo: to,
-						filter: (_from, _to, decoration) => {
-							const spec = decoration.spec as MB_WidgetSpec;
+				this.decorations = this.decorations.update({
+					filterFrom: node.from - 1,
+					filterTo: node.to + 1,
+					filter: (_from, _to, decoration) => {
+						const spec = decoration.spec as MB_WidgetSpec;
 
-							if (widgetTypeToKeep && spec.mb_widgetType === widgetTypeToKeep) {
-								return true;
-							}
+						if (!spec.mb_widgetType) {
+							// this is not a widget decoration, so we keep it
+							return true;
+						}
 
-							spec.mb_unload?.();
-							return false;
-						},
-					});
+						if (widgetTypeToKeep && spec.mb_widgetType === widgetTypeToKeep) {
+							return true;
+						}
+
+						spec.mb_unload?.();
+						return false;
+					},
 				});
 			}
 
@@ -169,11 +178,8 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 			 * @param inlineFieldType
 			 */
 			addDecoration(node: SyntaxNode, view: EditorView, widgetType: MB_WidgetType, data: RenderNodeData): void {
-				const from = node.from - data.preOffset;
-				const to = node.to + data.postOffset;
-
 				// we check if there already is a decoration of the same type in the range
-				if (Cm6_Util.existsDecorationOfTypeBetween(this.decorations, widgetType, from, to)) {
+				if (Cm6_Util.existsDecorationOfTypeBetween(this.decorations, widgetType, node.from, node.to)) {
 					return;
 				}
 
@@ -182,8 +188,6 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 				if (!currentFile) {
 					return;
 				}
-
-				console.log(`add decoration at ${from} - ${to} for node ${node.type.name}`);
 
 				const newDecoration: Range<Decoration> | Range<Decoration>[] = this.renderWidget(
 					node,
@@ -225,10 +229,16 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 				if (props.has('inline-code') && !props.has('formatting')) {
 					// check for selection or cursor overlap
 					const data = this.readNode(view, node.from, node.to);
+					// if the node is not truly inline, we do not render it
+					// this can happen for proper code blocks in callouts in LP mode. Idk why, but we have to work around it
+					if (!data.trulyInline) {
+						return { shouldRender: false, shouldHighlight: false, data: undefined };
+					}
+
 					const hasSelectionOverlap = Cm6_Util.checkSelectionOverlap(
 						view.state.selection,
-						node.from - data.preOffset,
-						node.to + data.postOffset,
+						node.from,
+						node.to,
 					);
 					const isLivePreview = this.isLivePreview(view.state);
 					// if we are in live preview mode, we only render the widget if there is no selection overlap
@@ -254,24 +264,19 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 			 * @param to
 			 */
 			readNode(view: EditorView, from: number, to: number): NodeData {
-				let content = Cm6_Util.getContent(view.state, from - 1, to + 1);
-
-				let preOffset = 0;
-				let postOffset = 0;
-				if (content.startsWith('`')) {
-					preOffset = 1;
+				let trulyInline = false;
+				try {
+					const extendedContent = Cm6_Util.getContent(view.state, from - 1, to + 1);
+					trulyInline = extendedContent.startsWith('`') && extendedContent.endsWith('`');
+				} catch (_) {
+					// we failed to read one more character before and after the node, so we assume it is not truly inline
 				}
-				if (content.endsWith('`')) {
-					postOffset = 1;
-				}
-
-				content = content.slice(1, content.length - 1);
+				const content = Cm6_Util.getContent(view.state, from, to);
 
 				return {
 					content: content,
 					widgetType: mb.api.isInlineFieldDeclarationAndGetType(content),
-					preOffset: preOffset,
-					postOffset: postOffset,
+					trulyInline: trulyInline,
 				};
 			}
 
@@ -298,11 +303,6 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 							const renderInfo = this.getRenderInfo(view, node);
 
 							if (!renderInfo.data?.widgetType) {
-								console.log(
-									`Skipping node ${node.type.name} because it is not a field declaration`,
-									renderInfo,
-								);
-
 								return;
 							}
 
@@ -313,9 +313,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 
 							if (renderInfo.shouldRender) {
 								widget = this.renderWidget(node, MB_WidgetType.FIELD, renderData, currentFile);
-							}
-
-							if (renderInfo.shouldHighlight) {
+							} else if (renderInfo.shouldHighlight) {
 								widget = this.renderWidget(node, MB_WidgetType.HIGHLIGHT, renderData, currentFile);
 							}
 
@@ -335,6 +333,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 
 			/**
 			 * Renders a singe widget of the given widget type at a given node.
+			 * Note that this should only be called on a node that was determined to be truly inline.
 			 *
 			 * @param view
 			 * @param node
@@ -363,13 +362,14 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 						mb_unload: () => {
 							widget.renderChild?.unload();
 						},
-					}).range(node.from - data.preOffset, node.to + data.postOffset);
+					}).range(node.from - 1, node.to + 1); // since we know that the it's truly inline, we can safely use -1 and +1
 				} else {
 					const highlight = mb.syntaxHighlighting.highlight(data.content, data.widgetType, false);
 
 					return highlight.getHighlights().map(h => {
 						return Decoration.mark({
 							class: `mb-highlight-${h.tokenClass}`,
+							mb_widgetType: MB_WidgetType.HIGHLIGHT,
 						}).range(node.from + h.range.from.index, node.from + h.range.to.index);
 					});
 				}

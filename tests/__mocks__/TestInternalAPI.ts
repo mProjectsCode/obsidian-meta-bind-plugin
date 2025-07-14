@@ -15,7 +15,7 @@ import type { ContextMenuItemDefinition, IContextMenu } from 'packages/core/src/
 import YAML from 'yaml';
 import { z, ZodType } from 'zod';
 import type { LifecycleHook } from 'packages/core/src/api/API';
-import { TestFileAPI } from './TestFileAPI';
+import { zodFunction } from 'packages/core/src/utils/ZodUtils';
 
 export class TestInternalAPI extends InternalAPI<TestComponents> {
 	constructor(mb: TestMetaBind) {
@@ -23,7 +23,7 @@ export class TestInternalAPI extends InternalAPI<TestComponents> {
 	}
 
 	public getLifecycleHookValidator(): ZodType<LifecycleHook, any, any> {
-		return z.object({ register: z.function().returns(z.void()) });
+		return z.object({ register: zodFunction() });
 	}
 
 	public async renderMarkdown(markdown: string, element: HTMLElement, _filePath: string): Promise<() => void> {

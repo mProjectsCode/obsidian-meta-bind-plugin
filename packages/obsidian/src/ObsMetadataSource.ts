@@ -84,8 +84,8 @@ export class ObsMetadataSource extends FilePathMetadataSource<ObsMetadataCacheIt
 	// 	return Array.from(new Set(tags));
 	// }
 
-	syncExternal(cacheItem: ObsMetadataCacheItem): void {
-		void this.mb.app.fileManager.processFrontMatter(cacheItem.file, frontmatter => {
+	async syncExternal(cacheItem: ObsMetadataCacheItem): Promise<void> {
+		return this.mb.app.fileManager.processFrontMatter(cacheItem.file, frontmatter => {
 			Object.assign(frontmatter, cacheItem.data);
 		});
 	}

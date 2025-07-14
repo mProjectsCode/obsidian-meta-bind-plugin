@@ -1,5 +1,5 @@
 import type { ReactiveComponent } from 'jsEngine/api/reactive/ReactiveComponent';
-import { Component } from 'obsidian';
+import type { Component } from 'obsidian';
 import type { LifecycleHook } from 'packages/core/src/api/API.js';
 import { API } from 'packages/core/src/api/API.js';
 import type { InlineFieldType } from 'packages/core/src/config/APIConfigs';
@@ -10,7 +10,7 @@ import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/error
 import type { Mountable } from 'packages/core/src/utils/Mountable';
 import { Signal } from 'packages/core/src/utils/Signal';
 import { getUUID } from 'packages/core/src/utils/Utils';
-import { validateAPIArgs } from 'packages/core/src/utils/ZodUtils';
+import { validateAPIArgs, zodFunction } from 'packages/core/src/utils/ZodUtils';
 import { MarkdownRenderChildWidget } from 'packages/obsidian/src/cm6/Cm6_Widgets';
 import type { ObsComponents, ObsMetaBind } from 'packages/obsidian/src/main';
 import { MountableMDRC } from 'packages/obsidian/src/MountableMDRC';
@@ -28,7 +28,7 @@ export interface ComponentLike {
  * @internal
  */
 export const V_ComponentLike = z.object({
-	addChild: z.function().args(z.instanceof(Component)).returns(z.void()),
+	addChild: zodFunction<(child: Component) => void>(),
 });
 
 /**

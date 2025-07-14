@@ -354,21 +354,31 @@ export class MetadataManager {
 	/**
 	 * Internal update function that runs each cycle.
 	 */
-	public cycle(): void {
-		for (const source of this.sources.values()) {
-			const markedForDelete: IMetadataCacheItem[] = [];
+	public async cycle(): Promise<void> {
+		const results = await Promise.allSettled(this.sources.values().map(source => this.cycleSource(source)));
 
-			for (const cacheItem of source.iterateCacheItems()) {
+		for (const result of results) {
+			if (result.status === 'rejected') {
+				console.warn(`meta-bind | MetadataManager >> failed to cycle source`, result.reason);
+			}
+		}
+	}
+
+	private async cycleSource(source: MetadataSource): Promise<void> {
+		const markedForDelete: IMetadataCacheItem[] = [];
+
+		const results = await Promise.allSettled(
+			source.getCacheItems().map(async cacheItem => {
 				source.onCycle(cacheItem);
 
 				// if the cache is dirty, sync the changes to the external source
 				if (cacheItem.dirty) {
 					try {
-						source.syncExternal(cacheItem);
+						await source.syncExternal(cacheItem);
+						cacheItem.dirty = false;
 					} catch (e) {
 						console.warn(`failed to sync changes to external source for ${source.id}`, e);
 					}
-					cacheItem.dirty = false;
 				}
 				// decrease the external write lock duration
 				if (cacheItem.externalWriteLock > 0) {
@@ -386,10 +396,15 @@ export class MetadataManager {
 				) {
 					markedForDelete.push(cacheItem);
 				}
-			}
+			}),
+		);
 
-			for (const cacheItem of markedForDelete) {
-				source.deleteCache(cacheItem);
+		for (const result of results) {
+			if (result.status === 'rejected') {
+				console.warn(
+					`meta-bind | MetadataManager >> failed to cycle cache item in source ${source.id}`,
+					result.reason,
+				);
 			}
 		}
 	}

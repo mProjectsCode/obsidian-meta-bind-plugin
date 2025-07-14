@@ -9,9 +9,9 @@
 	import type { ErrorCollection } from 'packages/core/src/utils/errors/ErrorCollection';
 	import ErrorCollectionComponent from 'packages/core/src/utils/errors/ErrorCollectionComponent.svelte';
 	import { ErrorLevel, MetaBindButtonError } from 'packages/core/src/utils/errors/MetaBindErrors';
+	import { toReadableError } from 'packages/core/src/utils/ZodUtils';
 	import ButtonTemplateSettingComponent from 'packages/obsidian/src/settings/buttonTemplateSetting/ButtonTemplateSettingComponent.svelte';
 	import type { ButtonTemplatesSettingModal } from 'packages/obsidian/src/settings/buttonTemplateSetting/ButtonTemplatesSettingModal';
-	import { fromZodError } from 'zod-validation-error';
 
 	let {
 		modal,
@@ -47,22 +47,17 @@
 		const validationResult = V_ButtonConfig.safeParse(unvalidatedConfig);
 
 		if (!validationResult.success) {
-			const niceError = fromZodError(validationResult.error, {
-				unionSeparator: '\nOR ',
-				issueSeparator: ' AND ',
-				prefix: null,
-			});
+			const niceError = toReadableError(validationResult.error);
 
 			console.warn(
 				new MetaBindButtonError({
 					errorLevel: ErrorLevel.ERROR,
 					effect: 'can not parse button config',
 					cause: 'zod validation failed. Check your button syntax',
-					positionContext: niceError.message,
+					positionContext: niceError,
 					docs: [DocsUtils.linkToButtonConfig()],
 				}),
 			);
-			console.warn(niceError);
 
 			new Notice(
 				'meta-bind | Can not parse button config. Check your button syntax. See the console for more details.',

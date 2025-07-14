@@ -21,33 +21,54 @@ import { oneOf, schemaForType } from 'packages/core/src/utils/ZodUtils';
 import { z } from 'zod';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function actionFieldNumber(action: string, name: string, description: string) {
+function actionFieldNumber(action: string, field: string, description: string) {
 	return z.number({
-		required_error: `The ${action} action requires a specified ${description} with the '${name}' field.`,
-		invalid_type_error: `The ${action} action requires the value of the '${name}' fields to be a number.`,
+		error: issue => {
+			if (issue.input === undefined) {
+				return `The ${action} action requires a specified ${description} with the '${field}' field.`;
+			} else {
+				return `The ${action} action requires the value of the '${field}' fields to be a number, but got ${typeof issue.input}.`;
+			}
+		},
 	});
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function actionFieldString(action: string, name: string, description: string) {
+function actionFieldString(action: string, field: string, description: string) {
 	return z.string({
-		required_error: `The ${action} action requires a specified ${description} with the '${name}' field.`,
+		error: issue => {
+			if (issue.input === undefined) {
+				return `The ${action} action requires a specified ${description} with the '${field}' field.`;
+			} else {
+				return `The ${action} action requires the value of the '${field}' fields to be a string, but got ${typeof issue.input}.`;
+			}
+		},
 	});
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function actionFieldCoerceString(action: string, name: string, description: string) {
+function actionFieldCoerceString(action: string, field: string, description: string) {
 	return z.coerce.string({
-		required_error: `The ${action} action requires a specified ${description} with the '${name}' field.`,
-		invalid_type_error: `The ${action} action requires the value of the '${name}' fields to be a string.`,
+		error: issue => {
+			if (issue.input === undefined) {
+				return `The ${action} action requires a specified ${description} with the '${field}' field.`;
+			} else {
+				return `The ${action} action requires the value of the '${field}' fields to be a string, but got ${typeof issue.input}.`;
+			}
+		},
 	});
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function actionFieldBool(action: string, name: string, description: string) {
+function actionFieldBool(action: string, field: string, description: string) {
 	return z.boolean({
-		required_error: `The ${action} action requires a specified ${description} with the '${name}' field.`,
-		invalid_type_error: `The ${action} action requires the value of the '${name}' fields to be a boolean.`,
+		error: issue => {
+			if (issue.input === undefined) {
+				return `The ${action} action requires a specified ${description} with the '${field}' field.`;
+			} else {
+				return `The ${action} action requires the value of the '${field}' fields to be a boolean, but got ${typeof issue.input}.`;
+			}
+		},
 	});
 }
 
@@ -62,7 +83,7 @@ export const V_JSButtonAction = schemaForType<JSButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.JS),
 		file: actionFieldString('js', 'file', 'file path to the file to run'),
-		args: z.record(z.unknown()).optional(),
+		args: z.record(z.string(), z.unknown()).optional(),
 	}),
 );
 
@@ -120,10 +141,7 @@ export const V_UpdateMetadataButtonAction = schemaForType<UpdateMetadataButtonAc
 			'evaluate',
 			'value for whether to evaluate the value as a JavaScript expression',
 		),
-		value: z.coerce.string({
-			required_error: `The updateMetadata action requires a specified value for the update with the 'value' field.`,
-			invalid_type_error: `The updateMetadata action requires the value of the 'value' fields to be a string.`,
-		}),
+		value: actionFieldCoerceString('updateMetadata', 'value for the update', 'value'),
 	}),
 );
 
@@ -185,7 +203,7 @@ export const V_InlineJSButtonAction = schemaForType<InlineJSButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.INLINE_JS),
 		code: actionFieldString('inlineJS', 'code', 'code string to run'),
-		args: z.record(z.unknown()).optional(),
+		args: z.record(z.string(), z.unknown()).optional(),
 	}),
 );
 
@@ -225,5 +243,5 @@ export const V_ButtonConfig = schemaForType<ButtonConfig>()(
 			action: V_ButtonAction.optional(),
 			actions: V_ButtonAction.array().optional(),
 		})
-		.superRefine(oneOf('action', 'actions')),
+		.check(oneOf('action', 'actions')),
 );

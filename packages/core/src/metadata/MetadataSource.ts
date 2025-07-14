@@ -70,9 +70,9 @@ export interface IMetadataSource<T extends IMetadataCacheItem> {
 	onCycle(cacheItem: T): void;
 
 	/**
-	 * Iterates over all cache items.
+	 * Get all cache items as an array, so that it can e.g. be iterated over.
 	 */
-	iterateCacheItems(): IterableIterator<T>;
+	getCacheItems(): T[];
 
 	/**
 	 * Can be used to stop the deletion of a cache item.
@@ -93,7 +93,7 @@ export interface IMetadataSource<T extends IMetadataCacheItem> {
 	 *
 	 * @param cacheItem
 	 */
-	syncExternal(cacheItem: T): void;
+	syncExternal(cacheItem: T): Promise<void>;
 
 	/**
 	 * Updates the cache item with the given value.
@@ -232,8 +232,8 @@ export abstract class FilePathMetadataSource<T extends FilePathMetadataCacheItem
 		// noop
 	}
 
-	iterateCacheItems(): IterableIterator<T> {
-		return this.cache.values();
+	getCacheItems(): T[] {
+		return this.cache.values().toArray();
 	}
 
 	shouldDelete(_cacheItem: T): boolean {
@@ -244,7 +244,7 @@ export abstract class FilePathMetadataSource<T extends FilePathMetadataCacheItem
 		this.cache.delete(cacheItem.storagePath);
 	}
 
-	abstract syncExternal(cacheItem: T): void;
+	abstract syncExternal(cacheItem: T): Promise<void>;
 
 	writeCache(value: unknown, bindTarget: BindTargetDeclaration): T {
 		const cacheItem = this.getOrCreateCacheItem(bindTarget.storagePath);

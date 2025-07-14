@@ -1,24 +1,29 @@
 import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
 import { ParsingError } from 'packages/core/src/parsers/ParsingError';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
-import type { RefinementCtx } from 'zod';
+import type { ZodError } from 'zod';
 import { z } from 'zod';
+import type { ParsePayload } from 'zod/v4/core/index.cjs';
 
-export function oneOf<
-	A,
-	K1 extends Extract<keyof A, string>,
-	K2 extends Extract<keyof A, string>,
-	R extends A & ((Required<Pick<A, K1>> & Record<K2, undefined>) | (Required<Pick<A, K2>> & Record<K1, undefined>)),
->(key1: K1, key2: K2): (arg: A, ctx: RefinementCtx) => arg is R {
-	return (arg, ctx): arg is R => {
-		if ((arg[key1] === undefined) === (arg[key2] === undefined)) {
-			ctx.addIssue({
-				code: z.ZodIssueCode.custom,
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type,@typescript-eslint/explicit-function-return-type
+export function zodFunction<T extends Function>() {
+	return z.custom<T>(val => {
+		return typeof val === 'function';
+	});
+}
+
+export function oneOf<A, K1 extends Extract<keyof A, string>, K2 extends Extract<keyof A, string>>(
+	key1: K1,
+	key2: K2,
+): (ctx: ParsePayload<A>) => void {
+	return ctx => {
+		if ((ctx.value[key1] === undefined) === (ctx.value[key2] === undefined)) {
+			ctx.issues.push({
+				code: 'custom',
 				message: `Either ${key1} or ${key2} must be used, but not both.`,
+				input: ctx.value,
 			});
-			return false;
 		}
-		return true;
 	};
 }
 
@@ -43,7 +48,7 @@ export function validateAPIArgs<T>(validator: z.ZodType<T>, args: T): void {
 }
 
 export function validate<T>(validator: z.ZodType<T>, value: unknown): ReturnType<z.ZodType<T>['safeParse']> {
-	return validator.safeParse(value, { errorMap: customErrorMap });
+	return validator.safeParse(value);
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -55,7 +60,7 @@ export function parserToValidator<T>(str: z.ZodType<string>, parser: Parser<T>) 
 			return result.value;
 		} else {
 			ctx.addIssue({
-				code: z.ZodIssueCode.custom,
+				code: 'custom',
 				message: new ParsingError(ErrorLevel.ERROR, 'parsiNOM parser', data, result).message,
 			});
 			return z.NEVER;
@@ -63,7 +68,7 @@ export function parserToValidator<T>(str: z.ZodType<string>, parser: Parser<T>) 
 	});
 }
 
-const special = [
+const specialNumberNames = [
 	'zeroth',
 	'first',
 	'second',
@@ -85,38 +90,44 @@ const special = [
 	'eighteenth',
 	'nineteenth',
 ];
-const deca = ['twent', 'thirt', 'fort', 'fift', 'sixt', 'sevent', 'eight', 'ninet'];
+const deciPrefix = ['twent', 'thirt', 'fort', 'fift', 'sixt', 'sevent', 'eight', 'ninet'];
 
+// Note: this only works for numbers 0-99, but can be extended if needed
 function stringifyNumber(n: number): string {
 	if (n < 20) {
-		return special[n];
+		return specialNumberNames[n];
 	}
 	if (n % 10 === 0) {
-		return deca[Math.floor(n / 10) - 2] + 'ieth';
+		return deciPrefix[Math.floor(n / 10) - 2] + 'ieth';
 	}
-	return deca[Math.floor(n / 10) - 2] + 'y-' + special[n % 10];
+	return deciPrefix[Math.floor(n / 10) - 2] + 'y-' + specialNumberNames[n % 10];
 }
 
-export const customErrorMap: z.ZodErrorMap = (issue, ctx) => {
-	const readablePath = issue.path
+export function toReadableError(error: ZodError): string {
+	let message = '';
+
+	for (const issue of error.issues) {
+		const readablePath = prettifyErrorPath(issue.path);
+		message += `✖ ${issue.message ?? issue.code} \n  → at '${readablePath}'\n`;
+	}
+
+	return message.trim();
+}
+
+function prettifyErrorPath(path: (string | number | symbol)[] | undefined): string {
+	if (!path || path.length === 0) {
+		return 'unknown location';
+	}
+
+	return path
 		.map(x => {
 			if (typeof x === 'string') {
 				return x;
+			} else if (typeof x === 'symbol') {
+				return x.toString();
 			} else {
 				return stringifyNumber(x + 1) + ' element';
 			}
 		})
 		.join(' > ');
-
-	// if (issue.code === z.ZodIssueCode.invalid_type) {
-	// 	if (issue.received === 'undefined') {
-	// 		return {
-	// 			message: `Value at '${readablePath}' is required.`,
-	// 		};
-	// 	}
-	// }
-
-	return {
-		message: `At '${readablePath}'. ${ctx.defaultError}`,
-	};
-};
+}

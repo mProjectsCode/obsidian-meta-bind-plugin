@@ -608,7 +608,7 @@ describe('IPF', () => {
 				const valueStream2 = Stream.ofCycle(valueStream1).skip(1);
 
 				for (const [validValue, otherValidValue] of multi.zip(valueStream1, valueStream2)) {
-					test(getTestName(validValue), () => {
+					test(getTestName(validValue), async () => {
 						const index = testPlugin.addTestInputField(TEST_CASE.declaration);
 
 						testPlugin.initializeTest();
@@ -617,7 +617,7 @@ describe('IPF', () => {
 						// emulate user updating the input field
 						testPlugin.setTestInputFieldValue(index, validValue);
 
-						testPlugin.cycleMetadataManagerUntilThreshold();
+						await testPlugin.cycleMetadataManagerUntilThreshold();
 
 						// emulate external update
 						testPlugin.setCacheExternally({ [TEST_PROP]: otherValidValue });
@@ -821,7 +821,7 @@ describe('IPF', () => {
 					const valueStream2 = Stream.ofCycle(valueStream1).skip(1);
 
 					for (const [validValue, otherValidValue] of multi.zip(valueStream1, valueStream2)) {
-						test(getTestName(validValue), () => {
+						test(getTestName(validValue), async () => {
 							const index1 = testPlugin.addTestInputField(TEST_CASE.declaration);
 							const index2 = testPlugin.addTestInputField(TEST_CASE.declaration);
 
@@ -831,7 +831,7 @@ describe('IPF', () => {
 							// emulate user updating the input field
 							testPlugin.setTestInputFieldValue(index1, validValue);
 
-							testPlugin.cycleMetadataManagerUntilThreshold();
+							await testPlugin.cycleMetadataManagerUntilThreshold();
 
 							testPlugin.setCacheExternally({ [TEST_PROP]: otherValidValue });
 

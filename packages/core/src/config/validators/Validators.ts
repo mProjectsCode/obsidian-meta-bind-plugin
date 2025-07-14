@@ -37,7 +37,7 @@ import { Mountable } from 'packages/core/src/utils/Mountable';
 import { PropAccessType } from 'packages/core/src/utils/prop/PropAccess';
 import { PropPath } from 'packages/core/src/utils/prop/PropPath';
 import { Signal } from 'packages/core/src/utils/Signal';
-import { schemaForType } from 'packages/core/src/utils/ZodUtils';
+import { schemaForType, zodFunction } from 'packages/core/src/utils/ZodUtils';
 import { z } from 'zod';
 
 export const V_FilePath = schemaForType<string>()(z.string());
@@ -54,7 +54,7 @@ export const V_BindTargetScope = schemaForType<BindTargetScope>()(z.instanceof(B
 
 export const V_Signal = schemaForType<Signal<unknown>>()(z.instanceof(Signal));
 
-export const V_VoidFunction = schemaForType<() => void>()(z.function().args().returns(z.void()));
+export const V_VoidFunction = schemaForType<() => void>()(zodFunction<() => void>());
 
 export const V_FieldMountable = schemaForType<FieldMountable>()(z.instanceof(FieldMountable));
 export const V_Mountable = schemaForType<Mountable>()(z.instanceof(Mountable));

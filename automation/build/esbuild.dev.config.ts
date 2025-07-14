@@ -30,7 +30,9 @@ const context = await esbuild.context({
 	format: 'cjs',
 	target: 'es2022',
 	logLevel: 'info',
-	sourcemap: 'inline',
+	sourcemap: false,
+	// NOTE: disabled because some stupid invalid sourcemap warnings
+	// sourcemap: 'inline',
 	treeShaking: true,
 	outdir: `exampleVault/.obsidian/plugins/${manifest.id}/`,
 	outbase: 'packages/obsidian/src',
