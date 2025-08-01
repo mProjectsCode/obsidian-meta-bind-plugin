@@ -42,13 +42,14 @@ import { z } from 'zod';
 
 export const V_FilePath = schemaForType<string>()(z.string());
 
-export const V_RenderChildType = schemaForType<RenderChildType>()(z.nativeEnum(RenderChildType));
+export const V_RenderChildType = schemaForType<RenderChildType>()(z.enum(RenderChildType));
 
-export const V_FieldType = schemaForType<FieldType>()(z.nativeEnum(FieldType));
+export const V_FieldType = schemaForType<FieldType>()(z.enum(FieldType));
 
-export const V_InputFieldType = schemaForType<InputFieldType>()(z.nativeEnum(InputFieldType));
+export const V_InputFieldType = schemaForType<InputFieldType>()(z.enum(InputFieldType));
 
-export const V_HTMLElement = schemaForType<HTMLElement>()(z.instanceof(HTMLElement));
+// This is temporarily changed to `z.any()` from `z.instanceof(HTMLElement)`, because the latter does not work in popout windows or PDF exports.
+export const V_HTMLElement = schemaForType<HTMLElement>()(z.any());
 
 export const V_BindTargetScope = schemaForType<BindTargetScope>()(z.instanceof(BindTargetScope));
 
