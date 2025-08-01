@@ -1,5 +1,16 @@
 # Obsidian Meta Bind Changelog
 
+# 1.4.3
+
+Bug Fixes
+
+- Fixed the plugin breaking live preview in Obsidian 1.9 [#598](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/598)
+- Fixed the plugin breaking PDF export in Obsidian 1.9 [#603](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/603)
+
+Misc
+
+- Updated to Zod version 4. Validation error messages might be slightly different, especially for buttons.
+
 # 1.4.2
 
 Bug Fixes
