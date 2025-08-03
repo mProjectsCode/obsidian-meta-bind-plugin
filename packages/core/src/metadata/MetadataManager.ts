@@ -355,9 +355,16 @@ export class MetadataManager {
 	 * Internal update function that runs each cycle.
 	 */
 	public async cycle(): Promise<void> {
-		const results = await Promise.allSettled(this.sources.values().map(source => this.cycleSource(source)));
+		// Note: I would like to use the commented out line, but this is not supported by older installers
+		// const results = await Promise.allSettled(this.sources.values().map(source => this.cycleSource(source)));
 
-		for (const result of results) {
+		const promises = [];
+
+		for (const source of this.sources.values()) {
+			promises.push(this.cycleSource(source));
+		}
+
+		for (const result of await Promise.allSettled(promises)) {
 			if (result.status === 'rejected') {
 				console.warn(`meta-bind | MetadataManager >> failed to cycle source`, result.reason);
 			}

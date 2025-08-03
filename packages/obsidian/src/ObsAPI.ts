@@ -120,7 +120,7 @@ export class ObsAPI extends API<ObsComponents> {
 			z.object({
 				bindTargets: V_BindTargetDeclaration.array(),
 				lifecycleHook: this.mb.internal.getLifecycleHookValidator(),
-				callback: z.function(),
+				callback: zodFunction<(...values: unknown[]) => Promise<unknown>>(),
 			}),
 			{
 				bindTargets: bindTargets,

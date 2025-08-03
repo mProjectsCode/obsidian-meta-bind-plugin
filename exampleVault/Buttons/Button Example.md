@@ -1,9 +1,9 @@
 ---
-count: 10
+count: 0
 someList:
   - 1708945050652
   - 1709918700548
-count2: 0
+count2: 32
 ---
 Meta Bind is getting Buttons
 
@@ -45,6 +45,16 @@ action:
   file: testJsFile.js
   args: 
     greeting: "Meta Bind User"
+```
+
+```meta-bind-button
+style: default
+label: Run Custom Inline JS
+hidden: false
+actions:
+  - type: inlineJS
+    code: console.log("good morning")
+    args: {}
 ```
 
 And open internal and external links

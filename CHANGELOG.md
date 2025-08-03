@@ -1,5 +1,12 @@
 # Obsidian Meta Bind Changelog
 
+# 1.4.4
+
+Bug Fixes
+
+- Fixed argument validation for the `reactiveMetadata` API function
+- Fixed the plugin failing to update metadata for people on an older installer [#606](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/606)
+
 # 1.4.3
 
 Bug Fixes
