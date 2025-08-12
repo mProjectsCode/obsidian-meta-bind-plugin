@@ -233,7 +233,7 @@ export abstract class FilePathMetadataSource<T extends FilePathMetadataCacheItem
 	}
 
 	getCacheItems(): T[] {
-		return this.cache.values().toArray();
+		return Array.from(this.cache.values());
 	}
 
 	shouldDelete(_cacheItem: T): boolean {

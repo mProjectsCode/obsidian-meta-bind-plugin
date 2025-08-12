@@ -211,6 +211,8 @@ export class ObsInternalAPI extends InternalAPI<ObsMetaBind> {
 
 		const newFile = await templaterAPI.create_new_note_from_template(templateFile, folder, fileName, false);
 
+		// The problem here is that Templater can't open the note in a new tab.
+		// TODO: maybe a better way to handle this would be to first create and switch to a new tab, and then let templater open it.
 		if (openNote && newFile) {
 			await this.mb.file.openInSourceMode(newFile, newTab);
 		}

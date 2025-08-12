@@ -96,8 +96,8 @@ export class LineNumberExpression {
 
 		if (this.literal in context) {
 			return (context as unknown as Record<string, number>)[this.literal];
+		} else {
+			throw new Error(`Error while evaluating line number expression: Literal "${this.literal}" not available.`);
 		}
-
-		return undefined;
 	}
 }
