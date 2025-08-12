@@ -1,5 +1,15 @@
 # Obsidian Meta Bind Changelog
 
+# 1.4.5
+
+Changes
+
+- Relative line number expressions now throw if a literal is not available instead of it as `0`
+
+Bug Fixes
+
+- Fixed another issue with the plugin on older installers
+
 # 1.4.4
 
 Bug Fixes

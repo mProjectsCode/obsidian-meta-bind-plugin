@@ -16,12 +16,12 @@ export function getJsEnginePluginAPI(mb: ObsMetaBind): JsEngineAPI {
 }
 
 export enum Templater_RunMode {
-    CreateNewFromTemplate,
-    AppendActiveFile,
-    OverwriteFile,
-    OverwriteActiveFile,
-    DynamicProcessor,
-    StartupTemplate,
+	CreateNewFromTemplate,
+	AppendActiveFile,
+	OverwriteFile,
+	OverwriteActiveFile,
+	DynamicProcessor,
+	StartupTemplate,
 }
 
 export function getTemplaterPluginAPI(mb: ObsMetaBind): Templater {
