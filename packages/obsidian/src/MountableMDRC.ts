@@ -18,6 +18,9 @@ export class MountableMDRC extends MarkdownRenderChild {
 	}
 
 	onload(): void {
+		// TODO: fixes #403, but maybe there is a better way to apply this only when it's needed
+		this.containerEl.addClass('interactive-child');
+
 		this.mountable.mount(this.containerEl);
 
 		super.onload();
