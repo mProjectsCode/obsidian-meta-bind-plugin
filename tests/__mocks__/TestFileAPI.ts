@@ -32,7 +32,10 @@ export class TestFileAPI extends FileAPI<TestComponents> {
 	}
 
 	public create(folderPath: string, fileName: string, extension: string, open?: boolean): Promise<string> {
-		const filePath = `${folderPath}/${fileName}.${extension}`;
+		let filePath = `${folderPath}/${fileName}.${extension}`;
+		if (filePath.startsWith('/')) {
+			filePath = filePath.slice(1);
+		}
 		this.fileSystem.writeFile(filePath, '');
 		return Promise.resolve(filePath);
 	}

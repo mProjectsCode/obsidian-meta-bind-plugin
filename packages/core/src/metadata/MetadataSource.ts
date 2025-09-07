@@ -140,6 +140,8 @@ export interface IMetadataSource<T extends IMetadataCacheItem> {
 	 * @returns The entire data of the cache item.
 	 */
 	readEntireCacheItem(cacheItem: T): Metadata;
+
+	usesStoragePath(): boolean;
 }
 
 export abstract class FilePathMetadataSource<T extends FilePathMetadataCacheItem> implements IMetadataSource<T> {
@@ -282,5 +284,9 @@ export abstract class FilePathMetadataSource<T extends FilePathMetadataCacheItem
 
 	readEntireCacheItem(cacheItem: T): Metadata {
 		return cacheItem.data;
+	}
+
+	usesStoragePath(): boolean {
+		return true;
 	}
 }

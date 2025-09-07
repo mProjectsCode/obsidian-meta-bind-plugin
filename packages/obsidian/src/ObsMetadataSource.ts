@@ -60,7 +60,7 @@ export class ObsMetadataSource extends FilePathMetadataSource<ObsMetadataCacheIt
 			data: structuredClone(frontmatter) ?? {},
 			storagePath: storagePath,
 			file: file,
-			...this.manager.getDefaultCacheItem(),
+			...this.manager.constructDefaultCacheItem(),
 		};
 	}
 

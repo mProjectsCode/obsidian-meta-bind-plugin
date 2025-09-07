@@ -27,7 +27,7 @@ export class PublishMetadataSource extends FilePathMetadataSource<FilePathMetada
 		return {
 			data: structuredClone(frontmatter) ?? {},
 			storagePath: storagePath,
-			...this.manager.getDefaultCacheItem(),
+			...this.manager.constructDefaultCacheItem(),
 		};
 	}
 

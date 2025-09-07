@@ -24,7 +24,7 @@ export class InternalMetadataSource extends FilePathMetadataSource<FilePathMetad
 		return {
 			data: {},
 			storagePath: storagePath,
-			...this.manager.getDefaultCacheItem(),
+			...this.manager.constructDefaultCacheItem(),
 		};
 	}
 
@@ -51,7 +51,7 @@ export class TestMetadataSource extends FilePathMetadataSource<FilePathMetadataC
 		return {
 			data: this.readExternal(storagePath),
 			storagePath: storagePath,
-			...this.manager.getDefaultCacheItem(),
+			...this.manager.constructDefaultCacheItem(),
 		};
 	}
 
@@ -72,7 +72,7 @@ export class GlobalMetadataSource implements IMetadataSource<GlobalMetadataCache
 
 		this.cache = {
 			data: {},
-			...this.manager.getDefaultCacheItem(),
+			...this.manager.constructDefaultCacheItem(),
 		};
 	}
 
@@ -103,7 +103,7 @@ export class GlobalMetadataSource implements IMetadataSource<GlobalMetadataCache
 	}
 
 	public getCacheItemForStoragePath(_storagePath: string): GlobalMetadataCacheItem | undefined {
-		return undefined;
+		return this.cache;
 	}
 
 	public getCacheItems(): GlobalMetadataCacheItem[] {
@@ -154,6 +154,10 @@ export class GlobalMetadataSource implements IMetadataSource<GlobalMetadataCache
 
 	public readEntireCacheItem(cacheItem: GlobalMetadataCacheItem): Metadata {
 		return cacheItem.data;
+	}
+
+	public usesStoragePath(): boolean {
+		return false;
 	}
 }
 
@@ -258,5 +262,9 @@ export class ScopeMetadataSource implements IMetadataSource<IMetadataCacheItem> 
 			effect: 'action not permitted',
 			cause: `source 'scope' should have no cache items or subscriptions`,
 		});
+	}
+
+	public usesStoragePath(): boolean {
+		return false;
 	}
 }

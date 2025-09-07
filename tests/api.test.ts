@@ -262,4 +262,92 @@ action:
 			expect(callback).toHaveBeenLastCalledWith(1);
 		});
 	});
+
+	describe('update metadata interactions', () => {
+		beforeEach(() => {
+			plugin.file.create('', 'test', 'md');
+		});
+
+		test.each(['foo', 'memory^foo', 'globalMemory^foo'])('view field created after', async value => {
+			const bindTarget = plugin.api.parseBindTarget(value, 'test.md');
+
+			plugin.api.setMetadata(bindTarget, 123);
+
+			expect(plugin.api.getMetadata(bindTarget)).toBe(123);
+
+			const viewField = plugin.api.createViewFieldMountable('test.md', {
+				declaration: `VIEW[{${value}}]`,
+				renderChildType: RenderChildType.INLINE,
+			});
+
+			viewField.mount(document.body);
+
+			await new Promise(resolve => setTimeout(resolve, 0));
+
+			expect(viewField.viewField?.getTargetEl()?.textContent).toBe('123');
+		});
+
+		test.each(['foo', 'memory^foo', 'globalMemory^foo'])('input field created after', async value => {
+			const bindTarget = plugin.api.parseBindTarget(value, 'test.md');
+
+			plugin.api.setMetadata(bindTarget, 123);
+
+			expect(plugin.api.getMetadata(bindTarget)).toBe(123);
+
+			const inputField = plugin.api.createInputFieldMountable('test.md', {
+				declaration: `INPUT[number:${value}]`,
+				renderChildType: RenderChildType.INLINE,
+			});
+
+			inputField.mount(document.body);
+
+			await new Promise(resolve => setTimeout(resolve, 0));
+
+			expect(inputField.inputField?.getValue()).toBe(123);
+		});
+
+		test.each(['foo', 'memory^foo', 'globalMemory^foo'])('view field created before', async value => {
+			const bindTarget = plugin.api.parseBindTarget(value, 'test.md');
+
+			const viewField = plugin.api.createViewFieldMountable('test.md', {
+				declaration: `VIEW[{${value}}]`,
+				renderChildType: RenderChildType.INLINE,
+			});
+
+			viewField.mount(document.body);
+
+			await new Promise(resolve => setTimeout(resolve, 0));
+
+			plugin.api.setMetadata(bindTarget, 123);
+
+			expect(plugin.api.getMetadata(bindTarget)).toBe(123);
+
+			await new Promise(resolve => setTimeout(resolve, 0));
+
+			expect(viewField.viewField?.getTargetEl()?.textContent).toBe('123');
+		});
+
+		test.each(['foo', 'memory^foo', 'globalMemory^foo'])('input field created before', async value => {
+			const bindTarget = plugin.api.parseBindTarget(value, 'test.md');
+
+			const inputField = plugin.api.createInputFieldMountable('test.md', {
+				declaration: `INPUT[number:${value}]`,
+				renderChildType: RenderChildType.INLINE,
+			});
+
+			inputField.mount(document.body);
+
+			await new Promise(resolve => setTimeout(resolve, 0));
+
+			plugin.api.setMetadata(bindTarget, 123);
+
+			expect(plugin.api.getMetadata(bindTarget)).toBe(123);
+
+			await new Promise(resolve => setTimeout(resolve, 0));
+
+			console.log(plugin.metadataManager.getSource('globalMemory'));
+
+			expect(inputField.inputField?.getValue()).toBe(123);
+		});
+	});
 });

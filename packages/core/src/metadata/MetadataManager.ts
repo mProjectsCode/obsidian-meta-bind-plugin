@@ -558,6 +558,10 @@ export class MetadataManager {
 	 */
 	public deleteCachesForStoragePath(storagePath: string): void {
 		for (const source of this.sources.values()) {
+			if (!source.usesStoragePath()) {
+				continue;
+			}
+
 			const cacheItem = source.getCacheItemForStoragePath(storagePath);
 			if (cacheItem === undefined) {
 				continue;
@@ -567,7 +571,7 @@ export class MetadataManager {
 		}
 	}
 
-	public getDefaultCacheItem(): IMetadataCacheItem {
+	public constructDefaultCacheItem(): IMetadataCacheItem {
 		return {
 			subscriptions: [],
 			externalWriteLock: 0,
