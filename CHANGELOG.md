@@ -1,5 +1,12 @@
 # Obsidian Meta Bind Changelog
 
+# 1.4.6
+
+Bug Fixes
+
+- Fixed interactions with input fields in callouts in live preview mode [#403](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/403)
+- Fixed `globalMetadata` source not updating subscriptions
+
 # 1.4.5
 
 Changes
