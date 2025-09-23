@@ -51,6 +51,7 @@ export interface OpenButtonAction {
 	type: ButtonActionType.OPEN;
 	link: string;
 	newTab?: boolean;
+	newWindow?: boolean;
 }
 
 export interface InputButtonAction {
@@ -232,6 +233,10 @@ export class ButtonClickContext {
 	 */
 	openInNewTab(): boolean {
 		return this.type === ButtonClickType.MIDDLE || this.ctrlKey;
+	}
+
+	openInNewWindow(): boolean {
+		return this.type === ButtonClickType.LEFT || this.ctrlKey || this.altKey || this.shiftKey;
 	}
 }
 

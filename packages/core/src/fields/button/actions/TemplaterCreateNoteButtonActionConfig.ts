@@ -25,7 +25,7 @@ export class TemplaterCreateNoteButtonActionConfig extends AbstractButtonActionC
 			const filePath = ensureFileExtension(joinPath(action.folderPath ?? '', action.fileName), 'md');
 			// if the file already exists, open it in the same tab
 			if (await this.mb.file.exists(filePath)) {
-				await this.mb.file.open(filePath, '', false);
+				await this.mb.file.open(filePath, '', false, false);
 				return;
 			}
 		}

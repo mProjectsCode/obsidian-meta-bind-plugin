@@ -22,15 +22,17 @@ export class OpenButtonActionConfig extends AbstractButtonActionConfig<OpenButto
 		click: ButtonClickContext,
 	): Promise<void> {
 		const newTab = click.openInNewTab() || (action.newTab ?? false);
+		const newWindow = click.openInNewWindow() || (action.newWindow ?? false);
 		const link = MDLinkParser.interpretAsLink(action.link);
 		if (!link) {
 			throw new Error('Invalid link');
 		}
-		link.open(this.mb, filePath, newTab);
+
+		link.open(this.mb, filePath, newTab, newWindow);
 	}
 
 	create(): Required<OpenButtonAction> {
-		return { type: ButtonActionType.OPEN, link: '', newTab: true };
+		return { type: ButtonActionType.OPEN, link: '', newTab: true, newWindow: true };
 	}
 
 	getActionLabel(): string {

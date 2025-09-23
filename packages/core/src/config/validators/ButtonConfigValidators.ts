@@ -92,6 +92,7 @@ export const V_OpenButtonAction = schemaForType<OpenButtonAction>()(
 		type: z.literal(ButtonActionType.OPEN),
 		link: actionFieldString('open', 'link', 'link to open'),
 		newTab: actionFieldBool('open', 'newTab', '').optional(),
+		newWindow: actionFieldBool('open', 'newWindow', '').optional(),
 	}),
 );
 

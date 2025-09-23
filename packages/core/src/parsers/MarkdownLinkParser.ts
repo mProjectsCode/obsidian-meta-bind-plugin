@@ -63,9 +63,9 @@ export class MarkdownLink {
 		return this.block ? `${this.target}#${this.block}` : this.target;
 	}
 
-	open(mb: MetaBind, relativeFilePath: string, newTab: boolean): void {
+	open(mb: MetaBind, relativeFilePath: string, newTab: boolean, newWindow: boolean): void {
 		if (this.internal) {
-			void mb.file.open(this.fullTarget(), relativeFilePath, newTab);
+			void mb.file.open(this.fullTarget(), relativeFilePath, newTab, newWindow);
 		} else {
 			openURL(this.target);
 		}

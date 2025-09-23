@@ -58,8 +58,9 @@ export abstract class FileAPI<Components extends MB_Comps> {
 	 * @param filePath
 	 * @param callingFilePath
 	 * @param newTab
+	 * @param newWindow
 	 */
-	public abstract open(filePath: string, callingFilePath: string, newTab: boolean): Promise<void>;
+	public abstract open(filePath: string, callingFilePath: string, newTab: boolean, newWindow: boolean): Promise<void>;
 
 	/**
 	 * Resolves a file name to a file path.

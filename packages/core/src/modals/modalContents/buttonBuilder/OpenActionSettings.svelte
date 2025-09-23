@@ -32,3 +32,7 @@
 <SettingComponent name="New tab" description="Whether to open the link in a new tab.">
 	<Toggle bind:checked={action.newTab}></Toggle>
 </SettingComponent>
+
+<SettingComponent name="New window" description="Whether to open the link in a new window.">
+	<Toggle bind:checked={action.newWindow}></Toggle>
+</SettingComponent>
