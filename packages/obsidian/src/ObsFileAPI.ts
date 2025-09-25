@@ -2,6 +2,7 @@ import type { App } from 'obsidian';
 import { normalizePath, TFile, TFolder } from 'obsidian';
 import { FileAPI } from 'packages/core/src/api/FileAPI';
 import type { ObsComponents, ObsMetaBind } from 'packages/obsidian/src/main';
+import type { ButtonPaneType } from './docsExports';
 
 export class ObsFileAPI extends FileAPI<ObsComponents> {
 	readonly app: App;
@@ -72,8 +73,8 @@ export class ObsFileAPI extends FileAPI<ObsComponents> {
 			.map(file => file.path);
 	}
 
-	public async open(filePath: string, callingFilePath: string, newTab: boolean): Promise<void> {
-		void this.app.workspace.openLinkText(filePath, callingFilePath, newTab);
+	public async open(filePath: string, callingFilePath: string, PaneType: ButtonPaneType): Promise<void> {
+		void this.app.workspace.openLinkText(filePath, callingFilePath, PaneType);
 	}
 
 	public async openInSourceMode(file: TFile, newTab: boolean): Promise<void> {

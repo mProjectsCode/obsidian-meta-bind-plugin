@@ -5,6 +5,7 @@ import { P_FilePath } from 'packages/core/src/parsers/nomParsers/GeneralNomParse
 import { runParser } from 'packages/core/src/parsers/ParsingError';
 import { isUrl, openURL } from 'packages/core/src/utils/Utils';
 import type { MetaBind } from '..';
+import type { ButtonPaneType } from '../config/ButtonConfig';
 
 const P_MDLinkInner: Parser<[string, string | undefined, string | undefined]> = P.sequence(
 	P_FilePath, // the file path
@@ -63,9 +64,9 @@ export class MarkdownLink {
 		return this.block ? `${this.target}#${this.block}` : this.target;
 	}
 
-	open(mb: MetaBind, relativeFilePath: string, newTab: boolean): void {
+	open(mb: MetaBind, relativeFilePath: string, PaneType: ButtonPaneType): void {
 		if (this.internal) {
-			void mb.file.open(this.fullTarget(), relativeFilePath, newTab);
+			void mb.file.open(this.fullTarget(), relativeFilePath, PaneType);
 		} else {
 			openURL(this.target);
 		}

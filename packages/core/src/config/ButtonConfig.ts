@@ -36,6 +36,12 @@ export enum ButtonActionType {
 	INLINE_JS = 'inlineJS',
 }
 
+export enum ButtonPaneType {
+	NewTab = 'tab',
+	NewSplit = 'split',
+	NewWindow = 'window',
+}
+
 export interface CommandButtonAction {
 	type: ButtonActionType.COMMAND;
 	command: string;
@@ -50,7 +56,7 @@ export interface JSButtonAction {
 export interface OpenButtonAction {
 	type: ButtonActionType.OPEN;
 	link: string;
-	newTab?: boolean;
+	panetype?: ButtonPaneType; // "tab" | "split" | "window"
 }
 
 export interface InputButtonAction {
@@ -232,6 +238,14 @@ export class ButtonClickContext {
 	 */
 	openInNewTab(): boolean {
 		return this.type === ButtonClickType.MIDDLE || this.ctrlKey;
+	}
+
+	openInNewWindow(): boolean {
+		return this.type === ButtonClickType.LEFT && this.ctrlKey && this.altKey && this.shiftKey;
+	}
+
+	openInNewSplit(): boolean {
+		return this.type === ButtonClickType.MIDDLE && this.ctrlKey && this.altKey;
 	}
 }
 
