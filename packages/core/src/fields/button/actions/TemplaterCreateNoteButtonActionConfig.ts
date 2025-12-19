@@ -7,32 +7,11 @@ import type {
 } from 'packages/core/src/config/ButtonConfig';
 import { ButtonActionType } from 'packages/core/src/config/ButtonConfig';
 import { AbstractButtonActionConfig } from 'packages/core/src/fields/button/AbstractButtonActionConfig';
-import { ensureFileExtension, joinPath } from 'packages/core/src/utils/Utils';
-import moment from 'moment';
+import { ensureFileExtension, joinPath, processDateFormatPlaceholders } from 'packages/core/src/utils/Utils';
 
 export class TemplaterCreateNoteButtonActionConfig extends AbstractButtonActionConfig<TemplaterCreateNoteButtonAction> {
 	constructor(mb: MetaBind) {
 		super(ButtonActionType.TEMPLATER_CREATE_NOTE, mb);
-	}
-
-	private processDateFormatPlaceholders(value: string | undefined): string | undefined {
-		if (!value) {
-			return value;
-		}
-
-		// Match {...} patterns and replace with formatted dates
-		// Uses a regex to find all {format} patterns
-		const placeholderRegex = /\{([^}]+)\}/g;
-
-		return value.replace(placeholderRegex, (match, format) => {
-			try {
-				// Format the current date/time using the captured format string
-				return moment().format(format);
-			} catch (error) {
-				// If formatting fails, return the original placeholder
-				return match;
-			}
-		});
 	}
 
 	async run(
@@ -42,11 +21,11 @@ export class TemplaterCreateNoteButtonActionConfig extends AbstractButtonActionC
 		_context: ButtonContext,
 		click: ButtonClickContext,
 	): Promise<void> {
-		const processedFileName = this.processDateFormatPlaceholders(action.fileName);
-		const processedFolderPath = this.processDateFormatPlaceholders(action.folderPath);
+		const processedFileName = processDateFormatPlaceholders(action.fileName);
+		const processedFolderPath = processDateFormatPlaceholders(action.folderPath);
 
-		if (action.openIfAlreadyExists && processedFileName) {
-			const filePath = ensureFileExtension(joinPath(processedFolderPath ?? '', processedFileName), 'md');
+		if (action.openIfAlreadyExists && action.fileName) {
+			const filePath = ensureFileExtension(joinPath(processedFolderPath ?? '', processedFileName ?? ''), 'md');
 			// if the file already exists, open it in the same tab
 			if (await this.mb.file.exists(filePath)) {
 				await this.mb.file.open(filePath, '', false);

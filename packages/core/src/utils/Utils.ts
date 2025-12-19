@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 /**
  * Clamp
  *
@@ -369,6 +371,22 @@ export function ensureFileExtension(filePath: string, extension: string): string
 	}
 
 	return filePath + extension;
+}
+
+/**
+ * Processes date format placeholders in a string.
+ * Replaces patterns like {YYYY-MM-DD} with formatted dates using moment.js.
+ */
+export function processDateFormatPlaceholders(value: string | undefined): string | undefined {
+	if (!value) {
+		return value;
+	}
+
+	const placeholderRegex = /\{([^}]+)\}/g;
+
+	return value.replace(placeholderRegex, (_match, format: string) => {
+		return moment().format(format);
+	});
 }
 
 export function toArray<T>(value: T | T[] | undefined): T[] {
