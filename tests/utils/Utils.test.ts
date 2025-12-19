@@ -8,6 +8,7 @@ import {
 	joinPath,
 	mod,
 	optClamp,
+	processDateFormatPlaceholders,
 	remapRange,
 	toArray,
 	toEnumeration,
@@ -398,6 +399,110 @@ describe('utils', () => {
 					() => {},
 				),
 			).toBe(false);
+		});
+	});
+
+	describe('processDateFormatPlaceholders function', () => {
+		test('should return undefined for undefined input', () => {
+			expect(processDateFormatPlaceholders(undefined)).toBeUndefined();
+		});
+
+		test('should return empty string for empty string input', () => {
+			expect(processDateFormatPlaceholders('')).toBe('');
+		});
+
+		test('should return original string if no placeholders are present', () => {
+			expect(processDateFormatPlaceholders('folder/subfolder')).toBe('folder/subfolder');
+			expect(processDateFormatPlaceholders('note-title')).toBe('note-title');
+		});
+
+		test('should leave invalid format placeholders unchanged', () => {
+			expect(processDateFormatPlaceholders('{INVALID}')).toBe('{INVALID}');
+			expect(processDateFormatPlaceholders('{random text}')).toBe('{random text}');
+			expect(processDateFormatPlaceholders('{123}')).toBe('{123}');
+			expect(processDateFormatPlaceholders('{abc}')).toBe('{abc}');
+		});
+
+		test('should process valid year formats', () => {
+			const result = processDateFormatPlaceholders('{YYYY}');
+			expect(result).toMatch(/^\d{4}$/); // 4-digit year
+
+			const yearShort = processDateFormatPlaceholders('{YY}');
+			expect(yearShort).toMatch(/^\d{2}$/); // 2-digit year
+		});
+
+		test('should process valid month formats', () => {
+			const result = processDateFormatPlaceholders('{MM}');
+			expect(result).toMatch(/^(0[1-9]|1[0-2])$/); // 01-12
+
+			const monthName = processDateFormatPlaceholders('{MMMM}');
+			expect(monthName).toMatch(/^(January|February|March|April|May|June|July|August|September|October|November|December)$/);
+		});
+
+		test('should process valid day formats', () => {
+			const result = processDateFormatPlaceholders('{DD}');
+			expect(result).toMatch(/^(0[1-9]|[12][0-9]|3[01])$/); // 01-31
+
+			const dayOfWeek = processDateFormatPlaceholders('{dddd}');
+			expect(dayOfWeek).toMatch(/^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)$/);
+		});
+
+		test('should process combined date format', () => {
+			const result = processDateFormatPlaceholders('{YYYY-MM-DD}');
+			expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/); // YYYY-MM-DD format
+		});
+
+		test('should process multiple placeholders in one string', () => {
+			const result = processDateFormatPlaceholders('folder/{YYYY}/{MM}/{YYYY-MM-DD}');
+			expect(result).toMatch(/^folder\/\d{4}\/\d{2}\/\d{4}-\d{2}-\d{2}$/);
+		});
+
+		test('should mix processed and unprocessed placeholders', () => {
+			const result = processDateFormatPlaceholders('{YYYY}-{INVALID}-{MM}');
+			expect(result).toMatch(/^\d{4}-\{INVALID\}-\d{2}$/);
+		});
+
+		test('should handle nested braces correctly', () => {
+			const result = processDateFormatPlaceholders('{{YYYY}}');
+			// The outer braces capture "{YYYY}" which contains braces that aren't valid moment tokens
+			// So it should be left unchanged
+			expect(result).toBe('{{YYYY}}');
+		});
+
+		test('should handle strings with text around placeholders', () => {
+			const result = processDateFormatPlaceholders('Daily note {YYYY-MM-DD}.md');
+			expect(result).toMatch(/^Daily note \d{4}-\d{2}-\d{2}\.md$/);
+		});
+
+		test('should handle hour, minute, second formats', () => {
+			const hourResult = processDateFormatPlaceholders('{HH}');
+			expect(hourResult).toMatch(/^\d{2}$/); // 00-23
+
+			const minuteResult = processDateFormatPlaceholders('{mm}');
+			expect(minuteResult).toMatch(/^\d{2}$/); // 00-59
+
+			const secondResult = processDateFormatPlaceholders('{ss}');
+			expect(secondResult).toMatch(/^\d{2}$/); // 00-59
+		});
+
+		test('should handle quarter format', () => {
+			const result = processDateFormatPlaceholders('{Q}');
+			expect(result).toMatch(/^[1-4]$/); // 1-4
+		});
+
+		test('should handle week formats', () => {
+			const weekResult = processDateFormatPlaceholders('{W}');
+			expect(weekResult).toMatch(/^\d{1,2}$/); // 1-53
+		});
+
+		test('should handle time with AM/PM', () => {
+			const result = processDateFormatPlaceholders('{h:mm A}');
+			expect(result).toMatch(/^\d{1,2}:\d{2} (AM|PM)$/);
+		});
+
+		test('should handle locale-aware formats', () => {
+			const result = processDateFormatPlaceholders('{YYYY-MM-DD, dddd}');
+			expect(result).toMatch(/^\d{4}-\d{2}-\d{2}, (Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)$/);
 		});
 	});
 });

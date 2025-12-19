@@ -21,7 +21,7 @@ export class CreateNoteButtonActionConfig extends AbstractButtonActionConfig<Cre
 		_context: ButtonContext,
 		click: ButtonClickContext,
 	): Promise<void> {
-		const processedFileName = processDateFormatPlaceholders(action.fileName) ?? action.fileName;
+		const processedFileName = processDateFormatPlaceholders(action.fileName);
 		const processedFolderPath = processDateFormatPlaceholders(action.folderPath);
 
 		if (action.openIfAlreadyExists && action.fileName) {
