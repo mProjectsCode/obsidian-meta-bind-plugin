@@ -9,14 +9,19 @@
 
 	const linkHref = $derived(mdLink.block ? `${mdLink.target}#${mdLink.block}` : mdLink.target);
 	const cssClass = $derived(mdLink.internal ? 'internal-link' : 'external-link');
+	const ariaLabel = $derived(mdLink.alias ? linkHref : undefined);
+
+	const linkText = $derived.by(() => {
+		if (mdLink.alias) {
+			return mdLink.alias;
+		} else if (mdLink.block) {
+			return `${mdLink.target} > ${mdLink.block}`;
+		} else {
+			return mdLink.target;
+		}
+	});
 </script>
 
-{#if mdLink.alias}
-	<a data-href={linkHref} href={linkHref} class={cssClass} target="_blank" rel="noopener" aria-label={linkHref}>
-		{mdLink.alias}
-	</a>
-{:else}
-	<a data-href={linkHref} href={linkHref} class={cssClass} target="_blank" rel="noopener">
-		{linkHref}
-	</a>
-{/if}
+<a data-href={linkHref} href={linkHref} class={cssClass} target="_blank" rel="noopener" aria-label={ariaLabel}>
+	{linkText}
+</a>

@@ -330,13 +330,6 @@ export class MetadataManager {
 			return [];
 		}
 
-		const ret = [];
-		for (const subscription of fileCache.subscriptions) {
-			if (hasUpdateOverlap(subscription.bindTarget, bindTarget)) {
-				ret.push(subscription);
-			}
-		}
-
 		return fileCache.subscriptions.filter(x => hasUpdateOverlap(x.bindTarget, bindTarget));
 	}
 
@@ -412,6 +405,16 @@ export class MetadataManager {
 					`meta-bind | MetadataManager >> failed to cycle cache item in source ${source.id}`,
 					result.reason,
 				);
+			}
+		}
+
+		for (const cacheItem of markedForDelete) {
+			if (
+				cacheItem.subscriptions.length === 0 &&
+				cacheItem.cyclesWithoutListeners > METADATA_CACHE_INACTIVE_CYCLE_THRESHOLD &&
+				source.shouldDelete(cacheItem)
+			) {
+				source.deleteCache(cacheItem);
 			}
 		}
 	}
@@ -566,7 +569,10 @@ export class MetadataManager {
 			if (cacheItem === undefined) {
 				continue;
 			}
-			cacheItem.subscriptions.forEach(x => x.delete());
+			// Use a snapshot because delete callbacks can mutate the subscriptions array.
+			for (const subscription of [...cacheItem.subscriptions]) {
+				subscription.delete();
+			}
 			source.deleteCache(cacheItem);
 		}
 	}
