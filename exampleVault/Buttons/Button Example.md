@@ -95,24 +95,13 @@ text `BUTTON[docs-button, open-button, open-tab-button]` text
 And switch between light and dark mode
 
 ```meta-bind-button
-label: Switch to Light Mode
+label: Toggle Light Dark
 hidden: false
 id: ""
 style: destructive
 actions:
   - type: command
-    command: theme:use-light
-```
-
-```meta-bind-button
-label: Switch to Dark Mode
-hidden: false
-id: ""
-style: primary
-actions:
-  - type: command
-    command: theme:use-dark
-
+    command: theme:toggle-light-dark
 ```
 
 And multiple things

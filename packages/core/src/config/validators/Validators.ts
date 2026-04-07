@@ -1,4 +1,4 @@
-import type { ParsingPosition, ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
+import type { ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
 import type {
 	ButtonGroupOptions,
 	ButtonOptions,
@@ -62,18 +62,10 @@ export const V_Mountable = schemaForType<Mountable>()(z.instanceof(Mountable));
 
 export const V_NotePosition = schemaForType<NotePosition>()(z.instanceof(NotePosition));
 
-export const V_ParsingPosition = schemaForType<ParsingPosition>()(
-	z.object({
-		index: z.number(),
-		line: z.number(),
-		column: z.number(),
-	}),
-);
-
 export const V_ParsingRange = schemaForType<ParsingRange>()(
 	z.object({
-		from: V_ParsingPosition,
-		to: V_ParsingPosition,
+		from: z.number(),
+		to: z.number(),
 	}),
 );
 
@@ -93,7 +85,7 @@ export const V_UnvalidatedFieldArgument = schemaForType<UnvalidatedFieldArgument
 
 export const V_UnvalidatedPropAccess = schemaForType<UnvalidatedPropAccess>()(
 	z.object({
-		type: z.nativeEnum(PropAccessType),
+		type: z.enum(PropAccessType),
 		prop: V_ParsingResultNode,
 	}),
 );
@@ -147,7 +139,7 @@ export const V_SimpleFieldArgument = schemaForType<SimpleFieldArgument>()(
 
 export const V_SimplePropAccess = schemaForType<SimplePropAccess>()(
 	z.object({
-		type: z.nativeEnum(PropAccessType),
+		type: z.enum(PropAccessType),
 		prop: z.string(),
 	}),
 );

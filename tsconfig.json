@@ -1,6 +1,9 @@
 {
 	"compilerOptions": {
-		"baseUrl": ".",
+		"paths": {
+			"packages/*": ["./packages/*"],
+			"tests/*": ["./tests/*"]
+		},
 		"module": "ESNext",
 		"target": "ES2022",
 		"allowJs": true,
@@ -8,7 +11,7 @@
 		"strict": true,
 		"strictNullChecks": true,
 		"noImplicitReturns": true,
-		"moduleResolution": "Node",
+		"moduleResolution": "bundler",
 		"importHelpers": true,
 		"isolatedModules": true,
 		"verbatimModuleSyntax": true,

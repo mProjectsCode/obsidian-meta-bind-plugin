@@ -370,7 +370,7 @@ export function createMarkdownRenderChildWidgetEditorPlugin(mb: ObsMetaBind): Vi
 						return Decoration.mark({
 							class: `mb-highlight-${h.tokenClass}`,
 							mb_widgetType: MB_WidgetType.HIGHLIGHT,
-						}).range(node.from + h.range.from.index, node.from + h.range.to.index);
+						}).range(node.from + h.range.from, node.from + h.range.to);
 					});
 				}
 			}

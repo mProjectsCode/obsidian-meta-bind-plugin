@@ -113,9 +113,8 @@ For input fields, templates can be set in the plugin settings
 
 There are a lot of different error messages and they are clickable
 
-- `INPUT[text():meta bind/nonExistantFile#title]`
 - `INPUT[slider(nonExistantArgument)]`
-- `INPUT[slider]`
+- `INPUT[text():meta bind/nonExistantFile#title]`
 - `INPUT[inlineSelect(option(option a),option(option b),option(option c),option(option d):select]`
 - `INPUT[inlineSelect(option(option a),option(option b),option(option c),option(option d)):select#]`
 - `INPUT[inlineSelect(option(option a),option(option b),option(option c),option(option d)):select#:]`

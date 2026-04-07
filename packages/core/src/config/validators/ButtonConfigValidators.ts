@@ -226,11 +226,14 @@ export const V_ButtonAction = schemaForType<ButtonAction>()(
 	]),
 );
 
-export const V_ButtonStyleType = z.nativeEnum(ButtonStyleType);
+export const V_ButtonStyleType = z.enum(ButtonStyleType);
 
 export const V_ButtonConfig = schemaForType<ButtonConfig>()(
-	z
-		.object({
+	oneOf(
+		'action',
+		'actions',
+	)(
+		z.object({
 			label: z.string(),
 			icon: z.string().optional(),
 			style: V_ButtonStyleType,
@@ -242,6 +245,6 @@ export const V_ButtonConfig = schemaForType<ButtonConfig>()(
 			hidden: z.boolean().optional(),
 			action: V_ButtonAction.optional(),
 			actions: V_ButtonAction.array().optional(),
-		})
-		.check(oneOf('action', 'actions')),
+		}),
+	),
 );

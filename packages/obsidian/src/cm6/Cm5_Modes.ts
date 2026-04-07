@@ -1,5 +1,6 @@
 import { javascript } from '@codemirror/legacy-modes/mode/javascript';
 import { yaml } from '@codemirror/legacy-modes/mode/yaml';
+import { mapIndexToLineColumn } from '@lemons_dev/parsinom/lib/ParserError';
 import type { Mode, StringStream } from 'codemirror';
 import type { InlineFieldType } from 'packages/core/src/config/APIConfigs';
 import { SyntaxHighlighting } from 'packages/core/src/parsers/syntaxHighlighting/SyntaxHighlighting';
@@ -101,8 +102,15 @@ export function registerCm5HLModes(mb: ObsMetaBind): void {
 					// console.log(state.str, state.highlights.getHighlights());
 				}
 
-				const lineHighlights = state.highlights.getHighlights().filter(h => h.range.from.line === state.line);
-				const highlight = lineHighlights.find(h => h.range.from.column === stream.pos + 1);
+				const lineHighlights = state.highlights
+					.getHighlights()
+					.map(h => ({
+						highlight: h,
+						from: mapIndexToLineColumn(state.str, h.range.from),
+						to: mapIndexToLineColumn(state.str, h.range.to),
+					}))
+					.filter(h => h.from.line === state.line);
+				const highlight = lineHighlights.find(h => h.from.column === stream.pos + 1);
 
 				// console.log(state.line, stream.pos, stream.peek(), highlight);
 
@@ -114,13 +122,21 @@ export function registerCm5HLModes(mb: ObsMetaBind): void {
 					return `line-HyperMD-codeblock`;
 				}
 
-				if (!stream.eatWhile(() => stream.pos + 1 < highlight.range.to.column)) {
+				if (
+					!stream.eatWhile(() => {
+						if (highlight.to.line !== state.line) {
+							return !stream.eol();
+						}
+
+						return stream.pos + 1 < highlight.to.column;
+					})
+				) {
 					stream.next();
 				}
 				if (stream.eol()) {
 					state.line += 1;
 				}
-				return `line-HyperMD-codeblock mb-highlight-${highlight.tokenClass}`;
+				return `line-HyperMD-codeblock mb-highlight-${highlight.highlight.tokenClass}`;
 			},
 		};
 

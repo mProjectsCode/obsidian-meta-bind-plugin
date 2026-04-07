@@ -3,7 +3,6 @@ import { ParsingError } from 'packages/core/src/parsers/ParsingError';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import type { ZodError } from 'zod';
 import { z } from 'zod';
-import type { ParsePayload } from 'zod/v4/core/index.cjs';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type,@typescript-eslint/explicit-function-return-type
 export function zodFunction<T extends Function>() {
@@ -12,25 +11,24 @@ export function zodFunction<T extends Function>() {
 	});
 }
 
-export function oneOf<A, K1 extends Extract<keyof A, string>, K2 extends Extract<keyof A, string>>(
-	key1: K1,
-	key2: K2,
-): (ctx: ParsePayload<A>) => void {
-	return ctx => {
-		if ((ctx.value[key1] === undefined) === (ctx.value[key2] === undefined)) {
-			ctx.issues.push({
-				code: 'custom',
+export function oneOf<K1 extends string, K2 extends string>(key1: K1, key2: K2) {
+	// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+	return function <Shape extends Record<K1 | K2, z.ZodTypeAny>>(schema: z.ZodObject<Shape>) {
+		return schema.refine(
+			data => {
+				const value = data as Record<K1 | K2, unknown>;
+				return (value[key1] === undefined) !== (value[key2] === undefined);
+			},
+			{
 				message: `Either ${key1} or ${key2} must be used, but not both.`,
-				input: ctx.value,
-			});
-		}
+				path: [key2],
+			},
+		);
 	};
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function schemaForType<T>(): <S extends z.ZodType<T, any, any>>(arg: S) => S {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	return function <S extends z.ZodType<T, any, any>>(arg: S): S {
+export function schemaForType<T>(): <S extends z.ZodType<T>>(arg: S) => S {
+	return function <S extends z.ZodType<T>>(arg: S): S {
 		return arg;
 	};
 }

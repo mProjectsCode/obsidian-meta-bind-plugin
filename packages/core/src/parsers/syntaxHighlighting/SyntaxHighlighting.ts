@@ -1,4 +1,3 @@
-import type { ParsingPosition } from '@lemons_dev/parsinom/lib/HelperTypes';
 import type { ParsingError } from 'packages/core/src/parsers/ParsingError';
 import { Highlight } from 'packages/core/src/parsers/syntaxHighlighting/Highlight';
 import { MB_TokenClass } from 'packages/core/src/parsers/syntaxHighlighting/HLPUtils';
@@ -10,7 +9,7 @@ export class SyntaxHighlighting {
 
 	constructor(str: string, highlights: Highlight[], parsingError?: ParsingError) {
 		this.str = str;
-		this.highlights = highlights.filter(x => x.range.from.index !== x.range.to.index);
+		this.highlights = highlights.filter(x => x.range.from !== x.range.to);
 		this.parsingError = parsingError;
 	}
 
@@ -19,26 +18,13 @@ export class SyntaxHighlighting {
 			return this.highlights;
 		}
 
-		let errorTo: ParsingPosition;
-
-		if (this.str[this.parsingError.parseFailure.furthest.index] === '\n') {
-			errorTo = {
-				index: this.parsingError.parseFailure.furthest.index + 1,
-				column: 1,
-				line: this.parsingError.parseFailure.furthest.line + 1,
-			};
-		} else {
-			errorTo = {
-				index: this.parsingError.parseFailure.furthest.index + 1,
-				column: this.parsingError.parseFailure.furthest.column + 1,
-				line: this.parsingError.parseFailure.furthest.line,
-			};
-		}
+		const errorFrom = this.parsingError.parseFailure.furthest;
+		const errorTo = errorFrom + 1;
 
 		return [
 			new Highlight(
 				{
-					from: this.parsingError.parseFailure.furthest,
+					from: errorFrom,
 					to: errorTo,
 				},
 				MB_TokenClass.ERROR,
