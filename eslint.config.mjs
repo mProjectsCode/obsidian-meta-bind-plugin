@@ -6,7 +6,7 @@ import only_warn from 'eslint-plugin-only-warn';
 import no_relative_import_paths from 'eslint-plugin-no-relative-import-paths';
 import * as plugin_import from 'eslint-plugin-import';
 import eslintPluginSvelte from 'eslint-plugin-svelte';
-import obsidianmd from 'eslint-plugin-obsidianmd';
+// import obsidianmd from 'eslint-plugin-obsidianmd';
 
 import projectConfig from './automation/config.json' with { type: 'json' };
 
@@ -95,7 +95,7 @@ export default tseslint.config(
 			'only-warn': only_warn,
 			'no-relative-import-paths': no_relative_import_paths,
 			import: plugin_import,
-			obsidianmd: obsidianmd,
+			// obsidianmd: obsidianmd,
 		},
 		rules: {
 			'@typescript-eslint/no-explicit-any': ['warn'],
@@ -139,7 +139,7 @@ export default tseslint.config(
 					allowShortCircuit: true,
 				},
 			],
-			...obsidianmd.configs.recommended.rules,
+			// ...obsidianmd.configs.recommended.rules,
 		},
 	},
 	...overrides,

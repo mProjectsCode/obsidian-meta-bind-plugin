@@ -1,4 +1,4 @@
-import manifest from '../../manifest.json' assert { type: 'json' };
+import manifest from '../../manifest.json' with { type: 'json' };
 
 export function getBuildBanner(buildType: string, getVersion: (version: string) => string) {
 	return `/*

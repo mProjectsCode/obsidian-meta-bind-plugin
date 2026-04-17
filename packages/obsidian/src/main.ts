@@ -26,6 +26,9 @@ import { ObsNotePosition } from 'packages/obsidian/src/ObsNotePosition';
 import { PlaygroundView, MB_PLAYGROUND_VIEW_TYPE } from 'packages/obsidian/src/playground/PlaygroundView';
 import { MetaBindSettingTab } from 'packages/obsidian/src/settings/SettingsTab';
 
+// @ts-expect-error TS6133
+import 'packages/obsidian/src/styles.css';
+
 export interface ObsComponents {
 	api: ObsAPI;
 	internal: ObsInternalAPI;

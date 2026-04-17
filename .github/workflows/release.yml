@@ -13,6 +13,11 @@ jobs:
     build:
         runs-on: ubuntu-latest
 
+        permissions:
+            contents: write
+            id-token: write
+            attestations: write
+
         steps:
             - name: Checkout
               uses: actions/checkout@v4
@@ -38,9 +43,19 @@ jobs:
                   bun run pack:i
                   bun run build
                   mkdir ${{ env.PLUGIN_NAME }}
-                  cp main.js manifest.json styles.css ${{ env.PLUGIN_NAME }}
+                  cp dist/main.js dist/manifest.json dist/styles.css ${{ env.PLUGIN_NAME }}
                   zip -r ${{ env.PLUGIN_NAME }}-${{ github.ref_name }}.zip ${{ env.PLUGIN_NAME }}
                   ls
+
+            - name: Attest build provenance
+              uses: actions/attest-build-provenance@v1
+              with:
+                  subject-path: |
+                      dist/main.js
+                      dist/manifest.json
+                      dist/styles.css
+                      ${{ env.PLUGIN_NAME }}-${{ github.ref_name }}.zip
+                  output-path: ${{ env.PLUGIN_NAME }}-${{ github.ref_name }}.intoto.jsonl
 
             - name: Release
               id: release
@@ -50,6 +65,6 @@ jobs:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   files: |
                       ${{ env.PLUGIN_NAME }}-${{ github.ref_name }}.zip
-                      main.js
-                      manifest.json
-                      styles.css
+                      dist/main.js
+                      dist/manifest.json
+                      dist/styles.css

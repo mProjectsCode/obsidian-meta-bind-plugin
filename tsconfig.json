@@ -7,6 +7,7 @@
 		"module": "ESNext",
 		"target": "ES2022",
 		"allowJs": true,
+		"checkJs": true,
 		"noImplicitAny": true,
 		"strict": true,
 		"strictNullChecks": true,
@@ -14,11 +15,14 @@
 		"moduleResolution": "bundler",
 		"importHelpers": true,
 		"isolatedModules": true,
+		"skipLibCheck": true,
 		"verbatimModuleSyntax": true,
+		"resolveJsonModule": true,
+		"moduleDetection": "force",
+		"sourceMap": true,
 		"lib": ["DOM", "ESNext"],
-		"types": ["svelte"],
 		"allowSyntheticDefaultImports": true,
-		"skipLibCheck": true
+		"types": ["svelte"]
 	},
 	"include": [
 		"packages/core/**/*.ts",
