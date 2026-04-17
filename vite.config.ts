@@ -38,7 +38,7 @@ export default defineConfig(async ({ mode }) => {
 			},
 		},
 		define: {
-			MB_VERSION: manifest.version,
+			MB_VERSION: `"${manifest.version}"`,
 			MB_DEV_BUILD: !prod,
 			MB_DEBUG: false,
 		},
