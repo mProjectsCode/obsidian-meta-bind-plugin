@@ -20,7 +20,7 @@ jobs:
 
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
 
             - name: Determine prerelease status
               id: status
@@ -32,7 +32,7 @@ jobs:
                   fi
 
             - name: Install Bun
-              uses: oven-sh/setup-bun@v1
+              uses: oven-sh/setup-bun@v2
               with:
                   bun-version: latest
 
@@ -48,18 +48,17 @@ jobs:
                   ls
 
             - name: Attest build provenance
-              uses: actions/attest-build-provenance@v1
+              uses: actions/attest@v4
               with:
                   subject-path: |
                       dist/main.js
                       dist/manifest.json
                       dist/styles.css
                       ${{ env.PLUGIN_NAME }}-${{ github.ref_name }}.zip
-                  output-path: ${{ env.PLUGIN_NAME }}-${{ github.ref_name }}.intoto.jsonl
 
             - name: Release
               id: release
-              uses: softprops/action-gh-release@v2
+              uses: softprops/action-gh-release@v3
               with:
                   prerelease: ${{ steps.status.outputs.prerelease }}
                   token: ${{ secrets.GITHUB_TOKEN }}
