@@ -1,5 +1,15 @@
 # Obsidian Meta Bind Changelog
 
+# 1.4.7
+
+Bug Fixes
+
+- Fixed unnecessary updates for dependent view fields during initialization [#652](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/652)
+
+Misc
+
+- Added release attestation
+
 # 1.4.6
 
 Bug Fixes
