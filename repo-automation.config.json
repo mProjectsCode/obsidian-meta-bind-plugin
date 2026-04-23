@@ -2,6 +2,5 @@
 	"devBranch": "master",
 	"releaseBranch": "release",
 	"github": "https://github.com/mProjectsCode/obsidian-meta-bind-plugin",
-	"corePackages": ["core"],
-	"packages": ["obsidian", "publish"]
+	"preconditions": ["bun run typecheck", "bun run format", "bun run lint:fix", "bun run test"]
 }

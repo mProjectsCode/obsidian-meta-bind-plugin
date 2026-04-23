@@ -1,4 +1,4 @@
-import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
+import type { Parser } from '@lemons_dev/parsinom';
 import { ParsingError } from 'packages/core/src/parsers/ParsingError';
 import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import type { ZodError } from 'zod';

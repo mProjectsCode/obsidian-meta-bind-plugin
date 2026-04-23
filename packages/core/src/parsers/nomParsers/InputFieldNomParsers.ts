@@ -1,6 +1,5 @@
-import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
-import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
-import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
+import type { Parser } from '@lemons_dev/parsinom';
+import { P_UTILS, P } from '@lemons_dev/parsinom';
 import type { UnvalidatedFieldArgument } from 'packages/core/src/parsers/FieldDeclaration';
 import type { PartialUnvalidatedInputFieldDeclaration } from 'packages/core/src/parsers/inputFieldParser/InputFieldDeclaration';
 import { P_BindTarget } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';

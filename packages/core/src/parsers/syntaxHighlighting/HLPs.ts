@@ -1,6 +1,5 @@
-import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
-import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
-import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
+import type { Parser } from '@lemons_dev/parsinom';
+import { P_UTILS, P } from '@lemons_dev/parsinom';
 import { P_MetadataPath } from 'packages/core/src/parsers/nomParsers/BindTargetNomParsers';
 import { P_NonStringArgumentValue } from 'packages/core/src/parsers/nomParsers/FieldArgumentNomParsers';
 import { P_FilePath, P_Ident, P_SingleQuotedString } from 'packages/core/src/parsers/nomParsers/GeneralNomParsers';

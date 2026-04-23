@@ -1,5 +1,4 @@
-import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
-import { P } from '@lemons_dev/parsinom/lib/ParsiNOM';
+import { P_UTILS, P } from '@lemons_dev/parsinom';
 import type { ButtonConfig } from 'packages/core/src/config/ButtonConfig';
 import { V_ButtonConfig } from 'packages/core/src/config/validators/ButtonConfigValidators';
 import type { MetaBind } from 'packages/core/src/index';

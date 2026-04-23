@@ -1,6 +1,5 @@
-import type { ParseFailure, ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
-import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
-import { mapIndexToLineColumn } from '@lemons_dev/parsinom/lib/ParserError';
+import type { ParseFailure, Parser, ParsingRange } from '@lemons_dev/parsinom';
+import { mapIndexToLineColumn } from '@lemons_dev/parsinom';
 import { ErrorLevel, ErrorType, MetaBindError } from 'packages/core/src/utils/errors/MetaBindErrors';
 
 export function runParser<T>(parser: Parser<T>, str: string): T {

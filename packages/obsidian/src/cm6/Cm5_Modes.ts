@@ -1,6 +1,6 @@
 import { javascript } from '@codemirror/legacy-modes/mode/javascript';
 import { yaml } from '@codemirror/legacy-modes/mode/yaml';
-import { mapIndexToLineColumn } from '@lemons_dev/parsinom/lib/ParserError';
+import { mapIndexToLineColumn } from '@lemons_dev/parsinom';
 import type { Mode, StringStream } from 'codemirror';
 import type { InlineFieldType } from 'packages/core/src/config/APIConfigs';
 import { SyntaxHighlighting } from 'packages/core/src/parsers/syntaxHighlighting/SyntaxHighlighting';

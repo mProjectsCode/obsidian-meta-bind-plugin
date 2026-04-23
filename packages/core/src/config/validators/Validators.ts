@@ -1,4 +1,4 @@
-import type { ParsingRange } from '@lemons_dev/parsinom/lib/HelperTypes';
+import type { ParsingRange } from '@lemons_dev/parsinom';
 import type {
 	ButtonGroupOptions,
 	ButtonOptions,

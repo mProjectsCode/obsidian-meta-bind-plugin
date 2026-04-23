@@ -1,7 +1,7 @@
 {
 	"name": "meta-bind-obsidian",
 	"dependencies": {
-		"@codemirror/lang-javascript": "^6.2.1",
+		"@codemirror/lang-javascript": "^6.2.5",
 		"@codemirror/language": "6.9.2",
 		"@codemirror/state": "6.3.1",
 		"@codemirror/view": "6.22.0",

@@ -1,5 +1,5 @@
-import type { Parser } from '@lemons_dev/parsinom/lib/Parser';
-import { P_UTILS } from '@lemons_dev/parsinom/lib/ParserUtils';
+import type { Parser } from '@lemons_dev/parsinom';
+import { P_UTILS } from '@lemons_dev/parsinom';
 import type { InlineFieldType } from 'packages/core/src/config/APIConfigs';
 import { FieldType } from 'packages/core/src/config/APIConfigs';
 import { ParsingError, runParser } from 'packages/core/src/parsers/ParsingError';

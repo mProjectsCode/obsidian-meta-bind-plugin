@@ -1,14 +1,18 @@
 // @ts-check
 
 import eslint from '@eslint/js';
+import { defineConfig } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 import only_warn from 'eslint-plugin-only-warn';
 import no_relative_import_paths from 'eslint-plugin-no-relative-import-paths';
-import * as plugin_import from 'eslint-plugin-import';
+import { importX } from 'eslint-plugin-import-x';
 import eslintPluginSvelte from 'eslint-plugin-svelte';
 // import obsidianmd from 'eslint-plugin-obsidianmd';
 
-import projectConfig from './automation/config.json' with { type: 'json' };
+const projectConfig = {
+	corePackages: ['core'],
+	packages: ['obsidian', 'publish'],
+};
 
 /** @type {{files: string[], rules: Record<string, [string, {patterns: {group: string[], message: string }[]}]>}[]} */
 const overrides = [];
@@ -22,6 +26,11 @@ for (const corePackage of projectConfig.corePackages) {
 			message: `Core package "${corePackage}" should not import from the non core "${nonCorePackage}" package.`,
 		});
 	}
+
+	patterns.push({
+		group: [`obsidian`],
+		message: `Core package "${corePackage}" should not import from the "obsidian" package.`,
+	});
 
 	overrides.push({
 		files: [`packages/${corePackage}/src/**/*.ts`],
@@ -70,7 +79,7 @@ const flatOverrides = overrides.map(o => ({
 console.log('Import restrictions:');
 console.log(flatOverrides);
 
-export default tseslint.config(
+export default defineConfig(
 	{
 		ignores: ['npm/', 'node_modules/', 'exampleVault/', 'automation/', 'main.js', '**/*.svelte', '**/*.d.ts'],
 	},
@@ -94,10 +103,12 @@ export default tseslint.config(
 			// @ts-ignore
 			'only-warn': only_warn,
 			'no-relative-import-paths': no_relative_import_paths,
-			import: plugin_import,
+			import: importX,
 			// obsidianmd: obsidianmd,
 		},
 		rules: {
+			'no-duplicate-imports': ['warn', { allowSeparateTypeImports: true }],
+
 			'@typescript-eslint/no-explicit-any': ['warn'],
 
 			'@typescript-eslint/no-unused-vars': [

@@ -3,8 +3,8 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import banner from 'vite-plugin-banner';
 import path from 'path';
-import builtins from 'builtin-modules';
-import { getBuildBanner } from './automation/build/buildBanner';
+import { builtinModules } from 'node:module';
+import { getBuildBanner } from '@lemons_dev/lemons-obsidian-plugin-automation';
 import manifest from './manifest.json' with { type: 'json' };
 
 const entryFile = 'packages/obsidian/src/main.ts';
@@ -78,7 +78,7 @@ export default defineConfig(async ({ mode }) => {
 					'@lezer/common',
 					'@lezer/highlight',
 					'@lezer/lr',
-					...builtins,
+					...builtinModules,
 				],
 			},
 		},
