@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Moment } from 'moment';
 	import moment from 'moment';
-	import { genSvelteId, getDateRows, getWeekDays } from 'packages/core/src/utils/DatePickerUtils.js';
+	import { getDateRows, getWeekDays } from 'packages/core/src/utils/DatePickerUtils.js';
 
 	let {
 		selectedDate,
@@ -41,7 +41,7 @@
 	</div>
 
 	<div class="mb-calendar-content">
-		{#each cells as value (genSvelteId())}
+		{#each cells as value, index (index)}
 			<div
 				class="mb-calendar-cell"
 				onclick={() => selectCell(value)}

@@ -47,10 +47,3 @@ export function getWeekDays(): string[] {
 
 	return sortedWeekdays.map(x => x.shortName);
 }
-
-export function genSvelteId(): () => number {
-	let id = 0;
-	return () => {
-		return ++id;
-	};
-}
