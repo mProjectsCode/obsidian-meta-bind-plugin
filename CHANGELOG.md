@@ -1,5 +1,11 @@
 # Obsidian Meta Bind Changelog
 
+# 1.4.8
+
+Bug Fixes
+
+- Fixed navigation in date picker not working [#654](https://github.com/mProjectsCode/obsidian-meta-bind-plugin/issues/654)
+
 # 1.4.7
 
 Bug Fixes
