@@ -27,7 +27,7 @@ function actionFieldNumber(action: string, field: string, description: string) {
 			if (issue.input === undefined) {
 				return `The ${action} action requires a specified ${description} with the '${field}' field.`;
 			} else {
-				return `The ${action} action requires the value of the '${field}' fields to be a number, but got ${typeof issue.input}.`;
+				return `The ${action} action requires the value of the '${field}' field to be a number, but got ${typeof issue.input}.`;
 			}
 		},
 	});
@@ -40,7 +40,7 @@ function actionFieldString(action: string, field: string, description: string) {
 			if (issue.input === undefined) {
 				return `The ${action} action requires a specified ${description} with the '${field}' field.`;
 			} else {
-				return `The ${action} action requires the value of the '${field}' fields to be a string, but got ${typeof issue.input}.`;
+				return `The ${action} action requires the value of the '${field}' field to be a string, but got ${typeof issue.input}.`;
 			}
 		},
 	});
@@ -53,7 +53,7 @@ function actionFieldCoerceString(action: string, field: string, description: str
 			if (issue.input === undefined) {
 				return `The ${action} action requires a specified ${description} with the '${field}' field.`;
 			} else {
-				return `The ${action} action requires the value of the '${field}' fields to be a string, but got ${typeof issue.input}.`;
+				return `The ${action} action requires the value of the '${field}' field to be a string, but got ${typeof issue.input}.`;
 			}
 		},
 	});
@@ -66,7 +66,7 @@ function actionFieldBool(action: string, field: string, description: string) {
 			if (issue.input === undefined) {
 				return `The ${action} action requires a specified ${description} with the '${field}' field.`;
 			} else {
-				return `The ${action} action requires the value of the '${field}' fields to be a boolean, but got ${typeof issue.input}.`;
+				return `The ${action} action requires the value of the '${field}' field to be a boolean, but got ${typeof issue.input}.`;
 			}
 		},
 	});
@@ -91,7 +91,7 @@ export const V_OpenButtonAction = schemaForType<OpenButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.OPEN),
 		link: actionFieldString('open', 'link', 'link to open'),
-		newTab: actionFieldBool('open', 'newTab', '').optional(),
+		newTab: actionFieldBool('open', 'newTab', 'flag for whether to open in a new tab').optional(),
 	}),
 );
 
@@ -109,7 +109,6 @@ export const V_SleepButtonAction = schemaForType<SleepButtonAction>()(
 	}),
 );
 
-// TODO: more better error messages
 export const V_TemplaterCreateNoteButtonAction = schemaForType<TemplaterCreateNoteButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.TEMPLATER_CREATE_NOTE),
@@ -141,7 +140,7 @@ export const V_UpdateMetadataButtonAction = schemaForType<UpdateMetadataButtonAc
 			'evaluate',
 			'value for whether to evaluate the value as a JavaScript expression',
 		),
-		value: actionFieldCoerceString('updateMetadata', 'value for the update', 'value'),
+		value: actionFieldCoerceString('updateMetadata', 'value', 'value for the update'),
 	}),
 );
 
