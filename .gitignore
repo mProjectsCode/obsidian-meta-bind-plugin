@@ -40,3 +40,13 @@ exampleVault/.obsidian/plugins/obsidian-meta-bind-plugin/*
 coverage/
 
 dist/
+# Geth collective intelligence — session logs and working memory
+geth/geth-memory/
+geth/programs/*/memory.md
+geth/programs/*/legacy-memory.md
+geth/legacy-memory/
+geth/core/lattice.md
+geth/core/feelings.md
+
+# Envoy debriefs — consumed artifacts, not permanent records
+envoys/debriefs/
