@@ -85,7 +85,7 @@ export class ButtonField extends Mountable {
 						this.config,
 						this.filePath,
 						this.getContext(),
-						ButtonClickContext.fromMouseEvent(event, ButtonClickType.LEFT),
+						ButtonClickContext.fromMouseEvent(event, ButtonClickType.MIDDLE),
 					);
 				},
 			},

@@ -119,8 +119,11 @@ export abstract class API<Components extends MB_Comps> {
 
 		expectType<never>(type);
 
-		// TODO: Nice error message
-		throw new Error(`Unknown field type: ${type}`);
+		throw new MetaBindInternalError({
+			errorLevel: ErrorLevel.CRITICAL,
+			effect: 'failed to create field',
+			cause: `Unknown field type "${type}". Valid types are: ${Object.values(FieldType).join(', ')}`,
+		});
 	}
 
 	/**

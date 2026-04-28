@@ -42,6 +42,7 @@
 				}
 			} catch (e) {
 				console.warn('failed to run button component on click', e);
+				mb.internal.showNotice('meta-bind | Error while running button action. Check the console for details.');
 			} finally {
 				disabled = false;
 			}

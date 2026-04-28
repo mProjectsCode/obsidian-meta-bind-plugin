@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, mock, type Mock, spyOn, test } from 'bun:test';
+import { afterEach, beforeEach, describe, expect, mock, type Mock, spyOn, test } from 'bun:test';
 import { TestMetaBind } from './__mocks__/TestPlugin';
 import { InputFieldMountable } from 'packages/core/src/fields/inputFields/InputFieldMountable';
 import { ViewFieldMountable } from 'packages/core/src/fields/viewFields/ViewFieldMountable';
@@ -12,6 +12,8 @@ import { FieldType, RenderChildType } from 'packages/core/src/config/APIConfigs'
 import { PropPath } from 'packages/core/src/utils/prop/PropPath';
 import { PropAccess, PropAccessType } from 'packages/core/src/utils/prop/PropAccess';
 import { TestComponent } from './__mocks__/TestComponent';
+import { ErrorLevel, MetaBindInternalError } from 'packages/core/src/utils/errors/MetaBindErrors';
+import * as ZodUtils from 'packages/core/src/utils/ZodUtils';
 
 describe('api', () => {
 	let plugin = new TestMetaBind();
@@ -128,6 +130,56 @@ action:
 			let field = plugin.api.createField(FieldType.EXCLUDED, '', undefined, true);
 
 			expect(field).toBeInstanceOf(ExcludedMountable);
+		});
+
+		describe('unknown field type', () => {
+			let validateSpy: ReturnType<typeof spyOn> | undefined;
+			let thrownError: MetaBindInternalError | undefined;
+
+			beforeEach(() => {
+				validateSpy = spyOn(ZodUtils, 'validateAPIArgs').mockImplementation(() => {});
+
+				const garbageType = 'GARBAGE_TYPE' as FieldType;
+
+				try {
+					plugin.api.createField(
+						garbageType,
+						'',
+						{
+							declaration: 'INPUT[toggle:foo]',
+							renderChildType: RenderChildType.BLOCK,
+						},
+						true,
+					);
+				} catch (e) {
+					thrownError = e as MetaBindInternalError;
+				}
+			});
+
+			afterEach(() => {
+				validateSpy?.mockRestore();
+			});
+
+			test('throws MetaBindInternalError', () => {
+				expect(thrownError).toBeInstanceOf(MetaBindInternalError);
+			});
+
+			test('errorLevel is CRITICAL', () => {
+				expect(thrownError!.errorLevel).toBe(ErrorLevel.CRITICAL);
+			});
+
+			test('cause mentions the invalid type', () => {
+				expect(thrownError!.cause).toContain('GARBAGE_TYPE');
+			});
+
+			test('cause lists valid field types', () => {
+				expect(thrownError!.cause).toContain('INPUT');
+				expect(thrownError!.cause).toContain('BUTTON');
+			});
+
+			test('effect is correct', () => {
+				expect(thrownError!.effect).toBe('failed to create field');
+			});
 		});
 	});
 
