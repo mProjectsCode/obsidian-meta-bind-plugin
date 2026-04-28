@@ -7,7 +7,7 @@ import type {
 } from 'packages/core/src/config/ButtonConfig';
 import { ButtonActionType } from 'packages/core/src/config/ButtonConfig';
 import { AbstractButtonActionConfig } from 'packages/core/src/fields/button/AbstractButtonActionConfig';
-import { ensureFileExtension, joinPath } from 'packages/core/src/utils/Utils';
+import { ensureFileExtension, joinPath, processDateFormatPlaceholders } from 'packages/core/src/utils/Utils';
 
 export class TemplaterCreateNoteButtonActionConfig extends AbstractButtonActionConfig<TemplaterCreateNoteButtonAction> {
 	constructor(mb: MetaBind) {
@@ -21,8 +21,11 @@ export class TemplaterCreateNoteButtonActionConfig extends AbstractButtonActionC
 		_context: ButtonContext,
 		click: ButtonClickContext,
 	): Promise<void> {
+		const processedFileName = processDateFormatPlaceholders(action.fileName);
+		const processedFolderPath = processDateFormatPlaceholders(action.folderPath);
+
 		if (action.openIfAlreadyExists && action.fileName) {
-			const filePath = ensureFileExtension(joinPath(action.folderPath ?? '', action.fileName), 'md');
+			const filePath = ensureFileExtension(joinPath(processedFolderPath ?? '', processedFileName ?? ''), 'md');
 			// if the file already exists, open it in the same tab
 			if (await this.mb.file.exists(filePath)) {
 				await this.mb.file.open(filePath, '', false);
@@ -32,8 +35,8 @@ export class TemplaterCreateNoteButtonActionConfig extends AbstractButtonActionC
 
 		await this.mb.internal.createNoteWithTemplater(
 			action.templateFile,
-			action.folderPath,
-			action.fileName,
+			processedFolderPath,
+			processedFileName,
 			action.openNote,
 			click.openInNewTab(),
 		);

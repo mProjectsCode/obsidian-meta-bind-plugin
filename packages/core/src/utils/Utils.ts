@@ -1,3 +1,5 @@
+import Moment from 'moment/moment';
+
 /**
  * Clamp
  *
@@ -369,6 +371,32 @@ export function ensureFileExtension(filePath: string, extension: string): string
 	}
 
 	return filePath + extension;
+}
+
+/**
+ * Processes date format placeholders in a string.
+ * Replaces patterns like {YYYY-MM-DD} with formatted dates using moment.js.
+ */
+export function processDateFormatPlaceholders(value: string | undefined): string | undefined {
+	if (value === undefined || value === '') {
+		return value;
+	}
+
+	const placeholderRegex = /\{([^}]+)\}/g;
+
+	return value.replace(placeholderRegex, (match, format: string) => {
+		// Validate that the format string only contains valid moment.js tokens and delimiters
+		// Moment.js tokens: Y M D d H h m s S a A Q W w X x Z z G g E e o k l
+		// Common delimiters: : / - space . , [ ]
+		const validMomentFormat = /^[YMDdHhmsaAQWwXxZzGgEeSsokl:/\-\s.,[\]]+$/.test(format);
+
+		if (!validMomentFormat) {
+			// Leave unknown/invalid formats unchanged
+			return match;
+		}
+
+		return Moment().format(format);
+	});
 }
 
 export function toArray<T>(value: T | T[] | undefined): T[] {

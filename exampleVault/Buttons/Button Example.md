@@ -150,6 +150,20 @@ actions:
 ```
 
 ```meta-bind-button
+label: Daily Note (with date)
+hidden: false
+id: ""
+style: primary
+actions:
+  - type: templaterCreateNote
+    templateFile: "templates/templater/Templater Template.md"
+    folderPath: "Daily/{YYYY}/{MM}"
+    fileName: "{YYYY-MM-DD}"
+    openIfAlreadyExists: true
+
+```
+
+```meta-bind-button
 label: Sleep
 hidden: false
 id: ""
