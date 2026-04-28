@@ -27,7 +27,7 @@ export class MarkdownRenderChildWidget extends WidgetType {
 	}
 
 	public toDOM(_: EditorView): HTMLElement {
-		const span = document.createElement('span');
+		const span = createSpan();
 		span.addClass('cm-inline-code');
 
 		const mountable = this.mb.api.createInlineFieldOfTypeFromString(

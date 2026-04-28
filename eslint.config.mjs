@@ -7,7 +7,7 @@ import only_warn from 'eslint-plugin-only-warn';
 import no_relative_import_paths from 'eslint-plugin-no-relative-import-paths';
 import { importX } from 'eslint-plugin-import-x';
 import eslintPluginSvelte from 'eslint-plugin-svelte';
-// import obsidianmd from 'eslint-plugin-obsidianmd';
+import obsidianmd from 'eslint-plugin-obsidianmd';
 
 const projectConfig = {
 	corePackages: ['core'],
@@ -104,7 +104,7 @@ export default defineConfig(
 			'only-warn': only_warn,
 			'no-relative-import-paths': no_relative_import_paths,
 			import: importX,
-			// obsidianmd: obsidianmd,
+			obsidianmd: obsidianmd,
 		},
 		rules: {
 			'no-duplicate-imports': ['warn', { allowSeparateTypeImports: true }],
@@ -150,7 +150,9 @@ export default defineConfig(
 					allowShortCircuit: true,
 				},
 			],
-			// ...obsidianmd.configs.recommended.rules,
+			// ...Object.keys(obsidianmd.rules).map(ruleName => ({
+			// 	[`obsidianmd/${ruleName}`]: ['warn'],
+			// })).reduce((acc, cur) => ({ ...acc, ...cur }), {}),
 		},
 	},
 	...overrides,

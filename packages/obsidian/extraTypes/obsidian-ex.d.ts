@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- type-only import
+import * as CodeMirror from 'codemirror';
 import type { Plugin, PluginManifest } from 'obsidian';
 
 declare module 'obsidian' {

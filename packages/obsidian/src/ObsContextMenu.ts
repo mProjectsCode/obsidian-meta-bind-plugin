@@ -24,7 +24,7 @@ export class ObsContextMenu implements IContextMenu {
 	}
 
 	public show(x: number, y: number): void {
-		this.menu.showAtPosition({ x, y }, document);
+		this.menu.showAtPosition({ x, y }, activeDocument);
 	}
 
 	public showWithEvent(event: MouseEvent): void {

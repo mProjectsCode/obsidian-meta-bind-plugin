@@ -27,7 +27,7 @@ export function getSuggesterOptions(
 	}
 
 	if (optionQueryArgs.length > 0) {
-		let dv: DataviewApi | undefined = undefined;
+		let dv: DataviewApi;
 		try {
 			dv = getDataViewPluginAPI(mb);
 		} catch (e) {

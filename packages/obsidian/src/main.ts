@@ -258,7 +258,7 @@ export class ObsMetaBind extends MetaBind<ObsComponents> {
 
 		this.plugin.addCommand({
 			id: 'open-help',
-			name: 'Open Help',
+			name: 'Open help',
 			callback: () => {
 				void this.activateView(MB_PLAYGROUND_VIEW_TYPE);
 			},
@@ -274,14 +274,14 @@ export class ObsMetaBind extends MetaBind<ObsComponents> {
 							`\`\`\`meta-bind-button\n${stringifyYaml(config)}\n\`\`\``,
 						);
 					},
-					submitText: 'Copy to Clipboard',
+					submitText: 'Copy to clipboard',
 				});
 			},
 		});
 
 		this.plugin.addCommand({
 			id: 'copy-command-id',
-			name: 'Select and copy command id',
+			name: 'Select and copy command ID',
 			callback: () => {
 				this.internal.openCommandSelectModal(command => {
 					void window.navigator.clipboard.writeText(command.id);

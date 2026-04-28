@@ -39,8 +39,7 @@ jobs:
             - name: Build
               id: build
               run: |
-                  bun install
-                  bun run pack:i
+                  bun install --frozen-lockfile
                   bun run build
                   mkdir ${{ env.PLUGIN_NAME }}
                   cp dist/main.js dist/manifest.json dist/styles.css ${{ env.PLUGIN_NAME }}

@@ -120,7 +120,7 @@ export function createInputFieldInsertExamples(_mb: MetaBind): [string, string][
 		}
 		const ipfType = type as InputFieldType;
 
-		let fullDeclaration = '';
+		let fullDeclaration: string;
 
 		if (InputFieldConfigs[ipfType].allowInline) {
 			fullDeclaration = `\`INPUT[${declaration}:exampleProperty]\``;

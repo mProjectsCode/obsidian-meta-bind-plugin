@@ -1,10 +1,14 @@
 {
 	"name": "meta-bind-obsidian",
-	"dependencies": {
-		"@codemirror/lang-javascript": "^6.2.5",
-		"@codemirror/language": "6.9.2",
-		"@codemirror/state": "6.3.1",
-		"@codemirror/view": "6.22.0",
+	"devDependencies": {
+		"@lezer/common": "^1.5.2",
+		"@types/codemirror": "^5.60.17",
+		"@codemirror/legacy-modes": "^6.5.2",
+		"@codemirror/autocomplete": "^6.20.1",
+		"@codemirror/language": "^6.12.3",
+		"@codemirror/lint": "^6.9.5",
+		"@codemirror/state": "^6.6.0",
+		"@codemirror/view": "^6.41.1",
 		"obsidian": "latest"
 	}
 }

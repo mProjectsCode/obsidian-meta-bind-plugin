@@ -17,7 +17,7 @@ export function createEditorMenu(menu: Menu, editor: Editor, mb: ObsMetaBind): v
 		const mbSubmenu = mbItem.setSubmenu();
 
 		mbSubmenu.addItem(ipfItem => {
-			ipfItem.setTitle('Input Field');
+			ipfItem.setTitle('Input field');
 
 			const ipfSubmenu = ipfItem.setSubmenu();
 
@@ -30,7 +30,7 @@ export function createEditorMenu(menu: Menu, editor: Editor, mb: ObsMetaBind): v
 		});
 
 		mbSubmenu.addItem(vfItem => {
-			vfItem.setTitle('View Field');
+			vfItem.setTitle('View field');
 
 			const vfSubmenu = vfItem.setSubmenu();
 
@@ -43,7 +43,7 @@ export function createEditorMenu(menu: Menu, editor: Editor, mb: ObsMetaBind): v
 		});
 
 		mbSubmenu.addItem(inlineButtonItem => {
-			inlineButtonItem.setTitle('Inline Button');
+			inlineButtonItem.setTitle('Inline button');
 			inlineButtonItem.onClick(() => {
 				insetAtCursor(editor, '`BUTTON[example-id]`');
 			});

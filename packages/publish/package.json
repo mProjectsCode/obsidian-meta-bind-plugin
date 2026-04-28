@@ -1,6 +1,6 @@
 {
 	"name": "meta-bind-publish",
-	"dependencies": {
+	"devDependencies": {
 		"obsidian": "latest"
 	}
 }

@@ -28,7 +28,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 				cls: 'mb-error',
 			});
 			const button = new ButtonComponent(containerEl);
-			button.setButtonText('Learn About Canary Builds');
+			button.setButtonText('Learn about canary builds');
 			button.setCta();
 			button.onClick(() => {
 				DocsUtils.open(DocsUtils.linkToCanaryBuilds());
@@ -65,7 +65,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Enable syntax highlighting')
-			.setDesc(`Enable syntax highlighting for meta bind syntax. RESTART REQUIRED.`)
+			.setDesc(`Enable syntax highlighting for meta bind syntax. Restart required.`)
 			.addToggle(cb => {
 				cb.setValue(this.mb.getSettings().enableSyntaxHighlighting);
 				cb.onChange(data => {
@@ -77,7 +77,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Enable editor right-click menu')
-			.setDesc(`Enable a meta bind menu section in the editor right-click menu. RESTART REQUIRED.`)
+			.setDesc(`Enable a meta bind menu section in the editor right-click menu. Restart required.`)
 			.addToggle(cb => {
 				cb.setValue(this.mb.getSettings().enableEditorRightClickMenu);
 				cb.onChange(data => {
@@ -134,7 +134,7 @@ export class MetaBindSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName('Enable JavaScript')
 			.setDesc(
-				"Enable features that run user written JavaScript. This is potentially DANGEROUS, thus it's disabled by default. RESTART REQUIRED.",
+				"Enable features that run user written JavaScript. This is potentially DANGEROUS, thus it's disabled by default. Restart required.",
 			)
 			.addToggle(cb => {
 				cb.setValue(this.mb.getSettings().enableJs);
