@@ -1,5 +1,12 @@
 # Obsidian Meta Bind Changelog
 
+# 1.4.9
+
+Misc
+
+- Internal changes
+- Fix some non sentence case UI text
+
 # 1.4.8
 
 Bug Fixes
