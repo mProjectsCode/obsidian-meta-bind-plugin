@@ -3,6 +3,7 @@ import { MDLinkParser } from 'packages/core/src/parsers/MarkdownLinkParser';
 import { ErrorLevel, MetaBindParsingError } from 'packages/core/src/utils/errors/MetaBindErrors';
 import type { LineNumberContext } from 'packages/core/src/utils/LineNumberExpression';
 import type { MB_Comps, MetaBind } from '..';
+import type { ButtonPaneType } from '../config/ButtonConfig';
 
 export abstract class FileAPI<Components extends MB_Comps> {
 	readonly mb: MetaBind<Components>;
@@ -57,9 +58,9 @@ export abstract class FileAPI<Components extends MB_Comps> {
 	 *
 	 * @param filePath
 	 * @param callingFilePath
-	 * @param newTab
+	 * @param PaneType
 	 */
-	public abstract open(filePath: string, callingFilePath: string, newTab: boolean): Promise<void>;
+	public abstract open(filePath: string, callingFilePath: string, PaneType: ButtonPaneType | boolean): Promise<void>;
 
 	/**
 	 * Resolves a file name to a file path.

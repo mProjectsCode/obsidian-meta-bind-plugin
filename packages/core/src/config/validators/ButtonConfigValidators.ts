@@ -16,7 +16,7 @@ import type {
 	TemplaterCreateNoteButtonAction,
 	UpdateMetadataButtonAction,
 } from 'packages/core/src/config/ButtonConfig';
-import { ButtonActionType, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
+import { ButtonActionType, ButtonPaneType, ButtonStyleType } from 'packages/core/src/config/ButtonConfig';
 import { oneOf, schemaForType } from 'packages/core/src/utils/ZodUtils';
 import { z } from 'zod';
 
@@ -91,7 +91,7 @@ export const V_OpenButtonAction = schemaForType<OpenButtonAction>()(
 	z.object({
 		type: z.literal(ButtonActionType.OPEN),
 		link: actionFieldString('open', 'link', 'link to open'),
-		newTab: actionFieldBool('open', 'newTab', '').optional(),
+		panetype: z.enum([ButtonPaneType.NewTab, ButtonPaneType.NewSplit, ButtonPaneType.NewWindow]).optional(),
 	}),
 );
 

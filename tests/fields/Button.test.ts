@@ -4,6 +4,7 @@ import {
 	ButtonActionType,
 	ButtonClickContext,
 	ButtonClickType,
+	ButtonPaneType,
 } from 'packages/core/src/config/ButtonConfig';
 import { TestMetaBind } from 'tests/__mocks__/TestPlugin';
 
@@ -55,7 +56,7 @@ const buttonActionTests: Record<ButtonActionType, () => void> = {
 				await simplifiedRunAction({
 					type: ButtonActionType.OPEN,
 					link: '[[test/otherFile.md]]',
-					newTab: true,
+					panetype: ButtonPaneType.NewSplit,
 				});
 			}).not.toThrow();
 		});

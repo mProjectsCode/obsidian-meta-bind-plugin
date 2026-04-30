@@ -1,4 +1,5 @@
 import { FileAPI } from 'packages/core/src/api/FileAPI';
+import type { ButtonPaneType } from 'packages/core/src/config/ButtonConfig';
 import type { PublishComponents } from 'packages/publish/src/main';
 
 export class PublishFileAPI extends FileAPI<PublishComponents> {
@@ -40,7 +41,7 @@ export class PublishFileAPI extends FileAPI<PublishComponents> {
 		return Array.from(folders);
 	}
 
-	public open(_filePath: string, _callingFilePath: string, _newTab: boolean): Promise<void> {
+	public open(_filePath: string, _callingFilePath: string, _paneType: ButtonPaneType | boolean): Promise<void> {
 		throw new Error('not implemented');
 	}
 
