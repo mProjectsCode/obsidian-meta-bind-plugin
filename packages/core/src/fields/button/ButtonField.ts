@@ -76,7 +76,7 @@ export class ButtonField extends Mountable {
 					await this.mb.buttonActionRunner.runButtonActions(
 						this.config,
 						this.filePath,
-						this.getContext(),
+                        this.getContext(targetEl),
 						ButtonClickContext.fromMouseEvent(event, ButtonClickType.LEFT),
 					);
 				},
@@ -84,7 +84,7 @@ export class ButtonField extends Mountable {
 					await this.mb.buttonActionRunner.runButtonActions(
 						this.config,
 						this.filePath,
-						this.getContext(),
+                        this.getContext(targetEl),
 						ButtonClickContext.fromMouseEvent(event, ButtonClickType.LEFT),
 					);
 				},
@@ -92,11 +92,16 @@ export class ButtonField extends Mountable {
 		});
 	}
 
-	public getContext(): ButtonContext {
+    public getContext(target: HTMLElement): ButtonContext {
+        let parent = target.parentElement;
+        if (parent && this.isInline) {
+            parent = parent.parentElement;
+        }
 		return {
 			position: this.position?.getPosition(),
 			isInGroup: this.isInGroup,
 			isInline: this.isInline,
+            parentId: parent ? parent.id : "",
 		};
 	}
 
