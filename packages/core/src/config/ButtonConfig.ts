@@ -202,6 +202,7 @@ export interface ButtonContext {
 	position: LinePosition | undefined;
 	isInGroup: boolean;
 	isInline: boolean;
+    parentId?: String | undefined;
 }
 
 /**
