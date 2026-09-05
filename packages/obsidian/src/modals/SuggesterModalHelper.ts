@@ -6,12 +6,73 @@ import { applyUseLinksArgument } from 'meta-bind-core/src/fields/fieldArguments/
 import type { SuggesterLikeIFP } from 'meta-bind-core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
 import { SuggesterOption } from 'meta-bind-core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
 import { deduplicateOptions } from 'meta-bind-core/src/fields/inputFields/optionSource/OptionSourceUtils';
+import { MDLinkParser } from 'meta-bind-core/src/parsers/MarkdownLinkParser';
 import type { MBLiteral } from 'meta-bind-core/src/utils/Literal';
 import type { ObsMetaBind } from 'meta-bind-obsidian/src/ObsMB';
 import { getDataViewPluginAPI } from 'meta-bind-obsidian/src/ObsUtils';
 import { Notice } from 'obsidian';
 import type { DataArray, DataviewApi, Literal } from 'obsidian-dataview';
 import { z } from 'zod';
+
+/**
+ * Creates a new link string with the given alias as the display text.
+ * If the input is not a link, returns it unchanged.
+ */
+export function createLinkWithAlias(linkStr: string, alias: string): string {
+	try {
+		if (MDLinkParser.isLink(linkStr)) {
+			const link = MDLinkParser.parseLink(linkStr);
+			link.alias = alias;
+			return link.toString();
+		}
+	} catch (e) {
+		console.warn('meta-bind | failed to create link with alias', e);
+	}
+	return linkStr;
+}
+
+/**
+ * Builds the additional suggester options for a file's aliases (Dataview's `file.aliases`).
+ *
+ * - Skips aliases that are identical to the file name, since they would just duplicate the
+ *   file option already added for `link` (case-sensitive but whitespace-trimmed comparison).
+ * - Logs a warning instead of throwing if `aliases` is present but not an array, since Dataview
+ *   does not guarantee the shape of frontmatter values.
+ */
+export function getAliasSuggesterOptions(
+	link: string,
+	dvFileName: string,
+	dvFilePath: string,
+	aliases: unknown,
+): SuggesterOption<MBLiteral>[] {
+	if (aliases === undefined || aliases === null) {
+		return [];
+	}
+
+	if (!Array.isArray(aliases)) {
+		console.warn(`meta-bind | expected "aliases" on "${dvFilePath}" to be an array, got "${typeof aliases}"`);
+		return [];
+	}
+
+	const options: SuggesterOption<MBLiteral>[] = [];
+	const normalizedFileName = dvFileName.trim();
+
+	for (const alias of aliases) {
+		if (typeof alias !== 'string') {
+			continue;
+		}
+
+		const trimmedAlias = alias.trim();
+		if (!trimmedAlias || trimmedAlias === normalizedFileName) {
+			continue;
+		}
+
+		const linkWithAlias = createLinkWithAlias(link, trimmedAlias);
+		options.push(new SuggesterOption<MBLiteral>(linkWithAlias, trimmedAlias, `alias of: ${dvFilePath}`));
+	}
+
+	return options;
+}
 
 export function getSuggesterOptions(
 	mb: ObsMetaBind,
@@ -60,6 +121,9 @@ export function getSuggesterOptions(
 
 					const link = applyUseLinksArgument(dvFile.path, dvFile.name, useLinks);
 					options.push(new SuggesterOption<MBLiteral>(link, dvFile.name, `file: ${dvFile.path}`));
+
+					// Add aliases as additional selectable options with the alias as the link text
+					options.push(...getAliasSuggesterOptions(link, dvFile.name, dvFile.path, file.aliases));
 				} catch (e) {
 					console.warn('meta-bind | error while computing suggest options', e);
 				}

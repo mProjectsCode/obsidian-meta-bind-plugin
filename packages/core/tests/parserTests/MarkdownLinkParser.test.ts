@@ -201,4 +201,81 @@ describe('markdown link parser', () => {
 			).toThrow();
 		});
 	});
+
+	describe('serialize link with toString', () => {
+		test('should serialize wiki link without alias', () => {
+			const link = MDLinkParser.parseLink('[[test]]');
+			expect(link.toString()).toBe('[[test]]');
+		});
+
+		test('should serialize wiki link with alias', () => {
+			const link = MDLinkParser.parseLink('[[test|display]]');
+			expect(link.toString()).toBe('[[test|display]]');
+		});
+
+		test('should serialize wiki link with block', () => {
+			const link = MDLinkParser.parseLink('[[test#123]]');
+			expect(link.toString()).toBe('[[test#123]]');
+		});
+
+		test('should serialize wiki link with block and alias', () => {
+			const link = MDLinkParser.parseLink('[[test#123|display]]');
+			expect(link.toString()).toBe('[[test#123|display]]');
+		});
+
+		test('should serialize external markdown link', () => {
+			const link = MDLinkParser.parseLink('[github](https://github.com)');
+			expect(link.toString()).toBe('[github](https://github.com)');
+		});
+
+		test('should serialize external markdown image link', () => {
+			const link = MDLinkParser.parseLink('![alt](https://example.com/image.png)');
+			expect(link.toString()).toBe('![alt](https://example.com/image.png)');
+		});
+	});
+
+	describe('modify link alias and serialize', () => {
+		test('should add alias to wiki link without alias', () => {
+			const link = MDLinkParser.parseLink('[[test]]');
+			link.alias = 'custom text';
+			expect(link.toString()).toBe('[[test|custom text]]');
+		});
+
+		test('should change existing alias on wiki link', () => {
+			const link = MDLinkParser.parseLink('[[test|old alias]]');
+			link.alias = 'new alias';
+			expect(link.toString()).toBe('[[test|new alias]]');
+		});
+
+		test('should change alias while preserving block reference', () => {
+			const link = MDLinkParser.parseLink('[[test#123|old alias]]');
+			link.alias = 'new alias';
+			expect(link.toString()).toBe('[[test#123|new alias]]');
+		});
+
+		test('should change alias on external markdown link', () => {
+			const link = MDLinkParser.parseLink('[old](https://github.com)');
+			link.alias = 'GitHub';
+			expect(link.toString()).toBe('[GitHub](https://github.com)');
+		});
+
+		test('should change alias on external markdown image link', () => {
+			const link = MDLinkParser.parseLink('![old alt](https://example.com/image.png)');
+			link.alias = 'new alt';
+			expect(link.toString()).toBe('![new alt](https://example.com/image.png)');
+		});
+
+		test('should handle empty alias string', () => {
+			const link = MDLinkParser.parseLink('[[test|original]]');
+			link.alias = '';
+			// Empty string is falsy, so it won't render the alias in toString
+			expect(link.toString()).toBe('[[test]]');
+		});
+
+		test('should clear alias by setting to undefined', () => {
+			const link = MDLinkParser.parseLink('[[test|alias]]');
+			link.alias = undefined;
+			expect(link.toString()).toBe('[[test]]');
+		});
+	});
 });

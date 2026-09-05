@@ -10,6 +10,7 @@
 	const props: InputFieldSvelteProps<MBLiteral> & {
 		showSuggester: () => void;
 		showTextPrompt: () => void;
+		editLinkText: () => void;
 		allowOther: boolean;
 	} = $props();
 
@@ -44,6 +45,11 @@
 	<Button variant={ButtonStyleType.PLAIN} onclick={props.showSuggester}>
 		<Icon mb={props.mb} iconName="list" />
 	</Button>
+	{#if mdLink !== undefined}
+		<Button variant={ButtonStyleType.PLAIN} onclick={props.editLinkText} tooltip="Edit link text">
+			<Icon mb={props.mb} iconName="pencil" />
+		</Button>
+	{/if}
 	{#if props.allowOther}
 		<Button variant={ButtonStyleType.PLAIN} onclick={props.showTextPrompt}>
 			<Icon mb={props.mb} iconName="pencil" />

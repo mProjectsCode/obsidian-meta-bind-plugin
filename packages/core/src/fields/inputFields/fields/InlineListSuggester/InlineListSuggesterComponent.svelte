@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { InputFieldSvelteProps } from 'meta-bind-core/src/fields/inputFields/InputFieldSvelteWrapper';
+	import { MDLinkParser } from 'meta-bind-core/src/parsers/MarkdownLinkParser';
 	import Icon from 'meta-bind-core/src/utils/components/Icon.svelte';
 	import LiteralRenderComponent from 'meta-bind-core/src/utils/components/LiteralRenderComponent.svelte';
 	import type { ContextMenuItemDefinition } from 'meta-bind-core/src/utils/IContextMenu';
@@ -8,6 +9,7 @@
 	const props: InputFieldSvelteProps<MBLiteral[]> & {
 		showSuggester: () => void;
 		showTextPrompt: () => void;
+		editLinkText: (index: number, value: MBLiteral) => void;
 		allowOther: boolean;
 	} = $props();
 
@@ -56,6 +58,16 @@
 	function openContextMenuForElement(e: MouseEvent, index: number): void {
 		const menuActions: ContextMenuItemDefinition[] = [];
 
+		const entry = value[index];
+		const isLink = typeof entry === 'string' && MDLinkParser.isLink(entry);
+		if (isLink) {
+			menuActions.push({
+				name: 'Edit link text',
+				icon: 'pencil',
+				onclick: () => props.editLinkText(index, entry),
+			});
+		}
+
 		if (index > 0) {
 			menuActions.push({
 				name: 'Move left',
@@ -97,7 +109,10 @@
 	{#each value as entry, i}
 		<div
 			class="mb-inline-list-item"
-			oncontextmenu={e => openContextMenuForElement(e, i)}
+			oncontextmenu={e => {
+				e.preventDefault();
+				openContextMenuForElement(e, i);
+			}}
 			role="listitem"
 			data-value={stringifyLiteral(entry)}
 		>

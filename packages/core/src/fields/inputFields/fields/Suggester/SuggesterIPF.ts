@@ -1,5 +1,6 @@
 import { InputFieldArgumentType } from 'meta-bind-core/src/config/FieldConfigs';
 import { AbstractInputField } from 'meta-bind-core/src/fields/inputFields/AbstractInputField';
+import { openLinkTextEditingModal } from 'meta-bind-core/src/fields/inputFields/fields/Suggester/SuggesterHelper';
 import type { InputFieldSvelteComponent } from 'meta-bind-core/src/fields/inputFields/InputFieldSvelteWrapper';
 import type { MBLiteral } from 'meta-bind-core/src/utils/Literal';
 import { parseUnknownToLiteral } from 'meta-bind-core/src/utils/Literal';
@@ -31,6 +32,7 @@ export class SuggesterIPF extends AbstractInputField<MBLiteral, MBLiteral> {
 		return {
 			showSuggester: () => this.openModal(),
 			showTextPrompt: () => this.openTextModal(),
+			editLinkText: () => this.openLinkTextEditor(),
 			allowOther: this.mountable.getArgument(InputFieldArgumentType.ALLOW_OTHER)?.value === true,
 		};
 	}
@@ -50,5 +52,20 @@ export class SuggesterIPF extends AbstractInputField<MBLiteral, MBLiteral> {
 			},
 			onCancel: () => {},
 		});
+	}
+
+	openLinkTextEditor(): void {
+		const currentValue = this.getInternalValue();
+		if (!currentValue || typeof currentValue !== 'string') {
+			return;
+		}
+
+		openLinkTextEditingModal(
+			currentValue,
+			params => this.mountable.mb.internal.openTextPromptModal(params),
+			updatedLink => {
+				this.setInternalValue(updatedLink);
+			},
+		);
 	}
 }
