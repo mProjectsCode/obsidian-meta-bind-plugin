@@ -55,13 +55,30 @@ span.cm-inline-code.mb-inline-widget-rendered {
 	margin: 0;
 }
 
-div.mb-view-wrapper.mb-view-markdown > p {
+/* An inline view sits inside a sentence, so its rendered markdown must not
+   introduce block flow — hence the collapsed paragraphs below. A block view has
+   a line of its own, and collapsing there destroys the author's paragraph
+   breaks: two <p>s become one run of text.
+
+   Note which element carries which class. ViewFieldMountable puts
+   mb-view-block / mb-view-inline on targetEl, and mb-view-wrapper on the child
+   div it creates inside it; TextVF adds mb-view-markdown to that same child.
+   So the mode has to be matched on the PARENT, not on the wrapper itself.
+
+   Written as :not(.mb-view-block) > … so a block view inherits Obsidian's own
+   <p> styling untouched, and every other case — including a wrapper with no
+   mode class, e.g. JsViewFieldMountable — keeps exactly what it had. */
+:not(.mb-view-block) > div.mb-view-wrapper.mb-view-markdown > p {
 	margin: 0;
 	display: inline-block;
 }
 
-div.mb-view-wrapper {
+:not(.mb-view-block) > div.mb-view-wrapper {
 	display: inline;
+}
+
+.mb-view-block > div.mb-view-wrapper {
+	display: block;
 }
 
 .mb-button.mb-button {
